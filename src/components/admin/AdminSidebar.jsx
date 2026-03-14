@@ -13,13 +13,13 @@ export default function AdminSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-64 bg-slate-900 text-white flex flex-col min-h-screen shrink-0">
+    <aside className="w-64 flex flex-col min-h-screen shrink-0" style={{ background: '#0a0a0a', borderRight: '1px solid #D4AF3733' }}>
       {/* Logo */}
-      <div className="p-6 flex items-center gap-3 border-b border-slate-700/50">
+      <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid #D4AF3733' }}>
         <CharlieAvatar size="sm" />
         <div>
-          <h1 className="font-bold text-base">ReloCharlie</h1>
-          <p className="text-xs text-slate-400">Admin Panel</p>
+          <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE</h1>
+          <p className="text-xs tracking-widest font-light" style={{ color: '#555' }}>ADMIN PANEL</p>
         </div>
       </div>
 
@@ -31,11 +31,13 @@ export default function AdminSidebar() {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                isActive
-                  ? 'bg-orange-500/20 text-orange-400'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
-              }`}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+              style={{
+                background: isActive ? 'rgba(212,175,55,0.12)' : 'transparent',
+                color: isActive ? '#D4AF37' : '#666',
+              }}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = '#666'; }}
             >
               <item.icon className="w-4 h-4" />
               {item.label}
@@ -45,10 +47,13 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Back to App */}
-      <div className="p-3 border-t border-slate-700/50">
+      <div className="p-3" style={{ borderTop: '1px solid #1a1a1a' }}>
         <Link
           to="/Dashboard"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+          style={{ color: '#555' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
+          onMouseLeave={e => e.currentTarget.style.color = '#555'}
         >
           <ArrowLeft className="w-4 h-4" />
           Back to App

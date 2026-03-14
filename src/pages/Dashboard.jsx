@@ -22,15 +22,15 @@ export default function Dashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{ background: '#080808' }}>
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-40">
+      <header className="sticky top-0 z-40" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CharlieAvatar size="sm" />
             <div>
-              <h1 className="font-bold text-slate-900">ReloCharlie</h1>
-              <p className="text-xs text-slate-400">Your relocation dashboard</p>
+              <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE RELOCATION SERVICES</h1>
+              <p className="text-xs" style={{ color: '#555' }}>Your personal AI dashboard</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
