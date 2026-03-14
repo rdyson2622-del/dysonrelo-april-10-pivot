@@ -64,14 +64,13 @@ export default function Home() {
                 POWERED BY AI
               </div>
 
-              <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)', fontWeight: 700, lineHeight: 1.04, letterSpacing: '-0.035em', marginBottom: '0.15em' }}>
+              <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '0.1em' }}>
                 <span style={{ color: '#fff' }}>Your Personal</span>
               </h1>
-              <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)', fontWeight: 700, lineHeight: 1.04, letterSpacing: '-0.035em', marginBottom: '0.15em' }}
-                className="gold-text-gradient">
+              <h1 className="serif-heading gold-text-gradient" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '0.1em' }}>
                 AI Real Estate
               </h1>
-              <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)', fontWeight: 700, lineHeight: 1.04, letterSpacing: '-0.035em', marginBottom: '2rem' }}>
+              <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '2rem' }}>
                 <span style={{ color: '#fff' }}>Concierge.</span>
               </h1>
 
