@@ -65,14 +65,14 @@ export default function Home() {
                 POWERED BY AI
               </div>
 
-              <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '0.1em' }}>
-                <span style={{ color: '#fff' }}>Your Personal</span>
+              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.1em', color: '#fff' }}>
+                Your Personal
               </h1>
-              <h1 className="serif-heading gold-text-gradient" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '0.1em' }}>
+              <h1 className="display-heading gold-text-gradient" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.1em' }}>
                 AI Real Estate
               </h1>
-              <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 7vw, 6.5rem)', fontWeight: 600, lineHeight: 1.0, letterSpacing: '0.02em', marginBottom: '2rem' }}>
-                <span style={{ color: '#fff' }}>Concierge.</span>
+              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '2rem', color: '#fff' }}>
+                Concierge.
               </h1>
 
               <p className="text-lg leading-relaxed mb-2 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
