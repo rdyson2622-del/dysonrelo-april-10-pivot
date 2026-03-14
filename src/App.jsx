@@ -140,6 +140,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/Home" replace />} />
       <Route path="/Home" element={<Home />} />
+      <Route path="/Explainers" element={<Explainers />} />
       
       {/* App routes with floating Charlie */}
       <Route element={<AppLayout />}>
