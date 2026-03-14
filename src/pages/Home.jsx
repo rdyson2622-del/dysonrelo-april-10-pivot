@@ -55,40 +55,76 @@ export default function Home() {
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.5) 50%, transparent 100%)' }} />
 
         <div className="relative max-w-7xl mx-auto px-6 md:px-14 py-24 w-full">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-16">
 
-            {/* Left: Copy */}
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
-                style={{ background: '#D4AF37', color: '#000' }}>
-                <Sparkles className="w-3 h-3" />
-                POWERED BY AI
+            {/* Left: Copy + Progress Card */}
+            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
+                  style={{ background: '#D4AF37', color: '#000' }}>
+                  <Sparkles className="w-3 h-3" />
+                  POWERED BY AI
+                </div>
+
+                <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
+                  <span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span><br />CONCIERGE
+                </h1>
+
+                <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: '#fff', fontWeight: 400 }}>
+                  Meet Charlie — AI that handles every aspect of your relocation.
+                </p>
+                <p className="text-base font-semibold mb-8" style={{ color: '#000' }}>
+                  ✦ Completely free to you.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <Link to="/Chat">
+                    <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
+                      Talk to Charlie <MessageCircle className="w-4 h-4" />
+                    </button>
+                  </Link>
+                  <Link to="/Dashboard">
+                    <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
+                      style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                      My Dashboard <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </Link>
+                </div>
               </div>
 
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
-                <span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span><br />CONCIERGE
-              </h1>
+              {/* Progress Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="mt-12 p-6 rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.95)', border: '2px solid #D4AF37' }}
+              >
+                <div className="mb-6">
+                  <h3 className="serif-heading text-lg mb-4" style={{ color: '#000', letterSpacing: '-0.01em' }}>Welcome Back</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#666' }}>Your relocation journey is underway. We're here to guide you every step of the way.</p>
+                </div>
 
-              <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: '#fff', fontWeight: 400 }}>
-                Meet Charlie — AI that handles every aspect of your relocation.
-              </p>
-              <p className="text-base font-semibold mb-8" style={{ color: '#000' }}>
-                ✦ Completely free to you.
-              </p>
+                <div className="border-t border-gray-200 pt-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h4 className="font-semibold text-sm" style={{ color: '#000' }}>Progress</h4>
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full" style={{ background: 'rgba(212,175,55,0.1)' }}>
+                      <span className="text-lg font-bold" style={{ color: '#D4AF37' }}>13%</span>
+                    </div>
+                  </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Link to="/Chat">
-                  <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-                    Talk to Charlie <MessageCircle className="w-4 h-4" />
-                  </button>
-                </Link>
-                <Link to="/Dashboard">
-                  <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
-                    style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                    My Dashboard <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs font-semibold tracking-widest mb-1" style={{ color: '#999' }}>COMPLETED</p>
+                      <p className="text-2xl font-bold" style={{ color: '#D4AF37' }}>1</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold tracking-widest mb-1" style={{ color: '#999' }}>TOTAL TASKS</p>
+                      <p className="text-2xl font-bold" style={{ color: '#000' }}>8</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Right: Charlie card */}
