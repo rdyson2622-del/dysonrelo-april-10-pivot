@@ -66,7 +66,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="rounded-3xl p-8"
-            style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+            style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: '1px solid #D4AF37' }}
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="serif-heading text-lg" style={{ color: '#000' }}>Progress</h3>
