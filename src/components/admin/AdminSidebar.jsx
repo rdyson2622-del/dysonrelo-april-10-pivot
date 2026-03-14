@@ -36,10 +36,8 @@ export default function AdminSidebar() {
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
               style={{
                 background: isActive ? 'rgba(212,175,55,0.12)' : 'transparent',
-                color: isActive ? '#D4AF37' : '#666',
+                color: isActive ? '#D4AF37' : '#fff',
               }}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = '#666'; }}
             >
               <item.icon className="w-4 h-4" />
               {item.label}
