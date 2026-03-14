@@ -114,6 +114,7 @@ import AdminListingSearch from './pages/AdminListingSearch';
 import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
 import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
 import Explainers from './pages/Explainers';
+import BusinessPlan from './pages/BusinessPlan';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
