@@ -250,7 +250,7 @@ export default function Home() {
           style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 100%, rgba(212,175,55,0.06) 0%, transparent 60%)' }} />
         <div className="relative">
           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>GET STARTED TODAY</p>
-          <h2 className="serif-heading mb-4" style={{ fontSize: 'clamp(2.6rem, 6vw, 5rem)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '0.02em', color: '#fff' }}>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
             Ready for your{' '}
             <span className="gold-text-gradient">fresh start?</span>
           </h2>
