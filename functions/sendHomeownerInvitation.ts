@@ -3,56 +3,86 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    const { event, data } = await req.json();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verify we have the seller outreach data
+    if (!data) {
+      return Response.json({ error: 'No data provided' }, { status: 400 });
     }
 
-    const { seller_name, seller_email, seller_phone, property_address, outreach_id } = await req.json();
+    const { seller_name, seller_phone, seller_email, property_address } = data;
 
-    if (!seller_name || (!seller_email && !seller_phone)) {
-      return Response.json({
-        error: 'Missing required fields: seller_name and (seller_email or seller_phone)',
-      }, { status: 400 });
+    if (!seller_phone && !seller_email) {
+      return Response.json({ error: 'No phone or email to contact seller' }, { status: 400 });
     }
 
-    const appUrl = 'https://dyson-relocation.app'; // Update with your actual app URL
-    const inviteMessage = `Hi ${seller_name},
+    // Send SMS if phone exists
+    if (seller_phone) {
+      const twilioAccountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
+      const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
+      const twilioPhoneNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-We've connected with you regarding your home at ${property_address}. 
+      if (!twilioAccountSid || !twilioAuthToken || !twilioPhoneNumber) {
+        return Response.json({ error: 'Twilio credentials not configured' }, { status: 500 });
+      }
 
-We'd love to help you find your next perfect home wherever you're moving. Use our free AI Concierge app to get started:
+      const smsBody = `Hi ${seller_name}! We're Dyson & Dyson Relocation. We help families relocate with an AI concierge + top local agents—at zero cost to you. Chat with us: https://dyson-relocation.app/chat`;
 
-${appUrl}
+      const formData = new FormData();
+      formData.append('Body', smsBody);
+      formData.append('From', twilioPhoneNumber);
+      formData.append('To', seller_phone);
 
-Our service is completely free to you.
+      const twilioResponse = await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${btoa(`${twilioAccountSid}:${twilioAuthToken}`)}`,
+          },
+          body: formData,
+        }
+      );
 
-Best regards,
-Dyson & Dyson Relocation Team`;
+      if (!twilioResponse.ok) {
+        const error = await twilioResponse.json();
+        console.error('Twilio SMS error:', error);
+      }
+    }
 
-    // Send email
+    // Send email if email exists
     if (seller_email) {
       await base44.integrations.Core.SendEmail({
         to: seller_email,
-        subject: `Your Free Relocation Concierge - Dyson & Dyson`,
-        body: inviteMessage,
-        from_name: 'Dyson & Dyson Relocation',
-      });
-    }
+        subject: 'Free Relocation Help for Your Home Sale',
+        body: `Hi ${seller_name},
 
-    // TODO: If you have Twilio set up, add SMS here
-    // For now, we'll just log that phone-based invitation was needed
-    if (seller_phone && !seller_email) {
-      console.log(`[PENDING SMS] Phone: ${seller_phone} - Requires Twilio integration`);
+We noticed your home at ${property_address} is listed for sale. 
+
+We're Dyson & Dyson Relocation—we help families relocate with:
+✓ AI Concierge (Charlie) available 24/7
+✓ Free neighborhood research & city guides
+✓ Hand-matched local agents in your destination city
+✓ Complete moving coordination
+✓ Schools, healthcare, utilities setup
+
+All 100% free to you as the buyer.
+
+Let's talk about your relocation:
+https://dyson-relocation.app/chat
+
+Best regards,
+Dyson & Dyson Relocation Team`,
+        from_name: 'Dyson & Dyson',
+      });
     }
 
     return Response.json({
       success: true,
-      message: `Invitation sent to ${seller_email || seller_phone}`,
-      outreach_id,
+      message: `Invitation sent to ${seller_name} via ${seller_phone ? 'SMS' : ''}${seller_phone && seller_email ? ' and ' : ''}${seller_email ? 'email' : ''}`,
     });
   } catch (error) {
+    console.error('Error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
