@@ -35,7 +35,7 @@ export default function AdminOwners() {
   });
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-8">
           <div>
