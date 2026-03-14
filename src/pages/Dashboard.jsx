@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church } from 'lucide-react';
+import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import StatCard from '../components/dashboard/StatCard';
@@ -138,6 +138,14 @@ export default function Dashboard() {
                 <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
                   <FileText className="w-4 h-4" style={{ color: '#D4AF37' }} />
                   <span className="text-sm" style={{ color: '#aaa' }}>My Move Plan</span>
+                </Link>
+
+                <div className="pt-2 pb-1">
+                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>PROPERTY SEARCH</p>
+                </div>
+                <Link to="/Search" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <Home className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>Search Listings</span>
                 </Link>
 
                 <div className="pt-2 pb-1">
