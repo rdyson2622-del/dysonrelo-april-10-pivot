@@ -31,7 +31,7 @@ export default function Home() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-4" style={{ borderBottom: `1px solid ${GOLD}22`, background: '#0a0a0a' }}>
         <div className="flex items-center gap-2">
-          <DnDLogo size="md" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto" />
         </div>
         <div className="flex items-center gap-3">
           <Link to="/Dashboard">
