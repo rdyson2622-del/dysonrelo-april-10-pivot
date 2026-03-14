@@ -9,18 +9,18 @@ export default function Chat() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 px-6 py-3 flex items-center gap-3 shrink-0">
+      <header className="px-6 py-3 flex items-center gap-3 shrink-0" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
         <Link to="/Dashboard">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
         <CharlieAvatar size="sm" speaking={false} />
         <div>
-          <h1 className="font-bold text-slate-900 text-sm">Chat with Charlie</h1>
-          <p className="text-xs text-slate-400">Your relocation assistant</p>
+          <h1 className="font-black text-sm" style={{ color: '#D4AF37' }}>Charlie — AI Concierge</h1>
+          <p className="text-xs" style={{ color: '#555' }}>Concierge Relocation Services • Always Free</p>
         </div>
       </header>
 

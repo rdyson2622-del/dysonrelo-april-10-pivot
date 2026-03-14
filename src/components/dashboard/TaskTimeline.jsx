@@ -26,7 +26,7 @@ const categoryLabels = {
 export default function TaskTimeline({ tasks }) {
   if (!tasks || tasks.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-400 text-sm">
+      <div className="text-center py-8 text-sm" style={{ color: '#555' }}>
         No tasks yet. Ask Charlie to create a relocation checklist!
       </div>
     );
