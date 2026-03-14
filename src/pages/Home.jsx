@@ -276,7 +276,7 @@ export default function Home() {
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
                 <s.icon className="w-5 h-5" style={{ color: GOLD }} />
               </div>
-              <h3 className="font-semibold mb-2 text-lg" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.01em', fontSize: '19.6px' }}>{s.title}</h3>
+              <h3 className="font-semibold mb-2 text-lg serif-heading" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.01em', fontSize: '19.6px' }}>{s.title}</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{s.desc}</p>
             </motion.div>
           ))}
