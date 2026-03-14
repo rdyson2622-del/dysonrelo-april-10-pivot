@@ -158,7 +158,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="rounded-3xl p-8"
-          style={{ background: 'rgba(255,255,255,0.7)', border: `1px solid ${GOLD}30` }}
+          style={{ background: 'rgba(255,255,255,0.7)', border: `1px solid ${GOLD}` }}
         >
           <h3 className="serif-heading text-xl mb-8" style={{ color: '#000' }}>Next Steps</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
