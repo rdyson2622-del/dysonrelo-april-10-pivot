@@ -41,7 +41,7 @@ export default function Explainers() {
           <h1 className="display-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem' }}>
             <span style={{ color: '#000' }}>THE MODERN </span><span className="gold-text-gradient">EVOLUTION</span>
           </h1>
-          <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-12" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-12" style={{ color: '#fff' }}>
             Just as motion pictures evolved from silent films to "talkies" in 1927, we're pioneering the next revolution: voice-powered AI in real estate.
           </p>
         </motion.div>
@@ -61,7 +61,7 @@ export default function Explainers() {
               </div>
               <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Then: 1927 "Talkies"</h3>
             </div>
-            <p className="leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="leading-relaxed mb-6" style={{ color: '#fff' }}>
               When the movie "The Jazz Singer" premiered, it revolutionized entertainment by adding synchronized sound to motion pictures. One of the first entertainers in those times, Charlie Chaplin was a significant figure. Audiences were amazed to hear actors speak.
             </p>
             <p className="font-semibold" style={{ color: GOLD }}>
@@ -84,7 +84,7 @@ export default function Explainers() {
               </div>
               <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Now: AI "Talkies"</h3>
             </div>
-            <p className="leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="leading-relaxed mb-6" style={{ color: '#fff' }}>
               We're experimenting with voice-to-voice technology that lets you talk naturally with Charlie — he understands your needs, explains complex processes, and guides you through every step.
             </p>
             <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
@@ -139,7 +139,7 @@ export default function Explainers() {
               "Like any new technology, Charlie might stumble a few times since he couldn't even talk in the 1920's.",
               "Voice to Voice is a fun new entry into all of our lives — so watch us and join us by adding other subscribers to broaden our networks on this fun new road we are all traveling."
             ].map((item, i) => (
-              <li key={i} className="flex gap-4 text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              <li key={i} className="flex gap-4 text-base leading-relaxed" style={{ color: '#fff' }}>
                 <span style={{ color: '#000' }}>•</span>
                 <span>{item}</span>
               </li>

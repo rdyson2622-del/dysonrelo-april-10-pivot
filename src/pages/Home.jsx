@@ -69,7 +69,7 @@ export default function Home() {
                 <span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span><br />CONCIERGE
               </h1>
 
-              <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
+              <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: '#fff', fontWeight: 400 }}>
                 Meet Charlie — AI that handles every aspect of your relocation.
               </p>
               <p className="text-base font-semibold mb-8" style={{ color: '#000' }}>
@@ -161,7 +161,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <h3 className="serif-heading text-lg mb-1 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  <p className="text-xs leading-relaxed" style={{ color: '#fff' }}>
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function Home() {
           <h2 className="display-heading gold-text-gradient mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', lineHeight: 1.2, letterSpacing: '0.22em' }}>
             A new era of real estate is here.
           </h2>
-          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: '#fff' }}>
             Concierge Relocation Services harnesses advanced AI to give every family access to a world-class personal assistant — the kind previously reserved for executives.{' '}
             <span style={{ color: GOLD, fontWeight: 600 }}>And it costs you absolutely nothing.</span>
           </p>
@@ -203,7 +203,7 @@ export default function Home() {
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
             Each assistant specializes in one domain
           </h2>
-          <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: '#fff' }}>
             but they communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
           </p>
         </div>
@@ -277,7 +277,7 @@ export default function Home() {
                 <s.icon className="w-5 h-5" style={{ color: GOLD }} />
               </div>
               <h3 className="font-semibold mb-2 text-lg serif-heading" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.01em', fontSize: '19.6px' }}>{s.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{s.desc}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -307,7 +307,7 @@ export default function Home() {
               </p>
               <ul className="space-y-2.5 mb-9">
                 {['Vetted & Certified Relocation Specialists', 'Top 10% Producers in Their Markets', 'Dedicated Buyer Representation', 'Zero Cost to You as the Buyer'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  <li key={i} className="flex items-center gap-3 text-sm" style={{ color: '#fff' }}>
                     <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
                     {item}
                   </li>
@@ -337,7 +337,7 @@ export default function Home() {
             Ready for your{' '}
             <span className="gold-text-gradient">fresh start?</span>
           </h2>
-          <p className="text-base mb-10 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-base mb-10 max-w-md mx-auto" style={{ color: '#fff' }}>
             Talk to Charlie right now. No sign-up required. No hidden fees. Just exceptional AI-powered relocation service.
           </p>
           <Link to="/Chat">
