@@ -65,7 +65,7 @@ export default function Home() {
                 POWERED BY AI
               </div>
 
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
+              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
                 <span className="gold-text-gradient">Real Estate</span><br />CONCIERGE
               </h1>
 
