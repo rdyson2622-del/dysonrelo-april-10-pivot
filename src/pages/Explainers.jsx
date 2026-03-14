@@ -131,6 +131,7 @@ export default function Explainers() {
               The Dyson & Dyson Companies —<br />
               We're known for making history in Real Estate
             </h2>
+            </div>
           </div>
 
           <ul className="space-y-4">
