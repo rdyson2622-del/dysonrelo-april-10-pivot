@@ -3,16 +3,14 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Settings, ArrowRight, Home, Zap } from 'lucide-react';
+import { MapPin, Users, Home, ArrowRight, Settings, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import TaskTimeline from '../components/dashboard/TaskTimeline';
-import AccomplishmentsModal from '../components/dashboard/AccomplishmentsModal';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const CHARLIE_IMG = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png";
+const GOLD = '#D4AF37';
 
 export default function Dashboard() {
-  const [showAccomplishments, setShowAccomplishments] = useState(false);
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
     queryFn: () => base44.entities.RelocationTask.list('-created_date', 50),
@@ -24,154 +22,176 @@ export default function Dashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen" style={{ background: '#080808' }}>
+    <div className="min-h-screen" style={{ background: '#A9A9A9' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <Link to="/Home">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" />
+      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: 'rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+        <Link to="/Home">
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto cursor-pointer" />
+        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/Chat">
+            <button className="px-6 py-2 rounded-full font-semibold text-sm transition-all" style={{ background: GOLD, color: '#000' }}>
+              Talk to Charlie
+            </button>
           </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/Chat">
-              <button className="gold-btn gap-2 text-xs font-bold rounded-full px-4 py-2">
-                Talk to Charlie
-              </button>
-            </Link>
-            <Link to="/Admin">
-              <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
-                <Settings className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
+          <Link to="/Admin">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Settings className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-6">
-        {/* Welcome + Stats Compact */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-6">
+      <main className="max-w-6xl mx-auto px-6 py-16">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <h1 className="display-heading mb-4" style={{ fontSize: '3.5rem', letterSpacing: '0.22em', color: '#000' }}>
+            Welcome Back
+          </h1>
+          <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(0,0,0,0.6)' }}>
+            Your relocation journey is underway. We're here to guide you every step of the way.
+          </p>
+        </motion.div>
+
+        {/* Three Column Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-20">
+          {/* Progress Overview */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-2"
+            transition={{ delay: 0.1 }}
+            className="rounded-3xl p-8"
+            style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
           >
-            <h2 className="text-xl font-black mb-1" style={{ color: '#fff' }}>Welcome back! ✨</h2>
-            <p className="text-xs mb-4" style={{ color: '#666' }}>Your relocation progress</p>
-            
-            {/* Compact stats grid */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-lg p-3" style={{ background: '#111', border: '1px solid #222' }}>
-                <p className="text-xs" style={{ color: '#888' }}>Total</p>
-                <p className="text-lg font-bold" style={{ color: '#fff' }}>{totalTasks}</p>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="serif-heading text-lg" style={{ color: '#000' }}>Progress</h3>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: `${GOLD}22` }}>
+                <span className="text-2xl font-black" style={{ color: GOLD }}>{progressPercent}%</span>
               </div>
-              <div className="rounded-lg p-3" style={{ background: '#111', border: '1px solid #2a2' }}>
-                <p className="text-xs" style={{ color: '#888' }}>Completed</p>
-                <p className="text-lg font-bold" style={{ color: '#4f4' }}>{completedTasks}</p>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs font-semibold mb-2" style={{ color: 'rgba(0,0,0,0.6)' }}>COMPLETED</p>
+                <p className="text-3xl font-black" style={{ color: GOLD }}>{completedTasks}</p>
               </div>
-              <div className="rounded-lg p-3" style={{ background: '#111', border: '1px solid #D4AF3733' }}>
-                <p className="text-xs" style={{ color: '#888' }}>Progress</p>
-                <p className="text-lg font-bold" style={{ color: '#D4AF37' }}>{progressPercent}%</p>
+              <div>
+                <p className="text-xs font-semibold mb-2" style={{ color: 'rgba(0,0,0,0.6)' }}>TOTAL TASKS</p>
+                <p className="text-3xl font-black" style={{ color: '#000' }}>{totalTasks}</p>
               </div>
             </div>
           </motion.div>
 
-          {/* Charlie card - right side */}
+          {/* Charlie Card */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="rounded-lg p-4" 
-            style={{ background: '#111', border: '1px solid #D4AF3744' }}
+            transition={{ delay: 0.2 }}
+            className="rounded-3xl p-8 md:col-span-2"
+            style={{ background: `linear-gradient(135deg, ${GOLD}15 0%, ${GOLD}08 100%)`, border: `1px solid ${GOLD}30` }}
           >
-            <div className="flex items-center gap-2 mb-3">
-              <img src={DYSON_LOGO} alt="Charlie" className="h-8 w-auto" />
+            <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h3 className="text-xs font-bold" style={{ color: '#D4AF37' }}>Charlie</h3>
-                <p className="text-xs" style={{ color: '#666' }}>AI Concierge</p>
+                <div className="flex items-center gap-3 mb-4">
+                  <img src={DYSON_LOGO} alt="Charlie" className="h-8 w-auto" />
+                  <div>
+                    <p className="text-sm font-black" style={{ color: GOLD }}>CHARLIE</p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>Your AI Concierge</p>
+                  </div>
+                </div>
+                <p className="text-lg leading-relaxed mb-6" style={{ color: 'rgba(0,0,0,0.7)' }}>
+                  Have questions about your move? Charlie is available 24/7 to help with everything from neighborhood research to logistics.
+                </p>
+                <Link to="/Chat">
+                  <button className="px-6 py-3 rounded-full font-bold text-sm transition-all hover:shadow-lg flex items-center gap-2" style={{ background: GOLD, color: '#000' }}>
+                    <MessageCircle className="w-4 h-4" />
+                    Chat with Charlie
+                  </button>
+                </Link>
+              </div>
+              <div className="flex justify-center">
+                <img src={CHARLIE_IMG} alt="Charlie" className="h-32 w-auto" />
               </div>
             </div>
-            <p className="text-xs mb-3 leading-relaxed" style={{ color: '#888' }}>
-              Questions about your move? Ask Charlie.
-            </p>
-            <Link to="/Chat">
-              <button className="w-full py-2 rounded-lg font-bold text-xs" style={{ background: '#D4AF37', color: '#000' }}>
-                Talk to Charlie
-              </button>
-            </Link>
           </motion.div>
         </div>
 
-        {/* Progress bar - compact */}
+        {/* Explore Section */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="rounded-lg p-3 mb-6"
-          style={{ background: '#111', border: '1px solid #D4AF3733' }}
+          transition={{ delay: 0.3 }}
+          className="mb-20"
         >
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-xs font-bold" style={{ color: '#fff' }}>Relocation Progress</h3>
-            <button
-              onClick={() => setShowAccomplishments(true)}
-              className="text-xs font-semibold px-2 py-1 rounded transition-all hover:opacity-90"
-              style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: `1px solid rgba(212,175,55,0.3)` }}
-            >
-              <Zap className="w-2.5 h-2.5 inline mr-0.5" /> View
-            </button>
-          </div>
-          <Progress value={progressPercent} className="h-1.5" />
-        </motion.div>
+          <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Explore Your Relocation</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link to="/CityGuide">
+              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
+                  <MapPin className="w-6 h-6" style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-bold mb-2" style={{ color: '#000' }}>City Guide</h3>
+                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Discover neighborhoods, schools & local info</p>
+              </div>
+            </Link>
 
-        <AccomplishmentsModal open={showAccomplishments} onClose={() => setShowAccomplishments(false)} tasks={tasks} />
-
-        {/* Main content - Tasks only */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-lg p-4"
-          style={{ background: '#111', border: '1px solid #222' }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold" style={{ color: '#fff' }}>Relocation Tasks</h3>
             <Link to="/Chat">
-              <Button variant="ghost" size="sm" className="gap-1 text-xs" style={{ color: '#D4AF37', padding: '0.25rem 0.5rem', height: 'auto' }}>
-                Add tasks <ArrowRight className="w-3 h-3" />
-              </Button>
+              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
+                  <Users className="w-6 h-6" style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-bold mb-2" style={{ color: '#000' }}>Find an Agent</h3>
+                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Get matched with a local real estate expert</p>
+              </div>
             </Link>
+
+            <Link to="/Search">
+              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
+                  <Home className="w-6 h-6" style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-bold mb-2" style={{ color: '#000' }}>Search Homes</h3>
+                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Browse listings in your new city</p>
+              </div>
+            </Link>
+
+            <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
+                <CheckCircle2 className="w-6 h-6" style={{ color: GOLD }} />
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#000' }}>Tasks</h3>
+              <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Track your relocation checklist</p>
+            </div>
           </div>
-          <TaskTimeline tasks={tasks} />
         </motion.div>
 
-        {/* Quick Links - Bottom */}
+        {/* Quick Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-          className="mt-4 rounded-lg p-4"
-          style={{ background: '#111', border: '1px solid #222' }}
+          transition={{ delay: 0.4 }}
+          className="rounded-3xl p-8"
+          style={{ background: 'rgba(255,255,255,0.7)', border: `1px solid ${GOLD}30` }}
         >
-          <h3 className="text-xs font-bold mb-3" style={{ color: '#fff' }}>Quick Links</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-            <Link to="/CityGuide" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
-              <MapPin className="w-4 h-4" style={{ color: '#D4AF37' }} />
-              <span className="text-xs" style={{ color: '#aaa' }}>Guide</span>
-            </Link>
-            <Link to="/Chat" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
-              <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
-              <span className="text-xs" style={{ color: '#aaa' }}>Agent</span>
-            </Link>
-            <Link to="/Search" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
-              <Home className="w-4 h-4" style={{ color: '#D4AF37' }} />
-              <span className="text-xs" style={{ color: '#aaa' }}>Search</span>
-            </Link>
-            <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
-              <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#006AFF' }}>Z</span>
-              <span className="text-xs" style={{ color: '#aaa' }}>Zillow</span>
-            </a>
-            <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
-              <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#D92228' }}>R</span>
-              <span className="text-xs" style={{ color: '#aaa' }}>Realtor</span>
-            </a>
+          <h3 className="serif-heading text-xl mb-8" style={{ color: '#000' }}>Next Steps</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: '📍', title: 'Research Your Destination', desc: 'Explore neighborhoods and neighborhoods that match your lifestyle' },
+              { icon: '🏠', title: 'Find Your Perfect Home', desc: 'Browse listings and get expert recommendations' },
+              { icon: '👤', title: 'Connect with an Agent', desc: 'Meet a local real estate professional who specializes in relocations' },
+            ].map((step, i) => (
+              <div key={i} className="flex gap-4">
+                <span className="text-3xl">{step.icon}</span>
+                <div>
+                  <h4 className="font-bold mb-1" style={{ color: '#000' }}>{step.title}</h4>
+                  <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>{step.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </main>
