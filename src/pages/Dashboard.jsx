@@ -71,7 +71,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Three Column Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Progress Overview */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -143,32 +143,32 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        {/* Explore Section */}
+        {/* Quick Access Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="mb-20 rounded-3xl p-8"
-          style={{ border: '1px solid #D4AF37' }}
+          style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid #D4AF37' }}
         >
-          <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Quick Access</h2>
+          <h2 className="serif-heading text-2xl mb-6" style={{ color: '#000' }}>Quick Access</h2>
           <div className="flex flex-wrap gap-3">
-            <Link to="/CityGuide" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
+            <Link to="/CityGuide" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #D4AF37' }}>
               <MapPin className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>City Guide</span>
             </Link>
 
-            <Link to="/Chat" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
+            <Link to="/Chat" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #D4AF37' }}>
               <Users className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>Find Agent</span>
             </Link>
 
-            <Link to="/Search" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
+            <Link to="/Search" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #D4AF37' }}>
               <Home className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>Search Homes</span>
             </Link>
 
-            <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
+            <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #D4AF37' }}>
               <CheckCircle2 className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>My Tasks</span>
             </Link>
