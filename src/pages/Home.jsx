@@ -154,16 +154,14 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="mt-12 flex justify-center"
             >
-              <div className="relative rounded-3xl px-8 py-4 frosted-dark flex flex-row items-center gap-8 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
-                <div className="flex items-center gap-4 shrink-0">
-                  <div>
-                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
-                  </div>
-                  <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto" />
+              <div className="relative rounded-3xl px-8 py-3 frosted-dark flex flex-row items-center gap-6 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+                <div className="flex items-center gap-3 shrink-0">
+                  <img src={DYSON_LOGO} alt="D&D" className="h-10 w-auto" />
+                  <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
                 </div>
                 <div className="flex-1">
-                  <h3 className="serif-heading text-xl mb-2 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  <h3 className="serif-heading text-lg mb-1 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
