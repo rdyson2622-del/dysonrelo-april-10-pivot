@@ -1,4 +1,27 @@
 import { Toaster } from "@/components/ui/toaster"
+import { useEffect } from "react"
+
+function FontInjector() {
+  useEffect(() => {
+    // Inject Google Font link
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap';
+    document.head.appendChild(link);
+
+    // Inject heading styles
+    const style = document.createElement('style');
+    style.textContent = `
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Cormorant Garamond', Georgia, serif !important;
+        font-weight: 300 !important;
+        letter-spacing: 0.12em !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }, []);
+  return null;
+}
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
