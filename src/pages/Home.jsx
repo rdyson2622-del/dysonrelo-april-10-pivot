@@ -69,7 +69,9 @@ export default function Home() {
                 Your Personal
               </h1>
               <h1 className="display-heading" style={{ fontSize: 'clamp(1.8rem, 4vw, 3.8rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '2rem', color: '#fff' }}>
-                <span className="gold-text-gradient">AI Real Estate</span> Concierge.
+                <span className="gold-text-gradient">AI Real Estate</span>
+                <br />
+                CONCIERGE.
               </h1>
 
               <p className="text-lg leading-relaxed mb-2 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
