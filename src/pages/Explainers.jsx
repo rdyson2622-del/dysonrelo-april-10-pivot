@@ -8,7 +8,7 @@ const GOLD = '#D4AF37';
 
 const HISTORY_IMAGES = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/aa90313ee_f09ff0d6a_Screenshot2026-02-27at65008PM-1.png",
-  "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=500&fit=crop",
+  "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/87bce6413_5d13e8638_Screenshot2026-02-27at65055PM.png",
   "https://images.unsplash.com/photo-1611339555312-e607c90352fd?w=400&h=500&fit=crop"
 ];
 
