@@ -144,20 +144,12 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     setInput('');
     setIsTyping(true);
 
-    const contextMessages = history.slice(-10).map(m =>
-      `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`
-    ).join('\n\n');
-
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt: `${buildCharlieScript(profile)}
-
-Conversation so far:
-${contextMessages}
-
-Respond as Charlie now. Be natural, warm, and helpful.`,
+    const res = await base44.functions.invoke('charlie', {
+      messages: history.slice(-12),
+      profile,
     });
 
-    const charlieMsg = { role: 'charlie', content: response, type: 'text' };
+    const charlieMsg = { role: 'charlie', content: res.data.reply, type: 'text' };
     setMessages(prev => [...prev, charlieMsg]);
     setIsTyping(false);
     if (voiceMode) speakText(response);
