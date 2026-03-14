@@ -152,7 +152,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-12 flex justify-center w-full"
+              className="mt-12 flex justify-center w-screen -mx-6 px-6"
             >
               <div className="relative rounded-3xl px-8 py-1 frosted-dark flex flex-row items-center gap-6 w-full" style={{ background: '#000', border: '1px solid #D4AF37' }}>
                 <div className="flex items-center gap-3 shrink-0">
