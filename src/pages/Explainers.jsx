@@ -147,8 +147,6 @@ export default function Explainers() {
               </li>
             ))}
           </ul>
-
-
         </motion.div>
       </main>
     </div>
