@@ -97,6 +97,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
 import CityGuide from './pages/CityGuide';
+import Search from './pages/Search';
 import Admin from './pages/Admin';
 import AdminOwners from './pages/AdminOwners';
 import AdminClients from './pages/AdminClients';
@@ -134,6 +135,7 @@ const AuthenticatedApp = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Chat" element={<Chat />} />
         <Route path="/CityGuide" element={<CityGuide />} />
+        <Route path="/Search" element={<Search />} />
       </Route>
 
       {/* Admin routes with sidebar */}
