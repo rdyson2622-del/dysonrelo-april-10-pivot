@@ -21,7 +21,7 @@ export default function AdminSidebar() {
         <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
           <h1 className="font-black text-sm tracking-tight" style={{ color: '#fff' }}>CONCIERGE</h1>
-          <p className="text-xs tracking-widest font-light" style={{ color: '#555' }}>ADMIN PANEL</p>
+          <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
         </div>
       </div>
 
