@@ -3,6 +3,12 @@ import { useEffect } from "react"
 
 function FontInjector() {
   useEffect(() => {
+    // Inject Cormorant Garamond for luxury serif headings
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&display=swap';
+    document.head.appendChild(link);
+
     const style = document.createElement('style');
     style.textContent = `
       *, *::before, *::after {
@@ -17,9 +23,14 @@ function FontInjector() {
         -moz-osx-font-smoothing: grayscale;
       }
       h1, h2, h3, h4, h5, h6 {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.025em;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      .serif-heading {
+        font-family: 'Cormorant Garamond', Georgia, serif !important;
+        font-weight: 600;
+        letter-spacing: 0.01em;
       }
       .frosted-gold {
         background: rgba(18, 15, 5, 0.72);
