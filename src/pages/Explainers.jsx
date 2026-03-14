@@ -19,8 +19,8 @@ export default function Explainers() {
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-14 py-4 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <Link to="/Home" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <ArrowLeft className="w-4 h-4" style={{ color: GOLD }} />
-          <span className="text-sm font-semibold" style={{ color: GOLD }}>Back</span>
+          <ArrowLeft className="w-4 h-4" style={{ color: '#000' }} />
+          <span className="text-sm font-semibold" style={{ color: '#000' }}>Back</span>
         </Link>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
         <div className="w-20" />
