@@ -7,6 +7,7 @@ const navItems = [
   { label: 'Overview', path: '/Admin', icon: LayoutDashboard },
   { label: 'Find Listings', path: '/AdminListingSearch', icon: Search },
   { label: 'Listing Owners', path: '/AdminOwners', icon: Home },
+  { label: 'Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
   { label: 'Clients', path: '/AdminClients', icon: UserCheck },
 ];
 
