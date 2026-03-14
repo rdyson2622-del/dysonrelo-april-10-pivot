@@ -152,23 +152,22 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-12"
+              className="mt-12 w-full"
             >
-              <div className="relative rounded-3xl px-8 py-10 frosted-dark flex flex-col gap-6 w-80" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>VOICE-TO-</p>
-                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE</p>
+              <div className="relative rounded-3xl px-8 py-6 frosted-dark flex flex-row items-center gap-8" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+                <div className="flex items-center gap-4 shrink-0">
+                  <div>
+                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
                   </div>
-                  <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto shrink-0" />
+                  <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto" />
                 </div>
-                <div>
-                  <h3 className="serif-heading text-2xl mb-4 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                  <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                <div className="flex-1">
+                  <h3 className="serif-heading text-xl mb-2 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
-                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold" style={{ color: GOLD }}>
+                <a href="https://dysonhomeportal.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold shrink-0" style={{ color: GOLD }}>
                   EXPLORE <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
