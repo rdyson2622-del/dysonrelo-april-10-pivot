@@ -130,22 +130,22 @@ export default function Dashboard() {
         >
           <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Quick Access</h2>
           <div className="flex flex-wrap gap-3">
-            <Link to="/CityGuide" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+            <Link to="/CityGuide" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
               <MapPin className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>City Guide</span>
             </Link>
 
-            <Link to="/Chat" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+            <Link to="/Chat" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
               <Users className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>Find Agent</span>
             </Link>
 
-            <Link to="/Search" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+            <Link to="/Search" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
               <Home className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>Search Homes</span>
             </Link>
 
-            <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+            <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #D4AF37' }}>
               <CheckCircle2 className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>My Tasks</span>
             </Link>
