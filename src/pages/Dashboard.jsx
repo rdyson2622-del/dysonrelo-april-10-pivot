@@ -26,12 +26,8 @@ export default function Dashboard() {
       {/* Header */}
       <header className="sticky top-0 z-40" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <DnDLogo size="sm" />
-            <div>
-              <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE RELOCATION SERVICES</h1>
-              <p className="text-xs" style={{ color: '#555' }}>Your personal AI dashboard</p>
-            </div>
+          <div className="flex items-center gap-2">
+            <DnDLogo size="md" />
           </div>
           <div className="flex items-center gap-2">
             <Link to="/Chat">
