@@ -269,7 +269,8 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="p-6 rounded-2xl service-card"
+              className="p-6 rounded-2xl"
+              style={{ background: '#000', border: '1px solid #D4AF37' }}
             >
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
