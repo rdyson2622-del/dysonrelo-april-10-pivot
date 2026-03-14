@@ -112,6 +112,7 @@ import AdminOwners from './pages/AdminOwners';
 import AdminClients from './pages/AdminClients';
 import AdminListingSearch from './pages/AdminListingSearch';
 import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
+import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
 import Explainers from './pages/Explainers';
 
 import AppLayout from './components/layout/AppLayout';
@@ -158,6 +159,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminClients" element={<AdminClients />} />
         <Route path="/AdminListingSearch" element={<AdminListingSearch />} />
         <Route path="/AdminOutreachCampaigns" element={<AdminOutreachCampaigns />} />
+        <Route path="/AdminFlaggedConversations" element={<AdminFlaggedConversations />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
