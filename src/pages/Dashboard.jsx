@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church, Home, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import StatCard from '../components/dashboard/StatCard';
 import TaskTimeline from '../components/dashboard/TaskTimeline';
 import AccomplishmentsModal from '../components/dashboard/AccomplishmentsModal';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -150,83 +149,28 @@ export default function Dashboard() {
         >
           <h3 className="text-xs font-bold mb-3" style={{ color: '#fff' }}>Quick Links</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-            <div className="rounded-2xl p-6" style={{ background: '#111', border: '1px solid #D4AF3744' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto" />
-                <div>
-                  <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
-                  <p className="text-xs" style={{ color: '#666' }}>AI Concierge • Free</p>
-                </div>
-              </div>
-              <p className="text-sm mb-4 leading-relaxed" style={{ color: '#888' }}>
-                Charlie handles neighborhoods, agent matching, utilities, schools, and every detail of your relocation — completely free.
-              </p>
-              <Link to="/Chat">
-                <button className="w-full py-2.5 rounded-xl font-bold text-sm" style={{ background: '#D4AF37', color: '#000' }}>
-                  Talk to Charlie
-                </button>
-              </Link>
-            </div>
-
-            <div className="rounded-2xl p-5" style={{ background: '#111', border: '1px solid #222' }}>
-              <h3 className="font-bold text-sm mb-3" style={{ color: '#fff' }}>Quick Links</h3>
-              <div className="space-y-1">
-                <Link to="/CityGuide" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <MapPin className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>City Guide</span>
-                </Link>
-                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>Find My Agent</span>
-                </Link>
-                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <FileText className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>My Move Plan</span>
-                </Link>
-
-                <div className="pt-2 pb-1">
-                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>PROPERTY SEARCH</p>
-                </div>
-                <Link to="/Search" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <Home className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>Search Listings</span>
-                </Link>
-
-                <div className="pt-2 pb-1">
-                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>FIND A CHURCH</p>
-                </div>
-                <a href="https://www.churchfinder.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <Church className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>ChurchFinder</span>
-                </a>
-                <a href="https://www.findachurch.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <Church className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>FindAChurch</span>
-                </a>
-                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
-                  <span className="text-sm" style={{ color: '#aaa' }}>Ask Charlie to Find One</span>
-                </Link>
-
-                <div className="pt-2 pb-1">
-                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>SEARCH HOMES</p>
-                </div>
-                <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#006AFF' }}>Z</span>
-                  <span className="text-sm" style={{ color: '#aaa' }}>Zillow</span>
-                </a>
-                <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#D92228' }}>R</span>
-                  <span className="text-sm" style={{ color: '#aaa' }}>Realtor.com</span>
-                </a>
-                <a href="https://www.redfin.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
-                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#CC2943' }}>RF</span>
-                  <span className="text-sm" style={{ color: '#aaa' }}>Redfin</span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+            <Link to="/CityGuide" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
+              <MapPin className="w-4 h-4" style={{ color: '#D4AF37' }} />
+              <span className="text-xs" style={{ color: '#aaa' }}>Guide</span>
+            </Link>
+            <Link to="/Chat" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
+              <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
+              <span className="text-xs" style={{ color: '#aaa' }}>Agent</span>
+            </Link>
+            <Link to="/Search" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
+              <Home className="w-4 h-4" style={{ color: '#D4AF37' }} />
+              <span className="text-xs" style={{ color: '#aaa' }}>Search</span>
+            </Link>
+            <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
+              <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#006AFF' }}>Z</span>
+              <span className="text-xs" style={{ color: '#aaa' }}>Zillow</span>
+            </a>
+            <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 p-2 rounded text-center transition-colors hover:bg-white/5">
+              <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#D92228' }}>R</span>
+              <span className="text-xs" style={{ color: '#aaa' }}>Realtor</span>
+            </a>
+          </div>
+        </motion.div>
       </main>
     </div>
   );
