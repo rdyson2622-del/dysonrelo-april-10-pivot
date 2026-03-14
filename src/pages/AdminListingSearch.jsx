@@ -94,7 +94,7 @@ export default function AdminListingSearch() {
         {/* Results */}
         <div className="space-y-4">
           {filteredListings.length === 0 ? (
-            <div className="text-center py-12" style={{ color: 'rgba(0,0,0,0.5)' }}>
+            <div className="text-center py-12" style={{ color: '#fff' }}>
               <Home className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p className="text-sm">No listings found. Add your first listing to begin seller outreach.</p>
             </div>
