@@ -125,7 +125,8 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mb-20"
+          className="mb-20 rounded-3xl p-8"
+          style={{ border: '1px solid #D4AF37' }}
         >
           <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Quick Access</h2>
           <div className="flex flex-wrap gap-3">
