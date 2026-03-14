@@ -60,6 +60,10 @@ export default function Home() {
             {/* Left: Copy + Progress Card */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col pt-[45%]">
               <div>
+                <div className="mb-8">
+                  <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto" />
+                </div>
+
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
                   style={{ background: '#D4AF37', color: '#000' }}>
                   <Sparkles className="w-3 h-3" />
