@@ -349,7 +349,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: '#000' }}>
         <div className="font-bold tracking-widest text-xs mb-2" style={{ color: 'rgba(212,175,55,0.7)' }}>CONCIERGE RELOCATION SERVICES</div>
         <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>© 2026 · Powered by AI · Serving Families Nationwide · Always Free to Buyers</p>
       </footer>
