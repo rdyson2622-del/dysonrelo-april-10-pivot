@@ -54,27 +54,110 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Welcome Back Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-20 rounded-3xl p-8"
-          style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: '1px solid #D4AF37' }}
-        >
-          <h2 className="serif-heading text-2xl mb-4" style={{ color: '#000', letterSpacing: '-0.01em' }}>Welcome Back</h2>
-          <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(0,0,0,0.7)' }}>
-            Your relocation journey is underway. We're here to guide you every step of the way.
-          </p>
-          
-          <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-            <h3 className="serif-heading text-lg" style={{ color: '#000' }}>Progress</h3>
-            <div className="text-right">
-              <p className="text-3xl font-black" style={{ color: GOLD }}>{progressPercent}%</p>
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {/* Landing Hero Section */}
+        <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
+          {/* Left Column */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-8 tracking-widest"
+              style={{ background: GOLD, color: '#000' }}>
+              ✨ POWERED BY AI
             </div>
-          </div>
-        </motion.div>
+
+            <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.22em', color: '#000' }}>
+              <span style={{ color: '#000' }}>REAL ESTATE</span><br />CONCIERGE
+            </h1>
+
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#000' }}>
+              Meet Charlie — AI that handles every aspect of your relocation.
+            </p>
+            <p className="font-semibold mb-8" style={{ color: '#000' }}>
+              ✦ Completely free to you.
+            </p>
+
+            <div className="flex flex-col gap-3 mb-12">
+              <Link to="/Chat">
+                <button className="px-6 py-3 rounded-full text-sm font-bold transition-all hover:shadow-lg" 
+                  style={{ background: GOLD, color: '#000' }}>
+                  Talk to Charlie
+                </button>
+              </Link>
+              <Link to="/Dashboard">
+                <button className="px-6 py-3 rounded-full text-sm font-semibold transition-all flex items-center gap-2"
+                  style={{ background: '#000', color: '#fff' }}>
+                  My Dashboard <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
+
+            {/* Welcome Back Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="rounded-2xl p-6"
+              style={{ background: 'rgba(255,255,255,0.95)', border: '2px solid #D4AF37' }}
+            >
+              <h3 className="serif-heading text-lg mb-3" style={{ color: '#000', letterSpacing: '-0.01em' }}>Welcome Back</h3>
+              <p className="text-sm leading-relaxed mb-6" style={{ color: '#666' }}>
+                Your relocation journey is underway. We're here to guide you every step of the way.
+              </p>
+              <div className="flex items-center justify-between pt-4 border-t border-gray-300">
+                <span className="font-semibold" style={{ color: '#000' }}>Progress</span>
+                <span className="text-2xl font-black" style={{ color: GOLD }}>{progressPercent}%</span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right Column */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="rounded-3xl p-8"
+            style={{ background: '#3a3a3a', border: `2px solid ${GOLD}` }}
+          >
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest"
+                style={{ background: GOLD, color: '#000' }}>
+                AI-POWERED
+              </div>
+            </div>
+
+            <div className="flex justify-center mb-8">
+              <img src={CHARLIE_IMG} alt="Charlie" className="h-40 w-auto" />
+            </div>
+
+            <p className="text-center text-xs font-bold tracking-widest mb-6" style={{ color: '#fff' }}>
+              CHARLIE — YOUR AI CONCIERGE
+            </p>
+
+            <div className="space-y-4 mb-6">
+              <div className="rounded-lg px-4 py-3 text-sm leading-relaxed"
+                style={{ background: '#000', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}>
+                Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
+              </div>
+              <div className="rounded-lg px-4 py-3 text-sm font-semibold ml-auto w-fit" style={{ background: GOLD, color: '#000' }}>
+                We're moving to Austin, TX in June!
+              </div>
+              <div className="rounded-lg px-4 py-3 text-sm leading-relaxed"
+                style={{ background: '#000', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}>
+                Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
+              </div>
+            </div>
+
+            <Link to="/Chat" className="block w-full">
+              <button className="w-full py-3 rounded-full text-sm font-bold tracking-wider transition-all hover:shadow-lg"
+                style={{ background: GOLD, color: '#000' }}>
+                START FREE CONSULTATION
+              </button>
+            </Link>
+          </motion.div>
+        </div>
 
         {/* Quick Access Card */}
         <motion.div
