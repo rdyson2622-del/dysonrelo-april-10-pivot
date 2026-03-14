@@ -19,9 +19,13 @@ function FontInjector() {
       *, *::before, *::after {
         box-sizing: border-box;
       }
-      html, body {
+      html {
         margin: 0; padding: 0;
-        background: #A9A9A9;
+        background: #A9A9A9 !important;
+      }
+      body {
+        margin: 0; padding: 0;
+        background: #A9A9A9 !important;
         color: #fff;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
