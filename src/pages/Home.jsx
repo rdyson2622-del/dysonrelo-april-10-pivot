@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, MessageCircle, Shield, MapPin, CheckCircle2,
-  UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, Sparkles, Flag, AlertCircle
+  UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, Sparkles
 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 import CharlieTopHat from '../components/brand/CharlieTopHat';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -23,18 +22,6 @@ const services = [
 ];
 
 export default function Home() {
-  const [flaggedCount, setFlaggedCount] = useState(0);
-
-  useEffect(() => {
-    const fetchFlaggedMessages = async () => {
-      const flagged = await base44.entities.ChatMessage.filter(
-        { flag_status: { $ne: 'none' } }
-      );
-      setFlaggedCount(flagged.length);
-    };
-    fetchFlaggedMessages();
-  }, []);
-
   return (
     <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
 
@@ -136,22 +123,6 @@ export default function Home() {
                       <p className="text-2xl font-bold" style={{ color: '#000' }}>8</p>
                     </div>
                   </div>
-
-                  {flaggedCount > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-6 pt-6 border-t border-gray-200"
-                    >
-                      <Link to="/AdminFlaggedConversations">
-                        <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all hover:shadow-md"
-                          style={{ background: '#FFE5E5', color: '#D32F2F' }}>
-                          <AlertCircle className="w-4 h-4" />
-                          <span className="font-semibold text-sm">{flaggedCount} Flagged {flaggedCount === 1 ? 'Message' : 'Messages'}</span>
-                        </button>
-                      </Link>
-                    </motion.div>
-                  )}
                 </div>
               </motion.div>
             </motion.div>
