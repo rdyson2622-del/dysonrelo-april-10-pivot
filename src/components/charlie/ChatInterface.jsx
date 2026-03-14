@@ -1,49 +1,60 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, X, Maximize2, Minimize2, UserCheck } from 'lucide-react';
+import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import DnDLogo from '../brand/DnDLogo';
 import ChatBubble from './ChatBubble';
 import VoiceOrb from './VoiceOrb';
+import OnboardingFlow from './OnboardingFlow';
+import MovePlan from './MovePlan';
 import { base44 } from '@/api/base44Client';
 
-const CHARLIE_SCRIPT = `You are Charlie, the AI concierge for Concierge Relocation Services. You speak in a warm, professional, human-like voice — like a trusted friend who happens to be a real estate expert.
+const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+
+const buildCharlieScript = (profile) => {
+  const hasProfile = profile && profile.destination_city;
+  const profileContext = hasProfile
+    ? `\n\nYou already know about this client:
+- Moving FROM: ${profile.current_city || 'unknown'} TO: ${profile.destination_city}
+- Timeline: ${profile.move_date || 'TBD'}
+- Family: ${profile.family_size || 'unknown'} ${profile.family_notes ? `(${profile.family_notes})` : ''}
+- Budget: ${profile.budget || 'TBD'} | Housing: ${profile.purchase_type || 'buying'}
+- Priorities: ${profile.priorities?.join(', ') || 'general lifestyle'}
+Use this context naturally in your responses. Don't re-ask questions you already know the answers to.`
+    : '';
+
+  return `You are Charlie, the AI concierge for Concierge Relocation Services. You speak in a warm, professional, human-like voice — like a trusted friend who happens to be a real estate expert.
 
 Your personality: Confident but never pushy. Knowledgeable but never condescending. Always reassuring. You use natural conversational language, not corporate speak.
 
-Your scripted flow (guide users through these stages naturally):
-1. WELCOME: Greet warmly, introduce yourself as their personal AI real estate concierge — completely free to them.
-2. DISCOVERY: Ask where they're moving FROM and TO, their timeline, family situation, budget range, and key priorities including schools, commute, safety, religious community / church / place of worship, and lifestyle preferences.
-3. CITY INTEL: Share specific insights about their destination city — neighborhoods, schools, cost of living, local culture.
-4. SERVICES MENU: Explain the full suite: City research, Neighborhood matching, Agent selection & introduction, Moving coordination, Utilities setup, School enrollment, Healthcare providers, Local community connections.
-5. AGENT MATCHING: Offer to match them with a vetted local agent in their destination city. Explain you only work with top-performing agents who know relocation.
-6. MOVING CHECKLIST: Generate a personalized checklist based on their situation.
-7. FOLLOW-UP: Set expectations for next steps and offer to schedule a call with their matched agent.
+Your role covers the full relocation journey:
+1. CITY & NEIGHBORHOOD RESEARCH — specific neighborhoods, lifestyle fit, commute, culture
+2. HOME SEARCH & AGENT MATCH — connect them with a vetted top-performing local agent
+3. MOVING LOGISTICS — packing timeline, movers, checklists
+4. UTILITIES & SERVICES — internet, electric, gas, water — all set up before they arrive
+5. SCHOOL RESEARCH & ENROLLMENT — district research, tours, enrollment paperwork
+6. HEALTHCARE SETUP — doctors, dentists, specialists in the new area
+7. COMMUNITY CONNECTIONS — church/religious community, sports leagues, social groups, neighborhoods
+8. 30/60/90 DAY PLAN — milestones for settling in
+
+If you notice a key piece of information is missing (destination, budget, timeline, family size), bring it up politely. Only ask about the same missing item a maximum of twice, then move forward gracefully.
 
 Key messages to weave in naturally:
 - "This is completely FREE to you as the buyer — our agents handle the compensation."
 - "Think of me as your personal AI assistant, available 24/7."
-- "This is a new way of doing real estate — powered by AI, but with a human touch."
-- Emphasize this is an exciting, innovative service unlike anything they've experienced.
 
-Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.`;
+Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.${profileContext}`;
+};
 
-const SUGGESTIONS = [
-  "Tell me about relocating to Austin, TX",
-  "Help me find a local real estate agent",
-  "What's the cost of living in my new city?",
-  "Create my moving checklist",
-  "What schools are best in my area?",
-  "Walk me through your services",
-];
-
-export default function ChatInterface({ expanded = false, onToggleExpand, onClose }) {
+export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
+  const [tab, setTab] = useState(initialProfile ? 'chat' : 'onboard');
+  const [profile, setProfile] = useState(initialProfile);
   const [messages, setMessages] = useState([
     {
       role: 'charlie',
-      content: "Hello! I'm Charlie, your personal AI real estate concierge from Concierge Relocation Services. ✨\n\nMoving to a new city where you don't know anyone? That's exactly why I'm here — and my services are completely **free** to you.\n\nI'm a new kind of AI assistant built specifically for relocating families and professionals. Tell me — where are you headed, and when are you planning to make the move?",
+      content: "Hello! I'm Charlie, your personal AI real estate concierge. ✨\n\nMoving to a new city where you don't know anyone? That's exactly why I'm here — and my services are completely **free** to you.\n\nTell me — where are you headed, and when are you planning to make the move?",
       type: 'text',
     },
   ]);
@@ -67,7 +78,6 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     synthRef.current.cancel();
     const clean = text.replace(/[*_#`]/g, '').replace(/\n/g, ' ');
     const utterance = new SpeechSynthesisUtterance(clean);
-    // Prefer a natural-sounding voice
     const voices = synthRef.current.getVoices();
     const preferred = voices.find(v =>
       v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Alex') || v.lang === 'en-US'
@@ -83,10 +93,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert('Voice recognition not supported in this browser. Please use Chrome.');
-      return;
-    }
+    if (!SpeechRecognition) { alert('Voice recognition not supported. Please use Chrome.'); return; }
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.continuous = false;
@@ -103,17 +110,28 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     recognition.start();
   };
 
-  const stopListening = () => {
-    recognitionRef.current?.stop();
-    setIsListening(false);
+  const stopListening = () => { recognitionRef.current?.stop(); setIsListening(false); };
+  const toggleVoice = () => isListening ? stopListening() : startListening();
+
+  const handleOnboardingComplete = (completedProfile) => {
+    setProfile(completedProfile);
+    setTab('plan');
+    // Save to RelocationClient entity
+    base44.entities.RelocationClient.create({
+      full_name: 'New Client',
+      email: 'pending@email.com',
+      destination_city: completedProfile.destination_city,
+      current_city: completedProfile.current_city,
+      budget: completedProfile.budget,
+      priorities: completedProfile.priorities,
+      notes: `Family: ${completedProfile.family_size} ${completedProfile.family_notes || ''}. Timeline: ${completedProfile.move_date}. Housing: ${completedProfile.purchase_type}.`,
+      status: 'in_consultation',
+    }).catch(() => {});
   };
 
-  const toggleVoice = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      startListening();
-    }
+  const handleChatAbout = (topic) => {
+    setTab('chat');
+    handleSend(topic);
   };
 
   const handleSend = async (text) => {
@@ -126,12 +144,12 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     setInput('');
     setIsTyping(true);
 
-    const contextMessages = history.slice(-8).map(m =>
+    const contextMessages = history.slice(-10).map(m =>
       `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`
     ).join('\n\n');
 
     const response = await base44.integrations.Core.InvokeLLM({
-      prompt: `${CHARLIE_SCRIPT}
+      prompt: `${buildCharlieScript(profile)}
 
 Conversation so far:
 ${contextMessages}
@@ -142,38 +160,39 @@ Respond as Charlie now. Be natural, warm, and helpful.`,
     const charlieMsg = { role: 'charlie', content: response, type: 'text' };
     setMessages(prev => [...prev, charlieMsg]);
     setIsTyping(false);
-
-    if (voiceMode) {
-      speakText(response);
-    }
+    if (voiceMode) speakText(response);
   };
+
+  const tabs = [
+    ...(profile ? [] : [{ id: 'onboard', label: 'Get Started', icon: ClipboardList }]),
+    { id: 'chat', label: 'Chat', icon: MessageCircle },
+    ...(profile ? [{ id: 'plan', label: 'Move Plan', icon: Map }] : []),
+  ];
 
   return (
     <motion.div
-      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${
-        expanded ? 'fixed inset-4 z-50' : 'h-[580px] w-full'
-      }`}
-      style={{ background: '#0a0a0a', border: '1px solid #D4AF37' }}
+      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'h-[580px] w-full'}`}
+      style={{ background: '#0a0a0a', border: `1px solid ${GOLD}` }}
       layout
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3" style={{ background: 'linear-gradient(90deg, #111 0%, #1a1a1a 100%)', borderBottom: '1px solid #D4AF37' }}>
-        <DnDLogo size="sm" speaking={isSpeaking} />
+      <div className="flex items-center gap-3 px-4 py-3 shrink-0"
+        style={{ background: 'linear-gradient(90deg, #111 0%, #1a1a1a 100%)', borderBottom: `1px solid ${GOLD}` }}>
+        <img src={DYSON_LOGO} alt="Charlie" className="h-10 w-auto" />
         <div className="flex-1">
-          <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
+          <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#888' }}>
             {isTyping ? 'Thinking...' : isListening ? '🎤 Listening...' : isSpeaking ? '🔊 Speaking...' : 'AI Concierge • Always Free'}
           </p>
         </div>
 
-        {/* Voice mode toggle */}
         <button
           onClick={() => setVoiceMode(!voiceMode)}
           className="text-xs px-2 py-1 rounded-lg border transition-all mr-1"
           style={{
-            borderColor: voiceMode ? '#D4AF37' : '#444',
-            color: voiceMode ? '#D4AF37' : '#888',
+            borderColor: voiceMode ? GOLD : '#444',
+            color: voiceMode ? GOLD : '#888',
             background: voiceMode ? 'rgba(212,175,55,0.1)' : 'transparent',
           }}
         >
@@ -192,86 +211,97 @@ Respond as Charlie now. Be natural, warm, and helpful.`,
         </div>
       </div>
 
-      {/* Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-        <div className="space-y-4">
-          <AnimatePresence>
-            {messages.map((msg, i) => (
-              <ChatBubble key={i} message={msg} />
-            ))}
-          </AnimatePresence>
-
-          {isTyping && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-sm" style={{ color: '#888' }}>
-              <div className="flex gap-1">
-                {[0, 0.15, 0.3].map((delay, i) => (
-                  <motion.div key={i} className="w-2 h-2 rounded-full" style={{ background: '#D4AF37' }}
-                    animate={{ y: [0, -6, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay }} />
-                ))}
-              </div>
-              Charlie is thinking...
-            </motion.div>
-          )}
-
-          {messages.length === 1 && (
-            <div className="space-y-2 mt-4">
-              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#D4AF37' }}>Quick Start</p>
-              {SUGGESTIONS.map((s, i) => (
-                <motion.button key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="block w-full text-left text-sm px-3 py-2 rounded-lg transition-all"
-                  style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.2)' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(212,175,55,0.18)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(212,175,55,0.08)'}
-                  onClick={() => handleSend(s)}
-                >
-                  {s}
-                </motion.button>
-              ))}
-            </div>
-          )}
-        </div>
-      </ScrollArea>
-
-      {/* Voice Orb (when voice mode) */}
-      {voiceMode && (
-        <div className="px-4 pt-3" style={{ borderTop: '1px solid #222' }}>
-          <VoiceOrb isListening={isListening} isSpeaking={isSpeaking} onToggle={toggleVoice} disabled={isTyping} />
+      {/* Tabs */}
+      {tabs.length > 1 && (
+        <div className="flex shrink-0" style={{ borderBottom: '1px solid #1a1a1a', background: '#0d0d0d' }}>
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold transition-all"
+              style={{
+                color: tab === t.id ? GOLD : '#555',
+                borderBottom: tab === t.id ? `2px solid ${GOLD}` : '2px solid transparent',
+              }}
+            >
+              <t.icon className="w-3.5 h-3.5" />
+              {t.label}
+            </button>
+          ))}
         </div>
       )}
 
-      {/* Text Input */}
-      <div className="p-3" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
-        <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
-          <button
-            type="button"
-            onClick={toggleVoice}
-            disabled={isTyping}
-            className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-40"
-            style={{
-              background: isListening ? '#D4AF37' : 'rgba(212,175,55,0.1)',
-              border: '1px solid #D4AF37',
-            }}
-          >
-            {isListening
-              ? <span className="text-black text-xs font-bold">■</span>
-              : <span style={{ color: '#D4AF37', fontSize: 16 }}>🎤</span>
-            }
-          </button>
-          <Input
-            placeholder="Ask Charlie anything..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 text-sm border-0 rounded-lg"
-            style={{ background: '#1a1a1a', color: '#fff', caretColor: '#D4AF37' }}
-          />
-          <Button type="submit" size="icon" disabled={!input.trim() || isTyping}
-            className="shrink-0 rounded-lg"
-            style={{ background: '#D4AF37', color: '#000' }}>
-            <Send className="w-4 h-4" />
-          </Button>
-        </form>
-      </div>
+      {/* ONBOARDING TAB */}
+      {tab === 'onboard' && (
+        <OnboardingFlow onComplete={handleOnboardingComplete} />
+      )}
+
+      {/* MOVE PLAN TAB */}
+      {tab === 'plan' && profile && (
+        <MovePlan profile={profile} onChatAbout={handleChatAbout} />
+      )}
+
+      {/* CHAT TAB */}
+      {tab === 'chat' && (
+        <>
+          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+            <div className="space-y-4">
+              <AnimatePresence>
+                {messages.map((msg, i) => (
+                  <ChatBubble key={i} message={msg} />
+                ))}
+              </AnimatePresence>
+
+              {isTyping && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-sm" style={{ color: '#888' }}>
+                  <div className="flex gap-1">
+                    {[0, 0.15, 0.3].map((delay, i) => (
+                      <motion.div key={i} className="w-2 h-2 rounded-full" style={{ background: GOLD }}
+                        animate={{ y: [0, -6, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay }} />
+                    ))}
+                  </div>
+                  Charlie is thinking...
+                </motion.div>
+              )}
+            </div>
+          </ScrollArea>
+
+          {voiceMode && (
+            <div className="px-4 pt-3" style={{ borderTop: '1px solid #222' }}>
+              <VoiceOrb isListening={isListening} isSpeaking={isSpeaking} onToggle={toggleVoice} disabled={isTyping} />
+            </div>
+          )}
+
+          <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
+            <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
+              <button
+                type="button"
+                onClick={toggleVoice}
+                disabled={isTyping}
+                className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-40"
+                style={{ background: isListening ? GOLD : 'rgba(212,175,55,0.1)', border: `1px solid ${GOLD}` }}
+              >
+                {isListening
+                  ? <span className="text-black text-xs font-bold">■</span>
+                  : <span style={{ color: GOLD, fontSize: 16 }}>🎤</span>
+                }
+              </button>
+              <Input
+                placeholder="Ask Charlie anything..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1 text-sm border-0 rounded-lg"
+                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+              />
+              <Button type="submit" size="icon" disabled={!input.trim() || isTyping}
+                className="shrink-0 rounded-lg"
+                style={{ background: GOLD, color: '#000' }}>
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }
