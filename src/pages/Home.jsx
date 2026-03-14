@@ -154,18 +154,21 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="mt-12"
             >
-              <div className="relative rounded-3xl px-10 py-8 frosted-dark flex items-center justify-between gap-8 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
-                <div className="flex items-center gap-6 flex-shrink-0">
-                  <img src={DYSON_LOGO} alt="D&D" className="h-16 w-auto" />
+              <div className="relative rounded-3xl px-8 py-10 frosted-dark flex flex-col gap-6 w-80" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>VOICE-TO-</p>
+                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE</p>
+                  </div>
+                  <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto shrink-0" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
-                  <h3 className="serif-heading text-xl mb-3" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                <div>
+                  <h3 className="serif-heading text-2xl mb-4 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
+                  <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.65)' }}>
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
-                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold shrink-0 whitespace-nowrap" style={{ color: GOLD }}>
+                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold" style={{ color: GOLD }}>
                   EXPLORE <ArrowRight className="w-4 h-4" />
                 </a>
               </div>
