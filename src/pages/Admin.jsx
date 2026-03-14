@@ -24,7 +24,7 @@ export default function Admin() {
   const conversionRate = owners.length > 0 ? Math.round((converted / owners.length) * 100) : 0;
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Admin Overview</h1>
         <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage your listing owners and relocation clients</p>
