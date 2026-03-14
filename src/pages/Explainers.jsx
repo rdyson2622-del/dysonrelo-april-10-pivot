@@ -7,9 +7,9 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 const GOLD = '#D4AF37';
 
 const HISTORY_IMAGES = [
-  "https://images.unsplash.com/photo-1533613220915-609f21a91335?w=400&h=500&fit=crop",
-  "https://images.unsplash.com/photo-1532619927891-4d71bcdd2167?w=400&h=500&fit=crop",
-  "https://images.unsplash.com/photo-1485579149c0-123123ae6333?w=400&h=500&fit=crop"
+  "https://images.unsplash.com/photo-1489749798305-4fea3ba63d60?w=400&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1611339555312-e607c90352fd?w=400&h=500&fit=crop"
 ];
 
 export default function Explainers() {
