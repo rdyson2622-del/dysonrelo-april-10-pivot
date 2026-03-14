@@ -154,7 +154,7 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="mt-12 flex justify-center"
             >
-              <div className="relative rounded-3xl px-8 py-3 frosted-dark flex flex-row items-center gap-6 w-full" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.25)' }}>
+              <div className="relative rounded-3xl px-8 py-3 frosted-dark flex flex-row items-center gap-6 w-full" style={{ background: '#000', border: '1px solid #D4AF37' }}>
                 <div className="flex items-center gap-3 shrink-0">
                   <img src={DYSON_LOGO} alt="D&D" className="h-10 w-auto" />
                   <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
