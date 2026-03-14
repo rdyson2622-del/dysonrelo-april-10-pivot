@@ -125,9 +125,11 @@ export default function Explainers() {
           </div>
 
           {/* Content */}
-          <h2 className="gold-text-gradient serif-heading text-2xl md:text-3xl mb-6" style={{ letterSpacing: '-0.01em' }}>
-            Dyson & Dyson Real Estate — We're known for making history.
-          </h2>
+          <div className="inline-flex items-center px-6 py-3 rounded-full mb-6" style={{ background: GOLD }}>
+            <h2 className="serif-heading text-xl md:text-2xl" style={{ letterSpacing: '-0.01em', color: '#000' }}>
+              The Dyson & Dyson Companies — We're known for making history in Real Estate
+            </h2>
+          </div>
 
           <ul className="space-y-4">
             {[
