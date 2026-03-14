@@ -21,7 +21,7 @@ function FontInjector() {
       }
       html, body {
         margin: 0; padding: 0;
-        background: #080808;
+        background: #A9A9A9;
         color: #fff;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -44,15 +44,15 @@ function FontInjector() {
         text-transform: uppercase;
       }
       .frosted-gold {
-        background: rgba(18, 15, 5, 0.72);
-        backdrop-filter: blur(28px) saturate(200%);
-        -webkit-backdrop-filter: blur(28px) saturate(200%);
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         border: 1px solid rgba(212,175,55,0.18);
       }
       .frosted-dark {
-        background: rgba(10,10,10,0.82);
-        backdrop-filter: blur(20px) saturate(160%);
-        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         border: 1px solid rgba(255,255,255,0.06);
       }
       .gold-text-gradient {
