@@ -172,7 +172,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-6 md:px-14 py-24">
         <div className="text-center mb-16">
           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>FULL-SERVICE RELOCATION</p>
-          <h2 className="text-3xl md:text-5xl font-bold" style={{ letterSpacing: '-0.03em', color: '#fff' }}>
+          <h2 className="serif-heading" style={{ fontSize: 'clamp(2.4rem, 5vw, 4.5rem)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '0.02em', color: '#fff' }}>
             Everything handled.<br />
             <span className="gold-text-gradient">Nothing left behind.</span>
           </h2>
