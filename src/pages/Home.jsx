@@ -125,7 +125,7 @@ export default function Home() {
 
                   <div className="space-y-3">
                     <div className="rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed"
-                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
                     </div>
                     <div className="rounded-2xl rounded-br-sm px-4 py-3 text-sm ml-6 font-semibold gold-btn">
