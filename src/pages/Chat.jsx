@@ -19,7 +19,7 @@ export default function Chat() {
         </Link>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
         <div>
-          <h1 className="font-black text-sm" style={{ color: '#D4AF37' }}>Charlie — AI Concierge</h1>
+          <h1 className="text-base font-black" style={{ color: '#D4AF37' }}>Charlie — AI Concierge</h1>
           <p className="text-xs" style={{ color: '#555' }}>Concierge Relocation Services • Always Free</p>
         </div>
       </header>
@@ -28,9 +28,9 @@ export default function Chat() {
       <div className="flex-1 max-w-3xl w-full mx-auto p-6">
         <ChatInterface
           expanded={expanded}
-          onToggleExpand={() => setExpanded(!expanded)}
-        />
+          onToggleExpand={() => setExpanded(!expanded)} />
+
       </div>
-    </div>
-  );
+    </div>);
+
 }
