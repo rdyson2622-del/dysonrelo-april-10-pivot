@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church, Home } from 'lucide-react';
+import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church, Home, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import StatCard from '../components/dashboard/StatCard';
 import TaskTimeline from '../components/dashboard/TaskTimeline';
+import AccomplishmentsModal from '../components/dashboard/AccomplishmentsModal';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 export default function Dashboard() {
