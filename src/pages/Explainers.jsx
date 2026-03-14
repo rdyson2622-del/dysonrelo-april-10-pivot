@@ -80,7 +80,7 @@ export default function Explainers() {
           <div className="rounded-3xl p-8 border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(212,175,55,0.15)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                <Mic className="w-6 h-6" style={{ color: GOLD }} />
+                <Mic className="w-6 h-6" style={{ color: '#000' }} />
               </div>
               <h3 className="serif-heading text-2xl" style={{ color: '#fff' }}>Now: AI "Talkies"</h3>
             </div>
