@@ -290,7 +290,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="rounded-3xl p-10 md:p-16 relative overflow-hidden frosted-gold"
-          style={{ border: '1px solid rgba(212,175,55,0.22)' }}
+          style={{ border: '1px solid rgba(212,175,55,0.22)', background: '#000' }}
         >
           {/* Subtle radial bg */}
           <div className="absolute inset-0 pointer-events-none" style={{
