@@ -117,7 +117,12 @@ export default function Home() {
                   </div>
 
                   <div className="flex justify-center mb-5 mt-2">
-                    <CharlieTopHat size="lg" />
+                    <img
+                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
+                      alt="Charlie"
+                      className="h-48 w-auto object-contain"
+                      style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
+                    />
                   </div>
 
                   <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: GOLD }}>
