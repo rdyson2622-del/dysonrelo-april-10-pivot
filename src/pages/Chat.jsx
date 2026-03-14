@@ -17,7 +17,7 @@ export default function Chat() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
+        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
           <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Charlie — AI Concierge</h1>
           <p className="text-xs" style={{ color: '#D4AF37' }}>Concierge Relocation Services • Always Free</p>
