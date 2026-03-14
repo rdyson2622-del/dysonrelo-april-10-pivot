@@ -3,19 +3,66 @@ import { useEffect } from "react"
 
 function FontInjector() {
   useEffect(() => {
-    // Inject Google Font link
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap';
-    document.head.appendChild(link);
-
-    // Inject heading styles
     const style = document.createElement('style');
     style.textContent = `
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0; padding: 0;
+        background: #080808;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
       h1, h2, h3, h4, h5, h6 {
-        font-family: 'Cormorant Garamond', Georgia, serif !important;
-        font-weight: 300 !important;
-        letter-spacing: 0.12em !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+      .frosted-gold {
+        background: rgba(18, 15, 5, 0.72);
+        backdrop-filter: blur(28px) saturate(200%);
+        -webkit-backdrop-filter: blur(28px) saturate(200%);
+        border: 1px solid rgba(212,175,55,0.18);
+      }
+      .frosted-dark {
+        background: rgba(10,10,10,0.82);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+      .gold-text-gradient {
+        background: linear-gradient(135deg, #F5E27A 0%, #D4AF37 40%, #B8860B 80%, #D4AF37 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .gold-btn {
+        background: linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%);
+        color: #000 !important;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        transition: all 0.25s ease;
+        box-shadow: 0 0 24px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.22);
+      }
+      .gold-btn:hover {
+        box-shadow: 0 0 40px rgba(212,175,55,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+        transform: translateY(-1px);
+      }
+      .service-card {
+        background: rgba(255,255,255,0.025);
+        border: 1px solid rgba(255,255,255,0.07);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+      }
+      .service-card:hover {
+        background: rgba(212,175,55,0.06);
+        border-color: rgba(212,175,55,0.28);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(212,175,55,0.1);
       }
     `;
     document.head.appendChild(style);
