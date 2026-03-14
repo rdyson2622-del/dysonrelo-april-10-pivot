@@ -139,7 +139,7 @@ export default function Explainers() {
               "Voice to Voice is a fun new entry into all of our lives — so watch us and join us by adding other subscribers to broaden our networks on this fun new road we are all traveling."
             ].map((item, i) => (
               <li key={i} className="flex gap-4 text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                <span style={{ color: GOLD }}>•</span>
+                <span style={{ color: '#000' }}>•</span>
                 <span>{item}</span>
               </li>
             ))}
