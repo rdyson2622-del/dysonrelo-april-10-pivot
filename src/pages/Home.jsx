@@ -151,29 +151,26 @@ export default function Home() {
 
             {/* V2V Agent Recruitment Card */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="flex justify-center mt-8"
+              className="mt-12"
             >
-              <div className="relative w-full max-w-sm">
-                <div className="relative rounded-2xl p-6 frosted-dark" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
-                  <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
-                  
-                  <div className="flex items-start gap-4">
-                    <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto shrink-0" />
-                    <div className="flex-1">
-                      <h3 className="serif-heading text-lg mb-2" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                      <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                        Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed. Learn and apply with us as AI continues to introduce us to the future.
-                      </p>
-                      <a href="#" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: GOLD }}>
-                        EXPLORE <ArrowRight className="w-4 h-4" />
-                      </a>
-                    </div>
+              <div className="relative rounded-2xl p-5 frosted-dark flex items-center justify-between gap-6" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <img src={DYSON_LOGO} alt="D&D" className="h-14 w-auto shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
+                    <h3 className="serif-heading text-base mb-1" style={{ color: '#fff' }}>The 1927 Parallel</h3>
+                    <p className="text-xs leading-snug" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                      Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed. Learn and apply with us as AI continues to introduce us to the future.
+                    </p>
                   </div>
                 </div>
+                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold shrink-0 whitespace-nowrap" style={{ color: GOLD }}>
+                  EXPLORE <ArrowRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </motion.div>
           </div>
