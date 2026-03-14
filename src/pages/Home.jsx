@@ -161,7 +161,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <h3 className="serif-heading text-lg mb-1 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                  <p className="text-xs leading-relaxed" style={{ color: '#fff' }}>
+                  <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
