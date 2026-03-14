@@ -60,19 +60,19 @@ export default function Home() {
             {/* Left: Copy */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
-                style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.25)' }}>
+                style={{ background: 'rgba(212,175,55,0.1)', color: '#000', border: '1px solid rgba(212,175,55,0.25)' }}>
                 <Sparkles className="w-3 h-3" />
                 POWERED BY AI
               </div>
 
               <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
-                <span className="gold-text-gradient">Real Estate</span><br />CONCIERGE
+                <span style={{ color: '#000' }}>Real Estate</span><br />CONCIERGE
               </h1>
 
               <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
                 Meet Charlie — AI that handles every aspect of your relocation.
               </p>
-              <p className="text-base font-semibold mb-8" style={{ color: GOLD }}>
+              <p className="text-base font-semibold mb-8" style={{ color: '#000' }}>
                 ✦ Completely free to you.
               </p>
 
