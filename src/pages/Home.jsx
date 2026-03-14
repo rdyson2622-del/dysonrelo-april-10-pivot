@@ -30,17 +30,8 @@ export default function Home() {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-4" style={{ borderBottom: `1px solid ${GOLD}22`, background: '#0a0a0a' }}>
-        <div className="flex items-center gap-3">
-          {/* Dyson-inspired wordmark logo */}
-          <DnDLogo size="sm" />
-          <div>
-            <div className="font-black text-lg tracking-tight leading-none" style={{ color: GOLD, letterSpacing: '-0.02em' }}>
-              CONCIERGE
-            </div>
-            <div className="text-xs tracking-[0.25em] font-light" style={{ color: '#888' }}>
-              RELOCATION SERVICES
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+          <DnDLogo size="md" />
         </div>
         <div className="flex items-center gap-3">
           <Link to="/Dashboard">
