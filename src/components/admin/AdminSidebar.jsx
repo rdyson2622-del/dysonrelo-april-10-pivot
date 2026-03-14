@@ -4,6 +4,7 @@ import { LayoutDashboard, Users, Home, UserCheck, BarChart3, Settings, ArrowLeft
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
+  { label: 'Search Profiles', path: '/AdminSearchProfiles', icon: Search },
   { label: 'Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
   { label: 'Find Listings', path: '/AdminListingSearch', icon: Search },
   { label: 'Listing Owners', path: '/AdminOwners', icon: Home },
