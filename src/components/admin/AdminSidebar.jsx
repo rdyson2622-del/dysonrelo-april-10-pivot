@@ -15,7 +15,7 @@ export default function AdminSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ borderRight: '1px solid rgba(212,175,55,0.12)' }}>
+    <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
       {/* Logo */}
       <div className="p-6 flex items-center gap-3" style={{ background: '#000', borderBottom: '1px solid #D4AF3733' }}>
         <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
