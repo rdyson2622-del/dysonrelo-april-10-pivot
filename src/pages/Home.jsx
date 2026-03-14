@@ -117,7 +117,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex justify-center mb-5 mt-2">
-                    <img src={DYSON_LOGO} alt="Charlie" className="h-28 w-auto" />
+                    <CharlieTopHat size="lg" />
                   </div>
 
                   <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: GOLD }}>
