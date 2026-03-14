@@ -239,7 +239,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.04, duration: 0.5 }}
               className="flex flex-col items-center p-4 rounded-xl transition-all hover:scale-105"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: '#000', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2" style={{ background: `${agent.color}22`, border: `1px solid ${agent.color}44` }}>
                 {agent.icon}
