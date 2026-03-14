@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function StatCard({ title, value, subtitle, icon: Icon, color = 'orange', delay = 0 }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
