@@ -35,7 +35,7 @@ export default function Explainers() {
           className="text-center mb-20"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-xs font-semibold tracking-widest"
-            style={{ background: GOLD, color: '#000' }}>
+            style={{ background: GOLD, color: '#000', border: '1px solid #000' }}>
             ✨ Introducing "Talkies"
           </div>
           <h1 className="display-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem' }}>
