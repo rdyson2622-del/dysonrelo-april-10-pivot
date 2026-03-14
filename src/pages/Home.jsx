@@ -123,15 +123,15 @@ export default function Home() {
                     CHARLIE — YOUR AI CONCIERGE
                   </p>
 
-                  <div className="space-y-3">
-                    <div className="rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed"
+                  <div className="space-y-2 bg-black rounded-2xl p-3">
+                    <div className="rounded-lg px-3 py-2 text-xs leading-relaxed"
                       style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
                     </div>
-                    <div className="rounded-2xl rounded-br-sm px-4 py-3 text-sm ml-6 font-semibold gold-btn">
+                    <div className="rounded-lg px-3 py-2 text-xs font-semibold gold-btn ml-auto w-fit">
                       We're moving to Austin, TX in June!
                     </div>
-                    <div className="rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed"
+                    <div className="rounded-lg px-3 py-2 text-xs leading-relaxed"
                       style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
                     </div>
