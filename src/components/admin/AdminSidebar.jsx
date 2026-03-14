@@ -49,12 +49,10 @@ export default function AdminSidebar() {
       {/* Back to App */}
       <div className="p-3" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
         <Link
-          to="/Dashboard"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{ color: '#fff' }}
-          onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
-          onMouseLeave={e => e.currentTarget.style.color = '#fff'}
-        >
+           to="/Dashboard"
+           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+           style={{ color: '#fff' }}
+         >
           <ArrowLeft className="w-4 h-4" />
           Back to App
         </Link>
