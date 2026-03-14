@@ -61,14 +61,15 @@ export default function CityGuide() {
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Where are you moving?</h2>
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="Enter city name (e.g., Austin, TX)"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  placeholder="Enter city name (e.g., Austin, TX)"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && city.trim() && searchCity(categories[0].label)}
+                  className="pl-10"
+                />
+              </div>
           </div>
         </motion.div>
 
