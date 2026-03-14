@@ -221,7 +221,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex justify-center">
-              <DnDLogo size="xl" speaking={false} />
+              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-40 w-auto" />
             </div>
           </div>
         </motion.div>
