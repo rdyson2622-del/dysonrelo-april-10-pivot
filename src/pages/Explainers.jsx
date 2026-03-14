@@ -38,8 +38,8 @@ export default function Explainers() {
             style={{ background: 'rgba(212,175,55,0.1)', color: '#000', border: '1px solid rgba(212,175,55,0.25)' }}>
             ✨ Introducing "Talkies"
           </div>
-          <h1 className="display-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
-            THE MODERN <span className="gold-text-gradient">EVOLUTION</span>
+          <h1 className="display-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem' }}>
+            <span style={{ color: '#000' }}>THE MODERN </span><span className="gold-text-gradient">EVOLUTION</span>
           </h1>
           <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-12" style={{ color: 'rgba(255,255,255,0.55)' }}>
             Just as motion pictures evolved from silent films to "talkies" in 1927, we're pioneering the next revolution: voice-powered AI in real estate.
