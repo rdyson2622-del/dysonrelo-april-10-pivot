@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Circle, Loader2, MapPin, Home, Package, Zap, GraduationCap, HeartPulse, Users, CalendarCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
+const GEMINI_API_KEY_NOTE = true; // Using Gemini via backend
+
 const GOLD = '#D4AF37';
 
 const PLAN_STEPS = [
