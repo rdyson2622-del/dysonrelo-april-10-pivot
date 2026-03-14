@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText } from 'lucide-react';
+import { MapPin, CheckCircle2, Clock, Users, Settings, ArrowRight, FileText, Church } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import StatCard from '../components/dashboard/StatCard';
