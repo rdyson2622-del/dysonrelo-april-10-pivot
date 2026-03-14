@@ -69,7 +69,7 @@ export default function Dashboard() {
             </div>
 
             <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.22em', color: '#000' }}>
-              <span style={{ color: '#000' }}>REAL ESTATE</span><br /><span style={{ color: GOLD }}>CONCIERGE</span>
+              <span style={{ color: '#000' }}>REAL ESTATE</span><br /><span style={{ color: '#fff' }}>CONCIERGE</span>
             </h1>
 
             <p className="text-lg leading-relaxed mb-4" style={{ color: '#000' }}>
