@@ -27,7 +27,7 @@ export default function Dashboard() {
       <header className="sticky top-0 z-40" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <DnDLogo size="md" />
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto" />
           </div>
           <div className="flex items-center gap-2">
             <Link to="/Chat">
