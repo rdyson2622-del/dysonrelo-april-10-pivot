@@ -54,12 +54,12 @@ export default function Explainers() {
           className="grid md:grid-cols-2 gap-6 mb-20"
         >
           {/* Then Card */}
-          <div className="rounded-3xl p-8 border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(212,175,55,0.15)' }}>
+          <div className="rounded-3xl p-8 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                <Volume2 className="w-6 h-6" style={{ color: '#000' }} />
+                <Volume2 className="w-6 h-6" style={{ color: GOLD }} />
               </div>
-              <h3 className="serif-heading text-2xl" style={{ color: '#fff' }}>Then: 1927 "Talkies"</h3>
+              <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Then: 1927 "Talkies"</h3>
             </div>
             <p className="leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
               When the movie "The Jazz Singer" premiered, it revolutionized entertainment by adding synchronized sound to motion pictures. One of the first entertainers in those times, Charlie Chaplin was a significant figure. Audiences were amazed to hear actors speak.
