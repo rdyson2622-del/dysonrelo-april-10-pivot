@@ -110,7 +110,7 @@ export default function Dashboard() {
           >
             <div className="rounded-2xl p-6" style={{ background: '#111', border: '1px solid #D4AF3744' }}>
               <div className="flex items-center gap-3 mb-4">
-                <DnDLogo size="md" speaking={false} />
+                <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto" />
                 <div>
                   <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
                   <p className="text-xs" style={{ color: '#666' }}>AI Concierge • Free</p>
