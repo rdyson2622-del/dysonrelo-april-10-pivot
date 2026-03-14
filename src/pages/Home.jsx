@@ -68,11 +68,8 @@ export default function Home() {
               <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.1em', color: '#fff' }}>
                 Your Personal
               </h1>
-              <h1 className="display-heading gold-text-gradient" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.1em' }}>
-                AI Real Estate
-              </h1>
               <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '2rem', color: '#fff' }}>
-                Concierge.
+                <span className="gold-text-gradient">AI Real Estate</span> Concierge.
               </h1>
 
               <p className="text-lg leading-relaxed mb-2 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
