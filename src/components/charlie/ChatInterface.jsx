@@ -4,7 +4,7 @@ import { Send, X, Maximize2, Minimize2, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import CharlieAvatar from './CharlieAvatar';
+import DnDLogo from '../brand/DnDLogo';
 import ChatBubble from './ChatBubble';
 import VoiceOrb from './VoiceOrb';
 import { base44 } from '@/api/base44Client';

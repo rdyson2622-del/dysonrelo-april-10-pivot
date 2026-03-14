@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CharlieAvatar from './CharlieAvatar';
+import DnDLogo from '../brand/DnDLogo';
 import ChatInterface from './ChatInterface';
 
 export default function FloatingCharlie() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Home, UserCheck, BarChart3, Settings, ArrowLeft } from 'lucide-react';
-import CharlieAvatar from '../charlie/CharlieAvatar';
+import DnDLogo from '../brand/DnDLogo';
 
 const navItems = [
   { label: 'Overview', path: '/Admin', icon: LayoutDashboard },

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import StatCard from '../components/dashboard/StatCard';
 import TaskTimeline from '../components/dashboard/TaskTimeline';
-import CharlieAvatar from '../components/charlie/CharlieAvatar';
+import DnDLogo from '../components/brand/DnDLogo';
 
 export default function Dashboard() {
   const { data: tasks = [] } = useQuery({

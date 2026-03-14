@@ -6,7 +6,7 @@ import {
   UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CharlieAvatar from '../components/charlie/CharlieAvatar';
+import DnDLogo from '../components/brand/DnDLogo';
 
 const GOLD = '#D4AF37';
 const DARK_GOLD = '#B8860B';

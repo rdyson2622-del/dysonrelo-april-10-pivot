@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ChatInterface from '../components/charlie/ChatInterface';
-import CharlieAvatar from '../components/charlie/CharlieAvatar';
+import DnDLogo from '../components/brand/DnDLogo';
 
 export default function Chat() {
   const [expanded, setExpanded] = useState(false);
