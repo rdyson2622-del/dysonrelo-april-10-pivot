@@ -111,6 +111,7 @@ import Admin from './pages/Admin';
 import AdminOwners from './pages/AdminOwners';
 import AdminClients from './pages/AdminClients';
 import AdminListingSearch from './pages/AdminListingSearch';
+import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
 import Explainers from './pages/Explainers';
 
 import AppLayout from './components/layout/AppLayout';
