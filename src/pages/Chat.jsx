@@ -20,7 +20,7 @@ export default function Chat() {
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
         <div>
           <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Charlie — AI Concierge</h1>
-          <p className="text-xs" style={{ color: '#555' }}>Concierge Relocation Services • Always Free</p>
+          <p className="text-xs" style={{ color: '#aaaaaa' }}>Concierge Relocation Services • Always Free</p>
         </div>
       </header>
 
