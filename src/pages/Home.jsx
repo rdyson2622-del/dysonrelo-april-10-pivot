@@ -103,7 +103,7 @@ export default function Home() {
                 <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
                   style={{ background: 'rgba(212,175,55,0.12)' }} />
 
-                <div className="relative rounded-3xl p-7" style={{ background: '#808080', border: '2px solid #D4AF37' }}>
+                <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
                   {/* AI badge */}
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
                     style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
