@@ -84,7 +84,7 @@ export default function Home() {
                 </Link>
                 <Link to="/Dashboard">
                   <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
-                    style={{ color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                    style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
                     My Dashboard <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
