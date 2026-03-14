@@ -11,7 +11,7 @@ export default function Chat() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
       {/* Header */}
-      <header className="px-6 py-3 flex items-center gap-3 shrink-0" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
+      <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <Link to="/Dashboard">
           <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
             <ArrowLeft className="w-4 h-4" />
