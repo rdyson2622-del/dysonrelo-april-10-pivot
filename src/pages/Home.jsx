@@ -158,7 +158,7 @@ export default function Home() {
             <Sparkles style={{ color: GOLD }} className="w-4 h-4" />
             <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(212,175,55,0.5), transparent)' }} />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-3 gold-text-gradient" style={{ letterSpacing: '-0.02em' }}>
+          <h2 className="serif-heading gold-text-gradient mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 600, lineHeight: 1.1, letterSpacing: '0.02em' }}>
             A new era of real estate is here.
           </h2>
           <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
