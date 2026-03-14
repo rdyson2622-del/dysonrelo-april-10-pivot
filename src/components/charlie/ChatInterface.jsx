@@ -169,8 +169,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 shrink-0"
-        style={{ background: 'linear-gradient(90deg, #111 0%, #1a1a1a 100%)', borderBottom: `1px solid ${GOLD}` }}>
+      <div className="flex items-center gap-3 px-4 py-3 shrink-0 frosted-gold"
+        style={{ borderBottom: `1px solid rgba(212,175,55,0.2)` }}>
         <img src={DYSON_LOGO} alt="Charlie" className="h-10 w-auto" />
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
