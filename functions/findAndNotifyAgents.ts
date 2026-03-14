@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 
     // Create proposal records and send emails
     for (const agent of agents.slice(0, 5)) {
-      const proposalToken = crypto.randomUUID();
+      const proposalToken = globalThis.crypto.getRandomValues(new Uint8Array(16)).toString();
 
       // Create ReferralProposal record
       const proposal = await base44.asServiceRole.entities.ReferralProposal.create({
