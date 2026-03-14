@@ -157,19 +157,19 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="mt-12"
             >
-              <div className="relative rounded-3xl px-8 py-6 frosted-dark flex items-center justify-between gap-8 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
-                <div className="flex items-center gap-6 flex-1">
-                  <img src={DYSON_LOGO} alt="D&D" className="h-16 w-auto shrink-0" />
-                  <div className="flex-1">
-                    <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
-                    <h3 className="serif-heading text-lg mb-2" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              <div className="relative rounded-full px-8 py-4 frosted-dark flex items-center justify-between gap-6 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <img src={DYSON_LOGO} alt="D&D" className="h-12 w-auto shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
+                    <h3 className="serif-heading text-base" style={{ color: '#fff' }}>The 1927 Parallel</h3>
+                    <p className="text-xs leading-snug" style={{ color: 'rgba(255,255,255,0.6)' }}>
                       Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed. Learn and apply with us as AI continues to introduce us to the future.
                     </p>
                   </div>
                 </div>
-                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold shrink-0 whitespace-nowrap ml-6" style={{ color: GOLD }}>
-                  EXPLORE <ArrowRight className="w-4 h-4" />
+                <a href="#" className="inline-flex items-center gap-2 text-xs font-bold shrink-0 whitespace-nowrap" style={{ color: GOLD }}>
+                  EXPLORE <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </motion.div>
