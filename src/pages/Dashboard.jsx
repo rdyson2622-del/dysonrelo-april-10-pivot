@@ -137,6 +137,10 @@ export default function Dashboard() {
                   <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
                   <span className="text-sm" style={{ color: '#aaa' }}>Find My Agent</span>
                 </Link>
+                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <FileText className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>My Move Plan</span>
+                </Link>
               </div>
             </div>
           </motion.div>
