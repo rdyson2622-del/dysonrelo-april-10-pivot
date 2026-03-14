@@ -35,12 +35,12 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <Link to="/Chat">
-              <Button variant="outline" size="sm" className="gap-2 text-xs">
-                <CharlieAvatar size="sm" /> Chat with Charlie
+              <Button size="sm" className="gap-2 text-xs font-bold rounded-lg" style={{ background: '#D4AF37', color: '#000' }}>
+                Talk to Charlie
               </Button>
             </Link>
             <Link to="/Admin">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
                 <Settings className="w-4 h-4" />
               </Button>
             </Link>
@@ -55,8 +55,8 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h2 className="text-2xl font-bold text-slate-900">Welcome back! 👋</h2>
-          <p className="text-slate-500 mt-1">Here's what's happening with your relocation</p>
+          <h2 className="text-2xl font-black" style={{ color: '#fff' }}>Welcome back! ✨</h2>
+          <p className="mt-1 text-sm" style={{ color: '#666' }}>Your AI-powered relocation command center</p>
         </motion.div>
 
         {/* Stats */}
@@ -72,11 +72,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl border border-slate-100 p-6 mb-8 shadow-sm"
+          className="rounded-2xl p-6 mb-8"
+          style={{ background: '#111', border: '1px solid #D4AF3733' }}
         >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-slate-900">Relocation Progress</h3>
-            <span className="text-sm font-medium text-orange-600">{progressPercent}%</span>
+            <h3 className="font-bold" style={{ color: '#fff' }}>Relocation Progress</h3>
+            <span className="text-sm font-bold" style={{ color: '#D4AF37' }}>{progressPercent}%</span>
           </div>
           <Progress value={progressPercent} className="h-2" />
           <p className="text-xs text-slate-400 mt-2">
@@ -90,12 +91,13 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 p-6 shadow-sm"
+            className="lg:col-span-2 rounded-2xl p-6"
+            style={{ background: '#111', border: '1px solid #222' }}
           >
             <div className="flex items-center justify-between mb-5">
-              <h3 className="font-semibold text-slate-900">Relocation Tasks</h3>
+              <h3 className="font-bold" style={{ color: '#fff' }}>Relocation Tasks</h3>
               <Link to="/Chat">
-                <Button variant="ghost" size="sm" className="text-orange-600 hover:text-orange-700 gap-1 text-xs">
+                <Button variant="ghost" size="sm" className="gap-1 text-xs font-semibold" style={{ color: '#D4AF37' }}>
                   Ask Charlie to add tasks <ArrowRight className="w-3 h-3" />
                 </Button>
               </Link>
@@ -110,34 +112,34 @@ export default function Dashboard() {
             transition={{ delay: 0.3 }}
             className="space-y-4"
           >
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white">
+            <div className="rounded-2xl p-6" style={{ background: '#111', border: '1px solid #D4AF3744' }}>
               <div className="flex items-center gap-3 mb-4">
                 <CharlieAvatar size="md" speaking={false} />
                 <div>
-                  <h3 className="font-semibold">Ask Charlie</h3>
-                  <p className="text-xs text-slate-300">Your AI relocation buddy</p>
+                  <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
+                  <p className="text-xs" style={{ color: '#666' }}>AI Concierge • Free</p>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-4 leading-relaxed">
-                Charlie can help you research neighborhoods, set up utilities, find schools, and much more.
+              <p className="text-sm mb-4 leading-relaxed" style={{ color: '#888' }}>
+                Charlie handles neighborhoods, agent matching, utilities, schools, and every detail of your relocation — completely free.
               </p>
               <Link to="/Chat">
-                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl">
-                  Start a Conversation
-                </Button>
+                <button className="w-full py-2.5 rounded-xl font-bold text-sm" style={{ background: '#D4AF37', color: '#000' }}>
+                  Talk to Charlie
+                </button>
               </Link>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-              <h3 className="font-semibold text-slate-900 mb-3">Quick Links</h3>
-              <div className="space-y-2">
-                <Link to="/CityGuide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                  <MapPin className="w-4 h-4 text-orange-500" />
-                  <span className="text-sm text-slate-600">City Guide</span>
+            <div className="rounded-2xl p-5" style={{ background: '#111', border: '1px solid #222' }}>
+              <h3 className="font-bold text-sm mb-3" style={{ color: '#fff' }}>Quick Links</h3>
+              <div className="space-y-1">
+                <Link to="/CityGuide" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <MapPin className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>City Guide</span>
                 </Link>
-                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                  <Users className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm text-slate-600">Find Local Pros</span>
+                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>Find My Agent</span>
                 </Link>
               </div>
             </div>
