@@ -24,16 +24,14 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: '#080808' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
+      <header className="sticky top-0 z-40 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto" />
-          </div>
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
           <div className="flex items-center gap-2">
             <Link to="/Chat">
-              <Button size="sm" className="gap-2 text-xs font-bold rounded-lg" style={{ background: '#D4AF37', color: '#000' }}>
+              <button className="gold-btn gap-2 text-xs font-bold rounded-full px-4 py-2">
                 Talk to Charlie
-              </Button>
+              </button>
             </Link>
             <Link to="/Admin">
               <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
