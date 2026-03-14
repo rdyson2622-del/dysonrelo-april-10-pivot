@@ -49,7 +49,7 @@ Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if yo
 };
 
 export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
-  const [tab, setTab] = useState(initialProfile ? 'chat' : 'onboard');
+  const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
   const [messages, setMessages] = useState([
     {
