@@ -88,6 +88,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
+        <FontInjector />
         <Router>
           <AuthenticatedApp />
         </Router>
