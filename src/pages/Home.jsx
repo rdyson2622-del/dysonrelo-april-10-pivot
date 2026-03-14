@@ -58,7 +58,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-16">
 
             {/* Left: Copy + Progress Card */}
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col">
+            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col pt-[45%]">
               <div>
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
                   style={{ background: '#D4AF37', color: '#000' }}>
