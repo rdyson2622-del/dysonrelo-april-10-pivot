@@ -39,10 +39,10 @@ export default function AdminOwners() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Listing Owners</h1>
-            <p className="text-slate-500 mt-1">Contact homeowners who are relocating</p>
+            <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Listing Owners</h1>
+            <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Contact homeowners who are relocating</p>
           </div>
-          <Button onClick={() => setShowAdd(true)} className="bg-slate-900 hover:bg-slate-800 gap-2 rounded-xl">
+          <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
             <Plus className="w-4 h-4" /> Add Owner
           </Button>
         </div>
@@ -56,16 +56,16 @@ export default function AdminOwners() {
         className="flex flex-wrap gap-3 mb-6"
       >
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(0,0,0,0.4)' }} />
           <Input
             placeholder="Search owners, properties, cities..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 bg-white"
+            style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-48 bg-white">
+          <SelectTrigger className="w-48" style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}>
             <Filter className="w-4 h-4 mr-2" />
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
@@ -86,7 +86,8 @@ export default function AdminOwners() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm"
+        className="rounded-2xl border p-6"
+        style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
       >
         {isLoading ? (
           <div className="flex justify-center py-12">

@@ -72,10 +72,10 @@ export default function AdminClients() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Relocation Clients</h1>
-            <p className="text-slate-500 mt-1">Manage people relocating to new cities</p>
+            <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Relocation Clients</h1>
+            <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage people relocating to new cities</p>
           </div>
-          <Button onClick={() => setShowAdd(true)} className="bg-slate-900 hover:bg-slate-800 gap-2 rounded-xl">
+          <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
             <Plus className="w-4 h-4" /> Add Client
           </Button>
         </div>
@@ -83,8 +83,8 @@ export default function AdminClients() {
 
       {/* Search */}
       <div className="relative max-w-sm mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <Input placeholder="Search clients..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10 bg-white" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(0,0,0,0.4)' }} />
+        <Input placeholder="Search clients..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)', paddingLeft: '2.5rem' }} />
       </div>
 
       {/* Client Cards */}
@@ -93,9 +93,9 @@ export default function AdminClients() {
           <div className="w-6 h-6 border-4 border-slate-200 border-t-slate-600 rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
-          <p className="text-slate-400 font-medium">No clients yet</p>
-          <p className="text-sm text-slate-400 mt-1">Add your first relocation client to get started</p>
+        <div className="text-center py-12 rounded-2xl border" style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}>
+          <p className="font-medium" style={{ color: 'rgba(0,0,0,0.4)' }}>No clients yet</p>
+          <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.3)' }}>Add your first relocation client to get started</p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -105,42 +105,43 @@ export default function AdminClients() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm hover:shadow-md transition-all"
+              className="rounded-2xl border p-5 hover:shadow-md transition-all"
+              style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold text-slate-900">{client.full_name}</h3>
+                  <h3 className="font-semibold" style={{ color: '#000' }}>{client.full_name}</h3>
                   <Badge className={`${statusColors[client.status] || statusColors.new_lead} border-0 text-xs mt-1`}>
                     {(client.status || 'new_lead').replace(/_/g, ' ')}
                   </Badge>
                 </div>
                 {client.budget && (
-                  <span className="text-xs font-medium text-slate-500">{budgetLabels[client.budget]}</span>
+                  <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
                 )}
               </div>
 
               <div className="space-y-1.5 mt-3">
                 {client.destination_city && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <div className="flex items-center gap-2 text-sm" style={{ color: '#000' }}>
                     <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                    {client.current_city && <span className="text-slate-400">{client.current_city} →</span>}
+                    {client.current_city && <span style={{ color: 'rgba(0,0,0,0.6)' }}>{client.current_city} →</span>}
                     <span className="font-medium">{client.destination_city}</span>
                   </div>
                 )}
                 {client.email && (
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
                     <Mail className="w-3 h-3" />
                     {client.email}
                   </div>
                 )}
                 {client.phone && (
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
                     <Phone className="w-3 h-3" />
                     {client.phone}
                   </div>
                 )}
                 {client.move_date && (
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
                     <Calendar className="w-3 h-3" />
                     Moving: {client.move_date}
                   </div>

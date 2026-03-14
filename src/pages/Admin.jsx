@@ -26,8 +26,8 @@ export default function Admin() {
   return (
     <div className="p-8">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold text-slate-900">Admin Overview</h1>
-        <p className="text-slate-500 mt-1">Manage your listing owners and relocation clients</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Admin Overview</h1>
+        <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage your listing owners and relocation clients</p>
       </motion.div>
 
       {/* Stats */}
@@ -45,16 +45,17 @@ export default function Admin() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer"
+            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
+            style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white">
                 <Home className="w-5 h-5" />
               </div>
-              <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors" />
+              <ArrowUpRight className="w-4 h-4" style={{ color: 'rgba(0,0,0,0.3)' }} />
             </div>
-            <h3 className="font-semibold text-slate-900">Listing Owners</h3>
-            <p className="text-sm text-slate-500 mt-1">
+            <h3 className="font-semibold" style={{ color: '#000' }}>Listing Owners</h3>
+            <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>
               {owners.length} owners • {owners.filter((o) => o.contact_status === 'not_contacted').length} pending outreach
             </p>
           </motion.div>
@@ -65,16 +66,17 @@ export default function Admin() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer"
+            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
+            style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white">
                 <UserCheck className="w-5 h-5" />
               </div>
-              <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors" />
+              <ArrowUpRight className="w-4 h-4" style={{ color: 'rgba(0,0,0,0.3)' }} />
             </div>
-            <h3 className="font-semibold text-slate-900">Relocation Clients</h3>
-            <p className="text-sm text-slate-500 mt-1">
+            <h3 className="font-semibold" style={{ color: '#000' }}>Relocation Clients</h3>
+            <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>
               {clients.length} clients • {clients.filter((c) => c.status === 'actively_searching').length} actively searching
             </p>
           </motion.div>
@@ -86,20 +88,21 @@ export default function Admin() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm mt-8"
+        className="rounded-2xl border p-6 mt-8"
+        style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
       >
-        <h3 className="font-semibold text-slate-900 mb-4">Recent Owners Added</h3>
+        <h3 className="font-semibold mb-4" style={{ color: '#000' }}>Recent Owners Added</h3>
         {owners.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-6">No listing owners yet. Go to Listing Owners to add some.</p>
+          <p className="text-sm text-center py-6" style={{ color: 'rgba(0,0,0,0.4)' }}>No listing owners yet. Go to Listing Owners to add some.</p>
         ) : (
           <div className="space-y-3">
             {owners.slice(0, 5).map((owner) => (
-              <div key={owner.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+              <div key={owner.id} className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.05)' }}>
                 <div>
-                  <p className="text-sm font-medium text-slate-800">{owner.owner_name}</p>
-                  <p className="text-xs text-slate-400">{owner.property_address}</p>
+                  <p className="text-sm font-medium" style={{ color: '#000' }}>{owner.owner_name}</p>
+                  <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>{owner.property_address}</p>
                 </div>
-                <span className="text-xs text-slate-500">{owner.moving_to || 'Unknown destination'}</span>
+                <span className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>{owner.moving_to || 'Unknown destination'}</span>
               </div>
             ))}
           </div>
