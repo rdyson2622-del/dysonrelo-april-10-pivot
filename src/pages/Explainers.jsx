@@ -77,12 +77,12 @@ export default function Explainers() {
           </div>
 
           {/* Now Card */}
-          <div className="rounded-3xl p-8 border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(212,175,55,0.15)' }}>
+          <div className="rounded-3xl p-8 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                <Mic className="w-6 h-6" style={{ color: '#000' }} />
+                <Mic className="w-6 h-6" style={{ color: GOLD }} />
               </div>
-              <h3 className="serif-heading text-2xl" style={{ color: '#fff' }}>Now: AI "Talkies"</h3>
+              <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Now: AI "Talkies"</h3>
             </div>
             <p className="leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
               We're experimenting with voice-to-voice technology that lets you talk naturally with Charlie — he understands your needs, explains complex processes, and guides you through every step.
