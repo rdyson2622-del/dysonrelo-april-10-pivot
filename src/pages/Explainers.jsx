@@ -14,7 +14,7 @@ const HISTORY_IMAGES = [
 
 export default function Explainers() {
   return (
-    <div className="min-h-screen" style={{ background: '#A9A9A9', color: '#fff' }}>
+    <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
       {/* Nav */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-14 py-4 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>

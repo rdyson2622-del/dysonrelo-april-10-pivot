@@ -23,7 +23,7 @@ const services = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen" style={{ background: '#A9A9A9', color: '#fff' }}>
+    <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
 
       {/* Nav */}
       <nav
