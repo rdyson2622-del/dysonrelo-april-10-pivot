@@ -39,9 +39,9 @@ export default function AdminListingSearch() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#080808' }}>
+    <div className="min-h-screen" style={{ background: '#A9A9A9' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
+      <header className="sticky top-0 z-40" style={{ background: 'rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link to="/Admin">
@@ -50,8 +50,8 @@ export default function AdminListingSearch() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-lg font-black" style={{ color: '#fff' }}>Listing Search</h1>
-              <p className="text-xs" style={{ color: '#666' }}>Find & analyze properties for seller outreach</p>
+              <h1 className="text-lg font-black" style={{ color: '#000' }}>Listing Search</h1>
+              <p className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>Find & analyze properties for seller outreach</p>
             </div>
           </div>
           <Button onClick={() => setShowAddDialog(true)} className="gap-2 gold-btn text-sm">
@@ -62,30 +62,30 @@ export default function AdminListingSearch() {
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Filters */}
-        <motion.div
+         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl p-6 mb-8"
-          style={{ background: '#111', border: '1px solid #222' }}
+          style={{ background: 'rgba(255,255,255,0.85)', border: '1px solid rgba(0,0,0,0.1)' }}
         >
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold mb-2 block" style={{ color: '#D4AF37' }}>CITY</label>
+              <label className="text-xs font-semibold mb-2 block" style={{ color: '#000' }}>CITY</label>
               <Input
                 placeholder="Austin, TX..."
                 value={searchCity}
                 onChange={(e) => setSearchCity(e.target.value)}
-                className="bg-slate-900 border-slate-700"
+                style={{ background: 'rgba(255,255,255,0.9)', borderColor: 'rgba(0,0,0,0.1)' }}
               />
             </div>
             <div>
-              <label className="text-xs font-semibold mb-2 block" style={{ color: '#D4AF37' }}>PRICE RANGE START</label>
+              <label className="text-xs font-semibold mb-2 block" style={{ color: '#000' }}>PRICE RANGE START</label>
               <Input
                 type="number"
                 placeholder="e.g., 500000"
                 value={searchPrice}
                 onChange={(e) => setSearchPrice(e.target.value)}
-                className="bg-slate-900 border-slate-700"
+                style={{ background: 'rgba(255,255,255,0.9)', borderColor: 'rgba(0,0,0,0.1)' }}
               />
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function AdminListingSearch() {
         {/* Results */}
         <div className="space-y-4">
           {filteredListings.length === 0 ? (
-            <div className="text-center py-12" style={{ color: '#666' }}>
+            <div className="text-center py-12" style={{ color: 'rgba(0,0,0,0.5)' }}>
               <Home className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p className="text-sm">No listings found. Add your first listing to begin seller outreach.</p>
             </div>
@@ -106,12 +106,12 @@ export default function AdminListingSearch() {
                 animate={{ opacity: 1, y: 0 }}
                 onClick={() => setSelectedListing(listing)}
                 className="rounded-2xl p-6 cursor-pointer transition-all hover:scale-102"
-                style={{ background: '#111', border: '1px solid #222' }}
+                style={{ background: 'rgba(255,255,255,0.85)', border: '1px solid rgba(0,0,0,0.1)' }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-bold text-lg" style={{ color: '#fff' }}>{listing.property_address}</h3>
-                    <p className="text-sm mt-1" style={{ color: '#666' }}>
+                    <h3 className="font-bold text-lg" style={{ color: '#000' }}>{listing.property_address}</h3>
+                    <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>
                       <MapPin className="w-3 h-3 inline mr-1" />
                       {listing.city}, {listing.state} {listing.zip}
                     </p>
@@ -126,22 +126,22 @@ export default function AdminListingSearch() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4 py-4 border-t border-b" style={{ borderColor: '#222' }}>
+                <div className="grid grid-cols-4 gap-4 py-4 border-t border-b" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
                   <div>
-                    <p className="text-xs" style={{ color: '#666' }}>BEDS</p>
-                    <p className="font-bold mt-1" style={{ color: '#fff' }}>{listing.bedrooms || '—'}</p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>BEDS</p>
+                    <p className="font-bold mt-1" style={{ color: '#000' }}>{listing.bedrooms || '—'}</p>
                   </div>
                   <div>
-                    <p className="text-xs" style={{ color: '#666' }}>BATHS</p>
-                    <p className="font-bold mt-1" style={{ color: '#fff' }}>{listing.bathrooms || '—'}</p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>BATHS</p>
+                    <p className="font-bold mt-1" style={{ color: '#000' }}>{listing.bathrooms || '—'}</p>
                   </div>
                   <div>
-                    <p className="text-xs" style={{ color: '#666' }}>SQ FT</p>
-                    <p className="font-bold mt-1" style={{ color: '#fff' }}>{listing.sqft ? (listing.sqft / 1000).toFixed(1) + 'k' : '—'}</p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>SQ FT</p>
+                    <p className="font-bold mt-1" style={{ color: '#000' }}>{listing.sqft ? (listing.sqft / 1000).toFixed(1) + 'k' : '—'}</p>
                   </div>
                   <div>
-                    <p className="text-xs" style={{ color: '#666' }}>DOM</p>
-                    <p className="font-bold mt-1" style={{ color: '#fff' }}>{listing.days_on_market || '—'}</p>
+                    <p className="text-xs" style={{ color: 'rgba(0,0,0,0.6)' }}>DOM</p>
+                    <p className="font-bold mt-1" style={{ color: '#000' }}>{listing.days_on_market || '—'}</p>
                   </div>
                 </div>
 
