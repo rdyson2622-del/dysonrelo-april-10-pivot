@@ -64,7 +64,7 @@ export default function FloatingCharlie() {
               onClick={() => setIsOpen(!isOpen)}
               className="block"
             >
-              <DnDLogo size="lg" speaking={false} />
+              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto" />
             </button>
           </div>
         </motion.div>
