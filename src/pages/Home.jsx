@@ -152,9 +152,9 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-12 -mx-6 md:-mx-14 px-6 md:px-14 w-screen relative left-1/2 -translate-x-1/2"
+              className="mt-12"
             >
-              <div className="relative rounded-3xl px-8 py-6 frosted-dark flex flex-row items-center gap-8" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+              <div className="relative rounded-3xl px-8 py-6 frosted-dark flex flex-row items-center gap-8 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
                 <div className="flex items-center gap-4 shrink-0">
                   <div>
                     <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
