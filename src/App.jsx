@@ -113,6 +113,7 @@ import AdminClients from './pages/AdminClients';
 import AdminListingSearch from './pages/AdminListingSearch';
 import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
 import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
+import AdminSearchProfiles from './pages/AdminSearchProfiles';
 import Explainers from './pages/Explainers';
 import BusinessPlan from './pages/BusinessPlan';
 
