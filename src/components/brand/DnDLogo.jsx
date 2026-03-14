@@ -16,18 +16,21 @@ export default function DnDLogo({ size = 'md', speaking = false, onClick }) {
       className="relative cursor-pointer shrink-0 inline-block"
       style={{ width: s.w, height: s.h }}
       onClick={onClick}
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
+      animate={speaking
+        ? { scale: [1, 1.06, 1], filter: ['brightness(1)', 'brightness(1.4)', 'brightness(1)'] }
+        : { scale: [1, 1.025, 1], filter: ['brightness(1)', 'brightness(1.1)', 'brightness(1)'] }
+      }
+      transition={{ duration: speaking ? 1.0 : 2.8, repeat: Infinity, ease: 'easeInOut' }}
     >
-      {/* Speaking glow */}
-      {speaking && (
-        <motion.div
-          className="absolute inset-0 rounded-lg"
-          style={{ background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)', filter: 'blur(8px)' }}
-          animate={{ opacity: [0.5, 0.1, 0.5] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
+      {/* Always-on ambient glow */}
+      <motion.div
+        className="absolute inset-0 rounded-lg pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)', filter: 'blur(10px)' }}
+        animate={{ opacity: speaking ? [0.4, 0.9, 0.4] : [0.08, 0.22, 0.08] }}
+        transition={{ duration: speaking ? 1.0 : 2.8, repeat: Infinity, ease: 'easeInOut' }}
+      />
 
       <svg
         viewBox="0 0 100 138"
