@@ -119,7 +119,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#000' }}>
+                  <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
                     CHARLIE — YOUR AI CONCIERGE
                   </p>
 
