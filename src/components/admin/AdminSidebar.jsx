@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Home, UserCheck, BarChart3, Settings, ArrowLeft } from 'lucide-react';
-import DnDLogo from '../brand/DnDLogo';
+const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
   { label: 'Overview', path: '/Admin', icon: LayoutDashboard },
