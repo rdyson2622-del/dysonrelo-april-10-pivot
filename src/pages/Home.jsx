@@ -33,7 +33,7 @@ export default function Home() {
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
         <div className="flex items-center gap-2">
           <Link to="/Dashboard">
-            <button className="text-sm px-4 py-2 rounded-full transition-all hover:bg-white/5" style={{ color: '#999', fontWeight: 500 }}>
+            <button className="text-sm px-4 py-2 rounded-full transition-all hover:bg-white/5" style={{ color: '#fff', fontWeight: 500 }}>
               Dashboard
             </button>
           </Link>
