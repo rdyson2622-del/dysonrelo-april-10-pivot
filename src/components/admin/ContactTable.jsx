@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { base44 } from '@/api/base44Client';
+import SendCampaignButton from './SendCampaignButton';
 
 const statusColors = {
   not_contacted: 'bg-slate-100 text-slate-600',
