@@ -132,7 +132,7 @@ export default function Home() {
                       We're moving to Austin, TX in June!
                     </div>
                     <div className="rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed"
-                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
                     </div>
                   </div>
