@@ -199,6 +199,64 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Intelligent Orchestration */}
+      <section className="max-w-7xl mx-auto px-6 md:px-14 py-24">
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>⚙️</div>
+            <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>INTELLIGENT ORCHESTRATION</p>
+          </div>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
+            Each assistant specializes in one domain
+          </h2>
+          <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            but they communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          {[
+            { icon: '💬', name: 'Charlie', role: 'Portal Concierge', color: '#B8860B' },
+            { icon: '🎯', name: 'Scout', role: 'Lead Scoring', color: '#4169E1' },
+            { icon: '👤', name: 'Nexus', role: 'Network Matcher', color: '#FF8C00' },
+            { icon: '📈', name: 'Pulse', role: 'Market Intelligence', color: '#20B820' },
+            { icon: '🛡️', name: 'Guardian', role: 'Transaction Oversight', color: '#9932CC' },
+            { icon: '⏰', name: 'Relay', role: 'Follow-Up Automation', color: '#DC143C' },
+            { icon: '✍️', name: 'Composer', role: 'Content Generator', color: '#20B2AA' },
+            { icon: '📢', name: 'Signal', role: 'Notification Engine', color: '#FF6347' },
+            { icon: '📊', name: 'Advisor', role: 'Escrower Simulator', color: '#20B820' },
+            { icon: '🏠', name: 'Keeper', role: 'Homeowner Assistant', color: '#1E90FF' },
+            { icon: '🚀', name: 'Bridge', role: 'Referral Coordinator', color: '#FF1493' },
+            { icon: '👁️', name: 'Lens', role: 'Profile Optimizer', color: '#9932CC' },
+            { icon: '📚', name: 'Curator', role: 'Education Pathways', color: '#228B22' },
+            { icon: '🔧', name: 'Dispatch', role: 'Service Coordinator', color: '#DC143C' },
+            { icon: '⚡', name: 'Harvest', role: 'Credit Engine', color: '#FFD700' },
+            { icon: '🛡️', name: 'Anchor', role: 'Compliance Monitor', color: '#808080' },
+            { icon: '🔍', name: 'Radar', role: 'Opportunity Finder', color: '#00BFFF' },
+            { icon: '🎼', name: 'Conductor', role: 'Workflow Orchestrator', color: '#FF1493' },
+            { icon: '📰', name: 'Herald', role: 'News & Distribution', color: '#20B820' },
+            { icon: '📧', name: 'Emissary', role: 'Email Intelligence', color: '#FFB6C1' },
+            { icon: '🎯', name: 'Sentinel', role: 'Admin Intelligence', color: '#DAA520' },
+          ].map((agent, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.04, duration: 0.5 }}
+              className="flex flex-col items-center p-4 rounded-xl transition-all hover:scale-105"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2" style={{ background: `${agent.color}22`, border: `1px solid ${agent.color}44` }}>
+                {agent.icon}
+              </div>
+              <p className="text-xs font-bold text-center" style={{ color: '#fff' }}>{agent.name}</p>
+              <p className="text-xs text-center mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{agent.role}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* Services */}
       <section className="max-w-7xl mx-auto px-6 md:px-14 py-24">
         <div className="text-center mb-16">
