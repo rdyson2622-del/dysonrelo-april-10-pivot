@@ -103,30 +103,33 @@ export default function ContactTable({ owners, onRefresh }) {
                 </Badge>
               </td>
               <td className="py-3 px-3 text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => updateStatus(owner.id, 'contacted')}>
-                      <Phone className="w-4 h-4 mr-2" /> Mark Contacted
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus(owner.id, 'in_conversation')}>
-                      <MessageSquare className="w-4 h-4 mr-2" /> In Conversation
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus(owner.id, 'interested')}>
-                      <Mail className="w-4 h-4 mr-2" /> Mark Interested
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus(owner.id, 'converted')}>
-                      <ExternalLink className="w-4 h-4 mr-2" /> Mark Converted
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus(owner.id, 'not_interested')} className="text-red-600">
-                      Not Interested
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+               <div className="flex items-center gap-2 justify-end">
+                 <SendCampaignButton owner={owner} />
+                 <DropdownMenu>
+                   <DropdownMenuTrigger asChild>
+                     <Button variant="ghost" size="icon" className="h-8 w-8">
+                       <MoreHorizontal className="w-4 h-4" />
+                     </Button>
+                   </DropdownMenuTrigger>
+                   <DropdownMenuContent align="end">
+                     <DropdownMenuItem onClick={() => updateStatus(owner.id, 'contacted')}>
+                       <Phone className="w-4 h-4 mr-2" /> Mark Contacted
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={() => updateStatus(owner.id, 'in_conversation')}>
+                       <MessageSquare className="w-4 h-4 mr-2" /> In Conversation
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={() => updateStatus(owner.id, 'interested')}>
+                       <Mail className="w-4 h-4 mr-2" /> Mark Interested
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={() => updateStatus(owner.id, 'converted')}>
+                       <ExternalLink className="w-4 h-4 mr-2" /> Mark Converted
+                     </DropdownMenuItem>
+                     <DropdownMenuItem onClick={() => updateStatus(owner.id, 'not_interested')} className="text-red-600">
+                       Not Interested
+                     </DropdownMenuItem>
+                   </DropdownMenuContent>
+                 </DropdownMenu>
+               </div>
               </td>
             </motion.tr>
           ))}
