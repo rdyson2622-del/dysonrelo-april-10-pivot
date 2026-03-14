@@ -145,15 +145,7 @@ export default function Explainers() {
             ))}
           </ul>
 
-          {/* CTA */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <button className="px-8 py-3 rounded-full font-bold transition-all hover:opacity-90" style={{ background: GOLD, color: '#000' }}>
-              ✏️ Edit Page
-            </button>
-            <button className="px-8 py-3 rounded-full font-bold border transition-all hover:bg-white/5" style={{ borderColor: GOLD, color: GOLD }}>
-              Subscribe for Free
-            </button>
-          </div>
+
         </motion.div>
       </main>
     </div>
