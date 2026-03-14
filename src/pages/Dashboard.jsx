@@ -127,45 +127,27 @@ export default function Dashboard() {
           transition={{ delay: 0.3 }}
           className="mb-20"
         >
-          <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Explore Your Relocation</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link to="/CityGuide">
-              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
-                  <MapPin className="w-6 h-6" style={{ color: GOLD }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: '#000' }}>City Guide</h3>
-                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Discover neighborhoods, schools & local info</p>
-              </div>
+          <h2 className="serif-heading text-2xl mb-8" style={{ color: '#000' }}>Quick Access</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/CityGuide" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+              <MapPin className="w-4 h-4" style={{ color: GOLD }} />
+              <span className="text-sm font-semibold" style={{ color: '#000' }}>City Guide</span>
             </Link>
 
-            <Link to="/Chat">
-              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
-                  <Users className="w-6 h-6" style={{ color: GOLD }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: '#000' }}>Find an Agent</h3>
-                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Get matched with a local real estate expert</p>
-              </div>
+            <Link to="/Chat" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+              <Users className="w-4 h-4" style={{ color: GOLD }} />
+              <span className="text-sm font-semibold" style={{ color: '#000' }}>Find Agent</span>
             </Link>
 
-            <Link to="/Search">
-              <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
-                  <Home className="w-6 h-6" style={{ color: GOLD }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: '#000' }}>Search Homes</h3>
-                <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Browse listings in your new city</p>
-              </div>
+            <Link to="/Search" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+              <Home className="w-4 h-4" style={{ color: GOLD }} />
+              <span className="text-sm font-semibold" style={{ color: '#000' }}>Search Homes</span>
             </Link>
 
-            <div className="rounded-2xl p-6 group cursor-pointer transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.85)' }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ background: `${GOLD}20` }}>
-                <CheckCircle2 className="w-6 h-6" style={{ color: GOLD }} />
-              </div>
-              <h3 className="font-bold mb-2" style={{ color: '#000' }}>Tasks</h3>
-              <p className="text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>Track your relocation checklist</p>
-            </div>
+            <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.8)' }}>
+              <CheckCircle2 className="w-4 h-4" style={{ color: GOLD }} />
+              <span className="text-sm font-semibold" style={{ color: '#000' }}>My Tasks</span>
+            </Link>
           </div>
         </motion.div>
 
