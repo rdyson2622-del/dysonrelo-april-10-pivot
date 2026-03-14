@@ -105,7 +105,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex justify-center mb-5 mt-2">
-                    <DnDLogo size="xl" speaking={charlieActive} onClick={() => setCharlieActive(!charlieActive)} />
+                    <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto cursor-pointer hover:scale-105 transition-transform" onClick={() => setCharlieActive(!charlieActive)} />
                   </div>
 
                   <p className="text-center text-xs font-semibold tracking-widest mb-4" style={{ color: GOLD }}>
