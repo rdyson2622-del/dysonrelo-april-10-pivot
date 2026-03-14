@@ -35,7 +35,7 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-3">
           <Link to="/Dashboard">
-            <Button variant="ghost" className="text-sm" style={{ color: '#aaa' }}>Dashboard</Button>
+            <Button variant="ghost" className="text-sm font-normal" style={{ color: '#aaa' }}>Dashboard</Button>
           </Link>
           <Link to="/Admin">
             <Button className="text-sm font-semibold rounded-lg px-4" style={{ background: GOLD, color: '#000' }}>
