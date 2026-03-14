@@ -55,11 +55,32 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
+        {/* Welcome Back Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-20 rounded-3xl p-8"
+          style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: '1px solid #D4AF37' }}
+        >
+          <h2 className="serif-heading text-2xl mb-4" style={{ color: '#000', letterSpacing: '-0.01em' }}>Welcome Back</h2>
+          <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(0,0,0,0.7)' }}>
+            Your relocation journey is underway. We're here to guide you every step of the way.
+          </p>
+          
+          <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+            <h3 className="serif-heading text-lg" style={{ color: '#000' }}>Progress</h3>
+            <div className="text-right">
+              <p className="text-3xl font-black" style={{ color: GOLD }}>{progressPercent}%</p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Quick Access Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.1 }}
           className="mb-20 rounded-3xl p-8"
           style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid #D4AF37' }}
         >
