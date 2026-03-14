@@ -163,6 +163,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminListingSearch" element={<AdminListingSearch />} />
         <Route path="/AdminOutreachCampaigns" element={<AdminOutreachCampaigns />} />
         <Route path="/AdminFlaggedConversations" element={<AdminFlaggedConversations />} />
+        <Route path="/AdminSearchProfiles" element={<AdminSearchProfiles />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
