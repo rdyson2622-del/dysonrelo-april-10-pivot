@@ -245,7 +245,7 @@ export default function Home() {
                 {agent.icon}
               </div>
               <p className="text-xs font-bold text-center" style={{ color: '#fff' }}>{agent.name}</p>
-              <p className="text-xs text-center mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{agent.role}</p>
+              <p className="text-xs text-center mt-1" style={{ color: '#fff' }}>{agent.role}</p>
             </motion.div>
           ))}
         </div>
@@ -302,7 +302,7 @@ export default function Home() {
               <h3 className="display-heading mb-5" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
                 Meet your perfect<br /><span className="gold-text-gradient">local agent.</span>
               </h3>
-              <p className="leading-relaxed mb-7" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="leading-relaxed mb-7" style={{ color: '#fff' }}>
                 Charlie doesn't just connect you with any agent — he analyzes your needs, budget, timeline, and neighborhood preferences to hand-match you with the ideal local expert. Every agent is vetted, top-producing, and relocation-certified.
               </p>
               <ul className="space-y-2.5 mb-9">
