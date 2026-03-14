@@ -6,7 +6,7 @@ function FontInjector() {
     // Inject Cormorant Garamond for luxury serif headings
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Barlow:wght@200;300;400;500&display=swap';
     document.head.appendChild(link);
 
     const style = document.createElement('style');
