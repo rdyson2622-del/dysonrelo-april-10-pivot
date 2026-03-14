@@ -154,7 +154,7 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="mt-12 flex justify-center"
             >
-              <div className="relative rounded-3xl px-8 py-6 frosted-dark flex flex-row items-center gap-8" style={{ border: '1px solid rgba(212,175,55,0.25)', maxWidth: '800px', width: '100%' }}>
+              <div className="relative rounded-3xl px-8 py-4 frosted-dark flex flex-row items-center gap-8 w-full" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
                 <div className="flex items-center gap-4 shrink-0">
                   <div>
                     <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
