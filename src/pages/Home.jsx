@@ -59,27 +59,24 @@ export default function Home() {
 
             {/* Left: Copy */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-8 tracking-widest"
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
                 style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.25)' }}>
                 <Sparkles className="w-3 h-3" />
                 POWERED BY AI
               </div>
 
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.1em', color: '#fff' }}>
-                Your Personal
-              </h1>
               <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.5rem', color: '#fff' }}>
                 <span className="gold-text-gradient">AI Real Estate</span>
               </h1>
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '2rem', color: '#fff' }}>
+              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
                 CONCIERGE.
               </h1>
 
-              <p className="text-lg leading-relaxed mb-2 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
-                Meet Charlie — AI that handles every aspect of your relocation. Neighborhood research, agent matching, school enrollment, and more.
+              <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
+                Meet Charlie — AI that handles every aspect of your relocation.
               </p>
-              <p className="text-base font-semibold mb-10" style={{ color: GOLD }}>
-                ✦ Completely free to you. Always.
+              <p className="text-base font-semibold mb-8" style={{ color: GOLD }}>
+                ✦ Completely free to you.
               </p>
 
               <div className="flex flex-wrap gap-3">
