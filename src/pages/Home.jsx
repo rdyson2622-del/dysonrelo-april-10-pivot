@@ -92,39 +92,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Progress Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="mt-12 p-6 rounded-2xl"
-                style={{ background: 'rgba(255,255,255,0.95)', border: '2px solid #D4AF37' }}
-              >
-                <div className="mb-6">
-                  <h3 className="serif-heading text-lg mb-4" style={{ color: '#000', letterSpacing: '-0.01em' }}>Welcome Back</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#666' }}>Your relocation journey is underway. We're here to guide you every step of the way.</p>
-                </div>
-
-                <div className="border-t border-gray-200 pt-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h4 className="font-semibold text-sm" style={{ color: '#000' }}>Progress</h4>
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full" style={{ background: 'rgba(212,175,55,0.1)' }}>
-                      <span className="text-lg font-bold" style={{ color: '#D4AF37' }}>13%</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-xs font-semibold tracking-widest mb-1" style={{ color: '#999' }}>COMPLETED</p>
-                      <p className="text-2xl font-bold" style={{ color: '#D4AF37' }}>1</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold tracking-widest mb-1" style={{ color: '#999' }}>TOTAL TASKS</p>
-                      <p className="text-2xl font-bold" style={{ color: '#000' }}>8</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+  
             </motion.div>
 
             {/* Right: Charlie card */}
