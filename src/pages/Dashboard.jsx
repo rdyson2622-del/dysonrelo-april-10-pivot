@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Home, ArrowRight, Settings, MessageCircle, CheckCircle2 } from 'lucide-react';
+import { MapPin, Users, Home, ArrowRight, Settings, MessageCircle, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -11,11 +11,23 @@ const CHARLIE_IMG = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/
 const GOLD = '#D4AF37';
 
 export default function Dashboard() {
+  const [flaggedCount, setFlaggedCount] = useState(0);
+
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
     queryFn: () => base44.entities.RelocationTask.list('-created_date', 50),
     initialData: [],
   });
+
+  useEffect(() => {
+    const fetchFlaggedMessages = async () => {
+      const flagged = await base44.entities.ChatMessage.filter(
+        { flag_status: { $ne: 'none' } }
+      );
+      setFlaggedCount(flagged.length);
+    };
+    fetchFlaggedMessages();
+  }, []);
 
   const completedTasks = tasks.filter((t) => t.status === 'completed').length;
   const totalTasks = tasks.length;
@@ -83,6 +95,17 @@ export default function Dashboard() {
                 <p className="text-xs font-semibold mb-2" style={{ color: 'rgba(0,0,0,0.6)' }}>TOTAL TASKS</p>
                 <p className="text-3xl font-black" style={{ color: '#000' }}>{totalTasks}</p>
               </div>
+              {flaggedCount > 0 && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 pt-4 border-t border-gray-300">
+                  <Link to="/AdminFlaggedConversations">
+                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all hover:shadow-md text-sm font-semibold"
+                      style={{ background: '#FFE5E5', color: '#D32F2F' }}>
+                      <AlertCircle className="w-4 h-4" />
+                      {flaggedCount} Flagged {flaggedCount === 1 ? 'Message' : 'Messages'}
+                    </button>
+                  </Link>
+                </motion.div>
+              )}
             </div>
           </motion.div>
 
