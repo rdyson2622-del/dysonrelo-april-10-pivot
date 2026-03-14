@@ -64,7 +64,7 @@ export default function Explainers() {
             <p className="leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
               When the movie "The Jazz Singer" premiered, it revolutionized entertainment by adding synchronized sound to motion pictures. One of the first entertainers in those times, Charlie Chaplin was a significant figure. Audiences were amazed to hear actors speak.
             </p>
-            <p className="font-semibold" style={{ color: '#000' }}>
+            <p className="font-semibold" style={{ color: GOLD }}>
               It changed everything. Silent films became obsolete overnight.
             </p>
             <button className="mt-6 w-full py-3 rounded-full font-semibold transition-all hover:opacity-90" 
