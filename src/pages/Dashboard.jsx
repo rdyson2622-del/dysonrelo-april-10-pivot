@@ -27,7 +27,7 @@ export default function Dashboard() {
       <header className="sticky top-0 z-40" style={{ background: '#0a0a0a', borderBottom: '1px solid #D4AF3733' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <CharlieAvatar size="sm" />
+            <DnDLogo size="sm" />
             <div>
               <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE RELOCATION SERVICES</h1>
               <p className="text-xs" style={{ color: '#555' }}>Your personal AI dashboard</p>
@@ -114,7 +114,7 @@ export default function Dashboard() {
           >
             <div className="rounded-2xl p-6" style={{ background: '#111', border: '1px solid #D4AF3744' }}>
               <div className="flex items-center gap-3 mb-4">
-                <CharlieAvatar size="md" speaking={false} />
+                <DnDLogo size="md" speaking={false} />
                 <div>
                   <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
                   <p className="text-xs" style={{ color: '#666' }}>AI Concierge • Free</p>

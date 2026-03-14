@@ -63,7 +63,7 @@ export default function FloatingCharlie() {
               onClick={() => setIsOpen(!isOpen)}
               className="block"
             >
-              <CharlieAvatar size="lg" speaking={false} />
+              <DnDLogo size="lg" speaking={false} />
             </button>
           </div>
         </motion.div>

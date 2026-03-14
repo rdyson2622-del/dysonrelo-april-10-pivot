@@ -17,7 +17,7 @@ export default function Chat() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <CharlieAvatar size="sm" speaking={false} />
+        <DnDLogo size="sm" speaking={false} />
         <div>
           <h1 className="font-black text-sm" style={{ color: '#D4AF37' }}>Charlie — AI Concierge</h1>
           <p className="text-xs" style={{ color: '#555' }}>Concierge Relocation Services • Always Free</p>

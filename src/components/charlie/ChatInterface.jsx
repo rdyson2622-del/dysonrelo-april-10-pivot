@@ -159,7 +159,7 @@ Respond as Charlie now. Be natural, warm, and helpful.`,
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3" style={{ background: 'linear-gradient(90deg, #111 0%, #1a1a1a 100%)', borderBottom: '1px solid #D4AF37' }}>
-        <CharlieAvatar size="sm" speaking={isSpeaking} />
+        <DnDLogo size="sm" speaking={isSpeaking} />
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: '#D4AF37' }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#888' }}>

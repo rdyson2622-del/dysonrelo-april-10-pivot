@@ -32,7 +32,7 @@ export default function Home() {
       <nav className="flex items-center justify-between px-6 md:px-12 py-4" style={{ borderBottom: `1px solid ${GOLD}22`, background: '#0a0a0a' }}>
         <div className="flex items-center gap-3">
           {/* Dyson-inspired wordmark logo */}
-          <CharlieAvatar size="sm" />
+          <DnDLogo size="sm" />
           <div>
             <div className="font-black text-lg tracking-tight leading-none" style={{ color: GOLD, letterSpacing: '-0.02em' }}>
               CONCIERGE
@@ -114,7 +114,7 @@ export default function Home() {
                   </div>
 
                   <div className="flex justify-center mb-5 mt-2">
-                    <CharlieAvatar size="xl" speaking={charlieActive} onClick={() => setCharlieActive(!charlieActive)} />
+                    <DnDLogo size="xl" speaking={charlieActive} onClick={() => setCharlieActive(!charlieActive)} />
                   </div>
 
                   <p className="text-center text-xs font-semibold tracking-widest mb-4" style={{ color: GOLD }}>
@@ -230,7 +230,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex justify-center">
-              <CharlieAvatar size="xl" speaking={false} />
+              <DnDLogo size="xl" speaking={false} />
             </div>
           </div>
         </motion.div>
