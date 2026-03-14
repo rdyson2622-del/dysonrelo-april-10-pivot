@@ -215,7 +215,7 @@ export default function Home() {
           <div className="relative grid md:grid-cols-2 gap-10 items-center">
             <div>
               <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>EXCLUSIVE AGENT NETWORK</p>
-              <h3 className="text-3xl md:text-4xl font-bold mb-5" style={{ letterSpacing: '-0.03em', color: '#fff' }}>
+              <h3 className="serif-heading mb-5" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 600, lineHeight: 1.05, letterSpacing: '0.02em', color: '#fff' }}>
                 Meet your perfect<br /><span className="gold-text-gradient">local agent.</span>
               </h3>
               <p className="leading-relaxed mb-7" style={{ color: 'rgba(255,255,255,0.5)' }}>
