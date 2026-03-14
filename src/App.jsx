@@ -32,6 +32,12 @@ function FontInjector() {
         font-weight: 600;
         letter-spacing: 0.01em;
       }
+      .display-heading {
+        font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif !important;
+        font-weight: 300;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
       .frosted-gold {
         background: rgba(18, 15, 5, 0.72);
         backdrop-filter: blur(28px) saturate(200%);
