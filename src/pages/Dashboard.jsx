@@ -141,6 +141,22 @@ export default function Dashboard() {
                 </Link>
 
                 <div className="pt-2 pb-1">
+                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>FIND A CHURCH</p>
+                </div>
+                <a href="https://www.churchfinder.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <Church className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>ChurchFinder</span>
+                </a>
+                <a href="https://www.findachurch.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <Church className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>FindAChurch</span>
+                </a>
+                <Link to="/Chat" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <Users className="w-4 h-4" style={{ color: '#D4AF37' }} />
+                  <span className="text-sm" style={{ color: '#aaa' }}>Ask Charlie to Find One</span>
+                </Link>
+
+                <div className="pt-2 pb-1">
                   <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>SEARCH HOMES</p>
                 </div>
                 <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
