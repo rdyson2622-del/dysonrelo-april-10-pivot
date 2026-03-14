@@ -36,7 +36,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen" style={{ background: '#A9A9A9' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: 'rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto cursor-pointer" />
         </Link>
