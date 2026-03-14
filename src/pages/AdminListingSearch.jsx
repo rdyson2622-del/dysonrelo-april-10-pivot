@@ -39,7 +39,7 @@ export default function AdminListingSearch() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#A9A9A9' }}>
+    <div>
       {/* Header */}
       <header className="sticky top-0 z-40" style={{ background: 'rgba(255,255,255,0.8)', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
