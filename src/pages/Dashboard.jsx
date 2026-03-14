@@ -139,6 +139,22 @@ export default function Dashboard() {
                   <FileText className="w-4 h-4" style={{ color: '#D4AF37' }} />
                   <span className="text-sm" style={{ color: '#aaa' }}>My Move Plan</span>
                 </Link>
+
+                <div className="pt-2 pb-1">
+                  <p className="text-xs font-bold tracking-widest px-2 mb-1" style={{ color: '#444' }}>SEARCH HOMES</p>
+                </div>
+                <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#006AFF' }}>Z</span>
+                  <span className="text-sm" style={{ color: '#aaa' }}>Zillow</span>
+                </a>
+                <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#D92228' }}>R</span>
+                  <span className="text-sm" style={{ color: '#aaa' }}>Realtor.com</span>
+                </a>
+                <a href="https://www.redfin.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white/5">
+                  <span className="w-4 h-4 flex items-center justify-center text-xs font-black" style={{ color: '#CC2943' }}>RF</span>
+                  <span className="text-sm" style={{ color: '#aaa' }}>Redfin</span>
+                </a>
               </div>
             </div>
           </motion.div>
