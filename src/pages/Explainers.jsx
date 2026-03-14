@@ -127,7 +127,8 @@ export default function Explainers() {
           {/* Content */}
           <div className="inline-flex items-center px-6 py-3 rounded-full mb-6" style={{ background: '#1a1a1a', border: `2px solid ${GOLD}` }}>
             <h2 className="serif-heading text-xl md:text-2xl" style={{ letterSpacing: '-0.01em', color: GOLD }}>
-              The Dyson & Dyson Companies — We're known for making history in Real Estate
+              The Dyson & Dyson Companies —<br />
+              We're known for making history in Real Estate
             </h2>
           </div>
 
