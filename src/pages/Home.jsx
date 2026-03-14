@@ -124,14 +124,14 @@ export default function Home() {
                   </p>
 
                   <div className="space-y-2">
-                    <div className="rounded-lg px-3 py-2 text-xs leading-relaxed"
+                    <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
                       style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
                     </div>
-                    <div className="rounded-lg px-3 py-2 text-xs font-semibold gold-btn ml-auto w-fit">
+                    <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
                       We're moving to Austin, TX in June!
                     </div>
-                    <div className="rounded-lg px-3 py-2 text-xs leading-relaxed"
+                    <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
                       style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
                       Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
                     </div>
