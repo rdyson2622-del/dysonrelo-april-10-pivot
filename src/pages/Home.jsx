@@ -65,11 +65,8 @@ export default function Home() {
                 POWERED BY AI
               </div>
 
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '0.5rem', color: '#fff' }}>
-                <span className="gold-text-gradient">Real Estate</span>
-              </h1>
               <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
-                CONCIERGE.
+                <span className="gold-text-gradient">Real Estate</span> CONCIERGE.
               </h1>
 
               <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
