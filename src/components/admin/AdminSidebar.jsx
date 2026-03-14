@@ -20,7 +20,7 @@ export default function AdminSidebar() {
       <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid #D4AF3733' }}>
         <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
-          <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE</h1>
+          <h1 className="font-black text-sm tracking-tight" style={{ color: '#fff' }}>CONCIERGE</h1>
           <p className="text-xs tracking-widest font-light" style={{ color: '#555' }}>ADMIN PANEL</p>
         </div>
       </div>
