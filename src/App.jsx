@@ -3,6 +3,11 @@ import { useEffect } from "react"
 
 function FontInjector() {
   useEffect(() => {
+    // Register service worker for PWA support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
     // Inject Cormorant Garamond for luxury serif headings
     const link = document.createElement('link');
     link.rel = 'stylesheet';
