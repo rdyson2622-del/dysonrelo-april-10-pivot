@@ -167,9 +167,9 @@ export default function Home() {
                     Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
                   </p>
                 </div>
-                <a href="https://dysonhomeportal.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold shrink-0" style={{ color: GOLD }}>
+                <Link to="/Explainers" className="inline-flex items-center gap-2 text-xs font-bold shrink-0" style={{ color: GOLD }}>
                   EXPLORE <ArrowRight className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </motion.div>
           </div>
