@@ -73,13 +73,21 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold" style={{ color: '#fff' }}>Relocation Progress</h3>
-            <span className="text-sm font-bold" style={{ color: '#D4AF37' }}>{progressPercent}%</span>
+            <button
+              onClick={() => setShowAccomplishments(true)}
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-90"
+              style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: `1px solid rgba(212,175,55,0.3)` }}
+            >
+              <Zap className="w-3 h-3 inline mr-1" /> See Results
+            </button>
           </div>
           <Progress value={progressPercent} className="h-2" />
           <p className="text-xs text-slate-400 mt-2">
             {completedTasks} of {totalTasks} tasks completed
           </p>
         </motion.div>
+
+        <AccomplishmentsModal open={showAccomplishments} onClose={() => setShowAccomplishments(false)} tasks={tasks} />
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Tasks */}
