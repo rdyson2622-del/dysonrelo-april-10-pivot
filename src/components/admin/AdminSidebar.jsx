@@ -16,7 +16,7 @@ export default function AdminSidebar() {
     <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ borderRight: '1px solid rgba(212,175,55,0.12)' }}>
       {/* Logo */}
       <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid #D4AF3733' }}>
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
+        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
           <h1 className="font-black text-sm tracking-tight" style={{ color: '#D4AF37' }}>CONCIERGE</h1>
           <p className="text-xs tracking-widest font-light" style={{ color: '#555' }}>ADMIN PANEL</p>
