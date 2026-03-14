@@ -60,7 +60,7 @@ export default function Home() {
             {/* Left: Copy */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
-                style={{ background: 'rgba(212,175,55,0.1)', color: '#000', border: '2px solid #D4AF37' }}>
+                style={{ background: '#D4AF37', color: '#000' }}>
                 <Sparkles className="w-3 h-3" />
                 POWERED BY AI
               </div>
