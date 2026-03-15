@@ -68,7 +68,7 @@ Use this context naturally. Don't re-ask questions you already know the answers 
           contents,
           generationConfig: {
             temperature: 0.85,
-            maxOutputTokens: 600,
+            maxOutputTokens: 1200,
           }
         })
       }
