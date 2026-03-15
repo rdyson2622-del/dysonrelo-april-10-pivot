@@ -5,7 +5,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 
 const navItems = [
   { label: 'Search Profiles', path: '/AdminSearchProfiles', icon: Search },
-  { label: 'Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
+  { label: 'Listing Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
   { label: 'Find Listings', path: '/AdminListingSearch', icon: Search },
   { label: 'Listing Owners', path: '/AdminOwners', icon: Home },
   { label: 'Clients', path: '/AdminClients', icon: UserCheck },
