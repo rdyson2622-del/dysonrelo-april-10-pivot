@@ -115,6 +115,7 @@ import AdminListingSearch from './pages/AdminListingSearch';
 import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
 import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
 import AdminSearchProfiles from './pages/AdminSearchProfiles';
+import AdminClientDetail from './pages/AdminClientDetail';
 import Explainers from './pages/Explainers';
 import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
