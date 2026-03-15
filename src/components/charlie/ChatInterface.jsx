@@ -137,7 +137,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     const charlieMsg = { role: 'charlie', content: res.data.reply, type: 'text' };
     setMessages(prev => [...prev, charlieMsg]);
     setIsTyping(false);
-    if (voiceMode) speakText(response);
+    if (voiceMode) speakText(res.data.reply);
   };
 
   const tabs = [
