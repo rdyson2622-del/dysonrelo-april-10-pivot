@@ -118,6 +118,7 @@ import AdminSearchProfiles from './pages/AdminSearchProfiles';
 import AdminClientDetail from './pages/AdminClientDetail';
 import AdminCommunications from './pages/AdminCommunications';
 import AdminTemplates from './pages/AdminTemplates';
+import AdminReferrals from './pages/AdminReferrals';
 import Explainers from './pages/Explainers';
 import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
@@ -174,6 +175,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminSearchProfiles" element={<AdminSearchProfiles />} />
         <Route path="/AdminCommunications" element={<AdminCommunications />} />
         <Route path="/AdminTemplates" element={<AdminTemplates />} />
+        <Route path="/AdminReferrals" element={<AdminReferrals />} />
         <Route path="/BusinessPlan" element={<BusinessPlan />} />
       </Route>
 
