@@ -4,12 +4,12 @@ import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
+  { label: 'Overview', path: '/Admin', icon: LayoutDashboard },
   { label: 'Search Listing Profiles', path: '/AdminSearchProfiles', icon: Search },
   { label: 'Listing Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
   { label: 'Listing Owners', path: '/AdminOwners', icon: Home },
   { label: 'Clients', path: '/AdminClients', icon: UserCheck },
   { label: 'Flagged Messages', path: '/AdminFlaggedConversations', icon: Flag },
-  { label: 'Overview', path: '/Admin', icon: LayoutDashboard },
   { label: 'Business Plan', path: '/BusinessPlan', icon: BookOpen },
 ];
 
