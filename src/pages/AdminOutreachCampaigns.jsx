@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 import OutreachWorkflow from '../components/admin/OutreachWorkflow';
 import OutreachProcessGuide from '../components/admin/OutreachProcessGuide';
+import PropertyDetailsPanel from '../components/admin/PropertyDetailsPanel';
 
 const STAGE_COLORS = {
   outreach: 'bg-blue-100 text-blue-800',
@@ -213,6 +214,8 @@ export default function AdminOutreachCampaigns() {
                 <p className="text-xs font-semibold text-slate-500 mb-1">CONTACT</p>
                 <p className="text-sm text-slate-900 font-mono">{selectedCampaign.owner_phone}</p>
               </div>
+
+              <PropertyDetailsPanel campaign={selectedCampaign} />
 
               <OutreachWorkflow
                 campaign={selectedCampaign}
