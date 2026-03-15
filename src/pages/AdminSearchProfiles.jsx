@@ -97,7 +97,9 @@ export default function AdminSearchProfiles() {
       communities: '',
       is_active: true,
       notes: '',
+      bulk_locations: '',
     });
+    setBulkMode(false);
   };
 
   const handleEdit = (search) => {
