@@ -351,11 +351,11 @@ export default function AdminTemplates() {
             </div>
 
             <div>
-              <Label>Content * (use {{owner_name}}, {{property_address}}, etc.)</Label>
+              <Label>Content * (use {`{{owner_name}}`}, {`{{property_address}}`}, etc.)</Label>
               <textarea
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Hi {{owner_name}}, we specialize in helping people relocate..."
+                placeholder="Hi {`{{owner_name}}`}, we specialize in helping people relocate..."
                 className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm font-mono"
                 rows="8"
                 required
