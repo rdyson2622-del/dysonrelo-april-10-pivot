@@ -100,15 +100,15 @@ export default function AdminClients() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((client, i) => (
-            <motion.div
-              key={client.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-              className="rounded-2xl border p-5 hover:shadow-md transition-all"
-              style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
-            >
+           {filtered.map((client, i) => (
+             <Link key={client.id} to={`/AdminClients/${client.id}`}>
+               <motion.div
+                 initial={{ opacity: 0, y: 10 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: i * 0.03 }}
+                 className="rounded-2xl border p-5 hover:shadow-md transition-all cursor-pointer hover:scale-105"
+                 style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
+               >
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="font-semibold" style={{ color: '#000' }}>{client.full_name}</h3>
