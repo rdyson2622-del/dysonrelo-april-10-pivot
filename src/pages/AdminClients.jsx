@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Search, MapPin, Phone, Mail, Calendar } from 'lucide-react';
+import { Plus, Search, MapPin, Phone, Mail, Calendar, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -69,18 +69,22 @@ export default function AdminClients() {
   const update = (field, value) => setForm((p) => ({ ...p, [field]: value }));
 
   return (
-    <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Relocation Clients</h1>
-            <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage people relocating to new cities</p>
-          </div>
-          <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
-            <Plus className="w-4 h-4" /> Add Client
-          </Button>
-        </div>
-      </motion.div>
+     <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
+       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+         <Link to="/Admin" className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-lg hover:bg-black/10 transition">
+           <ArrowLeft className="w-4 h-4" style={{ color: '#000' }} />
+           <span className="text-sm font-medium" style={{ color: '#000' }}>Back to Admin</span>
+         </Link>
+         <div className="flex items-center justify-between mb-8">
+           <div>
+             <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Relocation Clients</h1>
+             <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage people relocating to new cities</p>
+           </div>
+           <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
+             <Plus className="w-4 h-4" /> Add Client
+           </Button>
+         </div>
+       </motion.div>
 
       {/* Search */}
       <div className="relative max-w-sm mb-6">
