@@ -50,16 +50,12 @@ Use this context naturally. Don't re-ask questions you already know the answers 
 
     const systemInstruction = CHARLIE_SYSTEM + profileContext;
 
-    // Format conversation history for Gemini
-    // Inject system prompt as first user/model turn since v1 doesn't support system_instruction
-    const geminiMessages = [
-      { role: 'user', parts: [{ text: systemInstruction }] },
-      { role: 'model', parts: [{ text: 'Understood! I am Charlie, your personal AI relocation concierge. How can I help you today?' }] },
-      ...(messages || []).map(m => ({
-        role: m.role === 'charlie' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      })),
-    ];
+    // Flatten full conversation + system context into a single prompt for compatibility
+    const historyText = (messages || []).map(m =>
+      `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`
+    ).join('\n\n');
+
+    const fullPrompt = `${systemInstruction}\n\n---\nConversation so far:\n${historyText}\n\nCharlie:`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`,
@@ -67,7 +63,7 @@ Use this context naturally. Don't re-ask questions you already know the answers 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: geminiMessages,
+          contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
           generationConfig: {
             temperature: 0.85,
             maxOutputTokens: 600,
