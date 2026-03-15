@@ -51,10 +51,15 @@ Use this context naturally. Don't re-ask questions you already know the answers 
     const systemInstruction = CHARLIE_SYSTEM + profileContext;
 
     // Format conversation history for Gemini
-    const geminiMessages = (messages || []).map(m => ({
-      role: m.role === 'charlie' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
+    // Inject system prompt as first user/model turn since v1 doesn't support system_instruction
+    const geminiMessages = [
+      { role: 'user', parts: [{ text: systemInstruction }] },
+      { role: 'model', parts: [{ text: 'Understood! I am Charlie, your personal AI relocation concierge. How can I help you today?' }] },
+      ...(messages || []).map(m => ({
+        role: m.role === 'charlie' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      })),
+    ];
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -62,7 +67,6 @@ Use this context naturally. Don't re-ask questions you already know the answers 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemInstruction }] },
           contents: geminiMessages,
           generationConfig: {
             temperature: 0.85,
