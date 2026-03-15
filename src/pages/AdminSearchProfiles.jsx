@@ -165,30 +165,68 @@ export default function AdminSearchProfiles() {
               />
             </div>
 
-            {/* Location */}
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>City</label>
-                <Input
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  placeholder="Austin"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>State</label>
-                <select
-                  value={formData.state}
-                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
-                >
-                  {STATES.map((st) => (
-                    <option key={st} value={st}>{st}</option>
-                  ))}
-                </select>
+            {/* Mode Toggle */}
+            <div>
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#000' }}>Search Mode</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    checked={!bulkMode}
+                    onChange={() => setBulkMode(false)}
+                  />
+                  <span className="text-sm">Single Location</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    checked={bulkMode}
+                    onChange={() => setBulkMode(true)}
+                  />
+                  <span className="text-sm">Bulk Locations</span>
+                </label>
               </div>
             </div>
+
+            {/* Location */}
+            {!bulkMode ? (
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>City</label>
+                  <Input
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    placeholder="Austin"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>State</label>
+                  <select
+                    value={formData.state}
+                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                  >
+                    {STATES.map((st) => (
+                      <option key={st} value={st}>{st}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>Cities/Zip Codes (comma-separated)</label>
+                <textarea
+                  value={formData.bulk_locations}
+                  onChange={(e) => setFormData({ ...formData, bulk_locations: e.target.value })}
+                  placeholder="Austin TX, Denver CO, Seattle WA 98101, etc."
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+                  rows="2"
+                  required
+                />
+                <p className="text-xs mt-1" style={{ color: '#999' }}>Enter cities with state abbreviations or zip codes. One per line or comma-separated.</p>
+              </div>
+            )}
 
             {/* Price Range */}
             <div className="grid grid-cols-2 gap-4">
