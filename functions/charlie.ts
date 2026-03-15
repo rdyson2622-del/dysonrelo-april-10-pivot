@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
+const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+
 const CHARLIE_SYSTEM = `You are Charlie, the AI concierge for Concierge Relocation Services. You speak in a warm, professional, human-like voice — like a trusted friend who happens to be a real estate expert.
 
 Your personality: Confident but never pushy. Knowledgeable but never condescending. Always reassuring. You use natural conversational language, not corporate speak.
@@ -35,9 +37,9 @@ Deno.serve(async (req) => {
     const { messages, profile } = await req.json();
 
     // Build profile context if available
-    let profileContext = '';
+    let systemPrompt = CHARLIE_SYSTEM;
     if (profile && profile.destination_city) {
-      profileContext = `\n\nYou already know about this client:
+      systemPrompt += `\n\nYou already know about this client:
 - Moving FROM: ${profile.current_city || 'unknown'} TO: ${profile.destination_city}
 - Timeline: ${profile.move_date || 'TBD'}
 - Family: ${profile.family_size || 'unknown'} ${profile.family_notes ? `(${profile.family_notes})` : ''}
@@ -46,14 +48,35 @@ Deno.serve(async (req) => {
 Use this context naturally. Don't re-ask questions you already know the answers to.`;
     }
 
-    // Flatten conversation history into the prompt
-    const historyText = (messages || []).map(m =>
-      `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`
-    ).join('\n\n');
+    // Build Gemini-format conversation history
+    const contents = (messages || []).map(m => ({
+      role: m.role === 'charlie' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
 
-    const fullPrompt = `${CHARLIE_SYSTEM}${profileContext}\n\n---\nConversation so far:\n${historyText}\n\nRespond as Charlie in 2-3 paragraphs:`;
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents,
+          generationConfig: {
+            temperature: 0.85,
+            maxOutputTokens: 600,
+          }
+        })
+      }
+    );
 
-    const reply = await base44.integrations.Core.InvokeLLM({ prompt: fullPrompt });
+    const data = await response.json();
+
+    if (!response.ok) {
+      return Response.json({ error: data.error?.message || 'Gemini API error' }, { status: 500 });
+    }
+
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I had trouble responding. Please try again.';
 
     return Response.json({ reply });
   } catch (error) {
