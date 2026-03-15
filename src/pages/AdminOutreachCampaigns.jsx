@@ -76,7 +76,7 @@ export default function AdminOutreachCampaigns() {
             </Button>
           </Link>
           <div>
-            <h1 className="font-bold text-slate-900">Outreach Campaigns</h1>
+            <h1 className="font-bold text-slate-900">Listing Outreach Campaigns</h1>
             <p className="text-xs text-slate-500">Manage SMS outreach and workflow progression</p>
           </div>
         </div>
