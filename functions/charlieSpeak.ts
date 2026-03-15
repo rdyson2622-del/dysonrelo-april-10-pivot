@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+const GEMINI_API_KEY = Deno.env.get("GOOGLE_CLOUD_API_KEY") || Deno.env.get("GEMINI_API_KEY");
 
 Deno.serve(async (req) => {
   try {
