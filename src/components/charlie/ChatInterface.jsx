@@ -127,20 +127,28 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   };
 
   const handleSend = async (text) => {
-    const messageText = text || input;
-    if (!messageText.trim()) return;
+    const messageText = (text || input).trim();
+    if (!messageText || isTyping) return;
+
+    // Stop any ongoing speech immediately
+    stopCharlie();
+    setIsSpeaking(false);
 
     const userMsg = { role: 'user', content: messageText, type: 'text' };
-    const history = [...messages, userMsg];
-    setMessages(history);
+    setMessages(prev => {
+      const history = [...prev, userMsg];
+      sendToCharlie(history);
+      return history;
+    });
     setInput('');
-    setIsTyping(true);
+  };
 
+  const sendToCharlie = async (history) => {
+    setIsTyping(true);
     const res = await base44.functions.invoke('charlie', {
       messages: history.slice(-12),
       profile,
     });
-
     const charlieMsg = { role: 'charlie', content: res.data.reply, type: 'text' };
     setMessages(prev => [...prev, charlieMsg]);
     setIsTyping(false);
