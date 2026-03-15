@@ -113,9 +113,7 @@ export default function AdminOutreachCampaigns() {
             <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mx-auto" />
           </div>
         ) : filteredCampaigns.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border border-slate-100">
-            <p className="text-slate-500 text-sm">No campaigns found</p>
-          </div>
+          <OutreachProcessGuide />
         ) : (
           <div className="grid gap-4">
             {filteredCampaigns.map((campaign, idx) => (
