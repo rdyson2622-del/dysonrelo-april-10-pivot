@@ -116,6 +116,7 @@ import AdminOutreachCampaigns from './pages/AdminOutreachCampaigns';
 import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
 import AdminSearchProfiles from './pages/AdminSearchProfiles';
 import AdminClientDetail from './pages/AdminClientDetail';
+import AdminCommunications from './pages/AdminCommunications';
 import Explainers from './pages/Explainers';
 import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
@@ -170,6 +171,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminOutreachCampaigns" element={<AdminOutreachCampaigns />} />
         <Route path="/AdminFlaggedConversations" element={<AdminFlaggedConversations />} />
         <Route path="/AdminSearchProfiles" element={<AdminSearchProfiles />} />
+        <Route path="/AdminCommunications" element={<AdminCommunications />} />
         <Route path="/BusinessPlan" element={<BusinessPlan />} />
       </Route>
 
