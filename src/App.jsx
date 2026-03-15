@@ -147,7 +147,7 @@ const AuthenticatedApp = () => {
       <Route path="/Home" element={<Home />} />
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
-      <Route path="/BusinessPlan" element={<BusinessPlan />} />
+
       
       {/* App routes with floating Charlie */}
       <Route element={<AppLayout />}>
@@ -166,6 +166,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminOutreachCampaigns" element={<AdminOutreachCampaigns />} />
         <Route path="/AdminFlaggedConversations" element={<AdminFlaggedConversations />} />
         <Route path="/AdminSearchProfiles" element={<AdminSearchProfiles />} />
+        <Route path="/BusinessPlan" element={<BusinessPlan />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
