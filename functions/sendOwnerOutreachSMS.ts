@@ -1,59 +1,62 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
-const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-
-    if (!user || user.role !== 'admin') {
-      return Response.json({ error: 'Unauthorized' }, { status: 403 });
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const { listing_owner_id, phone, owner_name } = await req.json();
 
-    // Create Twilio auth header
-    const auth = btoa(`${accountSid}:${authToken}`);
-
-    // Send SMS via Twilio
-    const twilioResponse = await fetch('https://api.twilio.com/2010-04-01/Accounts/' + accountSid + '/Messages.json', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        From: fromNumber,
-        To: phone,
-        Body: `Hi ${owner_name}, we're Dyson & Dyson Concierge Relocation Services. We noticed your home is listed and help relocating sellers like you find their perfect new community completely free. Would you be interested in learning more? Reply YES to chat with Charlie, our AI concierge. 🏡`
-      }).toString()
-    });
-
-    if (!twilioResponse.ok) {
-      const error = await twilioResponse.text();
-      return Response.json({ error: 'Failed to send SMS', details: error }, { status: 500 });
+    if (!phone || !listing_owner_id) {
+      return Response.json({ error: 'Missing phone or listing_owner_id' }, { status: 400 });
     }
 
-    const smsData = await twilioResponse.json();
+    const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
+    const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
+    const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    // Create outreach campaign record
-    const campaign = await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
-      listing_owner_id,
-      owner_name,
-      owner_phone: phone,
-      workflow_stage: 'outreach',
-      sms_sent_date: new Date().toISOString()
+    const firstName = owner_name ? owner_name.split(' ')[0] : 'there';
+
+    const messageBody = `Hi ${firstName}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed for sale — are you planning to relocate? If so, we offer a completely FREE concierge service to help you find your next home, connect with a top local agent, and manage your entire move. Reply YES to learn more, or STOP to opt out.`;
+
+    const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+    const formData = new URLSearchParams();
+    formData.append('To', phone);
+    formData.append('From', fromNumber);
+    formData.append('Body', messageBody);
+
+    const response = await fetch(twilioUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
     });
 
-    return Response.json({
-      success: true,
-      campaign_id: campaign.id,
-      twilio_sid: smsData.sid,
-      message: 'SMS sent successfully'
+    const result = await response.json();
+
+    if (!response.ok) {
+      return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
+    }
+
+    // Update the campaign record
+    const campaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({
+      listing_owner_id
     });
+
+    if (campaigns.length > 0) {
+      await base44.asServiceRole.entities.OwnerOutreachCampaign.update(campaigns[0].id, {
+        sms_sent_date: new Date().toISOString(),
+        workflow_stage: 'outreach'
+      });
+    }
+
+    return Response.json({ success: true, message_sid: result.sid });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
