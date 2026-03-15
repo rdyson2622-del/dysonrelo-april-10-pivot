@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const GOOGLE_CLOUD_API_KEY = Deno.env.get("GOOGLE_CLOUD_API_KEY");
+const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 
 Deno.serve(async (req) => {
   try {
@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const clean = text.replace(/[*_#`]/g, '').replace(/\n/g, ' ').trim();
 
     const response = await fetch(
-      `https://us-central1-aiplatform.googleapis.com/v1/projects/gen-lang-client-0196708350/locations/us-central1/publishers/google/models/gemini-2.5-flash-lite-preview-tts:generateContent?key=${GOOGLE_CLOUD_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
