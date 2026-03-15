@@ -101,7 +101,7 @@ export default function AdminClients() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
            {filtered.map((client, i) => (
-             <Link key={client.id} to={`/AdminClients/${client.id}`}>
+             <Link key={client.id} to={`/AdminClients/${client.id}`} className="block">
                <motion.div
                  initial={{ opacity: 0, y: 10 }}
                  animate={{ opacity: 1, y: 0 }}
@@ -109,50 +109,50 @@ export default function AdminClients() {
                  className="rounded-2xl border p-5 hover:shadow-md transition-all cursor-pointer hover:scale-105"
                  style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
                >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold" style={{ color: '#000' }}>{client.full_name}</h3>
-                  <Badge className={`${statusColors[client.status] || statusColors.new_lead} border-0 text-xs mt-1`}>
-                    {(client.status || 'new_lead').replace(/_/g, ' ')}
-                  </Badge>
-                </div>
-                {client.budget && (
-                  <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
-                )}
-              </div>
+                 <div className="flex items-start justify-between mb-3">
+                   <div>
+                     <h3 className="font-semibold" style={{ color: '#000' }}>{client.full_name}</h3>
+                     <Badge className={`${statusColors[client.status] || statusColors.new_lead} border-0 text-xs mt-1`}>
+                       {(client.status || 'new_lead').replace(/_/g, ' ')}
+                     </Badge>
+                   </div>
+                   {client.budget && (
+                     <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
+                   )}
+                 </div>
 
-              <div className="space-y-1.5 mt-3">
-                {client.destination_city && (
-                  <div className="flex items-center gap-2 text-sm" style={{ color: '#000' }}>
-                    <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                    {client.current_city && <span style={{ color: 'rgba(0,0,0,0.6)' }}>{client.current_city} →</span>}
-                    <span className="font-medium">{client.destination_city}</span>
-                  </div>
-                )}
-                {client.email && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                    <Mail className="w-3 h-3" />
-                    {client.email}
-                  </div>
-                )}
-                {client.phone && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                    <Phone className="w-3 h-3" />
-                    {client.phone}
-                  </div>
-                )}
-                {client.move_date && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                    <Calendar className="w-3 h-3" />
-                    Moving: {client.move_date}
-                  </div>
-                )}
-              </div>
-              </motion.div>
-              </Link>
-              ))}
-              </div>
-              )}
+                 <div className="space-y-1.5 mt-3">
+                   {client.destination_city && (
+                     <div className="flex items-center gap-2 text-sm" style={{ color: '#000' }}>
+                       <MapPin className="w-3.5 h-3.5 text-orange-500" />
+                       {client.current_city && <span style={{ color: 'rgba(0,0,0,0.6)' }}>{client.current_city} →</span>}
+                       <span className="font-medium">{client.destination_city}</span>
+                     </div>
+                   )}
+                   {client.email && (
+                     <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                       <Mail className="w-3 h-3" />
+                       {client.email}
+                     </div>
+                   )}
+                   {client.phone && (
+                     <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                       <Phone className="w-3 h-3" />
+                       {client.phone}
+                     </div>
+                   )}
+                   {client.move_date && (
+                     <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                       <Calendar className="w-3 h-3" />
+                       Moving: {client.move_date}
+                     </div>
+                   )}
+                 </div>
+               </motion.div>
+             </Link>
+           ))}
+         </div>
+       )}
 
       {/* Add Client Dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
