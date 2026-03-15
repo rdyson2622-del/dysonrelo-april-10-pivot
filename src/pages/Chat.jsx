@@ -25,12 +25,26 @@ export default function Chat() {
         </div>
       </header>
 
+      {/* Gemini Live CTA banner */}
+      <div className="max-w-3xl w-full mx-auto px-6 pt-4 shrink-0">
+        <Link to="/GeminiSession">
+          <div className="rounded-xl px-4 py-3 flex items-center gap-3 cursor-pointer transition-all hover:opacity-90"
+            style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}44` }}>
+            <Sparkles className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
+              <p className="text-xs truncate" style={{ color: '#666' }}>Start your live Gemini session — builds your full relocation profile</p>
+            </div>
+            <span className="text-xs font-bold shrink-0" style={{ color: GOLD }}>Begin →</span>
+          </div>
+        </Link>
+      </div>
+
       {/* Chat */}
       <div className="flex-1 max-w-3xl w-full mx-auto p-6">
         <ChatInterface
           expanded={expanded}
           onToggleExpand={() => setExpanded(!expanded)} />
-
       </div>
     </div>);
 
