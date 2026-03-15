@@ -1,7 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-
 const CHARLIE_SYSTEM = `You are Charlie, the AI concierge for Concierge Relocation Services. You speak in a warm, professional, human-like voice — like a trusted friend who happens to be a real estate expert.
 
 Your personality: Confident but never pushy. Knowledgeable but never condescending. Always reassuring. You use natural conversational language, not corporate speak.
@@ -48,37 +46,14 @@ Deno.serve(async (req) => {
 Use this context naturally. Don't re-ask questions you already know the answers to.`;
     }
 
-    const systemInstruction = CHARLIE_SYSTEM + profileContext;
-
-    // Flatten full conversation + system context into a single prompt for compatibility
+    // Flatten conversation history into the prompt
     const historyText = (messages || []).map(m =>
       `${m.role === 'charlie' ? 'Charlie' : 'User'}: ${m.content}`
     ).join('\n\n');
 
-    const fullPrompt = `${systemInstruction}\n\n---\nConversation so far:\n${historyText}\n\nCharlie:`;
+    const fullPrompt = `${CHARLIE_SYSTEM}${profileContext}\n\n---\nConversation so far:\n${historyText}\n\nRespond as Charlie in 2-3 paragraphs:`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-          generationConfig: {
-            temperature: 0.85,
-            maxOutputTokens: 600,
-          },
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return Response.json({ error: data.error?.message || 'Gemini API error' }, { status: 500 });
-    }
-
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response. Please try again.";
+    const reply = await base44.integrations.Core.InvokeLLM({ prompt: fullPrompt });
 
     return Response.json({ reply });
   } catch (error) {
