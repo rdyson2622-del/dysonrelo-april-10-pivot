@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import OutreachWorkflow from '../components/admin/OutreachWorkflow';
 import OutreachProcessGuide from '../components/admin/OutreachProcessGuide';
 import PropertyDetailsPanel from '../components/admin/PropertyDetailsPanel';
+import OutreachTaskList from '../components/admin/OutreachTaskList';
 
 const STAGE_COLORS = {
   outreach: 'bg-blue-100 text-blue-800',
@@ -47,14 +48,28 @@ export default function AdminOutreachCampaigns() {
   });
 
   const updateStage = useMutation({
-    mutationFn: ({ campaign_id, new_stage, ...data }) =>
-      base44.functions.invoke('updateCampaignStage', {
+    mutationFn: async ({ campaign_id, new_stage, ...data }) => {
+      // Update the campaign stage
+      await base44.functions.invoke('updateCampaignStage', {
         campaign_id,
         new_stage,
         ...data
-      }),
+      });
+
+      // Generate tasks for the new stage
+      const campaign = campaigns.find((c) => c.id === campaign_id);
+      if (campaign) {
+        await base44.functions.invoke('generateOutreachTasks', {
+          campaign_id,
+          campaign_stage: new_stage,
+          owner_name: campaign.owner_name,
+          property_address: campaign.property_address,
+        });
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach_campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['outreach_tasks'] });
       setSelectedCampaign(null);
     }
   });
@@ -216,6 +231,8 @@ export default function AdminOutreachCampaigns() {
               </div>
 
               <PropertyDetailsPanel campaign={selectedCampaign} />
+
+              <OutreachTaskList campaign_id={selectedCampaign.id} />
 
               <OutreachWorkflow
                 campaign={selectedCampaign}
