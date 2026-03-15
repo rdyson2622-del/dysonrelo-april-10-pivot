@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 import OutreachWorkflow from '../components/admin/OutreachWorkflow';
+import OutreachProcessGuide from '../components/admin/OutreachProcessGuide';
 
 const STAGE_COLORS = {
   outreach: 'bg-blue-100 text-blue-800',
