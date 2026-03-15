@@ -164,6 +164,279 @@ Infrastructure Priorities:
 Cost Optimization: As volume grows, replace Gemini API calls with cached responses and custom fine-tuned models.`
   },
   {
+    id: 'process-overview',
+    title: '🗺️ Process Overview (New Employee)',
+    icon: Zap,
+    content: `WELCOME TO DYSON & DYSON — HOW THE MACHINE WORKS
+
+If you're reading this, you're joining a business that automates 90% of a traditional relocation concierge. Here is the complete flow from first contact to closed deal. Read this once and you'll understand the whole operation.
+
+────────────────────────────────
+STEP 1 — CLIENT ACQUISITION (Automated)
+────────────────────────────────
+Clients come in two ways:
+
+A) Inbound via Website / App
+A potential relocating family visits dysonanddyson.com, interacts with Charlie (our AI concierge), and either chats or books a live Gemini session. Charlie is live 24/7 — no human needed for initial contact.
+
+B) Outbound Seller Outreach (Human + AI)
+We identify homeowners currently listing their homes for sale — people who are clearly moving. We run their address through CrissCross (skip tracing) to get phone numbers, then send outreach SMS via Twilio. When they respond, Charlie (via AI) handles the follow-up conversation. Our goal: find out WHERE they're moving to and offer to connect them with a top agent there.
+
+────────────────────────────────
+STEP 2 — COMMITMENT GATE (Automated)
+────────────────────────────────
+Before a client gets access to the deep AI interview, they must pass through our Commitment Gate. This is a 3-step screen:
+
+1. Intro + Disclosure — explains what Gemini will do, that the call is recorded, and that the service is free
+2. Contact Form — captures name, email, phone
+3. Service Agreement — 5 checkboxes the client must personally confirm:
+   • Service is free to them
+   • Exclusive representation (they agree to use our referred agent)
+   • Consent to recording and profile building
+   • Staff review of their profile
+   • All transaction communication flows through the Dyson platform
+
+WHY THIS MATTERS: The exclusive representation clause is our referral fee protection. Once they click all 5 boxes, we have a documented agreement. This is your lead — protected.
+
+────────────────────────────────
+STEP 3 — GEMINI LIVE INTAKE SESSION (Automated)
+────────────────────────────────
+After the gate, the client enters a live voice-to-voice AI interview powered by Google Gemini. This is not a chatbot — this is real-time voice conversation. The session:
+
+• Lasts 10–20 minutes
+• Covers: destination city, neighborhoods, timeline, family, budget, buying vs. renting, priorities (schools, church, commute, etc.), employment situation, whether they're selling, special needs
+• Is fully transcribed in real-time — every word saved
+• Has a live timer and speaking indicators so clients know they're being heard
+
+WHAT YOU DO DURING A SESSION: Nothing. It's fully automated. You will only get involved AFTER the session ends.
+
+────────────────────────────────
+STEP 4 — AUTOMATED DEBRIEF (Automated)
+────────────────────────────────
+When the session ends, Gemini analyzes the full transcript and extracts structured data:
+
+• Destination city, current city, timeline
+• Family composition (kids' ages, pets, special needs)
+• Budget range (mapped to our internal pricing tiers)
+• Top priorities (schools, church, commute, safety, etc.)
+• Whether they're selling their current home
+• Employment situation
+• Action items mentioned during the call
+
+This data is automatically:
+1. Saved to the RelocationClient profile in the admin database
+2. Converted into RelocationTask records (their move checklist)
+3. Flagged for staff review in the admin panel
+4. Logged as a ChatMessage transcript
+
+────────────────────────────────
+STEP 5 — STAFF REVIEW & AGENT MATCHING (Human)
+────────────────────────────────
+THIS IS WHERE YOU COME IN. After the automated steps, a staff member:
+
+1. Opens the AdminClients panel and reviews the new profile
+2. Reads the AI-generated summary and transcript
+3. Reviews the action items created
+4. Uses judgment to select the best agent match from our network
+5. Sends a formal referral proposal to the selected agent (automated email)
+6. Monitors agent acceptance and agreement signing
+
+Your job is to be the quality layer between AI and the client. The AI gathers raw data. You make the judgment call on the right agent fit.
+
+────────────────────────────────
+STEP 6 — AGENT MATCHING & AGREEMENT (Human + Automated)
+────────────────────────────────
+Once you identify the right agent for the client:
+
+1. A ReferralProposal record is created in the admin panel
+2. The system sends the agent an email with a unique accept/reject link
+3. Agent reviews: referral fee (25%), relocation management fee (15%), client brief
+4. Agent accepts → digital agreement is executed → AgentReferral record is created
+5. Agent is introduced to the client via the Dyson platform (all comms captured)
+
+WHY ALL COMMS GO THROUGH THE PLATFORM: We maintain visibility on every conversation. If an agent tries to "cut us out," we have documented evidence. This also protects the client — we can monitor for quality and intervene if needed.
+
+────────────────────────────────
+STEP 7 — ACTIVE RELOCATION & CHARLIE SUPPORT (Automated + Human)
+────────────────────────────────
+Once matched:
+• Charlie continues to serve the client 24/7 via the chat interface
+• RelocationTasks are tracked and updated
+• CityGuide provides neighborhood research
+• Charlie can help with schools, utilities, healthcare, community connections
+• Staff spot-checks conversations flagged by the system
+
+────────────────────────────────
+STEP 8 — CLOSE & GET PAID (Human)
+────────────────────────────────
+When the client closes on their new home:
+1. Verify the referral fee has been triggered in the agent agreement
+2. Confirm agent's close date in the AgentReferral record
+3. Invoice the receiving broker for the 25% referral fee + 15% relocation management fee
+4. Mark fees_paid = true in the system
+5. Follow up with client for NPS survey and potential seller referral (they may now be selling their old home — another lead!)
+
+CYCLE COMPLETE. One family, two potential transactions (buy + sell). That's the full flywheel.`
+  },
+  {
+    id: 'process-commitment-gate',
+    title: '🔐 Commitment Gate — Deep Dive',
+    icon: Shield,
+    content: `THE COMMITMENT GATE — YOUR REFERRAL FEE PROTECTION LAYER
+
+The Commitment Gate is the most legally and commercially important piece of the platform. It exists for one reason: to secure your referral fee before you invest time and resources matching a client.
+
+────────────────────────────────
+THE THREE SCREENS
+────────────────────────────────
+
+SCREEN 1: Intro & Disclosure
+Shows the client:
+• What Gemini AI is and how it works
+• That the session is recorded and summarized
+• That their profile is reviewed by human Dyson staff
+• That the service is 100% free to them
+• A disclosure about Google Gemini powering the interview
+
+Purpose: Informed consent. Clients who understand the process trust it more and ghost less.
+
+SCREEN 2: Contact Form
+Captures: Full name, email address, phone (optional)
+Why: This is how we build the RelocationClient record and how we reach them after the session.
+
+SCREEN 3: Service Agreement (The 5 Commitments)
+Each item must be individually checked — not a single "I agree" button. This creates deliberate, documented consent.
+
+The 5 Items:
+1. "Service is free to me — agents handle compensation" → Sets expectation, no surprise later
+2. "I will work exclusively with a Dyson-referred agent for my destination purchase" → THIS IS YOUR PROTECTION. They cannot go around you.
+3. "I consent to this conversation being recorded and summarized" → Legal recording consent
+4. "My profile will be reviewed by Dyson staff to match me with the right agent" → Sets expectation for human review
+5. "All official transaction communications will flow through the Dyson platform" → Controls the communication channel
+
+────────────────────────────────
+WHY THE GATE IS NON-NEGOTIABLE
+────────────────────────────────
+Without the gate, you can spend 20 minutes matching a client with an agent, they close 6 months later, and the agent claims they found the buyer themselves. With the gate:
+
+• You have a timestamped, name + email documented agreement
+• You have proof of exclusive representation
+• You have communication channel control (platform-first model)
+• You have a legal basis for the referral fee claim
+
+Never skip the gate. Never "let someone start the session early." The gate IS the contract.
+
+────────────────────────────────
+WHAT HAPPENS AFTER THE GATE
+────────────────────────────────
+After all 5 boxes are checked:
+1. Client info (name, email, phone) is passed to the Gemini Live session
+2. The GeminiLiveSession component initializes with their info
+3. A ChatMessage record is created: "[GEMINI LIVE SESSION STARTED] Client: [name]"
+4. The live voice interview begins
+
+The gate data becomes the ClientInfo object that travels through the entire session pipeline and gets saved to the RelocationClient profile during the debrief phase.`
+  },
+  {
+    id: 'process-gemini-debrief',
+    title: '🤖 Gemini Debrief — How AI Builds the Profile',
+    icon: Zap,
+    content: `THE GEMINI DEBRIEF — TURNING VOICE CONVERSATIONS INTO STRUCTURED DATA
+
+After every Gemini Live session ends, an automated AI debrief runs in the backend. This is what converts a 15-minute voice conversation into an actionable client file. Understanding this process is critical — it's what makes the system work without manual data entry.
+
+────────────────────────────────
+WHAT TRIGGERS THE DEBRIEF
+────────────────────────────────
+When a client clicks "End Session & Build Profile," the following happens automatically:
+1. The WebSocket connection closes
+2. The full transcript (every spoken word) is sent to the geminiDebrief backend function
+3. Gemini 2.5 Flash analyzes the transcript
+4. Structured JSON data is extracted
+5. Data is saved to multiple entities simultaneously
+
+────────────────────────────────
+WHAT GEMINI EXTRACTS
+────────────────────────────────
+From a raw conversation, the AI pulls:
+
+LOCATION DATA
+• destination_city — "Austin, TX" not just "Austin"
+• current_city — where they're moving FROM
+• move_timeline — "3–6 months", "end of summer", etc.
+
+FAMILY DATA
+• family_size — number of people moving
+• family_details — kids' ages, pets, elderly parents, special needs
+
+FINANCIAL DATA
+• budget_range — price range mentioned (mapped to our enum tiers)
+• purchase_type — buying vs. renting
+
+PRIORITY DATA
+• priorities array — mapped from conversational language to our standard tags:
+  - "my kids need good schools" → ['schools']
+  - "we go to church every Sunday" → ['religious_community']
+  - "I need to be close to MD Anderson" → ['healthcare']
+  - "love walkable neighborhoods" → ['walkability']
+
+EMPLOYMENT DATA
+• employment — remote/transferring/job searching/employed locally
+
+ADDITIONAL CONTEXT
+• selling_current_home — true/false (potential second transaction!)
+• personality_notes — lifestyle preferences, city vs. suburbs, introvert/extrovert
+• agent_personality_match — notes on what type of agent personality fits them
+• special_needs — medical, accessibility, elderly care
+• action_items — EVERY specific task they mention (flight research, school tours, etc.)
+• summary — 2-3 sentence human-readable summary for the matching agent
+
+────────────────────────────────
+WHERE THE DATA GOES
+────────────────────────────────
+
+1. RelocationClient entity — profile created or updated with all fields
+2. RelocationTask entity — one task per action item, auto-categorized:
+   • "check school ratings" → category: schools
+   • "set up electricity" → category: utilities
+   • "research pediatricians" → category: healthcare
+   • "find Catholic church nearby" → category: social
+3. ChatMessage entity — full transcript saved verbatim for staff review
+4. ChatMessage entity (second record) — admin alert flagged for review:
+   "[NEW CLIENT READY FOR AGENT MATCHING]" with summary, destination, budget, timeline
+
+────────────────────────────────
+HOW TO READ A DEBRIEF AS STAFF
+────────────────────────────────
+In the AdminClients panel:
+1. Find the new client (sorted by created_date)
+2. Read the notes field — this is the AI-generated summary
+3. Check their priorities array — these drive the agent match
+4. Look for selling_current_home = true — this means a potential seller referral too
+5. Check agent_personality_match notes — use this to select the right agent personality
+6. Review their action items in RelocationTasks — this is your follow-up checklist
+
+THE DEBRIEF IS YOUR BRIEFING DOCUMENT. Before you pick up the phone or send a single email about this client, read their debrief. Everything you need to match them correctly is in there.
+
+────────────────────────────────
+FAILURE MODES & HOW TO HANDLE THEM
+────────────────────────────────
+If the client ends the session early (< 5 minutes):
+• Debrief still runs — just with less data
+• Profile will have nulls for some fields
+• Staff should follow up via email to complete the intake
+
+If Gemini extraction fails:
+• Raw transcript is always saved as a ChatMessage
+• Staff can manually read transcript and update the RelocationClient record
+• Never lose a lead because of a technical failure — the transcript is always the backup
+
+If client skips the gate and calls directly:
+• NEVER match an agent without gate completion
+• Direct them to complete the online agreement first
+• Use your judgment on high-value clients — but get the agreement before agent introduction`
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
