@@ -73,7 +73,14 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   }, [messages, isTyping]);
 
   const speakText = (text) => {
+    // Stop any current speech before starting new
+    stopCharlie();
     speakAsCharlie(text, () => setIsSpeaking(true), () => setIsSpeaking(false));
+  };
+
+  const handleStopSpeaking = () => {
+    stopCharlie();
+    setIsSpeaking(false);
   };
 
   const startListening = () => {
