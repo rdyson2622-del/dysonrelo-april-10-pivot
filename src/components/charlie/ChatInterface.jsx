@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import ChatBubble from './ChatBubble';
 import VoiceOrb from './VoiceOrb';
 import OnboardingFlow from './OnboardingFlow';
