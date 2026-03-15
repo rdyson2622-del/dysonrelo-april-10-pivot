@@ -166,27 +166,35 @@ export default function AdminSearchProfiles() {
             </div>
 
             {/* Mode Toggle */}
-            <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#000' }}>Search Mode</label>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={!bulkMode}
-                    onChange={() => setBulkMode(false)}
-                  />
-                  <span className="text-sm">Single Location</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    checked={bulkMode}
-                    onChange={() => setBulkMode(true)}
-                  />
-                  <span className="text-sm">Bulk Locations</span>
-                </label>
-              </div>
-            </div>
+             <div>
+               <label className="block text-sm font-semibold mb-3" style={{ color: '#000' }}>Search Mode</label>
+               <div className="space-y-3">
+                 <label className="flex items-start gap-3 cursor-pointer p-3 rounded border border-slate-200">
+                   <input
+                     type="radio"
+                     checked={!bulkMode}
+                     onChange={() => setBulkMode(false)}
+                     className="mt-1"
+                   />
+                   <div>
+                     <span className="text-sm font-medium block" style={{ color: '#000' }}>Single Location</span>
+                     <span className="text-xs" style={{ color: '#999' }}>Search one city and state</span>
+                   </div>
+                 </label>
+                 <label className="flex items-start gap-3 cursor-pointer p-3 rounded border border-slate-200">
+                   <input
+                     type="radio"
+                     checked={bulkMode}
+                     onChange={() => setBulkMode(true)}
+                     className="mt-1"
+                   />
+                   <div>
+                     <span className="text-sm font-medium block" style={{ color: '#000' }}>Bulk Locations</span>
+                     <span className="text-xs" style={{ color: '#999' }}>Search multiple cities/states at once</span>
+                   </div>
+                 </label>
+               </div>
+             </div>
 
             {/* Location */}
             {!bulkMode ? (
