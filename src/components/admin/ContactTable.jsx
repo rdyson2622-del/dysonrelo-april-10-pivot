@@ -79,13 +79,15 @@ export default function ContactTable({ owners, onRefresh }) {
                       </a>
                     )}
                   </div>
-                  {owner.phone && (
-                    <a href={`tel:${owner.phone}`} className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                      <Phone className="w-3 h-3" />
-                      {owner.phone}
-                    </a>
-                  )}
+                    {owner.phone && (
+                      <a href={`tel:${owner.phone}`} className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                        <Phone className="w-3 h-3" />
+                        {owner.phone}
+                      </a>
+                    )}
+                  </div>
                 </div>
+                </Link>
               </td>
               <td className="py-3 px-3">
                 <p className="text-sm text-slate-700">{owner.property_address}</p>
