@@ -66,8 +66,6 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [voiceMode, setVoiceMode] = useState(false);
   const scrollRef = useRef(null);
   const recognitionRef = useRef(null);
-  const synthRef = useRef(window.speechSynthesis);
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
