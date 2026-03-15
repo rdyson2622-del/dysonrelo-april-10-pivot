@@ -361,7 +361,7 @@ export default function AdminTemplates() {
                 required
               />
               <p className="text-xs text-slate-500 mt-2">
-                Available placeholders: {{'{owner_name}'}} {{'{property_address}'}} {{'{listing_price}'}} {{'{destination_city}'}}
+                Available placeholders: owner_name, property_address, listing_price, destination_city
               </p>
             </div>
 
