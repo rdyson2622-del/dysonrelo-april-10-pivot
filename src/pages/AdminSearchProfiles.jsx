@@ -19,6 +19,7 @@ const STATES = ['CA', 'TX', 'FL', 'NY', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI', 'NJ'
 export default function AdminSearchProfiles() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [bulkMode, setBulkMode] = useState(false);
   const [formData, setFormData] = useState({
     search_name: '',
     city: '',
@@ -29,6 +30,7 @@ export default function AdminSearchProfiles() {
     communities: '',
     is_active: true,
     notes: '',
+    bulk_locations: '',
   });
 
   const queryClient = useQueryClient();
