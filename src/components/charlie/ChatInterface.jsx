@@ -65,11 +65,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [isListening, setIsListening] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const scrollRef = useRef(null);
+  const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
+
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
   const speakText = (text) => {
