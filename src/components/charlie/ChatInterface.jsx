@@ -73,21 +73,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   }, [messages, isTyping]);
 
   const speakText = (text) => {
-    if (!synthRef.current) return;
-    synthRef.current.cancel();
-    const clean = text.replace(/[*_#`]/g, '').replace(/\n/g, ' ');
-    const utterance = new SpeechSynthesisUtterance(clean);
-    const voices = synthRef.current.getVoices();
-    const preferred = voices.find(v =>
-      v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Alex') || v.lang === 'en-US'
-    );
-    if (preferred) utterance.voice = preferred;
-    utterance.rate = 0.92;
-    utterance.pitch = 1.05;
-    utterance.volume = 1;
-    setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    synthRef.current.speak(utterance);
+    speakAsCharlie(text, () => setIsSpeaking(true), () => setIsSpeaking(false));
   };
 
   const startListening = () => {
