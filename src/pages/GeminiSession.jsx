@@ -1,0 +1,146 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
+import CommitmentGate from '../components/charlie/CommitmentGate';
+import GeminiLiveSession from '../components/charlie/GeminiLiveSession';
+
+const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+
+export default function GeminiSession() {
+  const [stage, setStage] = useState('gate'); // gate | session | done
+  const [clientInfo, setClientInfo] = useState(null);
+  const [sessionResult, setSessionResult] = useState(null);
+
+  const handleCommit = (info) => {
+    setClientInfo(info);
+    setStage('session');
+  };
+
+  const handleSessionComplete = (result) => {
+    setSessionResult(result);
+    setStage('done');
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
+      {/* Header */}
+      <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
+        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        <Link to="/Chat">
+          <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: GOLD }}>
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
+        <Link to="/Home">
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" />
+        </Link>
+        <div>
+          <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Gemini Live Interview</h1>
+          <p className="text-xs" style={{ color: GOLD }}>Powered by Google Gemini • Your Private Relocation Session</p>
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="flex-1 max-w-2xl w-full mx-auto flex flex-col" style={{ minHeight: 0 }}>
+        <AnimatePresence mode="wait">
+
+          {/* COMMITMENT GATE */}
+          {stage === 'gate' && (
+            <motion.div key="gate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
+              style={{ background: '#0d0d0d', border: `1px solid ${GOLD}33` }}>
+              {/* Gate header */}
+              <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #1a1a1a' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">✨</span>
+                  <h2 className="font-bold text-sm" style={{ color: GOLD }}>Before We Begin</h2>
+                </div>
+                <p className="text-xs" style={{ color: '#666' }}>
+                  Charlie will hand you off to Gemini for your private relocation interview.
+                </p>
+              </div>
+              <CommitmentGate onCommit={handleCommit} />
+            </motion.div>
+          )}
+
+          {/* LIVE SESSION */}
+          {stage === 'session' && (
+            <motion.div key="session" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
+              style={{ background: '#0d0d0d', border: `1px solid ${GOLD}33`, minHeight: '600px' }}>
+              {/* Session header */}
+              <div className="px-5 pt-4 pb-3 shrink-0" style={{ borderBottom: '1px solid #1a1a1a' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-bold" style={{ color: '#fff' }}>
+                    Welcome, {clientInfo?.name?.split(' ')[0]} — Gemini is ready
+                  </span>
+                </div>
+                <p className="text-xs mt-0.5" style={{ color: '#555' }}>
+                  Speak naturally. This conversation builds your relocation profile.
+                </p>
+              </div>
+              <GeminiLiveSession
+                clientInfo={clientInfo}
+                onSessionComplete={handleSessionComplete}
+              />
+            </motion.div>
+          )}
+
+          {/* DONE */}
+          {stage === 'done' && (
+            <motion.div key="done" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
+              className="flex-1 flex flex-col items-center justify-center p-8 gap-6">
+              <div className="text-6xl">🎉</div>
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Your Profile is Built</h2>
+                <p className="text-sm" style={{ color: '#888' }}>
+                  Your Dyson concierge team has been notified. We'll reach out within 24 hours to introduce you to your matched agent.
+                </p>
+              </div>
+
+              {sessionResult?.tasks?.length > 0 && (
+                <div className="w-full rounded-2xl p-4 space-y-2"
+                  style={{ background: '#111', border: '1px solid #2a2a2a' }}>
+                  <p className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>
+                    Action Items Added to Your Move Plan ({sessionResult.tasks.length})
+                  </p>
+                  {sessionResult.tasks.slice(0, 5).map((task, i) => (
+                    <div key={i} className="flex gap-2 items-start">
+                      <span style={{ color: GOLD }}>•</span>
+                      <span className="text-xs" style={{ color: '#aaa' }}>{task.title}</span>
+                    </div>
+                  ))}
+                  {sessionResult.tasks.length > 5 && (
+                    <p className="text-xs" style={{ color: '#555' }}>
+                      +{sessionResult.tasks.length - 5} more in your dashboard
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div className="flex flex-col gap-3 w-full">
+                <Link to="/Dashboard" className="w-full">
+                  <button className="w-full h-11 rounded-xl font-bold text-sm"
+                    style={{ background: GOLD, color: '#000' }}>
+                    View My Dashboard →
+                  </button>
+                </Link>
+                <Link to="/Chat" className="w-full">
+                  <button className="w-full h-11 rounded-xl font-bold text-sm"
+                    style={{ background: 'transparent', border: `1px solid ${GOLD}44`, color: '#888' }}>
+                    Back to Charlie
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
