@@ -573,7 +573,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#666' }}
         >
-          <p>Business Plan v1.0 • Last Updated: March 14, 2026</p>
+          <p>Business Plan v2.0 • Last Updated: March 15, 2026 • Includes Full Operational Process Guides</p>
         </motion.div>
       </main>
     </div>
