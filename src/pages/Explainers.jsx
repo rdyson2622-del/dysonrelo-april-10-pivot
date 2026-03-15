@@ -13,7 +13,17 @@ const HISTORY_IMAGES = [
   "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/90e2b476c_768aea81c_Screenshot2026-02-27at65132PM.png"
 ];
 
+const THEN_TEXT = "When the movie The Jazz Singer premiered, it revolutionized entertainment by adding synchronized sound to motion pictures. Charlie Chaplin was a significant figure in those times. Audiences were amazed to hear actors speak. It changed everything. Silent films became obsolete overnight.";
+const NOW_TEXT = "We're experimenting with voice-to-voice technology that lets you talk naturally with Charlie — he understands your needs, explains complex processes, and guides you through every step. While Charlie is still learning the full range of our services, every conversation is backed up by the text chat box so you're always connected.";
+
 export default function Explainers() {
+  const [speaking, setSpeaking] = useState(null);
+
+  const handleSpeak = (key, text) => {
+    if (speaking === key) return;
+    speakAsCharlie(text, () => setSpeaking(key), () => setSpeaking(null));
+  };
+
   return (
     <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
       {/* Nav */}
