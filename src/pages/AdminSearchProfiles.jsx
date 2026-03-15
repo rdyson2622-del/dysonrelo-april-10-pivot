@@ -132,7 +132,7 @@ export default function AdminSearchProfiles() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Search Profiles</h1>
+          <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Search Listing Profiles</h1>
           <p className="text-sm mt-1" style={{ color: '#666' }}>Create daily automated searches for new listings</p>
         </div>
         <Button
