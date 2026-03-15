@@ -148,10 +148,11 @@ export default function AdminClients() {
                   </div>
                 )}
               </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
+              </motion.div>
+              </Link>
+              ))}
+              </div>
+              )}
 
       {/* Add Client Dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
