@@ -91,54 +91,13 @@ export default function GeminiSession() {
             </motion.div>
           )}
 
-          {/* DONE */}
-          {stage === 'done' && (
-            <motion.div key="done" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
-              className="flex-1 flex flex-col items-center justify-center p-8 gap-6">
-              <div className="text-6xl">🎉</div>
-              <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Your Profile is Built</h2>
-                <p className="text-sm" style={{ color: '#888' }}>
-                  Your Dyson concierge team has been notified. We'll reach out within 24 hours to introduce you to your matched agent.
-                </p>
-              </div>
-
-              {sessionResult?.tasks?.length > 0 && (
-                <div className="w-full rounded-2xl p-4 space-y-2"
-                  style={{ background: '#111', border: '1px solid #2a2a2a' }}>
-                  <p className="text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>
-                    Action Items Added to Your Move Plan ({sessionResult.tasks.length})
-                  </p>
-                  {sessionResult.tasks.slice(0, 5).map((task, i) => (
-                    <div key={i} className="flex gap-2 items-start">
-                      <span style={{ color: GOLD }}>•</span>
-                      <span className="text-xs" style={{ color: '#aaa' }}>{task.title}</span>
-                    </div>
-                  ))}
-                  {sessionResult.tasks.length > 5 && (
-                    <p className="text-xs" style={{ color: '#555' }}>
-                      +{sessionResult.tasks.length - 5} more in your dashboard
-                    </p>
-                  )}
-                </div>
-              )}
-
-              <div className="flex flex-col gap-3 w-full">
-                <Link to="/Dashboard" className="w-full">
-                  <button className="w-full h-11 rounded-xl font-bold text-sm"
-                    style={{ background: GOLD, color: '#000' }}>
-                    View My Dashboard →
-                  </button>
-                </Link>
-                <Link to="/Chat" className="w-full">
-                  <button className="w-full h-11 rounded-xl font-bold text-sm"
-                    style={{ background: 'transparent', border: `1px solid ${GOLD}44`, color: '#888' }}>
-                    Back to Charlie
-                  </button>
-                </Link>
-              </div>
-            </motion.div>
-          )}
+          {/* DONE - Interview Summary */}
+           {stage === 'done' && (
+             <motion.div key="done" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
+               className="flex-1 flex flex-col w-full">
+               <InterviewSummary clientInfo={clientInfo} sessionResult={sessionResult} />
+             </motion.div>
+           )}
 
         </AnimatePresence>
       </div>
