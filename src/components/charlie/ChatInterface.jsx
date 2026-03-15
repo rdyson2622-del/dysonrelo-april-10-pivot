@@ -179,6 +179,15 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
           </p>
         </div>
 
+        {isSpeaking && (
+          <button
+            onClick={handleStopSpeaking}
+            className="text-xs px-2 py-1 rounded-lg border transition-all mr-1 animate-pulse"
+            style={{ borderColor: '#ff4444', color: '#ff4444', background: 'rgba(255,68,68,0.1)' }}
+          >
+            ■ Stop
+          </button>
+        )}
         <button
           onClick={() => setVoiceMode(!voiceMode)}
           className="text-xs px-2 py-1 rounded-lg border transition-all mr-1"
