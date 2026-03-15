@@ -103,11 +103,14 @@ export default function Explainers() {
             <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
               While Charlie is still learning the full range of our services, every conversation is backed up by the text chat box in the upper-right corner of each page — so you're always connected.
             </p>
-            <button className="w-full py-3 rounded-full font-semibold transition-all hover:opacity-90" 
+            <button
+              onClick={() => handleSpeak('now', NOW_TEXT)}
+              disabled={speaking !== null}
+              className="w-full py-3 rounded-full font-semibold transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: GOLD, color: '#000' }}>
               <div className="flex items-center justify-center gap-2">
                 <Mic className="w-4 h-4" />
-                Hear Charlie read this
+                {speaking === 'now' ? 'Speaking...' : 'Hear Charlie read this'}
               </div>
             </button>
           </div>
