@@ -77,11 +77,14 @@ export default function Explainers() {
             <p className="font-semibold" style={{ color: GOLD }}>
               It changed everything. Silent films became obsolete overnight.
             </p>
-            <button className="mt-6 w-full py-3 rounded-full font-semibold transition-all hover:opacity-90" 
+            <button
+              onClick={() => handleSpeak('then', THEN_TEXT)}
+              disabled={speaking !== null}
+              className="mt-6 w-full py-3 rounded-full font-semibold transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: GOLD, color: '#000' }}>
               <div className="flex items-center justify-center gap-2">
                 <Volume2 className="w-4 h-4" />
-                Hear Charlie read this
+                {speaking === 'then' ? 'Speaking...' : 'Hear Charlie read this'}
               </div>
             </button>
           </div>
