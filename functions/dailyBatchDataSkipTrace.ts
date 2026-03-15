@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Get latest 50 active listings
+    // Get latest 50 active listings in San Francisco, $2M+
     const listings = await base44.entities.ListingImport.filter(
-      { status: 'active' },
+      { status: 'active', city: 'San Francisco', state: 'CA', price: { '$gte': 2000000 } },
       '-list_date',
       50
     );
