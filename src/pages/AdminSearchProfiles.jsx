@@ -346,14 +346,19 @@ export default function AdminSearchProfiles() {
         </motion.div>
       )}
 
+      {/* Process Guide */}
+      {searches.length === 0 && (
+        <SearchProfilesProcessGuide />
+      )}
+
       {/* Searches List */}
-      <div className="space-y-3">
-        {searches.length === 0 ? (
-          <div className="text-center py-12 rounded-lg bg-slate-50">
-            <Search className="w-12 h-12 mx-auto mb-4" style={{ color: '#ccc' }} />
-            <p style={{ color: '#999' }}>No search profiles yet. Create one to get started.</p>
-          </div>
-        ) : (
+       <div className="space-y-3">
+         {searches.length === 0 ? (
+           <div className="text-center py-12 rounded-lg bg-slate-50">
+             <Search className="w-12 h-12 mx-auto mb-4" style={{ color: '#ccc' }} />
+             <p style={{ color: '#999' }}>No search profiles yet. Create one to get started.</p>
+           </div>
+         ) : (
           searches.map((search, i) => (
             <motion.div
               key={search.id}
