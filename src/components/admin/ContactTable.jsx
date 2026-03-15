@@ -68,9 +68,10 @@ export default function ContactTable({ owners, onRefresh }) {
               className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors"
             >
               <td className="py-3 px-3">
-                <div>
-                  <p className="font-medium text-sm text-slate-800">{owner.owner_name}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                <Link to={`/AdminOwners/${owner.id}`}>
+                  <div className="cursor-pointer hover:opacity-70 transition">
+                    <p className="font-medium text-sm text-slate-800">{owner.owner_name}</p>
+                    <div className="flex items-center gap-2 mt-1">
                     {owner.email && (
                       <a href={`mailto:${owner.email}`} className="text-xs text-blue-500 hover:underline flex items-center gap-1">
                         <Mail className="w-3 h-3" />
