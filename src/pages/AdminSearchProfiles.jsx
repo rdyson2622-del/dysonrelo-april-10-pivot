@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Plus, Trash2, Edit2, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import SearchProfilesProcessGuide from '../components/admin/SearchProfilesProcessGuide';
 
 const PROPERTY_TYPES = [
   { value: 'single_family', label: 'Single Family' },
