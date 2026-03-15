@@ -1,7 +1,30 @@
 import { base44 } from '@/api/base44Client';
 
+let currentSource = null;
+let currentCtx = null;
+
+// Stop any currently playing Charlie audio
+export function stopCharlie() {
+  try {
+    if (currentSource) {
+      currentSource.onended = null;
+      currentSource.stop();
+      currentSource = null;
+    }
+    if (currentCtx) {
+      currentCtx.close();
+      currentCtx = null;
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
 // Plays text using Charlie's Enceladus voice via backend TTS
 export async function speakAsCharlie(text, onStart, onEnd) {
+  // Stop any previous audio first
+  stopCharlie();
+
   if (onStart) onStart();
   try {
     const res = await base44.functions.invoke('charlieSpeak', { text });
@@ -14,6 +37,8 @@ export async function speakAsCharlie(text, onStart, onEnd) {
     for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    currentCtx = audioCtx;
+
     const sampleRate = 22050;
     const numSamples = bytes.buffer.byteLength / 2;
     const audioBuffer = audioCtx.createBuffer(1, numSamples, sampleRate);
@@ -24,15 +49,20 @@ export async function speakAsCharlie(text, onStart, onEnd) {
     }
 
     const source = audioCtx.createBufferSource();
+    currentSource = source;
     source.buffer = audioBuffer;
     source.connect(audioCtx.destination);
     source.onended = () => {
+      currentSource = null;
+      currentCtx = null;
       if (onEnd) onEnd();
       audioCtx.close();
     };
     source.start();
   } catch (e) {
     console.error('Charlie TTS error:', e);
+    currentSource = null;
+    currentCtx = null;
     if (onEnd) onEnd();
   }
 }
