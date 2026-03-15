@@ -162,6 +162,7 @@ const AuthenticatedApp = () => {
       <Route element={<AdminLayout />}>
         <Route path="/Admin" element={<Admin />} />
         <Route path="/AdminOwners" element={<AdminOwners />} />
+        <Route path="/AdminOwners/:ownerId" element={<AdminOwnerDetail />} />
         <Route path="/AdminClients" element={<AdminClients />} />
         <Route path="/AdminListingSearch" element={<AdminListingSearch />} />
         <Route path="/AdminOutreachCampaigns" element={<AdminOutreachCampaigns />} />
