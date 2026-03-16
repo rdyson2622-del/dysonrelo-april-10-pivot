@@ -15,8 +15,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No text provided' }, { status: 400 });
     }
 
-    // Clean text for speech
-    const clean = text.replace(/[*_#`]/g, '').replace(/\n/g, ' ').trim();
+    // Strip to headlines and key values only — remove body filler text
+    const stripped = stripToEssentials(text);
+
+    // Inject natural pause cues between points
+    const scripted = injectPauses(stripped);
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`,
@@ -26,7 +29,9 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           contents: [{
             role: "user",
-            parts: [{ text: `Say in a confident, warm, and friendly male tone: ${clean}` }]
+            parts: [{
+              text: `You are Charlie, a confident and polished real estate AI concierge. Speak each point with authority and calm. Take a natural breath-pause between each point. Do not rush. Deliver this script:\n\n${scripted}`
+            }]
           }],
           generationConfig: {
             responseModalities: ["AUDIO"],
@@ -60,3 +65,38 @@ Deno.serve(async (req) => {
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
+
+/**
+ * Strips text down to headings, short labels, numbers, and key phrases.
+ * Removes long body sentences (over 12 words) unless they are a standalone stat or label.
+ */
+function stripToEssentials(text) {
+  // Remove markdown symbols
+  const clean = text.replace(/[*_#`]/g, '').replace(/\n{3,}/g, '\n\n').trim();
+
+  const lines = clean.split('\n').map(l => l.trim()).filter(Boolean);
+
+  const kept = lines.filter(line => {
+    const wordCount = line.split(/\s+/).length;
+    const hasNumber = /\d/.test(line);
+    const isShort = wordCount <= 12;
+    const looksLikeHeading = /^[A-Z]/.test(line) && wordCount <= 8;
+    const isBullet = /^[-•·]/.test(line);
+    const isLabel = line.endsWith(':') || line.includes(':') && wordCount <= 6;
+
+    return isShort || hasNumber || looksLikeHeading || isBullet || isLabel;
+  });
+
+  return kept.join('\n');
+}
+
+/**
+ * Injects "..." pause cues between lines/sections for natural pacing.
+ */
+function injectPauses(text) {
+  return text
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .join(' ... ');
+}
