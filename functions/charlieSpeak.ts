@@ -26,14 +26,14 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           contents: [{
             role: "user",
-            parts: [{ text: `Say in a confident and strong tone: ${clean}` }]
+            parts: [{ text: `Say in a confident, warm, and friendly male tone: ${clean}` }]
           }],
           generationConfig: {
             responseModalities: ["AUDIO"],
             speechConfig: {
               voiceConfig: {
                 prebuiltVoiceConfig: {
-                  voiceName: "Enceladus"
+                  voiceName: "Charon"
                 }
               }
             }
@@ -45,11 +45,13 @@ Deno.serve(async (req) => {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('TTS API error:', JSON.stringify(data));
       return Response.json({ error: data.error?.message || 'TTS API error' }, { status: 500 });
     }
 
     const audioB64 = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     if (!audioB64) {
+      console.error('No audio in response:', JSON.stringify(data).slice(0, 500));
       return Response.json({ error: 'No audio returned' }, { status: 500 });
     }
 
