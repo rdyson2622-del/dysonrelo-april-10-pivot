@@ -63,13 +63,14 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="flex flex-col items-start mb-6">
-              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto mb-3" />
-              <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.22em' }}>
-                <span style={{ display: 'block', textAlign: 'left', color: '#fff' }}>CONCIERGE</span>
-                <span style={{ display: 'block', textAlign: 'left', color: '#000' }}>Real Estate</span>
-              </h1>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-8 tracking-widest"
+              style={{ background: GOLD, color: '#000' }}>
+              ✨ POWERED BY AI
             </div>
+
+            <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.22em', color: '#000' }}>
+              <span style={{ color: '#000' }}>REAL ESTATE</span><br /><span style={{ color: '#fff' }}>CONCIERGE</span>
+            </h1>
 
             <p className="text-lg leading-relaxed mb-4" style={{ color: '#000' }}>
               Meet Charlie — AI that handles every aspect of your relocation.
