@@ -538,13 +538,6 @@ If client skips the gate and calls directly:
   Risk 6: Churn if Agent Experience is Poor
   Mitigation: Excellent referral quality data; dedicated agent success team; ongoing feedback loop`
   },
-  {
-    id: 'referral-flow-mockup',
-    title: '🎯 Referral Flow Mockup',
-    icon: FileText,
-    isComponent: true,
-    component: ReferralFlowMockup
-  }
   ];
 
 export default function BusinessPlan() {
