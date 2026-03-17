@@ -120,6 +120,28 @@ Key Differentiator: Charlie operates 24/7, scales infinitely, and improves with 
   STRATEGIC MOAT: You're the intelligent aggregator of fragmented data. Individual suppliers can't replicate your synthesis + network effects. You control the distribution channel + client relationship.
 
   ────────────────────────────────
+  THE FREEMIUM VOICE MOAT STRATEGY
+  ────────────────────────────────
+  To manage high V2V costs ($0.35/min) and latency, we use a tiered approach:
+
+  CHARLIE (STAGE 1): Uses pre-recorded scripts (ElevenLabs or Google TTS) to greet and qualify.
+  • Cost: ~$0.01 per greeting
+  • Purpose: Initial contact, lead qualification, engagement
+  • Availability: 24/7 automated responses
+
+  THE COMMITMENT GATE: Users must agree to the Referral Agreement before accessing live voice.
+  • Filters for high-intent leads
+  • Establishes exclusive representation and referral fee protection
+  • Legal consent layer for recording and profile building
+
+  GEMINI LIVE (STAGE 2): High-intent users get a 10-minute 'Premium Advisory Session' ($7.00 cap) to build their relocation profile.
+  • Cost: ~$3.50 per session (capped at 10 min)
+  • Purpose: Deep-dive intake, comprehensive profile building, personalized guidance
+  • Availability: On-demand for committed users
+
+  STRATEGIC VALUE: This filters for high-intent leads for our agents while providing a 'First-to-Market' human-like AI experience. You're not burning V2V costs on tire-kickers — only on users who've signed the agreement and demonstrated intent. This creates a powerful conversion funnel while keeping infrastructure costs predictable.
+
+  ────────────────────────────────
   FUTURE VENDOR DEVELOPMENT
   ────────────────────────────────
   As the app evolves, new vendors may be added:
