@@ -156,8 +156,8 @@ export default function CommitmentGate({ onCommit }) {
                 onClick={() => toggleCheck(i)}
                 className="w-full text-left flex gap-3 items-start p-3 rounded-xl transition-all"
                 style={{
-                  background: checked.includes(i) ? 'rgba(212,175,55,0.1)' : '#111',
-                  border: checked.includes(i) ? `1px solid ${GOLD}44` : '1px solid #222',
+                  background: checked.includes(i) ? 'rgba(212,175,55,0.1)' : '#3a3a3a',
+                  border: checked.includes(i) ? `1px solid ${GOLD}44` : '1px solid #555',
                 }}>
                 <div className="w-5 h-5 rounded-md shrink-0 mt-0.5 flex items-center justify-center transition-all"
                   style={{
