@@ -150,13 +150,13 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-6 md:px-14 w-full">
           <div>
 
-          {/* V2V Agent Recruitment Card - below the hero grid */}
+          {/* V2V Agent Recruitment Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8"
+            className="mt-8 mb-8"
           >
             <div className="relative rounded-3xl px-8 py-4 frosted-dark flex flex-row items-center gap-6 w-full" style={{ background: '#000', border: '1px solid #D4AF37' }}>
               <div className="flex items-center gap-3 shrink-0">
@@ -174,8 +174,8 @@ export default function Home() {
               </Link>
             </div>
           </motion.div>
+          </div>
         </div>
-      </section>
 
       {/* Divider banner */}
       <section className="py-14 px-6 relative overflow-hidden"
