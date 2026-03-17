@@ -522,24 +522,31 @@ If client skips the gate and calls directly:
     title: 'Key Risks & Mitigations',
     icon: Shield,
     content: `Risk 1: Agent Network Adoption
-Mitigation: Aggressive recruitment incentives, proven referral quality, white-glove onboarding
+  Mitigation: Aggressive recruitment incentives, proven referral quality, white-glove onboarding
 
-Risk 2: Data Dependency on Third Parties (Zillow, MLS)
-Mitigation: Build proprietary data layer; negotiate direct MLS partnerships; develop alternatives
+  Risk 2: Data Dependency on Third Parties (Zillow, MLS)
+  Mitigation: Build proprietary data layer; negotiate direct MLS partnerships; develop alternatives
 
-Risk 3: LLM API Costs at Scale
-Mitigation: Cache queries; batch processing; transition to custom models; negotiate volume discounts
+  Risk 3: LLM API Costs at Scale
+  Mitigation: Cache queries; batch processing; transition to custom models; negotiate volume discounts
 
-Risk 4: Regulatory (State real estate licensing, referral fee structures)
-Mitigation: Legal review by state; structured as agent networking platform, not brokerage
+  Risk 4: Regulatory (State real estate licensing, referral fee structures)
+  Mitigation: Legal review by state; structured as agent networking platform, not brokerage
 
-Risk 5: Competitive Response from Zillow/Redfin
-Mitigation: Premium positioning + network effects make them slow to respond; build moat via data + brand
+  Risk 5: Competitive Response from Zillow/Redfin
+  Mitigation: Premium positioning + network effects make them slow to respond; build moat via data + brand
 
-Risk 6: Churn if Agent Experience is Poor
-Mitigation: Excellent referral quality data; dedicated agent success team; ongoing feedback loop`
+  Risk 6: Churn if Agent Experience is Poor
+  Mitigation: Excellent referral quality data; dedicated agent success team; ongoing feedback loop`
+  },
+  {
+    id: 'referral-flow-mockup',
+    title: '🎯 Referral Flow Mockup',
+    icon: FileText,
+    isComponent: true,
+    component: ReferralFlowMockup
   }
-];
+  ];
 
 export default function BusinessPlan() {
   const [expandedSection, setExpandedSection] = useState('executive-summary');
