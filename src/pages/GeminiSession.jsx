@@ -39,10 +39,15 @@ export default function GeminiSession() {
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" />
         </Link>
-        <div>
+        <div className="flex-1">
           <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Gemini Live Interview</h1>
           <p className="text-xs" style={{ color: GOLD }}>Powered by Google Gemini • Your Private Relocation Session</p>
         </div>
+        <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto" style={{ color: GOLD }}
+          onClick={() => setLandscape(l => !l)}
+          title={landscape ? 'Switch to Portrait' : 'Switch to Landscape'}>
+          {landscape ? <Smartphone className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
+        </Button>
       </header>
 
       {/* Content */}
