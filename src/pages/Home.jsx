@@ -58,7 +58,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-16 items-start">
 
             {/* Left: Copy + Progress Card */}
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center">
+            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center" style={{ paddingTop: '80px' }}>
               <div className="mb-6 flex justify-center">
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
