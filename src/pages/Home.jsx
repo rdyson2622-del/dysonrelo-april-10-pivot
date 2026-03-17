@@ -63,7 +63,7 @@ export default function Home() {
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
 
-              <div className="pt-[45%]">
+              <div className="pt-[30%]">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
                   style={{ background: '#D4AF37', color: '#000' }}>
                   <Sparkles className="w-3 h-3" />
