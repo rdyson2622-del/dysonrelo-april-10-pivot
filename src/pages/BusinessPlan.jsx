@@ -560,6 +560,80 @@ If client skips the gate and calls directly:
   Risk 6: Churn if Agent Experience is Poor
   Mitigation: Excellent referral quality data; dedicated agent success team; ongoing feedback loop`
   },
+  {
+    id: 'scripts-handoffs',
+    title: '📝 Scripts & Hand-offs',
+    icon: Mic,
+    content: `────────────────────────────────
+CONSUMER SCRIPT (CHARLIE'S INTRO)
+────────────────────────────────
+"I've prepared a private V2V session with Gemini—our most advanced advisor. To protect this premium experience, please confirm your Dyson Network commitment below to start your 10-minute deep-dive."
+
+Purpose: Frames the Gemini Live session as an exclusive, premium benefit that requires commitment. Builds anticipation and positions the user to take action.
+
+Delivery: Spoken by Charlie (text-to-speech or voice agent) right before the Commitment Gate. Sets expectations and creates a sense of exclusivity.
+
+────────────────────────────────
+AGENT SCRIPT (THE THREE-WAY)
+────────────────────────────────
+"I've brought Gemini into our call to analyze the data. Gemini, based on the new listing Sarah liked, how does the commute change compared to her original plan?"
+
+Purpose: Introduces the Silent Moderator mode—Gemini is listening to agent-client conversations and detecting pivot points in real-time. Makes the agent look tech-forward and data-driven.
+
+Delivery: Used by agents during live video or phone consultations with relocating buyers. Frames Gemini as a real-time analyst that improves the quality of the conversation.
+
+Context: Gemini silently tracks:
+- Budget shifts (e.g., "we can stretch to 650k now")
+- Destination pivots (e.g., "Austin's looking good, but maybe Denver too")
+- Timeline changes (e.g., "we need to close by Q2")
+- Priority updates (e.g., "schools are the deal-breaker for us")
+- Property type preferences (e.g., "maybe a condo instead of single-family")
+
+────────────────────────────────
+POST-SESSION EXECUTION: DELTA REPORT
+────────────────────────────────
+After every voice session (consumer Gemini session OR agent call with Silent Moderator), the system MUST automatically:
+
+1. GENERATE: Delta Report (What Changed)
+   - Compares session data to baseline moving plan
+   - Extracts all detected pivot points
+   - Creates human-readable summary: "Sarah's budget increased $100k, timeline moved up 2 months, priority shift toward walkable neighborhoods"
+
+2. EMAIL BUYER: "Your Relocation Profile Updated"
+   Subject: "What We Learned About Your Move – Delta Report"
+   Content:
+   - Highlights changes detected in the session
+   - Confirms updated priorities, timeline, budget
+   - Links to updated Moving Plan dashboard
+   - CTA: "Schedule a walkthrough with your agent"
+
+3. EMAIL AGENT: "Delta Report – New Intel on Your Buyer"
+   Subject: "[BUYER NAME] – Relocation Profile Update"
+   Content:
+   - Agent-focused summary of changes
+   - Budget, timeline, priority shifts
+   - Actionable next steps (e.g., "Run new MLS search with updated criteria")
+   - Data points to reference in next conversation
+
+4. UPDATE SYSTEM: Moving Plan entity
+   - All detected pivots logged to pivot_points array
+   - Timestamps recorded for audit trail
+   - Source tagged (voice_note, gemini_session, agent_call)
+   - Automatic triggers: If major change detected (e.g., 25% budget increase), flag for agent review
+
+TECHNICAL IMPLEMENTATION:
+- Delta Report generation: Triggered by geminiDebrief function after every session ends
+- Email distribution: Automated via SendEmail integration
+- Data sync: Moving Plan updated in real-time with detected pivots
+- Notification: Agent receives in-app alert + email notification
+
+STRATEGIC VALUE:
+✓ Keeps both parties informed with minimal admin overhead
+✓ Surfaces real changes in buyer preferences as they happen
+✓ Gives agents actionable intelligence for next conversation
+✓ Creates system of record for all preference changes
+✓ Reduces surprise objections ("I never said that") through documentation`
+  },
   ];
 
 export default function BusinessPlan() {
