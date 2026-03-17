@@ -45,110 +45,110 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden" style={{ minHeight: '88vh', display: 'flex', alignItems: 'center' }}>
+      {/* Hero — full viewport landing screen */}
+      <section className="relative overflow-hidden flex flex-col items-center justify-center" style={{ minHeight: '100vh' }}>
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
         }} />
         {/* Top shimmer line */}
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.5) 50%, transparent 100%)' }} />
 
-        <div className="relative max-w-7xl mx-auto px-6 md:px-14 py-24 w-full">
-          <div className="grid md:grid-cols-[5fr_6fr] gap-16 items-stretch">
-
-            {/* Left: Copy — order-2 on mobile (below Charlie), order-1 on desktop */}
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col order-2 md:order-1">
-              <div className="mb-6 flex justify-center">
-                <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
-              </div>
-
-              <div className="text-center">
-                <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'block', width: '100%', textAlign: 'center' }}>
-                  <span style={{ display: 'block', textAlign: 'center', width: '100%' }}>CONCIERGE</span>
-                  <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', letterSpacing: '0.28em' }}>Real Estate</span>
-                </h1>
-
-                <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: '#fff', fontWeight: 400 }}>
-                  Meet Charlie — AI that handles every aspect of your relocation.
-                </p>
-                <p className="text-base font-semibold mb-8" style={{ color: '#000' }}>
-                  ✦ Completely free to you.
-                </p>
-
-                <div className="flex flex-wrap gap-3 justify-center mt-auto md:mt-16">
-                  <Link to="/Chat">
-                    <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-                      Talk to Charlie <MessageCircle className="w-4 h-4" />
-                    </button>
-                  </Link>
-                  <Link to="/Dashboard">
-                    <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
-                      style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                      My Dashboard <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </Link>
-                </div>
-              </div>
-
-            </motion.div>
-
-            {/* Right: Charlie card — order-1 on mobile (top), order-2 on desktop */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="flex justify-center order-1 md:order-2"
-            >
-              <div className="relative w-full max-w-sm">
-                {/* Ambient glow */}
-                <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
-                  style={{ background: 'rgba(212,175,55,0.12)' }} />
-
-                <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
-                  {/* AI badge */}
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
-                    AI-POWERED
-                  </div>
-
-                  <div className="flex justify-center mb-5 mt-2">
-                    <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
-                      alt="Charlie"
-                      className="h-48 w-auto object-contain"
-                      style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
-                    />
-                  </div>
-
-                  <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
-                    CHARLIE — YOUR AI CONCIERGE
-                  </p>
-
-                  <div className="space-y-2">
-                    <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                      style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
-                    </div>
-                    <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
-                      We're moving to Austin, TX in June!
-                    </div>
-                    <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                      style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
-                    </div>
-                  </div>
-
-                  <Link to="/Chat" className="block mt-5">
-                    <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                      START FREE CONSULTATION
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-
+        {/* Landing panel */}
+        <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex flex-col items-center justify-center text-center px-6 w-full max-w-2xl mx-auto py-20">
+          <div className="mb-8 flex justify-center">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-36 w-auto" />
           </div>
+          <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 6vw, 5rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '1.5rem', display: 'block', width: '100%', textAlign: 'center' }}>
+            <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#fff' }}>CONCIERGE</span>
+            <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', letterSpacing: '0.28em' }}>Real Estate</span>
+          </h1>
+          <p className="text-base leading-relaxed mb-1" style={{ color: '#fff', fontWeight: 400 }}>
+            Meet Charlie — AI that handles every aspect of your relocation.
+          </p>
+          <p className="text-base font-semibold mb-10" style={{ color: '#000' }}>
+            ✦ Completely free to you.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link to="/Chat">
+              <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
+                Talk to Charlie <MessageCircle className="w-4 h-4" />
+              </button>
+            </Link>
+            <Link to="/Dashboard">
+              <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
+                style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                My Dashboard <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
+          {/* Scroll cue */}
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity }} className="mt-12 flex flex-col items-center gap-1" style={{ color: 'rgba(212,175,55,0.5)' }}>
+            <span className="text-xs tracking-widest">SCROLL</span>
+            <ArrowRight className="w-4 h-4 rotate-90" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Charlie Card Section */}
+      <section className="relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-sm"
+        >
+          {/* Ambient glow */}
+          <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
+            style={{ background: 'rgba(212,175,55,0.12)' }} />
+
+          <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
+            {/* AI badge */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
+              AI-POWERED
+            </div>
+
+            <div className="flex justify-center mb-5 mt-2">
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
+                alt="Charlie"
+                className="h-48 w-auto object-contain"
+                style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
+              />
+            </div>
+
+            <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
+              CHARLIE — YOUR AI CONCIERGE
+            </p>
+
+            <div className="space-y-2">
+              <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                Hello! I'm Charlie. Moving somewhere you don't know anyone? I've got you. Where are you headed? 🏙️
+              </div>
+              <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
+                We're moving to Austin, TX in June!
+              </div>
+              <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                Perfect! Austin's booming. I'll research the best neighborhoods, connect you with a top local agent, and build your complete moving plan — all free. ✨
+              </div>
+            </div>
+
+            <Link to="/Chat" className="block mt-5">
+              <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
+                START FREE CONSULTATION
+              </button>
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+        <div className="relative max-w-7xl mx-auto px-6 md:px-14 w-full">
+          <div>
 
           {/* V2V Agent Recruitment Card - below the hero grid */}
           <motion.div
