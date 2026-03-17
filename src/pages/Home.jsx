@@ -55,7 +55,7 @@ export default function Home() {
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.5) 50%, transparent 100%)' }} />
 
         {/* Portrait: centered column. Landscape/desktop: two columns side by side */}
-        <div className="relative flex flex-col md:flex-row items-center justify-center gap-12 px-6 md:px-14 w-full h-full" style={{ minHeight: '100vh' }}>
+        <div className="relative flex flex-col md:flex-row items-center md:items-start justify-center gap-12 px-6 md:px-14 w-full h-full" style={{ minHeight: '100vh', paddingTop: '5vh', paddingBottom: '5vh' }}>
 
           {/* LEFT — hero slide */}
           <motion.div
