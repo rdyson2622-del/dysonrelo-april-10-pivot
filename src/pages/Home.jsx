@@ -64,8 +64,9 @@ export default function Home() {
               </div>
 
               <div className="text-center">
-                <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
-                  CONCIERGE<br /><span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span>
+                <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'block', width: '100%', textAlign: 'center' }}>
+                  <span style={{ display: 'block', textAlign: 'center', width: '100%' }}>CONCIERGE</span>
+                  <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', letterSpacing: '0.28em' }}>Real Estate</span>
                 </h1>
 
                 <p className="text-base leading-relaxed mb-1 max-w-lg" style={{ color: '#fff', fontWeight: 400 }}>
