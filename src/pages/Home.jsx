@@ -59,11 +59,11 @@ export default function Home() {
 
             {/* Left: Copy + Progress Card */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center">
-              <div className="mb-6 flex justify-center mt-[5%]">
+              <div className="mb-6 flex justify-center">
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
 
-              <div>
+              <div style={{ paddingTop: '5%' }}>
                 <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
                   <span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span><br />CONCIERGE
                 </h1>
