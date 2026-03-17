@@ -204,7 +204,7 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative rounded-3xl px-8 py-4 frosted-dark flex flex-row items-center gap-6 w-full" style={{ background: '#111', border: '1px solid #D4AF37' }}>
+            <div className="relative rounded-3xl px-6 py-5 frosted-dark flex flex-col md:flex-row md:items-center gap-4 w-full" style={{ background: '#111', border: '1px solid #D4AF37' }}>
               <div className="flex items-center gap-3 shrink-0">
                 <img src={DYSON_LOGO} alt="D&D" className="h-10 w-auto" />
                 <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
