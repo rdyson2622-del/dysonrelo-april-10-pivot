@@ -125,7 +125,7 @@ export default function Explainers() {
           className="rounded-3xl p-10 md:p-16 border" style={{ background: 'rgba(212,175,55,0.02)', borderColor: 'rgba(212,175,55,0.1)' }}
         >
           {/* Images Grid */}
-          <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
             {HISTORY_IMAGES.map((img, i) => (
               <motion.div
                 key={i}
@@ -133,9 +133,9 @@ export default function Explainers() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="rounded-2xl overflow-hidden h-48 md:h-64"
+                className="rounded-2xl overflow-hidden"
               >
-                <img src={img} alt={`Historical moment ${i + 1}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`Historical moment ${i + 1}`} className="w-full h-auto object-contain" />
               </motion.div>
             ))}
           </div>
