@@ -33,24 +33,103 @@ Business Model: Free-to-consumer, agent-funded revenue (25% referral fee on buye
 Key Differentiator: Charlie operates 24/7, scales infinitely, and improves with data. This beats traditional human concierges on availability, cost, and responsiveness.`
   },
   {
-    id: 'data-suppliers',
-    title: 'Data Suppliers & Reach',
+    id: 'data-aggregation-network',
+    title: 'Data Aggregation + Network',
     icon: Shield,
-    content: `Current Information Sources:
+    content: `YOUR COMPETITIVE MOAT: DATA SOURCES + TECHNOLOGY PARTNERS
 
-1. MLS Networks (regional): Primary listing source. 250+ regional systems; strong coverage in major metros, weaker in rural/secondary markets.
+  ────────────────────────────────
+  CURRENT DATA SOURCES
+  ────────────────────────────────
 
-2. CrissCross (Skip Tracing): Seller contact data for outreach campaigns.
+  1. MLS NETWORKS (Regional)
+  Primary listing source. 250+ regional systems; strong coverage in major metros, weaker in rural/secondary markets.
+  Contact: Varies by region (IDX provider)
+  Website: Varies
 
-3. Zillow/Realtor.com: Secondary listing data and market intelligence. High visibility but API-dependent.
+  2. ZILLOW API
+  Secondary listing data & market intelligence. High visibility but API-dependent.
+  Website: https://www.zillow.com/webservice/
+  Contact: api.zillow.com/support
 
-4. Public Data: Census, school districts, tax records, neighborhood fundamentals. Static but comprehensive.
+  3. REALTOR.COM API
+  Complementary listing data & market trends
+  Website: https://www.realtor.com/api
+  Contact: api-support@realtor.com
 
-5. Google Gemini API (LLM + Web Search): Real-time synthesis and enrichment via internet search. Charlie uses Gemini 3 Flash/Pro with add_context_from_internet=true to answer questions with current, contextual data.
+  4. ANGI (formerly ANGIE'S LIST)
+  Home services & contractor data (for relocation move planning)
+  Website: https://www.angi.com/api
+  Contact: business@angi.com
 
-Reach Gaps: MLS fragmentation limits rural coverage. Real-time hyperlocal insights (walkability, community vibe) aren't in any database—Charlie fills this gap through AI synthesis.
+  5. CRISSCROSS (Skip Tracing)
+  Seller contact data for outbound campaigns
+  Website: https://crisscross.com
+  API Key: BATCHDATA_API_KEY (secrets)
 
-Strategic Moat: You're the intelligent aggregator of fragmented data. Suppliers can't replicate your synthesis layer alone.`
+  6. PROPSTREAM
+  Property valuations, tax records, comparable sales
+  Website: https://propstream.com
+  API Key: PROPSTREAM_API_KEY (secrets)
+
+  7. PUBLIC DATA
+  Census, school districts, tax records, neighborhood fundamentals (static but comprehensive)
+  Sources: census.gov, education.gov, county assessors
+
+  8. GOOGLE GEMINI API (LLM + Web Search)
+  Real-time synthesis and enrichment via internet search
+  Website: https://ai.google.dev/gemini-api
+  API Key: GEMINI_API_KEY (secrets)
+  Charlie uses Gemini 3 Flash/Pro with add_context_from_internet=true to answer questions with current data
+
+  ────────────────────────────────
+  TECHNOLOGY PARTNERS & INTEGRATION VENDORS
+  ────────────────────────────────
+
+  1. GOOGLE GEMINI API
+  Service: Large Language Model + Web Search
+  Website: https://cloud.google.com/ai/generative-ai
+  Contact: support.google.com/cloud
+  Role: AI concierge, live voice interviews, synthesis
+
+  2. BASE44 PLATFORM
+  Service: Backend-as-a-Service
+  Website: https://base44.com
+  Contact: support@base44.com
+  Role: Database, functions, auth, integrations
+
+  3. TWILIO
+  Service: SMS & Communication
+  Website: https://www.twilio.com
+  Contact: support@twilio.com
+  Role: Seller outreach SMS campaigns
+
+  4. GOOGLE WORKSPACE
+  Service: Docs, Sheets, Drive
+  Website: https://workspace.google.com
+  Contact: workspace support
+  Role: Admin docs, process tracking
+
+  ────────────────────────────────
+  REACH GAPS & STRATEGIC ADVANTAGE
+  ────────────────────────────────
+  • MLS fragmentation limits rural coverage → Compensate with Zillow + Realtor.com data
+  • Real-time hyperlocal insights (walkability, community vibe) not in any single database → Charlie fills this gap through AI synthesis + web search
+  • Home services coordination gap → Angi integration provides contractor/service provider data
+
+  STRATEGIC MOAT: You're the intelligent aggregator of fragmented data. Individual suppliers can't replicate your synthesis + network effects. You control the distribution channel + client relationship.
+
+  ────────────────────────────────
+  FUTURE VENDOR DEVELOPMENT
+  ────────────────────────────────
+  As the app evolves, new vendors may be added:
+  • Healthcare provider directories (Healthgrades, Zocdoc)
+  • School district APIs (Great Schools)
+  • Utility companies (direct integrations)
+  • Moving companies (Uship, Allied integrations)
+  • Insurance partners (state farm, Allstate integrations)
+
+  Always document: vendor name, website, contact, API docs, API key location (if applicable), and role.`
   },
   {
     id: 'revenue-model',
