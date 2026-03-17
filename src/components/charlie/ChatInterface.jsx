@@ -191,8 +191,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
           onClick={() => setVoiceMode(!voiceMode)}
           className="text-xs px-2 py-1 rounded-lg border transition-all mr-1"
           style={{
-            borderColor: voiceMode ? GOLD : '#444',
-            color: voiceMode ? GOLD : '#888',
+            borderColor: voiceMode ? GOLD : '#555',
+            color: voiceMode ? GOLD : '#f5f5f5',
             background: voiceMode ? 'rgba(212,175,55,0.1)' : 'transparent',
           }}
         >
@@ -200,11 +200,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         </button>
 
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#888' }} onClick={onToggleExpand}>
+          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#f5f5f5' }} onClick={onToggleExpand}>
             {expanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
           {onClose && (
-            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#888' }} onClick={onClose}>
+            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#f5f5f5' }} onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           )}
@@ -220,8 +220,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
               onClick={() => setTab(t.id)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold transition-all"
               style={{
-                color: tab === t.id ? GOLD : '#555',
-                borderBottom: tab === t.id ? `2px solid ${GOLD}` : '2px solid transparent',
+               color: tab === t.id ? GOLD : '#f5f5f5',
+               borderBottom: tab === t.id ? `2px solid ${GOLD}` : '2px solid transparent',
               }}
             >
               <t.icon className="w-3.5 h-3.5" />
