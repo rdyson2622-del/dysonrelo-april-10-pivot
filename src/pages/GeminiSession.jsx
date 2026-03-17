@@ -16,7 +16,7 @@ export default function GeminiSession() {
   const [stage, setStage] = useState('gate'); // gate | session | done
   const [clientInfo, setClientInfo] = useState(null);
   const [sessionResult, setSessionResult] = useState(null);
-  const [landscape, setLandscape] = useState(false);
+  const { landscape } = useLayout();
 
   const handleCommit = (info) => {
     setClientInfo(info);
