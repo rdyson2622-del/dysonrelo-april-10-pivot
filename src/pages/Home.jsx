@@ -67,9 +67,15 @@ export default function Home() {
             <div className="mb-8 flex justify-center">
               <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-36 w-auto" />
             </div>
-            <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 6vw, 5rem)', lineHeight: 1.15, letterSpacing: '0.28em', marginBottom: '1.5rem', display: 'block', width: '100%', textAlign: 'center' }}>
-              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#fff' }}>CONCIERGE</span>
-              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', letterSpacing: '0.28em' }}>Real Estate</span>
+            {/* Portrait: single condensed line. Desktop: two stacked lines */}
+            <h1 className="display-heading mb-6" style={{ textAlign: 'center', lineHeight: 1.15 }}>
+              <span className="md:hidden" style={{ fontSize: 'clamp(1.1rem, 5vw, 1.6rem)', letterSpacing: '0.18em', color: '#fff' }}>
+                CONCIERGE <span style={{ color: '#000', textTransform: 'none' }}>Real Estate</span>
+              </span>
+              <span className="hidden md:block" style={{ fontSize: 'clamp(2rem, 6vw, 5rem)', letterSpacing: '0.28em' }}>
+                <span style={{ display: 'block', color: '#fff' }}>CONCIERGE</span>
+                <span style={{ display: 'block', color: '#000', textTransform: 'none', letterSpacing: '0.28em' }}>Real Estate</span>
+              </span>
             </h1>
             <p className="text-base leading-relaxed mb-1" style={{ color: '#fff', fontWeight: 400 }}>
               Meet Charlie — AI that handles every aspect of your relocation.
