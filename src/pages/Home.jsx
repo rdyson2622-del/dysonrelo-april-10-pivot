@@ -64,12 +64,6 @@ export default function Home() {
               </div>
 
               <div>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-widest"
-                  style={{ background: '#D4AF37', color: '#000' }}>
-                  <Sparkles className="w-3 h-3" />
-                  POWERED BY AI
-                </div>
-
                 <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff', display: 'inline-block' }}>
                   <span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span><br />CONCIERGE
                 </h1>
