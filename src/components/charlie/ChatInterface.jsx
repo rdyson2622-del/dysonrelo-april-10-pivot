@@ -173,7 +173,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         <img src={DYSON_LOGO} alt="Charlie" className="h-10 w-auto" />
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
-          <p className="text-xs" style={{ color: '#888' }}>
+          <p className="text-xs" style={{ color: '#f5f5f5' }}>
             {isTyping ? 'Thinking...' : isListening ? '🎤 Listening...' : isSpeaking ? '🔊 Speaking...' : 'AI Concierge • Always Free'}
           </p>
         </div>
@@ -251,7 +251,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
               ))}
 
               {isTyping && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-sm" style={{ color: '#888' }}>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-sm" style={{ color: '#f5f5f5' }}>
                   <div className="flex gap-1">
                     {[0, 0.15, 0.3].map((delay, i) => (
                       <motion.div key={i} className="w-2 h-2 rounded-full" style={{ background: GOLD }}

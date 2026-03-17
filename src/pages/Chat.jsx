@@ -33,7 +33,7 @@ export default function Chat() {
             <Sparkles className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
-              <p className="text-xs truncate" style={{ color: '#666' }}>Start your live Gemini session — builds your full relocation profile</p>
+              <p className="text-xs truncate" style={{ color: '#f5f5f5' }}>Start your live Gemini session — builds your full relocation profile</p>
             </div>
             <span className="text-xs font-bold shrink-0" style={{ color: GOLD }}>Begin →</span>
           </div>
