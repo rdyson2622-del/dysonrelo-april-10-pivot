@@ -72,7 +72,7 @@ export default function CommitmentGate({ onCommit }) {
           </div>
 
           <div className="rounded-2xl p-4 text-sm" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33`, borderLeft: `4px solid ${GOLD}` }}>
-            <p style={{ color: '#999', lineHeight: '1.6' }}>
+            <p style={{ color: '#f5f5f5', lineHeight: '1.6' }}>
               <span style={{ color: GOLD, fontWeight: 600 }}>Disclosure: </span>
               This session is powered by Google Gemini AI. Conversations are recorded and summarized. Information shared by Dyson & Dyson staff is proprietary and confidential. You may request deletion of your data at any time.
             </p>
@@ -90,7 +90,7 @@ export default function CommitmentGate({ onCommit }) {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div>
             <h3 className="text-lg font-bold mb-1" style={{ color: '#fff' }}>Let's get acquainted</h3>
-            <p className="text-xs" style={{ color: '#666' }}>Your information is private and never sold.</p>
+            <p className="text-xs" style={{ color: '#f5f5f5' }}>Your information is private and never sold.</p>
           </div>
 
           <div className="space-y-3">
@@ -145,7 +145,7 @@ export default function CommitmentGate({ onCommit }) {
             <Shield className="w-7 h-7" style={{ color: GOLD }} />
             <div>
               <h3 className="text-2xl font-bold" style={{ color: '#fff' }}>Service Agreement</h3>
-              <p className="text-sm" style={{ color: '#666' }}>Please check each item to confirm you understand</p>
+              <p className="text-sm" style={{ color: '#f5f5f5' }}>Please check each item to confirm you understand</p>
             </div>
           </div>
 

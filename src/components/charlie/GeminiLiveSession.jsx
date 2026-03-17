@@ -222,7 +222,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full animate-pulse"
             style={{ background: status === 'active' ? '#22c55e' : status === 'connecting' ? GOLD : '#444' }} />
-          <span className="text-xs font-bold" style={{ color: '#888' }}>
+          <span className="text-xs font-bold" style={{ color: '#f5f5f5' }}>
             {status === 'ready' && 'Ready to begin'}
             {status === 'connecting' && 'Connecting to Gemini...'}
             {status === 'active' && `Live Session — ${formatTime(sessionDuration)} / 5:00`}
@@ -256,7 +256,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
                     border: entry.role === 'user' ? `1px solid ${GOLD}33` : '1px solid #2a2a2a',
                     color: entry.role === 'user' ? '#fff' : '#ddd',
                   }}>
-                  <p className="text-xs font-bold mb-1" style={{ color: entry.role === 'user' ? GOLD : '#888' }}>
+                  <p className="text-xs font-bold mb-1" style={{ color: entry.role === 'user' ? GOLD : '#f5f5f5' }}>
                     {entry.role === 'user' ? 'You' : '✨ Gemini'}
                   </p>
                   {entry.text}
@@ -277,7 +277,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
                   transition={{ duration: 0.5, repeat: Infinity, delay }} />
               ))}
             </div>
-            <span className="text-xs" style={{ color: '#666' }}>
+            <span className="text-xs" style={{ color: '#f5f5f5' }}>
               {currentSpeaker === 'gemini' ? 'Gemini is speaking...' : 'Listening...'}
             </span>
           </motion.div>
@@ -297,8 +297,8 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="flex flex-col items-center gap-3 py-8">
             <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
-            <p className="text-sm text-center" style={{ color: '#888' }}>
-              Gemini is analyzing your conversation and building your relocation profile...
+            <p className="text-sm text-center" style={{ color: '#f5f5f5' }}>
+             Gemini is analyzing your conversation and building your relocation profile...
             </p>
           </motion.div>
         )}
@@ -309,7 +309,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
             className="flex flex-col items-center gap-3 py-8">
             <CheckCircle2 className="w-10 h-10" style={{ color: '#22c55e' }} />
             <p className="text-base font-bold text-center" style={{ color: '#fff' }}>Profile Built Successfully</p>
-            <p className="text-sm text-center" style={{ color: '#888' }}>
+            <p className="text-sm text-center" style={{ color: '#f5f5f5' }}>
               Your Dyson concierge team has been notified and will reach out shortly.
             </p>
           </motion.div>
@@ -325,7 +325,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
         {status === 'ready' && (
           <div className="space-y-3">
             <div className="rounded-xl p-3 text-xs" style={{ background: '#111', border: '1px solid #222' }}>
-              <p style={{ color: '#888' }}>
+              <p style={{ color: '#f5f5f5' }}>
                 🎤 Make sure your microphone is enabled. Speak naturally — Gemini will guide the conversation.
                 Sessions typically last 10–20 minutes.
               </p>
