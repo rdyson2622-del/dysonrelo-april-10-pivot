@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3 } from 'lucide-react';
+import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GOLD = '#D4AF37';
