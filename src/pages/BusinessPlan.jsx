@@ -164,6 +164,118 @@ Infrastructure Priorities:
 Cost Optimization: As volume grows, replace Gemini API calls with cached responses and custom fine-tuned models.`
   },
   {
+    id: 'technology-partners',
+    title: 'Technology Partners & Vendors',
+    icon: Zap,
+    content: `CRITICAL VENDOR RELATIONSHIPS — OPERATIONAL QUICK REFERENCE
+
+  ────────────────────────────────
+  KEY IT & SERVICE PARTNERS
+  ────────────────────────────────
+
+  1. GOOGLE GEMINI API
+  Service: Large Language Model + Web Search Integration
+  Contact: Google Cloud Support (support.google.com/cloud)
+  Website: https://cloud.google.com/ai/generative-ai
+  API Docs: https://ai.google.dev/gemini-api
+  Status: ACTIVE (Production)
+  Cost: Pay-per-token (Gemini 2.5 Flash, Pro)
+  Role: Powers Charlie AI concierge, live voice interviews, content synthesis
+  Escalation: Google Cloud account owner via cloud console
+
+  2. BASE44 PLATFORM
+  Service: App Backend-as-a-Service (Data, Functions, Auth, Integrations)
+  Contact: Base44 Support (support@base44.com)
+  Website: https://base44.com
+  Documentation: https://docs.base44.com
+  Status: ACTIVE (Production)
+  Cost: Usage-based (credits)
+  Role: Database (entities), backend functions (Deno), authentication, integrations
+  Admin Panel: https://base44.com/dashboard
+  Escalation: Support ticket through dashboard
+
+  3. MLS NETWORKS (Regional)
+  Service: Real Estate Listing Data (250+ regional systems)
+  Contact: Varies by region (IDX provider)
+  Examples: TMLS, SWFL MLS, DFW MLS, Austin MLS
+  Website: Varies
+  Status: ACTIVE (Multiple Vendors)
+  Cost: Subscription per region
+  Role: Primary listing source for property search & matching
+  Escalation: IDX provider support team
+
+  4. CRISSCROSS (Skip Tracing)
+  Service: Homeowner Contact Data (Skip Tracing)
+  Contact: support@crisscross.com
+  Website: https://crisscross.com
+  API Docs: https://crisscross.com/api-docs
+  Status: ACTIVE (Production)
+  Cost: Per-lookup fee
+  Role: Seller outreach campaigns — phone/email lookup for listed homeowners
+  API Key: BATCHDATA_API_KEY (stored in secrets)
+  Escalation: CrissCross support or account manager
+
+  5. PROPSTREAM
+  Service: Property Data Intelligence (Valuations, Tax Records, Comps)
+  Contact: support@propstream.com
+  Website: https://propstream.com
+  API Docs: https://propstream.com/developer
+  Status: ACTIVE (Production)
+  Cost: Subscription + per-request
+  Role: Property detail panels, tax history, comparable sales
+  API Key: PROPSTREAM_API_KEY (stored in secrets)
+  Escalation: PropStream account team
+
+  6. ZILLOW API
+  Service: Listing Data & Market Intelligence
+  Contact: Zillow for Developers (api.zillow.com/support)
+  Website: https://www.zillow.com/webservice/
+  Status: ACTIVE (Secondary Source)
+  Cost: Free tier available
+  Role: Supplemental listing data, market trends, visibility
+  Escalation: Zillow Developer forum or support portal
+
+  7. TWILIO
+  Service: SMS Communication Platform
+  Contact: support@twilio.com
+  Website: https://www.twilio.com
+  Docs: https://www.twilio.com/docs
+  Status: ACTIVE (Seller Outreach SMS)
+  Cost: Per-SMS fee + VCAC charges
+  Role: Automated SMS outreach to sellers (Step 1)
+  Escalation: Twilio support or account manager
+
+  8. GOOGLE SHEETS / DRIVE
+  Service: Document Storage & Collaboration
+  Contact: Google Workspace Support
+  Website: https://workspace.google.com
+  Status: ACTIVE (Admin Documentation)
+  Cost: Workspace plan
+  Role: Process docs, agent network, roadmap tracking
+  Escalation: Workspace account admin
+
+  ────────────────────────────────
+  QUARTERLY VENDOR REVIEW CHECKLIST
+  ────────────────────────────────
+  ☐ Check all API rates/costs vs. budget
+  ☐ Review API deprecations or changes
+  ☐ Confirm all secrets/keys are current (not expired)
+  ☐ Audit data quality from each source
+  ☐ Confirm vendor SLAs are being met
+  ☐ Identify cost reduction opportunities
+
+  ────────────────────────────────
+  VENDOR CRITICAL FAILURE PROTOCOL
+  ────────────────────────────────
+  If a vendor goes down:
+  1. Google Gemini unavailable → Disable live interviews (fallback: email intake)
+  2. CrissCross unavailable → Pause seller outreach campaigns
+  3. MLS unavailable → Restrict property search features
+  4. Base44 unavailable → Entire platform down (escalate immediately)
+
+  Always have a backup communication channel with your account managers.`
+  },
+  {
     id: 'process-overview',
     title: '🗺️ Process Overview (New Employee)',
     icon: Zap,
