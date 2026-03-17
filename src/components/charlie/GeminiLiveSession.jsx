@@ -225,13 +225,15 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
           <span className="text-xs font-bold" style={{ color: '#888' }}>
             {status === 'ready' && 'Ready to begin'}
             {status === 'connecting' && 'Connecting to Gemini...'}
-            {status === 'active' && `Live Session — ${formatTime(sessionDuration)}`}
+            {status === 'active' && `Live Session — ${formatTime(sessionDuration)} / 5:00`}
             {status === 'processing' && 'Building your profile...'}
             {status === 'complete' && 'Session complete'}
           </span>
         </div>
         {status === 'active' && (
-          <span className="text-xs" style={{ color: '#555' }}>{formatTime(sessionDuration)}</span>
+          <span className="text-xs font-bold" style={{ color: sessionDuration >= 240 ? '#ef4444' : '#555' }}>
+            {SESSION_TIME_LIMIT - sessionDuration}s left
+          </span>
         )}
       </div>
 
