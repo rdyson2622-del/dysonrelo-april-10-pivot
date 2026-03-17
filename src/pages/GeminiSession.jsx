@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Smartphone, Monitor } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import CommitmentGate from '../components/charlie/CommitmentGate';
 import GeminiLiveSession from '../components/charlie/GeminiLiveSession';
 import InterviewSummary from '../components/charlie/InterviewSummary';
+import LayoutToggleButton from '../components/layout/LayoutToggleButton';
+import { useLayout } from '@/lib/LayoutContext';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
