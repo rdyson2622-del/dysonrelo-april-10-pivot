@@ -51,7 +51,7 @@ export default function GeminiSession() {
       </header>
 
       {/* Content */}
-      <div className="flex-1 max-w-2xl w-full mx-auto flex flex-col" style={{ minHeight: 0 }}>
+      <div className={`flex-1 w-full mx-auto flex flex-col ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`} style={{ minHeight: 0 }}>
         <AnimatePresence mode="wait">
 
           {/* COMMITMENT GATE */}
