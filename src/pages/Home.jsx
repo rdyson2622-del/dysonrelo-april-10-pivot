@@ -76,7 +76,7 @@ export default function Home() {
                   ✦ Completely free to you.
                 </p>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 justify-center mt-auto md:mt-16">
                   <Link to="/Chat">
                     <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
                       Talk to Charlie <MessageCircle className="w-4 h-4" />
