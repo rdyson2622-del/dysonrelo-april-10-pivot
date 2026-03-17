@@ -48,7 +48,7 @@ export default function CommitmentGate({ onCommit }) {
               <Mic className="w-10 h-10" style={{ color: GOLD }} />
             </div>
             <h2 className="serif-heading text-3xl font-bold" style={{ color: '#fff', letterSpacing: '-0.01em' }}>Meet Gemini — Your AI Relocation Advisor</h2>
-            <p className="text-base leading-relaxed max-w-md mx-auto" style={{ color: '#aaa' }}>
+            <p className="text-base leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5' }}>
               You're about to have a live voice conversation with Google Gemini — one of the most advanced AI systems in the world — guided by Charlie, your Dyson concierge.
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function CommitmentGate({ onCommit }) {
                   style={{ background: 'transparent', border: `1.5px solid ${GOLD}` }}>
                   <Check className="w-3.5 h-3.5" style={{ color: GOLD }} strokeWidth={3} />
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#ccc' }}>{item}</p>
+                <p className="text-sm leading-relaxed" style={{ color: '#f5f5f5' }}>{item}</p>
               </div>
             ))}
           </div>
