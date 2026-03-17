@@ -59,7 +59,7 @@ export default function Home() {
 
             {/* Left: Copy + Progress Card */}
             <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center">
-              <div className="mb-6 flex justify-center">
+              <div className="mb-6 flex justify-center mt-[5%]">
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
 
