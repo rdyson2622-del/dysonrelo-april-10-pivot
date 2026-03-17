@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { MapPin, Users, Home, ArrowRight, Settings, MessageCircle, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const CHARLIE_IMG = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png";
@@ -12,6 +14,7 @@ const GOLD = '#D4AF37';
 
 export default function Dashboard() {
   const [flaggedCount, setFlaggedCount] = useState(0);
+  const [clientId, setClientId] = useState(null);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
@@ -20,13 +23,26 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    const fetchFlaggedMessages = async () => {
+    const fetchClientAndFlags = async () => {
+      try {
+        // Get current user's client profile
+        const user = await base44.auth.me();
+        if (user?.email) {
+          const clients = await base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1);
+          if (clients.length > 0) {
+            setClientId(clients[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching client:', err);
+      }
+
       const flagged = await base44.entities.ChatMessage.filter(
         { flag_status: { $ne: 'none' } }
       );
       setFlaggedCount(flagged.length);
     };
-    fetchFlaggedMessages();
+    fetchClientAndFlags();
   }, []);
 
   const completedTasks = tasks.filter((t) => t.status === 'completed').length;
@@ -158,6 +174,18 @@ export default function Dashboard() {
             </Link>
           </motion.div>
         </div>
+
+        {/* Voice Note Section */}
+        {clientId && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <PlanVoiceNote clientId={clientId} />
+          </motion.div>
+        )}
 
         {/* Quick Access Card */}
         <motion.div
