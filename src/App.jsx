@@ -125,6 +125,7 @@ import BusinessPlan from './pages/BusinessPlan';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
+import { LayoutProvider } from './lib/LayoutContext';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
