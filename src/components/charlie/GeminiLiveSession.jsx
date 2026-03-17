@@ -8,7 +8,30 @@ const GOLD = '#D4AF37';
 
 const SESSION_TIME_LIMIT = 5 * 60; // 5 minutes in seconds
 
-const SESSION_SYSTEM = `You are a warm, professional relocation interview specialist working for Dyson & Dyson Concierge Relocation Services. Your job is to conduct a thorough but conversational intake interview to build the client's relocation profile.
+const createSessionSystem = (silentMode = false) => {
+  const baseSystem = `You are a warm, professional relocation specialist working for Dyson & Dyson Concierge Relocation Services.`;
+
+  if (silentMode) {
+    return `${baseSystem}
+
+SILENT MODERATOR MODE: An agent is on this call. Your role is to:
+1. Listen for 'Pivot Points' (budget changes, destination shifts, timeline changes, priority updates)
+2. Silently track these changes in real-time
+3. Do NOT interrupt the agent-client conversation
+4. At natural pauses, acknowledge understood pivot points: "I'm noting that you've shifted your budget to $X / timeline is now Y"
+5. Silently update the Moving Plan data object with detected pivots
+
+KEY PIVOT POINTS TO DETECT:
+- Budget mentions (e.g., "actually, we can go up to 650k")
+- Destination changes (e.g., "we're looking at Austin now instead of Denver")
+- Timeline shifts (e.g., "we need to move sooner")
+- Priority updates (e.g., "schools are more important now")
+- Property type changes (e.g., "thinking more condo than house")
+
+Be conversational but brief. Your goal is to ensure the plan stays current as decisions evolve.`;
+  }
+
+  return `${baseSystem}
 
 Cover these topics naturally in conversation (don't make it feel like a checklist):
 1. Destination city and specific neighborhoods of interest
@@ -26,13 +49,16 @@ Cover these topics naturally in conversation (don't make it feel like a checklis
 Be warm, conversational, and thorough. Ask follow-up questions. Take your time. This conversation will be used by our human staff to match them with the perfect agent and build their complete move plan.
 
 When the conversation feels complete (all major topics covered), wrap up naturally: "I think I have everything I need to start building your relocation profile. Our team will review this and reach out shortly to introduce you to your matched agent."`;
+};
 
-export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
+export default function GeminiLiveSession({ clientInfo, onSessionComplete, agentId = null, movingPlanId = null }) {
   const [status, setStatus] = useState('ready'); // ready | connecting | active | processing | complete
   const [transcript, setTranscript] = useState([]);
   const [currentSpeaker, setCurrentSpeaker] = useState(null);
   const [sessionDuration, setSessionDuration] = useState(0);
   const [error, setError] = useState(null);
+  const [detectedPivots, setDetectedPivots] = useState([]);
+  const [silentMode, setSilentMode] = useState(!!agentId); // Silent moderator mode if agent is present
 
   const wsRef = useRef(null);
   const audioCtxRef = useRef(null);
@@ -40,6 +66,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
   const streamRef = useRef(null);
   const timerRef = useRef(null);
   const transcriptRef = useRef([]);
+  const pivotsRef = useRef([]);
 
   const addToTranscript = useCallback((role, text) => {
     const entry = { role, text, timestamp: new Date().toISOString() };
@@ -75,7 +102,10 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
       const res = await base44.functions.invoke('geminiLiveProxy', {
         action: 'start_session',
         clientInfo,
-        systemPrompt: SESSION_SYSTEM,
+        systemPrompt: createSessionSystem(silentMode),
+        silentMode,
+        agentId,
+        movingPlanId,
       });
 
       if (res.data?.limit_reached) throw new Error(res.data.error);
@@ -105,6 +135,16 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
             addToTranscript('gemini', data.text);
             setCurrentSpeaker('gemini');
           }
+        } else if (data.type === 'pivot_detected' && silentMode) {
+          // Silent moderator detected a pivot point
+          const pivot = {
+            timestamp: new Date().toISOString(),
+            type: data.pivot_type,
+            old_value: data.old_value,
+            new_value: data.new_value,
+          };
+          pivotsRef.current = [...pivotsRef.current, pivot];
+          setDetectedPivots([...pivotsRef.current]);
         } else if (data.type === 'turn_complete') {
           setCurrentSpeaker(null);
         }
@@ -192,10 +232,18 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
     setCurrentSpeaker(null);
 
     // Send transcript to backend for debrief extraction
-    const res = await base44.functions.invoke('geminiDebrief', {
+    const debrief = {
       transcript: transcriptRef.current,
       clientInfo,
-    });
+    };
+
+    // If silent moderator mode, include detected pivots for moving plan update
+    if (silentMode && movingPlanId && pivotsRef.current.length > 0) {
+      debrief.detected_pivots = pivotsRef.current;
+      debrief.moving_plan_id = movingPlanId;
+    }
+
+    const res = await base44.functions.invoke('geminiDebrief', debrief);
 
     setStatus('complete');
     if (onSessionComplete) {
@@ -204,6 +252,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
         profile: res.data?.profile || {},
         tasks: res.data?.tasks || [],
         duration: sessionDuration,
+        detectedPivots: pivotsRef.current,
       });
     }
   };
