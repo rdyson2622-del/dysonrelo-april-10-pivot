@@ -189,11 +189,13 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <FontInjector />
-        <Router>
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
+        <LayoutProvider>
+          <FontInjector />
+          <Router>
+            <AuthenticatedApp />
+          </Router>
+          <Toaster />
+        </LayoutProvider>
       </QueryClientProvider>
     </AuthProvider>
   )
