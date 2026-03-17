@@ -640,13 +640,19 @@ export default function BusinessPlan() {
                     {React.createElement(section.icon, { className: 'w-6 h-6', style: { color: GOLD } })}
                     <h2 className="serif-heading text-2xl" style={{ color: '#000' }}>{section.title}</h2>
                   </div>
-                  <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
-                    {section.content.split('\n\n').map((para, i) => (
-                      <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">
-                        {para}
-                      </p>
-                    ))}
-                  </div>
+                  {section.isComponent ? (
+                    <div style={{ color: '#333' }}>
+                      {<section.component />}
+                    </div>
+                  ) : (
+                    <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
+                      {section.content.split('\n\n').map((para, i) => (
+                        <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               )
             ))}
