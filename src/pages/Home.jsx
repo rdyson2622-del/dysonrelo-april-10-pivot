@@ -63,7 +63,7 @@ export default function Home() {
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
 
-              <div className="text-center md:text-left">
+              <div className="text-center">
                 <h1 className="display-heading" style={{ fontSize: 'clamp(2rem, 4.5vw, 4.2rem)', lineHeight: 1.2, letterSpacing: '0.28em', marginBottom: '1.5rem', color: '#fff' }}>
                   CONCIERGE<br /><span style={{ color: '#000', whiteSpace: 'nowrap' }}>Real Estate</span>
                 </h1>
