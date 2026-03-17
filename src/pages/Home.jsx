@@ -196,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* V2V Agent Recruitment Card */}
-      <section className="px-6 md:px-14 py-10" style={{ background: '#000' }}>
+      <section className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
