@@ -18,9 +18,26 @@ Deno.serve(async (req) => {
     const { action, clientInfo, systemPrompt } = await req.json();
 
     if (action === 'start_session') {
-      // Return the Gemini Live WebSocket URL for direct browser connection
-      // The client connects directly to Gemini Live with the API key
-      // This is the approved pattern for browser-based Gemini Live sessions
+      // --- DAILY SESSION CAP: max 3 sessions per user per day ---
+      const today = new Date().toISOString().slice(0, 10); // "2026-03-17"
+      const todaySessions = await base44.asServiceRole.entities.ChatMessage.filter({
+        client_id: user.id,
+        message_type: 'task_update',
+      });
+
+      const sessionsTodayCount = todaySessions.filter(m =>
+        m.content?.startsWith('[GEMINI LIVE SESSION STARTED]') &&
+        m.created_date?.slice(0, 10) === today
+      ).length;
+
+      if (sessionsTodayCount >= 3) {
+        return Response.json({
+          error: 'Daily session limit reached. You may start a new session tomorrow.',
+          limit_reached: true,
+        }, { status: 429 });
+      }
+      // -----------------------------------------------------------
+
       const model = 'gemini-2.0-flash-live-001';
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
 

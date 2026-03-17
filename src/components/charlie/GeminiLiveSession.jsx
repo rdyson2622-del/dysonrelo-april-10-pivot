@@ -6,6 +6,8 @@ import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
+const SESSION_TIME_LIMIT = 5 * 60; // 5 minutes in seconds
+
 const SESSION_SYSTEM = `You are a warm, professional relocation interview specialist working for Dyson & Dyson Concierge Relocation Services. Your job is to conduct a thorough but conversational intake interview to build the client's relocation profile.
 
 Cover these topics naturally in conversation (don't make it feel like a checklist):
