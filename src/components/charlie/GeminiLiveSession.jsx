@@ -283,6 +283,15 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
           </motion.div>
         )}
 
+        {/* Time warning */}
+        {status === 'active' && sessionDuration >= 240 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="rounded-xl px-4 py-2 text-xs text-center font-bold"
+            style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}>
+            ⏱ Under 1 minute remaining — session will auto-complete soon
+          </motion.div>
+        )}
+
         {/* Processing state */}
         {status === 'processing' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
