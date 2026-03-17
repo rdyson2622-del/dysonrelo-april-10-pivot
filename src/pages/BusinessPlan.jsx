@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ReferralFlowMockup from '@/components/admin/ReferralFlowMockup';
 
 const GOLD = '#D4AF37';
 
