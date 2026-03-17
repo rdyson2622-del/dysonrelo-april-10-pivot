@@ -49,7 +49,14 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
-      setSessionDuration(d => d + 1);
+      setSessionDuration(d => {
+        const next = d + 1;
+        if (next >= SESSION_TIME_LIMIT) {
+          // Auto-end session at time limit
+          setTimeout(() => endSession(), 100);
+        }
+        return next;
+      });
     }, 1000);
   };
 
@@ -71,6 +78,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete }) {
         systemPrompt: SESSION_SYSTEM,
       });
 
+      if (res.data?.limit_reached) throw new Error(res.data.error);
       if (!res.data?.wsUrl) throw new Error('Could not start session');
 
       // Connect to Gemini Live WebSocket via our proxy
