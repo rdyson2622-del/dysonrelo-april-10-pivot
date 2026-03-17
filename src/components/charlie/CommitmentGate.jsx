@@ -142,10 +142,10 @@ export default function CommitmentGate({ onCommit }) {
       {step === 'consent' && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div className="flex items-center gap-3">
-            <Shield className="w-5 h-5" style={{ color: GOLD }} />
+            <Shield className="w-7 h-7" style={{ color: GOLD }} />
             <div>
-              <h3 className="text-base font-bold" style={{ color: '#fff' }}>Service Agreement</h3>
-              <p className="text-xs" style={{ color: '#666' }}>Please check each item to confirm you understand</p>
+              <h3 className="text-2xl font-bold" style={{ color: '#fff' }}>Service Agreement</h3>
+              <p className="text-sm" style={{ color: '#666' }}>Please check each item to confirm you understand</p>
             </div>
           </div>
 
