@@ -57,8 +57,8 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-6 md:px-14 py-24 w-full">
           <div className="grid md:grid-cols-2 gap-16 items-start">
 
-            {/* Left: Copy + Progress Card */}
-            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center">
+            {/* Left: Copy — order-2 on mobile (below Charlie), order-1 on desktop */}
+            <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col justify-center order-2 md:order-1">
               <div className="mb-6 flex justify-center">
                 <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-32 w-auto" />
               </div>
@@ -90,15 +90,14 @@ export default function Home() {
                 </div>
               </div>
 
-  
             </motion.div>
 
-            {/* Right: Charlie card */}
+            {/* Right: Charlie card — order-1 on mobile (top), order-2 on desktop */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="flex justify-center"
+              className="flex justify-center order-1 md:order-2"
             >
               <div className="relative w-full max-w-sm">
                 {/* Ambient glow */}
