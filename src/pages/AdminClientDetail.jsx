@@ -85,6 +85,7 @@ export default function AdminClientDetail() {
         <motion.div key={activeTab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}>
           {activeTab === 'profile'  && <ClientProfileTab client={client} />}
           {activeTab === 'gemini'   && <ClientGeminiTab client={client} />}
+          {activeTab === 'session'  && <ClientSessionMonitor client={client} />}
           {activeTab === 'chat'     && <ClientChatTab client={client} />}
           {activeTab === 'tasks'    && <ClientTasksTab client={client} />}
           {activeTab === 'contact'  && <ClientQuickContact client={client} />}
