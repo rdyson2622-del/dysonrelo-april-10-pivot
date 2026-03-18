@@ -75,7 +75,6 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   }, [messages, isTyping]);
 
   // Auto-speak welcome message as soon as voice mode is turned ON (first time only)
-  const hasSpokenWelcome = useRef(false);
   useEffect(() => {
     if (voiceMode && !hasSpokenWelcome.current && messages.length === 1) {
       hasSpokenWelcome.current = true;
