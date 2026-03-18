@@ -145,9 +145,14 @@ export default function AdminClients() {
              <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Relocation Clients</h1>
              <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage people relocating to new cities</p>
            </div>
-           <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
-             <Plus className="w-4 h-4" /> Add Client
-           </Button>
+           <div className="flex gap-2">
+              <Button onClick={() => setShowBulk(true)} variant="outline" className="gap-2 rounded-xl" style={{ borderColor: '#000', color: '#000' }}>
+                <Upload className="w-4 h-4" /> Bulk Import
+              </Button>
+              <Button onClick={() => setShowAdd(true)} className="gap-2 rounded-xl" style={{ background: '#000', color: '#fff' }}>
+                <Plus className="w-4 h-4" /> Add Client
+              </Button>
+            </div>
          </div>
        </motion.div>
 
