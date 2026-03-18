@@ -116,7 +116,7 @@ export default function CommitmentGate({ onCommit }) {
               />
             </div>
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Phone (optional)</label>
+              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Phone (optional)</label>
               <Input
                 type="tel"
                 placeholder="(555) 000-0000"
