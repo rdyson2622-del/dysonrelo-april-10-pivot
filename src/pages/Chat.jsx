@@ -20,8 +20,8 @@ export default function Chat() {
         </Link>
         <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
-          <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Charlie — AI Concierge</h1>
-          <p className="text-xs" style={{ color: '#D4AF37' }}>Concierge Relocation Services • Always Free</p>
+          <h1 className="text-2xl font-black" style={{ color: '#ffffff' }}>Charlie — AI Concierge</h1>
+          <p className="text-sm" style={{ color: '#D4AF37' }}>Concierge Relocation Services • Always Free</p>
         </div>
       </header>
 
@@ -32,10 +32,10 @@ export default function Chat() {
             style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}44` }}>
             <Sparkles className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
-              <p className="text-xs truncate" style={{ color: '#f5f5f5' }}>Start your live Gemini session — builds your full relocation profile</p>
+              <p className="text-sm font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
+              <p className="text-sm truncate" style={{ color: '#f5f5f5' }}>Start your live Gemini session — builds your full relocation profile</p>
             </div>
-            <span className="text-xs font-bold shrink-0" style={{ color: GOLD }}>Begin →</span>
+            <span className="text-sm font-bold shrink-0" style={{ color: GOLD }}>Begin →</span>
           </div>
         </Link>
       </div>
