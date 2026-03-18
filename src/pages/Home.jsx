@@ -376,15 +376,15 @@ export default function Home() {
           }} />
           <div className="relative grid md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>EXCLUSIVE AGENT NETWORK</p>
+              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>RELOCATION MANAGEMENT — NOT THE SALE SIDE</p>
               <h3 className="display-heading mb-5" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
-                Meet your perfect<br /><span className="gold-text-gradient">local agent.</span>
+                We manage your move.<br /><span className="gold-text-gradient">Your agent closes the deal.</span>
               </h3>
               <p className="leading-relaxed mb-7" style={{ color: '#fff' }}>
-                Charlie doesn't just connect you with any agent — he analyzes your needs, budget, timeline, and neighborhood preferences to hand-match you with the ideal local expert. Every agent is vetted, top-producing, and relocation-certified.
+                Dyson & Dyson is your Relocation Management team — we are not competing with your agent or listing your home. Our job is to research, coordinate, and execute every step of your move so your agent can focus on what they do best: finding and closing on the right property. We hand-select your agent. We stay with you through the entire journey.
               </p>
               <ul className="space-y-2.5 mb-9">
-                {['Vetted & Certified Relocation Specialists', 'Top 10% Producers in Their Markets', 'Dedicated Buyer Representation', 'Zero Cost to You as the Buyer'].map((item, i) => (
+                {['Independent Relocation Managers — Not Agents', 'We Select & Vet Your Local Agent For You', 'Active Management From First Call Through Closing', 'Zero Cost to You as the Buyer'].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm" style={{ color: '#fff' }}>
                     <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
                     {item}
