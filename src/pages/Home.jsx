@@ -204,7 +204,7 @@ export default function Home() {
             <span className="gold-text-gradient">We make the journey with you.</span>
           </h2>
           <p className="text-base max-w-2xl mx-auto" style={{ color: '#e5e5e5' }}>
-            Every step below is something Charlie and your Dyson concierge team actively execute — not just advise on. This is what "full service" actually means.
+            We are <strong style={{ color: GOLD }}>Relocation Managers</strong> — not agents, not a listing service. Every step below is something Charlie and your Dyson team actively execute on your behalf, all the way through closing.
           </p>
         </div>
 
