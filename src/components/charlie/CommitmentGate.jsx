@@ -66,7 +66,7 @@ export default function CommitmentGate({ onCommit }) {
                   style={{ background: 'transparent', border: `1.5px solid ${GOLD}` }}>
                   <Check className="w-3.5 h-3.5" style={{ color: GOLD }} strokeWidth={3} />
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#f5f5f5' }}>{item}</p>
+                <p className="leading-relaxed" style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>{item}</p>
               </div>
             ))}
           </div>
