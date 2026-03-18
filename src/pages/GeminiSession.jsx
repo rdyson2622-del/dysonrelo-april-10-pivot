@@ -101,10 +101,10 @@ export default function GeminiSession() {
               </div>
               <RelocationIntakeForm clientInfo={clientInfo} onComplete={handleIntakeComplete} />
               <div className="px-5 pb-4 shrink-0">
-                <button onClick={() => setStage('session')}
+                <button onClick={() => setStage('path')}
                   className="w-full text-center text-sm underline"
                   style={{ color: '#666' }}>
-                  Skip form — go straight to Gemini session
+                  Skip form — choose your path
                 </button>
               </div>
             </motion.div>
