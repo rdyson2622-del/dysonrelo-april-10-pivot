@@ -127,7 +127,7 @@ export default function OnboardingFlow({ onComplete }) {
                 onChange={e => setProfile(p => ({ ...p, destination_city: e.target.value }))}
                 onKeyDown={e => e.key === 'Enter' && canAdvance() && handleNext()}
                 className="text-base border-0 rounded-xl h-12"
-                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD, '--placeholder-color': '#aaa' }}
               />
             )}
 
