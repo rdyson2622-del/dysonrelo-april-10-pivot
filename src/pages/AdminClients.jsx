@@ -41,7 +41,6 @@ export default function AdminClients() {
   const [bulkStatus, setBulkStatus] = useState(null); // null | 'parsing' | 'preview' | 'importing' | 'done'
   const [bulkRows, setBulkRows] = useState([]);
   const [bulkResult, setBulkResult] = useState(null);
-  const fileRef = useRef(null);
   const queryClient = useQueryClient();
 
   const { data: clients = [], isLoading } = useQuery({
