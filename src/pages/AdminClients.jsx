@@ -122,7 +122,6 @@ export default function AdminClients() {
     setBulkStatus(null);
     setBulkRows([]);
     setBulkResult(null);
-    if (fileRef.current) fileRef.current.value = '';
   };
 
   const downloadTemplate = () => {
