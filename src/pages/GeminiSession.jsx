@@ -78,6 +78,31 @@ export default function GeminiSession() {
             </motion.div>
           )}
 
+          {/* INTAKE FORM */}
+          {stage === 'intake' && (
+            <motion.div key="intake" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
+              style={{ background: '#0d0d0d', border: `1px solid ${GOLD}33` }}>
+              <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #1a1a1a' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-2xl">📋</span>
+                  <h2 className="font-bold text-xl" style={{ color: GOLD }}>Your Relocation Profile</h2>
+                </div>
+                <p className="text-sm" style={{ color: '#e5e5e5' }}>
+                  Welcome, {clientInfo?.name?.split(' ')[0]}! Fill this out before your session — or use it as your complete profile if you prefer to skip the live interview.
+                </p>
+              </div>
+              <RelocationIntakeForm clientInfo={clientInfo} onComplete={handleIntakeComplete} />
+              <div className="px-5 pb-4 shrink-0">
+                <button onClick={() => setStage('session')}
+                  className="w-full text-center text-sm underline"
+                  style={{ color: '#666' }}>
+                  Skip form — go straight to Gemini session
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {/* LIVE SESSION */}
           {stage === 'session' && (
             <motion.div key="session" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
