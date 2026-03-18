@@ -31,12 +31,17 @@ const budgetLabels = {
 
 export default function AdminClients() {
   const [showAdd, setShowAdd] = useState(false);
+  const [showBulk, setShowBulk] = useState(false);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({
     full_name: '', email: '', phone: '', current_city: '',
     destination_city: '', budget: '', move_date: '', family_size: '', notes: '',
   });
   const [saving, setSaving] = useState(false);
+  const [bulkStatus, setBulkStatus] = useState(null); // null | 'parsing' | 'preview' | 'importing' | 'done'
+  const [bulkRows, setBulkRows] = useState([]);
+  const [bulkResult, setBulkResult] = useState(null);
+  const fileRef = useRef(null);
   const queryClient = useQueryClient();
 
   const { data: clients = [], isLoading } = useQuery({
