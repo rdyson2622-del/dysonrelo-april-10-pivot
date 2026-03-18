@@ -101,7 +101,7 @@ export default function CommitmentGate({ onCommit }) {
                 value={name}
                 onChange={e => setName(e.target.value)}
                 className="border-0 rounded-xl h-11"
-                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
               />
             </div>
             <div>
@@ -112,7 +112,7 @@ export default function CommitmentGate({ onCommit }) {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className="border-0 rounded-xl h-11"
-                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
               />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function CommitmentGate({ onCommit }) {
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 className="border-0 rounded-xl h-11"
-                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
               />
             </div>
           </div>
