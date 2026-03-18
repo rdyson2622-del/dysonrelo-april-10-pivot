@@ -179,7 +179,7 @@ export default function CommitmentGate({ onCommit }) {
             I Agree — Start My Session <Mic className="w-4 h-4" />
           </Button>
 
-          <p className="text-center text-xs" style={{ color: '#e5e5e5' }}>
+          <p className="text-center" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>
             By proceeding you agree to Dyson & Dyson's terms of service and privacy policy.
           </p>
         </motion.div>
