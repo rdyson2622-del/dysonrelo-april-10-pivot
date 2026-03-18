@@ -91,10 +91,6 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     const messageText = (text || input).trim();
     if (!messageText || isTyping) return;
 
-    // Stop any ongoing speech immediately
-    stopCharlie();
-    setIsSpeaking(false);
-
     const userMsg = { role: 'user', content: messageText, type: 'text' };
     setMessages(prev => {
       const history = [...prev, userMsg];
