@@ -68,8 +68,6 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const scrollRef = useRef(null);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
-  const hasSpokenWelcome = useRef(false);
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
