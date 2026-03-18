@@ -51,8 +51,8 @@ function CheckOption({ label, selected, onClick }) {
       onClick={onClick}
       className="w-full text-left flex gap-3 items-center p-3 rounded-xl transition-all"
       style={{
-        background: selected ? 'rgba(212,175,55,0.12)' : '#2a2a2a',
-        border: selected ? `1px solid ${GOLD}55` : '1px solid #444',
+        background: selected ? 'rgba(212,175,55,0.15)' : '#555',
+        border: selected ? `1px solid ${GOLD}55` : '1px solid #777',
       }}
     >
       <div className="w-5 h-5 rounded-md shrink-0 flex items-center justify-center transition-all"
