@@ -60,58 +60,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [voiceMode, setVoiceMode] = useState(false);
-  const scrollRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const recognitionRef = useRef(null);
-  const hasSpokenWelcome = useRef(false);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
-
-  // Auto-speak welcome message as soon as voice mode is turned ON (first time only)
-  useEffect(() => {
-    if (voiceMode && !hasSpokenWelcome.current && messages.length === 1) {
-      hasSpokenWelcome.current = true;
-      // Small delay to let AudioContext initialize after user gesture
-      setTimeout(() => speakText(messages[0].content), 300);
-    }
-  }, [voiceMode]);
-
-  const speakText = (text) => {
-    // Stop any current speech before starting new
-    stopCharlie();
-    speakAsCharlie(text, () => setIsSpeaking(true), () => setIsSpeaking(false));
-  };
-
-  const handleStopSpeaking = () => {
-    stopCharlie();
-    setIsSpeaking(false);
-  };
-
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { alert('Voice recognition not supported. Please use Chrome.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognitionRef.current = recognition;
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setIsListening(false);
-      handleSend(transcript);
-    };
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
-    setIsListening(true);
-    recognition.start();
-  };
-
-  const stopListening = () => { recognitionRef.current?.stop(); setIsListening(false); };
-  const toggleVoice = () => isListening ? stopListening() : startListening();
 
   const handleOnboardingComplete = (completedProfile) => {
     setProfile(completedProfile);
