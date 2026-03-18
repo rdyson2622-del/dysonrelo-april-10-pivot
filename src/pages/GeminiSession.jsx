@@ -110,6 +110,24 @@ export default function GeminiSession() {
             </motion.div>
           )}
 
+          {/* PATH CHOOSER */}
+          {stage === 'path' && (
+            <motion.div key="path" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
+              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+              <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-2xl">🛤️</span>
+                  <h2 className="font-bold text-xl" style={{ color: GOLD }}>How Would You Like to Proceed?</h2>
+                </div>
+                <p className="text-sm" style={{ color: '#e5e5e5' }}>
+                  Your profile is saved. Now choose how the Gemini session happens.
+                </p>
+              </div>
+              <PathChooser clientInfo={clientInfo} onChoose={handlePathChosen} />
+            </motion.div>
+          )}
+
           {/* LIVE SESSION */}
           {stage === 'session' && (
             <motion.div key="session" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
