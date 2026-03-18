@@ -47,8 +47,8 @@ export default function CommitmentGate({ onCommit }) {
               style={{ background: 'rgba(212,175,55,0.1)', border: `2px solid ${GOLD}` }}>
               <Mic className="w-10 h-10" style={{ color: GOLD }} />
             </div>
-            <h2 className="serif-heading text-3xl font-bold" style={{ color: '#fff', letterSpacing: '-0.01em' }}>Meet Gemini — Your AI Relocation Advisor</h2>
-            <p className="text-base leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5' }}>
+            <h2 className="serif-heading font-bold" style={{ color: '#fff', letterSpacing: '-0.01em', fontSize: '2.7rem' }}>Meet Gemini — Your AI Relocation Advisor</h2>
+            <p className="leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5', fontSize: '1.35rem' }}>
               You're about to have a live voice conversation with Google Gemini — one of the most advanced AI systems in the world — guided by Charlie, your Dyson concierge.
             </p>
           </div>
