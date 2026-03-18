@@ -18,11 +18,11 @@ const budgetLabels = {
   over_1m: 'Over $1M',
 };
 
-function InfoRow({ icon: Icon, label, value }) {
+function InfoRow({ icon: IconComp, label, value }) {
   if (!value) return null;
   return (
     <div className="flex items-start gap-3 py-2.5 border-b last:border-b-0" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-      <Icon className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+      <IconComp className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
       <div>
         <p className="text-xs" style={{ color: 'rgba(0,0,0,0.45)' }}>{label}</p>
         <p className="text-sm font-medium" style={{ color: '#000' }}>{value}</p>
