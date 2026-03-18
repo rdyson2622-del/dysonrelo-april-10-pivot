@@ -347,37 +347,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services */}
-      <section className="max-w-7xl mx-auto px-6 md:px-14 py-24">
-        <div className="text-center mb-16">
-          <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>FULL-SERVICE RELOCATION</p>
-          <h2 className="display-heading" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
-            Everything handled.<br />
-            <span className="gold-text-gradient">Nothing left behind.</span>
-          </h2>
-        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {services.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="p-6 rounded-2xl"
-              style={{ background: '#000', border: '1px solid #D4AF37' }}
-            >
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
-                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                <s.icon className="w-5 h-5" style={{ color: GOLD }} />
-              </div>
-              <h3 className="font-semibold mb-2 text-lg serif-heading" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.01em', fontSize: '19.6px' }}>{s.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
 
       {/* Agent highlight */}
       <section className="max-w-7xl mx-auto px-6 md:px-14 pb-24">
