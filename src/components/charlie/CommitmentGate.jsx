@@ -95,7 +95,7 @@ export default function CommitmentGate({ onCommit }) {
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Full Name *</label>
+              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Full Name *</label>
               <Input
                 placeholder="Your full name"
                 value={name}
