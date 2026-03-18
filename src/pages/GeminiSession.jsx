@@ -29,6 +29,11 @@ export default function GeminiSession() {
 
   const handleIntakeComplete = (data) => {
     setIntakeData(data);
+    setStage('path');
+  };
+
+  const handlePathChosen = (pathId) => {
+    setChosenPath(pathId);
     setStage('session');
   };
 
