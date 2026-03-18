@@ -298,7 +298,7 @@ Ready for your call with ${clientInfo.name}.
           onChange={e => setForm(p => ({ ...p, additional_notes: e.target.value }))}
           rows={3}
           className="w-full rounded-xl p-3 text-sm resize-none border-0 outline-none"
-          style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
+          style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
         />
       </div>
     </motion.div>,
