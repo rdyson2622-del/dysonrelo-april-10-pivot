@@ -305,8 +305,8 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
               ) : (
                 <div className="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm"
                   style={{
-                    background: entry.role === 'user' ? 'rgba(212,175,55,0.15)' : '#1a1a1a',
-                    border: entry.role === 'user' ? `1px solid ${GOLD}33` : '1px solid #2a2a2a',
+                    background: entry.role === 'user' ? 'rgba(212,175,55,0.15)' : '#2a2a2a',
+                    border: entry.role === 'user' ? `1px solid ${GOLD}33` : '1px solid #444',
                     color: entry.role === 'user' ? '#fff' : '#ddd',
                   }}>
                   <p className="text-xs font-bold mb-1" style={{ color: entry.role === 'user' ? GOLD : '#f5f5f5' }}>
