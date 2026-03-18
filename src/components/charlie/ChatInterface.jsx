@@ -49,6 +49,7 @@ Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if yo
 export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
+
   const WELCOME_MESSAGE = "Hello! I'm Charlie, your personal AI real estate concierge. ✨\n\nMoving to a new city? You won't be going it alone. Throughout your entire moving experience, you'll have full access to our human relocation staff, headed by **Bob Dyson** himself.\n\nWith our team of 21 AI assistants and a direct link to Gemini, we can answer virtually any real estate or community question you have — and monitor every step of your journey. Once you share the basics with us, we introduce ourselves live and stay with you all the way through closing.\n\nThis service is completely **free** to you as the buyer. So — where are you headed, and when are you planning to make the move?";
 
   const [messages, setMessages] = useState([
