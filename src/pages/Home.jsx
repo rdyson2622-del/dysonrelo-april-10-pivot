@@ -376,15 +376,27 @@ export default function Home() {
           }} />
           <div className="relative grid md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>RELOCATION MANAGEMENT — NOT THE SALE SIDE</p>
+              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE DYSON AGENT SELECTION PROCESS</p>
               <h3 className="display-heading mb-5" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
-                We manage your move.<br /><span className="gold-text-gradient">Your agent closes the deal.</span>
+                Your agent. Your choice.<br /><span className="gold-text-gradient">Zero guesswork.</span>
               </h3>
-              <p className="leading-relaxed mb-7" style={{ color: '#fff' }}>
-                Dyson & Dyson is your Relocation Management team — we are not competing with your agent or listing your home. Our job is to research, coordinate, and execute every step of your move so your agent can focus on what they do best: finding and closing on the right property. We hand-select your agent. We stay with you through the entire journey.
+              <p className="leading-relaxed mb-5" style={{ color: '#e5e5e5' }}>
+                Most people find an agent through Zillow, a yard sign, or a friend of a friend — with no idea whether they're any good. We eliminate that entirely.
+              </p>
+              <p className="leading-relaxed mb-6" style={{ color: '#e5e5e5' }}>
+                Before we show you a single name, Charlie interviews you on the <em>type</em> of agent you'd work best with — communication style, personality, pace. Then we pull from the <strong style={{ color: '#fff' }}>top 20 agents in your destination market</strong>, review their production records, check their DRE standing, and personally vet each one. From that pool, we present you with <strong style={{ color: '#fff' }}>3 to 5 curated candidates</strong> — never more, never less.
+              </p>
+              <p className="leading-relaxed mb-7" style={{ color: '#e5e5e5' }}>
+                You choose the one who feels right. The moment you do, <strong style={{ color: '#fff' }}>we have boots on the ground</strong> — a dedicated expert who knows your market, knows your needs, and is accountable to us. No "I love me" agents chasing their next deal. No cold handoffs. Just a professional who's been briefed, vetted, and ready to go to work for you.
               </p>
               <ul className="space-y-2.5 mb-9">
-                {['Independent Relocation Managers — Not Agents', 'We Select & Vet Your Local Agent For You', 'Active Management From First Call Through Closing', 'Zero Cost to You as the Buyer'].map((item, i) => (
+                {[
+                  'Charlie profiles your ideal agent before any names are shared',
+                  'Top 20 destination agents evaluated — production, DRE rating, personality',
+                  '3–5 personally vetted candidates presented for your review',
+                  'Your selection triggers immediate agent briefing & onboarding',
+                  'Zero cost to you as the buyer — always'
+                ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm" style={{ color: '#fff' }}>
                     <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
                     {item}
