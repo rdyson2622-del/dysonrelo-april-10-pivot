@@ -93,7 +93,7 @@ export default function OnboardingFlow({ onComplete }) {
               style={{ background: i <= step ? GOLD : '#333' }} />
           ))}
         </div>
-        <p className="text-xs" style={{ color: '#666' }}>Step {step + 1} of {steps.length}</p>
+        <p className="text-xs" style={{ color: '#e5e5e5' }}>Step {step + 1} of {steps.length}</p>
       </div>
 
       {/* Step content */}
@@ -114,7 +114,7 @@ export default function OnboardingFlow({ onComplete }) {
               </div>
               <div>
                 <h3 className="font-bold text-base" style={{ color: '#fff' }}>{currentStep.title}</h3>
-                <p className="text-xs" style={{ color: '#666' }}>{currentStep.subtitle}</p>
+                <p className="text-xs" style={{ color: '#e5e5e5' }}>{currentStep.subtitle}</p>
               </div>
             </div>
 
@@ -153,7 +153,7 @@ export default function OnboardingFlow({ onComplete }) {
                     style={{
                       background: profile.move_date === opt ? 'rgba(212,175,55,0.2)' : '#1a1a1a',
                       border: profile.move_date === opt ? `1px solid ${GOLD}` : '1px solid #2a2a2a',
-                      color: profile.move_date === opt ? GOLD : '#aaa',
+                      color: profile.move_date === opt ? GOLD : '#e5e5e5',
                     }}>
                     {opt}
                   </button>
@@ -171,7 +171,7 @@ export default function OnboardingFlow({ onComplete }) {
                       style={{
                         background: profile.family_size === opt ? 'rgba(212,175,55,0.2)' : '#1a1a1a',
                         border: profile.family_size === opt ? `1px solid ${GOLD}` : '1px solid #2a2a2a',
-                        color: profile.family_size === opt ? GOLD : '#aaa',
+                        color: profile.family_size === opt ? GOLD : '#e5e5e5',
                       }}>
                       {opt}
                     </button>
@@ -196,7 +196,7 @@ export default function OnboardingFlow({ onComplete }) {
                     style={{
                       background: profile.budget === opt.value ? 'rgba(212,175,55,0.2)' : '#1a1a1a',
                       border: profile.budget === opt.value ? `1px solid ${GOLD}` : '1px solid #2a2a2a',
-                      color: profile.budget === opt.value ? GOLD : '#aaa',
+                      color: profile.budget === opt.value ? GOLD : '#e5e5e5',
                     }}>
                     {opt.label}
                   </button>
@@ -213,7 +213,7 @@ export default function OnboardingFlow({ onComplete }) {
                     style={{
                       background: profile.purchase_type === opt ? 'rgba(212,175,55,0.2)' : '#1a1a1a',
                       border: profile.purchase_type === opt ? `1px solid ${GOLD}` : '1px solid #2a2a2a',
-                      color: profile.purchase_type === opt ? GOLD : '#aaa',
+                      color: profile.purchase_type === opt ? GOLD : '#e5e5e5',
                     }}>
                     {opt === 'buying' ? '🏠 Buying' : '🔑 Renting'}
                   </button>
@@ -232,7 +232,7 @@ export default function OnboardingFlow({ onComplete }) {
                       style={{
                         background: selected ? 'rgba(212,175,55,0.2)' : '#1a1a1a',
                         border: selected ? `1px solid ${GOLD}` : '1px solid #2a2a2a',
-                        color: selected ? GOLD : '#aaa',
+                        color: selected ? GOLD : '#e5e5e5',
                       }}>
                       {selected && <Check className="w-3 h-3" />}
                       {p.label}
