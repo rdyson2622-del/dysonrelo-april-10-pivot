@@ -245,7 +245,7 @@ export default function Home() {
               This session is <strong style={{ color: '#fff' }}>by invitation only</strong> — we protect it so the time is spent with families who are genuinely ready to move. Once we have your info, Charlie schedules it. No cost to you, ever.
             </p>
             <p className="text-sm leading-relaxed" style={{ color: '#aaa' }}>
-              We are not a member of any real estate association by design, but are a licensed brokerage firm — Ca. DRE # 02303118.
+              We are not a member of any real estate association by design, but are a licensed brokerage firm — The Dyson & Dyson Companies, Inc. Ca. DRE # 02303118.
             </p>
           </div>
 
