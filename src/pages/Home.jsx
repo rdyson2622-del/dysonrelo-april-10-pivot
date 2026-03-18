@@ -236,7 +236,7 @@ export default function Home() {
           </p>
 
           {/* Gemini 3-Way Session callout */}
-          <div className="rounded-2xl p-6 mb-6 text-left" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <div className="rounded-2xl p-6 mb-6 text-left" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
             <p className="text-sm leading-relaxed mb-3" style={{ color: '#e5e5e5' }}>
               Once you've confirmed your contact information with us, we set up a <strong style={{ color: '#fff' }}>private three-way live session</strong> — you, Google Gemini (one of the most advanced AI systems in the world), and Bob Dyson directly. This is not a chatbot form. It's a real conversation where we build your complete relocation profile together, in real time.
