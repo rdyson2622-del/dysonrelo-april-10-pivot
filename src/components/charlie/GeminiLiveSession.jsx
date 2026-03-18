@@ -219,10 +219,14 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
   };
 
   const cleanup = () => {
-    streamRef.current?.getTracks().forEach(t => t.stop());
-    processorRef.current?.disconnect();
-    audioCtxRef.current?.close();
-    wsRef.current?.close();
+    try { streamRef.current?.getTracks().forEach(t => t.stop()); } catch (_) {}
+    try { processorRef.current?.disconnect(); } catch (_) {}
+    try {
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close();
+      }
+    } catch (_) {}
+    try { if (wsRef.current?.readyState === WebSocket.OPEN) wsRef.current.close(); } catch (_) {}
   };
 
   const endSession = async () => {
