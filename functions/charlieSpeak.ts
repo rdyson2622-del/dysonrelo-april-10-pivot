@@ -77,14 +77,8 @@ function stripToEssentials(text) {
   const lines = clean.split('\n').map(l => l.trim()).filter(Boolean);
 
   const kept = lines.filter(line => {
-    const wordCount = line.split(/\s+/).length;
-    const hasNumber = /\d/.test(line);
-    const isShort = wordCount <= 12;
-    const looksLikeHeading = /^[A-Z]/.test(line) && wordCount <= 8;
-    const isBullet = /^[-•·]/.test(line);
-    const isLabel = line.endsWith(':') || line.includes(':') && wordCount <= 6;
-
-    return isShort || hasNumber || looksLikeHeading || isBullet || isLabel;
+    // Keep all lines — don't filter out conversational sentences
+    return line.length > 0;
   });
 
   return kept.join('\n');
