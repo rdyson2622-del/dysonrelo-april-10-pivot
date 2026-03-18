@@ -72,10 +72,10 @@ export default function Home() {
               <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(1.8rem, 4.5vw, 4rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Real Estate</span>
             </h1>
             <p className="text-base leading-relaxed mb-1" style={{ color: '#fff', fontWeight: 400 }}>
-              Meet Charlie — Artificial Intelligence (AI) that handles every aspect of your relocation.
+              Meet Charlie — your AI Relocation Manager. We don't sell homes. We manage your entire move — from first question to final walkthrough.
             </p>
             <p className="text-base font-semibold mb-10" style={{ color: '#000' }}>
-              ✦ Completely free to you.
+              ✦ Completely free to you as the buyer.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Link to="/Chat">
