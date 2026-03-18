@@ -223,7 +223,7 @@ export default function Home() {
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
                 <s.icon className="w-5 h-5" style={{ color: GOLD }} />
               </div>
-              <h3 className="font-bold mb-1.5 tracking-wide" style={{ color: '#fff', fontSize: '0.878rem' }}>{s.title}</h3>
+              <h3 className="font-bold mb-1.5 tracking-wide" style={{ color: '#fff', fontSize: '1.185rem' }}>{s.title}</h3>
               <p className="leading-relaxed" style={{ color: '#e5e5e5', fontSize: '0.878rem' }}>{s.desc}</p>
             </motion.div>
           ))}
