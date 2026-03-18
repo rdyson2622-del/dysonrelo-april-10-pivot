@@ -89,8 +89,8 @@ export default function CommitmentGate({ onCommit }) {
       {step === 'form' && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
           <div>
-            <h3 className="text-lg font-bold mb-1" style={{ color: '#fff' }}>Let's get acquainted</h3>
-            <p className="text-xs" style={{ color: '#f5f5f5' }}>Your information is private and never sold.</p>
+            <h3 className="font-bold mb-1" style={{ color: '#fff', fontSize: '1.65rem' }}>Let's get acquainted</h3>
+            <p style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>Your information is private and never sold.</p>
           </div>
 
           <div className="space-y-3">
