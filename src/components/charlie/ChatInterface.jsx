@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react'; // useRef kept for messagesEndRef
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
