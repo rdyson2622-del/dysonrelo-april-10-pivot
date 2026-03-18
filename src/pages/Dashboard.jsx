@@ -176,6 +176,11 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
+        {/* Relocation Profile Card */}
+        {clientId && (
+          <RelocationProfileCard clientId={clientId} />
+        )}
+
         {/* Voice Note Section */}
         {clientId && (
           <motion.div
