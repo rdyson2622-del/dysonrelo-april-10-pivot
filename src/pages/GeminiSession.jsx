@@ -42,8 +42,8 @@ export default function GeminiSession() {
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Gemini Live Interview</h1>
-          <p className="text-xs" style={{ color: GOLD }}>Powered by Google Gemini • Your Private Relocation Session</p>
+          <h1 className="text-2xl font-black" style={{ color: '#ffffff' }}>Gemini Live Interview</h1>
+          <p className="text-sm" style={{ color: GOLD }}>Powered by Google Gemini • Your Private Relocation Session</p>
         </div>
         <LayoutToggleButton />
       </header>
@@ -63,7 +63,7 @@ export default function GeminiSession() {
                  <span className="text-2xl">✨</span>
                  <h2 className="font-bold text-xl" style={{ color: GOLD }}>Before We Begin</h2>
                 </div>
-                <p className="text-sm" style={{ color: '#666' }}>
+                <p className="text-sm" style={{ color: '#e5e5e5' }}>
                  Charlie will hand you off to Gemini for your private relocation interview.
                 </p>
               </div>
@@ -84,8 +84,8 @@ export default function GeminiSession() {
                     Welcome, {clientInfo?.name?.split(' ')[0]} — Gemini is ready
                   </span>
                 </div>
-                <p className="text-xs mt-0.5" style={{ color: '#555' }}>
-                  Speak naturally. This conversation builds your relocation profile.
+                <p className="text-xs mt-0.5" style={{ color: '#e5e5e5' }}>
+                 Speak naturally. This conversation builds your relocation profile.
                 </p>
               </div>
               <GeminiLiveSession

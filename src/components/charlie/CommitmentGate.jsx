@@ -95,7 +95,7 @@ export default function CommitmentGate({ onCommit }) {
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#888' }}>Full Name *</label>
+              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Full Name *</label>
               <Input
                 placeholder="Your full name"
                 value={name}
@@ -105,7 +105,7 @@ export default function CommitmentGate({ onCommit }) {
               />
             </div>
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#888' }}>Email Address *</label>
+              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Email Address *</label>
               <Input
                 type="email"
                 placeholder="your@email.com"
@@ -116,7 +116,7 @@ export default function CommitmentGate({ onCommit }) {
               />
             </div>
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#888' }}>Phone (optional)</label>
+              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Phone (optional)</label>
               <Input
                 type="tel"
                 placeholder="(555) 000-0000"
@@ -179,7 +179,7 @@ export default function CommitmentGate({ onCommit }) {
             I Agree — Start My Session <Mic className="w-4 h-4" />
           </Button>
 
-          <p className="text-center text-xs" style={{ color: '#444' }}>
+          <p className="text-center text-xs" style={{ color: '#e5e5e5' }}>
             By proceeding you agree to Dyson & Dyson's terms of service and privacy policy.
           </p>
         </motion.div>
