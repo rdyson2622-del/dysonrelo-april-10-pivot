@@ -195,6 +195,53 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
+      <section className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="max-w-5xl mx-auto text-center mb-12">
+          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
+            We don't send you a map.<br />
+            <span className="gold-text-gradient">We make the journey with you.</span>
+          </h2>
+          <p className="text-base max-w-2xl mx-auto" style={{ color: '#e5e5e5' }}>
+            Every step below is something Charlie and your Dyson concierge team actively execute — not just advise on. This is what "full service" actually means.
+          </p>
+        </div>
+
+        <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {services.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.07, duration: 0.5 }}
+              className="p-5 rounded-2xl"
+              style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.25)' }}
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <s.icon className="w-5 h-5" style={{ color: GOLD }} />
+              </div>
+              <h3 className="font-bold mb-1.5 text-sm tracking-wide" style={{ color: '#fff' }}>{s.title}</h3>
+              <p className="text-xs leading-relaxed" style={{ color: '#e5e5e5' }}>{s.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-base font-semibold mb-5" style={{ color: '#e5e5e5' }}>
+            Seeing the full scope of what's ahead can feel overwhelming.<br />
+            <span style={{ color: GOLD }}>That's exactly the point — and exactly why we exist.</span>
+          </p>
+          <Link to="/Chat">
+            <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
+              Let Charlie Guide Me <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
+        </div>
+      </section>
+
       {/* V2V Agent Recruitment Card */}
       <section className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
         <div className="max-w-7xl mx-auto">
