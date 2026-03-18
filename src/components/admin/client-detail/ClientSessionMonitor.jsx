@@ -33,7 +33,7 @@ export default function ClientSessionMonitor({ client }) {
 
   const handleEndSession = () => {
     setSessionActive(false);
-    addMessageToChat('charlie', 'Thank you for the interview! Your profile has been saved. We'll be in touch with agent recommendations.');
+    addMessageToChat('charlie', "Thank you for the interview! Your profile has been saved. We'll be in touch with agent recommendations.");
   };
 
   const addMessageToChat = async (role, content) => {
