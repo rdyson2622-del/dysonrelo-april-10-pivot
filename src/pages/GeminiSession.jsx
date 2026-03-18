@@ -36,7 +36,7 @@ export default function GeminiSession() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#4a4a4a' }}>
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
