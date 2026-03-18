@@ -377,7 +377,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
 
         {status === 'ready' && (
           <div className="space-y-3">
-            <div className="rounded-xl p-3 text-xs" style={{ background: '#111', border: '1px solid #222' }}>
+            <div className="rounded-xl p-3 text-xs" style={{ background: '#2a2a2a', border: '1px solid #444' }}>
               <p style={{ color: '#f5f5f5' }}>
                 🎤 Make sure your microphone is enabled. Speak naturally — Gemini will guide the conversation.
                 Sessions typically last 10–20 minutes.
