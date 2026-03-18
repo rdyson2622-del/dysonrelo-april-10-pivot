@@ -228,6 +228,92 @@ export default function AdminClients() {
          </div>
        )}
 
+      {/* Bulk Import Dialog */}
+      <Dialog open={showBulk} onOpenChange={closeBulk}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Bulk Import Clients</DialogTitle>
+          </DialogHeader>
+
+          {(!bulkStatus || bulkStatus === 'parsing') && (
+            <div className="space-y-4 py-4">
+              <div className="rounded-lg p-4 text-sm" style={{ background: '#f8f8f8', border: '1px solid #e5e5e5' }}>
+                <p className="font-semibold mb-1">Upload a CSV file with client data.</p>
+                <p className="text-slate-500">Required columns: <code>full_name</code>, <code>email</code>, <code>destination_city</code></p>
+                <p className="text-slate-500">Optional: <code>phone</code>, <code>current_city</code>, <code>budget</code>, <code>move_date</code>, <code>family_size</code>, <code>notes</code>, <code>status</code></p>
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={downloadTemplate} className="gap-2 text-sm">
+                  <Download className="w-4 h-4" /> Download Template
+                </Button>
+                <Button onClick={() => fileRef.current?.click()} className="gap-2 text-sm" style={{ background: '#000', color: '#fff' }}>
+                  <Upload className="w-4 h-4" /> Choose CSV File
+                </Button>
+              </div>
+              <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCSV} />
+            </div>
+          )}
+
+          {bulkStatus === 'preview' && (
+            <div className="space-y-4 py-4">
+              <p className="text-sm font-semibold">{bulkRows.length} client{bulkRows.length !== 1 ? 's' : ''} ready to import:</p>
+              <div className="max-h-64 overflow-y-auto rounded-lg border">
+                <table className="w-full text-xs">
+                  <thead className="sticky top-0 bg-slate-100">
+                    <tr>
+                      <th className="text-left p-2">Name</th>
+                      <th className="text-left p-2">Email</th>
+                      <th className="text-left p-2">From</th>
+                      <th className="text-left p-2">Destination</th>
+                      <th className="text-left p-2">Budget</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bulkRows.map((r, i) => (
+                      <tr key={i} className="border-t">
+                        <td className="p-2">{r.full_name || r.name}</td>
+                        <td className="p-2">{r.email}</td>
+                        <td className="p-2">{r.current_city || r.from_city || '—'}</td>
+                        <td className="p-2">{r.destination_city || r.destination || '—'}</td>
+                        <td className="p-2">{r.budget || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={closeBulk}>Cancel</Button>
+                <Button onClick={runBulkImport} style={{ background: '#000', color: '#fff' }}>
+                  Import {bulkRows.length} Clients
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+
+          {bulkStatus === 'importing' && (
+            <div className="py-12 flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
+              <p className="text-sm font-medium">Importing clients...</p>
+            </div>
+          )}
+
+          {bulkStatus === 'done' && bulkResult && (
+            <div className="py-8 flex flex-col items-center gap-4">
+              <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+              <div className="text-center">
+                <p className="text-lg font-bold">{bulkResult.success} clients imported successfully</p>
+                {bulkResult.failed > 0 && (
+                  <p className="text-sm text-red-500 mt-1 flex items-center gap-1 justify-center">
+                    <AlertCircle className="w-4 h-4" /> {bulkResult.failed} failed
+                  </p>
+                )}
+              </div>
+              <Button onClick={closeBulk} style={{ background: '#000', color: '#fff' }}>Done</Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Add Client Dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent className="sm:max-w-lg">
