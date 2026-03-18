@@ -64,9 +64,10 @@ export default function Dashboard() {
             </button>
           </Link>
           <Link to="/Admin">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Settings className="w-4 h-4" />
-            </Button>
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold transition-all"
+              style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
+              <LayoutDashboard className="w-3.5 h-3.5" /> Admin
+            </button>
           </Link>
         </div>
       </header>
