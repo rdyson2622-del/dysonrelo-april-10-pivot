@@ -338,7 +338,7 @@ Ready for your call with ${clientInfo.name}.
       </div>
 
       {/* Navigation */}
-      <div className="px-5 py-4 shrink-0 flex gap-3" style={{ borderTop: '1px solid #1a1a1a' }}>
+      <div className="px-5 py-4 shrink-0 flex gap-3" style={{ borderTop: '1px solid #555' }}>
         {section > 0 && (
           <Button variant="ghost" onClick={() => setSection(s => s - 1)}
             className="gap-2 rounded-xl" style={{ color: '#aaa' }}>
