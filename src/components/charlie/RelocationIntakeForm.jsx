@@ -64,11 +64,11 @@ function CheckOption({ label, selected, onClick }) {
   );
 }
 
-function SectionHeader({ icon: Icon, title, subtitle }) {
+function SectionHeader({ icon: SectionIcon, title, subtitle }) {
   return (
     <div className="mb-5">
       <div className="flex items-center gap-2 mb-1">
-        <Icon className="w-5 h-5" style={{ color: GOLD }} />
+        <SectionIcon className="w-5 h-5" style={{ color: GOLD }} />
         <h3 className="font-bold text-lg" style={{ color: '#fff' }}>{title}</h3>
       </div>
       {subtitle && <p style={{ color: '#aaa', fontSize: '0.9rem' }}>{subtitle}</p>}
