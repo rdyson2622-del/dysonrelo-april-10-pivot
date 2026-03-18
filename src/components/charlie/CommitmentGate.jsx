@@ -166,7 +166,7 @@ export default function CommitmentGate({ onCommit }) {
                   }}>
                   {checked.includes(i) && <Check className="w-3 h-3 text-black" />}
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: checked.includes(i) ? '#ddd' : '#bbb', fontSize: '1rem' }}>{item}</p>
+                <p className="leading-relaxed" style={{ color: checked.includes(i) ? '#ddd' : '#bbb', fontSize: '1.05rem' }}>{item}</p>
               </button>
             ))}
           </div>
