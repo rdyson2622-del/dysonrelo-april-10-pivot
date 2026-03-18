@@ -122,12 +122,8 @@ export default function RelocationIntakeForm({ clientInfo, onComplete }) {
       status: 'in_consultation',
     }).catch(() => {});
 
-    // Send email notification to Bob
-    await base44.integrations.Core.SendEmail({
-      to: 'bob@dysonanddyson.com',
-      subject: `New Relocation Profile: ${clientInfo.name} → ${form.destination_city}, ${form.destination_state}`,
-      body: buildEmailBody(),
-    }).catch(() => {});
+    // Send email notification via backend function
+    await base44.functions.invoke('sendIntakeEmail', { clientInfo, form }).catch(() => {});
 
     setSubmitting(false);
     onComplete(form);
