@@ -83,8 +83,9 @@ export default function Dashboard() {
               ✨ POWERED BY AI
             </div>
 
-            <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.22em', color: '#000' }}>
-              <span style={{ color: '#000' }}>REAL ESTATE</span><br /><span style={{ color: '#fff' }}>CONCIERGE</span>
+            <h1 className="display-heading mb-6" style={{ lineHeight: 1.15, letterSpacing: '0.22em' }}>
+              <span style={{ display: 'block', color: '#D4AF37', fontSize: 'clamp(1.4rem, 5vw, 2.8rem)' }}>CONCIERGE</span>
+              <span style={{ display: 'block', color: '#000', fontSize: 'clamp(1.2rem, 4vw, 2.4rem)' }}>REAL ESTATE</span>
             </h1>
 
             <p className="text-lg leading-relaxed mb-4" style={{ color: '#000' }}>
