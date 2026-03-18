@@ -13,7 +13,7 @@ const GOLD = '#D4AF37';
 const services = [
   { icon: MessageCircle, title: 'AI Concierge Chat', desc: 'Charlie is available 24/7 to answer every question about your new city, completely free.' },
   { icon: MapPin, title: 'Neighborhood Research', desc: 'Deep-dive analysis of neighborhoods matching your lifestyle, commute, and priorities.' },
-  { icon: UserCheck, title: 'Agent Selection', desc: 'We match you with a vetted, top-performing local agent who specializes in relocation.' },
+  { icon: UserCheck, title: 'Agent Selection', desc: 'We interview you on agent personality & style, then present 3–5 hand-vetted candidates — reviewed for DRE ratings, production records, and personally screened. You choose. No "I love me" agents chasing deals.' },
   { icon: Building2, title: 'Home Search Strategy', desc: 'AI-powered property matching based on your exact criteria and budget.' },
   { icon: Truck, title: 'Moving Coordination', desc: 'From packing to delivery — Charlie manages your entire moving logistics checklist.' },
   { icon: Zap, title: 'Utilities & Services', desc: 'Internet, electric, gas, water — all transferred and set up before you arrive.' },
