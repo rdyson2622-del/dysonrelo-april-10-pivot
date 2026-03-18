@@ -120,7 +120,7 @@ export default function Home() {
                 />
               </div>
               <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
-                CHARLIE — YOUR AI CONCIERGE
+                CHARLIE — YOUR RELOCATION MANAGER
               </p>
               <div className="space-y-2">
                 <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
