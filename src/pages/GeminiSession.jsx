@@ -107,9 +107,9 @@ export default function GeminiSession() {
           {stage === 'session' && (
             <motion.div key="session" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#0d0d0d', border: `1px solid ${GOLD}33`, minHeight: '600px' }}>
+              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33`, minHeight: '600px' }}>
               {/* Session header */}
-              <div className="px-5 pt-4 pb-3 shrink-0" style={{ borderBottom: '1px solid #1a1a1a' }}>
+              <div className="px-5 pt-4 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-sm font-bold" style={{ color: '#fff' }}>
