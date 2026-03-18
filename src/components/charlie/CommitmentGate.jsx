@@ -71,7 +71,7 @@ export default function CommitmentGate({ onCommit }) {
             ))}
           </div>
 
-          <div className="rounded-2xl p-4 text-sm" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33`, borderLeft: `4px solid ${GOLD}` }}>
+          <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33`, borderLeft: `4px solid ${GOLD}`, fontSize: '1.05rem' }}>
             <p style={{ color: '#f5f5f5', lineHeight: '1.6' }}>
               <span style={{ color: GOLD, fontWeight: 600 }}>Disclosure: </span>
               This session is powered by Google Gemini AI. Conversations are recorded and summarized. Information shared by Dyson & Dyson staff is proprietary and confidential. You may request deletion of your data at any time.
