@@ -319,7 +319,7 @@ Ready for your call with ${clientInfo.name}.
           </span>
           <span className="text-xs" style={{ color: '#666' }}>{section + 1} of {SECTIONS.length}</span>
         </div>
-        <div className="h-1 rounded-full" style={{ background: '#222' }}>
+        <div className="h-1 rounded-full" style={{ background: '#555' }}>
           <div className="h-1 rounded-full transition-all duration-500"
             style={{ width: `${((section + 1) / SECTIONS.length) * 100}%`, background: GOLD }} />
         </div>
