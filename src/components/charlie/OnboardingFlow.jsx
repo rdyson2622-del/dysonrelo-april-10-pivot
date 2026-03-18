@@ -126,7 +126,7 @@ export default function OnboardingFlow({ onComplete }) {
                 value={profile.destination_city}
                 onChange={e => setProfile(p => ({ ...p, destination_city: e.target.value }))}
                 onKeyDown={e => e.key === 'Enter' && canAdvance() && handleNext()}
-                className="text-base border-0 rounded-xl h-12"
+                className="text-base border-0 rounded-xl h-12 placeholder:text-gray-400"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
             )}
@@ -139,7 +139,7 @@ export default function OnboardingFlow({ onComplete }) {
                 value={profile.current_city}
                 onChange={e => setProfile(p => ({ ...p, current_city: e.target.value }))}
                 onKeyDown={e => e.key === 'Enter' && canAdvance() && handleNext()}
-                className="text-base border-0 rounded-xl h-12"
+                className="text-base border-0 rounded-xl h-12 placeholder:text-gray-400"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
             )}
