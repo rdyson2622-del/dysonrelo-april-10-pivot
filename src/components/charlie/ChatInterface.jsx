@@ -73,6 +73,16 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
+  // Auto-speak welcome message as soon as voice mode is turned ON (first time only)
+  const hasSpokenWelcome = useRef(false);
+  useEffect(() => {
+    if (voiceMode && !hasSpokenWelcome.current && messages.length === 1) {
+      hasSpokenWelcome.current = true;
+      // Small delay to let AudioContext initialize after user gesture
+      setTimeout(() => speakText(messages[0].content), 300);
+    }
+  }, [voiceMode]);
+
   const speakText = (text) => {
     // Stop any current speech before starting new
     stopCharlie();
