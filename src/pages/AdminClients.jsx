@@ -73,6 +73,66 @@ export default function AdminClients() {
 
   const update = (field, value) => setForm((p) => ({ ...p, [field]: value }));
 
+  const handleCSV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setBulkStatus('parsing');
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const lines = evt.target.result.split('\n').filter(Boolean);
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+      const rows = lines.slice(1).map(line => {
+        const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const obj = {};
+        headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+        return obj;
+      }).filter(r => r.full_name || r.email);
+      setBulkRows(rows);
+      setBulkStatus('preview');
+    };
+    reader.readAsText(file);
+  };
+
+  const runBulkImport = async () => {
+    setBulkStatus('importing');
+    let success = 0, failed = 0;
+    for (const row of bulkRows) {
+      try {
+        await base44.entities.RelocationClient.create({
+          full_name: row.full_name || row.name || '',
+          email: row.email || '',
+          phone: row.phone || '',
+          current_city: row.current_city || row.from_city || '',
+          destination_city: row.destination_city || row.to_city || row.destination || '',
+          budget: row.budget || '',
+          move_date: row.move_date || '',
+          family_size: row.family_size ? parseInt(row.family_size) : undefined,
+          notes: row.notes || '',
+          status: row.status || 'new_lead',
+        });
+        success++;
+      } catch { failed++; }
+    }
+    setBulkResult({ success, failed });
+    setBulkStatus('done');
+    refresh();
+  };
+
+  const closeBulk = () => {
+    setShowBulk(false);
+    setBulkStatus(null);
+    setBulkRows([]);
+    setBulkResult(null);
+    if (fileRef.current) fileRef.current.value = '';
+  };
+
+  const downloadTemplate = () => {
+    const csv = 'full_name,email,phone,current_city,destination_city,budget,move_date,family_size,notes\nJane Doe,jane@email.com,(555) 123-4567,San Francisco CA,Austin TX,400k_600k,2026-06-01,3,';
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'clients_template.csv'; a.click();
+  };
+
   return (
      <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
