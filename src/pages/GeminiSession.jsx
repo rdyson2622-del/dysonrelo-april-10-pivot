@@ -82,10 +82,10 @@ export default function GeminiSession() {
           {stage === 'intake' && (
             <motion.div key="intake" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#0d0d0d', border: `1px solid ${GOLD}33` }}>
-              <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #1a1a1a' }}>
+              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+              <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-2xl">📋</span>
+                   <span className="text-2xl">📋</span>
                   <h2 className="font-bold text-xl" style={{ color: GOLD }}>Your Relocation Profile</h2>
                 </div>
                 <p className="text-sm" style={{ color: '#e5e5e5' }}>
