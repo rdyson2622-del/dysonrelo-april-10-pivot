@@ -51,15 +51,31 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      {/* Back to App */}
-      <div className="p-3" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
+      {/* Preview & Back */}
+      <div className="p-3 space-y-1" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
         <Link
-           to="/Dashboard"
-           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-           style={{ color: '#fff' }}
-         >
+          to="/GeminiSession"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+          style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
+        >
+          <span className="text-base">👁️</span>
+          Preview Client Flow
+        </Link>
+        <Link
+          to="/Dashboard"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+          style={{ color: '#aaa' }}
+        >
           <ArrowLeft className="w-4 h-4" />
-          Back to App
+          Client Dashboard
+        </Link>
+        <Link
+          to="/Chat"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+          style={{ color: '#aaa' }}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Client Chat
         </Link>
       </div>
     </aside>
