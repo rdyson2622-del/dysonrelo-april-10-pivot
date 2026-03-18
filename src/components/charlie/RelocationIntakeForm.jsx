@@ -258,7 +258,7 @@ Ready for your call with ${clientInfo.name}.
         <label className="block text-sm font-semibold mb-1" style={{ color: '#ccc' }}>Pets? (type and number, optional)</label>
         <Input placeholder="e.g. 2 dogs" value={form.pets}
           onChange={e => setForm(p => ({ ...p, pets: e.target.value }))}
-          className="border-0 rounded-xl h-11" style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }} />
+          className="border-0 rounded-xl h-11" style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }} />
       </div>
     </motion.div>,
 
