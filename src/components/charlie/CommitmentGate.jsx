@@ -144,8 +144,8 @@ export default function CommitmentGate({ onCommit }) {
           <div className="flex items-center gap-3">
             <Shield className="w-7 h-7" style={{ color: GOLD }} />
             <div>
-              <h3 className="text-2xl font-bold" style={{ color: '#fff' }}>Service Agreement</h3>
-              <p className="text-sm" style={{ color: '#f5f5f5' }}>Please check each item to confirm you understand</p>
+              <h3 className="font-bold" style={{ color: '#fff', fontSize: '2.1rem' }}>Service Agreement</h3>
+              <p style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>Please check each item to confirm you understand</p>
             </div>
           </div>
 
