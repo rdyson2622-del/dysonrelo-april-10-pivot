@@ -217,7 +217,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.07, duration: 0.5 }}
               className="p-5 rounded-2xl"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}
+              style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.25)' }}
             >
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
