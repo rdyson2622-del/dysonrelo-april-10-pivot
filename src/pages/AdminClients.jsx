@@ -242,15 +242,15 @@ export default function AdminClients() {
                 <p className="text-slate-500">Required columns: <code>full_name</code>, <code>email</code>, <code>destination_city</code></p>
                 <p className="text-slate-500">Optional: <code>phone</code>, <code>current_city</code>, <code>budget</code>, <code>move_date</code>, <code>family_size</code>, <code>notes</code>, <code>status</code></p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-center">
                 <Button variant="outline" onClick={downloadTemplate} className="gap-2 text-sm">
                   <Download className="w-4 h-4" /> Download Template
                 </Button>
-                <Button onClick={() => fileRef.current?.click()} className="gap-2 text-sm" style={{ background: '#000', color: '#fff' }}>
+                <label className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium cursor-pointer" style={{ background: '#000', color: '#fff' }}>
                   <Upload className="w-4 h-4" /> Choose CSV File
-                </Button>
+                  <input type="file" accept=".csv" className="hidden" onChange={handleCSV} />
+                </label>
               </div>
-              <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCSV} />
             </div>
           )}
 
