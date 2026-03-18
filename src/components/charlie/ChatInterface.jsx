@@ -131,30 +131,9 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#f5f5f5' }}>
-            {isTyping ? 'Thinking...' : isListening ? '🎤 Listening...' : isSpeaking ? '🔊 Speaking...' : 'AI Concierge • Always Free'}
+            {isTyping ? 'Thinking...' : 'AI Concierge • Always Free'}
           </p>
         </div>
-
-        {isSpeaking && (
-          <button
-            onClick={handleStopSpeaking}
-            className="text-xs px-2 py-1 rounded-lg border transition-all mr-1 animate-pulse"
-            style={{ borderColor: '#ff4444', color: '#ff4444', background: 'rgba(255,68,68,0.1)' }}
-          >
-            ■ Stop
-          </button>
-        )}
-        <button
-          onClick={() => setVoiceMode(!voiceMode)}
-          className="text-xs px-2 py-1 rounded-lg border transition-all mr-1"
-          style={{
-            borderColor: voiceMode ? GOLD : '#555',
-            color: voiceMode ? GOLD : '#f5f5f5',
-            background: voiceMode ? 'rgba(212,175,55,0.1)' : 'transparent',
-          }}
-        >
-          {voiceMode ? '🔊 Voice ON' : '🔇 Voice OFF'}
-        </button>
 
         <div className="flex gap-1">
           <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#f5f5f5' }} onClick={onToggleExpand}>
