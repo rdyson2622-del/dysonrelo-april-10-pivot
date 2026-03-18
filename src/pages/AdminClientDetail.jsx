@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { User, Sparkles, MessageCircle, CheckSquare, Phone } from 'lucide-react';
+import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic } from 'lucide-react';
 
 import ClientHeader from '@/components/admin/client-detail/ClientHeader';
 import ClientProfileTab from '@/components/admin/client-detail/ClientProfileTab';
@@ -11,12 +11,14 @@ import ClientGeminiTab from '@/components/admin/client-detail/ClientGeminiTab';
 import ClientChatTab from '@/components/admin/client-detail/ClientChatTab';
 import ClientTasksTab from '@/components/admin/client-detail/ClientTasksTab';
 import ClientQuickContact from '@/components/admin/client-detail/ClientQuickContact';
+import ClientSessionMonitor from '@/components/admin/client-detail/ClientSessionMonitor';
 
 const GOLD = '#D4AF37';
 
 const TABS = [
   { id: 'profile',  label: 'Profile',        icon: User },
   { id: 'gemini',   label: 'AI / Gemini',    icon: Sparkles },
+  { id: 'session',  label: 'Live Session',   icon: Mic },
   { id: 'chat',     label: 'Chat History',   icon: MessageCircle },
   { id: 'tasks',    label: 'Move Tasks',     icon: CheckSquare },
   { id: 'contact',  label: 'Quick Contact',  icon: Phone },
