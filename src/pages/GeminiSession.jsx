@@ -7,6 +7,7 @@ import CommitmentGate from '../components/charlie/CommitmentGate';
 import GeminiLiveSession from '../components/charlie/GeminiLiveSession';
 import InterviewSummary from '../components/charlie/InterviewSummary';
 import RelocationIntakeForm from '../components/charlie/RelocationIntakeForm';
+import PathChooser from '../components/charlie/PathChooser';
 import LayoutToggleButton from '../components/layout/LayoutToggleButton';
 import { useLayout } from '@/lib/LayoutContext';
 
