@@ -20,7 +20,7 @@ const PATHS = [
       'Bob Dyson and our team run the full AI interview using your profile',
       'We extract the key insights, neighborhood matches, and agent criteria',
       'You receive a curated summary and agent shortlist — nothing more required from you',
-      'Ideal if you're busy, not tech-savvy, or simply prefer a full-service experience',
+      'Ideal if you are busy, not tech-savvy, or simply prefer a full-service experience',
     ],
     cta: 'Let Dyson Handle It',
   },
