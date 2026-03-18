@@ -196,13 +196,13 @@ Ready for your call with ${clientInfo.name}.
           <label className="block text-sm font-semibold mb-1" style={{ color: '#ccc' }}>City *</label>
           <Input placeholder="e.g. Austin" value={form.destination_city}
             onChange={e => setForm(p => ({ ...p, destination_city: e.target.value }))}
-            className="border-0 rounded-xl h-11" style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }} />
+            className="border-0 rounded-xl h-11" style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }} />
         </div>
         <div>
           <label className="block text-sm font-semibold mb-1" style={{ color: '#ccc' }}>State *</label>
           <Input placeholder="e.g. TX" value={form.destination_state}
             onChange={e => setForm(p => ({ ...p, destination_state: e.target.value }))}
-            className="border-0 rounded-xl h-11" style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }} />
+            className="border-0 rounded-xl h-11" style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }} />
         </div>
       </div>
       <div>
