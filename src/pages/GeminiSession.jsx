@@ -22,6 +22,11 @@ export default function GeminiSession() {
 
   const handleCommit = (info) => {
     setClientInfo(info);
+    setStage('intake');
+  };
+
+  const handleIntakeComplete = (data) => {
+    setIntakeData(data);
     setStage('session');
   };
 
