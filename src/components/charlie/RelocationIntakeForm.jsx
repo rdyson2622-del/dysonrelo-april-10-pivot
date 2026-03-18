@@ -327,7 +327,7 @@ Ready for your call with ${clientInfo.name}.
         <div className="flex justify-between mt-2">
           {SECTIONS.map((s, i) => (
             <div key={i} className="w-2 h-2 rounded-full transition-all"
-              style={{ background: i <= section ? GOLD : '#333' }} />
+              style={{ background: i <= section ? GOLD : '#666' }} />
           ))}
         </div>
       </div>
