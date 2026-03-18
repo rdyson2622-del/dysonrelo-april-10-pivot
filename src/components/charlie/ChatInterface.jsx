@@ -202,26 +202,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
             </div>
           </div>
 
-          {voiceMode && (
-            <div className="px-4 pt-3" style={{ borderTop: '1px solid #222' }}>
-              <VoiceOrb isListening={isListening} isSpeaking={isSpeaking} onToggle={toggleVoice} disabled={isTyping} />
-            </div>
-          )}
-
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
-              <button
-                type="button"
-                onClick={toggleVoice}
-                disabled={isTyping}
-                className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-40"
-                style={{ background: isListening ? GOLD : 'rgba(212,175,55,0.1)', border: `1px solid ${GOLD}` }}
-              >
-                {isListening
-                  ? <span className="text-black text-xs font-bold">■</span>
-                  : <span style={{ color: GOLD, fontSize: 16 }}>🎤</span>
-                }
-              </button>
               <Input
                 placeholder="Ask Charlie anything..."
                 value={input}
