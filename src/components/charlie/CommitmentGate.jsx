@@ -53,7 +53,7 @@ export default function CommitmentGate({ onCommit }) {
             </p>
           </div>
 
-          <div className="rounded-2xl p-6 space-y-4" style={{ background: '#111', border: `1px solid ${GOLD}33` }}>
+          <div className="rounded-2xl p-6 space-y-4" style={{ background: '#2a2a2a', border: `1px solid ${GOLD}33` }}>
             <p className="font-bold uppercase tracking-widest" style={{ color: GOLD, fontSize: '0.9rem' }}>What happens in this session</p>
             {[
               "Gemini will interview you about your relocation — destination, lifestyle, budget, family needs",
