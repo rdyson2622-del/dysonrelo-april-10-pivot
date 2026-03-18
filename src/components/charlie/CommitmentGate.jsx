@@ -105,7 +105,7 @@ export default function CommitmentGate({ onCommit }) {
               />
             </div>
             <div>
-              <label className="text-xs font-bold mb-1 block" style={{ color: '#e5e5e5' }}>Email Address *</label>
+              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Email Address *</label>
               <Input
                 type="email"
                 placeholder="your@email.com"
