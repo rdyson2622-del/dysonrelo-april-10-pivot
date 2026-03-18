@@ -416,7 +416,7 @@ export default function Home() {
             <span className="gold-text-gradient">fresh start?</span>
           </h2>
           <p className="text-base mb-10 max-w-md mx-auto" style={{ color: '#fff' }}>
-            Talk to Charlie right now. No sign-up required. No hidden fees. Just exceptional AI-powered relocation service.
+            Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
           <Link to="/Chat">
             <button className="px-10 py-4 rounded-full font-bold text-base tracking-wide gold-btn">
