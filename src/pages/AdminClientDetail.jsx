@@ -59,7 +59,7 @@ export default function AdminClientDetail() {
         <ClientHeader client={client} />
 
         {/* Tab bar */}
-        <div className="flex gap-1 mb-6 p-1 rounded-2xl" style={{ background: 'rgba(0,0,0,0.12)' }}>
+        <div className="flex gap-1 mb-6 p-1 rounded-2xl overflow-x-auto" style={{ background: 'rgba(0,0,0,0.12)' }}>
           {TABS.map(tab => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -67,15 +67,16 @@ export default function AdminClientDetail() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap shrink-0"
                 style={{
                   background: active ? '#fff' : 'transparent',
                   color: active ? '#000' : 'rgba(0,0,0,0.55)',
                   boxShadow: active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
+                  border: active ? `1px solid ${GOLD}44` : '1px solid transparent',
                 }}
               >
                 <Icon className="w-4 h-4" style={{ color: active ? GOLD : 'inherit' }} />
-                <span className="hidden sm:inline">{tab.label}</span>
+                {tab.label}
               </button>
             );
           })}
