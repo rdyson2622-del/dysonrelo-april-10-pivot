@@ -707,7 +707,7 @@ export default function BusinessPlan() {
           {/* Navigation */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-1">
-              {sections.map((section) => {
+              {localSections.map((section) => {
                 const Icon = section.icon;
                 return (
                   <button
@@ -729,7 +729,7 @@ export default function BusinessPlan() {
 
           {/* Content */}
           <div className="lg:col-span-3">
-            {sections.map((section) => (
+            {localSections.map((section) => (
               expandedSection === section.id && (
                 <motion.div
                   key={section.id}
@@ -739,17 +739,35 @@ export default function BusinessPlan() {
                   className="p-8 rounded-2xl"
                   style={{ background: 'rgba(255,255,255,0.9)' }}
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    {React.createElement(section.icon, { className: 'w-6 h-6', style: { color: GOLD } })}
-                    <h2 className="serif-heading text-2xl" style={{ color: '#000' }}>{section.title}</h2>
+                  <div className="flex items-center justify-between gap-3 mb-6">
+                    <div className="flex items-center gap-3">
+                      {React.createElement(section.icon, { className: 'w-6 h-6', style: { color: GOLD } })}
+                      <h2 className="serif-heading text-2xl" style={{ color: '#000' }}>{section.title}</h2>
+                    </div>
+                    {editingSectionId === section.id ? (
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={saveEdit} className="gap-1.5" style={{ background: GOLD, color: '#000' }}><Check className="w-3.5 h-3.5" /> Save</Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="w-3.5 h-3.5" /></Button>
+                      </div>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={() => startEdit(section)} className="gap-1.5"><Edit2 className="w-3.5 h-3.5" /> Edit</Button>
+                    )}
                   </div>
-                  <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
-                    {section.content.split('\n\n').map((para, i) => (
-                      <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">
-                        {para}
-                      </p>
-                    ))}
-                  </div>
+                  {editingSectionId === section.id ? (
+                    <textarea
+                      value={editContent}
+                      onChange={e => setEditContent(e.target.value)}
+                      rows={20}
+                      className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm font-mono leading-relaxed resize-y"
+                      style={{ minHeight: 300 }}
+                    />
+                  ) : (
+                    <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
+                      {section.content.split('\n\n').map((para, i) => (
+                        <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">{para}</p>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               )
             ))}
