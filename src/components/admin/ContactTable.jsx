@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, ExternalLink, MoreHorizontal, MessageSquare, User } from 'lucide-react';
+import { Phone, Mail, ExternalLink, MoreHorizontal, MessageSquare, User, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
