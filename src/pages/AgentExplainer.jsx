@@ -89,7 +89,7 @@ export default function AgentExplainer() {
                   See Agent Portal <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
-              <a href="mailto:agents@dysonrelo.com">
+              <a href="mailto:rdyson2622@gmail.com">
                 <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
                   style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
                   Questions? <ArrowRight className="w-4 h-4" />
@@ -287,7 +287,7 @@ export default function AgentExplainer() {
               <em>No edit rights—you watch, your client stays confident you're guiding them.</em>
             </p>
 
-            <a href="mailto:agents@dysonrelo.com?subject=Agent%20Portal%20Demo%20Request">
+            <a href="mailto:rdyson2622@gmail.com?subject=Agent%20Portal%20Demo%20Request">
               <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
                 Request Agent Portal Demo <ArrowRight className="w-4 h-4" />
               </button>
@@ -311,7 +311,7 @@ export default function AgentExplainer() {
             Send your sellers to Charlie. Earn 25%. We handle everything. You stay their hero.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="mailto:agents@dysonrelo.com">
+            <a href="mailto:rdyson2622@gmail.com">
               <button className="gold-btn px-10 py-3 rounded-full text-sm font-bold tracking-wide">
                 Contact Our Agent Team
               </button>
