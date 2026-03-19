@@ -84,8 +84,8 @@ export default function AddOwnerDialog({ open, onClose, onAdded }) {
             <Label>Notes</Label>
             <Textarea value={form.notes} onChange={(e) => update('notes', e.target.value)} placeholder="Any additional notes..." rows={2} />
           </div>
-        </div>
-        <DialogFooter>
+          </form>
+          <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleSave} disabled={!form.owner_name || !form.property_address || saving} className="bg-slate-900 hover:bg-slate-800">
             {saving ? 'Saving...' : 'Add Owner'}
