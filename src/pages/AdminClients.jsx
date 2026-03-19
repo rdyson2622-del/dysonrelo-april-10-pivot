@@ -252,7 +252,7 @@ export default function AdminClients() {
                </div>
                ))}
                </div>
-       )}
+               )}
 
       {/* Bulk Import Dialog */}
       <Dialog open={showBulk} onOpenChange={closeBulk}>
