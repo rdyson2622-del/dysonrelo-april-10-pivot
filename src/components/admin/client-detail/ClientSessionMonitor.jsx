@@ -253,15 +253,16 @@ export default function ClientSessionMonitor({ client }) {
               onClick={isListening ? stopListening : startListening}
               disabled={loadingResponse}
               size="sm"
-              className="h-11 w-11 shrink-0"
+              className="h-11 shrink-0 gap-1.5 px-3"
               title={isListening ? 'Stop listening' : 'Tap to speak'}
               style={{
-                background: isListening ? '#ef4444' : 'rgba(0,0,0,0.08)',
-                color: isListening ? '#fff' : '#555',
+                background: isListening ? '#ef4444' : 'rgba(0,0,0,0.06)',
+                color: isListening ? '#fff' : 'rgba(0,0,0,0.35)',
                 border: `1px solid ${isListening ? '#ef4444' : 'rgba(0,0,0,0.15)'}`,
               }}
             >
               {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              <span className="text-xs font-medium">{isListening ? 'Stop' : 'Mic Off'}</span>
             </Button>
             <Button
               onClick={() => handleSend()}
