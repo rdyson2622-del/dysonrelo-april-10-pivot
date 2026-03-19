@@ -16,23 +16,19 @@ Deno.serve(async (req) => {
     }
 
     // BatchData Property Search API - search for recently listed Palo Alto properties over $2M
-    // Using searchCriteria as the top-level key per BatchData v1 docs
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
+    // NOTE: Also try the "query" shorthand format which BatchData docs mention
     const searchPayload = {
       searchCriteria: {
-        address: {
-          city: "Palo Alto",
-          state: "CA"
-        },
+        query: "Palo Alto, CA",
         listing: {
           listingStatus: ["Active"],
           minListPrice: 2000000,
           listDateMin: thirtyDaysAgo
         }
       },
-      take: 20,
-      skip: 0
+      take: 20
     };
 
     console.log("Calling BatchData Property Search for Palo Alto listings >$2M...");
