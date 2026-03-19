@@ -286,6 +286,47 @@ export default function AdminClients() {
                </div>
                )}
 
+      {/* Edit Client Dialog */}
+      <Dialog open={!!editClient} onOpenChange={() => setEditClient(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader><DialogTitle>Edit Client</DialogTitle></DialogHeader>
+          <div className="grid gap-3 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Full Name *</Label><Input value={editForm.full_name} onChange={e => setEditForm(f => ({...f, full_name: e.target.value}))} /></div>
+              <div><Label>Phone</Label><Input value={editForm.phone} onChange={e => setEditForm(f => ({...f, phone: e.target.value}))} /></div>
+            </div>
+            <div><Label>Email</Label><Input value={editForm.email} onChange={e => setEditForm(f => ({...f, email: e.target.value}))} /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Current City</Label><Input value={editForm.current_city} onChange={e => setEditForm(f => ({...f, current_city: e.target.value}))} /></div>
+              <div><Label>Destination City *</Label><Input value={editForm.destination_city} onChange={e => setEditForm(f => ({...f, destination_city: e.target.value}))} /></div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <Label>Budget</Label>
+                <Select value={editForm.budget} onValueChange={v => setEditForm(f => ({...f, budget: v}))}>
+                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="under_200k">Under $200K</SelectItem>
+                    <SelectItem value="200k_400k">$200K-$400K</SelectItem>
+                    <SelectItem value="400k_600k">$400K-$600K</SelectItem>
+                    <SelectItem value="600k_800k">$600K-$800K</SelectItem>
+                    <SelectItem value="800k_1m">$800K-$1M</SelectItem>
+                    <SelectItem value="over_1m">Over $1M</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div><Label>Move Date</Label><Input type="date" value={editForm.move_date} onChange={e => setEditForm(f => ({...f, move_date: e.target.value}))} /></div>
+              <div><Label>Family Size</Label><Input type="number" value={editForm.family_size} onChange={e => setEditForm(f => ({...f, family_size: e.target.value}))} /></div>
+            </div>
+            <div><Label>Notes</Label><textarea value={editForm.notes} onChange={e => setEditForm(f => ({...f, notes: e.target.value}))} rows={2} className="w-full rounded-md border border-input px-3 py-2 text-sm" /></div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditClient(null)}>Cancel</Button>
+            <Button onClick={handleSaveEdit} disabled={!editForm.full_name || !editForm.destination_city || editSaving}>{editSaving ? 'Saving...' : 'Save Changes'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Bulk Import Dialog */}
       <Dialog open={showBulk} onOpenChange={closeBulk}>
         <DialogContent className="sm:max-w-2xl">
