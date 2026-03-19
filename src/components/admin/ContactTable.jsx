@@ -24,6 +24,7 @@ const statusColors = {
 
 export default function ContactTable({ owners, onRefresh }) {
   const [updating, setUpdating] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const updateStatus = async (id, newStatus) => {
     setUpdating(id);
@@ -32,6 +33,12 @@ export default function ContactTable({ owners, onRefresh }) {
       last_contacted: new Date().toISOString().split('T')[0],
     });
     setUpdating(null);
+    onRefresh?.();
+  };
+
+  const handleDelete = async (id) => {
+    await base44.entities.ListingOwner.delete(id);
+    setConfirmDelete(null);
     onRefresh?.();
   };
 
@@ -128,9 +135,21 @@ export default function ContactTable({ owners, onRefresh }) {
                      <DropdownMenuItem onClick={() => updateStatus(owner.id, 'not_interested')} className="text-red-600">
                        Not Interested
                      </DropdownMenuItem>
-                   </DropdownMenuContent>
-                 </DropdownMenu>
-               </div>
+                     <DropdownMenuItem onClick={() => setConfirmDelete(owner.id)} className="text-red-600 font-semibold">
+                       <Trash2 className="w-4 h-4 mr-2" /> Delete Owner
+                     </DropdownMenuItem>
+                     </DropdownMenuContent>
+                     </DropdownMenu>
+                     </div>
+                     {confirmDelete === owner.id && (
+                     <div className="absolute right-0 top-10 z-50 bg-white rounded-xl shadow-xl border border-red-100 p-3 w-52 text-center">
+                     <p className="text-xs font-semibold text-red-700 mb-2">Delete this owner?</p>
+                     <div className="flex gap-2 justify-center">
+                     <button onClick={() => handleDelete(owner.id)} className="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-bold hover:bg-red-700">Delete</button>
+                     <button onClick={() => setConfirmDelete(null)} className="px-3 py-1 rounded-lg border text-xs font-bold hover:bg-slate-50">Cancel</button>
+                     </div>
+                     </div>
+                     )}
               </td>
             </motion.tr>
           ))}
