@@ -84,10 +84,12 @@ export default function AgentExplainer() {
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center mt-8">
-              <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-                See Agent Portal <ArrowRight className="w-4 h-4" />
-              </button>
-              <a href="mailto:hello@dysonrelo.com">
+              <Link to="/AdminReferrals">
+                <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
+                  See Agent Portal <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+              <a href="mailto:agents@dysonrelo.com">
                 <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
                   style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
                   Questions? <ArrowRight className="w-4 h-4" />
@@ -285,9 +287,11 @@ export default function AgentExplainer() {
               <em>No edit rights—you watch, your client stays confident you're guiding them.</em>
             </p>
 
-            <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
-              Request Agent Portal Demo <ArrowRight className="w-4 h-4" />
-            </button>
+            <a href="mailto:agents@dysonrelo.com?subject=Agent%20Portal%20Demo%20Request">
+              <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
+                Request Agent Portal Demo <ArrowRight className="w-4 h-4" />
+              </button>
+            </a>
           </motion.div>
         </div>
       </section>
