@@ -148,6 +148,9 @@ export default function ContactTable({ owners, onRefresh }) {
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(owner)} title="Edit owner">
                    <Edit2 className="w-4 h-4" />
                  </Button>
+                 <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50" onClick={() => setConfirmDelete(owner.id)} title="Delete owner">
+                   <Trash2 className="w-4 h-4" />
+                 </Button>
                  <DropdownMenu>
                    <DropdownMenuTrigger asChild>
                      <Button variant="ghost" size="icon" className="h-8 w-8">
