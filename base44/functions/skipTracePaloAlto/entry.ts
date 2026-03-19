@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const listings = await base44.asServiceRole.entities.ListingImport.filter(
       { city: 'Palo Alto', state: 'CA', status: 'active' },
       '-list_date',
-      20
+      10
     );
 
     if (listings.length === 0) {
