@@ -73,6 +73,7 @@ export default function ClientSessionMonitor({ client }) {
     setLoadingResponse(true);
     const greeting = `Hello! I'm Charlie, your relocation concierge. I'm here to learn everything about your ideal move to ${client.destination_city || 'your destination'}. Let's start — what's drawing you to that area, and what's your ideal move-in timeline?`;
     await saveAndShowMessage('charlie', greeting);
+    if (ttsEnabled) speakText(greeting);
     setLoadingResponse(false);
   };
 
