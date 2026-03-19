@@ -197,11 +197,11 @@ export default function AgentExplainer() {
               <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE BROKER ADVANTAGE</p>
               <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
                 We partner with the<br />
-                <span className="gold-text-gradient">top 10 brokers</span><br />
-                in every market.
+                <span className="gold-text-gradient">top 10 agents</span><br />
+                in all major cities and worldwide.
               </h3>
               <p className="leading-relaxed mb-4" style={{ color: '#e5e5e5' }}>
-                When your seller relocates, we don't hand them off to a random network. We connect them with the best, most experienced brokers in their destination market.
+                When your seller relocates, we don't hand them off to a random network. We connect them with the best, most experienced agents in their destination market—whether it's down the street or across the globe.
               </p>
               <p className="leading-relaxed mb-6" style={{ color: '#e5e5e5' }}>
                 This isn't just better service—it means faster sales, better negotiations, and higher close rates. Your sellers win. You look brilliant for connecting them.
