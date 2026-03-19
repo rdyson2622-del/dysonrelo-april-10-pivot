@@ -56,6 +56,14 @@ export default function AdminFlaggedConversations() {
     }
   });
 
+  const deleteMessageMutation = useMutation({
+    mutationFn: (id) => base44.entities.ChatMessage.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['flaggedMessages'] });
+      setSelectedMessage(null);
+    }
+  });
+
   const suspendUserMutation = useMutation({
     mutationFn: (data) =>
       base44.entities.User.update(data.userId, {

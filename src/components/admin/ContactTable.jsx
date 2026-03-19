@@ -28,6 +28,35 @@ const statusColors = {
 export default function ContactTable({ owners, onRefresh }) {
   const [updating, setUpdating] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editOwner, setEditOwner] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
+
+  const openEdit = (owner) => {
+    setEditOwner(owner);
+    setEditForm({
+      owner_name: owner.owner_name || '',
+      email: owner.email || '',
+      phone: owner.phone || '',
+      property_address: owner.property_address || '',
+      property_city: owner.property_city || '',
+      property_state: owner.property_state || '',
+      listing_price: owner.listing_price || '',
+      moving_to: owner.moving_to || '',
+      notes: owner.notes || '',
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    setSaving(true);
+    await base44.entities.ListingOwner.update(editOwner.id, {
+      ...editForm,
+      listing_price: editForm.listing_price ? parseFloat(editForm.listing_price) : undefined,
+    });
+    setSaving(false);
+    setEditOwner(null);
+    onRefresh?.();
+  };
 
   const updateStatus = async (id, newStatus) => {
     setUpdating(id);
