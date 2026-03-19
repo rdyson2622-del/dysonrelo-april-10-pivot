@@ -72,7 +72,7 @@ export default function ContactTable({ owners, onRefresh }) {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors"
+              className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors relative"
             >
               <td className="py-3 px-3">
                 <Link to={`/AdminOwners/${owner.id}`} className="cursor-pointer hover:opacity-70 transition block">

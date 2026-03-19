@@ -38,6 +38,14 @@ export default function AdminClients() {
     destination_city: '', budget: '', move_date: '', family_size: '', notes: '',
   });
   const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
+
+  const handleDelete = async (id, e) => {
+    e.preventDefault();
+    await base44.entities.RelocationClient.delete(id);
+    setConfirmDelete(null);
+    refresh();
+  };
   const [bulkStatus, setBulkStatus] = useState(null); // null | 'parsing' | 'preview' | 'importing' | 'done'
   const [bulkRows, setBulkRows] = useState([]);
   const [bulkResult, setBulkResult] = useState(null);
