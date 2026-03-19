@@ -1,9 +1,13 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Users, Home, TrendingUp, UserCheck, ArrowUpRight } from 'lucide-react';
+import { Users, Home, TrendingUp, UserCheck, ArrowUpRight, Trash2, Edit2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import StatCard from '../components/dashboard/StatCard';
 
 export default function Admin() {
