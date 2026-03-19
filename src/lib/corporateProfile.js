@@ -43,6 +43,8 @@ export const CORPORATE_PROFILE = {
 
   tagline: "We use AI to work faster and smarter, but you always get a real person who knows real estate inside and out.",
   
+  bobsDedication: "Bob Dyson has personally dedicated the next several years to interfacing decades of relocation skills and practices with today's new and evolving AI tools—to the benefit of families relocating nationwide. It's a new art.",
+  
   disclosure: "AI-Assisted: Powered by experienced relocation experts and advanced AI technology. All major decisions include human expert review and approval."
 };
 

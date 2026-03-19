@@ -187,16 +187,31 @@ export default function AgentExplainer() {
         </div>
       </section>
 
+      {/* Bob's Vision Section */}
+      <section className="py-20 px-6 md:px-14" style={{ background: '#3a3a3a', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+       <div className="max-w-4xl mx-auto text-center">
+         <div className="rounded-2xl p-8" style={{ background: '#000', border: '2px solid #D4AF37' }}>
+           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE VISION</p>
+           <p className="text-lg italic leading-relaxed" style={{ color: '#fff' }}>
+             "{CORPORATE_PROFILE.bobsDedication}"
+           </p>
+           <p className="text-sm mt-6" style={{ color: '#e5e5e5' }}>
+             This is what every agent partnership represents—the marriage of 40+ years of real estate mastery with today's most powerful technology.
+           </p>
+         </div>
+       </div>
+      </section>
+
       {/* Why Top Brokers */}
       <section className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE BROKER ADVANTAGE</p>
+       <div className="max-w-4xl mx-auto">
+         <div className="grid md:grid-cols-2 gap-10 items-center">
+           <motion.div
+             initial={{ opacity: 0, x: -20 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+           >
+             <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE BROKER ADVANTAGE</p>
               <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
                 We partner with the<br />
                 <span className="gold-text-gradient">top 10 agents</span><br />

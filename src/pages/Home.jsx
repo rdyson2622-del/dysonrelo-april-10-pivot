@@ -6,6 +6,7 @@ import {
   UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, Sparkles
 } from 'lucide-react';
 import CharlieTopHat from '../components/brand/CharlieTopHat';
+import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const GOLD = '#D4AF37';
@@ -303,8 +304,11 @@ export default function Home() {
           </div>
           
           <div className="rounded-2xl p-8 mb-8" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#fff' }}>
               Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America from a 500-office network to 1,600+ offices with 45,000 agents across 42 states. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services—combining 40+ years of hands-on real estate expertise with cutting-edge AI to serve families nationwide.
+            </p>
+            <p className="text-sm italic leading-relaxed" style={{ color: '#D4AF37', borderLeft: '3px solid #D4AF37', paddingLeft: '1rem' }}>
+              "{CORPORATE_PROFILE.bobsDedication}"
             </p>
           </div>
 
