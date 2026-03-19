@@ -179,6 +179,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminCommunications" element={<AdminCommunications />} />
         <Route path="/AdminTemplates" element={<AdminTemplates />} />
         <Route path="/AdminReferrals" element={<AdminReferrals />} />
+        <Route path="/AdminContentApproval" element={<AdminContentApproval />} />
         <Route path="/BusinessPlan" element={<BusinessPlan />} />
         <Route path="/SkipTraceResults" element={<SkipTraceResults />} />
       </Route>
