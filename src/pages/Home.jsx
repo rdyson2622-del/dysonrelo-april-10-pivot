@@ -248,8 +248,8 @@ export default function Home() {
               Once you've confirmed your contact information with us, we set up a <strong style={{ color: '#fff' }}>private three-way live session</strong> — you, Google Gemini (one of the most advanced AI systems in the world), and Bob Dyson directly. This is not a chatbot form. It's a real conversation where we build your complete relocation profile together, in real time. Bob brings 40+ years of real estate leadership to every conversation.
             </p>
             <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
-              This session is <strong style={{ color: '#fff' }}>by invitation only</strong> — we protect it so the time is spent with families who are genuinely ready to move. Once we have your info, Charlie schedules it. No cost to you, ever.
-            </p>
+               This session is <strong style={{ color: '#fff' }}>by invitation only</strong> — we're selective about who we work with to ensure everyone gets the intensive, hands-on attention they deserve. We don't have unlimited capacity because we refuse to compromise on quality. Once we have your info and can confirm we're the right fit for your move, Charlie schedules it. No cost to you, ever.
+             </p>
             <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
               We are not a member of any real estate association by design, but are a licensed brokerage firm — The Dyson & Dyson Companies, Inc. Ca. DRE # 02303118.
             </p>
