@@ -108,7 +108,7 @@ import Chat from './pages/Chat';
 import CityGuide from './pages/CityGuide';
 import Search from './pages/Search';
 import Admin from './pages/Admin';
-import AdminOwners from './pages/AdminOwners';
+import AdminOwners from './pages/AdminOwners.jsx';
 import AdminOwnerDetail from './pages/AdminOwnerDetail';
 import AdminClients from './pages/AdminClients';
 import AdminListingSearch from './pages/AdminListingSearch';
