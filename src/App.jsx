@@ -122,6 +122,7 @@ import AdminReferrals from './pages/AdminReferrals';
 import Explainers from './pages/Explainers';
 import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
+import SkipTraceResults from './pages/SkipTraceResults';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
