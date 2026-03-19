@@ -48,44 +48,44 @@ export default function AddOwnerDialog({ open, onClose, onAdded }) {
             <div>
               <Label>Owner Name *</Label>
               <Input autoComplete="off" value={form.owner_name} onChange={(e) => update('owner_name', e.target.value)} placeholder="John Smith" />
-              </div>
-              <div>
-               <Label>Phone</Label>
-               <Input autoComplete="off" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="(555) 123-4567" />
-              </div>
-              </div>
-              <div>
-              <Label>Email</Label>
-              <Input autoComplete="off" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="john@email.com" />
-              </div>
-              <div>
-              <Label>Property Address *</Label>
-              <Input autoComplete="off" value={form.property_address} onChange={(e) => update('property_address', e.target.value)} placeholder="123 Main St" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-              <div>
-               <Label>City</Label>
-               <Input autoComplete="off" value={form.property_city} onChange={(e) => update('property_city', e.target.value)} placeholder="Austin" />
-              </div>
-              <div>
-               <Label>State</Label>
-               <Input autoComplete="off" value={form.property_state} onChange={(e) => update('property_state', e.target.value)} placeholder="TX" />
-              </div>
-              <div>
-               <Label>Listing Price</Label>
-               <Input autoComplete="off" type="number" value={form.listing_price} onChange={(e) => update('listing_price', e.target.value)} placeholder="450000" />
-              </div>
-              </div>
-              <div>
-              <Label>Moving To</Label>
-              <Input autoComplete="off" value={form.moving_to} onChange={(e) => update('moving_to', e.target.value)} placeholder="Where are they relocating?" />
+            </div>
+            <div>
+              <Label>Phone</Label>
+              <Input autoComplete="off" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="(555) 123-4567" />
+            </div>
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input autoComplete="off" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="john@email.com" />
+          </div>
+          <div>
+            <Label>Property Address *</Label>
+            <Input autoComplete="off" value={form.property_address} onChange={(e) => update('property_address', e.target.value)} placeholder="123 Main St" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <Label>City</Label>
+              <Input autoComplete="off" value={form.property_city} onChange={(e) => update('property_city', e.target.value)} placeholder="Austin" />
+            </div>
+            <div>
+              <Label>State</Label>
+              <Input autoComplete="off" value={form.property_state} onChange={(e) => update('property_state', e.target.value)} placeholder="TX" />
+            </div>
+            <div>
+              <Label>Listing Price</Label>
+              <Input autoComplete="off" type="number" value={form.listing_price} onChange={(e) => update('listing_price', e.target.value)} placeholder="450000" />
+            </div>
+          </div>
+          <div>
+            <Label>Moving To</Label>
+            <Input autoComplete="off" value={form.moving_to} onChange={(e) => update('moving_to', e.target.value)} placeholder="Where are they relocating?" />
           </div>
           <div>
             <Label>Notes</Label>
             <Textarea value={form.notes} onChange={(e) => update('notes', e.target.value)} placeholder="Any additional notes..." rows={2} />
           </div>
-          </form>
-          <DialogFooter>
+        </form>
+        <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleSave} disabled={!form.owner_name || !form.property_address || saving} className="bg-slate-900 hover:bg-slate-800">
             {saving ? 'Saving...' : 'Add Owner'}
