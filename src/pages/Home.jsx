@@ -313,7 +313,7 @@ export default function Home() {
           </div>
 
           <p className="text-base text-center mb-8" style={{ color: '#fff' }}>
-            <strong style={{ color: GOLD }}>What this means for you:</strong> AI handles data work faster. Expert judgment calls the shots.
+            <strong style={{ color: GOLD }}>At Dyson & Dyson:</strong> We don't sell real estate. We manage the entire move.
           </p>
         </div>
       </section>
