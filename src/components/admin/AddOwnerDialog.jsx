@@ -43,7 +43,7 @@ export default function AddOwnerDialog({ open, onClose, onAdded }) {
         <DialogHeader>
           <DialogTitle>Add Listing Owner</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <form autoComplete="off" className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Owner Name *</Label>
