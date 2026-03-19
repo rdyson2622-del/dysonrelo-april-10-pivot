@@ -37,14 +37,20 @@ Deno.serve(async (req) => {
 
     const systemInstruction = `${SYSTEM_PROMPT}\n\nClient context: ${clientContext || 'No context provided.'}`;
 
+    // Prepend system prompt as a user/model exchange for v1 API compatibility
+    const fullContents = [
+      { role: 'user', parts: [{ text: systemInstruction }] },
+      { role: 'model', parts: [{ text: 'Understood. I am Charlie, ready to assist.' }] },
+      ...contents,
+    ];
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemInstruction }] },
-          contents,
+          contents: fullContents,
           generationConfig: {
             temperature: 0.8,
             maxOutputTokens: 300,
