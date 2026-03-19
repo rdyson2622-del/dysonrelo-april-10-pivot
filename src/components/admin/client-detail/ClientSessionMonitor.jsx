@@ -71,7 +71,19 @@ export default function ClientSessionMonitor({ client }) {
     setSessionActive(true);
     setTranscript([]);
     setLoadingResponse(true);
-    const greeting = `Hello! I'm Charlie, your relocation concierge. I'm here to learn everything about your ideal move to ${client.destination_city || 'your destination'}. Let's start — what's drawing you to that area, and what's your ideal move-in timeline?`;
+
+    // Check for prior messages to determine if this is a returning session
+    const prior = await base44.entities.ChatMessage.filter({ client_id: client.id }, '-created_date', 5);
+    const isReturning = prior && prior.length > 0;
+
+    let greeting;
+    if (isReturning) {
+      const lastTopic = prior.find(m => m.role === 'user')?.content?.slice(0, 60) || 'your relocation';
+      greeting = `Welcome back, ${client.full_name?.split(' ')[0] || 'there'}! Great to continue our conversation. Last time we were discussing ${lastTopic}… Where would you like to pick up, or is there something new on your mind?`;
+    } else {
+      greeting = `Hello! I'm Charlie, your relocation concierge. I'm here to learn everything about your ideal move to ${client.destination_city || 'your destination'}. Let's start — what's drawing you to that area, and what's your ideal move-in timeline?`;
+    }
+
     await saveAndShowMessage('charlie', greeting);
     if (ttsEnabled) speakText(greeting);
     setLoadingResponse(false);
