@@ -329,7 +329,7 @@ export default function AgentExplainer() {
       {/* Footer */}
       <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="font-bold tracking-widest text-xs mb-2" style={{ color: 'rgba(212,175,55,0.7)' }}>FOR REAL ESTATE AGENTS</div>
-        <p className="text-sm" style={{ color: '#fff' }}>© 2026 · Dyson & Dyson Concierge Relocation · Free to list, paid at close</p>
+        <p className="text-sm" style={{ color: '#fff' }}>The Dyson & Dyson Companies / Concierge Relocation Program     Free to list, paid at close     CA.DRE # 02303118</p>
       </footer>
     </div>
   );
