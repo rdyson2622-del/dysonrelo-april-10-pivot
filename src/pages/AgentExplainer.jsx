@@ -106,7 +106,7 @@ export default function AgentExplainer() {
           <div className="text-center mb-12">
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE AGENT MODEL</p>
             <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
-              You list. We relocate.<br />
+              You list. Bob's team relocates.<br />
               <span style={{ color: GOLD }}>You get paid 25% of the sale.</span>
             </h2>
           </div>
@@ -114,7 +114,7 @@ export default function AgentExplainer() {
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {[
               { title: "Your Role", items: ["Present Dyson at listing meeting", "Stay primary advisor throughout", "Receive transaction access/updates", "Earn 25% at close"] },
-              { title: "Our Role", items: ["AI concierge (Charlie) 24/7", "Neighborhood research & strategy", "Hand-vetted agent selection", "Utilities, schools, movers—all coordinated"] },
+              { title: "Bob's Team Role", items: ["Expert relocation vetting (40+ years)", "AI-assisted research & analysis", "Hand-vetted agent selection", "Utilities, schools, movers—all coordinated"] },
               { title: "Client Outcome", items: ["Relocate with confidence", "Expert local agent match", "Logistics handled end-to-end", "Zero cost—completely free"] }
             ].map((col, i) => (
               <motion.div
