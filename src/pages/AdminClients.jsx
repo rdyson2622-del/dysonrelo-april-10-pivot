@@ -239,9 +239,19 @@ export default function AdminClients() {
                    )}
                  </div>
                </motion.div>
-             </Link>
-           ))}
-         </div>
+               </Link>
+               {confirmDelete === client.id && (
+               <div className="absolute top-2 right-2 z-50 bg-white rounded-xl shadow-xl border border-red-100 p-3 text-center w-44">
+                 <p className="text-xs font-semibold text-red-700 mb-2">Delete {client.full_name}?</p>
+                 <div className="flex gap-2 justify-center">
+                   <button onClick={(e) => handleDelete(client.id, e)} className="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-bold hover:bg-red-700">Delete</button>
+                   <button onClick={(e) => { e.preventDefault(); setConfirmDelete(null); }} className="px-3 py-1 rounded-lg border text-xs font-bold hover:bg-slate-50">Cancel</button>
+                 </div>
+               </div>
+               )}
+               </div>
+               ))}
+               </div>
        )}
 
       {/* Bulk Import Dialog */}
