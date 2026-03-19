@@ -27,6 +27,7 @@ export default function ClientSessionMonitor({ client }) {
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
   const recognitionRef = useRef(null);
   const transcriptEndRef = useRef(null);
 
