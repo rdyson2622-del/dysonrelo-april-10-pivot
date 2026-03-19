@@ -181,7 +181,8 @@ export default function AdminClients() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
            {filtered.map((client, i) => (
-             <Link key={client.id} to={`/AdminClients/${client.id}`} className="block">
+             <div key={client.id} className="relative">
+               <Link to={`/AdminClients/${client.id}`} className="block">
                <motion.div
                  initial={{ opacity: 0, y: 10 }}
                  animate={{ opacity: 1, y: 0 }}
@@ -196,9 +197,18 @@ export default function AdminClients() {
                        {(client.status || 'new_lead').replace(/_/g, ' ')}
                      </Badge>
                    </div>
-                   {client.budget && (
-                     <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
-                   )}
+                   <div className="flex items-center gap-2">
+                     {client.budget && (
+                       <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
+                     )}
+                     <button
+                       onClick={(e) => { e.preventDefault(); setConfirmDelete(confirmDelete === client.id ? null : client.id); }}
+                       className="p-1 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition"
+                       title="Delete client"
+                     >
+                       <Trash2 className="w-3.5 h-3.5" />
+                     </button>
+                   </div>
                  </div>
 
                  <div className="space-y-1.5 mt-3">
