@@ -5,6 +5,7 @@ import {
   ArrowRight, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake,
   MapPin, Shield, Users, Sparkles
 } from 'lucide-react';
+import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
