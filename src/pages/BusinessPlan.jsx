@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic } from 'lucide-react';
+import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GOLD = '#D4AF37';
@@ -638,6 +638,21 @@ STRATEGIC VALUE:
 
 export default function BusinessPlan() {
   const [expandedSection, setExpandedSection] = useState('executive-summary');
+  const [editingSectionId, setEditingSectionId] = useState(null);
+  const [editContent, setEditContent] = useState('');
+  const [localSections, setLocalSections] = useState(sections);
+
+  const startEdit = (section) => {
+    setEditingSectionId(section.id);
+    setEditContent(section.content);
+  };
+
+  const saveEdit = () => {
+    setLocalSections(prev => prev.map(s => s.id === editingSectionId ? { ...s, content: editContent } : s));
+    setEditingSectionId(null);
+  };
+
+  const cancelEdit = () => setEditingSectionId(null);
 
   const exportToPDF = () => {
     // Placeholder for PDF export functionality
