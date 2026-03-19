@@ -156,7 +156,9 @@ export default function ClientSessionMonitor({ client }) {
                   title="Toggle mic input"
                 >
                   <Mic className="w-4 h-4" />
-                  {voiceMode ? 'Mic ON' : 'Mic OFF'}
+                  <span style={{ opacity: voiceMode ? 1 : 0.35, fontSize: '0.75rem' }}>
+                    {voiceMode ? 'Mic On' : 'Mic Off'}
+                  </span>
                 </Button>
               </>
             )}
