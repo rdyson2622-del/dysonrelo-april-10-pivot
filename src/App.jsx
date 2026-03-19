@@ -126,6 +126,7 @@ import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
 import SkipTraceResults from './pages/SkipTraceResults';
 import AgentExplainer from './pages/AgentExplainer';
+import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -186,6 +187,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminInterviews" element={<AdminInterviews />} />
         <Route path="/BusinessPlan" element={<BusinessPlan />} />
         <Route path="/SkipTraceResults" element={<SkipTraceResults />} />
+        <Route path="/AdminListingAgentExplainer" element={<AdminListingAgentExplainer />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
