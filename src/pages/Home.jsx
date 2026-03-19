@@ -206,8 +206,11 @@ export default function Home() {
             We don't send you a map.<br />
             <span className="gold-text-gradient">We make the journey with you.</span>
           </h2>
-          <p className="text-base max-w-2xl mx-auto" style={{ color: '#e5e5e5' }}>
+          <p className="text-base max-w-2xl mx-auto mb-4" style={{ color: '#e5e5e5' }}>
             We are <strong style={{ color: GOLD }}>Relocation Managers</strong> — not agents, not a listing service. Every step below is something Charlie and your Dyson team actively execute on your behalf, all the way through closing.
+          </p>
+          <p className="text-sm max-w-2xl mx-auto" style={{ color: 'rgba(229,229,229,0.8)' }}>
+            <em>We intentionally work with a limited number of families at any given time. This isn't exclusivity — it's commitment. Real relocation management requires deep local focus, market expertise, timeline coordination, and relentless attention to detail. We're not scaling a service. We're delivering one.</em>
           </p>
         </div>
 
