@@ -57,24 +57,13 @@ export default function ClientSessionMonitor({ client }) {
   };
 
   const callGemini = async (userMessage, history) => {
-    // Build conversation history for context
-    const conversationContext = history.slice(-6).map(m =>
-      `${m.role === 'user' ? 'Admin/Client' : 'Charlie'}: ${m.content}`
-    ).join('\n');
-
-    const prompt = `${SYSTEM_PROMPT}
-
-Client: ${client.full_name}, relocating to ${client.destination_city || 'unknown destination'}, budget: ${client.budget || 'unknown'}.
-
-Conversation so far:
-${conversationContext}
-
-Admin/Client: ${userMessage}
-
-Charlie:`;
-
-    const result = await base44.integrations.Core.InvokeLLM({ prompt });
-    return result;
+    const clientContext = `Name: ${client.full_name}, Destination: ${client.destination_city || 'unknown'}, Budget: ${client.budget || 'unknown'}, Priorities: ${(client.priorities || []).join(', ') || 'none specified'}`;
+    const res = await base44.functions.invoke('geminiChat', {
+      message: userMessage,
+      history: history.slice(-10).map(m => ({ role: m.role, content: m.content })),
+      clientContext,
+    });
+    return res.data.response;
   };
 
   const handleStartSession = async () => {
