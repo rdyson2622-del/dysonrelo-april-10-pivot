@@ -9,7 +9,7 @@ const navItems = [
   { label: 'Listing Owners Info', path: '/AdminOwners', icon: Home },
   { label: 'Listing Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
   { label: 'Clients', path: '/AdminClients', icon: UserCheck },
-  { label: 'Message Templates', path: '/AdminTemplates', icon: FileText },
+  { label: 'Presentation Library', path: '/AdminPresentationLibrary', icon: FileText },
   { label: 'Communications', path: '/AdminCommunications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/AdminFlaggedConversations', icon: Flag },
   { label: 'Referral Management', path: '/AdminReferrals', icon: LinkIcon },
