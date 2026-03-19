@@ -183,6 +183,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminSearchProfiles" element={<AdminSearchProfiles />} />
         <Route path="/AdminCommunications" element={<AdminCommunications />} />
         <Route path="/AdminTemplates" element={<AdminTemplates />} />
+        <Route path="/AdminPresentationLibrary" element={<AdminPresentationLibrary />} />
         <Route path="/AdminReferrals" element={<AdminReferrals />} />
         <Route path="/AdminContentApproval" element={<AdminContentApproval />} />
         <Route path="/AdminInterviews" element={<AdminInterviews />} />
