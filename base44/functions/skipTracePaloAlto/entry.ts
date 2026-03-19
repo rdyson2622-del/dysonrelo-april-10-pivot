@@ -75,8 +75,32 @@ Deno.serve(async (req) => {
     let data;
     try {
       data = JSON.parse(responseText);
-    } catch {
-      return Response.json({ error: 'Failed to parse BatchData skip trace response', raw: responseText }, { status: 502 });
+    } catch (parseError) {
+      // Try to parse as HTML and extract JSON from it
+      console.log("JSON parse failed, attempting HTML parse...");
+      
+      // Look for JSON inside HTML (common in error responses)
+      const jsonMatch = responseText.match(/<pre[^>]*>(.*?)<\/pre>/s) || responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const extracted = jsonMatch[1] || jsonMatch[0];
+          data = JSON.parse(extracted);
+          console.log("Successfully extracted JSON from HTML");
+        } catch {
+          return Response.json({ 
+            error: 'HTML response detected, could not extract JSON', 
+            html_preview: responseText.substring(0, 500),
+            statusCode: response.status 
+          }, { status: 502 });
+        }
+      } else {
+        return Response.json({ 
+          error: 'Failed to parse BatchData response (HTML instead of JSON)',
+          response_type: response.headers.get('content-type'),
+          status_code: response.status,
+          html_preview: responseText.substring(0, 500)
+        }, { status: 502 });
+      }
     }
 
     // BatchData returns results array matching input order
