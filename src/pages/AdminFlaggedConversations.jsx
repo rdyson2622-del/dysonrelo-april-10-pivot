@@ -131,18 +131,19 @@ export default function AdminFlaggedConversations() {
                 key={msg.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-4 rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-all ${config.color}`}
-                onClick={() => {
-                  setSelectedMessage(msg);
-                  setAdminNotes(msg.flag_notes || '');
-                }}
+                className={`p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all ${config.color}`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 cursor-pointer flex-1" onClick={() => { setSelectedMessage(msg); setAdminNotes(msg.flag_notes || ''); }}>
                     {Icon && <Icon className="w-4 h-4" />}
                     <span className="font-semibold text-sm">{msg.client?.full_name || 'Unknown Client'}</span>
                   </div>
-                  <Badge className={config.color}>{msg.flag_status}</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge className={config.color}>{msg.flag_status}</Badge>
+                    <button onClick={() => deleteMessageMutation.mutate(msg.id)} className="p-1 rounded hover:bg-red-100 text-red-400 hover:text-red-600 transition" title="Delete message">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-sm mb-2" style={{ color: '#333' }}>{msg.content}</p>
                 <p className="text-xs" style={{ color: '#666' }}>

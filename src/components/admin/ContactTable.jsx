@@ -145,6 +145,9 @@ export default function ContactTable({ owners, onRefresh }) {
               <td className="py-3 px-3 text-right">
                <div className="flex items-center gap-2 justify-end">
                  <SendCampaignButton owner={owner} />
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(owner)} title="Edit owner">
+                   <Edit2 className="w-4 h-4" />
+                 </Button>
                  <DropdownMenu>
                    <DropdownMenuTrigger asChild>
                      <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -187,6 +190,34 @@ export default function ContactTable({ owners, onRefresh }) {
           ))}
         </tbody>
       </table>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editOwner} onOpenChange={() => setEditOwner(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader><DialogTitle>Edit Owner</DialogTitle></DialogHeader>
+          <div className="grid gap-3 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Name *</Label><Input value={editForm.owner_name} onChange={e => setEditForm(f => ({...f, owner_name: e.target.value}))} /></div>
+              <div><Label>Phone</Label><Input value={editForm.phone} onChange={e => setEditForm(f => ({...f, phone: e.target.value}))} /></div>
+            </div>
+            <div><Label>Email</Label><Input value={editForm.email} onChange={e => setEditForm(f => ({...f, email: e.target.value}))} /></div>
+            <div><Label>Property Address</Label><Input value={editForm.property_address} onChange={e => setEditForm(f => ({...f, property_address: e.target.value}))} /></div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-2"><Label>City</Label><Input value={editForm.property_city} onChange={e => setEditForm(f => ({...f, property_city: e.target.value}))} /></div>
+              <div><Label>State</Label><Input value={editForm.property_state} onChange={e => setEditForm(f => ({...f, property_state: e.target.value}))} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>Listing Price</Label><Input type="number" value={editForm.listing_price} onChange={e => setEditForm(f => ({...f, listing_price: e.target.value}))} /></div>
+              <div><Label>Moving To</Label><Input value={editForm.moving_to} onChange={e => setEditForm(f => ({...f, moving_to: e.target.value}))} /></div>
+            </div>
+            <div><Label>Notes</Label><textarea value={editForm.notes} onChange={e => setEditForm(f => ({...f, notes: e.target.value}))} rows={2} className="w-full rounded-md border border-input px-3 py-2 text-sm" /></div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOwner(null)}>Cancel</Button>
+            <Button onClick={handleSaveEdit} disabled={!editForm.owner_name || saving}>{saving ? 'Saving...' : 'Save Changes'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
