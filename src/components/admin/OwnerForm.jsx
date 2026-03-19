@@ -63,42 +63,42 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
         <DialogHeader>
           <DialogTitle>{owner ? 'Edit Owner' : 'Add Owner'}</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4" style={{WebkitAutocomplete: 'off', autoComplete: 'off'}}>
+        <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Name *</Label>
-              <Input value={form.owner_name} onChange={(e) => setForm(f => ({ ...f, owner_name: e.target.value }))} placeholder="John Smith" />
+              <Input value={form.owner_name} onChange={(e) => setForm(f => ({ ...f, owner_name: e.target.value }))} placeholder="John Smith" autoComplete="off" />
             </div>
             <div>
               <Label>Phone</Label>
-              <Input value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" />
+              <Input value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" autoComplete="off" />
             </div>
           </div>
           <div>
             <Label>Email</Label>
-            <Input value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="john@email.com" type="email" />
+            <Input value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="john@email.com" type="email" autoComplete="off" />
           </div>
           <div>
             <Label>Property Address *</Label>
-            <Input value={form.property_address} onChange={(e) => setForm(f => ({ ...f, property_address: e.target.value }))} placeholder="123 Main St" />
+            <Input value={form.property_address} onChange={(e) => setForm(f => ({ ...f, property_address: e.target.value }))} placeholder="123 Main St" autoComplete="off" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>City</Label>
-              <Input value={form.property_city} onChange={(e) => setForm(f => ({ ...f, property_city: e.target.value }))} placeholder="Austin" />
+              <Input value={form.property_city} onChange={(e) => setForm(f => ({ ...f, property_city: e.target.value }))} placeholder="Austin" autoComplete="off" />
             </div>
             <div>
               <Label>State</Label>
-              <Input value={form.property_state} onChange={(e) => setForm(f => ({ ...f, property_state: e.target.value }))} placeholder="TX" />
+              <Input value={form.property_state} onChange={(e) => setForm(f => ({ ...f, property_state: e.target.value }))} placeholder="TX" autoComplete="off" />
             </div>
             <div>
               <Label>Price</Label>
-              <Input type="number" value={form.listing_price} onChange={(e) => setForm(f => ({ ...f, listing_price: e.target.value }))} placeholder="450000" />
+              <Input type="number" value={form.listing_price} onChange={(e) => setForm(f => ({ ...f, listing_price: e.target.value }))} placeholder="450000" autoComplete="off" />
             </div>
           </div>
           <div>
             <Label>Moving To</Label>
-            <Input value={form.moving_to} onChange={(e) => setForm(f => ({ ...f, moving_to: e.target.value }))} placeholder="Destination city" />
+            <Input value={form.moving_to} onChange={(e) => setForm(f => ({ ...f, moving_to: e.target.value }))} placeholder="Destination city" autoComplete="off" />
           </div>
           <div>
             <Label>Notes</Label>
