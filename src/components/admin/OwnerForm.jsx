@@ -63,7 +63,7 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
         <DialogHeader>
           <DialogTitle>{owner ? 'Edit Owner' : 'Add Owner'}</DialogTitle>
         </DialogHeader>
-        <form autoComplete="off" className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Name *</Label>
@@ -71,7 +71,7 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
             </div>
             <div>
               <Label>Phone</Label>
-              <Input autoComplete="tel" value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" />
+              <Input autoComplete="off" value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" />
             </div>
           </div>
           <div>
@@ -104,7 +104,7 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
             <Label>Notes</Label>
             <Textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Additional notes..." rows={2} />
           </div>
-        </form>
+        </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleSave} disabled={!form.owner_name || !form.property_address || saving}>
