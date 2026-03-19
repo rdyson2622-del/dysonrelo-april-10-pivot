@@ -119,6 +119,7 @@ import AdminClientDetail from './pages/AdminClientDetail';
 import AdminCommunications from './pages/AdminCommunications';
 import AdminTemplates from './pages/AdminTemplates';
 import AdminReferrals from './pages/AdminReferrals';
+import AdminContentApproval from './pages/AdminContentApproval';
 import Explainers from './pages/Explainers';
 import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
