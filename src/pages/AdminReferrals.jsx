@@ -70,8 +70,8 @@ export default function AdminReferrals() {
 
             {/* Right Column: Status Tracker */}
             <div className="col-span-1">
-              <div className="bg-white rounded-lg border border-slate-200 p-4">
-                <ReferralTracker />
+              <div className="bg-white rounded-lg border border-slate-200 p-8 flex items-center justify-center min-h-64">
+                <p className="text-slate-400 font-medium">Coming Soon</p>
               </div>
             </div>
           </div>
