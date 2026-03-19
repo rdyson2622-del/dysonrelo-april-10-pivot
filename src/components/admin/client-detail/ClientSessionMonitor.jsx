@@ -7,10 +7,18 @@ import { motion } from 'framer-motion';
 
 const GOLD = '#D4AF37';
 
-const SYSTEM_PROMPT = `You are Charlie, a luxury relocation concierge AI. You are conducting an intake interview with a client who is relocating. 
-Ask focused, intelligent questions about their destination preferences, budget, lifestyle priorities, neighborhood preferences, schools, commute needs, and timeline.
-Give specific, helpful answers when asked about locations, neighborhoods, lakes, schools, etc. Use your real knowledge.
-Be warm, professional, and concise. Maximum 3 sentences per response.`;
+const speakText = (text) => {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95;
+  utterance.pitch = 1.05;
+  // Prefer a natural female voice
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Karen') || v.name.includes('Moira'));
+  if (preferred) utterance.voice = preferred;
+  window.speechSynthesis.speak(utterance);
+};
 
 export default function ClientSessionMonitor({ client }) {
   const [sessionActive, setSessionActive] = useState(false);
