@@ -16,12 +16,7 @@ Deno.serve(async (req) => {
 
     const apiKey = Deno.env.get('GEMINI_API_KEY');
 
-    // Debug: list available models
-    if (message === '__list_models__') {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-      const d = await r.json();
-      return Response.json({ models: d.models?.map(m => m.name) });
-    }
+
     
     // Build conversation history for Gemini
     const contents = [];
