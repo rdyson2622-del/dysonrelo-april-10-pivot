@@ -67,11 +67,11 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Name *</Label>
-              <Input value={form.owner_name} onChange={(e) => setForm(f => ({ ...f, owner_name: e.target.value }))} placeholder="John Smith" />
+              <Input autoComplete="off" value={form.owner_name} onChange={(e) => setForm(f => ({ ...f, owner_name: e.target.value }))} placeholder="John Smith" />
             </div>
             <div>
               <Label>Phone</Label>
-              <Input value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" />
+              <Input autoComplete="tel" value={form.phone} onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="(555) 123-4567" />
             </div>
           </div>
           <div>
