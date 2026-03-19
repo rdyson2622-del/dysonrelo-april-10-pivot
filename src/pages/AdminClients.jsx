@@ -39,11 +39,36 @@ export default function AdminClients() {
   });
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editClient, setEditClient] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [editSaving, setEditSaving] = useState(false);
 
   const handleDelete = async (id, e) => {
     e.preventDefault();
     await base44.entities.RelocationClient.delete(id);
     setConfirmDelete(null);
+    refresh();
+  };
+
+  const openEdit = (client, e) => {
+    e.preventDefault();
+    setEditClient(client);
+    setEditForm({
+      full_name: client.full_name || '', email: client.email || '', phone: client.phone || '',
+      current_city: client.current_city || '', destination_city: client.destination_city || '',
+      budget: client.budget || '', move_date: client.move_date || '',
+      family_size: client.family_size || '', notes: client.notes || '',
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    setEditSaving(true);
+    await base44.entities.RelocationClient.update(editClient.id, {
+      ...editForm,
+      family_size: editForm.family_size ? parseInt(editForm.family_size) : undefined,
+    });
+    setEditSaving(false);
+    setEditClient(null);
     refresh();
   };
   const [bulkStatus, setBulkStatus] = useState(null); // null | 'parsing' | 'preview' | 'importing' | 'done'
