@@ -107,7 +107,7 @@ export default function ContactTable({ owners, onRefresh }) {
               className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors relative"
             >
               <td className="py-3 px-3">
-                <Link to={`/AdminOwners/${owner.id}`} className="cursor-pointer hover:opacity-70 transition block">
+                <div onClick={() => window.location.href = `/AdminOwners/${owner.id}`} className="cursor-pointer hover:opacity-70 transition block">
                   <p className="font-medium text-sm text-slate-800">{owner.owner_name}</p>
                   <div className="flex items-center gap-2 mt-1">
                     {owner.email && (
@@ -123,7 +123,7 @@ export default function ContactTable({ owners, onRefresh }) {
                       {owner.phone}
                     </a>
                   )}
-                </Link>
+                </div>
               </td>
               <td className="py-3 px-3">
                 <p className="text-sm text-slate-700">{owner.property_address}</p>
