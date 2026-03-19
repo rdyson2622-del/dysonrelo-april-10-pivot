@@ -450,7 +450,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: '#000' }}>
         <div className="font-bold tracking-widest text-xs mb-2" style={{ color: 'rgba(212,175,55,0.7)' }}>CONCIERGE RELOCATION SERVICES</div>
-        <p className="text-sm" style={{ color: '#fff' }}>© 2026 · Powered by AI · Serving Families Nationwide · Always Free to Buyers</p>
+        <p className="text-sm" style={{ color: '#fff' }}>The Dyson & Dyson Companies / Concierge Relocation Program     Free to Buyers, Paid at Close     CA.DRE # 02303118</p>
       </footer>
     </div>
   );
