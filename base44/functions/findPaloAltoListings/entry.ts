@@ -36,16 +36,25 @@ Deno.serve(async (req) => {
     };
 
     console.log("Calling BatchData Property Search for Palo Alto listings >$2M...");
-    console.log("Request payload:", JSON.stringify(searchPayload, null, 2));
 
-    const response = await fetch("https://api.batchdata.com/api/v1/property/search", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${BATCHDATA_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(searchPayload)
-    });
+    // Test with a short timeout to see if API is reachable
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+    let response;
+    try {
+      response = await fetch("https://api.batchdata.com/api/v1/property/search", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${BATCHDATA_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(searchPayload),
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const responseText = await response.text();
     console.log("BatchData response status:", response.status);
