@@ -18,6 +18,7 @@ export default function ClientChatTab({ client }) {
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['client-chat', client.id],
     queryFn: () => base44.entities.ChatMessage.filter({ client_id: client.id }, 'created_date', 500),
+    refetchInterval: 5000,
   });
 
   if (isLoading) {
