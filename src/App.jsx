@@ -118,6 +118,7 @@ import AdminSearchProfiles from './pages/AdminSearchProfiles';
 import AdminClientDetail from './pages/AdminClientDetail';
 import AdminCommunications from './pages/AdminCommunications';
 import AdminTemplates from './pages/AdminTemplates';
+import AdminPresentationLibrary from './pages/AdminPresentationLibrary';
 import AdminReferrals from './pages/AdminReferrals';
 import AdminContentApproval from './pages/AdminContentApproval';
 import AdminInterviews from './pages/AdminInterviews';
