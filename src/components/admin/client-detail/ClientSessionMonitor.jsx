@@ -139,16 +139,26 @@ export default function ClientSessionMonitor({ client }) {
           </div>
           <div className="flex gap-2">
             {sessionActive && (
-              <Button
-                onClick={() => setVoiceMode(v => !v)}
-                size="sm"
-                variant="outline"
-                className="gap-1.5"
-                style={{ borderColor: voiceMode ? GOLD : undefined, color: voiceMode ? GOLD : undefined }}
-              >
-                <Volume2 className="w-4 h-4" />
-                {voiceMode ? 'Voice ON' : 'Voice OFF'}
-              </Button>
+              <>
+                <Button
+                  onClick={() => { setTtsEnabled(v => !v); if (ttsEnabled) window.speechSynthesis?.cancel(); }}
+                  size="sm" variant="outline" className="gap-1.5"
+                  style={{ borderColor: ttsEnabled ? GOLD : undefined, color: ttsEnabled ? GOLD : undefined }}
+                  title="Toggle Gemini voice output"
+                >
+                  <Volume2 className="w-4 h-4" />
+                  {ttsEnabled ? 'Speaking' : 'Muted'}
+                </Button>
+                <Button
+                  onClick={() => setVoiceMode(v => !v)}
+                  size="sm" variant="outline" className="gap-1.5"
+                  style={{ borderColor: voiceMode ? GOLD : undefined, color: voiceMode ? GOLD : undefined }}
+                  title="Toggle mic input"
+                >
+                  <Mic className="w-4 h-4" />
+                  {voiceMode ? 'Mic ON' : 'Mic OFF'}
+                </Button>
+              </>
             )}
             {!sessionActive ? (
               <Button onClick={handleStartSession} size="sm" style={{ background: GOLD, color: '#000' }} className="gap-2 font-bold">
