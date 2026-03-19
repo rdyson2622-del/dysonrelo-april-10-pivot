@@ -76,11 +76,11 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
           </div>
           <div>
             <Label>Email</Label>
-            <Input value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="john@email.com" type="email" />
+            <Input autoComplete="off" value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="john@email.com" type="email" />
           </div>
           <div>
             <Label>Property Address *</Label>
-            <Input value={form.property_address} onChange={(e) => setForm(f => ({ ...f, property_address: e.target.value }))} placeholder="123 Main St" />
+            <Input autoComplete="off" value={form.property_address} onChange={(e) => setForm(f => ({ ...f, property_address: e.target.value }))} placeholder="123 Main St" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
