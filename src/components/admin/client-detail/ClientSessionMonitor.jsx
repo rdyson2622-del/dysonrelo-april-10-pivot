@@ -91,6 +91,7 @@ export default function ClientSessionMonitor({ client }) {
     await saveAndShowMessage('user', text);
     const response = await callGemini(text, currentHistory);
     await saveAndShowMessage('charlie', response);
+    if (ttsEnabled) speakText(response);
     setLoadingResponse(false);
   };
 
