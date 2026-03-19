@@ -51,8 +51,8 @@ Deno.serve(async (req) => {
           system_instruction: { parts: [{ text: systemInstruction }] },
           contents,
           generationConfig: {
-            temperature: 0.8,
-            maxOutputTokens: 300,
+            temperature: 0.7,
+            maxOutputTokens: 800,
           }
         })
       }
