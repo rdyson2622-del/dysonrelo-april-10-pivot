@@ -224,45 +224,55 @@ export default function ClientSessionMonitor({ client }) {
         )}
       </div>
 
-      {/* Input row */}
+      {/* Input row — text always available, mic is optional addon */}
       {sessionActive && (
-        <div className="shrink-0 flex gap-2">
-          {voiceMode ? (
+        <div className="shrink-0 flex flex-col gap-2">
+          {isListening && (
+            <div className="text-center text-xs font-semibold animate-pulse" style={{ color: '#ef4444' }}>
+              🎙️ Listening... speak now
+            </div>
+          )}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Type your question — or use mic button to speak..."
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && !loadingResponse && handleSend()}
+              disabled={loadingResponse}
+              className="flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none"
+              style={{
+                background: '#fff',
+                color: '#000',
+                borderColor: isListening ? '#ef4444' : 'rgba(0,0,0,0.2)',
+                boxShadow: isListening ? '0 0 0 2px rgba(239,68,68,0.2)' : 'none',
+              }}
+            />
+            {/* Mic button — always visible, optional */}
             <Button
               onClick={isListening ? stopListening : startListening}
               disabled={loadingResponse}
-              className="flex-1 gap-2 h-11 font-bold text-sm"
-              style={{ background: isListening ? '#ef4444' : GOLD, color: '#000' }}
+              size="sm"
+              className="h-11 w-11 shrink-0"
+              title={isListening ? 'Stop listening' : 'Tap to speak'}
+              style={{
+                background: isListening ? '#ef4444' : 'rgba(0,0,0,0.08)',
+                color: isListening ? '#fff' : '#555',
+                border: `1px solid ${isListening ? '#ef4444' : 'rgba(0,0,0,0.15)'}`,
+              }}
             >
-              {isListening ? <><MicOff className="w-4 h-4" /> Listening... (tap to stop)</> : <><Mic className="w-4 h-4" /> Tap to Speak</>}
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </Button>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Ask anything — lakes, neighborhoods, schools, budget..."
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && !loadingResponse && handleSend()}
-                disabled={loadingResponse}
-                className="flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none"
-                style={{
-                  background: '#fff',
-                  color: '#000',
-                  borderColor: 'rgba(0,0,0,0.2)',
-                }}
-              />
-              <Button
-                onClick={() => handleSend()}
-                disabled={!inputValue.trim() || loadingResponse}
-                size="sm"
-                className="h-11 gap-1.5 font-bold px-5"
-                style={{ background: GOLD, color: '#000' }}
-              >
-                <Send className="w-3.5 h-3.5" /> Send
-              </Button>
-            </>
-          )}
+            <Button
+              onClick={() => handleSend()}
+              disabled={!inputValue.trim() || loadingResponse}
+              size="sm"
+              className="h-11 gap-1.5 font-bold px-5 shrink-0"
+              style={{ background: GOLD, color: '#000' }}
+            >
+              <Send className="w-3.5 h-3.5" /> Send
+            </Button>
+          </div>
         </div>
       )}
 
