@@ -231,10 +231,10 @@ export default function AgentExplainer() {
                 10+
               </div>
               <p className="text-sm mb-6" style={{ color: '#fff' }}>
-                Top brokers in every major market
+                Top 10 agents in all major cities worldwide
               </p>
               <p className="text-xs" style={{ color: '#e5e5e5' }}>
-                Austin • Denver • Miami • Phoenix • Portland • San Diego • Seattle • Tampa • And growing...
+                All U.S. major markets • International expansion in progress • Always the best local expertise
               </p>
             </motion.div>
           </div>
