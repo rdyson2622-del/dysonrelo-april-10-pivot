@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     const systemInstruction = `${SYSTEM_PROMPT}\n\nClient context: ${clientContext || 'No context provided.'}`;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
