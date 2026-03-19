@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
 **DATE:** ${new Date().toLocaleDateString()}
 
 **BETWEEN:**
-**Dyson & Dyson Concierge Relocation Services** ("Dyson & Dyson")
+**The Dyson & Dyson Companies** (CA.DRE # 02303118) Concierge Relocation Services ("Dyson & Dyson")
 AND
 **${list_agent_name}** / **${broker_name}** ("Listing Agent/Broker")
 

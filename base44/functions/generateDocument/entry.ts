@@ -190,14 +190,14 @@ function buildPDF(templateKey, data) {
     y += 8;
   });
 
-  // Page numbers
+  // Page numbers and DRE footer
   const totalPages = doc.internal.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text(`Page ${i} of ${totalPages}`, pageW / 2, pageH - 8, { align: 'center' });
-    doc.text('CONFIDENTIAL — For authorized use only', marginL, pageH - 8);
+    doc.text('The Dyson & Dyson Companies | CA.DRE # 02303118 | CONFIDENTIAL', marginL, pageH - 8);
   }
 
   return doc.output('arraybuffer');

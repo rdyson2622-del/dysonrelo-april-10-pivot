@@ -291,6 +291,29 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Bob Dyson Leadership Section */}
+      <section className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
+            <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
+              Bob Dyson:<br />
+              <span style={{ color: GOLD }}>40+ Years, 1000+ Properties, 1600+ Office Network</span>
+            </h2>
+          </div>
+          
+          <div className="rounded-2xl p-8 mb-8" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
+              Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America from a 500-office network to 1,600+ offices with 45,000 agents across 42 states. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services—combining 40+ years of hands-on real estate expertise with cutting-edge AI to serve families nationwide.
+            </p>
+          </div>
+
+          <p className="text-base text-center mb-8" style={{ color: '#fff' }}>
+            <strong style={{ color: GOLD }}>What this means for you:</strong> AI handles data work faster. Expert judgment calls the shots.
+          </p>
+        </div>
+      </section>
+
       {/* Divider banner */}
       <section className="py-14 px-6 relative overflow-hidden"
         style={{ borderTop: '1px solid rgba(212,175,55,0.1)', borderBottom: '1px solid rgba(212,175,55,0.1)', background: '#000' }}>
@@ -301,10 +324,10 @@ export default function Home() {
             <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(212,175,55,0.5), transparent)' }} />
           </div>
           <h2 className="display-heading gold-text-gradient mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', lineHeight: 1.2, letterSpacing: '0.22em' }}>
-            A new era of real estate is here.
+            Experienced experts, powered by AI.
           </h2>
           <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: '#fff' }}>
-            Concierge Relocation Services harnesses advanced AI to give every family access to a world-class personal assistant — the kind previously reserved for executives.{' '}
+            AI handles data aggregation, comp analysis, document generation, and 24/7 availability. Real estate experts make the judgment calls, approve major decisions, and guide you through your relocation.{' '}
             <span style={{ color: GOLD, fontWeight: 600 }}>And it costs you absolutely nothing.</span>
           </p>
         </div>

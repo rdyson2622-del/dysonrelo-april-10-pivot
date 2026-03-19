@@ -154,7 +154,7 @@ Deno.serve(async (req) => {
       doc.setFontSize(8);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(0, 0, 0);
-      doc.text('Dyson & Dyson Concierge Relocation Services · Confidential', margin, pageH - 12);
+      doc.text('The Dyson & Dyson Companies | CA.DRE # 02303118 | Confidential', margin, pageH - 12);
       doc.text(`Page ${p} of ${totalPages}`, pageW - margin, pageH - 12, { align: 'right' });
     }
 
