@@ -18,8 +18,8 @@ Deno.serve(async (req) => {
     // Step 1: Search for 10 homes over $2M recently listed in Palo Alto
     console.log("Searching for Palo Alto homes over $2M...");
     const today = new Date();
-    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const formattedDate = thirtyDaysAgo.toISOString().split('T')[0];
+    const tenDaysAgo = new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000);
+    const formattedDate = tenDaysAgo.toISOString().split('T')[0];
 
     const searchResponse = await fetch("https://api.batchdata.com/batch/property/search", {
       method: "POST",
