@@ -43,10 +43,6 @@ Deno.serve(async (req) => {
       }
     }));
 
-    const skipTracePayload = {
-      requests: skipTraceRequests
-    };
-
     console.log("Sending skip trace request for", skipTraceRequests.length, "properties...");
     console.log("Sample request:", JSON.stringify(skipTraceRequests[0], null, 2));
 
@@ -56,7 +52,9 @@ Deno.serve(async (req) => {
         "Authorization": `Bearer ${BATCHDATA_API_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(skipTracePayload)
+      body: JSON.stringify({
+        requests: skipTraceRequests
+      })
     });
 
     const responseText = await response.text();
