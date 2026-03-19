@@ -53,7 +53,7 @@ export default function AdminOwners() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen bg-white">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Listing Owners</h1>
         <Button onClick={() => { setEditingOwner(null); setShowForm(true); }} className="bg-slate-900 hover:bg-slate-800">
