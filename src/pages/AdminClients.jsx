@@ -227,6 +227,13 @@ export default function AdminClients() {
                        <span className="text-xs font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>{budgetLabels[client.budget]}</span>
                      )}
                      <button
+                       onClick={(e) => openEdit(client, e)}
+                       className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition"
+                       title="Edit client"
+                     >
+                       <Edit2 className="w-3.5 h-3.5" />
+                     </button>
+                     <button
                        onClick={(e) => { e.preventDefault(); setConfirmDelete(confirmDelete === client.id ? null : client.id); }}
                        className="p-1 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition"
                        title="Delete client"
