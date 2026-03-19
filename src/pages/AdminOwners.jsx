@@ -3,12 +3,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Upload } from 'lucide-react';
 import OwnersList from '@/components/admin/OwnersList';
 import OwnerForm from '@/components/admin/OwnerForm';
+import OwnerImportCSV from '@/components/admin/OwnerImportCSV';
 
 export default function AdminOwners() {
   const [showForm, setShowForm] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [editingOwner, setEditingOwner] = useState(null);
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -56,10 +58,16 @@ export default function AdminOwners() {
     <div className="p-8 min-h-screen bg-white">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Listing Owners</h1>
-        <Button onClick={() => { setEditingOwner(null); setShowForm(true); }} className="bg-slate-900 hover:bg-slate-800">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Owner
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowImport(true)}>
+            <Upload className="w-4 h-4 mr-2" />
+            Import CSV
+          </Button>
+          <Button onClick={() => { setEditingOwner(null); setShowForm(true); }} className="bg-slate-900 hover:bg-slate-800">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Owner
+          </Button>
+        </div>
       </div>
 
       <div className="mb-6">
@@ -86,6 +94,15 @@ export default function AdminOwners() {
         onClose={() => { setShowForm(false); setEditingOwner(null); }}
         owner={editingOwner}
         onSave={editingOwner ? handleEdit : handleAdd}
+      />
+
+      <OwnerImportCSV
+        open={showImport}
+        onClose={() => setShowImport(false)}
+        onImportComplete={() => {
+          setShowImport(false);
+          queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+        }}
       />
 
       {deleteConfirm && (
