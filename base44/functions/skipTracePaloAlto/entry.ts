@@ -60,6 +60,10 @@ Deno.serve(async (req) => {
     const responseText = await response.text();
     console.log("Skip trace response status:", response.status);
     console.log("Skip trace raw response (first 3000 chars):", responseText.substring(0, 3000));
+    console.log("Response headers:", {
+      contentType: response.headers.get('content-type'),
+      location: response.headers.get('location')
+    });
 
     if (!response.ok) {
       return Response.json({
