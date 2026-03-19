@@ -104,7 +104,7 @@ export default function OwnerForm({ open, onClose, owner, onSave }) {
             <Label>Notes</Label>
             <Textarea value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Additional notes..." rows={2} />
           </div>
-        </div>
+        </form>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={handleSave} disabled={!form.owner_name || !form.property_address || saving}>
