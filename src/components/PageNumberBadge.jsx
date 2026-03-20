@@ -7,16 +7,26 @@ export default function PageNumberBadge() {
 
   if (!location?.pathname) return null;
 
-  // Find page number by path
+  // Find page number by path — check exact match first, then dynamic routes
   let pageNumber = null;
   let pageInfo = null;
 
-  for (const [num, page] of Object.entries(PAGE_REGISTRY)) {
+  // Sort entries by path length (longest first) to match specific routes before general ones
+  const sortedEntries = Object.entries(PAGE_REGISTRY).sort((a, b) => b[1].path.length - a[1].path.length);
+
+  for (const [num, page] of sortedEntries) {
     if (!page?.path) continue;
     
-    const basePath = page.path.split(':')[0]; // e.g., '/AdminOwners/' from '/AdminOwners/:ownerId'
+    // Exact match
+    if (location.pathname === page.path) {
+      pageNumber = num;
+      pageInfo = page;
+      break;
+    }
     
-    if (location.pathname === page.path || location.pathname.startsWith(basePath)) {
+    // Dynamic route match (e.g., /AdminOwners/:ownerId)
+    const basePath = page.path.split(':')[0]; // e.g., '/AdminOwners/' from '/AdminOwners/:ownerId'
+    if (basePath && basePath !== '/' && location.pathname.startsWith(basePath.slice(0, -1))) {
       pageNumber = num;
       pageInfo = page;
       break;
