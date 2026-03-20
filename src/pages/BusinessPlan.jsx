@@ -218,28 +218,34 @@ Unit Economics: Higher-priced markets (Austin, Denver, Seattle, Florida) generat
     id: 'growth-roadmap',
     title: 'Growth Roadmap',
     icon: TrendingUp,
-    content: `Phase 1 (Months 1-6): MVP Launch
-• Validate product-market fit in 2-3 high-value markets (Austin, Denver, Seattle)
-• Build initial agent network (50-100 agents)
-• Refine Charlie's capabilities based on user feedback
+    content: `Phase 1 — NOW (Platform Build & Initial Clients):
+• Charlie live 24/7 for inbound inquiries
+• Gemini Session pipeline fully operational (Commitment Gate → Live Session → Debrief → Profile)
+• Admin panel: Clients, Outreach Campaigns, Communications, Presentation Library, Interviews
+• Listing Agent outreach active (skip trace → SMS → campaign → referral proposal)
+• Interview & approval workflow: clients interviewed by Bob, approved/rejected before agent matching
+• Presentation Library: Listing Agent, Client Intro, Receiving Agent (in development), AI Explainer
 
-Phase 2 (Months 6-12): Scale & Expand
-• Expand to top 20 US metros
-• Grow agent network to 500+
-• Launch corporate relocation partnerships
-• Optimize data aggregation pipeline
+Phase 2 (Months 3-9): Listing Agent Distribution Channel
+• Systematically recruit listing agents in top relocating markets (Austin, Denver, Charlotte, Nashville, Phoenix)
+• Every agent gets a Dyson Presentation Kit — client intro, agent explainer, referral agreement
+• Launch Receiving Agent network: vet and contract top 10 agents in each destination market
+• Complete Receiving Agent Presentation and onboarding materials
 
-Phase 3 (Year 2): Infrastructure & Moat
-• Build proprietary data layer (own MLS aggregation, public data warehouse)
-• International expansion (Canada, UK)
-• Develop agent performance predictive models
-• Launch data licensing to suppliers
+Phase 3 (Months 9-18): Scale Intake
+• Increase client intake volume as systems mature
+• Corporate relocation partnerships (employer-sponsored relocation benefits)
+• Build Delta Report automation: every Gemini session triggers buyer + agent email updates
+• Launch data licensing to agents/brokers (neighborhood intelligence, market trends)
 
-Phase 4 (Year 3+): Adjacent Markets
-• Rental relocation product
-• Insurance partnerships
-• International relocation services
-• Real estate investment syndication (help relocators invest in destination markets)`
+Phase 4 (Year 2+): Adjacent Markets & International
+• International expansion (Canada, UK, Mexico — expats and cross-border relocations)
+• Rental relocation product (high-volume, lower AOV)
+• Insurance partnerships (home, auto, life — relocating families need all three)
+• Real estate investment syndication (help relocators invest in destination markets)
+
+THE FLYWHEEL:
+One family → two potential transactions (buy + sell) → two referral fees → agent refers their next relocating client → more families → growing agent network → better data → better matches → more families.`
   },
   {
     id: 'key-metrics',
