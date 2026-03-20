@@ -36,14 +36,9 @@ export default function CommitmentGate({ onCommit }) {
     setChecked(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
   };
 
-  const handleSubmit = () => {
-    if (!name.trim() || !email.trim()) return;
-    setStep('consent');
-  };
-
   const handleCommit = () => {
     if (!allChecked) return;
-    onCommit({ name, email, phone });
+    onCommit({ name, email });
   };
 
   return (
