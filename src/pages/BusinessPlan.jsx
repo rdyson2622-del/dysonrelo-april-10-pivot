@@ -32,14 +32,26 @@ Licensed: The Dyson & Dyson Companies, Inc. CA DRE # 02303118`
     icon: TrendingUp,
     content: `Why Relocating Families Choose Dyson:
 
-• Neighborhood Research: AI-powered analysis of neighborhoods matching lifestyle, commute, and priorities
-• AI Concierge (Charlie): 24/7 availability, free expert guidance on every aspect of relocation
-• Agent Selection: Hand-matched with vetted, top-performing local agents specializing in relocations
-• Home Search Strategy: AI-powered property matching based on exact criteria and budget
-• Full-Service Coordination: Moving logistics, utilities setup, school enrollment, healthcare provider discovery
-• Zero Cost to Buyers: Completely free—funded through agent partnerships
+WHAT CHARLIE DOES FOR EVERY CLIENT:
+• Neighborhood Research: AI-powered analysis matched to lifestyle, commute, schools, safety, community
+• 24/7 AI Concierge: Charlie answers every question about the new city, anytime, at no cost
+• Agent Selection: Charlie interviews the client on agent personality fit, then we evaluate the top 20 agents in the destination market — DRE ratings, production records, personality screened by Bob Dyson personally. We present 3–5 curated candidates. Client chooses. No "I love me" agents chasing a deal.
+• Moving Logistics: From packing to delivery — Charlie manages the entire moving checklist
+• Utilities & Services: Internet, electric, gas, water — all transferred and set up before arrival
+• School Enrollment: District research, school tours, enrollment paperwork
+• Healthcare Setup: Top-rated doctors, dentists, and specialists in the new area
+• Zero Cost to Buyers: Completely free — always
 
-Key Differentiator: Charlie operates 24/7, scales infinitely, and improves with data. This beats traditional human concierges on availability, cost, and responsiveness.`
+THE GEMINI SESSION — BY INVITATION ONLY:
+After a client confirms their information, we schedule a private 3-way live session:
+• The client and their family
+• Google Gemini AI — one of the most advanced AI systems in the world
+• Bob Dyson — 40+ years of hands-on real estate expertise
+
+In this session we build the complete relocation profile together, in real time. It is not a chatbot form. It is a real conversation. This session is by invitation only — we are selective about who we work with to ensure everyone gets the intensive, hands-on attention they deserve.
+
+THE CLIENT DASHBOARD:
+Every client gets a personalized dashboard showing their full moving timeline, matched listings, completed/pending tasks, Charlie chat history, neighborhood research, and offer/escrow status. Everything in one place, on any device.`
   },
   {
     id: 'data-aggregation-network',
