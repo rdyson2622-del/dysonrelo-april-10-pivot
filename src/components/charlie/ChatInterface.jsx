@@ -62,7 +62,14 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Speak welcome message on first load
+  useEffect(() => {
+    speakAsCharlie(WELCOME_MESSAGE, () => setIsSpeaking(true), () => setIsSpeaking(false));
+    return () => stopCharlie();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
