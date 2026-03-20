@@ -11,11 +11,20 @@ const sections = [
     id: 'executive-summary',
     title: 'Executive Summary',
     icon: FileText,
-    content: `Dyson & Dyson Concierge Relocation Services harnesses advanced AI to provide end-to-end relocation assistance to families relocating in the US. The platform is completely free to consumers—funded through agent referral fees—and operates 24/7 via Charlie, an AI concierge.
+    content: `Dyson & Dyson Concierge Relocation Services is a fully independent relocation management company — not a brokerage, not an agent network, not a listing service. We manage the entire relocation experience for families moving across the country, from first question to final walkthrough. The service is 100% free to buyers. Always.
 
-Market Opportunity: 8-9 million households relocate annually in the US. Even 5% penetration would be transformational. The relocation market is fragmented and painful; consumers pay for piecemeal solutions across multiple vendors (real estate agents, movers, utilities, schools, healthcare). Dyson consolidates this into one integrated experience.
+Founded by Bob Dyson — 40+ years in real estate, former Chief Pilot for the Governor of Oklahoma, builder of Red Carpet Corporation of America (500 to 1,600+ offices, 45,000 agents, 42 states) — Dyson & Dyson combines decades of real estate mastery with cutting-edge AI. This is not a startup guessing at a market. It is an expert-led platform built by someone who has seen the industry from every angle.
 
-Business Model: Free-to-consumer, agent-funded revenue (25% referral fee on buyer's side, 15% relocation management fee). This eliminates buyer friction and accelerates adoption vs. traditional real estate models.`
+Market Opportunity: 8-9 million households relocate annually in the US. The relocation market is fragmented and painful — consumers coordinate real estate agents, movers, utilities, schools, and healthcare across multiple vendors with no central guide. Dyson consolidates this into one managed experience.
+
+The Dyson Philosophy: We intentionally work with a limited number of families at any given time. This is not exclusivity for its own sake — it is a commitment to quality. Real relocation management demands intensive focus, deep local knowledge, timeline coordination, and relentless attention to detail. We are not scaling a service. We are delivering one.
+
+Business Model: Free-to-consumer, agent-funded revenue:
+• 25% referral fee on buyer-side commission (from receiving agent at close)
+• 10–15% relocation management fee (from seller at close of their current home)
+• Both fees disclosed transparently upfront — zero surprises
+
+Licensed: The Dyson & Dyson Companies, Inc. CA DRE # 02303118`
   },
   {
     id: 'consumer-value',
