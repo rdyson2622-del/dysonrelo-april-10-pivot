@@ -133,6 +133,7 @@ import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import { LayoutProvider } from './lib/LayoutContext';
+import PageNumberBadge from './components/PageNumberBadge';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -207,6 +208,7 @@ function App() {
           <FontInjector />
           <Router>
             <AuthenticatedApp />
+            <PageNumberBadge />
           </Router>
           <Toaster />
         </LayoutProvider>
