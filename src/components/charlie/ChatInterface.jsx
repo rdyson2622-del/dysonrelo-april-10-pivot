@@ -153,14 +153,13 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
     // Small delay to feel natural
     setIsTyping(true);
+    stopCharlie(); // stop any previous audio before new reply
     setTimeout(() => {
-      const reply = getSpokeResponse(messageText);
-      const charlieMsg = { role: 'charlie', content: reply, type: 'text' };
+      const { display, spoken } = getSpokeResponse(messageText);
+      const charlieMsg = { role: 'charlie', content: display, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
-      // Strip markdown links and cap length for TTS so audio never cuts off
-      const ttsText = reply.replace(/\*\*\[([^\]]+)\]\([^)]+\)\*\*/g, '$1').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*/g, '').slice(0, 400);
-      speakAsCharlie(ttsText, () => setIsSpeaking(true), () => setIsSpeaking(false));
+      speakAsCharlie(spoken, () => setIsSpeaking(true), () => setIsSpeaking(false));
     }, 1200);
   };
 
