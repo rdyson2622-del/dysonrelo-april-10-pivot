@@ -64,7 +64,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }).catch(() => {});
   }, []);
 
-  const WELCOME_MESSAGE = `Hi! I'm Charlie — your Dyson & Dyson guide. I introduce you to each part of our service and point you in the right direction. For real answers about your move, that's what our live Gemini session with Bob Dyson is for. Tell me where you are in your journey!`;
+  const WELCOME_MESSAGE = `Hi! I'm Charlie — your Dyson & Dyson site guide. 👋\n\nI'm here to show you around and point you in the right direction. I'm not an advisor yet — that's coming soon when I'll be powered by Google AI Studio with full voice and knowledge.\n\nFor now, tell me what you're curious about and I'll direct you to the right place. Or tap below to get started:\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**`;
 
   const [messages, setMessages] = useState([
     {
