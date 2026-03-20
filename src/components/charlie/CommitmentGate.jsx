@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Check, ChevronRight, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
@@ -15,11 +15,20 @@ const COMMITMENTS = [
 ];
 
 export default function CommitmentGate({ onCommit }) {
-  const [step, setStep] = useState('intro'); // intro | form | consent
+  const [step, setStep] = useState('intro'); // intro | consent
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [checked, setChecked] = useState([]);
+
+  // Auto-populate from logged-in user — no form needed
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user) {
+        setName(user.full_name || '');
+        setEmail(user.email || '');
+      }
+    }).catch(() => {});
+  }, []);
 
   const allChecked = checked.length === COMMITMENTS.length;
 
