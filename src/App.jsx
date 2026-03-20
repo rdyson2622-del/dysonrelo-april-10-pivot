@@ -105,7 +105,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
-import CityGuide from './pages/CityGuide';
+import CityGuide from './pages/CityGuide.jsx';
 import Search from './pages/Search';
 import Admin from './pages/Admin';
 import AdminOwners from './pages/AdminOwners.jsx';
