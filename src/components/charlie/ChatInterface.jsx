@@ -142,7 +142,9 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       const charlieMsg = { role: 'charlie', content: reply, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
-      speakAsCharlie(reply, () => setIsSpeaking(true), () => setIsSpeaking(false));
+      // Strip markdown links and cap length for TTS so audio never cuts off
+      const ttsText = reply.replace(/\*\*\[([^\]]+)\]\([^)]+\)\*\*/g, '$1').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*/g, '').slice(0, 400);
+      speakAsCharlie(ttsText, () => setIsSpeaking(true), () => setIsSpeaking(false));
     }, 1200);
   };
 
