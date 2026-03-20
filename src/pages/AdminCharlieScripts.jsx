@@ -165,7 +165,7 @@ export default function AdminCharlieScripts() {
               <div className="text-center py-12 text-slate-400 text-sm">No scripts found</div>
             )}
             {filtered.map(script => (
-              <button key={script.id} onClick={() => { setSelected(script); setEditing(false); setAdding(false); }}
+              <button key={script.id} onClick={() => { setSelected(script); setEditing(false); setAdding(false); setTestText(''); setShowHistory(false); stopCharlie(); setPlaying(false); setTestPlaying(false); }}
                 className={`w-full text-left px-4 py-3 border-b border-slate-100 transition-all hover:bg-slate-50 ${selected?.id === script.id ? 'bg-amber-50' : ''}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
