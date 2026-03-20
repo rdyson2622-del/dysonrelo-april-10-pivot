@@ -5,19 +5,25 @@ import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 export default function PageNumberBadge() {
   const location = useLocation();
 
+  if (!location?.pathname) return null;
+
   // Find page number by path
   let pageNumber = null;
   let pageInfo = null;
 
   for (const [num, page] of Object.entries(PAGE_REGISTRY)) {
-    if (location.pathname === page.path || location.pathname.startsWith(page.path.replace(':ownerId', '').replace(':clientId', ''))) {
+    if (!page?.path) continue;
+    
+    const basePath = page.path.split(':')[0]; // e.g., '/AdminOwners/' from '/AdminOwners/:ownerId'
+    
+    if (location.pathname === page.path || location.pathname.startsWith(basePath)) {
       pageNumber = num;
       pageInfo = page;
       break;
     }
   }
 
-  if (!pageNumber) return null;
+  if (!pageNumber || !pageInfo) return null;
 
   return (
     <div
