@@ -26,6 +26,16 @@ export default function CityGuide() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [committed, setCommitted] = useState(null); // null=loading, true/false
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (!user) { setCommitted(false); return; }
+      base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1)
+        .then(results => setCommitted(results && results.length > 0))
+        .catch(() => setCommitted(false));
+    }).catch(() => setCommitted(false));
+  }, []);
 
   const handleCitySubmit = (e) => {
     e.preventDefault();
