@@ -133,12 +133,12 @@ export default function CityGuide() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                placeholder="Enter city (e.g., Austin, TX)"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="pl-10 h-12 text-base rounded-xl border-2"
-                style={{ borderColor: submittedCity ? GOLD : undefined }}
-              />
+                  placeholder="Enter city (e.g., Austin, TX)"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="pl-10 h-12 text-base rounded-xl border-2"
+                  style={{ borderColor: submittedCity ? GOLD : undefined, background: '#fff', color: '#111' }}
+                />
             </div>
             <Button type="submit" className="h-12 px-6 rounded-xl font-bold"
               style={{ background: GOLD, color: '#000' }}>
@@ -161,7 +161,7 @@ export default function CityGuide() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               onClick={() => searchCity(cat)}
-              disabled={!cityReady || loading}
+              disabled={!submittedCity || loading}
               className={`p-5 rounded-2xl border-2 text-left transition-all ${
                 selectedCategory?.key === cat.key
                   ? 'shadow-md'
