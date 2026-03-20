@@ -82,62 +82,9 @@ export default function CommitmentGate({ onCommit }) {
             </p>
           </div>
 
-          <Button onClick={() => setStep('form')} className="w-full h-12 font-bold gap-2 rounded-xl text-base"
+          <Button onClick={() => setStep('consent')} className="w-full h-12 font-bold gap-2 rounded-xl text-base"
             style={{ background: GOLD, color: '#000' }}>
             Get Started <ChevronRight className="w-5 h-5" />
-          </Button>
-        </motion.div>
-      )}
-
-      {/* FORM */}
-      {step === 'form' && (
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-          <div>
-            <h3 className="font-bold mb-1" style={{ color: '#fff', fontSize: '1.65rem' }}>Let's get acquainted</h3>
-            <p style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>Your information is private and never sold.</p>
-          </div>
-
-          <div className="space-y-3">
-            <div>
-              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Full Name *</label>
-              <Input
-                placeholder="Your full name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                className="border-0 rounded-xl h-11"
-                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
-              />
-            </div>
-            <div>
-              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Email Address *</label>
-              <Input
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="border-0 rounded-xl h-11"
-                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
-              />
-            </div>
-            <div>
-              <label className="font-bold mb-1 block" style={{ color: '#e5e5e5', fontSize: '1.05rem' }}>Phone (optional)</label>
-              <Input
-                type="tel"
-                placeholder="(555) 000-0000"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                className="border-0 rounded-xl h-11"
-                style={{ background: '#2a2a2a', color: '#fff', caretColor: GOLD }}
-              />
-            </div>
-          </div>
-
-          <Button
-            onClick={handleSubmit}
-            disabled={!name.trim() || !email.trim()}
-            className="w-full h-11 font-bold gap-2 rounded-xl disabled:opacity-30"
-            style={{ background: GOLD, color: '#000' }}>
-            Continue to Agreement <ChevronRight className="w-4 h-4" />
           </Button>
         </motion.div>
       )}
