@@ -276,6 +276,73 @@ export default function AdminCharlieScripts() {
                   <strong>Notes:</strong> {selected.notes}
                 </div>
               )}
+              {/* Change History */}
+              {showHistory && (
+                <div className="mt-4 rounded-xl border border-slate-200 overflow-hidden">
+                  <div className="px-4 py-2 bg-slate-50 border-b border-slate-200">
+                    <p className="text-xs font-bold text-slate-600 tracking-wide">CHANGE HISTORY</p>
+                  </div>
+                  <div className="p-4 space-y-2">
+                    {selected.last_edited_by ? (
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800">{selected.last_edited_by}</p>
+                          <p className="text-xs text-slate-400">
+                            Last updated {selected.updated_date ? new Date(selected.updated_date).toLocaleString() : 'unknown'}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-slate-400">No edit history recorded yet.</p>
+                    )}
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                      <div>
+                        <p className="text-sm text-slate-600">Script created</p>
+                        <p className="text-xs text-slate-400">
+                          {selected.created_date ? new Date(selected.created_date).toLocaleString() : 'unknown'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Custom Voice Tester */}
+              <div className="mt-4 rounded-xl border border-slate-200 overflow-hidden">
+                <div className="px-4 py-2 bg-slate-50 border-b border-slate-200 flex items-center gap-2">
+                  <Mic className="w-3.5 h-3.5 text-slate-500" />
+                  <p className="text-xs font-bold text-slate-600 tracking-wide">TEST CHARLIE'S VOICE</p>
+                </div>
+                <div className="p-4 space-y-3">
+                  <textarea
+                    value={testText}
+                    onChange={e => setTestText(e.target.value)}
+                    placeholder="Type any text here to hear how Charlie sounds before saving..."
+                    rows={3}
+                    className="w-full rounded-md border border-input px-3 py-2 text-sm resize-none"
+                  />
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline"
+                      onClick={() => {
+                        if (testPlaying) { stopCharlie(); setTestPlaying(false); }
+                        else speakAsCharlie(testText || selected.script_text, () => setTestPlaying(true), () => setTestPlaying(false));
+                      }}
+                      disabled={!testText && !selected.script_text}
+                      className="gap-1.5"
+                      style={{ borderColor: testPlaying ? '#ef4444' : GOLD, color: testPlaying ? '#ef4444' : '#8B6914' }}>
+                      {testPlaying ? <><Square className="w-3.5 h-3.5" /> Stop</> : <><Volume2 className="w-3.5 h-3.5" /> {testText ? 'Play Custom Text' : 'Play Script'}</>}
+                    </Button>
+                    {testText && (
+                      <Button size="sm" variant="ghost" onClick={() => setTestText('')} className="text-slate-400 text-xs">
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               {selected.last_edited_by && (
                 <p className="text-xs text-slate-400 mt-3">Last edited by: {selected.last_edited_by}</p>
               )}
