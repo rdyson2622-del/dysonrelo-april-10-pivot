@@ -13,6 +13,7 @@ const navItems = [
   { label: 'Communications', path: '/AdminCommunications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/AdminFlaggedConversations', icon: Flag },
   { label: 'Referral Management', path: '/AdminReferrals', icon: LinkIcon },
+  { label: "Charlie's Scripts", path: '/AdminCharlieScripts', icon: ScrollText },
   { label: 'Business Plan', path: '/BusinessPlan', icon: BookOpen },
 ];
 
