@@ -263,7 +263,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
                 className="flex-1 text-sm border-0 rounded-lg"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
-              <Button type="submit" size="icon" disabled={!input.trim() || isTyping}
+              <Button type="submit" size="icon" disabled={!input.trim() || isTyping || isSpeaking}
                 className="shrink-0 rounded-lg"
                 style={{ background: GOLD, color: '#000' }}>
                 <Send className="w-4 h-4" />
