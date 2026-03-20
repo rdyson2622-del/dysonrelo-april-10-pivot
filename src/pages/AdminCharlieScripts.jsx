@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Check, X, Search, MessageCircle, ToggleLeft, ToggleRight, Volume2, Square } from 'lucide-react';
+import { Plus, Edit2, Check, X, Search, MessageCircle, ToggleLeft, ToggleRight, Volume2, Square, Copy, History, Mic } from 'lucide-react';
 import { speakAsCharlie, stopCharlie } from '../components/charlie/charlieVoice';
 
 const GOLD = '#D4AF37';
