@@ -284,11 +284,16 @@ function ScriptForm({ form, setForm, onSave, onCancel, saving, title, onDelete }
       </div>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className="block text-xs font-bold text-slate-600 mb-1">PAGE NUMBER</label>
+            <Input type="number" value={form.page_number ?? ''} onChange={e => set('page_number', e.target.value === '' ? null : Number(e.target.value))}
+              placeholder="e.g. 1" className="font-mono" />
+          </div>
           <div>
             <label className="block text-xs font-bold text-slate-600 mb-1">PAGE CODE *</label>
             <Input value={form.page_code} onChange={e => set('page_code', e.target.value.toUpperCase())}
-              placeholder="e.g. HOME, GATE-1, GUIDE" className="font-mono" />
+              placeholder="e.g. HOME, GATE-1" className="font-mono" />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-600 mb-1">SCRIPT TYPE *</label>
