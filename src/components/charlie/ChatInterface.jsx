@@ -80,7 +80,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
   // Speak welcome message on first load
   useEffect(() => {
-    speakAsCharlie(WELCOME_MESSAGE, () => setIsSpeaking(true), () => setIsSpeaking(false));
+    const welcomeTTS = WELCOME_MESSAGE.replace(/\*\*/g, '').slice(0, 400);
+    speakAsCharlie(welcomeTTS, () => setIsSpeaking(true), () => setIsSpeaking(false));
     return () => stopCharlie();
   }, []);
 
