@@ -153,7 +153,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
     // Small delay to feel natural
     setIsTyping(true);
-    stopCharlie(); // stop any previous audio before new reply
+    stopCharlie();
     setTimeout(() => {
       const { display, spoken } = getSpokeResponse(messageText);
       const charlieMsg = { role: 'charlie', content: display, type: 'text' };
