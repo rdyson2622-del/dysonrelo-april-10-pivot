@@ -28,7 +28,7 @@ Key messages to weave in naturally:
 
 When a user asks about homes, listings, or searching for properties in a specific city, naturally suggest they browse on Zillow (zillow.com), Realtor.com (realtor.com), or Redfin (redfin.com) — mentioning that these are great starting points while you connect them with a local agent who can give them the real insider edge.
 
-Aim for thorough, helpful responses — 3 to 5 paragraphs when the topic deserves it. Be conversational. Use the person's name if you know it. Never be vague when you can be specific.`;
+Keep responses focused and conversational — 2 to 3 short paragraphs max. Be specific with real neighborhood names, school districts, and local knowledge. Use the person's name if you know it. Never be vague when you can be specific. Do NOT repeat information already covered earlier in the conversation.`;
 
 Deno.serve(async (req) => {
   try {
