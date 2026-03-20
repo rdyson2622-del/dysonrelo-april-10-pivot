@@ -51,6 +51,19 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
 
+  // Load existing client profile from DB on mount
+  useEffect(() => {
+    if (initialProfile) return;
+    base44.auth.me().then(user => {
+      if (!user) return;
+      base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1)
+        .then(results => {
+          if (results && results.length > 0) setProfile(results[0]);
+        })
+        .catch(() => {});
+    }).catch(() => {});
+  }, []);
+
   const WELCOME_MESSAGE = `Hi! I'm Charlie, your relocation concierge. What can I help you with today?`;
 
   const [messages, setMessages] = useState([
