@@ -138,10 +138,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     // Small delay to feel natural
     setIsTyping(true);
     setTimeout(() => {
-      const charlieMsg = { role: 'charlie', content: SPOKESPERSON_REPLY, type: 'text' };
+      const reply = getSpokeResponse(messageText);
+      const charlieMsg = { role: 'charlie', content: reply, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
-      speakAsCharlie(SPOKESPERSON_REPLY, () => setIsSpeaking(true), () => setIsSpeaking(false));
+      speakAsCharlie(reply, () => setIsSpeaking(true), () => setIsSpeaking(false));
     }, 1200);
   };
 
