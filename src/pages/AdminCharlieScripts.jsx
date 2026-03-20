@@ -205,6 +205,11 @@ export default function AdminCharlieScripts() {
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
+                    {selected.page_number != null && (
+                      <span className="text-xs font-black px-2 py-0.5 rounded bg-slate-200 text-slate-600">
+                        #{selected.page_number}
+                      </span>
+                    )}
                     <span className="text-xs font-black tracking-widest px-2 py-0.5 rounded"
                       style={{ background: 'rgba(212,175,55,0.15)', color: '#8B6914' }}>
                       {selected.page_code}
