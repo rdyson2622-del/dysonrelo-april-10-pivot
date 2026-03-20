@@ -252,6 +252,13 @@ export default function AdminCharlieScripts() {
                     style={{ borderColor: playing ? '#ef4444' : GOLD, color: playing ? '#ef4444' : '#8B6914' }}>
                     {playing ? <><Square className="w-3.5 h-3.5" /> Stop</> : <><Volume2 className="w-3.5 h-3.5" /> Preview Voice</>}
                   </Button>
+                  <Button size="sm" variant="outline" onClick={() => duplicateScript(selected)} className="gap-1.5">
+                    <Copy className="w-3.5 h-3.5" /> Duplicate
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setShowHistory(h => !h)} className="gap-1.5"
+                    style={{ borderColor: showHistory ? GOLD : undefined, color: showHistory ? '#8B6914' : undefined }}>
+                    <History className="w-3.5 h-3.5" /> History
+                  </Button>
                   <Button size="sm" onClick={() => startEdit(selected)} className="gap-1.5"
                     style={{ background: GOLD, color: '#000' }}>
                     <Edit2 className="w-3.5 h-3.5" /> Edit
