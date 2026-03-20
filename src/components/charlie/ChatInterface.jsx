@@ -64,7 +64,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }).catch(() => {});
   }, []);
 
-  const WELCOME_MESSAGE = `Hi! I'm Charlie, your relocation concierge. What can I help you with today?`;
+  const WELCOME_MESSAGE = `Hi! I'm Charlie — the Dyson & Dyson spokesperson. 👋 We'd love to help with your relocation. Send me a message and I'll point you to the right next step!`;
 
   const [messages, setMessages] = useState([
     {
