@@ -145,7 +145,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
   const handleSend = async (text) => {
     const messageText = (text || input).trim();
-    if (!messageText || isTyping) return;
+    if (!messageText || isTyping || isSpeaking) return;
 
     const userMsg = { role: 'user', content: messageText, type: 'text' };
     setMessages(prev => [...prev, userMsg]);
