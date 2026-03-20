@@ -196,17 +196,23 @@ Unit Economics: Higher-priced markets (Austin, Denver, Seattle, Florida) generat
     id: 'competitive-advantage',
     title: 'Competitive Advantages',
     icon: Zap,
-    content: `1. Network Effects: More agents → better matches → happier consumers → more agents. Strong defensibility.
+    content: `1. Bob Dyson's 40+ Year Track Record: This is not a startup guessing at real estate. Bob built and sold a 1,600-office, 45,000-agent network. He has operated at every level of this industry. That credibility is irreplaceable and not reproducible by a tech company.
 
-2. Luxury Brand Positioning: Premium design and "Dyson & Dyson" brand position above commoditized solutions (Zillow, Redfin). Appeals to higher-income relocating families.
+2. The Human + AI Model: We don't choose between technology and expertise — we combine them. AI provides speed, scale, and 24/7 availability. Bob and our team provide judgment, trust, and accountability. Every major recommendation is reviewed by a human expert before reaching the client. No competitor is doing this at this level.
 
-3. Free-to-Consumer Model: Eliminates buyer friction vs. traditional agent models. Faster adoption.
+3. Intentionally Limited Intake: We do not race to scale. We work with a limited number of clients at any time because we refuse to compromise on quality. This creates a sense of invitation and exclusivity that premium clients respond to — and it protects our service standard.
 
-4. AI Scalability: Charlie operates 24/7 on unlimited inquiries. Beats human concierge model on cost and availability.
+4. Listing Agent Partnership Model: We turn every listing agent into a referral partner. At their listing presentation, they can offer a complete concierge relocation service to their sellers — at zero cost to the agent or seller. They earn 25% at close. We handle everything. This creates a distribution channel most relocation companies don't have.
 
-5. Data Moat: Over time, accumulate insights on neighborhoods, agent performance, market trends that become increasingly valuable and defensible.
+5. The Presentation Library: All agent-facing, client-facing, and receiving-agent materials are stored, versioned, and deliverable from a central admin hub. No more ad-hoc PDFs or inconsistent pitches.
 
-6. End-to-End Integration: Competitors address single problems (listings, agents, movers). You solve the full journey.`
+6. Communication Threading: Every SMS and email with clients and agents is logged, searchable, and threaded in the admin panel. Full conversation history. No context is ever lost.
+
+7. Data Moat: PropStream property data, CrissCross skip trace, Google Gemini web search, and growing transaction history create a defensible intelligence layer no individual agent can replicate.
+
+8. End-to-End Integration: Competitors solve one problem. We solve the entire journey — agent, city, move, utilities, schools, healthcare, and beyond.
+
+9. Luxury Positioning: Premium brand design and Bob's direct personal engagement position Dyson above commoditized platforms (Zillow, Redfin). Appeals to serious relocating families who want a trusted advisor, not an algorithm.`
   },
   {
     id: 'growth-roadmap',
