@@ -815,7 +815,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#f5f5f5' }}
         >
-          <p>Business Plan v2.0 • Last Updated: March 15, 2026 • Includes Full Operational Process Guides</p>
+          <p>Business Plan v3.0 • Last Updated: March 20, 2026 • Updated: Executive Summary, Consumer Value, Competitive Advantages, Growth Roadmap, + Interview Gate, Listing Agent Model, Presentation Library</p>
         </motion.div>
       </main>
     </div>
