@@ -56,7 +56,7 @@ export default function FloatingCharlie() {
                 animate={{ opacity: 1, x: 0 }}
                 className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-sm px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg"
               >
-                Ask Charlie 💬
+                Meet Charlie — your site guide 👋
                 <div className="absolute top-1/2 -translate-y-1/2 right-[-6px] w-3 h-3 bg-slate-900 rotate-45" />
               </motion.div>
             )}
