@@ -129,7 +129,7 @@ export default function Home() {
               <div className="space-y-2">
                 <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
                   style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We handle every step of your move, completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
+                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
                   </div>
                   <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
                   We're moving to Austin, TX in June!
@@ -180,7 +180,7 @@ export default function Home() {
                   <div className="space-y-2">
                   <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
                   style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We handle every step of your move, completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
+                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
                   </div>
                   <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
                   We're moving to Austin, TX in June!
