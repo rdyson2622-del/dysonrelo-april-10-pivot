@@ -108,22 +108,39 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     handleSend(topic);
   };
 
+  // Returns { display: string, spoken: string }
   const getSpokeResponse = (text) => {
     const t = text.toLowerCase();
+
     if (t.includes('neighborhood') || t.includes('area') || t.includes('where') || t.includes('city')) {
-      return `Great question about neighborhoods — but that's exactly what our **Gemini Live Session** is built for! 🗺️\n\nIn that session, Bob Dyson and Gemini AI will dive deep into your destination city together with you — neighborhoods, schools, commute, lifestyle fit — all in real time.\n\n👉 **[Start Your Gemini Session](/GeminiSession)** to get those answers with a real expert.\n\nThis service is 100% free to you.`;
+      return {
+        display: `Great question about neighborhoods — but that's exactly what our **Gemini Live Session** is built for! 🗺️\n\nIn that session, Bob Dyson and Gemini AI will dive deep into your destination city — neighborhoods, schools, commute, lifestyle fit — all in real time.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**\n\nThis service is 100% free to you.`,
+        spoken: `Neighborhoods, schools, commute — that's exactly what your private Gemini session with Bob Dyson is built for. It's free. Click below to begin.`
+      };
     }
     if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
-      return `Agent matching is one of our specialties! 🤝\n\nWe don't just hand you a random name — Bob Dyson personally reviews the top agents in your destination market and matches you based on your personality and needs.\n\nTo get matched, you'll first need to complete your **Gemini intake session** so we know exactly what you need.\n\n👉 **[Begin Your Session](/GeminiSession)**`;
+      return {
+        display: `Agent matching is one of our specialties! 🤝\n\nBob Dyson personally reviews the top agents in your destination market and matches you based on your personality and needs.\n\nComplete your **Gemini intake session** first so we know exactly what you need.\n\n👉 **[Begin Your Session](/GeminiSession)**`,
+        spoken: `Bob Dyson hand-selects your agent personally. To get matched, start with your Gemini session — it's completely free.`
+      };
     }
     if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price')) {
-      return `Our service is **100% free to you as the buyer.** Always. 🎉\n\nWe are compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\nReady to get started at no cost?\n\n👉 **[Go to Your Dashboard](/Dashboard)** or **[Start Your Gemini Session](/GeminiSession)**`;
+      return {
+        display: `Our service is **100% free to you as the buyer.** Always. 🎉\n\nWe're compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
+        spoken: `Our service is one hundred percent free to you as the buyer. Always. Your agent handles our compensation at close.`
+      };
     }
     if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next')) {
-      return `Here's how Dyson & Dyson works — step by step:\n\n1. **Chat with me** (you're doing it!) — I'll orient you to the site\n2. **Gemini Live Session** — a private AI interview with Bob Dyson to build your full relocation profile\n3. **Agent Match** — we hand-select the best agents in your destination city\n4. **Relocation Plan** — moving logistics, schools, utilities, healthcare all coordinated for you\n\n👉 **[Start Step 2 — Your Gemini Session](/GeminiSession)**`;
+      return {
+        display: `Here's how Dyson & Dyson works:\n\n1. **Chat with me** — I orient you to the service\n2. **Gemini Live Session** — a private AI interview with Bob Dyson builds your full relocation profile\n3. **Agent Match** — we hand-select the best agents in your destination city\n4. **Relocation Plan** — moving, schools, utilities, healthcare all coordinated\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
+        spoken: `Here's how it works. Chat with me first. Then your private Gemini session with Bob Dyson builds your full relocation profile. From there, we match you with the right agent. All free.`
+      };
     }
     // Default
-    return `That's a great topic — and it's exactly what our **live Gemini AI session** is designed to explore in depth with you and Bob Dyson! 🌟\n\nI'm here to guide you around the site, but for real answers tailored to your move, the Gemini session is where the magic happens.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Bob directly: **(405) 833-2622** | rdyson2622@gmail.com`;
+    return {
+      display: `That's exactly what our **live Gemini AI session** is designed to explore with you and Bob Dyson! 🌟\n\nI'm here to guide you around the site — for real answers tailored to your move, the Gemini session is where the magic happens.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Bob directly: **(405) 833-2622**`,
+      spoken: `For real answers about your move, your private Gemini session with Bob Dyson is the right next step. I'm just here to show you the way.`
+    };
   };
 
   const handleSend = async (text) => {
