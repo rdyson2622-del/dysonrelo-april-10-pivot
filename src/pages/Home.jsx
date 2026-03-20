@@ -73,7 +73,7 @@ export default function Home() {
               <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(1.8rem, 4.5vw, 4rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Real Estate</span>
             </h1>
             <p className="text-base leading-relaxed mb-2" style={{ color: '#fff', fontWeight: 400 }}>
-              Meet Charlie — your AI Relocation Manager backed by Bob Dyson and 40+ years of real estate expertise. We don't sell homes. We manage your entire move — from first question to final walkthrough.
+              Meet Charlie — your AI Relocation Manager backed by Bob Dyson and 40+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home — we don't sell. We manage your entire relocation.
             </p>
             <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Experienced relocation experts powered by AI. We handle data work so you get real insight. You get Charlie for 24/7 answers AND a real person who knows your market inside and out. We work with a limited number of clients at any given time because relocation management demands intensive focus — on your specific market, your lifestyle, your timeline. We're not racing toward a sale. We're focused on getting you home.
@@ -208,7 +208,7 @@ export default function Home() {
             <span className="gold-text-gradient">We make the journey with you.</span>
           </h2>
           <p className="text-base max-w-2xl mx-auto mb-4" style={{ color: '#e5e5e5' }}>
-            We are <strong style={{ color: GOLD }}>Relocation Managers</strong> — not agents, not a listing service. Every step below is something Charlie and your Dyson team actively execute on your behalf, all the way through closing.
+            We are <strong style={{ color: GOLD }}>Relocation Managers</strong> — not agents, not a listing service, not a broker. We help families and professionals sell their current home and find their next one, anywhere in the country. Every step below is something Charlie and your Dyson team actively execute on your behalf, all the way through closing.
           </p>
           <p className="text-sm max-w-2xl mx-auto" style={{ color: 'rgba(229,229,229,0.8)' }}>
             <em>We intentionally work with a limited number of families at any given time. This isn't exclusivity — it's commitment. Real relocation management requires deep local focus, market expertise, timeline coordination, and relentless attention to detail. We're not scaling a service. We're delivering one.</em>
