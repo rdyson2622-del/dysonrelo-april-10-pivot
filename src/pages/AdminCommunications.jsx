@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Mail, Phone, Calendar, MapPin, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { motion } from 'framer-motion';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 const STATUS_COLORS = {
   sent: 'bg-blue-100 text-blue-800',
@@ -16,18 +17,38 @@ const STATUS_COLORS = {
   opened: 'bg-purple-100 text-purple-800',
 };
 
-const STATUS_ICONS = {
-  sent: Clock,
-  delivered: CheckCircle2,
-  failed: AlertCircle,
-  bounced: AlertCircle,
-  opened: CheckCircle2,
-};
+function getTimeAgo(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  if (days > 0) return `${days}d ago`;
+  if (hours > 0) return `${hours}h ago`;
+  if (minutes > 0) return `${minutes}m ago`;
+  return 'just now';
+}
+
+// Group communications by recipient name
+function groupByRecipient(communications) {
+  const groups = {};
+  communications.forEach(c => {
+    const key = c.recipient_name;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  });
+  // Sort each thread by sent_date ascending
+  Object.values(groups).forEach(thread =>
+    thread.sort((a, b) => new Date(a.sent_date) - new Date(b.sent_date))
+  );
+  return groups;
+}
 
 export default function AdminCommunications() {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [newMessage, setNewMessage] = useState('');
+  const queryClient = useQueryClient();
 
   const { data: communications = [], isLoading } = useQuery({
     queryKey: ['communications'],
@@ -35,46 +56,78 @@ export default function AdminCommunications() {
     initialData: [],
   });
 
-  const filtered = communications.filter((comm) => {
-    const matchSearch =
-      !searchTerm ||
-      comm.recipient_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      comm.property_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      comm.listing_agent_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchType = typeFilter === 'all' || comm.communication_type === typeFilter;
-    const matchStatus = statusFilter === 'all' || comm.status === statusFilter;
-    return matchSearch && matchType && matchStatus;
+  const sendMutation = useMutation({
+    mutationFn: (data) => base44.entities.Communication.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
+      setNewMessage('');
+      toast.success('Message sent');
+    }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Communication.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communications'] });
+      toast.success('Message deleted');
+    }
+  });
+
+  const filtered = communications.filter((c) => {
+    const matchSearch =
+      !searchTerm ||
+      c.recipient_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.property_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.listing_agent_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchType = typeFilter === 'all' || c.communication_type === typeFilter;
+    return matchSearch && matchType;
+  });
+
+  const grouped = groupByRecipient(filtered);
+  const recipients = Object.keys(grouped).sort();
+
+  const thread = selectedRecipient ? (grouped[selectedRecipient] || []) : [];
+  const threadContact = thread[0];
+
+  const handleSend = () => {
+    if (!newMessage.trim() || !threadContact) return;
+    sendMutation.mutate({
+      communication_type: threadContact.communication_type,
+      recipient_name: threadContact.recipient_name,
+      recipient_phone: threadContact.recipient_phone,
+      recipient_email: threadContact.recipient_email,
+      property_address: threadContact.property_address,
+      listing_agent_name: threadContact.listing_agent_name,
+      message_content: newMessage.trim(),
+      sent_date: new Date().toISOString(),
+      status: 'sent',
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="flex flex-col h-full" style={{ height: 'calc(100vh - 48px)' }}>
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-40">
-        <div className="px-6 py-4">
+      <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-3">
           <Link to="/Admin">
-            <Button variant="ghost" size="sm" className="gap-2 mb-4">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
               <ArrowLeft className="w-4 h-4" />
-              Back to Admin
             </Button>
           </Link>
           <div>
             <h1 className="font-bold text-slate-900">Communication Log</h1>
-            <p className="text-xs text-slate-500 mt-1">All SMS and email communications with property owners</p>
+            <p className="text-xs text-slate-500 mt-0.5">Click a contact to open their thread</p>
           </div>
         </div>
-
-        {/* Filters */}
-        <div className="px-6 py-4 border-t border-slate-100 flex flex-wrap gap-3">
-          <div className="flex-1 min-w-[200px]">
-            <Input
-              placeholder="Search by name, property, or agent..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-8 text-sm"
-            />
-          </div>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Search contacts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-48 h-8 text-sm"
+          />
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-32 h-8 text-sm">
+            <SelectTrigger className="w-28 h-8 text-sm">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
@@ -83,127 +136,130 @@ export default function AdminCommunications() {
               <SelectItem value="email">Email</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32 h-8 text-sm">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="delivered">Delivered</SelectItem>
-              <SelectItem value="opened">Opened</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
-              <SelectItem value="bounced">Bounced</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-16 rounded-lg bg-white border border-slate-200">
-            <MessageCircle className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-            <p className="font-medium text-slate-900">No communications found</p>
-            <p className="text-sm text-slate-500 mt-1">Communications will appear here as SMS and emails are sent</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {filtered.map((comm, idx) => {
-              const StatusIcon = STATUS_ICONS[comm.status];
-              const sentDate = new Date(comm.sent_date);
-              const timeAgo = getTimeAgo(sentDate);
+      {/* Body: Two-column */}
+      <div className="flex flex-1 overflow-hidden">
 
+        {/* Left: Contact List */}
+        <div className="w-72 shrink-0 border-r border-slate-200 bg-white overflow-y-auto">
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <div className="w-5 h-5 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin" />
+            </div>
+          ) : recipients.length === 0 ? (
+            <div className="p-6 text-center text-slate-400 text-sm">
+              <MessageCircle className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+              No communications yet
+            </div>
+          ) : (
+            recipients.map(name => {
+              const msgs = grouped[name];
+              const latest = msgs[msgs.length - 1];
+              const isSelected = selectedRecipient === name;
               return (
-                <motion.div
-                  key={comm.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.02 }}
-                  className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all"
+                <div
+                  key={name}
+                  onClick={() => setSelectedRecipient(name)}
+                  className={`p-4 cursor-pointer border-b border-slate-100 flex items-start gap-3 hover:bg-slate-50 transition-colors ${isSelected ? 'bg-amber-50 border-l-4 border-l-amber-400' : ''}`}
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    {/* Type & Status */}
-                    <div className="flex items-start gap-2">
-                      <div className="p-2 rounded-lg bg-slate-100">
-                        {comm.communication_type === 'sms' ? (
-                          <Phone className="w-4 h-4 text-slate-600" />
-                        ) : (
-                          <Mail className="w-4 h-4 text-slate-600" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-slate-500 uppercase">{comm.communication_type}</p>
-                        <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded mt-1 ${STATUS_COLORS[comm.status]}`}>
-                          {comm.status}
-                        </span>
-                      </div>
+                  <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600 shrink-0">
+                    {name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center">
+                      <p className="font-semibold text-sm text-slate-900 truncate">{name}</p>
+                      <span className="text-xs text-slate-400 shrink-0 ml-1">{getTimeAgo(new Date(latest.sent_date))}</span>
                     </div>
-
-                    {/* Recipient */}
-                    <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Recipient</p>
-                      <p className="font-medium text-sm text-slate-900">{comm.recipient_name}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {comm.communication_type === 'sms' ? comm.recipient_phone : comm.recipient_email}
-                      </p>
-                    </div>
-
-                    {/* Property */}
-                    <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Property</p>
-                      <div className="flex items-start gap-1">
-                        <MapPin className="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" />
-                        <p className="text-sm text-slate-900">{comm.property_address}</p>
-                      </div>
-                      {comm.listing_agent_name && (
-                        <p className="text-xs text-slate-500 mt-1">Agent: {comm.listing_agent_name}</p>
-                      )}
-                    </div>
-
-                    {/* Message Preview */}
-                    <div>
-                      <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Message</p>
-                      <p className="text-sm text-slate-700 line-clamp-2">{comm.message_content}</p>
-                    </div>
-
-                    {/* Timestamp */}
-                    <div className="flex flex-col items-end justify-between">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-slate-400" />
-                        <p className="text-xs text-slate-500">{sentDate.toLocaleDateString()}</p>
-                      </div>
-                      <p className="text-xs text-slate-400 mt-2">{timeAgo}</p>
-                      <div className="flex gap-1 mt-3">
-                        {comm.notes && (
-                          <Button variant="ghost" size="sm" title={comm.notes} className="h-7 text-xs">
-                            📝
-                          </Button>
-                        )}
-                      </div>
+                    <p className="text-xs text-slate-500 truncate mt-0.5">{latest.message_content}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${STATUS_COLORS[latest.status]}`}>{latest.status}</span>
+                      <span className="text-xs text-slate-400">{msgs.length} msg{msgs.length > 1 ? 's' : ''}</span>
                     </div>
                   </div>
-                </motion.div>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0 mt-1" />
+                </div>
               );
-            })}
+            })
+          )}
+        </div>
+
+        {/* Right: Thread View */}
+        {selectedRecipient ? (
+          <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden">
+            {/* Thread Header */}
+            <div className="bg-white border-b border-slate-200 px-5 py-3 flex items-center justify-between shrink-0">
+              <div>
+                <p className="font-bold text-slate-900">{selectedRecipient}</p>
+                <p className="text-xs text-slate-500">
+                  {threadContact?.communication_type === 'sms' ? threadContact.recipient_phone : threadContact?.recipient_email}
+                  {threadContact?.property_address ? ` · ${threadContact.property_address}` : ''}
+                </p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedRecipient(null)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+              {thread.map((msg) => {
+                const isOutbound = msg.role !== 'inbound';
+                return (
+                  <div key={msg.id} className={`flex ${isOutbound ? 'justify-end' : 'justify-start'} group`}>
+                    <div className={`relative max-w-sm rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                      isOutbound ? 'bg-slate-800 text-white rounded-br-sm' : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm'
+                    }`}>
+                      <p className="leading-relaxed whitespace-pre-wrap">{msg.message_content}</p>
+                      <div className={`flex items-center justify-between gap-3 mt-1 ${isOutbound ? 'text-slate-400' : 'text-slate-400'}`}>
+                        <span className="text-xs">{getTimeAgo(new Date(msg.sent_date))}</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${STATUS_COLORS[msg.status]}`}>{msg.status}</span>
+                      </div>
+                      {/* Delete button on hover */}
+                      <button
+                        onClick={() => {
+                          if (confirm('Delete this message?')) deleteMutation.mutate(msg.id);
+                        }}
+                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs hidden group-hover:flex items-center justify-center hover:bg-red-600"
+                      >
+                        <Trash2 className="w-2.5 h-2.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Compose */}
+            <div className="bg-white border-t border-slate-200 px-5 py-3 flex gap-2 shrink-0">
+              <Textarea
+                placeholder={`Send ${threadContact?.communication_type === 'sms' ? 'SMS' : 'email'} to ${selectedRecipient}...`}
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                className="flex-1 min-h-[60px] max-h-32 resize-none text-sm"
+              />
+              <Button
+                onClick={handleSend}
+                disabled={!newMessage.trim() || sendMutation.isPending}
+                className="self-end gap-2 bg-slate-900 hover:bg-slate-800"
+              >
+                <Send className="w-4 h-4" />
+                Send
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center bg-slate-50">
+            <div className="text-center text-slate-400">
+              <MessageCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <p className="font-medium">Select a contact to view their thread</p>
+              <p className="text-sm mt-1">Click any name on the left</p>
+            </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
-}
-
-function getTimeAgo(date) {
-  const seconds = Math.floor((new Date() - date) / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) return `${days}d ago`;
-  if (hours > 0) return `${hours}h ago`;
-  if (minutes > 0) return `${minutes}m ago`;
-  return 'just now';
 }
