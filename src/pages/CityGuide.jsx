@@ -248,6 +248,8 @@ export default function CityGuide() {
             <p className="text-sm">Enter a destination city above to unlock the research categories.</p>
           </div>
         )}
+
+        </> /* end committed === true */}
       </main>
     </div>
   );
