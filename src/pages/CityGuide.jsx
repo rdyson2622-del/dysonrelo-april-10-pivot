@@ -77,6 +77,48 @@ export default function CityGuide() {
 
       <main className="max-w-3xl mx-auto px-4 py-8">
 
+        {/* Loading state */}
+        {committed === null && (
+          <div className="flex justify-center py-20">
+            <div className="w-7 h-7 border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* GATE — not committed */}
+        {committed === false && (
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            className="max-w-md mx-auto text-center py-16">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+              style={{ background: 'rgba(212,175,55,0.1)', border: `2px solid ${GOLD}` }}>
+              <Lock className="w-8 h-8" style={{ color: GOLD }} />
+            </div>
+            <h2 className="text-xl font-bold mb-3" style={{ color: '#111' }}>City Guide is for Committed Clients</h2>
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+              The City Guide is a service we provide <strong>after</strong> you've completed your intake — so we can tailor the research to your specific move, budget, and family needs.
+            </p>
+            <p className="text-sm text-slate-500 mb-8 leading-relaxed">
+              Start with Charlie or your Gemini Session to unlock full access.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link to="/GeminiSession">
+                <button className="w-full py-3 rounded-full font-bold text-sm"
+                  style={{ background: GOLD, color: '#000' }}>
+                  Start My Gemini Session
+                </button>
+              </Link>
+              <Link to="/Chat">
+                <button className="w-full py-3 rounded-full font-semibold text-sm border-2"
+                  style={{ borderColor: GOLD, color: '#000', background: 'transparent' }}>
+                  Chat with Charlie First
+                </button>
+              </Link>
+            </div>
+          </motion.div>
+        )}
+
+        {/* FULL GUIDE — committed clients only */}
+        {committed === true && <>
+
         {/* Page Title */}
         <div className="text-center mb-8">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
