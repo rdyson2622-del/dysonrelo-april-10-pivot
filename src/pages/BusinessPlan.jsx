@@ -572,6 +572,116 @@ If client skips the gate and calls directly:
 • Use your judgment on high-value clients — but get the agreement before agent introduction`
   },
   {
+    id: 'listing-agent-model',
+    title: '🤝 Listing Agent Partnership Model',
+    icon: TrendingUp,
+    content: `THE LISTING AGENT DISTRIBUTION CHANNEL — HOW WE GROW WITHOUT ADVERTISING
+
+The most powerful growth lever in this business is the listing agent. Every agent who lists a relocating seller becomes a potential Dyson distribution partner. Here's the full model:
+
+────────────────────────────────
+THE AGENT'S ROLE
+────────────────────────────────
+The listing agent does ONE thing: at their listing presentation, they say:
+"I've partnered with Dyson & Dyson to offer you a complete concierge relocation service — at zero cost to you. They'll handle your entire move: agent selection in your new city, neighborhood research, moving logistics, utilities, schools, healthcare — everything. And they're free."
+
+That's it. They hand the seller to us. We do everything else.
+
+WHAT THE AGENT GETS:
+• 25% referral fee at close of the buyer's new home
+• Zero added workload — we handle 100% of the relocation
+• Transaction portal access: read-only visibility into the client's move milestones
+• Their client comes back after the move and refers them friends ("You were amazing, you helped us with everything")
+
+────────────────────────────────
+THE PRESENTATION LIBRARY
+────────────────────────────────
+Every listing agent gets access to a presentation kit stored in the admin Presentation Library:
+
+1. Listing Agent Partnership Presentation (8 slides)
+   — For agents to understand the model and pitch to their sellers
+
+2. Client Welcome & Relocation Overview (8 slides)
+   — For sellers to understand what they're getting
+
+3. Receiving Agent Program (in development)
+   — For agents in destination cities who receive our referrals
+
+4. AI Explainer: The 1927 Parallel (4 slides)
+   — For skeptical agents/clients who don't yet understand AI's role
+
+All presentations are manageable from the admin panel — click, send as link, edit, or remove.
+
+────────────────────────────────
+THE AGENT FEE STRUCTURE
+────────────────────────────────
+Example on a $600,000 new home:
+• Buyer's agent commission: 2.5% = $15,000
+• Agent's 25% referral share = $3,750 paid at close
+• Our relocation management fee: 10–15% from seller at close of THEIR home
+
+The agent earns $3,750 by saying one sentence at a listing appointment. That's the pitch.`
+  },
+  {
+    id: 'interview-gate',
+    title: '🎙️ Interview & Approval Gate',
+    icon: Shield,
+    content: `THE INTERVIEW GATE — QUALITY CONTROL BEFORE AGENT MATCHING
+
+Not every client who completes the Gemini session gets matched with an agent immediately. We have an Interview & Approval layer that ensures we're working with serious, high-intent families who are the right fit for our model.
+
+────────────────────────────────
+WHY THE INTERVIEW EXISTS
+────────────────────────────────
+Bob Dyson interviews every client personally (or reviews their Gemini session transcript) before any agent is introduced. This exists for three reasons:
+
+1. QUALITY PROTECTION: We vouch for every client we send to an agent. Our reputation with our agent network depends on referral quality. We don't send unqualified leads.
+
+2. CAPACITY MANAGEMENT: We work with a limited number of families at any time. The interview is how we determine who gets one of those limited spots.
+
+3. FEE PROTECTION: A serious, committed client is far more likely to close — and therefore generate the referral fee that funds the entire service.
+
+────────────────────────────────
+THE INTERVIEW WORKFLOW
+────────────────────────────────
+STEP 1: Client completes Gemini Session
+→ Profile auto-created in AdminClients panel
+→ Interview record created with status "pending"
+
+STEP 2: Admin schedules interview
+→ Interview record updated with scheduled_date
+→ Client notified (email/SMS)
+
+STEP 3: Bob or team conducts interview
+→ Interview notes recorded: family dynamics, intent, engagement level, timeline, financial readiness
+→ Status updated to "completed"
+
+STEP 4: Approval decision
+→ APPROVED: Client advances to agent matching. Gemini session scheduled.
+→ REJECTED: Client notified gracefully. Referral to other services if appropriate.
+→ Approval notes recorded for internal reference.
+
+────────────────────────────────
+WHAT WE'RE LOOKING FOR IN AN INTERVIEW
+────────────────────────────────
+• Clear destination city and timeline (not "maybe someday")
+• Financial readiness (pre-qualified or strong buyer signals)
+• Family engagement — both decision-makers involved, not just one
+• Genuine relocation (not fishing for free information)
+• Willingness to work exclusively with our referred agent
+
+────────────────────────────────
+ADMIN PANEL: INTERVIEW MANAGEMENT
+────────────────────────────────
+All interviews are tracked in the AdminInterviews panel:
+• View all pending, completed, approved, and rejected interviews
+• Record interview notes and approval decisions
+• Track which clients have had their Gemini session scheduled post-approval
+• Monitor approval rates and interview-to-close pipeline
+
+This gate is what separates a serious relocation management firm from a lead generation website. We earn trust with agents by only sending them clients we've personally vetted.`
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
