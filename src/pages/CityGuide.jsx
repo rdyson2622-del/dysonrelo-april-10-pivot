@@ -250,7 +250,8 @@ export default function CityGuide() {
           </div>
         )}
 
-        </> /* end committed === true */}
+        </div>
+        )}
       </main>
     </div>
   );
