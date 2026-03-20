@@ -42,10 +42,18 @@ export default function AdminCharlieScripts() {
   const [testPlaying, setTestPlaying] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const { data: scripts = [], isLoading } = useQuery({
+  const { data: scripts = [], isLoading, error } = useQuery({
     queryKey: ['charlie-scripts'],
-    queryFn: () => base44.entities.CharlieScript.list('-updated_date', 200),
+    queryFn: async () => {
+      const result = await base44.entities.CharlieScript.list('-updated_date', 200);
+      console.log('Charlie Scripts loaded:', result);
+      return result;
+    },
   });
+
+  React.useEffect(() => {
+    if (error) console.error('Scripts query error:', error);
+  }, [error]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
