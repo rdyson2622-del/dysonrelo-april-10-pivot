@@ -69,6 +69,14 @@ export default function AdminCharlieScripts() {
     },
   });
 
+  const duplicateScript = (script) => {
+    const { id, created_date, updated_date, ...rest } = script;
+    setForm({ ...rest, page_name: rest.page_name + ' (copy)', page_number: null });
+    setAdding(true);
+    setEditing(false);
+    setSelected(null);
+  };
+
   const toggleActive = (script) => {
     base44.entities.CharlieScript.update(script.id, { is_active: !script.is_active })
       .then(() => qc.invalidateQueries({ queryKey: ['charlie-scripts'] }));
