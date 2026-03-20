@@ -17,23 +17,34 @@ export default function PageNumberBadge() {
   for (const [num, page] of sortedEntries) {
     if (!page?.path) continue;
     
-    // Exact match
-    if (location.pathname === page.path) {
+    const pathname = location.pathname;
+    const pagePath = page.path;
+    
+    // Exact match (e.g., '/Dashboard' === '/Dashboard')
+    if (pathname === pagePath) {
       pageNumber = num;
       pageInfo = page;
       break;
     }
     
-    // Dynamic route match (e.g., /AdminOwners/:ownerId)
-    const basePath = page.path.split(':')[0]; // e.g., '/AdminOwners/' from '/AdminOwners/:ownerId'
-    if (basePath && basePath !== '/' && location.pathname.startsWith(basePath.slice(0, -1))) {
-      pageNumber = num;
-      pageInfo = page;
-      break;
+    // Dynamic route match (e.g., '/AdminOwners/123' matches '/AdminOwners/:ownerId')
+    // Check if pagePath has a param and pathname starts with the base
+    if (pagePath.includes(':')) {
+      const basePath = pagePath.split(':')[0]; // '/AdminOwners/' from '/AdminOwners/:ownerId'
+      const baseWithoutSlash = basePath.slice(0, -1); // '/AdminOwners'
+      
+      if (pathname.startsWith(baseWithoutSlash) && pathname !== baseWithoutSlash) {
+        pageNumber = num;
+        pageInfo = page;
+        break;
+      }
     }
   }
 
-  if (!pageNumber || !pageInfo) return null;
+  if (!pageNumber || !pageInfo) {
+    console.warn('No page found for path:', location.pathname);
+    return null;
+  }
 
   return (
     <div
