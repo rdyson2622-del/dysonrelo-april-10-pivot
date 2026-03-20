@@ -37,6 +37,7 @@ export default function AdminCharlieScripts() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState(BLANK);
   const [adding, setAdding] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   const { data: scripts = [], isLoading } = useQuery({
     queryKey: ['charlie-scripts'],
