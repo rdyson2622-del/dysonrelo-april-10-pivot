@@ -109,18 +109,23 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     handleSend(topic);
   };
 
-  const SPOKESPERSON_REPLY = `Thank you for reaching out! 🏡
-
-At Dyson & Dyson, we work with a **limited number of families** at any given time — because real relocation management demands intensive, hands-on attention.
-
-Here's how to get started:
-• **Call or text Bob directly:** (405) 833-2622
-• **Email:** rdyson2622@gmail.com
-• **Or visit our site** to learn more about what we do
-
-One of our team members will personally reach out to schedule your complimentary consultation and — if it's a great fit — your private Gemini AI session with Bob Dyson.
-
-*This service is 100% free to you as the buyer.*`;
+  const getSpokeResponse = (text) => {
+    const t = text.toLowerCase();
+    if (t.includes('neighborhood') || t.includes('area') || t.includes('where') || t.includes('city')) {
+      return `Great question about neighborhoods — but that's exactly what our **Gemini Live Session** is built for! 🗺️\n\nIn that session, Bob Dyson and Gemini AI will dive deep into your destination city together with you — neighborhoods, schools, commute, lifestyle fit — all in real time.\n\n👉 **[Start Your Gemini Session](/GeminiSession)** to get those answers with a real expert.\n\nThis service is 100% free to you.`;
+    }
+    if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
+      return `Agent matching is one of our specialties! 🤝\n\nWe don't just hand you a random name — Bob Dyson personally reviews the top agents in your destination market and matches you based on your personality and needs.\n\nTo get matched, you'll first need to complete your **Gemini intake session** so we know exactly what you need.\n\n👉 **[Begin Your Session](/GeminiSession)**`;
+    }
+    if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price')) {
+      return `Our service is **100% free to you as the buyer.** Always. 🎉\n\nWe are compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\nReady to get started at no cost?\n\n👉 **[Go to Your Dashboard](/Dashboard)** or **[Start Your Gemini Session](/GeminiSession)**`;
+    }
+    if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next')) {
+      return `Here's how Dyson & Dyson works — step by step:\n\n1. **Chat with me** (you're doing it!) — I'll orient you to the site\n2. **Gemini Live Session** — a private AI interview with Bob Dyson to build your full relocation profile\n3. **Agent Match** — we hand-select the best agents in your destination city\n4. **Relocation Plan** — moving logistics, schools, utilities, healthcare all coordinated for you\n\n👉 **[Start Step 2 — Your Gemini Session](/GeminiSession)**`;
+    }
+    // Default
+    return `That's a great topic — and it's exactly what our **live Gemini AI session** is designed to explore in depth with you and Bob Dyson! 🌟\n\nI'm here to guide you around the site, but for real answers tailored to your move, the Gemini session is where the magic happens.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Bob directly: **(405) 833-2622** | rdyson2622@gmail.com`;
+  };
 
   const handleSend = async (text) => {
     const messageText = (text || input).trim();
