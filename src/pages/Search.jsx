@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Home, Search as SearchIcon, Plus, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Home, Search as SearchIcon, Plus, MessageCircle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
@@ -18,12 +18,27 @@ export default function Search() {
     maxPrice: '',
   });
 
-  const handleBrowseSearch = () => {
+  const handleSearch = (platform) => {
     const location = searchParams.location || 'United States';
-    const params = new URLSearchParams();
-    if (searchParams.minPrice) params.append('minPrice', searchParams.minPrice);
-    if (searchParams.maxPrice) params.append('maxPrice', searchParams.maxPrice);
-    const url = `https://www.zillow.com/homes/for_sale/${location}/?${params.toString()}`;
+    let url;
+    
+    if (platform === 'zillow') {
+      const params = new URLSearchParams();
+      if (searchParams.minPrice) params.append('minPrice', searchParams.minPrice);
+      if (searchParams.maxPrice) params.append('maxPrice', searchParams.maxPrice);
+      url = `https://www.zillow.com/homes/for_sale/${location}/?${params.toString()}`;
+    } else if (platform === 'realtor') {
+      const params = new URLSearchParams({ location });
+      if (searchParams.minPrice) params.append('price_min', searchParams.minPrice);
+      if (searchParams.maxPrice) params.append('price_max', searchParams.maxPrice);
+      url = `https://www.realtor.com/homes/for_sale/${location}?${params.toString()}`;
+    } else if (platform === 'redfin') {
+      const params = new URLSearchParams();
+      if (searchParams.minPrice) params.append('min_price', searchParams.minPrice);
+      if (searchParams.maxPrice) params.append('max_price', searchParams.maxPrice);
+      url = `https://www.redfin.com/homes/for_sale/${location}?${params.toString()}`;
+    }
+    
     window.open(url, '_blank');
   };
 
@@ -153,14 +168,38 @@ export default function Search() {
                   />
                 </div>
               </div>
-              <button
-                onClick={handleBrowseSearch}
-                className="gold-btn px-6 py-3 rounded-xl text-sm font-bold w-full"
-              >
-                Search Zillow
-              </button>
-              <p className="text-xs mt-4" style={{ color: '#666' }}>
-                ⚠️ Opens Zillow in a new tab. Soon: Direct access to our MLS listings — keeping everything in-house.
+              <p className="text-xs font-bold mb-3 tracking-widest" style={{ color: '#D4AF37' }}>CHOOSE YOUR PREFERRED PLATFORM</p>
+              <div className="grid sm:grid-cols-3 gap-3 mb-4">
+                <button
+                  onClick={() => handleSearch('zillow')}
+                  className="p-4 rounded-xl font-bold text-sm transition-all border-2 flex flex-col items-center gap-2"
+                  style={{ borderColor: '#0074E4', background: 'rgba(0,116,228,0.05)', color: '#0074E4' }}
+                >
+                  <span className="text-lg">🏠</span>
+                  Zillow
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => handleSearch('realtor')}
+                  className="p-4 rounded-xl font-bold text-sm transition-all border-2 flex flex-col items-center gap-2"
+                  style={{ borderColor: '#D4145A', background: 'rgba(212,20,90,0.05)', color: '#D4145A' }}
+                >
+                  <span className="text-lg">🔑</span>
+                  Realtor.com
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => handleSearch('redfin')}
+                  className="p-4 rounded-xl font-bold text-sm transition-all border-2 flex flex-col items-center gap-2"
+                  style={{ borderColor: '#C41E3A', background: 'rgba(196,30,58,0.05)', color: '#C41E3A' }}
+                >
+                  <span className="text-lg">🔴</span>
+                  Redfin
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
+              <p className="text-xs" style={{ color: '#666' }}>
+                ⚠️ Opens your choice in a new tab. Soon: Direct MLS access — everything stays with us.
               </p>
             </div>
 
