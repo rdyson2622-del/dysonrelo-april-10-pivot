@@ -37,16 +37,15 @@ export default function PageNumberBadge() {
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-full text-xs font-bold tracking-widest flex items-center gap-2"
+      className="fixed bottom-4 right-4 z-40 text-xs font-semibold"
       style={{
-        background: 'linear-gradient(135deg, #D4AF37, #B8860B)',
-        color: '#000',
-        boxShadow: '0 4px 16px rgba(212,175,55,0.3)',
+        color: 'rgba(212,175,55,0.4)',
+        opacity: 0.5,
+        pointerEvents: 'none',
       }}
       title={`${pageInfo.name} (${pageInfo.section})`}
     >
-      <span>PAGE</span>
-      <span style={{ fontSize: '1.1rem', fontWeight: 900 }}>{pageNumber}</span>
+      <span style={{ fontSize: '0.65rem' }}>#{pageNumber}</span>
     </div>
   );
 }
