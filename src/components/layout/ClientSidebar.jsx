@@ -49,6 +49,19 @@ export default function ClientSidebar() {
         })}
       </nav>
 
+      {/* Human Help */}
+      <div className="mx-3 mb-3 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>NEED A HUMAN?</p>
+        <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>We're here Mon–Sat, 9am–7pm PT</p>
+        <a href="tel:+18583531200" className="flex items-center gap-2 group">
+          <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          <span className="text-sm font-bold tracking-wide group-hover:underline" style={{ color: '#fff' }}>
+            (858) 353-1200
+          </span>
+        </a>
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Dyson Relo Direct Line</p>
+      </div>
+
       {/* Footer */}
       <div className="px-3 py-4 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
         <Link to="/Admin">
