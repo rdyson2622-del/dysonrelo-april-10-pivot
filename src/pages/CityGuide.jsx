@@ -117,7 +117,8 @@ export default function CityGuide() {
         )}
 
         {/* FULL GUIDE — committed clients only */}
-        {committed === true && <>
+        {committed === true && (
+        <div>
 
         {/* Page Title */}
         <div className="text-center mb-8">
