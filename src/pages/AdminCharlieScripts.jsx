@@ -228,6 +228,19 @@ export default function AdminCharlieScripts() {
                     {selected.is_active ? <ToggleRight className="w-4 h-4 text-emerald-500" /> : <ToggleLeft className="w-4 h-4 text-slate-400" />}
                     {selected.is_active ? 'Active' : 'Inactive'}
                   </Button>
+                  <Button size="sm" variant="outline"
+                    onClick={() => {
+                      if (playing) {
+                        stopCharlie();
+                        setPlaying(false);
+                      } else {
+                        speakAsCharlie(selected.script_text, () => setPlaying(true), () => setPlaying(false));
+                      }
+                    }}
+                    className="gap-1.5"
+                    style={{ borderColor: playing ? '#ef4444' : GOLD, color: playing ? '#ef4444' : '#8B6914' }}>
+                    {playing ? <><Square className="w-3.5 h-3.5" /> Stop</> : <><Volume2 className="w-3.5 h-3.5" /> Preview Voice</>}
+                  </Button>
                   <Button size="sm" onClick={() => startEdit(selected)} className="gap-1.5"
                     style={{ background: GOLD, color: '#000' }}>
                     <Edit2 className="w-3.5 h-3.5" /> Edit
