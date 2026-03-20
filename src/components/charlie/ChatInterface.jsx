@@ -109,29 +109,35 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     handleSend(topic);
   };
 
+  const SPOKESPERSON_REPLY = `Thank you for reaching out! 🏡
+
+At Dyson & Dyson, we work with a **limited number of families** at any given time — because real relocation management demands intensive, hands-on attention.
+
+Here's how to get started:
+• **Call or text Bob directly:** (405) 833-2622
+• **Email:** rdyson2622@gmail.com
+• **Or visit our site** to learn more about what we do
+
+One of our team members will personally reach out to schedule your complimentary consultation and — if it's a great fit — your private Gemini AI session with Bob Dyson.
+
+*This service is 100% free to you as the buyer.*`;
+
   const handleSend = async (text) => {
     const messageText = (text || input).trim();
     if (!messageText || isTyping) return;
 
     const userMsg = { role: 'user', content: messageText, type: 'text' };
-    setMessages(prev => {
-      const history = [...prev, userMsg];
-      sendToCharlie(history);
-      return history;
-    });
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
-  };
 
-  const sendToCharlie = async (history) => {
+    // Small delay to feel natural
     setIsTyping(true);
-    const res = await base44.functions.invoke('charlie', {
-      messages: history.slice(-12),
-      profile,
-    });
-    const charlieMsg = { role: 'charlie', content: res.data.reply, type: 'text' };
-    setMessages(prev => [...prev, charlieMsg]);
-    setIsTyping(false);
-    speakAsCharlie(res.data.reply, () => setIsSpeaking(true), () => setIsSpeaking(false));
+    setTimeout(() => {
+      const charlieMsg = { role: 'charlie', content: SPOKESPERSON_REPLY, type: 'text' };
+      setMessages(prev => [...prev, charlieMsg]);
+      setIsTyping(false);
+      speakAsCharlie(SPOKESPERSON_REPLY, () => setIsSpeaking(true), () => setIsSpeaking(false));
+    }, 1200);
   };
 
   const tabs = [
