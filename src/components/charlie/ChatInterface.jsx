@@ -141,7 +141,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#f5f5f5' }}>
-            {isTyping ? 'Thinking...' : 'AI Concierge • Always Free'}
+            {isTyping ? 'Thinking...' : isSpeaking ? 'Speaking...' : 'AI Concierge • Always Free'}
           </p>
         </div>
 
