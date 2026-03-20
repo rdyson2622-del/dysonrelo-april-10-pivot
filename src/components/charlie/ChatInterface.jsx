@@ -257,7 +257,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
               <Input
-                placeholder="Ask Charlie anything..."
+                placeholder="Tell me what you're looking for..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 className="flex-1 text-sm border-0 rounded-lg"
