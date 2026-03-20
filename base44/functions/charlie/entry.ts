@@ -52,14 +52,14 @@ Deno.serve(async (req) => {
 Use this context naturally. Don't re-ask questions you already know the answers to.`;
     }
 
-    // Build Gemini-format conversation history
-    const contents = (messages || []).map(m => ({
+    // Build Gemini-format conversation history — keep last 20 messages for context
+    const contents = (messages || []).slice(-20).map(m => ({
       role: m.role === 'charlie' ? 'model' : 'user',
       parts: [{ text: m.content }]
     }));
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,8 +67,8 @@ Use this context naturally. Don't re-ask questions you already know the answers 
           system_instruction: { parts: [{ text: systemPrompt }] },
           contents,
           generationConfig: {
-            temperature: 0.85,
-            maxOutputTokens: 1200,
+            temperature: 0.75,
+            maxOutputTokens: 600,
           }
         })
       }
