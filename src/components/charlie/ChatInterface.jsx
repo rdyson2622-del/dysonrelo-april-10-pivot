@@ -78,10 +78,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Speak welcome message on first load
+  // Cleanup on unmount only
   useEffect(() => {
-    const welcomeTTS = WELCOME_MESSAGE.replace(/\*\*/g, '').slice(0, 400);
-    speakAsCharlie(welcomeTTS, () => setIsSpeaking(true), () => setIsSpeaking(false));
     return () => stopCharlie();
   }, []);
 
