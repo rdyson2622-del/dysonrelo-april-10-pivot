@@ -43,7 +43,9 @@ export default function CityGuide() {
       add_context_from_internet: true,
     });
 
-    setResult(response);
+    // InvokeLLM returns the text directly (string)
+    const text = typeof response === 'string' ? response : (response?.data || response?.result || JSON.stringify(response));
+    setResult(text);
     setLoading(false);
   };
 
