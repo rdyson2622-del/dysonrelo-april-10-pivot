@@ -59,6 +59,7 @@ export default function ClientProfileTab({ client }) {
     await base44.entities.RelocationClient.update(client.id, {
       ...form,
       family_size: form.family_size ? parseInt(form.family_size) : undefined,
+      buyer_broker_signed: form.buyer_broker_signed,
     });
     setSaving(false);
     setEditing(false);
@@ -129,7 +130,30 @@ export default function ClientProfileTab({ client }) {
         <InfoRow icon={Calendar} label="Planned Move Date" value={client.move_date ? new Date(client.move_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : null} />
         <InfoRow icon={DollarSign} label="Budget" value={budgetLabels[client.budget]} />
         <InfoRow icon={Users} label="Family Size" value={client.family_size ? `${client.family_size} person${client.family_size > 1 ? 's' : ''}` : null} />
-        <InfoRow icon={Home} label="Assigned Agent" value={client.assigned_agent} />
+        <InfoRow icon={Home} label="Assigned Agent Email" value={client.assigned_agent} />
+        <InfoRow icon={UserCheck} label="Agent Name" value={client.agent_name} />
+        <InfoRow icon={Calendar} label="Agent Selected" value={client.agent_selected_date ? new Date(client.agent_selected_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : null} />
+      </div>
+
+      {/* Buyer Broker Status */}
+      <div className="rounded-2xl border p-5" style={{ background: client.buyer_broker_signed ? 'rgba(34,197,94,0.06)' : 'rgba(245,158,11,0.06)', borderColor: client.buyer_broker_signed ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)' }}>
+        <div className="flex items-center gap-2 mb-1">
+          <FileSignature className="w-4 h-4" style={{ color: client.buyer_broker_signed ? '#22c55e' : '#f59e0b' }} />
+          <h3 className="font-bold text-sm" style={{ color: '#000' }}>Buyer Broker Agreement</h3>
+          <span className={`ml-auto text-xs font-bold px-2 py-0.5 rounded-full ${client.buyer_broker_signed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+            {client.buyer_broker_signed ? '✓ Signed' : 'Pending'}
+          </span>
+        </div>
+        {client.buyer_broker_signed_date && (
+          <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>
+            Signed {new Date(client.buyer_broker_signed_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </p>
+        )}
+        {!client.buyer_broker_signed && (
+          <p className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>
+            City Guide access is locked until this is signed.
+          </p>
+        )}
       </div>
 
       {/* Priorities & Notes */}
