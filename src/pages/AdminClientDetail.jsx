@@ -93,7 +93,12 @@ export default function AdminClientDetail() {
           {activeTab === 'session'  && <ClientSessionMonitor client={client} />}
           {activeTab === 'chat'     && <ClientChatTab client={client} />}
           {activeTab === 'tasks'    && <ClientTasksTab client={client} />}
-          {activeTab === 'timeline' && <ClientTransactionTimeline client={client} />}
+          {activeTab === 'timeline'  && <ClientTransactionTimeline client={client} />}
+          {activeTab === 'cityguide' && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+              <CityGuideResearch client={client} />
+            </div>
+          )}
           {activeTab === 'contact'  && <ClientQuickContact client={client} />}
         </motion.div>
       </motion.div>
