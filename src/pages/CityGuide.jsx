@@ -32,7 +32,11 @@ export default function CityGuide() {
     base44.auth.me().then(user => {
       if (!user) { setCommitted(false); return; }
       base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1)
-        .then(results => setCommitted(results && results.length > 0))
+        .then(results => {
+          const client = results?.[0];
+          // Must have signed buyer broker agreement to access City Guide
+          setCommitted(client?.buyer_broker_signed === true);
+        })
         .catch(() => setCommitted(false));
     }).catch(() => setCommitted(false));
   }, []);
@@ -109,10 +113,10 @@ export default function CityGuide() {
             </div>
             <h2 className="text-xl font-bold mb-3" style={{ color: '#111' }}>City Guide is for Committed Clients</h2>
             <p className="text-sm text-slate-500 mb-6 leading-relaxed">
-              The City Guide is a service we provide <strong>after</strong> you've completed your intake — so we can tailor the research to your specific move, budget, and family needs.
+              The City Guide is unlocked after you've selected your agent and signed your Buyer Broker Agreement — so we can tailor research to your specific neighborhoods, schools, and community needs.
             </p>
             <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-              Start with Charlie or your Gemini Session to unlock full access.
+              Complete your Gemini Session and agent selection to unlock full access.
             </p>
             <div className="flex flex-col gap-3">
               <Link to="/GeminiSession">
