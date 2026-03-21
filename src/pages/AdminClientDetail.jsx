@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic, ScrollText } from 'lucide-react';
+import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic, ScrollText, MapPin } from 'lucide-react';
 
 import ClientHeader from '@/components/admin/client-detail/ClientHeader';
 import ClientProfileTab from '@/components/admin/client-detail/ClientProfileTab';
@@ -13,6 +13,7 @@ import ClientTasksTab from '@/components/admin/client-detail/ClientTasksTab';
 import ClientQuickContact from '@/components/admin/client-detail/ClientQuickContact';
 import ClientSessionMonitor from '@/components/admin/client-detail/ClientSessionMonitor';
 import ClientTransactionTimeline from '@/components/admin/client-detail/ClientTransactionTimeline';
+import CityGuideResearch from '@/components/admin/CityGuideResearch';
 
 const GOLD = '#D4AF37';
 
@@ -23,6 +24,7 @@ const TABS = [
   { id: 'chat',      label: 'Chat History',   icon: MessageCircle },
   { id: 'tasks',     label: 'Move Tasks',     icon: CheckSquare },
   { id: 'timeline',  label: 'Transaction Log',icon: ScrollText },
+  { id: 'cityguide', label: 'City Research',  icon: MapPin },
   { id: 'contact',   label: 'Quick Contact',  icon: Phone },
 ];
 
