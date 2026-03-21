@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, DollarSign, Home, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Home, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, UserCheck, FileSignature, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

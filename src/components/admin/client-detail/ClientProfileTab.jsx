@@ -45,6 +45,10 @@ export default function ClientProfileTab({ client }) {
     move_date: client.move_date || '',
     family_size: client.family_size || '',
     assigned_agent: client.assigned_agent || '',
+    agent_name: client.agent_name || '',
+    agent_selected_date: client.agent_selected_date || '',
+    buyer_broker_signed: client.buyer_broker_signed || false,
+    buyer_broker_signed_date: client.buyer_broker_signed_date || '',
     notes: client.notes || '',
   });
 
