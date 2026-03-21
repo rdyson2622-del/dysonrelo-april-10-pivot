@@ -52,6 +52,7 @@ export default function CityGuide() {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Provide a detailed, practical guide about ${cat.prompt} in ${submittedCity} for a family relocating there. Include specific names of places, realistic price ranges, neighborhoods, and actionable advice. Use markdown with headers and bullet points. Be specific — avoid vague generalities.`,
         add_context_from_internet: true,
+        model: 'gemini_3_flash',
       });
 
       // Extract text from response (handles both string and object responses)
