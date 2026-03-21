@@ -97,6 +97,14 @@ export default function ClientProfileTab({ client }) {
           <div><Label className="text-xs">Move Date</Label><Input type="date" value={form.move_date} onChange={e => update('move_date', e.target.value)} /></div>
           <div><Label className="text-xs">Family Size</Label><Input type="number" value={form.family_size} onChange={e => update('family_size', e.target.value)} /></div>
           <div><Label className="text-xs">Assigned Agent Email</Label><Input value={form.assigned_agent} onChange={e => update('assigned_agent', e.target.value)} /></div>
+          <div><Label className="text-xs">Agent Full Name</Label><Input value={form.agent_name} onChange={e => update('agent_name', e.target.value)} /></div>
+          <div><Label className="text-xs">Agent Selected Date</Label><Input type="date" value={form.agent_selected_date} onChange={e => update('agent_selected_date', e.target.value)} /></div>
+          <div className="flex items-center gap-3 pt-5">
+            <input type="checkbox" id="broker_signed" checked={form.buyer_broker_signed}
+              onChange={e => update('buyer_broker_signed', e.target.checked)} className="w-4 h-4 accent-amber-500" />
+            <Label htmlFor="broker_signed" className="text-xs cursor-pointer">Buyer Broker Agreement Signed</Label>
+          </div>
+          <div><Label className="text-xs">Buyer Broker Signed Date</Label><Input type="date" value={form.buyer_broker_signed_date} onChange={e => update('buyer_broker_signed_date', e.target.value)} /></div>
         </div>
         <div>
           <Label className="text-xs">Admin Notes</Label>

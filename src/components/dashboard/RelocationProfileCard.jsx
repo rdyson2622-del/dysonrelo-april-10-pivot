@@ -183,6 +183,43 @@ export default function RelocationProfileCard({ clientId }) {
         </div>
       </div>
 
+      {/* Agent & Broker Milestones */}
+      <div className="px-6 pb-4">
+        <div className="flex items-center gap-1.5 mb-2">
+          <UserCheck className="w-3.5 h-3.5" style={{ color: GOLD }} />
+          <span className="text-xs font-bold tracking-wider uppercase" style={{ color: '#888' }}>Your Milestones</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {client?.agent_name ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+              style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80' }}>
+              <Check className="w-3 h-3" /> Agent Selected — {client.agent_name}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#888' }}>
+              <Clock className="w-3 h-3" /> Agent Selection Pending
+            </span>
+          )}
+          {client?.buyer_broker_signed ? (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+              style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', color: '#4ade80' }}>
+              <FileSignature className="w-3 h-3" /> Buyer Broker Signed
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#888' }}>
+              <Clock className="w-3 h-3" /> Buyer Broker Agreement Pending
+            </span>
+          )}
+        </div>
+        {!client?.buyer_broker_signed && (
+          <p className="text-xs mt-2 leading-relaxed" style={{ color: '#666' }}>
+            Completing these two steps unlocks your full City Guide, personalized neighborhood research, and our complete concierge service.
+          </p>
+        )}
+      </div>
+
       {/* Priorities */}
       {client?.priorities?.length > 0 && (
         <div className="px-6 pb-4">
