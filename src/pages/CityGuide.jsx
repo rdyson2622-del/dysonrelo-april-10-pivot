@@ -308,43 +308,69 @@ export default function CityGuide() {
         {/* ─── FULL GUIDE — committed clients only ─── */}
         {committed === true && (
           <div style={{ position: 'relative' }}>
-            <div className="text-center mb-8">
-              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
-              <h1 className="text-2xl font-bold mb-2" style={{ color: '#111' }}>Deep-Dive Research for your High-Probability Property</h1>
-              <p className="text-sm text-slate-500">Enter a destination city, then tap any category to get AI-powered research.</p>
 
-              {/* Commitment Architecture Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
-                {/* Button 1 — Disabled AI Deep Dive */}
-                <div className="relative group">
-                  <button
-                    disabled
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold cursor-not-allowed opacity-50"
-                    style={{ background: '#ccc', color: '#555', border: '1px solid #bbb' }}
-                  >
-                    <Lock className="w-4 h-4" />
-                    Start AI Deep Dive (30 Min Pass)
-                  </button>
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 text-xs text-center px-3 py-2 rounded-lg shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50"
-                    style={{ background: '#111', color: '#FFD700', border: '1px solid rgba(212,175,55,0.4)' }}>
-                    Unlocks after Agent Commitment &amp; Buyer Broker Agreement.
+            {/* Protocol Header */}
+            <div className="text-center mb-6">
+              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>HIGH-PROBABILITY RESEARCH PROTOCOL</p>
+              <h1 className="text-2xl font-bold mb-2" style={{ color: '#111' }}>Deep-Dive Research for your High-Probability Property</h1>
+              <p className="text-sm text-slate-500 max-w-lg mx-auto">
+                Surgical data for Finalist-stage properties only. Research is delivered via Charlie and permanently archived in your Moving Plan of Action.
+              </p>
+            </div>
+
+            {/* Dual-Track Explainer */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 mb-6">
+              <p className="text-xs font-bold tracking-[0.2em] mb-4" style={{ color: GOLD }}>YOUR TWO RESEARCH TRACKS</p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {/* Track 1 — Automated */}
+                <div className="rounded-xl p-4 border" style={{ background: '#fafafa', borderColor: '#e5e5e5' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                      <Sparkles className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                    </div>
+                    <p className="text-sm font-bold text-slate-800">Automated Gemini Deep Dive</p>
+                  </div>
+                  <p className="text-xs text-slate-500 leading-relaxed mb-3">30-minute AI research session on your Finalist property — schools, neighborhood, commute, comps, healthcare, and more. Archived to your Moving Plan automatically.</p>
+                  {/* Disabled button with tooltip */}
+                  <div className="relative group">
+                    <button
+                      disabled
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold cursor-not-allowed opacity-50"
+                      style={{ background: '#ddd', color: '#666', border: '1px solid #ccc' }}
+                    >
+                      <Lock className="w-3.5 h-3.5" />
+                      Start AI Deep Dive (30 Min Pass)
+                    </button>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 text-xs text-center px-3 py-2 rounded-lg shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50"
+                      style={{ background: '#111', color: '#FFD700', border: '1px solid rgba(212,175,55,0.4)' }}>
+                      Unlocks when your agent identifies a Finalist-stage property.
+                    </div>
                   </div>
                 </div>
 
-                {/* Button 2 — Enabled Concierge Request */}
-                <a
-                  href={`/Chat?prefill=${encodeURIComponent('I have an urgent research request for the Dyson Admin Team regarding...')}`}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:opacity-90"
-                  style={{ background: GOLD, color: '#000' }}
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Request Dyson Team Research
-                </a>
+                {/* Track 2 — Concierge */}
+                <div className="rounded-xl p-4 border" style={{ background: '#0d0d0d', borderColor: GOLD }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
+                      <MessageCircle className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                    </div>
+                    <p className="text-sm font-bold" style={{ color: '#fff' }}>Admin-Led Concierge Research</p>
+                  </div>
+                  <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.65)' }}>Unlimited. A member of the Dyson team personally researches your specific request and delivers findings via Charlie Chat, archived to your plan.</p>
+                  <a
+                    href={`/Chat?prefill=${encodeURIComponent('I have an urgent research request for the Dyson Admin Team regarding...')}`}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all hover:opacity-90"
+                    style={{ background: GOLD, color: '#000', display: 'flex' }}
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    Request Dyson Team Research
+                  </a>
+                </div>
               </div>
 
               {/* Scripting note */}
-              <p className="text-xs mt-3 max-w-md mx-auto" style={{ color: '#888' }}>
-                <em>Note: AI Deep Dives are reserved for High-Probability Properties to ensure pinpoint accuracy before your offer.</em>
+              <p className="text-xs mt-4 text-center" style={{ color: '#999' }}>
+                <em>AI Deep Dives are reserved for High-Probability (Finalist) properties to ensure pinpoint accuracy before your offer. General city research is available below.</em>
               </p>
             </div>
 
