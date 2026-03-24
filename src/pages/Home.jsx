@@ -47,7 +47,7 @@ export default function Home() {
       </nav>
 
       {/* Hero — full viewport landing screen */}
-      <section id="101" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
+      <section id="101" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080', position: 'relative' }}>
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
