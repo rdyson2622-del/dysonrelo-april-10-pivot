@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import SectionTag from './components/debug/SectionTag';
 
 function FontInjector() {
   useEffect(() => {
