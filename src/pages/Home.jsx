@@ -48,7 +48,7 @@ export default function Home() {
       </nav>
 
       {/* Hero — full viewport landing screen */}
-      <section id="home-hero" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
+      <section id="101" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
         <SectionBadge id={101} />
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
@@ -202,7 +202,7 @@ export default function Home() {
       </section>
 
       {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
-      <section id="home-how-it-works" className="relative py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+      <section id="103" className="relative py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <SectionBadge id={102} />
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
@@ -218,7 +218,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div id="home-services" className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 relative">
+        <div id="102" className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 relative">
           <SectionBadge id={103} />
           {services.map((s, i) => (
             <motion.div
@@ -297,7 +297,7 @@ export default function Home() {
       </section>
 
       {/* Bob Dyson Leadership Section */}
-      <section id="home-bio" className="relative py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+      <section id="105" className="relative py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
         <SectionBadge id={104} />
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -343,7 +343,7 @@ export default function Home() {
       </section>
 
       {/* Intelligent Orchestration */}
-      <section id="home-ai-grid" className="relative max-w-7xl mx-auto px-6 md:px-14 py-24">
+      <section id="104" className="relative max-w-7xl mx-auto px-6 md:px-14 py-24">
         <SectionBadge id={106} />
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -404,7 +404,7 @@ export default function Home() {
 
 
       {/* Agent highlight */}
-      <section id="home-agents" className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24">
+      <section id="106" className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24">
         <SectionBadge id={105} />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
