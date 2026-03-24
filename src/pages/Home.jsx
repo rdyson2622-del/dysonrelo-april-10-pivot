@@ -219,7 +219,7 @@ export default function Home() {
         </div>
 
         <div id="102" className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 relative">
-          <SectionBadge id={103} />
+          <SectionBadge id={102} />
           {services.map((s, i) => (
             <motion.div
               key={i}
@@ -344,7 +344,7 @@ export default function Home() {
 
       {/* Intelligent Orchestration */}
       <section id="104" className="relative max-w-7xl mx-auto px-6 md:px-14 py-24">
-        <SectionBadge id={106} />
+        <SectionBadge id={104} />
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>⚙️</div>
@@ -405,7 +405,7 @@ export default function Home() {
 
       {/* Agent highlight */}
       <section id="106" className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24">
-        <SectionBadge id={105} />
+        <SectionBadge id={106} />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
