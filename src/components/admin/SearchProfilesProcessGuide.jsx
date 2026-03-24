@@ -10,11 +10,6 @@ const STAGES = [
     description: 'Automated searches run daily based on your criteria',
     icon: Search,
     details: 'Set search profiles for specific cities, price ranges, and property types. The system automatically finds new listings matching your criteria every day.',
-    examples: [
-      'Austin, TX • $300K-$750K • Single Family',
-      'Denver, CO • $400K-$900K • All Types',
-      'Seattle, WA • $500K-$1.2M • Condos',
-    ]
   },
   {
     id: 2,
@@ -22,11 +17,6 @@ const STAGES = [
     description: 'Extract contact details from search results',
     icon: Users,
     details: 'Use data enrichment services to identify property owners and get their contact information (phone, email, address).',
-    examples: [
-      'John Smith • 303-555-0123 • john@example.com',
-      'Jane Doe • 206-555-0456 • jane@example.com',
-      'Contact via listing agent if direct info unavailable',
-    ]
   },
   {
     id: 3,
@@ -34,11 +24,6 @@ const STAGES = [
     description: 'SMS, direct contact, or listing agent outreach',
     icon: Send,
     details: 'Reach out to owners with personalized messages. Try direct contact first, then listing agent if no response.',
-    examples: [
-      '📱 SMS: "Hi John, interested in your Denver property..."',
-      '☎️ Phone: Direct call to owner',
-      '📧 Email: Listing agent inquiry for owner info',
-    ]
   },
   {
     id: 4,
@@ -46,11 +31,6 @@ const STAGES = [
     description: 'Active lead or mark as dead file',
     icon: CheckCircle2,
     details: 'Track responses and categorize: active leads move to relocation clients, non-responders go to dead file for later follow-up.',
-    examples: [
-      '✅ Owner interested → Move to active',
-      '❌ No response after 30 days → Dead file',
-      '→ Owner relocating? → Create relocation client',
-    ]
   }
 ];
 
