@@ -126,18 +126,18 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     if (cityGuideTopics) {
       if (clientCommitted) {
         return {
-          display: `Great news — your **City Guide for ${cityName}** is fully unlocked! 🗺️\n\nHead over to the City Guide tab and tap any category — Neighborhoods, Schools, Cost of Living, Healthcare, Parks, or Local Culture — to get live AI research tailored to your move.\n\n👉 **[Open City Guide](/CityGuide)**`,
-          spoken: `Your City Guide for ${cityName} is fully unlocked. Head to the City Guide tab and tap any category to get personalized research right now.`
+          display: `Your **City Guide for ${cityName}** is fully unlocked! 🗺️\n\nHead to the City Guide tab and tap any category — Neighborhoods, Schools, Cost of Living, Healthcare, Parks, or Local Culture — for live AI research tailored to your specific move.\n\n👉 **[Open City Guide](/CityGuide)**`,
+          spoken: `Your City Guide for ${cityName} is fully unlocked. Go tap any category for live personalized research right now.`
         };
       } else if (agentSelected) {
         return {
-          display: `You're almost there! 🙌\n\nYour agent — **${profile.agent_name}** — is selected. The last step is signing your **Buyer Broker Agreement**, and your full City Guide for **${cityName}** unlocks immediately.\n\nThe agreement protects you and formalizes the relationship. Once it's signed, I'll have live research ready across 6 categories — neighborhoods, schools, cost of living, healthcare, parks, and local culture.\n\n👉 **[View Your Dashboard](/Dashboard)**`,
-          spoken: `You're one step away. Your agent is selected — once you sign the Buyer Broker Agreement, your full City Guide for ${cityName} unlocks instantly. Check your dashboard for next steps.`
+          display: `You're one step away from your full City Guide! 🙌\n\nYour agent — **${profile.agent_name}** — is your Boots on the Ground in ${cityName}. Now that they're selected, the last step is signing your **Buyer Broker Agreement** to formalize the relationship.\n\nOnce that's done, your deep-dive guide unlocks — tailored school data, neighborhood breakdowns, healthcare, cost of living — all filtered to your actual target area.\n\n👉 **[View Your Dashboard](/Dashboard)**`,
+          spoken: `You're one step away. ${profile.agent_name} is your boots on the ground in ${cityName}. Sign your Buyer Broker Agreement and your full City Guide unlocks instantly.`
         };
       } else {
         return {
-          display: `I love that question — and I have a full **City Guide** ready for **${cityName}** the moment we're set up properly. 🗺️\n\nHere's the thing: generic city data isn't very useful. Neighborhood quality varies block by block. School ratings depend on which zip code you're in. Cost of living means nothing without knowing your target area.\n\nSo here's what unlocks your personalized City Guide:\n1. **Agent Selection** — we match you with a vetted local expert\n2. **Buyer Broker Agreement** — formalizes the relationship (and it's free to you)\n\nOnce those are in place, I generate a fully tailored guide — specific to your budget, priorities, and target neighborhoods.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
-          spoken: `I have a full City Guide ready for ${cityName} — but I hold it until your agent is selected and your Buyer Broker Agreement is signed. Generic city data isn't useful without knowing exactly where you'll be. Once those two steps are done, your full personalized guide unlocks immediately. Start with your Gemini session to move forward.`
+          display: `I can certainly help with general info about **${cityName}** — but to give you the deep-dive school data, neighborhood breakdowns, and healthcare research you actually need, we first have to get your **Boots on the Ground**. 👟\n\nThat means selecting your local expert agent. Here's why this matters:\n\n- School quality varies **block by block** — the right agent knows which side of the street matters\n- Neighborhood character can't be captured in a search result — your agent lives it\n- Healthcare, commute, community — all depend on exactly where you'll be\n\n**Selecting your agent is the key that unlocks your full moving plan.** It's free to you as the buyer.\n\n👉 **[Start Your Gemini Session](/GeminiSession)** — Bob Dyson personally selects your agent from there.`,
+          spoken: `I can find you a house in ${cityName} — but to give you the deep-dive school and neighborhood data you need, we first have to get your Boots on the Ground by selecting your local expert agent. That's the key that unlocks your full moving plan. Start your Gemini session and Bob will personally select your agent.`
         };
       }
     }
