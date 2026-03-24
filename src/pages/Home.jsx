@@ -396,7 +396,6 @@ export default function Home() {
 
       {/* Agent highlight */}
       <section className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24" style={{ position: 'relative' }}>
-        <SectionBadge id={106} />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
