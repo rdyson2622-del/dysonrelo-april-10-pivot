@@ -8,6 +8,7 @@ const GOLD = '#D4AF37';
 
 export default function Chat() {
   const [expanded, setExpanded] = useState(false);
+  const prefill = new URLSearchParams(window.location.search).get('prefill') || '';
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
