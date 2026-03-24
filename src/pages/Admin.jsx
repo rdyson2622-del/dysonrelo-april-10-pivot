@@ -17,22 +17,15 @@ const [confirmDelete, setConfirmDelete] = useState(null);
   const [saving, setSaving] = useState(false);
 
   // EMERGENCY OVERRIDE: PLACE THE ORDER BUTTON MANUALLY
-  const triggerLASearch = () => {
-    window.alert("COMMAND RECEIVED: Searching MLS for 10 LA Listings >$2M...");
-    // This forces the app to acknowledge the command even if the UI is hidden
-  };  const [editOwner, setEditOwner] = useState(null);
+const [confirmDelete, setConfirmDelete] = useState(null);
+  const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
 
-  const handleDelete = async (id) => {
-    await base44.entities.ListingOwner.delete(id);
-    setConfirmDelete(null);
-    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
-  };
-
-  const openEdit = (owner) => {
-    setEditOwner(owner);
-    setEditForm({ owner_name: owner.owner_name || '', phone: owner.phone || '', email: owner.email || '', property_address: owner.property_address || '', moving_to: owner.moving_to || '' });
+  const triggerLASearch = () => {
+    window.alert("COMMAND RECEIVED: Searching MLS for 10 LA Listings >$2M...");
+    // Future: Wire this to your actual API key for the 10-lead pull
+  };    setEditForm({ owner_name: owner.owner_name || '', phone: owner.phone || '', email: owner.email || '', property_address: owner.property_address || '', moving_to: owner.moving_to || '' });
   };
 
   const handleSaveEdit = async () => {
