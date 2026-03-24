@@ -47,7 +47,7 @@ Key messages to weave in naturally:
 Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.${profileContext}`;
 };
 
-export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
+export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null, initialMessage = '' }) {
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
 
@@ -73,7 +73,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       type: 'text',
     },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(initialMessage);
   const [isTyping, setIsTyping] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
