@@ -48,7 +48,6 @@ export default function Home() {
 
       {/* Hero — full viewport landing screen */}
       <section className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
-        <SectionBadge id={101} />
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',

@@ -176,7 +176,6 @@ export default function CityGuide() {
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
         {committed === false && committed !== null && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8" style={{ position: 'relative' }}>
-            <SectionBadge id={301} />
 
             {/* Hero */}
             <div className="text-center">
@@ -311,7 +310,6 @@ export default function CityGuide() {
         {/* ─── FULL GUIDE — committed clients only ─── */}
         {committed === true && (
           <div style={{ position: 'relative' }}>
-            <SectionBadge id={301} />
             <div className="text-center mb-8">
               <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
               <h1 className="text-2xl font-bold mb-2" style={{ color: '#111' }}>Research Your New City</h1>
