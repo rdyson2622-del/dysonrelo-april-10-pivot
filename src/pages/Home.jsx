@@ -47,8 +47,7 @@ export default function Home() {
       </nav>
 
       {/* Hero — full viewport landing screen */}
-      <section id="101" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
-        <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#101</div>
+      <section className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
@@ -151,8 +150,7 @@ export default function Home() {
       </section>
 
       {/* Charlie Card Section — portrait only */}
-      <section id="102" className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#102</div>
+      <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -201,8 +199,7 @@ export default function Home() {
       </section>
 
       {/* WE MOVE WITH YOU — Journey Banner */}
-      <section id="103" className="relative py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-        <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#103</div>
+      <section className="relative py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
@@ -245,8 +242,7 @@ export default function Home() {
           </p>
 
           {/* Gemini 3-Way Session callout */}
-          <div id="104" className="rounded-2xl p-6 mb-6 text-left relative" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)', position: 'relative' }}>
-            <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#104</div>
+          <div className="rounded-2xl p-6 mb-6 text-left" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
             <p className="text-sm leading-relaxed mb-3" style={{ color: '#e5e5e5' }}>
               Once you've confirmed your contact information with us, we set up a <strong style={{ color: '#fff' }}>private three-way live session</strong> — you, Google Gemini (one of the most advanced AI systems in the world), and Bob Dyson directly. This is not a chatbot form. It's a real conversation where we build your complete relocation profile together, in real time. Bob brings 40+ years of real estate leadership to every conversation.
@@ -296,8 +292,7 @@ export default function Home() {
       </section>
 
       {/* Bob Dyson Leadership Section */}
-      <section id="105" className="relative py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#105</div>
+      <section className="relative py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
@@ -400,8 +395,7 @@ export default function Home() {
       </section>
 
       {/* Agent highlight */}
-      <section id="106" className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24" style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: 40, fontWeight: 'bold', color: 'rgba(212,175,55,0.4)', zIndex: 99999, pointerEvents: 'none', userSelect: 'none' }}>#106</div>
+      <section className="relative max-w-7xl mx-auto px-6 md:px-14 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

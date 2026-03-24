@@ -255,7 +255,7 @@ export default function CityGuide() {
             </div>
 
             {/* Urgent Request Box */}
-            <div id="303" className="rounded-2xl border-2 p-5 relative" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
+            <div className="rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
                 <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -338,7 +338,7 @@ export default function CityGuide() {
               )}
             </form>
 
-            <div id="302" className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
               {categories.map((cat, i) => (
                 <motion.button
                   key={cat.key}
