@@ -1,21 +1,22 @@
-export default function SectionTag({ currentId }) {
-  if (!currentId) return null;
+export default function SectionTag({ activeId }) {
+  if (!activeId) return null;
   return (
     <div style={{
       position: 'fixed',
-      bottom: '10px',
-      right: '10px',
+      bottom: '15px',
+      right: '15px',
       background: '#000',
       color: '#FFD700',
-      padding: '4px 8px',
-      fontSize: '14px',
+      padding: '6px 10px',
+      fontSize: '16px',
       fontWeight: 'bold',
-      zIndex: 999999,
-      border: '1px solid #FFD700',
-      borderRadius: '4px',
+      zIndex: 1000000,
+      border: '2px solid #FFD700',
+      borderRadius: '6px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
       pointerEvents: 'none',
     }}>
-      #{currentId}
+      {'#' + activeId}
     </div>
   );
 }
