@@ -300,7 +300,7 @@ export default function CityGuide() {
         )}
 
         {/* ─── FULL GUIDE — always visible ─── */}
-        {(
+        {true && (
           <div style={{ position: 'relative' }}>
 
             {/* Protocol Header */}
