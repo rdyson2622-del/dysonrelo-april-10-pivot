@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Users, Send, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Search, Users, Send, CheckCircle2, ChevronRight, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const STAGES = [
   {
@@ -10,6 +11,13 @@ const STAGES = [
     description: 'Automated searches run daily based on your criteria',
     icon: Search,
     details: 'Set search profiles for specific cities, price ranges, and property types. The system automatically finds new listings matching your criteria every day.',
+    partner: 'Zillow / Realtor / Redfin',
+    why: 'Identifying new listings daily to find high-intent sellers.',
+    links: [
+      { label: 'Zillow', url: 'https://www.zillow.com' },
+      { label: 'Realtor.com', url: 'https://www.realtor.com' },
+      { label: 'Redfin', url: 'https://www.redfin.com' },
+    ],
   },
   {
     id: 2,
@@ -17,6 +25,11 @@ const STAGES = [
     description: 'Extract contact details from search results',
     icon: Users,
     details: 'Use data enrichment services to identify property owners and get their contact information (phone, email, address).',
+    partner: 'BatchData',
+    why: 'Skip-tracing the listing address to find the owner\'s phone and email.',
+    links: [
+      { label: 'BatchData.com', url: 'https://www.batchdata.com' },
+    ],
   },
   {
     id: 3,
@@ -24,19 +37,28 @@ const STAGES = [
     description: 'SMS, direct contact, or listing agent outreach',
     icon: Send,
     details: 'Reach out to owners with personalized messages. Try direct contact first, then listing agent if no response.',
+    partner: 'GoHighLevel / Twilio',
+    why: 'Automated SMS and initial "human-touch" text to offer relocation services.',
+    links: [
+      { label: 'GoHighLevel.com', url: 'https://www.gohighlevel.com' },
+    ],
   },
   {
     id: 4,
-    title: 'Outcome',
+    title: 'Outcome & Tracking',
     description: 'Active lead or mark as dead file',
     icon: CheckCircle2,
     details: 'Track responses and categorize: active leads move to relocation clients, non-responders go to dead file for later follow-up.',
-  }
+    partner: 'DysonRelo Internal',
+    why: 'Tagging the lead status and moving them into the Gemini Interview pipeline.',
+    links: null, // internal link — handled separately
+  },
 ];
+
+const GOLD = '#D4AF37';
 
 export default function SearchProfilesProcessGuide() {
   const [activeStep, setActiveStep] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const currentStage = STAGES[activeStep];
   const CurrentIcon = currentStage.icon;
@@ -55,13 +77,13 @@ export default function SearchProfilesProcessGuide() {
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-lg">HOW IT WORKS — BULK SEARCH WORKFLOW</h3>
-            <p className="text-sm text-slate-600 mt-1">Click any step to see the details. Here's how searches convert to leads.</p>
+            <p className="text-sm text-slate-600 mt-1">Click any step to see partner details and access links.</p>
           </div>
         </div>
       </div>
 
       {/* Progress Steps */}
-      <div className="px-6 py-4 border-b border-slate-100 flex gap-2">
+      <div className="px-6 py-4 border-b border-slate-100 flex flex-wrap gap-2">
         {STAGES.map((stage, idx) => (
           <button
             key={stage.id}
@@ -79,7 +101,7 @@ export default function SearchProfilesProcessGuide() {
 
       {/* Content Area */}
       <div className="grid md:grid-cols-2 gap-8 p-6">
-        {/* Stage Detail */}
+        {/* Left — Stage Detail */}
         <motion.div
           key={activeStep}
           initial={{ opacity: 0, x: -20 }}
@@ -100,23 +122,59 @@ export default function SearchProfilesProcessGuide() {
             <p className="text-sm text-slate-700 leading-relaxed">{currentStage.details}</p>
           </div>
 
-          {/* Partner Access Portal — content coming soon */}
+          {/* The Why */}
+          <div className="rounded-lg p-4 border" style={{ background: 'rgba(212,175,55,0.06)', borderColor: 'rgba(212,175,55,0.3)' }}>
+            <p className="text-xs font-bold mb-1" style={{ color: '#8B6914' }}>THE WHY</p>
+            <p className="text-sm text-slate-700 leading-relaxed">{currentStage.why}</p>
+          </div>
         </motion.div>
 
-        {/* Side Panel */}
+        {/* Right — Partner Access Portal */}
         <motion.div
-          key={activeStep}
+          key={`side-${activeStep}`}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           className="space-y-4"
         >
+          {/* Partner Badge */}
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <p className="text-xs font-semibold text-blue-900 mb-2">STEP {currentStage.id} IN FOCUS</p>
-            <h5 className="font-bold text-blue-900 text-sm">{currentStage.title}</h5>
-            <p className="text-xs text-blue-800 mt-2 leading-relaxed">{currentStage.description}</p>
+            <p className="text-xs font-semibold text-blue-900 mb-1">STEP {currentStage.id} PARTNER</p>
+            <p className="font-bold text-blue-900 text-base">{currentStage.partner}</p>
           </div>
 
-          {/* Partner Access Portal — links coming soon */}
+          {/* Access Links */}
+          <div className="rounded-xl border border-slate-200 overflow-hidden">
+            <div className="px-4 py-2.5 bg-slate-800">
+              <p className="text-xs font-bold text-white tracking-wider">PARTNER ACCESS PORTAL</p>
+            </div>
+            <div className="p-4 space-y-2">
+              {currentStage.links ? (
+                currentStage.links.map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
+                    style={{ background: GOLD, color: '#000' }}
+                  >
+                    <span>{link.label}</span>
+                    <ExternalLink className="w-4 h-4 shrink-0" />
+                  </a>
+                ))
+              ) : (
+                /* Card 4 — internal link */
+                <Link
+                  to="/AdminClients"
+                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
+                  style={{ background: GOLD, color: '#000' }}
+                >
+                  <span>Open Clients Tab</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" />
+                </Link>
+              )}
+            </div>
+          </div>
 
           {/* Next Step */}
           {activeStep < STAGES.length - 1 && (
