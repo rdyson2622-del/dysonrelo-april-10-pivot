@@ -45,7 +45,8 @@ export default function Chat() {
       <div className="flex-1 max-w-3xl w-full mx-auto p-6">
         <ChatInterface
           expanded={expanded}
-          onToggleExpand={() => setExpanded(!expanded)} />
+          onToggleExpand={() => setExpanded(!expanded)}
+          initialMessage={prefill} />
       </div>
     </div>);
 
