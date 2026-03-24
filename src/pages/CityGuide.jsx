@@ -299,8 +299,8 @@ export default function CityGuide() {
           </motion.div>
         )}
 
-        {/* ─── FULL GUIDE — committed clients only ─── */}
-        {(showCommitted || committed === true) && (
+        {/* ─── FULL GUIDE — always visible ─── */}
+        {(
           <div style={{ position: 'relative' }}>
 
             {/* Protocol Header */}
