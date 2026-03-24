@@ -11,7 +11,8 @@ import { Label } from '@/components/ui/label';
 import StatCard from '../components/dashboard/StatCard';
 
 export default function Admin() {
-console.log("SYSTEM_ACTIVE");  const [confirmDelete, setConfirmDelete] = useState(null);
+  const queryClient = useQueryClient();
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
@@ -168,4 +169,4 @@ console.log("SYSTEM_ACTIVE");  const [confirmDelete, setConfirmDelete] = useStat
       </Dialog>
     </div>
   );
-}s
+}
