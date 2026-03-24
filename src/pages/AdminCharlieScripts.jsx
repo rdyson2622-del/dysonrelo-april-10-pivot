@@ -117,7 +117,7 @@ export default function AdminCharlieScripts() {
   const cancelForm = () => { setEditing(false); setAdding(false); };
 
   return (
-    <div className="min-h-screen" style={{ background: '#f4f4f4' }}>
+    <div id="205" className="min-h-screen" style={{ background: '#f4f4f4' }}>
       {/* Header */}
       <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4"
         style={{ background: '#000', borderBottom: `1px solid rgba(212,175,55,0.2)` }}>
