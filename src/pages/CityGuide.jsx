@@ -167,15 +167,8 @@ export default function CityGuide() {
 
       <main className="max-w-3xl mx-auto px-4 py-8">
 
-        {/* Loading */}
-        {committed === null && (
-          <div className="flex justify-center py-20">
-            <div className="w-7 h-7 border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin" />
-          </div>
-        )}
-
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
-        {!showCommitted && committed === false && committed !== null && (
+        {false && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8" style={{ position: 'relative' }}>
 
             {/* Hero */}
