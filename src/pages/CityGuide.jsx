@@ -176,7 +176,8 @@ export default function CityGuide() {
 
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
         {committed === false && committed !== null && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8" style={{ position: 'relative' }}>
+            <SectionBadge id={301} />
 
             {/* Hero */}
             <div className="text-center">
@@ -188,7 +189,8 @@ export default function CityGuide() {
             </div>
 
             {/* The 6 Preview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative">
+              <SectionBadge id={302} />
               {categories.map((cat, i) => (
                 <motion.div key={cat.key}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -256,7 +258,8 @@ export default function CityGuide() {
             </div>
 
             {/* Urgent Request Box */}
-            <div className="rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
+            <div className="rounded-2xl border-2 p-5 relative" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
+              <SectionBadge id={303} />
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
                 <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -308,7 +311,8 @@ export default function CityGuide() {
 
         {/* ─── FULL GUIDE — committed clients only ─── */}
         {committed === true && (
-          <div>
+          <div style={{ position: 'relative' }}>
+            <SectionBadge id={301} />
             <div className="text-center mb-8">
               <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
               <h1 className="text-2xl font-bold mb-2" style={{ color: '#111' }}>Research Your New City</h1>
