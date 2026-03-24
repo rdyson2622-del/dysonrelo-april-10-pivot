@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageSquare, ShieldCheck, Zap, Star } from 'lucide-react';
+import DnDLogo from '@/components/brand/DnDLogo';
 
 const Home = () => {
   return (
