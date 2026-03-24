@@ -72,21 +72,26 @@ const Home = () => {
         <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#105</div>
       </section>
 
-      {/* SECTION #106 - AGENT SELECTION PROCESS */}
-{/* SECTION #106 - AGENT SELECTION VETTING PROTOCOL */}
-<section id="106" style={{ position: 'relative', padding: '80px 20px', background: '#000', color: '#fff', textAlign: 'center', borderTop: '2px solid #D4AF37' }}>
-  <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-    <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#D4AF37', marginBottom: '20px' }}>AGENT VETTING PROTOCOL</h2>
-    <p style={{ fontSize: '18px', lineHeight: '1.6', color: '#ccc', marginBottom: '40px' }}>
-      We don't just "refer" agents. We interview the top 20 producers in your destination city, check their DRE standing, and vet them against Bob Dyson's 40-year standard. You receive 3 curated finalists.
-    </p>
-    <button 
-      onClick={() => window.location.href='/Chat?prefill=I am ready to begin the Dyson Agent Vetting process for...'}
-      style={{ padding: '18px 45px', background: '#D4AF37', color: '#000', fontWeight: 'bold', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '16px' }}
-      className="dyson-pulse"
-    >
-      START AGENT VETTING
-    </button>
-  </div>
-  <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#106</div>
-</section>
+      {/* SECTION #106 - AGENT SELECTION VETTING PROTOCOL */}
+      <section id="106" style={{ position: 'relative', padding: '80px 20px', background: '#000', color: '#fff', textAlign: 'center', borderTop: '2px solid #D4AF37' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: '#D4AF37', marginBottom: '20px' }}>AGENT VETTING PROTOCOL</h2>
+          <p style={{ fontSize: '18px', lineHeight: '1.6', color: '#ccc', marginBottom: '40px' }}>
+            We don't just "refer" agents. We interview the top 20 producers in your destination city, check their DRE standing, and vet them against Bob Dyson's 40-year standard. You receive 3 curated finalists.
+          </p>
+          <button
+            onClick={() => window.location.href='/Chat?prefill=I am ready to begin the Dyson Agent Vetting process for...'}
+            style={{ padding: '18px 45px', background: '#D4AF37', color: '#000', fontWeight: 'bold', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '16px' }}
+            className="dyson-pulse"
+          >
+            START AGENT VETTING
+          </button>
+        </div>
+        <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#106</div>
+      </section>
+
+    </div>
+  );
+};
+
+export default Home;
