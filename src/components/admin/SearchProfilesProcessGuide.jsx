@@ -100,17 +100,7 @@ export default function SearchProfilesProcessGuide() {
             <p className="text-sm text-slate-700 leading-relaxed">{currentStage.details}</p>
           </div>
 
-          <div>
-            <p className="text-xs font-semibold text-slate-500 mb-2">EXAMPLES:</p>
-            <ul className="space-y-2">
-              {currentStage.examples.map((example, idx) => (
-                <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
-                  <span className="text-blue-600 font-bold mt-0.5">•</span>
-                  {example}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Partner Access Portal — content coming soon */}
         </motion.div>
 
         {/* Side Panel */}
