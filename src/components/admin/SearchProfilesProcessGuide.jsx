@@ -70,8 +70,7 @@ export default function SearchProfilesProcessGuide() {
       className="rounded-2xl border border-slate-200 bg-white overflow-hidden"
     >
       {/* Header */}
-      <div id="202" className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-6" style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#000', color: '#FFD700', padding: '2px 6px', fontSize: '12px', fontWeight: 'bold', zIndex: 99999, borderRadius: '4px', pointerEvents: 'none' }}>#202</div>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-6">
         <div className="flex items-start gap-3">
           <div className="p-2.5 rounded-lg bg-blue-600 text-white">
             <Search className="w-5 h-5" />
@@ -144,8 +143,7 @@ export default function SearchProfilesProcessGuide() {
           </div>
 
           {/* Access Links */}
-          <div id="203" className="rounded-xl border border-slate-200 overflow-hidden" style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '5px', right: '5px', background: '#000', color: '#FFD700', padding: '2px 6px', fontSize: '12px', fontWeight: 'bold', zIndex: 99999, borderRadius: '4px', pointerEvents: 'none' }}>#203</div>
+          <div className="rounded-xl border border-slate-200 overflow-hidden">
             <div className="px-4 py-2.5 bg-slate-800">
               <p className="text-xs font-bold text-white tracking-wider">PARTNER ACCESS PORTAL</p>
             </div>
