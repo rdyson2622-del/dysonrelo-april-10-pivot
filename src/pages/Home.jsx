@@ -147,6 +147,7 @@ export default function Home() {
           </motion.div>
 
         </div>
+        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#101</div>
       </section>
 
       {/* Charlie Card Section — portrait only */}
@@ -261,6 +262,7 @@ export default function Home() {
             </button>
           </Link>
         </div>
+        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#103</div>
       </section>
 
       {/* V2V Agent Recruitment Card */}
@@ -315,6 +317,7 @@ export default function Home() {
             <strong style={{ color: GOLD }}>At Dyson & Dyson:</strong> We don't sell real estate. We manage the entire move.
           </p>
         </div>
+        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#105</div>
       </section>
 
       {/* Divider banner */}
