@@ -207,7 +207,6 @@ function App() {
           <FontInjector />
           <Router>
             <AuthenticatedApp />
-            <PageNumberBadge />
           </Router>
           <Toaster />
         </LayoutProvider>
