@@ -116,38 +116,7 @@ export default function SearchProfilesProcessGuide() {
             <p className="text-xs text-blue-800 mt-2 leading-relaxed">{currentStage.description}</p>
           </div>
 
-          {/* Quick Tips */}
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-slate-500">KEY ACTIONS:</p>
-            {activeStep === 0 && (
-              <ul className="space-y-2 text-xs text-slate-600">
-                <li>✓ Define search criteria (city, price, property type)</li>
-                <li>✓ Set active to run daily automated searches</li>
-                <li>✓ Monitor for new listings each day</li>
-              </ul>
-            )}
-            {activeStep === 1 && (
-              <ul className="space-y-2 text-xs text-slate-600">
-                <li>✓ Use data enrichment API to get owner info</li>
-                <li>✓ Verify contact details before outreach</li>
-                <li>✓ Note listing agent as backup contact</li>
-              </ul>
-            )}
-            {activeStep === 2 && (
-              <ul className="space-y-2 text-xs text-slate-600">
-                <li>✓ Personalize message with property details</li>
-                <li>✓ Try SMS first for direct reach</li>
-                <li>✓ Follow up with agent if no response</li>
-              </ul>
-            )}
-            {activeStep === 3 && (
-              <ul className="space-y-2 text-xs text-slate-600">
-                <li>✓ Track owner responses and interest</li>
-                <li>✓ Convert interested owners to relocation clients</li>
-                <li>✓ Archive non-responders for later outreach</li>
-              </ul>
-            )}
-          </div>
+          {/* Partner Access Portal — links coming soon */}
 
           {/* Next Step */}
           {activeStep < STAGES.length - 1 && (
