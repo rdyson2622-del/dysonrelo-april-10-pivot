@@ -11,8 +11,7 @@ import { Label } from '@/components/ui/label';
 import StatCard from '../components/dashboard/StatCard';
 
 export default function Admin() {
-  const queryClient = useQueryClient();
-  const [confirmDelete, setConfirmDelete] = useState(null);
+console.log("SYSTEM_ACTIVE");  const [confirmDelete, setConfirmDelete] = useState(null);
   const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
