@@ -444,7 +444,7 @@ export default function CityGuide() {
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900">{selectedCategory?.label} in {submittedCity}</h3>
-                      <p className="text-xs text-slate-400">AI research • Live data</p>
+                      <p className="text-xs text-slate-400">AI research • Live data • Archived to your Moving Plan</p>
                     </div>
                   </div>
                   <div className="prose prose-sm prose-slate max-w-none">
