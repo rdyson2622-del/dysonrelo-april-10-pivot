@@ -39,8 +39,15 @@ const [confirmDelete, setConfirmDelete] = useState(null);
     setSaving(true);
     await base44.entities.ListingOwner.update(editOwner.id, editForm);
     setSaving(false);
-    setEditOwner(null);
-    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
+<div style={{ background: '#000', padding: '20px', border: '2px solid #D4AF37', borderRadius: '10px', marginBottom: '20px' }}>
+  <h3 style={{ color: '#D4AF37', margin: '0 0 10px 0' }}>Surgical Listing Order</h3>
+  <button 
+    onClick={triggerLASearch}
+    style={{ background: '#D4AF37', color: '#000', padding: '10px 20px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '5px' }}
+  >
+    ORDER 10 LA LISTINGS (>$2M)
+  </button>
+</div>    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
   };
 
   const { data: owners = [] } = useQuery({
