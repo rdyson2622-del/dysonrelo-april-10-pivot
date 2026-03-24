@@ -257,6 +257,7 @@ export default function CityGuide() {
 
             {/* Urgent Request Box */}
             <div className="rounded-2xl border-2 p-5 relative" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
+              <SectionBadge id={303} />
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
                 <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -315,6 +316,9 @@ export default function CityGuide() {
               <p className="text-sm text-slate-500">Enter a destination city, then tap any category to get AI-powered research.</p>
             </div>
 
+            <div className="relative">
+              <SectionBadge id={301} />
+            </div>
             <form onSubmit={handleCitySubmit} className="mb-6">
               <div className="flex gap-2">
                 <div className="relative flex-1">
@@ -339,7 +343,8 @@ export default function CityGuide() {
               )}
             </form>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8 relative">
+              <SectionBadge id={302} />
               {categories.map((cat, i) => (
                 <motion.button
                   key={cat.key}
