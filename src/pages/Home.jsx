@@ -203,7 +203,7 @@ export default function Home() {
 
       {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
       <section id="103" className="relative py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-        <SectionBadge id={102} />
+        <SectionBadge id={103} />
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
@@ -298,7 +298,7 @@ export default function Home() {
 
       {/* Bob Dyson Leadership Section */}
       <section id="105" className="relative py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <SectionBadge id={104} />
+        <SectionBadge id={105} />
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
