@@ -175,8 +175,7 @@ export default function CityGuide() {
 
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
         {committed === false && committed !== null && (
-          <motion.div id="301" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="relative space-y-8">
-            <SectionBadge id={301} />
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
 
             {/* Hero */}
             <div className="text-center">
@@ -188,8 +187,7 @@ export default function CityGuide() {
             </div>
 
             {/* The 6 Preview Cards */}
-            <div id="302" className="relative grid grid-cols-1 md:grid-cols-2 gap-3">
-              <SectionBadge id={302} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {categories.map((cat, i) => (
                 <motion.div key={cat.key}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -237,8 +235,7 @@ export default function CityGuide() {
             </div>
 
             {/* How it unlocks */}
-            <div id="guide-unlock" className="relative bg-white rounded-2xl border border-slate-200 p-5">
-              <SectionBadge id={303} />
+            <div className="bg-white rounded-2xl border border-slate-200 p-5">
               <h3 className="font-bold text-sm text-slate-900 mb-4 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" style={{ color: GOLD }} />
                 How Full Access Unlocks
@@ -258,8 +255,7 @@ export default function CityGuide() {
             </div>
 
             {/* Urgent Request Box */}
-            <div id="303" className="relative rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
-              <SectionBadge id={304} />
+            <div className="rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
                 <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
@@ -311,8 +307,7 @@ export default function CityGuide() {
 
         {/* ─── FULL GUIDE — committed clients only ─── */}
         {committed === true && (
-          <div id="301" className="relative">
-            <SectionBadge id={305} />
+          <div>
             <div className="text-center mb-8">
               <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
               <h1 className="text-2xl font-bold mb-2" style={{ color: '#111' }}>Research Your New City</h1>
