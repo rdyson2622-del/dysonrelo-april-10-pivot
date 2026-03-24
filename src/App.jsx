@@ -200,39 +200,40 @@ const AuthenticatedApp = () => {
   );
 };
 
-const WATCHED_IDS = ['101', '103', '105', '202', '203'];
-
 function SectionObserver() {
-  const [currentId, setCurrentId] = useState(null);
+  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     const observers = [];
 
     const attach = () => {
-      WATCHED_IDS.forEach((id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
+      // Query all elements whose id is purely numeric (section tags)
+      const els = Array.from(document.querySelectorAll('[id]')).filter(el =>
+        /^\d+$/.test(el.id)
+      );
+
+      els.forEach((el) => {
         const obs = new IntersectionObserver(
           ([entry]) => {
             if (entry.isIntersecting) {
-              setCurrentId(entry.target.id);
+              setActiveId(entry.target.id);
             }
           },
-          { threshold: 0.15 }
+          { threshold: 0.2, rootMargin: '0px 0px -30% 0px' }
         );
         obs.observe(el);
         observers.push(obs);
       });
     };
 
-    const timer = setTimeout(attach, 400);
+    const timer = setTimeout(attach, 500);
     return () => {
       clearTimeout(timer);
       observers.forEach((o) => o.disconnect());
     };
   }, [window.location.pathname]);
 
-  return <SectionTag currentId={currentId} />;
+  return <SectionTag activeId={activeId} />;
 }
 
 function App() {
