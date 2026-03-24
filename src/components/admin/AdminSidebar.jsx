@@ -128,6 +128,9 @@ export default function AdminSidebar() {
         })}
       </nav>
 
+      {/* Jump Search */}
+      <JumpSearch />
+
       {/* Preview & Back */}
       <div className="p-3 space-y-1" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
         <Link
