@@ -256,7 +256,6 @@ export default function CityGuide() {
 
             {/* Urgent Request Box */}
             <div className="rounded-2xl border-2 p-5 relative" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
-              <SectionBadge id={303} />
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
                 <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
