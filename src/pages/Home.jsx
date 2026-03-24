@@ -11,7 +11,7 @@ const Home = () => {
       {/* BACK BUTTON */}
       <div style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 1000 }}>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.history.back()}
           style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: '#D4AF37', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
         >
           <ArrowLeft size={18} />
