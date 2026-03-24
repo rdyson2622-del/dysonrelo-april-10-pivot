@@ -307,7 +307,7 @@ export default function CityGuide() {
         )}
 
         {/* ─── FULL GUIDE — committed clients only ─── */}
-        {committed === true && (
+        {(showCommitted || committed === true) && (
           <div style={{ position: 'relative' }}>
 
             {/* Protocol Header */}
