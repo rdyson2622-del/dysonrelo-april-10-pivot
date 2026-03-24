@@ -176,7 +176,7 @@ export default function CityGuide() {
 
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
         {committed === false && committed !== null && (
-          <motion.div id="guide-hero" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="relative space-y-8">
+          <motion.div id="301" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="relative space-y-8">
             <SectionBadge id={301} />
 
             {/* Hero */}
@@ -189,7 +189,7 @@ export default function CityGuide() {
             </div>
 
             {/* The 6 Preview Cards */}
-            <div id="guide-categories" className="relative grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div id="302" className="relative grid grid-cols-1 md:grid-cols-2 gap-3">
               <SectionBadge id={302} />
               {categories.map((cat, i) => (
                 <motion.div key={cat.key}
@@ -259,7 +259,7 @@ export default function CityGuide() {
             </div>
 
             {/* Urgent Request Box */}
-            <div id="guide-urgent" className="relative rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
+            <div id="303" className="relative rounded-2xl border-2 p-5" style={{ borderColor: GOLD, background: '#0d0d0d' }}>
               <SectionBadge id={304} />
               <div className="mb-3">
                 <p className="font-bold text-sm mb-1" style={{ color: GOLD }}>Need Something Specific Right Now?</p>
@@ -312,7 +312,7 @@ export default function CityGuide() {
 
         {/* ─── FULL GUIDE — committed clients only ─── */}
         {committed === true && (
-          <div id="guide-full" className="relative">
+          <div id="301" className="relative">
             <SectionBadge id={305} />
             <div className="text-center mb-8">
               <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
