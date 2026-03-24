@@ -188,7 +188,6 @@ export default function CityGuide() {
 
             {/* The 6 Preview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative">
-              <SectionBadge id={302} />
               {categories.map((cat, i) => (
                 <motion.div key={cat.key}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}

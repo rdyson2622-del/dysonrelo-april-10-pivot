@@ -151,7 +151,6 @@ export default function Home() {
 
       {/* Charlie Card Section — portrait only */}
       <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <SectionBadge id={102} />
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
