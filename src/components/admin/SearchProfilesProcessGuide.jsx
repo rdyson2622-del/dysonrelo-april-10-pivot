@@ -80,6 +80,7 @@ export default function SearchProfilesProcessGuide() {
             <p className="text-sm text-slate-600 mt-1">Click any step to see partner details and access links.</p>
           </div>
         </div>
+        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#202</div>
       </div>
 
       {/* Progress Steps */}
@@ -144,6 +145,7 @@ export default function SearchProfilesProcessGuide() {
 
           {/* Access Links */}
           <div id="203" className="rounded-xl border border-slate-200 overflow-hidden" style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#203</div>
             <div className="px-4 py-2.5 bg-slate-800">
               <p className="text-xs font-bold text-white tracking-wider">PARTNER ACCESS PORTAL</p>
             </div>
