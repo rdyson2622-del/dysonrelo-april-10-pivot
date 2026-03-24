@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, MapPin, GraduationCap, DollarSign, Heart, Building2, TreePine, MessageCircle, ArrowRight, Sparkles, Clock, CheckCircle2, Send, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, GraduationCap, DollarSign, Heart, Building2, TreePine, MessageCircle, ArrowRight, Sparkles, Clock, CheckCircle2, Send, Loader2, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
