@@ -61,7 +61,9 @@ const Home = () => {
       {/* SECTION #105 - BOB DYSON BIO */}
       <section id="105" style={{ position: 'relative', padding: '80px 20px', background: '#f9f9f9' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', maxWidth: '1000px', margin: '0 auto', alignItems: 'center' }}>
-          <div style={{ flex: '1 1 300px', height: '400px', background: '#ccc', borderRadius: '10px' }}></div> {/* Placeholder for Bob's Image */}
+          <div style={{ flex: '1 1 300px', height: '400px', background: '#000', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" style={{ maxHeight: '200px', width: 'auto' }} />
+          </div>
           <div style={{ flex: '2 1 400px' }}>
             <h2 style={{ fontSize: '32px', fontWeight: 'bold' }}>Bob Dyson</h2>
             <p style={{ fontSize: '18px', color: '#444', marginTop: '20px', lineHeight: '1.6' }}>With over 30 years in luxury real estate, Bob built DysonRelo to eliminate the noise and incompetence that plagues traditional relocation.</p>
