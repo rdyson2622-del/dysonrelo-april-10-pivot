@@ -208,7 +208,6 @@ function App() {
           <Router>
             <AuthenticatedApp />
           </Router>
-          <SectionTag />
           <Toaster />
         </LayoutProvider>
       </QueryClientProvider>
