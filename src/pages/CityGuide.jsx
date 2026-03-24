@@ -149,6 +149,7 @@ export default function CityGuide() {
   };
 
   const cityReady = !!submittedCity;
+  const showCommitted = true; // TEMP: force committed view for preview
 
   return (
     <div className="min-h-screen" style={{ background: '#f8f8f8' }}>
