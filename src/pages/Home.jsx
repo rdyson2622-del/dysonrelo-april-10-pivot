@@ -51,7 +51,7 @@ const Home = () => {
       <section id="105" style={{ position: 'relative', padding: '100px 20px', background: '#fff' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '60px', maxWidth: '1100px', margin: '0 auto', alignItems: 'center' }}>
           <div style={{ flex: '1 1 400px', height: '500px', background: '#000', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #D4AF37' }}>
-            <DnDLogo size="lg" />
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
           </div>
           <div style={{ flex: '2 1 500px' }}>
             <h2 style={{ fontSize: '40px', fontWeight: 'bold', color: '#000' }}>Bob Dyson</h2>
