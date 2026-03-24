@@ -200,6 +200,41 @@ const AuthenticatedApp = () => {
   );
 };
 
+const WATCHED_IDS = ['101', '103', '105', '202', '203'];
+
+function SectionObserver() {
+  const [currentId, setCurrentId] = useState(null);
+
+  useEffect(() => {
+    const observers = [];
+
+    const attach = () => {
+      WATCHED_IDS.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const obs = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              setCurrentId(entry.target.id);
+            }
+          },
+          { threshold: 0.15 }
+        );
+        obs.observe(el);
+        observers.push(obs);
+      });
+    };
+
+    const timer = setTimeout(attach, 400);
+    return () => {
+      clearTimeout(timer);
+      observers.forEach((o) => o.disconnect());
+    };
+  }, [window.location.pathname]);
+
+  return <SectionTag currentId={currentId} />;
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -209,6 +244,7 @@ function App() {
           <Router>
             <AuthenticatedApp />
           </Router>
+          <SectionObserver />
           <Toaster />
         </LayoutProvider>
       </QueryClientProvider>
