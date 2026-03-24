@@ -175,7 +175,7 @@ export default function CityGuide() {
         )}
 
         {/* ─── NOT YET COMMITTED: Preview + Explanation ─── */}
-        {committed === false && committed !== null && (
+        {!showCommitted && committed === false && committed !== null && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8" style={{ position: 'relative' }}>
 
             {/* Hero */}
