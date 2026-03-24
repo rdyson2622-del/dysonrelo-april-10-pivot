@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ShieldCheck, Zap, Star } from 'lucide-react';
+import { MessageSquare, ShieldCheck, Zap, Star, ArrowLeft } from 'lucide-react';
 
 const Home = () => {
   return (
