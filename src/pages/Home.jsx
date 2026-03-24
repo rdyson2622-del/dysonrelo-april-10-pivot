@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { MessageSquare, ShieldCheck, Zap, Star, ArrowLeft } from 'lucide-react';
 
 const Home = () => {
+  const navigate = useNavigate();
+  
   return (
     <div style={{ position: 'relative', background: '#fff', fontFamily: 'sans-serif' }}>
       
       {/* BACK BUTTON */}
       <div style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 1000 }}>
         <button
-          onClick={() => window.history.back()}
+          onClick={() => navigate(-1)}
           style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: '#D4AF37', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
         >
           <ArrowLeft size={18} />
