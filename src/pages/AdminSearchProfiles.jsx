@@ -271,10 +271,11 @@ export default function AdminSearchProfiles() {
                 <div>
                   <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>City</label>
                   <Input
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    placeholder="Austin"
-                    required
+                   value={formData.city}
+                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                   placeholder="Austin"
+                   required
+                   style={{ color: '#000', background: '#fff' }}
                   />
                 </div>
                 <div>
