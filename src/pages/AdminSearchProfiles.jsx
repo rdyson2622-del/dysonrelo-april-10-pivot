@@ -418,8 +418,13 @@ export default function AdminSearchProfiles() {
                   )}
                 </div>
                 <p className="text-sm" style={{ color: '#666' }}>
-                  {search.city}, {search.state} • ${search.min_price.toLocaleString()} - ${search.max_price.toLocaleString()}
+                  {search.city}, {search.state} • ${search.min_price.toLocaleString()} – ${search.max_price.toLocaleString()}
                 </p>
+                {search.last_run_date && (
+                  <p className="text-xs mt-1" style={{ color: '#aaa' }}>
+                    Last run: {new Date(search.last_run_date).toLocaleString()}
+                  </p>
+                )}
                 {search.property_types?.length > 0 && (
                   <div className="flex gap-2 mt-2">
                     {search.property_types.map((type) => (
