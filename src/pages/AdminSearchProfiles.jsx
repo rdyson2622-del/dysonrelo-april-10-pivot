@@ -75,8 +75,8 @@ export default function AdminSearchProfiles() {
       return base44.entities.PropertySearch.update(editingId, {
         ...data,
         communities: communityArray,
-        min_price: parseInt(data.min_price),
-        max_price: parseInt(data.max_price),
+        min_price: parseFloat(data.min_price) || 0,
+        max_price: parseFloat(data.max_price) || 0,
       });
     },
     onSuccess: () => {
