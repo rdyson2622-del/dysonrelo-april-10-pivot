@@ -9,8 +9,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Get all active search profiles
-    const searches = await base44.entities.PropertySearch.filter({ is_active: true });
+    // Support running a single search by ID, or all active searches
+    const body = await req.json().catch(() => ({}));
+    const { search_id } = body;
+
+    let searches;
+    if (search_id) {
+      const single = await base44.entities.PropertySearch.get(search_id);
+      searches = single ? [single] : [];
+    } else {
+      searches = await base44.entities.PropertySearch.filter({ is_active: true });
+    }
 
     if (!searches.length) {
       return Response.json({ message: 'No active searches found', processed: 0 });
