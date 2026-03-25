@@ -83,34 +83,43 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
 
         const listings = llmResponse.listings || [];
 
-        // Store or update listings in database
+        // Load ALL existing property addresses once (avoid N+1 DB calls)
+        const existingImports = await base44.asServiceRole.entities.ListingImport.list('-created_date', 500);
+        const existingOwners = await base44.asServiceRole.entities.ListingOwner.list('-created_date', 500);
+
+        const importAddresses = new Set(existingImports.map(l => l.property_address?.toLowerCase().trim()));
+        const ownerAddresses = new Set(existingOwners.map(o => o.property_address?.toLowerCase().trim()));
+
+        let newCount = 0;
+
         for (const listing of listings) {
-          // Check if listing already exists
-          const existing = await base44.asServiceRole.entities.ListingImport.filter({
-            mls_id: listing.mls_id || listing.property_address,
+          if (!listing.property_address) continue;
+          const normalizedAddress = listing.property_address.toLowerCase().trim();
+
+          // Skip if already in ListingImport
+          if (importAddresses.has(normalizedAddress)) continue;
+
+          // Create ListingImport record
+          await base44.asServiceRole.entities.ListingImport.create({
+            mls_id: listing.mls_id || '',
+            property_address: listing.property_address,
+            city: listing.city,
+            state: listing.state,
+            zip: listing.zip || '',
+            price: listing.price,
+            bedrooms: listing.bedrooms || 0,
+            bathrooms: listing.bathrooms || 0,
+            sqft: listing.sqft || 0,
+            list_agent_name: listing.list_agent_name || '',
+            list_agent_email: listing.list_agent_email || '',
+            list_agent_phone: listing.list_agent_phone || '',
+            list_date: listing.list_date || new Date().toISOString().split('T')[0],
+            source: 'automated_search',
+            status: 'active',
           });
 
-          if (!existing.length) {
-            // Create ListingImport record
-            await base44.asServiceRole.entities.ListingImport.create({
-              mls_id: listing.mls_id || '',
-              property_address: listing.property_address,
-              city: listing.city,
-              state: listing.state,
-              zip: listing.zip || '',
-              price: listing.price,
-              bedrooms: listing.bedrooms || 0,
-              bathrooms: listing.bathrooms || 0,
-              sqft: listing.sqft || 0,
-              list_agent_name: listing.list_agent_name || '',
-              list_agent_email: listing.list_agent_email || '',
-              list_agent_phone: listing.list_agent_phone || '',
-              list_date: listing.list_date || new Date().toISOString().split('T')[0],
-              source: 'automated_search',
-              status: 'active',
-            });
-
-            // Also create a ListingOwner record so it appears in Listing Owners tab
+          // Also create a ListingOwner record — only if address not already there
+          if (!ownerAddresses.has(normalizedAddress)) {
             await base44.asServiceRole.entities.ListingOwner.create({
               owner_name: listing.list_agent_name || 'Unknown Owner',
               phone: listing.list_agent_phone || '',
@@ -123,7 +132,11 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
               notes: `Auto-imported from search: ${search.search_name}. MLS: ${listing.mls_id || 'N/A'}. ${listing.sqft || 0} sqft, ${listing.bedrooms || 0}bd/${listing.bathrooms || 0}ba.`,
               listing_url: listing.property_url || '',
             });
+            ownerAddresses.add(normalizedAddress);
           }
+
+          importAddresses.add(normalizedAddress);
+          newCount++;
         }
 
         // Update search last_run_date
