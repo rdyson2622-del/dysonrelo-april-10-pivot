@@ -10,6 +10,7 @@ import OutreachWorkflow from '../components/admin/OutreachWorkflow';
 import OutreachProcessGuide from '../components/admin/OutreachProcessGuide';
 import PropertyDetailsPanel from '../components/admin/PropertyDetailsPanel';
 import OutreachTaskList from '../components/admin/OutreachTaskList';
+import OutreachSMSScript from '../components/admin/OutreachSMSScript';
 
 const STAGE_COLORS = {
   outreach: 'bg-blue-100 text-blue-800',
