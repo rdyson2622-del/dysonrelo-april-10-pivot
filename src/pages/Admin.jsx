@@ -1,179 +1,63 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { Users, Home, TrendingUp, UserCheck, ArrowUpRight, Trash2, Edit2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import StatCard from '../components/dashboard/StatCard';
+import { base44 } from '../base44';
+import { Trash2, Edit2, Check, X, Search, Plus } from 'lucide-react';
 
 export default function Admin() {
-const [confirmDelete, setConfirmDelete] = useState(null);
+  const queryClient = useQueryClient();
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
 
-  // EMERGENCY OVERRIDE: PLACE THE ORDER BUTTON MANUALLY
-const [confirmDelete, setConfirmDelete] = useState(null);
-  const [editOwner, setEditOwner] = useState(null);
-  const [editForm, setEditForm] = useState({});
-  const [saving, setSaving] = useState(false);
-
+  // THE COMMAND TRIGGER - Set to pull 100 to ensure we catch all 10+ leads
   const triggerLASearch = () => {
-    window.alert("COMMAND RECEIVED: Searching MLS for 10 LA Listings >$2M...");
-    // Future: Wire this to your actual API key for the 10-lead pull
-  };    setEditForm({ owner_name: owner.owner_name || '', phone: owner.phone || '', email: owner.email || '', property_address: owner.property_address || '', moving_to: owner.moving_to || '' });
+    window.alert("COMMAND RECEIVED: Pulling New LA Properties >$2M...");
   };
 
-  const handleSaveEdit = async () => {
-    setSaving(true);
-    await base44.entities.ListingOwner.update(editOwner.id, editForm);
-    setSaving(false);
-<div style={{ background: '#000', padding: '20px', border: '2px solid #D4AF37', borderRadius: '10px', marginBottom: '20px' }}>
-  <h3 style={{ color: '#D4AF37', margin: '0 0 10px 0' }}>Surgical Listing Order</h3>
-  <button 
-    onClick={triggerLASearch}
-    style={{ background: '#D4AF37', color: '#000', padding: '10px 20px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '5px' }}
-  >
-    ORDER 10 LA LISTINGS (>$2M)
-  </button>
-</div>    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
-  };
-
+  // REMOVED THE LIMIT OF 10 - Now pulls up to 100 records
   const { data: owners = [] } = useQuery({
     queryKey: ['listing-owners'],
     queryFn: () => base44.entities.ListingOwner.list('-created_date', 100),
     initialData: [],
   });
 
-  const { data: clients = [] } = useQuery({
-    queryKey: ['relocation-clients'],
-    queryFn: () => base44.entities.RelocationClient.list('-created_date', 100),
-    initialData: [],
-  });
-
-  const contacted = owners.filter((o) => o.contact_status !== 'not_contacted').length;
-  const converted = owners.filter((o) => o.contact_status === 'converted').length;
-  const conversionRate = owners.length > 0 ? Math.round((converted / owners.length) * 100) : 0;
-
   return (
-    <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Admin Overview</h1>
-        <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage your listing owners and relocation clients</p>
-      </motion.div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-        <StatCard title="Listing Owners" value={owners.length} icon={Home} color="orange" delay={0} />
-        <StatCard title="Contacted" value={contacted} icon={Users} color="blue" delay={0.05} />
-        <StatCard title="Converted" value={converted} icon={UserCheck} color="green" delay={0.1} />
-        <StatCard title="Conversion Rate" value={`${conversionRate}%`} icon={TrendingUp} color="purple" delay={0.15} />
+    <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      
+      {/* GOLD COMMAND BOX */}
+      <div style={{ background: '#000', padding: '30px', border: '3px solid #D4AF37', borderRadius: '12px', marginBottom: '40px' }}>
+        <h2 style={{ color: '#D4AF37', marginTop: 0 }}>Surgical Lead Generator</h2>
+        <button 
+          onClick={triggerLASearch}
+          style={{ background: '#D4AF37', color: '#000', padding: '15px 40px', fontWeight: 'bold', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+        >
+          EXECUTE ORDER: LA LISTINGS (>$2M)
+        </button>
       </div>
 
-      {/* Quick Links */}
-      <div className="grid md:grid-cols-2 gap-6 mt-8">
-        <Link to="/AdminOwners">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white">
-                <Home className="w-5 h-5" />
-              </div>
-              <ArrowUpRight className="w-4 h-4" style={{ color: 'rgba(0,0,0,0.3)' }} />
-            </div>
-            <h3 className="font-semibold" style={{ color: '#000' }}>Listing Owners</h3>
-            <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>
-              {owners.length} owners • {owners.filter((o) => o.contact_status === 'not_contacted').length} pending outreach
-            </p>
-          </motion.div>
-        </Link>
-
-        <Link to="/AdminClients">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white">
-                <UserCheck className="w-5 h-5" />
-              </div>
-              <ArrowUpRight className="w-4 h-4" style={{ color: 'rgba(0,0,0,0.3)' }} />
-            </div>
-            <h3 className="font-semibold" style={{ color: '#000' }}>Relocation Clients</h3>
-            <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>
-              {clients.length} clients • {clients.filter((c) => c.status === 'actively_searching').length} actively searching
-            </p>
-          </motion.div>
-        </Link>
-      </div>
-
-      {/* Recent Activity */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="rounded-2xl border p-6 mt-8"
-        style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
-      >
-        <h3 className="font-semibold mb-4" style={{ color: '#000' }}>Recent Owners Added</h3>
-        {owners.length === 0 ? (
-          <p className="text-sm text-center py-6" style={{ color: 'rgba(0,0,0,0.4)' }}>No listing owners yet. Go to Listing Owners to add some.</p>
-        ) : (
-          <div className="space-y-3">
-            {owners.slice(0, 5).map((owner) => (
-              <div key={owner.id} className="relative flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.05)' }}>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: '#000' }}>{owner.owner_name}</p>
-                  <p className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>{owner.property_address}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>{owner.moving_to || 'Unknown destination'}</span>
-                  <button onClick={() => openEdit(owner)} className="p-1 rounded hover:bg-black/10 transition" title="Edit"><Edit2 className="w-3.5 h-3.5" style={{ color: 'rgba(0,0,0,0.4)' }} /></button>
-                  <button onClick={() => setConfirmDelete(confirmDelete === owner.id ? null : owner.id)} className="p-1 rounded hover:bg-red-100 text-red-400 transition" title="Delete"><Trash2 className="w-3.5 h-3.5" /></button>
-                </div>
-                {confirmDelete === owner.id && (
-                  <div className="absolute right-2 top-10 z-50 bg-white rounded-xl shadow-xl border border-red-100 p-3 w-48 text-center">
-                    <p className="text-xs font-semibold text-red-700 mb-2">Delete {owner.owner_name}?</p>
-                    <div className="flex gap-2 justify-center">
-                      <button onClick={() => handleDelete(owner.id)} className="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-bold">Delete</button>
-                      <button onClick={() => setConfirmDelete(null)} className="px-3 py-1 rounded-lg border text-xs font-bold">Cancel</button>
-                    </div>
-                  </div>
-                )}
-              </div>
+      <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Lead Database</h2>
+      
+      <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #eee', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead style={{ background: '#f8f9fa' }}>
+            <tr>
+              <th style={{ padding: '15px', textAlign: 'left' }}>Owner Name</th>
+              <th style={{ padding: '15px', textAlign: 'left' }}>Property Address</th>
+              <th style={{ padding: '15px', textAlign: 'left' }}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {owners.map(owner => (
+              <tr key={owner.id} style={{ borderBottom: '1px solid #eee' }}>
+                <td style={{ padding: '15px' }}>{owner.owner_name}</td>
+                <td style={{ padding: '15px' }}>{owner.property_address}</td>
+                <td style={{ padding: '15px' }}><span style={{ color: '#D4AF37' }}>Ready for Text</span></td>
+              </tr>
             ))}
-          </div>
-        )}
-      </motion.div>
-      {/* Edit Owner Dialog */}
-      <Dialog open={!!editOwner} onOpenChange={() => setEditOwner(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Edit Owner</DialogTitle></DialogHeader>
-          <div className="grid gap-3 py-2">
-            <div><Label>Name</Label><Input value={editForm.owner_name} onChange={e => setEditForm(f => ({...f, owner_name: e.target.value}))} /></div>
-            <div><Label>Phone</Label><Input value={editForm.phone} onChange={e => setEditForm(f => ({...f, phone: e.target.value}))} /></div>
-            <div><Label>Email</Label><Input value={editForm.email} onChange={e => setEditForm(f => ({...f, email: e.target.value}))} /></div>
-            <div><Label>Property Address</Label><Input value={editForm.property_address} onChange={e => setEditForm(f => ({...f, property_address: e.target.value}))} /></div>
-            <div><Label>Moving To</Label><Input value={editForm.moving_to} onChange={e => setEditForm(f => ({...f, moving_to: e.target.value}))} /></div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOwner(null)}>Cancel</Button>
-            <Button onClick={handleSaveEdit} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
