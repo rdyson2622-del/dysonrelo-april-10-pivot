@@ -410,7 +410,7 @@ export default function AdminSearchProfiles() {
               </Button>
             </div>
           </form>
-        </motion.div>
+        </div>
       )}
 
       {/* Process Guide */}
