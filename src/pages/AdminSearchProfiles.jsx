@@ -365,6 +365,7 @@ export default function AdminSearchProfiles() {
                 value={formData.communities}
                 onChange={(e) => setFormData({ ...formData, communities: e.target.value })}
                 placeholder="South Congress, Downtown, East Austin"
+                style={{ color: '#000', background: '#fff' }}
               />
             </div>
 
