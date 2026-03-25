@@ -46,7 +46,6 @@ const Home = () => {
             Charlie isn't a chatbot. He is the interface for the Dyson Protocol, ensuring every school district, hospital network, and neighborhood appreciation trend is vetted before you see it.
           </p>
         </div>
-        <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#102</div>
       </section>
 
       {/* SECTION #105 - BOB DYSON BIO (WITH LOGO PLUG) */}
