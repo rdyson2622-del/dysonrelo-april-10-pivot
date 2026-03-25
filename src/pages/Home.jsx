@@ -35,7 +35,6 @@ const Home = () => {
             START YOUR SEARCH
           </button>
         </div>
-        <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#101</div>
       </section>
 
       {/* SECTION #102 - CHARLIE ORCHESTRATOR */}
