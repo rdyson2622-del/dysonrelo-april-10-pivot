@@ -14,7 +14,7 @@ We're Dyson & Dyson Corporate Relocation — 50 years helping executives navigat
 
 Where are you planning to move? Charlie can pull a full AI report on your destination city — no obligation.
 
-${APP_URL}/Home`;
+${HOME_PAGE}`;
 }
 
 function buildFollowUp(ownerName) {
