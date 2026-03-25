@@ -220,7 +220,7 @@ export default function AdminSearchProfiles() {
 
       {/* Form */}
       {isFormOpen && (
-        <div className="rounded-xl p-6 bg-white border border-slate-200">
+        <div className="rounded-xl p-6 bg-white border border-slate-200" style={{ color: '#000' }}>
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* Search Name */}
             <div>
