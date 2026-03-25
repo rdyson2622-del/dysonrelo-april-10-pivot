@@ -331,7 +331,7 @@ export default function Home() {
             Experienced experts, powered by AI.
           </h2>
           <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto" style={{ color: '#fff' }}>
-            AI handles data aggregation, comp analysis, document generation, and 24/7 availability. Select Real estate experts position you to make wise judgment calls, approve major decisions, and guide you through your entire relocation.{' '}
+            AI handles data aggregation, comp analysis, document generation, and 24/7 availability. Real estate experts position you to make wise judgment calls, approve major decisions, and then guide you through your entire relocation.{' '}
             <span style={{ color: GOLD, fontWeight: 600 }}>And it costs you absolutely nothing since we are funded by the selected Brokers and&nbsp;Agents.</span>
           </p>
         </div>
