@@ -329,6 +329,8 @@ export default function AdminSearchProfiles() {
                   value={formData.max_price}
                   onChange={(e) => setFormData({ ...formData, max_price: e.target.value })}
                   placeholder="750000"
+                  step="1000"
+                  min="0"
                   required
                   style={{ color: '#000', background: '#fff' }}
                 />
