@@ -66,7 +66,7 @@ const pages = [
   },
   {
     id: 'commitment',
-    title: 'Why You'll',
+    title: "Why You'll",
     subtitle: 'Commit to Us',
     description: 'The full relocation package, 100% free to buyers.',
     benefits: [
