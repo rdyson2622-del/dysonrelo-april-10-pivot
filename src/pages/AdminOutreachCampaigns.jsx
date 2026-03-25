@@ -235,6 +235,9 @@ export default function AdminOutreachCampaigns() {
                 <p className="text-sm text-slate-900 font-mono">{selectedCampaign.owner_phone}</p>
               </div>
 
+              {/* SMS Script with app link */}
+              <OutreachSMSScript campaign={selectedCampaign} />
+
               <PropertyDetailsPanel campaign={selectedCampaign} />
 
               <OutreachTaskList campaign_id={selectedCampaign.id} />
