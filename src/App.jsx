@@ -137,10 +137,13 @@ import { LayoutProvider } from './lib/LayoutContext';
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasToken = !!urlParams.get('access_token');
+
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#808080' }}>
+        <div className="w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -149,13 +152,11 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    // For ALL other errors (auth_required, unknown, etc): if there's a token in the URL,
-    // just render the app. Never redirect in preview/token mode.
-    const urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.get('access_token') && authError.type === 'auth_required') {
+    if (!hasToken && authError.type === 'auth_required') {
       navigateToLogin();
       return null;
     }
+    // Any other error with token present — just render the app
   }
 
   return (
