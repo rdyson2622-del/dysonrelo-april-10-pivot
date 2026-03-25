@@ -15,10 +15,10 @@ Deno.serve(async (req) => {
 
     let searches;
     if (search_id) {
-      const single = await base44.entities.PropertySearch.get(search_id);
+      const single = await base44.asServiceRole.entities.PropertySearch.get(search_id);
       searches = single ? [single] : [];
     } else {
-      searches = await base44.entities.PropertySearch.filter({ is_active: true });
+      searches = await base44.asServiceRole.entities.PropertySearch.filter({ is_active: true });
     }
 
     if (!searches.length) {
