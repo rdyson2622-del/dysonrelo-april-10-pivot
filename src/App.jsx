@@ -148,16 +148,11 @@ const AuthenticatedApp = () => {
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const hasToken = urlParams.get('access_token');
-      if (!hasToken) {
-        navigateToLogin();
-        return null;
-      }
-      // Token present but auth failed transiently — don't boot, just render routes
-    } else if (authError.type !== 'unknown') {
-      // For any other non-unknown error, redirect to login
+    }
+    // For ALL other errors (auth_required, unknown, etc): if there's a token in the URL,
+    // just render the app. Never redirect in preview/token mode.
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('access_token') && authError.type === 'auth_required') {
       navigateToLogin();
       return null;
     }
