@@ -193,6 +193,28 @@ export default function AdminSearchProfiles() {
         </div>
       </div>
 
+      {/* Results Banner */}
+      {lastResults !== null && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl p-4 flex items-center justify-between"
+          style={{ background: '#D4AF37', color: '#000' }}
+        >
+          <div className="flex items-center gap-2 font-bold">
+            <CheckCircle2 className="w-5 h-5" />
+            Search complete! {lastResults} new listing{lastResults !== 1 ? 's' : ''} added to Listing Owners Info.
+          </div>
+          <Button
+            onClick={() => navigate('/AdminListingSearch')}
+            style={{ background: '#000', color: '#D4AF37', fontWeight: 'bold' }}
+            size="sm"
+          >
+            View Results →
+          </Button>
+        </motion.div>
+      )}
+
       {/* Form */}
       {isFormOpen && (
         <motion.div
