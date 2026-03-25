@@ -165,15 +165,27 @@ export default function AdminSearchProfiles() {
           <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Search Listing Profiles</h1>
           <p className="text-sm mt-1" style={{ color: '#666' }}>Create daily automated searches for new listings</p>
         </div>
-        <Button
-          onClick={() => {
-            resetForm();
-            setIsFormOpen(!isFormOpen);
-          }}
-          style={{ background: '#D4AF37', color: '#000' }}
-        >
-          <Plus className="w-4 h-4 mr-2" /> New Search
-        </Button>
+        <div className="flex gap-2">
+          {searches.length > 0 && (
+            <Button
+              onClick={runAllSearches}
+              disabled={runningAll}
+              style={{ background: '#1a1a1a', color: '#D4AF37', border: '1px solid #D4AF37' }}
+            >
+              {runningAll ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
+              {runningAll ? 'Searching...' : 'Run All Searches'}
+            </Button>
+          )}
+          <Button
+            onClick={() => {
+              resetForm();
+              setIsFormOpen(!isFormOpen);
+            }}
+            style={{ background: '#D4AF37', color: '#000' }}
+          >
+            <Plus className="w-4 h-4 mr-2" /> New Search
+          </Button>
+        </div>
       </div>
 
       {/* Form */}
