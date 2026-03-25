@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Users, HomeIcon, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Zap, BookOpen, ArrowRight } from 'lucide-react';
 import ChatInterface from '@/components/charlie/ChatInterface';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
-export default function Home() {
+export default function HomePage() {
   const [chatExpanded, setChatExpanded] = useState(false);
 
   const services = [
@@ -16,7 +16,6 @@ export default function Home() {
     { icon: '📦', title: 'Moving Logistics', desc: 'Packing timelines, movers coordination, checklists — all handled.' },
     { icon: '⚡', title: 'Utilities & Services Setup', desc: 'Internet, electric, gas, water — all set up before you arrive.' },
     { icon: '🎓', title: 'School Research & Enrollment', desc: 'District research, school tours, enrollment paperwork guidance.' },
-    { icon: '🏥', title: 'Healthcare Setup', desc: 'Find doctors, dentists, specialists in your new area.' },
   ];
 
   return (
@@ -33,7 +32,7 @@ export default function Home() {
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Two Column Layout */}
-        <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* Left Column - Services */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -58,7 +57,7 @@ export default function Home() {
             </p>
 
             {/* Services Grid */}
-            <div className="grid gap-4 mb-12">
+            <div className="grid gap-4">
               {services.map((service, i) => (
                 <motion.div
                   key={i}
@@ -76,13 +75,6 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
-
-            <Link to="/Chat">
-              <button className="px-6 py-3 rounded-full text-sm font-bold transition-all hover:shadow-lg"
-                style={{ background: GOLD, color: '#000' }}>
-                Start Free Consultation
-              </button>
-            </Link>
           </motion.div>
 
           {/* Right Column - Charlie Chat */}
