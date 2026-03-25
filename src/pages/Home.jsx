@@ -8,17 +8,6 @@ const Home = () => {
   return (
     <div style={{ position: 'relative', background: '#fff', fontFamily: 'sans-serif' }}>
       
-      {/* BACK BUTTON */}
-      <div style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 1000 }}>
-        <button
-          onClick={() => navigate('/Dashboard')}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', background: '#D4AF37', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
-        >
-          <ArrowLeft size={18} />
-          BACK
-        </button>
-      </div>
-      
       {/* SECTION #101 - HERO SECTION */}
       <section id="101" style={{ position: 'relative', minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', textAlign: 'center', padding: '20px' }}>
         <div>
