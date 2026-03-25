@@ -8,19 +8,13 @@ const APP_URL = window.location.origin;
 
 function buildScript(ownerName, propertyAddress) {
   const firstName = ownerName?.split(' ')[0] || 'there';
-  return `Hi ${firstName} — We see you have listed ${propertyAddress}. Congrats on taking that step!
+  return `Hi ${firstName} — We see you've listed ${propertyAddress}. Congrats!
 
-We are Dyson & Dyson Corporate Relocation — We do not list or sell real estate, we manage moves for executives and high-end homeowners. With our 21 AI assistants, we orchestrate your move and help navigate the ENTIRE move, not just the sale. We've only been doing this worldwide for 50 years!
+We're Dyson & Dyson Corporate Relocation — 50 years helping executives navigate the ENTIRE move, not just the sale. Our AI concierge "Charlie" handles destination research, agent matching, schools, utilities & timing — at no cost to you.
 
-Our AI concierge "Charlie" handles your destination research, neighborhood match, schools, utilities, timing — all completely at no expense to you. The selected agents pay for our services. We, along with Gemini, treat your moving process as if we are moving right along with you all the way through close of escrow.
+Where are you planning to move? Charlie can pull a full AI report on your destination city — no obligation.
 
-We specialize in out-of-area relocations and can connect you with a vetted agent wherever you're headed. We have access to the top 20 agents in each US market along with their current production reports.
-
-Curious where you're planning to move? Happy to have Charlie pull a full AI report on your destination city — no obligation at all.
-
-You can also check out what we offer here: ${APP_URL}/Home
-
-Just reply with where you're headed and we'll take it from there! 🏡`;
+${APP_URL}/Home`;
 }
 
 function buildFollowUp(ownerName) {
