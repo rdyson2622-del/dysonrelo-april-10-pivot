@@ -1,8 +1,9 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
 import { useLayout } from '@/lib/LayoutContext';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
