@@ -129,7 +129,11 @@ export default function AdminOutreachCampaigns() {
             <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mx-auto" />
           </div>
         ) : filteredCampaigns.length === 0 ? (
-          <OutreachProcessGuide />
+          <div className="text-center py-16 text-slate-400">
+            <Send className="w-12 h-12 mx-auto mb-4 opacity-30" />
+            <p className="font-semibold text-lg">No outreach campaigns yet</p>
+            <p className="text-sm mt-1">Go to <strong>Listing Owners</strong>, select owners, then click "Step 3: Send to Outreach".</p>
+          </div>
         ) : (
           <div className="grid gap-4">
             {filteredCampaigns.map((campaign, idx) => (
