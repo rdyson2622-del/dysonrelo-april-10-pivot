@@ -161,13 +161,13 @@ export default function AdminOwners() {
         </Button>
       </div>
 
-      {/* Selection Action Bar */}
+      {/* Selection Action Bar — sticky so always visible while scrolling */}
       {selectedIds.length > 0 && (
-        <div className="mb-4 flex items-center gap-3 p-4 rounded-xl border-2 border-amber-400 bg-amber-50">
-          <span className="font-semibold text-amber-800 text-sm">
-            {selectedIds.length} owner{selectedIds.length > 1 ? 's' : ''} selected
+        <div className="sticky top-0 z-30 mb-4 flex flex-wrap items-center gap-3 p-4 rounded-xl border-2 border-amber-400 bg-amber-50 shadow-lg">
+          <span className="font-bold text-amber-900 text-sm">
+            ✓ {selectedIds.length} owner{selectedIds.length > 1 ? 's' : ''} selected
           </span>
-          <div className="flex gap-2 ml-auto">
+          <div className="flex flex-wrap gap-2 ml-auto">
             <Button
               onClick={handleSkipTrace}
               disabled={skipTracing}
@@ -175,16 +175,17 @@ export default function AdminOwners() {
               size="sm"
             >
               {skipTracing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Fingerprint className="w-4 h-4" />}
-              {skipTracing ? 'Skip Tracing...' : 'Step 2: Skip Trace (Get Owner Info)'}
+              {skipTracing ? 'Skip Tracing...' : 'Step 2: Skip Trace'}
             </Button>
             <Button
               onClick={handleSendToOutreach}
               disabled={sendingToOutreach}
-              className="gap-2 bg-emerald-700 hover:bg-emerald-800 text-white"
               size="sm"
+              style={{ background: '#D4AF37', color: '#000', fontWeight: 700 }}
+              className="gap-2 hover:opacity-90 text-sm px-5"
             >
               {sendingToOutreach ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              {sendingToOutreach ? 'Sending...' : 'Step 3: Send to Outreach'}
+              {sendingToOutreach ? 'Sending...' : '➜ Move to Listing Outreach Campaigns'}
             </Button>
           </div>
         </div>
