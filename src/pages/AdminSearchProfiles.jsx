@@ -338,17 +338,13 @@ export default function AdminSearchProfiles() {
                       type="checkbox"
                       checked={formData.property_types.includes(type.value)}
                       onChange={(e) => {
-                        if (e.target.checked) {
-                          setFormData({
-                            ...formData,
-                            property_types: [...formData.property_types, type.value],
-                          });
-                        } else {
-                          setFormData({
-                            ...formData,
-                            property_types: formData.property_types.filter(t => t !== type.value),
-                          });
-                        }
+                        const checked = e.target.checked;
+                        setFormData(prev => ({
+                          ...prev,
+                          property_types: checked
+                            ? [...prev.property_types, type.value]
+                            : prev.property_types.filter(t => t !== type.value),
+                        }));
                       }}
                     />
                     <span className="text-sm">{type.label}</span>
