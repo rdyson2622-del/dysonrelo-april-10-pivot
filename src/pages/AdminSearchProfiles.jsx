@@ -378,6 +378,7 @@ export default function AdminSearchProfiles() {
                 placeholder="Internal notes..."
                 className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                 rows="3"
+                style={{ color: '#000', background: '#fff' }}
               />
             </div>
 
