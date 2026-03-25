@@ -431,7 +431,18 @@ export default function AdminSearchProfiles() {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
+                <Button
+                  size="sm"
+                  onClick={() => runSearch(search.id)}
+                  disabled={runningId === search.id}
+                  style={{ background: '#D4AF37', color: '#000', minWidth: '110px' }}
+                >
+                  {runningId === search.id
+                    ? <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> Running...</>
+                    : <><Play className="w-3 h-3 mr-1" /> Run Now</>
+                  }
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"
