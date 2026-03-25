@@ -167,6 +167,7 @@ const AuthenticatedApp = () => {
 
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
+      <Route path="/ReceivingAgentExplainer" element={<ReceivingAgentExplainer />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
 
       
