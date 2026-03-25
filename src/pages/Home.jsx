@@ -72,7 +72,6 @@ const Home = () => {
         <button style={{ padding: '20px 50px', background: '#D4AF37', color: '#000', fontWeight: 'bold', borderRadius: '8px', border: 'none', fontSize: '18px', cursor: 'pointer' }}>
           BROWSE PARTNER AGENTS
         </button>
-        <div style={{ position: 'absolute', top: '10px', right: '10px', background: '#000', color: '#D4AF37', padding: '4px 8px', fontSize: '12px', fontWeight: 'bold', borderRadius: '4px', border: '1px solid #D4AF37' }}>#106</div>
       </section>
 
     </div>
