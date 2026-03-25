@@ -91,7 +91,7 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
           });
 
           if (!existing.length) {
-            // Create new listing record
+            // Create ListingImport record
             await base44.asServiceRole.entities.ListingImport.create({
               mls_id: listing.mls_id || '',
               property_address: listing.property_address,
@@ -108,6 +108,20 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
               list_date: listing.list_date || new Date().toISOString().split('T')[0],
               source: 'automated_search',
               status: 'active',
+            });
+
+            // Also create a ListingOwner record so it appears in Listing Owners tab
+            await base44.asServiceRole.entities.ListingOwner.create({
+              owner_name: listing.list_agent_name || 'Unknown Owner',
+              phone: listing.list_agent_phone || '',
+              email: listing.list_agent_email || '',
+              property_address: listing.property_address,
+              property_city: listing.city,
+              property_state: listing.state,
+              listing_price: listing.price,
+              contact_status: 'not_contacted',
+              notes: `Auto-imported from search: ${search.search_name}. MLS: ${listing.mls_id || 'N/A'}. ${listing.sqft || 0} sqft, ${listing.bedrooms || 0}bd/${listing.bathrooms || 0}ba.`,
+              listing_url: listing.property_url || '',
             });
           }
         }
