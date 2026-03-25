@@ -147,7 +147,7 @@ const Home = () => {
         <p style={{ fontSize: '18px', color: '#ccc', maxWidth: '600px', margin: '0 auto 40px', lineHeight: '1.6' }}>
           Our AI concierge is available 24/7 to answer questions about your destination city, neighborhoods, schools, and more.
         </p>
-        <button style={{ padding: '16px 40px', background: '#D4AF37', color: '#000', fontWeight: '700', borderRadius: '8px', border: 'none', fontSize: '16px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s' }} onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}>
+        <button onClick={() => navigate('/Chat')} style={{ padding: '16px 40px', background: '#D4AF37', color: '#000', fontWeight: '700', borderRadius: '8px', border: 'none', fontSize: '16px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'all 0.3s' }} onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}>
           <MessageSquare size={20} />
           Start a Conversation
           <ArrowRight size={18} />
