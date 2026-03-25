@@ -120,7 +120,7 @@ Return as JSON array only, no other text.`;
         }
 
         // Update search last_run_date
-        await base44.entities.PropertySearch.update(search.id, {
+        await base44.asServiceRole.entities.PropertySearch.update(search.id, {
           last_run_date: new Date().toISOString(),
         });
 
