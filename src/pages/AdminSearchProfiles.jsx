@@ -127,10 +127,11 @@ export default function AdminSearchProfiles() {
 
   const runSearch = async (searchId) => {
     setRunningId(searchId);
+    setLastResults(null);
     try {
       const res = await base44.functions.invoke('dailyPropertySearch', { search_id: searchId });
       const found = res.data?.results?.[0]?.listings_found ?? 0;
-      toast.success(`Search complete! ${found} new listing${found !== 1 ? 's' : ''} found.`);
+      setLastResults(found);
       queryClient.invalidateQueries({ queryKey: ['propertySearches'] });
     } catch (e) {
       toast.error('Search failed: ' + e.message);
@@ -140,10 +141,11 @@ export default function AdminSearchProfiles() {
 
   const runAllSearches = async () => {
     setRunningAll(true);
+    setLastResults(null);
     try {
       const res = await base44.functions.invoke('dailyPropertySearch', {});
       const total = res.data?.results?.reduce((sum, r) => sum + (r.listings_found || 0), 0) ?? 0;
-      toast.success(`All searches complete! ${total} new listing${total !== 1 ? 's' : ''} found.`);
+      setLastResults(total);
       queryClient.invalidateQueries({ queryKey: ['propertySearches'] });
     } catch (e) {
       toast.error('Search failed: ' + e.message);
