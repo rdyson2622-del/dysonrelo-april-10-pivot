@@ -129,6 +129,7 @@ import SkipTraceResults from './pages/SkipTraceResults';
 import AgentExplainer from './pages/AgentExplainer';
 import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
+import Home from './pages/Home';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -161,7 +162,8 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/Dashboard" replace />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/Home" element={<Home />} />
 
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
