@@ -2,8 +2,6 @@ import React from 'react';
 import { MessageSquare, ShieldCheck, Zap, Star } from 'lucide-react';
 
 const Home = () => {
-  const navigate = useNavigate();
-  
   return (
     <div style={{ position: 'relative', background: '#fff', fontFamily: 'sans-serif' }}>
       
