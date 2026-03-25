@@ -38,6 +38,8 @@ export default function AdminSearchProfiles() {
 
   const [runningId, setRunningId] = useState(null);
   const [runningAll, setRunningAll] = useState(false);
+  const [lastResults, setLastResults] = useState(null);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: searches = [] } = useQuery({
