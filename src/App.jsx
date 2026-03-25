@@ -102,7 +102,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
-import Home from './pages/Home';
+
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
 import CityGuide from './pages/CityGuide.jsx';
@@ -162,7 +162,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/Dashboard" replace />} />
-      <Route path="/Home" element={<Home />} />
+
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
