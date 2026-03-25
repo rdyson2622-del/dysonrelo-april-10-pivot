@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Users, Home, TrendingUp, UserCheck, ArrowUpRight, Trash2, Edit2 } from 'lucide-react';
+import { Users, Home, TrendingUp, UserCheck, ArrowUpRight, Trash2, Edit2, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,25 +16,7 @@ export default function Admin() {
   const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
-
-  const handleDelete = async (id) => {
-    await base44.entities.ListingOwner.delete(id);
-    setConfirmDelete(null);
-    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
-  };
-
-  const openEdit = (owner) => {
-    setEditOwner(owner);
-    setEditForm({ owner_name: owner.owner_name || '', phone: owner.phone || '', email: owner.email || '', property_address: owner.property_address || '', moving_to: owner.moving_to || '' });
-  };
-
-  const handleSaveEdit = async () => {
-    setSaving(true);
-    await base44.entities.ListingOwner.update(editOwner.id, editForm);
-    setSaving(false);
-    setEditOwner(null);
-    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
-  };
+  const [orderSent, setOrderSent] = useState(false);
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listing-owners'],
@@ -48,6 +30,36 @@ export default function Admin() {
     initialData: [],
   });
 
+  const handleDelete = async (id) => {
+    await base44.entities.ListingOwner.delete(id);
+    setConfirmDelete(null);
+    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
+  };
+
+  const openEdit = (owner) => {
+    setEditOwner(owner);
+    setEditForm({
+      owner_name: owner.owner_name || '',
+      phone: owner.phone || '',
+      email: owner.email || '',
+      property_address: owner.property_address || '',
+      moving_to: owner.moving_to || ''
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    setSaving(true);
+    await base44.entities.ListingOwner.update(editOwner.id, editForm);
+    setSaving(false);
+    setEditOwner(null);
+    queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
+  };
+
+  const handleOrderListings = () => {
+    setOrderSent(true);
+    setTimeout(() => setOrderSent(false), 4000);
+  };
+
   const contacted = owners.filter((o) => o.contact_status !== 'not_contacted').length;
   const converted = owners.filter((o) => o.contact_status === 'converted').length;
   const conversionRate = owners.length > 0 ? Math.round((converted / owners.length) * 100) : 0;
@@ -56,7 +68,29 @@ export default function Admin() {
     <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Admin Overview</h1>
-        <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage your listing owners and relocation clients</p>
+        <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage listing owners and relocation clients</p>
+      </motion.div>
+
+      {/* ORDER LISTINGS BUTTON */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="mt-6 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+        style={{ background: '#000', border: '2px solid #D4AF37' }}
+      >
+        <div>
+          <h2 className="text-lg font-bold" style={{ color: '#D4AF37' }}>Surgical Lead Generator</h2>
+          <p className="text-sm mt-1" style={{ color: '#ccc' }}>Request a new batch of listings to be pulled into the system.</p>
+        </div>
+        <button
+          onClick={handleOrderListings}
+          className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-base transition-all"
+          style={{ background: orderSent ? '#2d6a2d' : '#D4AF37', color: orderSent ? '#fff' : '#000', minWidth: '220px', justifyContent: 'center' }}
+        >
+          <ShoppingCart size={20} />
+          {orderSent ? '✓ Order Received!' : 'ORDER NEW LISTINGS'}
+        </button>
       </motion.div>
 
       {/* Stats */}
@@ -74,7 +108,7 @@ export default function Admin() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
+            className="rounded-2xl border p-6 hover:shadow-md transition-all cursor-pointer"
             style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -95,7 +129,7 @@ export default function Admin() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="rounded-2xl border p-6 hover:shadow-md transition-all group cursor-pointer"
+            className="rounded-2xl border p-6 hover:shadow-md transition-all cursor-pointer"
             style={{ background: 'rgba(255,255,255,0.85)', borderColor: 'rgba(0,0,0,0.1)' }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -112,7 +146,7 @@ export default function Admin() {
         </Link>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Owners */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -122,7 +156,7 @@ export default function Admin() {
       >
         <h3 className="font-semibold mb-4" style={{ color: '#000' }}>Recent Owners Added</h3>
         {owners.length === 0 ? (
-          <p className="text-sm text-center py-6" style={{ color: 'rgba(0,0,0,0.4)' }}>No listing owners yet. Go to Listing Owners to add some.</p>
+          <p className="text-sm text-center py-6" style={{ color: 'rgba(0,0,0,0.4)' }}>No listing owners yet.</p>
         ) : (
           <div className="space-y-3">
             {owners.slice(0, 5).map((owner) => (
@@ -133,8 +167,12 @@ export default function Admin() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: 'rgba(0,0,0,0.5)' }}>{owner.moving_to || 'Unknown destination'}</span>
-                  <button onClick={() => openEdit(owner)} className="p-1 rounded hover:bg-black/10 transition" title="Edit"><Edit2 className="w-3.5 h-3.5" style={{ color: 'rgba(0,0,0,0.4)' }} /></button>
-                  <button onClick={() => setConfirmDelete(confirmDelete === owner.id ? null : owner.id)} className="p-1 rounded hover:bg-red-100 text-red-400 transition" title="Delete"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => openEdit(owner)} className="p-1 rounded hover:bg-black/10 transition" title="Edit">
+                    <Edit2 className="w-3.5 h-3.5" style={{ color: 'rgba(0,0,0,0.4)' }} />
+                  </button>
+                  <button onClick={() => setConfirmDelete(confirmDelete === owner.id ? null : owner.id)} className="p-1 rounded hover:bg-red-100 text-red-400 transition" title="Delete">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
                 {confirmDelete === owner.id && (
                   <div className="absolute right-2 top-10 z-50 bg-white rounded-xl shadow-xl border border-red-100 p-3 w-48 text-center">
@@ -156,11 +194,11 @@ export default function Admin() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>Edit Owner</DialogTitle></DialogHeader>
           <div className="grid gap-3 py-2">
-            <div><Label>Name</Label><Input value={editForm.owner_name} onChange={e => setEditForm(f => ({...f, owner_name: e.target.value}))} /></div>
-            <div><Label>Phone</Label><Input value={editForm.phone} onChange={e => setEditForm(f => ({...f, phone: e.target.value}))} /></div>
-            <div><Label>Email</Label><Input value={editForm.email} onChange={e => setEditForm(f => ({...f, email: e.target.value}))} /></div>
-            <div><Label>Property Address</Label><Input value={editForm.property_address} onChange={e => setEditForm(f => ({...f, property_address: e.target.value}))} /></div>
-            <div><Label>Moving To</Label><Input value={editForm.moving_to} onChange={e => setEditForm(f => ({...f, moving_to: e.target.value}))} /></div>
+            <div><Label>Name</Label><Input value={editForm.owner_name} onChange={e => setEditForm(f => ({ ...f, owner_name: e.target.value }))} /></div>
+            <div><Label>Phone</Label><Input value={editForm.phone} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))} /></div>
+            <div><Label>Email</Label><Input value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} /></div>
+            <div><Label>Property Address</Label><Input value={editForm.property_address} onChange={e => setEditForm(f => ({ ...f, property_address: e.target.value }))} /></div>
+            <div><Label>Moving To</Label><Input value={editForm.moving_to} onChange={e => setEditForm(f => ({ ...f, moving_to: e.target.value }))} /></div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOwner(null)}>Cancel</Button>
