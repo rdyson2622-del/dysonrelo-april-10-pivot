@@ -183,7 +183,10 @@ export default function AdminSearchProfiles() {
           )}
           <Button
             onClick={() => {
-              resetForm();
+              if (!isFormOpen) {
+                resetForm();
+                setEditingId(null);
+              }
               setIsFormOpen(!isFormOpen);
             }}
             style={{ background: '#D4AF37', color: '#000' }}
