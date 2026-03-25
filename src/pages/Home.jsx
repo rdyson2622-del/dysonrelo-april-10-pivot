@@ -427,7 +427,7 @@ export default function Home() {
               </p>
               <ul className="space-y-2.5 mb-9">
                 {[
-                  'Charlie profiles your ideal agent before any names are shared',
+                  'The Dyson Relo Team profiles your ideal agent before any names are shared',
                   'Top 20 destination agents evaluated — production, DRE rating, personality',
                   '3–5 personally vetted candidates presented for your review',
                   'Your selection triggers immediate agent briefing & onboarding',
