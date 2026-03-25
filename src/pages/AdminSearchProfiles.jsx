@@ -35,6 +35,8 @@ export default function AdminSearchProfiles() {
     bulk_locations: '',
   });
 
+  const [runningId, setRunningId] = useState(null);
+  const [runningAll, setRunningAll] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: searches = [] } = useQuery({
