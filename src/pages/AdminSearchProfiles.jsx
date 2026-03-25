@@ -226,10 +226,11 @@ export default function AdminSearchProfiles() {
             <div>
               <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>Search Name</label>
               <Input
-                value={formData.search_name}
-                onChange={(e) => setFormData({ ...formData, search_name: e.target.value })}
-                placeholder="e.g., Austin Tech Workers"
-                required
+               value={formData.search_name}
+               onChange={(e) => setFormData({ ...formData, search_name: e.target.value })}
+               placeholder="e.g., Austin Tech Workers"
+               required
+               style={{ color: '#000', background: '#fff' }}
               />
             </div>
 
