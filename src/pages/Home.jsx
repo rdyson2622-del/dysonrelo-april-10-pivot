@@ -347,7 +347,7 @@ export default function Home() {
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
             Each assistant specializes in one domain
           </h2>
-          <p className="text-base leading-relaxed max-w-2xl mx-auto" style={{ color: '#fff' }}>
+          <p className="text-2xl leading-relaxed max-w-5xl mx-auto" style={{ color: '#fff' }}>
             but they communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
           </p>
         </div>
