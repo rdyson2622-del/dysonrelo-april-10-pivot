@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Edit2, CheckCircle2, XCircle, Search, Play, Loader2, Zap } from 'lucide-react';
+import { Plus, Trash2, Edit2, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import SearchProfilesProcessGuide from '../components/admin/SearchProfilesProcessGuide';
-import { toast } from 'sonner';
 
 const PROPERTY_TYPES = [
   { value: 'single_family', label: 'Single Family' },
@@ -20,7 +18,7 @@ const PROPERTY_TYPES = [
 const STATES = ['CA', 'TX', 'FL', 'NY', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI', 'NJ', 'VA', 'WA', 'AZ', 'MA', 'TN', 'IN', 'MO', 'MD', 'WI', 'CO', 'MN', 'SC', 'AL', 'LA', 'KY', 'OR', 'OK', 'CT', 'UT', 'NV', 'AR', 'MS', 'KS', 'NM', 'NE', 'WV', 'ID', 'HI', 'NH', 'ME', 'MT', 'RI', 'DE', 'SD', 'ND', 'AK', 'VT', 'WY'];
 
 export default function AdminSearchProfiles() {
-  const [isFormOpen, setIsFormOpen] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [bulkMode, setBulkMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,10 +34,6 @@ export default function AdminSearchProfiles() {
     bulk_locations: '',
   });
 
-  const [runningId, setRunningId] = useState(null);
-  const [runningAll, setRunningAll] = useState(false);
-  const [lastResults, setLastResults] = useState(null);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: searches = [] } = useQuery({
@@ -56,8 +50,8 @@ export default function AdminSearchProfiles() {
       return base44.entities.PropertySearch.create({
         ...data,
         communities: communityArray,
-        min_price: parseFloat(data.min_price) || 0,
-        max_price: parseFloat(data.max_price) || 0,
+        min_price: parseInt(data.min_price),
+        max_price: parseInt(data.max_price),
       });
     },
     onSuccess: () => {
@@ -75,8 +69,8 @@ export default function AdminSearchProfiles() {
       return base44.entities.PropertySearch.update(editingId, {
         ...data,
         communities: communityArray,
-        min_price: parseFloat(data.min_price) || 0,
-        max_price: parseFloat(data.max_price) || 0,
+        min_price: parseInt(data.min_price),
+        max_price: parseInt(data.max_price),
       });
     },
     onSuccess: () => {
@@ -125,34 +119,6 @@ export default function AdminSearchProfiles() {
     setIsFormOpen(true);
   };
 
-  const runSearch = async (searchId) => {
-    setRunningId(searchId);
-    setLastResults(null);
-    try {
-      const res = await base44.functions.invoke('dailyPropertySearch', { search_id: searchId });
-      const found = res.data?.results?.[0]?.listings_found ?? 0;
-      setLastResults(found);
-      queryClient.invalidateQueries({ queryKey: ['propertySearches'] });
-    } catch (e) {
-      toast.error('Search failed: ' + e.message);
-    }
-    setRunningId(null);
-  };
-
-  const runAllSearches = async () => {
-    setRunningAll(true);
-    setLastResults(null);
-    try {
-      const res = await base44.functions.invoke('dailyPropertySearch', {});
-      const total = res.data?.results?.reduce((sum, r) => sum + (r.listings_found || 0), 0) ?? 0;
-      setLastResults(total);
-      queryClient.invalidateQueries({ queryKey: ['propertySearches'] });
-    } catch (e) {
-      toast.error('Search failed: ' + e.message);
-    }
-    setRunningAll(false);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editingId) {
@@ -170,67 +136,33 @@ export default function AdminSearchProfiles() {
           <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Search Listing Profiles</h1>
           <p className="text-sm mt-1" style={{ color: '#666' }}>Create daily automated searches for new listings</p>
         </div>
-        <div className="flex gap-2">
-          {searches.length > 0 && (
-            <Button
-              onClick={runAllSearches}
-              disabled={runningAll}
-              style={{ background: '#1a1a1a', color: '#D4AF37', border: '1px solid #D4AF37' }}
-            >
-              {runningAll ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
-              {runningAll ? 'Searching...' : 'Run All Searches'}
-            </Button>
-          )}
-          <Button
-            onClick={() => {
-              if (!isFormOpen) {
-                resetForm();
-                setEditingId(null);
-              }
-              setIsFormOpen(!isFormOpen);
-            }}
-            style={{ background: '#D4AF37', color: '#000' }}
-          >
-            <Plus className="w-4 h-4 mr-2" /> New Search
-          </Button>
-        </div>
-      </div>
-
-      {/* Results Banner */}
-      {lastResults !== null && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-4 flex items-center justify-between"
+        <Button
+          onClick={() => {
+            resetForm();
+            setIsFormOpen(!isFormOpen);
+          }}
           style={{ background: '#D4AF37', color: '#000' }}
         >
-          <div className="flex items-center gap-2 font-bold">
-            <CheckCircle2 className="w-5 h-5" />
-            Search complete! {lastResults} new listing{lastResults !== 1 ? 's' : ''} added to Listing Owners Info.
-          </div>
-          <Button
-            onClick={() => navigate('/AdminListingSearch')}
-            style={{ background: '#000', color: '#D4AF37', fontWeight: 'bold' }}
-            size="sm"
-          >
-            View Results →
-          </Button>
-        </motion.div>
-      )}
+          <Plus className="w-4 h-4 mr-2" /> New Search
+        </Button>
+      </div>
 
       {/* Form */}
       {isFormOpen && (
-        <div className="rounded-xl p-6 bg-white border border-slate-200" style={{ color: '#000' }}>
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate style={{ color: '#000' }}>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl p-6 bg-white border border-slate-200"
+        >
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Search Name */}
             <div>
               <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>Search Name</label>
               <Input
-               value={formData.search_name}
-               onChange={(e) => setFormData({ ...formData, search_name: e.target.value })}
-               placeholder="e.g., Austin Tech Workers"
-               required
-               style={{ color: '#000', background: '#fff' }}
+                value={formData.search_name}
+                onChange={(e) => setFormData({ ...formData, search_name: e.target.value })}
+                placeholder="e.g., Austin Tech Workers"
+                required
               />
             </div>
 
@@ -271,11 +203,10 @@ export default function AdminSearchProfiles() {
                 <div>
                   <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>City</label>
                   <Input
-                   value={formData.city}
-                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                   placeholder="Austin"
-                   required
-                   style={{ color: '#000', background: '#fff' }}
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    placeholder="Austin"
+                    required
                   />
                 </div>
                 <div>
@@ -284,7 +215,6 @@ export default function AdminSearchProfiles() {
                     value={formData.state}
                     onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                     className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
-                    style={{ color: '#000', background: '#fff' }}
                   >
                     {STATES.map((st) => (
                       <option key={st} value={st}>{st}</option>
@@ -316,10 +246,7 @@ export default function AdminSearchProfiles() {
                   value={formData.min_price}
                   onChange={(e) => setFormData({ ...formData, min_price: e.target.value })}
                   placeholder="300000"
-                  step="1000"
-                  min="0"
                   required
-                  style={{ color: '#000', background: '#fff' }}
                 />
               </div>
               <div>
@@ -329,10 +256,7 @@ export default function AdminSearchProfiles() {
                   value={formData.max_price}
                   onChange={(e) => setFormData({ ...formData, max_price: e.target.value })}
                   placeholder="750000"
-                  step="1000"
-                  min="0"
                   required
-                  style={{ color: '#000', background: '#fff' }}
                 />
               </div>
             </div>
@@ -347,13 +271,17 @@ export default function AdminSearchProfiles() {
                       type="checkbox"
                       checked={formData.property_types.includes(type.value)}
                       onChange={(e) => {
-                        const checked = e.target.checked;
-                        setFormData(prev => ({
-                          ...prev,
-                          property_types: checked
-                            ? [...prev.property_types, type.value]
-                            : prev.property_types.filter(t => t !== type.value),
-                        }));
+                        if (e.target.checked) {
+                          setFormData({
+                            ...formData,
+                            property_types: [...formData.property_types, type.value],
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            property_types: formData.property_types.filter(t => t !== type.value),
+                          });
+                        }
                       }}
                     />
                     <span className="text-sm">{type.label}</span>
@@ -369,7 +297,6 @@ export default function AdminSearchProfiles() {
                 value={formData.communities}
                 onChange={(e) => setFormData({ ...formData, communities: e.target.value })}
                 placeholder="South Congress, Downtown, East Austin"
-                style={{ color: '#000', background: '#fff' }}
               />
             </div>
 
@@ -382,7 +309,6 @@ export default function AdminSearchProfiles() {
                 placeholder="Internal notes..."
                 className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                 rows="3"
-                style={{ color: '#000', background: '#fff' }}
               />
             </div>
 
@@ -417,7 +343,7 @@ export default function AdminSearchProfiles() {
               </Button>
             </div>
           </form>
-        </div>
+        </motion.div>
       )}
 
       {/* Process Guide */}
@@ -451,13 +377,8 @@ export default function AdminSearchProfiles() {
                   )}
                 </div>
                 <p className="text-sm" style={{ color: '#666' }}>
-                  {search.city}, {search.state} • ${search.min_price.toLocaleString()} – ${search.max_price.toLocaleString()}
+                  {search.city}, {search.state} • ${search.min_price.toLocaleString()} - ${search.max_price.toLocaleString()}
                 </p>
-                {search.last_run_date && (
-                  <p className="text-xs mt-1" style={{ color: '#aaa' }}>
-                    Last run: {new Date(search.last_run_date).toLocaleString()}
-                  </p>
-                )}
                 {search.property_types?.length > 0 && (
                   <div className="flex gap-2 mt-2">
                     {search.property_types.map((type) => (
@@ -469,18 +390,7 @@ export default function AdminSearchProfiles() {
                 )}
               </div>
 
-              <div className="flex gap-2 items-center">
-                <Button
-                  size="sm"
-                  onClick={() => runSearch(search.id)}
-                  disabled={runningId === search.id}
-                  style={{ background: '#D4AF37', color: '#000', minWidth: '110px' }}
-                >
-                  {runningId === search.id
-                    ? <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> Running...</>
-                    : <><Play className="w-3 h-3 mr-1" /> Run Now</>
-                  }
-                </Button>
+              <div className="flex gap-2">
                 <Button
                   variant="ghost"
                   size="icon"

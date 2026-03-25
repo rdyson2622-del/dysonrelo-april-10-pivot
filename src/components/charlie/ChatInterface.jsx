@@ -47,7 +47,7 @@ Key messages to weave in naturally:
 Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.${profileContext}`;
 };
 
-export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null, initialMessage = '' }) {
+export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
 
@@ -73,7 +73,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       type: 'text',
     },
   ]);
-  const [input, setInput] = useState(initialMessage);
+  const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
@@ -112,49 +112,18 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const getSpokeResponse = (text) => {
     const t = text.toLowerCase();
 
-    const cityGuideTopics = t.includes('neighborhood') || t.includes('area') || t.includes('school') ||
-      t.includes('district') || t.includes('community') || t.includes('city guide') || t.includes('research') ||
-      t.includes('cost of living') || t.includes('healthcare') || t.includes('hospital') || t.includes('park') ||
-      t.includes('dining') || t.includes('culture') || t.includes('recreation');
-
-    const agentTopics = t.includes('agent') || t.includes('realtor') || t.includes('broker');
-
-    const cityName = profile?.destination_city || 'your destination city';
-    const clientCommitted = profile?.buyer_broker_signed === true;
-    const agentSelected = !!(profile?.agent_name);
-
-    if (cityGuideTopics) {
-      if (clientCommitted) {
-        return {
-          display: `Your **City Guide for ${cityName}** is fully unlocked! 🗺️\n\nHead to the City Guide tab and tap any category — Neighborhoods, Schools, Cost of Living, Healthcare, Parks, or Local Culture — for live AI research tailored to your specific move.\n\n👉 **[Open City Guide](/CityGuide)**`,
-          spoken: `Your City Guide for ${cityName} is fully unlocked. Go tap any category for live personalized research right now.`
-        };
-      } else if (agentSelected) {
-        return {
-          display: `You're one step away from your full City Guide! 🙌\n\nYour agent — **${profile.agent_name}** — is your Boots on the Ground in ${cityName}. Now that they're selected, the last step is signing your **Buyer Broker Agreement** to formalize the relationship.\n\nOnce that's done, your deep-dive guide unlocks — tailored school data, neighborhood breakdowns, healthcare, cost of living — all filtered to your actual target area.\n\n👉 **[View Your Dashboard](/Dashboard)**`,
-          spoken: `You're one step away. ${profile.agent_name} is your boots on the ground in ${cityName}. Sign your Buyer Broker Agreement and your full City Guide unlocks instantly.`
-        };
-      } else {
-        return {
-          display: `I can certainly help with general info about **${cityName}** — but to give you the deep-dive school data, neighborhood breakdowns, and healthcare research you actually need, we first have to get your **Boots on the Ground**. 👟\n\nThat means selecting your local expert agent. Here's why this matters:\n\n- School quality varies **block by block** — the right agent knows which side of the street matters\n- Neighborhood character can't be captured in a search result — your agent lives it\n- Healthcare, commute, community — all depend on exactly where you'll be\n\n**Selecting your agent is the key that unlocks your full moving plan.** It's free to you as the buyer.\n\n👉 **[Start Your Gemini Session](/GeminiSession)** — Bob Dyson personally selects your agent from there.`,
-          spoken: `I can find you a house in ${cityName} — but to give you the deep-dive school and neighborhood data you need, we first have to get your Boots on the Ground by selecting your local expert agent. That's the key that unlocks your full moving plan. Start your Gemini session and Bob will personally select your agent.`
-        };
-      }
-    }
-
-    if (agentTopics) {
-      if (agentSelected) {
-        return {
-          display: `You're all set with **${profile.agent_name}**! 🤝\n\nThey're your local expert on the ground in ${cityName}. If you have questions or want to update your preferences, just let me know — I'll make sure they're briefed.\n\nNext step: get your **Buyer Broker Agreement** signed to unlock your full City Guide and complete concierge service.\n\n👉 **[View Your Dashboard](/Dashboard)**`,
-          spoken: `You're already matched with ${profile.agent_name}. They're your expert on the ground. Get your Buyer Broker Agreement signed and your full City Guide unlocks immediately.`
-        };
-      }
+    if (t.includes('neighborhood') || t.includes('area') || t.includes('where') || t.includes('city')) {
       return {
-        display: `Agent matching is one of our most important services. 🤝\n\nBob Dyson personally reviews the top agents in **${cityName}** and hand-selects the right match for your personality, budget, and priorities. We don't just send referrals — we vet performance records, client reviews, and local expertise.\n\nSelecting your agent also unlocks your **City Guide** — so you get personalized neighborhood research at the same time.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
-        spoken: `Bob Dyson personally selects your agent — reviewing performance records and client reviews to find the right match for your specific move. And selecting your agent is the first step to unlocking your full City Guide. Start with your Gemini session.`
+        display: `Great question about neighborhoods — but that's exactly what our **Gemini Live Session** is built for! 🗺️\n\nIn that session, Bob Dyson and Gemini AI will dive deep into your destination city — neighborhoods, schools, commute, lifestyle fit — all in real time.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**\n\nThis service is 100% free to you.`,
+        spoken: `Neighborhoods, schools, commute — that's exactly what your private Gemini session with Bob Dyson is built for. It's free. Click below to begin.`
       };
     }
-
+    if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
+      return {
+        display: `Agent matching is one of our specialties! 🤝\n\nBob Dyson personally reviews the top agents in your destination market and matches you based on your personality and needs.\n\nComplete your **Gemini intake session** first so we know exactly what you need.\n\n👉 **[Begin Your Session](/GeminiSession)**`,
+        spoken: `Bob Dyson hand-selects your agent personally. To get matched, start with your Gemini session — it's completely free.`
+      };
+    }
     if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price')) {
       return {
         display: `Our service is **100% free to you as the buyer.** Always. 🎉\n\nWe're compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
@@ -163,8 +132,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }
     if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next')) {
       return {
-        display: `Here's how Dyson & Dyson works:\n\n1. **Chat with me** — I orient you to the service\n2. **Gemini Live Session** — a private AI interview with Bob Dyson builds your full relocation profile\n3. **Agent Match** — we hand-select the best agent in ${cityName}\n4. **City Guide Unlocks** — personalized research across neighborhoods, schools, cost of living, and more\n5. **Full Concierge** — moving, utilities, healthcare, community connections all coordinated\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
-        spoken: `Here's how it works. Chat with me first. Then your Gemini session builds your full relocation profile. From there, we match you with the right agent for ${cityName}, your City Guide unlocks, and our full concierge service kicks in. All free.`
+        display: `Here's how Dyson & Dyson works:\n\n1. **Chat with me** — I orient you to the service\n2. **Gemini Live Session** — a private AI interview with Bob Dyson builds your full relocation profile\n3. **Agent Match** — we hand-select the best agents in your destination city\n4. **Relocation Plan** — moving, schools, utilities, healthcare all coordinated\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
+        spoken: `Here's how it works. Chat with me first. Then your private Gemini session with Bob Dyson builds your full relocation profile. From there, we match you with the right agent. All free.`
       };
     }
     // Default

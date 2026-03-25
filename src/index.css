@@ -83,11 +83,6 @@
   }
 
   body {
-    @apply text-foreground;
-    background: #808080 !important;
-  }
-
-  html {
-    background: #808080 !important;
+    @apply bg-background text-foreground;
   }
 }

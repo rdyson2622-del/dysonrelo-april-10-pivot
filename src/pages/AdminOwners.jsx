@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Upload, Loader2, Fingerprint, Send, CheckSquare, Square } from 'lucide-react';
+import { Plus, Search, Upload } from 'lucide-react';
 import OwnersList from '@/components/admin/OwnersList';
 import OwnerForm from '@/components/admin/OwnerForm';
 import OwnerImportCSV from '@/components/admin/OwnerImportCSV';
-import { toast } from 'sonner';
-
-// Always fetch from production via backend function (bypasses test/dev environment)
-const fetchOwners = async () => {
-  const res = await base44.functions.invoke('getListingOwners', {});
-  return res.data?.owners || [];
-};
 
 export default function AdminOwners() {
   const [showForm, setShowForm] = useState(false);
@@ -22,15 +14,11 @@ export default function AdminOwners() {
   const [editingOwner, setEditingOwner] = useState(null);
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [skipTracing, setSkipTracing] = useState(false);
-  const [sendingToOutreach, setSendingToOutreach] = useState(false);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
-    queryFn: fetchOwners,
+    queryFn: () => base44.entities.ListingOwner.list(),
   });
 
   const filtered = owners.filter(owner =>
@@ -53,12 +41,12 @@ export default function AdminOwners() {
 
   const handleDelete = async (id) => {
     await base44.entities.ListingOwner.delete(id);
-    setSelectedIds(prev => prev.filter(sid => sid !== id));
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     setDeleteConfirm(null);
   };
 
   const handleStatusChange = async (id, status) => {
+    const owner = owners.find(o => o.id === id);
     await base44.entities.ListingOwner.update(id, {
       contact_status: status,
       last_contacted: new Date().toISOString().split('T')[0],
@@ -66,70 +54,8 @@ export default function AdminOwners() {
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
 
-  const handleToggleSelect = (id) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedIds.length === filtered.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(filtered.map(o => o.id));
-    }
-  };
-
-  const handleSkipTrace = async () => {
-    if (!selectedIds.length) return;
-    setSkipTracing(true);
-    try {
-      const res = await base44.functions.invoke('skipTraceOwners', { owner_ids: selectedIds });
-      const { processed, errors } = res.data;
-      toast.success(`Skip trace complete: ${processed} updated, ${errors} errors`);
-      queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
-      setSelectedIds([]);
-    } catch (e) {
-      toast.error('Skip trace failed: ' + e.message);
-    }
-    setSkipTracing(false);
-  };
-
-  const handleSendToOutreach = async () => {
-    if (!selectedIds.length) return;
-    setSendingToOutreach(true);
-    try {
-      const selectedOwners = owners.filter(o => selectedIds.includes(o.id));
-      let created = 0;
-      for (const owner of selectedOwners) {
-        // Check if campaign already exists
-        const existing = await base44.entities.OwnerOutreachCampaign.filter({ listing_owner_id: owner.id });
-        if (!existing.length) {
-          await base44.entities.OwnerOutreachCampaign.create({
-            listing_owner_id: owner.id,
-            owner_name: owner.owner_name,
-            owner_phone: owner.phone || '',
-            property_address: owner.property_address,
-            listing_price: owner.listing_price,
-            workflow_stage: 'outreach',
-            sms_sent_date: null,
-          });
-          created++;
-        }
-      }
-      toast.success(`${created} owners added to outreach campaigns`);
-      setSelectedIds([]);
-      navigate('/AdminOutreachCampaigns');
-    } catch (e) {
-      toast.error('Failed to send to outreach: ' + e.message);
-    }
-    setSendingToOutreach(false);
-  };
-
-  const allSelected = filtered.length > 0 && selectedIds.length === filtered.length;
-
   return (
-    <div id="204" className="p-8 min-h-screen bg-white">
+    <div className="p-8 min-h-screen bg-white">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Listing Owners</h1>
         <div className="flex gap-2">
@@ -144,9 +70,8 @@ export default function AdminOwners() {
         </div>
       </div>
 
-      {/* Search + Select All */}
-      <div className="mb-4 flex gap-3 items-center">
-        <div className="relative flex-1">
+      <div className="mb-6">
+        <div className="relative">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
           <Input
             placeholder="Search by name, address, or email..."
@@ -155,49 +80,13 @@ export default function AdminOwners() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" onClick={handleSelectAll} className="gap-2 shrink-0">
-          {allSelected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
-          {allSelected ? 'Deselect All' : 'Select All'}
-        </Button>
       </div>
-
-      {/* Selection Action Bar — sticky so always visible while scrolling */}
-      {selectedIds.length > 0 && (
-        <div className="sticky top-0 z-30 mb-4 flex flex-wrap items-center gap-3 p-4 rounded-xl border-2 border-amber-400 bg-amber-50 shadow-lg">
-          <span className="font-bold text-amber-900 text-sm">
-            ✓ {selectedIds.length} owner{selectedIds.length > 1 ? 's' : ''} selected
-          </span>
-          <div className="flex flex-wrap gap-2 ml-auto">
-            <Button
-              onClick={handleSkipTrace}
-              disabled={skipTracing}
-              className="gap-2 bg-indigo-700 hover:bg-indigo-800 text-white"
-              size="sm"
-            >
-              {skipTracing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Fingerprint className="w-4 h-4" />}
-              {skipTracing ? 'Skip Tracing...' : 'Step 2: Skip Trace'}
-            </Button>
-            <Button
-              onClick={handleSendToOutreach}
-              disabled={sendingToOutreach}
-              size="sm"
-              style={{ background: '#D4AF37', color: '#000', fontWeight: 700 }}
-              className="gap-2 hover:opacity-90 text-sm px-5"
-            >
-              {sendingToOutreach ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              {sendingToOutreach ? 'Sending...' : '➜ Move to Listing Outreach Campaigns'}
-            </Button>
-          </div>
-        </div>
-      )}
 
       <OwnersList
         owners={filtered}
         onEdit={(owner) => { setEditingOwner(owner); setShowForm(true); }}
         onDelete={(id) => setDeleteConfirm(id)}
         onStatusChange={handleStatusChange}
-        selectedIds={selectedIds}
-        onToggleSelect={handleToggleSelect}
       />
 
       <OwnerForm

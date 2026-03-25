@@ -9,17 +9,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Support running a single search by ID, or all active searches
-    const body = await req.json().catch(() => ({}));
-    const { search_id } = body;
-
-    let searches;
-    if (search_id) {
-      const single = await base44.asServiceRole.entities.PropertySearch.get(search_id);
-      searches = single ? [single] : [];
-    } else {
-      searches = await base44.asServiceRole.entities.PropertySearch.filter({ is_active: true });
-    }
+    // Get all active search profiles
+    const searches = await base44.entities.PropertySearch.filter({ is_active: true });
 
     if (!searches.length) {
       return Response.json({ message: 'No active searches found', processed: 0 });
@@ -29,29 +20,36 @@ Deno.serve(async (req) => {
 
     for (const search of searches) {
       try {
-        // Search Zillow/Realtor/Redfin via web for real listings
-        const today = new Date().toISOString().split('T')[0];
-        const communityStr = search.communities?.length > 0 ? search.communities.join(', ') : search.city;
-        const propTypes = search.property_types?.join(', ') || 'single family home';
+        // Call Gemini to search for recent listings matching criteria
+        const prompt = `Find recent property listings for the following criteria:
+        
+City: ${search.city}
+State: ${search.state}
+Price Range: $${search.min_price.toLocaleString()} - $${search.max_price.toLocaleString()}
+Property Types: ${search.property_types?.join(', ') || 'Any'}
+${search.communities?.length > 0 ? `Communities: ${search.communities.join(', ')}` : ''}
 
-        const prompt = `Search Zillow.com, Redfin.com, and Realtor.com RIGHT NOW for active real estate listings matching these criteria:
+Search for listings from the last 24 hours. Return results as JSON with fields: 
+- mls_id (if available)
+- property_address
+- city
+- state
+- zip
+- price
+- bedrooms
+- bathrooms
+- sqft
+- list_agent_name
+- list_agent_email
+- list_agent_phone
+- list_date
+- property_url (if found online)
 
-Location: ${communityStr}, ${search.city}, ${search.state}
-Price Range: $${search.min_price.toLocaleString()} to $${search.max_price.toLocaleString()}
-Property Type: ${propTypes}
-
-Go to Zillow.com and search for homes for sale in ${search.city} ${search.state} between $${search.min_price.toLocaleString()} and $${search.max_price.toLocaleString()}. 
-Return at least 10 real, currently active listings with real street addresses that exist in ${search.city}, ${search.state}.
-Use real MLS listing data from Zillow, Redfin, or Realtor.com.
-Each listing must have a real street address, realistic price, beds/baths/sqft for the area.
-List date should be recent (within last 30 days from ${today}).
-
-IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look them up on Zillow.`;
+Return as JSON array only, no other text.`;
 
         const llmResponse = await base44.integrations.Core.InvokeLLM({
           prompt,
           add_context_from_internet: true,
-          model: 'gemini_3_flash',
           response_json_schema: {
             type: 'object',
             properties: {
@@ -83,64 +81,37 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
 
         const listings = llmResponse.listings || [];
 
-        // Load ALL existing property addresses once (avoid N+1 DB calls)
-        const existingImports = await base44.asServiceRole.entities.ListingImport.list('-created_date', 500);
-        const existingOwners = await base44.asServiceRole.entities.ListingOwner.list('-created_date', 500);
-
-        const importAddresses = new Set(existingImports.map(l => l.property_address?.toLowerCase().trim()));
-        const ownerAddresses = new Set(existingOwners.map(o => o.property_address?.toLowerCase().trim()));
-
-        let newCount = 0;
-
+        // Store or update listings in database
         for (const listing of listings) {
-          if (!listing.property_address) continue;
-          const normalizedAddress = listing.property_address.toLowerCase().trim();
-
-          // Skip if already in ListingImport
-          if (importAddresses.has(normalizedAddress)) continue;
-
-          // Create ListingImport record
-          await base44.asServiceRole.entities.ListingImport.create({
-            mls_id: listing.mls_id || '',
-            property_address: listing.property_address,
-            city: listing.city,
-            state: listing.state,
-            zip: listing.zip || '',
-            price: listing.price,
-            bedrooms: listing.bedrooms || 0,
-            bathrooms: listing.bathrooms || 0,
-            sqft: listing.sqft || 0,
-            list_agent_name: listing.list_agent_name || '',
-            list_agent_email: listing.list_agent_email || '',
-            list_agent_phone: listing.list_agent_phone || '',
-            list_date: listing.list_date || new Date().toISOString().split('T')[0],
-            source: 'automated_search',
-            status: 'active',
+          // Check if listing already exists
+          const existing = await base44.entities.ListingImport.filter({
+            mls_id: listing.mls_id || listing.property_address,
           });
 
-          // Also create a ListingOwner record — only if address not already there
-          if (!ownerAddresses.has(normalizedAddress)) {
-            await base44.asServiceRole.entities.ListingOwner.create({
-              owner_name: listing.list_agent_name || 'Unknown Owner',
-              phone: listing.list_agent_phone || '',
-              email: listing.list_agent_email || '',
+          if (!existing.length) {
+            // Create new listing record
+            await base44.entities.ListingImport.create({
+              mls_id: listing.mls_id || '',
               property_address: listing.property_address,
-              property_city: listing.city,
-              property_state: listing.state,
-              listing_price: listing.price,
-              contact_status: 'not_contacted',
-              notes: `Auto-imported from search: ${search.search_name}. MLS: ${listing.mls_id || 'N/A'}. ${listing.sqft || 0} sqft, ${listing.bedrooms || 0}bd/${listing.bathrooms || 0}ba.`,
-              listing_url: listing.property_url || '',
+              city: listing.city,
+              state: listing.state,
+              zip: listing.zip || '',
+              price: listing.price,
+              bedrooms: listing.bedrooms || 0,
+              bathrooms: listing.bathrooms || 0,
+              sqft: listing.sqft || 0,
+              list_agent_name: listing.list_agent_name || '',
+              list_agent_email: listing.list_agent_email || '',
+              list_agent_phone: listing.list_agent_phone || '',
+              list_date: listing.list_date || new Date().toISOString().split('T')[0],
+              source: 'automated_search',
+              status: 'active',
             });
-            ownerAddresses.add(normalizedAddress);
           }
-
-          importAddresses.add(normalizedAddress);
-          newCount++;
         }
 
         // Update search last_run_date
-        await base44.asServiceRole.entities.PropertySearch.update(search.id, {
+        await base44.entities.PropertySearch.update(search.id, {
           last_run_date: new Date().toISOString(),
         });
 
@@ -148,7 +119,7 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
           search_name: search.search_name,
           city: search.city,
           state: search.state,
-          listings_found: newCount,
+          listings_found: listings.length,
           status: 'success',
         });
       } catch (error) {

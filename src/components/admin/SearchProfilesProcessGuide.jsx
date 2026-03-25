@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Users, Send, CheckCircle2, ChevronRight, ExternalLink } from 'lucide-react';
+import { Search, Users, Send, CheckCircle2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 
 const STAGES = [
   {
@@ -11,13 +10,11 @@ const STAGES = [
     description: 'Automated searches run daily based on your criteria',
     icon: Search,
     details: 'Set search profiles for specific cities, price ranges, and property types. The system automatically finds new listings matching your criteria every day.',
-    partner: 'Zillow / Realtor / Redfin',
-    why: 'Identifying new listings daily to find high-intent sellers.',
-    links: [
-      { label: 'Zillow', url: 'https://www.zillow.com' },
-      { label: 'Realtor.com', url: 'https://www.realtor.com' },
-      { label: 'Redfin', url: 'https://www.redfin.com' },
-    ],
+    examples: [
+      'Austin, TX • $300K-$750K • Single Family',
+      'Denver, CO • $400K-$900K • All Types',
+      'Seattle, WA • $500K-$1.2M • Condos',
+    ]
   },
   {
     id: 2,
@@ -25,11 +22,11 @@ const STAGES = [
     description: 'Extract contact details from search results',
     icon: Users,
     details: 'Use data enrichment services to identify property owners and get their contact information (phone, email, address).',
-    partner: 'BatchData',
-    why: 'Skip-tracing the listing address to find the owner\'s phone and email.',
-    links: [
-      { label: 'BatchData.com', url: 'https://www.batchdata.com' },
-    ],
+    examples: [
+      'John Smith • 303-555-0123 • john@example.com',
+      'Jane Doe • 206-555-0456 • jane@example.com',
+      'Contact via listing agent if direct info unavailable',
+    ]
   },
   {
     id: 3,
@@ -37,28 +34,29 @@ const STAGES = [
     description: 'SMS, direct contact, or listing agent outreach',
     icon: Send,
     details: 'Reach out to owners with personalized messages. Try direct contact first, then listing agent if no response.',
-    partner: 'GoHighLevel / Twilio',
-    why: 'Automated SMS and initial "human-touch" text to offer relocation services.',
-    links: [
-      { label: 'GoHighLevel.com', url: 'https://www.gohighlevel.com' },
-    ],
+    examples: [
+      '📱 SMS: "Hi John, interested in your Denver property..."',
+      '☎️ Phone: Direct call to owner',
+      '📧 Email: Listing agent inquiry for owner info',
+    ]
   },
   {
     id: 4,
-    title: 'Outcome & Tracking',
+    title: 'Outcome',
     description: 'Active lead or mark as dead file',
     icon: CheckCircle2,
     details: 'Track responses and categorize: active leads move to relocation clients, non-responders go to dead file for later follow-up.',
-    partner: 'DysonRelo Internal',
-    why: 'Tagging the lead status and moving them into the Gemini Interview pipeline.',
-    links: null, // internal link — handled separately
-  },
+    examples: [
+      '✅ Owner interested → Move to active',
+      '❌ No response after 30 days → Dead file',
+      '→ Owner relocating? → Create relocation client',
+    ]
+  }
 ];
-
-const GOLD = '#D4AF37';
 
 export default function SearchProfilesProcessGuide() {
   const [activeStep, setActiveStep] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const currentStage = STAGES[activeStep];
   const CurrentIcon = currentStage.icon;
@@ -70,21 +68,20 @@ export default function SearchProfilesProcessGuide() {
       className="rounded-2xl border border-slate-200 bg-white overflow-hidden"
     >
       {/* Header */}
-      <div id="202" className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-6" style={{ position: 'relative' }}>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200 p-6">
         <div className="flex items-start gap-3">
           <div className="p-2.5 rounded-lg bg-blue-600 text-white">
             <Search className="w-5 h-5" />
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-lg">HOW IT WORKS — BULK SEARCH WORKFLOW</h3>
-            <p className="text-sm text-slate-600 mt-1">Click any step to see partner details and access links.</p>
+            <p className="text-sm text-slate-600 mt-1">Click any step to see the details. Here's how searches convert to leads.</p>
           </div>
         </div>
-        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#202</div>
       </div>
 
       {/* Progress Steps */}
-      <div className="px-6 py-4 border-b border-slate-100 flex flex-wrap gap-2">
+      <div className="px-6 py-4 border-b border-slate-100 flex gap-2">
         {STAGES.map((stage, idx) => (
           <button
             key={stage.id}
@@ -102,7 +99,7 @@ export default function SearchProfilesProcessGuide() {
 
       {/* Content Area */}
       <div className="grid md:grid-cols-2 gap-8 p-6">
-        {/* Left — Stage Detail */}
+        {/* Stage Detail */}
         <motion.div
           key={activeStep}
           initial={{ opacity: 0, x: -20 }}
@@ -123,59 +120,63 @@ export default function SearchProfilesProcessGuide() {
             <p className="text-sm text-slate-700 leading-relaxed">{currentStage.details}</p>
           </div>
 
-          {/* The Why */}
-          <div className="rounded-lg p-4 border" style={{ background: 'rgba(212,175,55,0.06)', borderColor: 'rgba(212,175,55,0.3)' }}>
-            <p className="text-xs font-bold mb-1" style={{ color: '#8B6914' }}>THE WHY</p>
-            <p className="text-sm text-slate-700 leading-relaxed">{currentStage.why}</p>
+          <div>
+            <p className="text-xs font-semibold text-slate-500 mb-2">EXAMPLES:</p>
+            <ul className="space-y-2">
+              {currentStage.examples.map((example, idx) => (
+                <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
+                  <span className="text-blue-600 font-bold mt-0.5">•</span>
+                  {example}
+                </li>
+              ))}
+            </ul>
           </div>
         </motion.div>
 
-        {/* Right — Partner Access Portal */}
+        {/* Side Panel */}
         <motion.div
-          key={`side-${activeStep}`}
+          key={activeStep}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           className="space-y-4"
         >
-          {/* Partner Badge */}
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <p className="text-xs font-semibold text-blue-900 mb-1">STEP {currentStage.id} PARTNER</p>
-            <p className="font-bold text-blue-900 text-base">{currentStage.partner}</p>
+            <p className="text-xs font-semibold text-blue-900 mb-2">STEP {currentStage.id} IN FOCUS</p>
+            <h5 className="font-bold text-blue-900 text-sm">{currentStage.title}</h5>
+            <p className="text-xs text-blue-800 mt-2 leading-relaxed">{currentStage.description}</p>
           </div>
 
-          {/* Access Links */}
-          <div id="203" className="rounded-xl border border-slate-200 overflow-hidden" style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: '#000', color: '#FFD700', padding: '4px 8px', fontSize: '14px', fontWeight: 'bold', zIndex: 999999, borderRadius: '4px', border: '1px solid #FFD700' }}>#203</div>
-            <div className="px-4 py-2.5 bg-slate-800">
-              <p className="text-xs font-bold text-white tracking-wider">PARTNER ACCESS PORTAL</p>
-            </div>
-            <div className="p-4 space-y-2">
-              {currentStage.links ? (
-                currentStage.links.map((link) => (
-                  <a
-                    key={link.url}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
-                    style={{ background: GOLD, color: '#000' }}
-                  >
-                    <span>{link.label}</span>
-                    <ExternalLink className="w-4 h-4 shrink-0" />
-                  </a>
-                ))
-              ) : (
-                /* Card 4 — internal link */
-                <Link
-                  to="/AdminClients"
-                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
-                  style={{ background: GOLD, color: '#000' }}
-                >
-                  <span>Open Clients Tab</span>
-                  <ChevronRight className="w-4 h-4 shrink-0" />
-                </Link>
-              )}
-            </div>
+          {/* Quick Tips */}
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-slate-500">KEY ACTIONS:</p>
+            {activeStep === 0 && (
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li>✓ Define search criteria (city, price, property type)</li>
+                <li>✓ Set active to run daily automated searches</li>
+                <li>✓ Monitor for new listings each day</li>
+              </ul>
+            )}
+            {activeStep === 1 && (
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li>✓ Use data enrichment API to get owner info</li>
+                <li>✓ Verify contact details before outreach</li>
+                <li>✓ Note listing agent as backup contact</li>
+              </ul>
+            )}
+            {activeStep === 2 && (
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li>✓ Personalize message with property details</li>
+                <li>✓ Try SMS first for direct reach</li>
+                <li>✓ Follow up with agent if no response</li>
+              </ul>
+            )}
+            {activeStep === 3 && (
+              <ul className="space-y-2 text-xs text-slate-600">
+                <li>✓ Track owner responses and interest</li>
+                <li>✓ Convert interested owners to relocation clients</li>
+                <li>✓ Archive non-responders for later outreach</li>
+              </ul>
+            )}
           </div>
 
           {/* Next Step */}

@@ -10,7 +10,6 @@ import OutreachWorkflow from '../components/admin/OutreachWorkflow';
 import OutreachProcessGuide from '../components/admin/OutreachProcessGuide';
 import PropertyDetailsPanel from '../components/admin/PropertyDetailsPanel';
 import OutreachTaskList from '../components/admin/OutreachTaskList';
-import OutreachSMSScript from '../components/admin/OutreachSMSScript';
 
 const STAGE_COLORS = {
   outreach: 'bg-blue-100 text-blue-800',
@@ -130,11 +129,7 @@ export default function AdminOutreachCampaigns() {
             <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mx-auto" />
           </div>
         ) : filteredCampaigns.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">
-            <Send className="w-12 h-12 mx-auto mb-4 opacity-30" />
-            <p className="font-semibold text-lg">No outreach campaigns yet</p>
-            <p className="text-sm mt-1">Go to <strong>Listing Owners</strong>, select owners, then click "Step 3: Send to Outreach".</p>
-          </div>
+          <OutreachProcessGuide />
         ) : (
           <div className="grid gap-4">
             {filteredCampaigns.map((campaign, idx) => (
@@ -234,9 +229,6 @@ export default function AdminOutreachCampaigns() {
                 <p className="text-xs font-semibold text-slate-500 mb-1">CONTACT</p>
                 <p className="text-sm text-slate-900 font-mono">{selectedCampaign.owner_phone}</p>
               </div>
-
-              {/* SMS Script with app link */}
-              <OutreachSMSScript campaign={selectedCampaign} />
 
               <PropertyDetailsPanel campaign={selectedCampaign} />
 
