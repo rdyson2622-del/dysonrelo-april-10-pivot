@@ -330,9 +330,9 @@ export default function Home() {
           <h2 className="display-heading gold-text-gradient mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', lineHeight: 1.2, letterSpacing: '0.22em' }}>
             Experienced experts, powered by AI.
           </h2>
-          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: '#fff' }}>
+          <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto" style={{ color: '#fff' }}>
             AI handles data aggregation, comp analysis, document generation, and 24/7 availability. Select Real estate experts position you to make the judgment calls, approve major decisions, and guide you through your entire relocation.{' '}
-            <span style={{ color: GOLD, fontWeight: 600 }}>And it costs you absolutely nothing since we are funded by the participating Brokers and Agents.</span>
+            <span style={{ color: GOLD, fontWeight: 600 }}>And it costs you absolutely nothing since we are funded by the selected Brokers and&nbsp;Agents.</span>
           </p>
         </div>
       </section>
