@@ -246,7 +246,7 @@ export default function Home() {
           <div className="rounded-2xl p-6 mb-6 text-left" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
             <p className="text-sm leading-relaxed mb-3" style={{ color: '#e5e5e5' }}>
-              Once you've confirmed your contact information with us, we set up a <strong style={{ color: '#fff' }}>private three-way live session</strong> — you, Google Gemini (one of the most advanced AI systems in the world), and Bob Dyson directly. This is not a chatbot form. It's a real conversation where we build your complete relocation profile together, in real time. Bob brings 40+ years of real estate leadership to every conversation.
+              Once you've confirmed your contact information with us, we set up a private three-way live session — you, Google Gemini (one of the most advanced AI systems in the world), and Senior Staff directly. This is not a chatbot form. It's a real conversation where we build your complete relocation profile together, in real time. Dyson Leadership brings 54+ years of real estate options and guidance to every conversation.
             </p>
             <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
                This session is <strong style={{ color: '#fff' }}>by invitation only</strong> — we're selective about who we work with to ensure everyone gets the intensive, hands-on attention they deserve. We don't have unlimited capacity because we refuse to compromise on quality. Once we have your info and can confirm we're the right fit for your move, Charlie schedules it. No cost to you, ever.
