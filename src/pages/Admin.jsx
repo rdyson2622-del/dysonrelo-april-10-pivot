@@ -11,14 +11,10 @@ export default function Admin() {
   // THE ORDER TRIGGER
   const triggerLASearch = () => {
     window.alert("COMMAND RECEIVED: Pulling 10 Just-Listed LA Properties >$2M...");
-  };
-
-  const { data: owners = [] } = useQuery({
-    queryKey: ['listing-owners'],
-    queryFn: () => base44.entities.ListingOwner.list('-created_date', 100),
-    initialData: [],
-  });
-
+const [confirmDelete, setConfirmDelete] = useState(null);
+const [editOwner, setEditOwner] = useState(null);
+const [editForm, setEditForm] = useState({});
+const [saving, setSaving] = useState(false);
   return (
     <div style={{ padding: '40px', background: '#A9A9A9', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       
