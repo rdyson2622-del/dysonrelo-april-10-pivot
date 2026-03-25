@@ -56,10 +56,7 @@ export default function Admin() {
     queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
   };
 
-  const handleOrderListings = () => {
-    setOrderSent(true);
-    setTimeout(() => setOrderSent(false), 4000);
-  };
+
 
   const contacted = owners.filter((o) => o.contact_status !== 'not_contacted').length;
   const converted = owners.filter((o) => o.contact_status === 'converted').length;
