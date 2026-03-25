@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '' });
   const [submitting, setSubmitting] = useState(false);
 
