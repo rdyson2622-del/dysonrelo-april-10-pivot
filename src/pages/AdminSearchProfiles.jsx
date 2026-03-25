@@ -221,7 +221,7 @@ export default function AdminSearchProfiles() {
       {/* Form */}
       {isFormOpen && (
         <div className="rounded-xl p-6 bg-white border border-slate-200" style={{ color: '#000' }}>
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate style={{ color: '#000' }}>
             {/* Search Name */}
             <div>
               <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>Search Name</label>
