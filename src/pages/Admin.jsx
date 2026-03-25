@@ -81,14 +81,14 @@ export default function Admin() {
           <h2 className="text-lg font-bold" style={{ color: '#D4AF37' }}>Surgical Lead Generator</h2>
           <p className="text-sm mt-1" style={{ color: '#ccc' }}>Request a new batch of listings to be pulled into the system.</p>
         </div>
-        <button
-          onClick={handleOrderListings}
+        <Link
+          to="/AdminSearchProfiles"
           className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-base transition-all"
-          style={{ background: orderSent ? '#2d6a2d' : '#D4AF37', color: orderSent ? '#fff' : '#000', minWidth: '220px', justifyContent: 'center' }}
+          style={{ background: '#D4AF37', color: '#000', minWidth: '220px', justifyContent: 'center' }}
         >
           <ShoppingCart size={20} />
-          {orderSent ? '✓ Order Received!' : 'ORDER NEW LISTINGS'}
-        </button>
+          ORDER NEW LISTINGS
+        </Link>
       </motion.div>
 
       {/* Stats */}
