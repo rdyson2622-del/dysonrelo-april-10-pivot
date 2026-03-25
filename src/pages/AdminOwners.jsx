@@ -8,6 +8,12 @@ import OwnersList from '@/components/admin/OwnersList';
 import OwnerForm from '@/components/admin/OwnerForm';
 import OwnerImportCSV from '@/components/admin/OwnerImportCSV';
 
+// Always fetch from production via backend function (bypasses test/dev environment)
+const fetchOwners = async () => {
+  const res = await base44.functions.invoke('getListingOwners', {});
+  return res.data?.owners || [];
+};
+
 export default function AdminOwners() {
   const [showForm, setShowForm] = useState(false);
   const [showImport, setShowImport] = useState(false);
