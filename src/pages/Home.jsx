@@ -73,7 +73,7 @@ export default function Home() {
               <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(1.8rem, 4.5vw, 4rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Real Estate</span>
             </h1>
             <p className="text-base leading-relaxed mb-2" style={{ color: '#fff', fontWeight: 400 }}>
-              Meet Charlie — your AI Relocation Manager backed by Bob Dyson and 40+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home — we don't sell. We manage your entire relocation.
+              Meet Charlie — your AI Relocation Manager backed by The Dyson & Dyson Companies and 54+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home — we don't sell. We manage your entire relocation.
             </p>
             <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Experienced relocation experts powered by AI. We handle data work so you get real insight. You get Charlie for 24/7 answers AND a real person who knows your market inside and out. We work with a limited number of clients at any given time because relocation management demands intensive focus — on your specific market, your lifestyle, your timeline. We're not racing toward a sale. We're focused on getting you home.
