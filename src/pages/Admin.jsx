@@ -22,12 +22,6 @@ export default function Admin() {
     setConfirmDelete(null);
     queryClient.invalidateQueries({ queryKey: ['listing-owners'] });
   };
-
-  const openEdit = (owner) => {
-    setEditOwner(owner);
-    setEditForm({ owner_name: owner.owner_name || '', phone: owner.phone || '', email: owner.email || '', property_address: owner.property_address || '', moving_to: owner.moving_to || '' });
-  };
-
   const handleSaveEdit = async () => {
     setSaving(true);
     await base44.entities.ListingOwner.update(editOwner.id, editForm);
