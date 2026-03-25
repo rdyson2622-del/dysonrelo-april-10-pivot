@@ -39,7 +39,7 @@ const Home = () => {
             Dyson & Dyson Corporate Relocation handles the entire move — destination research, agent matching, schools, utilities, timing. At no extra cost to you.
           </p>
           <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button style={{ padding: '16px 40px', background: '#D4AF37', color: '#000', fontWeight: '700', borderRadius: '8px', border: 'none', fontSize: '16px', cursor: 'pointer', transition: 'all 0.3s' }} onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}>
+            <button onClick={() => navigate('/Chat')} style={{ padding: '16px 40px', background: '#D4AF37', color: '#000', fontWeight: '700', borderRadius: '8px', border: 'none', fontSize: '16px', cursor: 'pointer', transition: 'all 0.3s' }} onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'} onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}>
               Schedule a Consultation
             </button>
           </div>
