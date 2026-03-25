@@ -120,7 +120,7 @@ export default function OutreachSMSScript({ campaign }) {
 
         {/* Copy app link */}
         <button
-          onClick={() => handleCopy(`${APP_URL}/Home`, 'link')}
+          onClick={() => handleCopy(HOME_PAGE, 'link')}
           className="flex items-center justify-center gap-2 w-full py-2 rounded-lg font-semibold text-xs border border-slate-300 bg-white hover:bg-slate-50 transition-all text-slate-700"
         >
           {copied === 'link' ? (
