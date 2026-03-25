@@ -299,13 +299,13 @@ export default function Home() {
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
             <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
               Bob Dyson:<br />
-              <span style={{ color: GOLD }}>40+ Years, 1000+ Properties, 1600+ Office Network</span>
+              <span style={{ color: GOLD }}>54+ Years, 1000+ Properties, 1600+ Office Network</span>
             </h2>
           </div>
           
           <div className="rounded-2xl p-8 mb-8" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.25)' }}>
             <p className="text-sm leading-relaxed mb-6" style={{ color: '#fff' }}>
-              Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma — at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America from a 500-office network to 1,600+ offices with 45,000 agents across 42 states. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services — combining 40+ years of hands-on real estate expertise with cutting-edge AI to serve families nationwide.
+              Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma — at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America from a 500-office network to 1,600+ offices with 45,000 agents across 42 states. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services — combining 54+ years of hands-on real estate expertise along with cutting-edge AI to serve families nationwide.
             </p>
             <p className="text-sm italic leading-relaxed" style={{ color: '#D4AF37', borderLeft: '3px solid #D4AF37', paddingLeft: '1rem' }}>
               "{CORPORATE_PROFILE.bobsDedication}"
