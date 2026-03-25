@@ -93,13 +93,13 @@ Return as JSON array only, no other text.`;
         // Store or update listings in database
         for (const listing of listings) {
           // Check if listing already exists
-          const existing = await base44.entities.ListingImport.filter({
+          const existing = await base44.asServiceRole.entities.ListingImport.filter({
             mls_id: listing.mls_id || listing.property_address,
           });
 
           if (!existing.length) {
             // Create new listing record
-            await base44.entities.ListingImport.create({
+            await base44.asServiceRole.entities.ListingImport.create({
               mls_id: listing.mls_id || '',
               property_address: listing.property_address,
               city: listing.city,
