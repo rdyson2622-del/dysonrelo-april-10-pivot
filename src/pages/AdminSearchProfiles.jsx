@@ -222,7 +222,7 @@ export default function AdminSearchProfiles() {
           animate={{ opacity: 1, y: 0 }}
           className="rounded-xl p-6 bg-white border border-slate-200"
         >
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* Search Name */}
             <div>
               <label className="block text-sm font-semibold mb-1" style={{ color: '#000' }}>Search Name</label>
