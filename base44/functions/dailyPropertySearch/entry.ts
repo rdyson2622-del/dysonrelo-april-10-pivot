@@ -148,7 +148,7 @@ IMPORTANT: Return REAL listings with accurate addresses, not made up ones. Look 
           search_name: search.search_name,
           city: search.city,
           state: search.state,
-          listings_found: listings.length,
+          listings_found: newCount,
           status: 'success',
         });
       } catch (error) {
