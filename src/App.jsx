@@ -127,6 +127,7 @@ import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
 import SkipTraceResults from './pages/SkipTraceResults';
 import AgentExplainer from './pages/AgentExplainer';
+import ReceivingAgentExplainer from './pages/ReceivingAgentExplainer';
 import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import Home from './pages/Home';
