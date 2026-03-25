@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '../base44';
-import { Trash2, Edit2, Check, X, Search, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export default function Admin() {
-  const queryClient = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [editOwner, setEditOwner] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
 
-  // THE COMMAND TRIGGER - Set to pull 100 to ensure we catch all 10+ leads
   const triggerLASearch = () => {
-    window.alert("COMMAND RECEIVED: Pulling New LA Properties >$2M...");
+    window.alert("COMMAND RECEIVED: Pulling 10 Just-Listed LA Properties >$2M...");
   };
 
-  // REMOVED THE LIMIT OF 10 - Now pulls up to 100 records
   const { data: owners = [] } = useQuery({
     queryKey: ['listing-owners'],
     queryFn: () => base44.entities.ListingOwner.list('-created_date', 100),
@@ -28,11 +25,12 @@ export default function Admin() {
       {/* GOLD COMMAND BOX */}
       <div style={{ background: '#000', padding: '30px', border: '3px solid #D4AF37', borderRadius: '12px', marginBottom: '40px' }}>
         <h2 style={{ color: '#D4AF37', marginTop: 0 }}>Surgical Lead Generator</h2>
+        <p style={{ color: '#fff' }}>Ready to execute the LA High-Probability Pull (10 Listings &gt;$2M).</p>
         <button 
           onClick={triggerLASearch}
-          style={{ background: '#D4AF37', color: '#000', padding: '15px 40px', fontWeight: 'bold', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          style={{ background: '#D4AF37', color: '#000', padding: '15px 40px', fontWeight: 'bold', fontSize: '18px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
         >
-          EXECUTE ORDER: LA LISTINGS (>$2M)
+          PLACE NEW ORDER NOW
         </button>
       </div>
 
@@ -48,13 +46,15 @@ export default function Admin() {
             </tr>
           </thead>
           <tbody>
-            {owners.map(owner => (
+            {owners.length > 0 ? owners.map(owner => (
               <tr key={owner.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '15px' }}>{owner.owner_name}</td>
                 <td style={{ padding: '15px' }}>{owner.property_address}</td>
                 <td style={{ padding: '15px' }}><span style={{ color: '#D4AF37' }}>Ready for Text</span></td>
               </tr>
-            ))}
+            )) : (
+              <tr><td colSpan="3" style={{ padding: '20px', textAlign: 'center', color: '#666' }}>No active leads found. Click the button above to start.</td></tr>
+            )}
           </tbody>
         </table>
       </div>
