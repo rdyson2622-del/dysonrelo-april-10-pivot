@@ -149,7 +149,11 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      navigateToLogin();
+      // Only redirect if no token is present in URL (don't redirect in preview mode)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.get('access_token')) {
+        navigateToLogin();
+      }
       return null;
     }
   }
