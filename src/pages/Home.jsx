@@ -312,8 +312,8 @@ export default function Home() {
             </p>
           </div>
 
-          <p className="text-base text-center mb-8" style={{ color: '#fff' }}>
-            <strong style={{ color: GOLD }}>At Dyson & Dyson:</strong> We don't sell real estate. We manage the entire move.
+          <p className="text-center mb-8" style={{ color: '#fff', fontSize: '1.5rem' }}>
+            <strong style={{ color: GOLD }}>At The Dyson & Dyson Companies:</strong> We don't sell real estate. We manage the entire move.
           </p>
         </div>
       </section>
