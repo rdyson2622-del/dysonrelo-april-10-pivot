@@ -3,8 +3,8 @@ import { Copy, Check, MessageSquare, ExternalLink, Smartphone } from 'lucide-rea
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-// The app's public URL — update this to match your published domain
-const APP_URL = window.location.origin;
+// The app's public URL for consumer landing page
+const HOME_PAGE = window.location.origin + '/Home';
 
 function buildScript(ownerName, propertyAddress) {
   const firstName = ownerName?.split(' ')[0] || 'there';
