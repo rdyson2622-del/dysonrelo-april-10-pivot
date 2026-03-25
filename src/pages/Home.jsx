@@ -1,96 +1,78 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { MapPin, Users, Zap, BookOpen, ArrowRight } from 'lucide-react';
-import ChatInterface from '@/components/charlie/ChatInterface';
+import React from 'react';
+import { MessageSquare, ShieldCheck, Zap, Star } from 'lucide-react';
 
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-const GOLD = '#D4AF37';
-
-export default function HomePage() {
-  const [chatExpanded, setChatExpanded] = useState(false);
-
-  const services = [
-    { icon: '🏙️', title: 'City & Neighborhood Research', desc: 'Explore lifestyle fit, commute, culture, and community in your destination.' },
-    { icon: '🏠', title: 'Home Search & Agent Match', desc: 'Find the perfect property and connect with a vetted top-performing local agent.' },
-    { icon: '📦', title: 'Moving Logistics', desc: 'Packing timelines, movers coordination, checklists — all handled.' },
-    { icon: '⚡', title: 'Utilities & Services Setup', desc: 'Internet, electric, gas, water — all set up before you arrive.' },
-    { icon: '🎓', title: 'School Research & Enrollment', desc: 'District research, school tours, enrollment paperwork guidance.' },
-  ];
-
+const Home = () => {
   return (
-    <div className="min-h-screen" style={{ background: '#A9A9A9' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
-        <Link to="/Explainers">
-          <button className="px-6 py-2 rounded-full font-semibold text-sm transition-all" style={{ background: GOLD, color: '#000' }}>
-            Learn Our Story
+    <div style={{ position: 'relative', background: '#fff', fontFamily: 'sans-serif' }}>
+      
+      {/* SECTION #101 - HERO SECTION */}
+      <section id="101" style={{ position: 'relative', minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', textAlign: 'center', padding: '20px' }}>
+        <div>
+          <h1 style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '20px' }}>Your High-Probability Relocation Strategy</h1>
+          <p style={{ fontSize: '20px', maxWidth: '800px', margin: '0 auto 30px' }}>Surgical data and expert vetting for committed home buyers.</p>
+          
+          {/* CHARLIE AUDIO UNLOCK PROTOCOL */}
+          <div style={{ marginBottom: '20px' }}>
+            <button 
+              onClick={() => {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+                alert("Dyson Voice Protocol Enabled. Charlie is standing by.");
+              }}
+              style={{ padding: '10px 20px', background: 'transparent', color: '#D4AF37', border: '2px solid #D4AF37', borderRadius: '30px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer' }}
+            >
+              ENABLE CHARLIE VOICE CONCIERGE
+            </button>
+          </div>
+
+          <button 
+            onClick={() => window.location.href='/CityGuide'}
+            style={{ padding: '15px 40px', background: '#D4AF37', color: '#000', fontWeight: 'bold', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
+          >
+            START YOUR SEARCH
           </button>
-        </Link>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        {/* Two Column Layout */}
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* Left Column - Services */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-8 tracking-widest"
-              style={{ background: GOLD, color: '#000' }}>
-              ✨ POWERED BY AI
-            </div>
-
-            <h1 className="display-heading mb-6" style={{ lineHeight: 1.15, letterSpacing: '0.22em' }}>
-              <span style={{ display: 'block', color: '#D4AF37', fontSize: 'clamp(1.4rem, 5vw, 2.8rem)' }}>CONCIERGE</span>
-              <span style={{ display: 'block', color: '#000', fontSize: 'clamp(1.2rem, 4vw, 2.4rem)' }}>REAL ESTATE</span>
-            </h1>
-
-            <p className="text-lg leading-relaxed mb-4" style={{ color: '#000' }}>
-              Meet Charlie — AI that handles every aspect of your relocation.
-            </p>
-            <p className="font-semibold mb-8" style={{ color: '#000' }}>
-              ✦ Completely free to you.
-            </p>
-
-            {/* Services Grid */}
-            <div className="grid gap-4">
-              {services.map((service, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="flex gap-3 p-3 rounded-lg"
-                  style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(212,175,55,0.2)' }}
-                >
-                  <span className="text-2xl flex-shrink-0">{service.icon}</span>
-                  <div>
-                    <h4 className="font-bold text-sm" style={{ color: '#000' }}>{service.title}</h4>
-                    <p className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.7)' }}>{service.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right Column - Charlie Chat */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            <ChatInterface
-              expanded={chatExpanded}
-              onToggleExpand={() => setChatExpanded(!chatExpanded)}
-              initialMessage=""
-            />
-          </motion.div>
         </div>
-      </main>
+      </section>
+
+      {/* SECTION #102 - CHARLIE ORCHESTRATOR */}
+      <section id="102" style={{ position: 'relative', padding: '80px 20px', background: '#f9f9f9', textAlign: 'center' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto', background: '#fff', padding: '40px', borderRadius: '15px', border: '1px solid #D4AF37', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+          <MessageSquare size={48} color="#D4AF37" style={{ marginBottom: '20px' }} />
+          <h2 style={{ fontSize: '28px', fontWeight: 'bold' }}>Charlie: Your Relocation Orchestrator</h2>
+          <p style={{ color: '#444', fontSize: '18px', marginTop: '15px', lineHeight: '1.6' }}>
+            Charlie isn't a chatbot. He is the interface for the Dyson Protocol, ensuring every school district, hospital network, and neighborhood appreciation trend is vetted before you see it.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION #105 - BOB DYSON BIO (WITH LOGO PLUG) */}
+      <section id="105" style={{ position: 'relative', padding: '100px 20px', background: '#fff' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '60px', maxWidth: '1100px', margin: '0 auto', alignItems: 'center' }}>
+          <div style={{ flex: '1 1 400px', height: '500px', background: '#000', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #D4AF37' }}>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+          </div>
+          <div style={{ flex: '2 1 500px' }}>
+            <h2 style={{ fontSize: '40px', fontWeight: 'bold', color: '#000' }}>Bob Dyson</h2>
+            <p style={{ fontSize: '20px', color: '#333', marginTop: '25px', lineHeight: '1.8' }}>
+              With over 30 years in luxury real estate, Bob Dyson created this platform to eliminate the "Incompetence Gap" in relocation. We provide surgical data for those who refuse to settle for generic search results.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION #106 - AGENT VETTING PROTOCOL */}
+      <section id="106" style={{ position: 'relative', padding: '100px 20px', background: '#000', color: '#fff', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '36px', fontWeight: 'bold', color: '#D4AF37', marginBottom: '30px' }}>READY TO VET YOUR AREA?</h2>
+        <p style={{ fontSize: '20px', color: '#ccc', maxWidth: '800px', margin: '0 auto 40px' }}>
+          Our partner network consists only of agents who have passed the Dyson Relo Vetting Standard. Surgical precision, local mastery, and client advocacy.
+        </p>
+        <button style={{ padding: '20px 50px', background: '#D4AF37', color: '#000', fontWeight: 'bold', borderRadius: '8px', border: 'none', fontSize: '18px', cursor: 'pointer' }}>
+          BROWSE PARTNER AGENTS
+        </button>
+      </section>
+
     </div>
   );
-}
+};
+
+export default Home;

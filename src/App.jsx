@@ -102,7 +102,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
-
+import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Chat from './pages/Chat';
 import CityGuide from './pages/CityGuide.jsx';
@@ -127,10 +127,9 @@ import GeminiSession from './pages/GeminiSession';
 import BusinessPlan from './pages/BusinessPlan';
 import SkipTraceResults from './pages/SkipTraceResults';
 import AgentExplainer from './pages/AgentExplainer';
-import ReceivingAgentExplainer from './pages/ReceivingAgentExplainer';
 import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
-import Home from './pages/Home';
+
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import { LayoutProvider } from './lib/LayoutContext';
@@ -162,11 +161,10 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-
+      <Route path="/" element={<Navigate to="/Dashboard" replace />} />
+      <Route path="/Home" element={<Home />} />
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
-      <Route path="/ReceivingAgentExplainer" element={<ReceivingAgentExplainer />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
 
       
