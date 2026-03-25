@@ -1,6 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MessageSquare, ShieldCheck, Zap, Star, ArrowLeft } from 'lucide-react';
+import { MessageSquare, ShieldCheck, Zap, Star } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
