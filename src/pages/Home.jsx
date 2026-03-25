@@ -425,7 +425,7 @@ export default function Home() {
               <p className="leading-relaxed mb-7" style={{ color: '#e5e5e5' }}>
                 You choose the one who feels right. The moment you do, <strong style={{ color: '#fff' }}>we have boots on the ground</strong> — a dedicated expert who knows your market, knows your needs, and is accountable to us. No "I love me" agents chasing their next deal. No cold handoffs. Just a professional who's been briefed, vetted, and ready to go to work for you.
               </p>
-              <ul className="space-y-2.5 mb-9">
+              <ul className="space-y-2.5 mb-9 max-w-2xl">
                 {[
                   'The Dyson Relo Team profiles your ideal agent before any names are shared',
                   'Top 20 destination agents evaluated — production, DRE rating, personality',
