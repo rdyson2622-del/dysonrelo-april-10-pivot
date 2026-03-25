@@ -317,6 +317,7 @@ export default function AdminSearchProfiles() {
                   onChange={(e) => setFormData({ ...formData, min_price: e.target.value })}
                   placeholder="300000"
                   required
+                  style={{ color: '#000', background: '#fff' }}
                 />
               </div>
               <div>
