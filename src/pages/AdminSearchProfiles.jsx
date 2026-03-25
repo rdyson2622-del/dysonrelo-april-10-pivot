@@ -220,11 +220,7 @@ export default function AdminSearchProfiles() {
 
       {/* Form */}
       {isFormOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-6 bg-white border border-slate-200"
-        >
+        <div className="rounded-xl p-6 bg-white border border-slate-200">
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* Search Name */}
             <div>
