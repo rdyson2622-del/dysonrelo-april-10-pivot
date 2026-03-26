@@ -1,7 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, Mail, MessageSquare } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Phone, Mail, MessageSquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
@@ -20,7 +18,6 @@ const statusColors = {
 };
 
 export default function ClientHeader({ client }) {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const handleStatusChange = async (newStatus) => {
@@ -31,9 +28,6 @@ export default function ClientHeader({ client }) {
   return (
     <div className="rounded-2xl border p-5 mb-6" style={{ background: 'rgba(255,255,255,0.92)', borderColor: 'rgba(0,0,0,0.1)' }}>
       <div className="flex items-center gap-3 mb-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/AdminClients')} style={{ color: '#000' }}>
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-bold" style={{ color: '#000' }}>{client.full_name}</h1>
           <p className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>

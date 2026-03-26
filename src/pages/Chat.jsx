@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
 import ChatInterface from '../components/charlie/ChatInterface';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
@@ -13,11 +12,6 @@ export default function Chat() {
     <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <Link to="/Dashboard">
-          <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
         <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
           <h1 className="text-2xl font-black" style={{ color: '#ffffff' }}>Charlie — AI Concierge</h1>

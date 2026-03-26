@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Phone, Clock, FileText } from 'lucide-react';
+import { Phone, Clock, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PropertyHistory from '../components/admin/PropertyHistory';
 import ContactNotesSection from '../components/admin/ContactNotesSection';
@@ -68,15 +68,6 @@ export default function AdminOwnerDetail() {
 
   return (
     <div className="min-h-screen p-8" style={{ background: '#A9A9A9' }}>
-      <Button
-        variant="ghost"
-        onClick={() => navigate('/AdminOwners')}
-        className="mb-6"
-        style={{ color: '#000' }}
-      >
-        <ArrowLeft className="w-4 h-4 mr-2" /> Back to Owners
-      </Button>
-
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         {/* Header */}
         <div className="rounded-2xl border p-8 mb-6" style={{ background: 'rgba(255,255,255,0.9)', borderColor: 'rgba(0,0,0,0.1)' }}>
