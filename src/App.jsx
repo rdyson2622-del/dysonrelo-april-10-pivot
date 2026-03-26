@@ -10,6 +10,7 @@ import PageNumberBadge from './components/PageNumberBadge';
 
 // Layout Imports
 import AdminLayout from './components/layout/AdminLayout';
+import AppLayout from './components/layout/AppLayout';
 
 // Page Imports
 import Home from './pages/Home';
@@ -55,12 +56,17 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/relocation-intake" element={<RelocationIntake />} />
-      <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
-      <Route path="/gemini" element={<GeminiSession />} />
+      {/* Consumer Routes with Sidebar Layout */}
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/relocation-intake" element={<RelocationIntake />} />
+        <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
+        <Route path="/gemini" element={<GeminiSession />} />
+        <Route path="/explainers" element={<Explainers />} />
+        <Route path="/chat" element={<Chat />} />
+      </Route>
       
       {/* Admin Routes with Sidebar Layout */}
       <Route element={<AdminLayout />}>
@@ -79,8 +85,6 @@ const AuthenticatedApp = () => {
         <Route path="/business-plan" element={<BusinessPlan />} />
       </Route>
       
-      <Route path="/explainers" element={<Explainers />} />
-      <Route path="/chat" element={<Chat />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
