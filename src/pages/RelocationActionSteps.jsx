@@ -71,12 +71,19 @@ export default function RelocationActionSteps() {
         if (user?.email) {
           const clients = await base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1);
           if (clients.length > 0) {
-            setClientId(clients[0].id);
-            // Load any existing MovingPlan data
-            const plans = await base44.entities.MovingPlan.filter({ client_id: clients[0].id });
-            if (plans.length > 0) {
-              // Pre-populate with existing data structure if available
-            }
+            const client = clients[0];
+            setClientId(client.id);
+            // Pre-populate Phase 1 with existing intake data
+            setAnswers({
+              1: {
+                'Full Name': client.full_name || '',
+                'Email': client.email || '',
+                'Destination City': client.destination_city || '',
+                'Budget': client.budget || '',
+                'Timeline': client.move_date || '',
+                'Priorities': (client.priorities || []).join(', '),
+              }
+            });
           }
         }
       } catch (err) {
