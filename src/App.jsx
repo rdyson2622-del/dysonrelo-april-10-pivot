@@ -132,6 +132,7 @@ import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import RelocationIntake from './pages/RelocationIntake';
 import RelocationRoadmap from './components/intake/RelocationRoadmap';
 import PropertyComparison from './pages/PropertyComparison';
+import RelocationActionSteps from './pages/RelocationActionSteps';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -173,6 +174,7 @@ const AuthenticatedApp = () => {
       {/* App routes with floating Charlie */}
       <Route element={<AppLayout />}>
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/RelocationActionSteps" element={<RelocationActionSteps />} />
         <Route path="/Chat" element={<Chat />} />
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/Search" element={<Search />} />

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, ChevronDown, ChevronUp,
   UserCheck, MapPin, Home, Search, ClipboardCheck,
-  FileText, Key, Truck, Sparkles
+  FileText, Key, Truck, Sparkles, ArrowLeft
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -129,7 +129,15 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Header */}
+      {/* Header with Back Button */}
+      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <ArrowLeft className="w-4 h-4" /> Back
+        </button>
+        <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
+        <div className="w-20" />
+      </nav>
+
       <div className="text-center px-6 pt-16 pb-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
