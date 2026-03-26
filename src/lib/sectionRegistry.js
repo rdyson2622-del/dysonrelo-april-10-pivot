@@ -2,9 +2,8 @@
 // Format: PAGE_NUMBER.SECTION_LETTER (e.g., 1.A = Home Hero, 1.B = Home Services)
 
 export const PAGE_SECTIONS = {
-  // PAGE 1: Home
-  '/Home': {
-    '1.A': { id: 'hero', name: 'Hero Section', description: 'Main landing with logo and Charlie card' },
+5: { name: 'Property Search', path: '/Search', section: 'Client' },
+  6: { name: 'Gemini Session', path: '/GeminiSession', section: 'Client' },    '1.A': { id: 'hero', name: 'Hero Section', description: 'Main landing with logo and Charlie card' },
     '1.B': { id: 'promise', name: 'Dyson Promise', description: 'We move with you header section' },
     '1.C': { id: 'services', name: 'Services Grid', description: '8 service cards (AI Concierge, Agent Selection, etc.)' },
     '1.D': { id: 'gemini-cta', name: 'Gemini Session CTA', description: 'Invitation-only session callout' },
