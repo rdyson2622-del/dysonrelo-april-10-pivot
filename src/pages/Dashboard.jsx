@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Home, ArrowRight, MessageCircle, CheckCircle2, AlertCircle, LayoutDashboard } from 'lucide-react';
+import { MapPin, Users, Home, ArrowRight, MessageCircle, CheckCircle2, AlertCircle, LayoutDashboard, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
@@ -222,6 +222,11 @@ export default function Dashboard() {
             <Link to="/Dashboard" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #D4AF37' }}>
               <CheckCircle2 className="w-4 h-4" style={{ color: GOLD }} />
               <span className="text-sm font-semibold" style={{ color: '#000' }}>My Tasks</span>
+            </Link>
+
+            <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-6 py-3 rounded-full transition-all hover:shadow-lg" style={{ background: GOLD, border: '1px solid #D4AF37' }}>
+              <Map className="w-4 h-4" style={{ color: '#000' }} />
+              <span className="text-sm font-semibold" style={{ color: '#000' }}>My Roadmap</span>
             </Link>
           </div>
         </motion.div>
