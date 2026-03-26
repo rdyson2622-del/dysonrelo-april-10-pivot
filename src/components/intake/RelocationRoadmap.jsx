@@ -26,20 +26,6 @@ const PHASES = [
   },
   {
     number: 2,
-    icon: MapPin,
-    title: 'Community Selection',
-    status: 'upcoming',
-    tagline: 'Finding your ideal neighborhoods.',
-    steps: [
-      'AI-driven neighborhood research',
-      'School district deep-dives',
-      'Commute & lifestyle analysis',
-      'Shortlist of 3–5 communities presented',
-    ],
-    dyson_role: 'Charlie and our team research your destination using your priorities — schools, commute, safety, lifestyle.',
-  },
-  {
-    number: 3,
     icon: UserCheck,
     title: 'Agent Match',
     status: 'upcoming',
@@ -51,6 +37,20 @@ const PHASES = [
       '3–5 finalists presented — you choose',
     ],
     dyson_role: 'Bob\'s team personally vets every candidate. No cold handoffs. No "I love me" agents.',
+  },
+  {
+    number: 3,
+    icon: MapPin,
+    title: 'Community Selection',
+    status: 'upcoming',
+    tagline: 'Finding your ideal neighborhoods.',
+    steps: [
+      'AI-driven neighborhood research',
+      'School district deep-dives',
+      'Commute & lifestyle analysis',
+      'Shortlist of 3–5 communities presented',
+    ],
+    dyson_role: 'Charlie and our team research your destination using your priorities — schools, commute, safety, lifestyle.',
   },
   {
     number: 4,
