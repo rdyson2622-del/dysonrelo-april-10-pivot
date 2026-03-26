@@ -129,8 +129,8 @@ export default function RelocationActionSteps() {
     <div className="min-h-screen" style={{ background: '#808080' }}>
       {/* Header with back button */}
       <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          <ArrowLeft className="w-4 h-4" /> Back
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-base" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <ArrowLeft className="w-5 h-5" /> Back
         </button>
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
@@ -141,11 +141,11 @@ export default function RelocationActionSteps() {
       <main className="max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ACTION STEPS</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <p className="text-sm font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ACTION STEPS</p>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(3.6rem, 8vw, 5.6rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Your Relocation Checklist
           </h1>
-          <p className="text-sm max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <p className="text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Work through each phase — answer the questions, track progress, and we'll store everything for your reference.
           </p>
         </motion.div>
@@ -193,16 +193,16 @@ export default function RelocationActionSteps() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-sm" style={{ color: '#fff' }}>
+                      <h3 className="font-bold text-2xl" style={{ color: '#fff' }}>
                         Phase {phase.number}: {phase.title}
                       </h3>
                       {isComplete && (
-                        <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
+                        <span className="text-sm px-3 py-1 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
                           COMPLETE
                         </span>
                       )}
                     </div>
-                    <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <p className="text-lg mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
                       {filled} of {total} questions answered
                     </p>
                   </div>
@@ -224,7 +224,7 @@ export default function RelocationActionSteps() {
                   >
                     {phase.questions.map((question, j) => (
                       <div key={j}>
-                        <label className="block text-xs font-bold tracking-wider mb-1.5" style={{ color: GOLD }}>
+                        <label className="block text-lg font-bold tracking-wider mb-2" style={{ color: GOLD }}>
                           {question}
                         </label>
                         <input
@@ -232,7 +232,7 @@ export default function RelocationActionSteps() {
                           value={answers[phase.number]?.[question] || ''}
                           onChange={e => updateAnswer(phase.number, question, e.target.value)}
                           placeholder={`Enter ${question.toLowerCase()}...`}
-                          className="w-full rounded-xl px-4 py-2.5 text-sm"
+                          className="w-full rounded-xl px-4 py-3 text-lg"
                           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
                         />
                       </div>
@@ -248,7 +248,7 @@ export default function RelocationActionSteps() {
         <div className="flex justify-center gap-3">
           <button
             onClick={saveProgress}
-            className="px-8 py-3 rounded-full text-sm font-bold tracking-wide gold-btn"
+            className="px-10 py-4 rounded-full text-lg font-bold tracking-wide gold-btn"
           >
             Save My Progress
           </button>
