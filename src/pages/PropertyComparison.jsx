@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, ArrowLeft, Home } from 'lucide-react';
+import { Plus, Home } from 'lucide-react';
 import AddPropertyModal from '@/components/cityguide/AddPropertyModal';
 import PropertyComparisonCard from '@/components/cityguide/PropertyComparisonCard';
+import AppLayout from '@/components/layout/AppLayout';
 
 const GOLD = '#D4AF37';
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 export default function PropertyComparison() {
   const [clientId, setClientId] = useState(null);
@@ -38,15 +38,7 @@ export default function PropertyComparison() {
   const eliminated = properties.filter(p => p.status === 'eliminated');
 
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Nav */}
-      <nav className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
-        <Link to="/Dashboard" className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          <ArrowLeft className="w-4 h-4" /> Dashboard
-        </Link>
-      </nav>
-
+    <AppLayout>
       <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
@@ -171,6 +163,6 @@ export default function PropertyComparison() {
           onAdded={refresh}
         />
       )}
-    </div>
+    </AppLayout>
   );
 }
