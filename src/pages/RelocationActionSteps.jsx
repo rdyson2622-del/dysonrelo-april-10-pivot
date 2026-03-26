@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -93,6 +93,8 @@ export default function RelocationActionSteps() {
     fetchClient();
   }, []);
 
+  const debounceTimer = useRef(null);
+
   const updateAnswer = (phaseNum, question, value) => {
     setAnswers(prev => ({
       ...prev,
@@ -103,6 +105,37 @@ export default function RelocationActionSteps() {
     }));
   };
 
+  // Auto-save answers with debounce
+  useEffect(() => {
+    if (!clientId) return;
+
+    clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      const actionItems = Object.keys(answers).flatMap(phaseNum => 
+        Object.entries(answers[phaseNum] || {})
+          .filter(([_, v]) => v && v.trim())
+          .map(([q, a]) => `${PHASES[parseInt(phaseNum) - 1].title}: ${q} - ${a}`)
+      );
+
+      if (actionItems.length > 0) {
+        base44.entities.MovingPlan.create({
+          client_id: clientId,
+          destination_city: answers[1]?.['Destination City'] || '',
+          destination_state: '',
+          budget_range: answers[1]?.['Budget'] || '',
+          move_timeline: answers[1]?.['Timeline'] || '',
+          neighborhoods: (answers[4]?.['Target Neighborhoods'] || '').split(',').map(n => n.trim()).filter(Boolean),
+          priorities: (answers[1]?.['Priorities'] || '').split(',').map(p => p.trim()).filter(Boolean),
+          property_type: answers[3]?.['Property Type'] || '',
+          action_items: actionItems,
+          notes: 'Relocation action steps auto-saved',
+        }).catch(() => {});
+      }
+    }, 1500);
+
+    return () => clearTimeout(debounceTimer.current);
+  }, [answers, clientId]);
+
   const getPhaseCompletion = (phaseNum) => {
     const phaseAnswers = answers[phaseNum] || {};
     const totalQuestions = PHASES[phaseNum - 1].questions.length;
@@ -110,27 +143,7 @@ export default function RelocationActionSteps() {
     return { filled: filledAnswers, total: totalQuestions };
   };
 
-  const saveProgress = async () => {
-    if (!clientId) return;
-    try {
-      await base44.entities.MovingPlan.create({
-        client_id: clientId,
-        destination_city: answers[1]?.['Destination City'] || '',
-        destination_state: '',
-        budget_range: answers[1]?.['Budget'] || '',
-        move_timeline: answers[1]?.['Timeline'] || '',
-        neighborhoods: (answers[4]?.['Target Neighborhoods'] || '').split(',').map(n => n.trim()),
-        priorities: (answers[1]?.['Priorities'] || '').split(',').map(p => p.trim()),
-        property_type: answers[3]?.['Property Type'] || '',
-        action_items: Object.keys(answers).flatMap(phaseNum => 
-          Object.entries(answers[phaseNum] || {}).map(([q, a]) => `${PHASES[parseInt(phaseNum) - 1].title}: ${q} - ${a}`)
-        ),
-        notes: 'Relocation action steps saved',
-      });
-    } catch (err) {
-      console.error('Error saving progress:', err);
-    }
-  };
+
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
@@ -251,14 +264,11 @@ export default function RelocationActionSteps() {
           })}
         </div>
 
-        {/* Save Button */}
+        {/* Auto-save indicator */}
         <div className="flex justify-center gap-3">
-          <button
-            onClick={saveProgress}
-            className="px-10 py-4 rounded-full text-lg font-bold tracking-wide gold-btn"
-          >
-            Save My Progress
-          </button>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            ✓ Saving automatically as you fill out each phase
+          </p>
         </div>
       </main>
     </div>
