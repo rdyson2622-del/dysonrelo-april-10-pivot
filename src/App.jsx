@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { Toaster } from "@/components/ui/toaster";
 import PageNotFound from './lib/PageNotFound';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import PageNumberBadge from './components/PageNumberBadge';
 
 // Layout Imports
 import AdminLayout from './components/layout/AdminLayout';
@@ -92,6 +93,7 @@ function App() {
         <Router>
           <AuthenticatedApp />
           <Toaster />
+          <PageNumberBadge />
         </Router>
       </QueryClientProvider>
     </AuthProvider>
