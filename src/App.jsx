@@ -2,18 +2,18 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-// We are using DIRECT paths to bypass the "@" alias errors
-import { queryClientInstance } from './lib/query-client';
-import { AuthProvider } from './lib/AuthContext';
-import { Toaster } from "./components/ui/toaster";
+// Using /src/ to bypass the broken @ alias
+import { queryClientInstance } from '/src/lib/query-client';
+import { AuthProvider } from '/src/lib/AuthContext';
+import { Toaster } from "/src/components/ui/toaster";
 
-// Verified Page Components
-import Dashboard from './pages/Dashboard';
-import Admin from './pages/Admin';
-import CharlieScripts from './pages/CharlieScripts';
-import GeminiSession from './pages/GeminiSession';
-import RelocationIntake from './pages/RelocationIntake';
-import RelocationRoadmap from './pages/RelocationRoadmap';
+// Verified Page Components - Adding /src/ to every path
+import Dashboard from '/src/pages/Dashboard';
+import Admin from '/src/pages/Admin';
+import CharlieScripts from '/src/pages/CharlieScripts';
+import GeminiSession from '/src/pages/GeminiSession';
+import RelocationIntake from '/src/pages/RelocationIntake';
+import RelocationRoadmap from '/src/pages/RelocationRoadmap';
 
 function App() {
   return (
