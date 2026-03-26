@@ -82,9 +82,9 @@ export default function Home() {
               ✦ Completely free to you as the buyer.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Link to="/Chat">
+              <Link to="/RelocationIntake">
                 <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-                  Talk to Charlie <MessageCircle className="w-4 h-4" />
+                  Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
               <Link to="/Dashboard">
@@ -139,9 +139,9 @@ export default function Home() {
                   Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
                   </div>
                   </div>
-                  <Link to="/Chat" className="block mt-5">
+                  <Link to="/RelocationIntake" className="block mt-5">
                   <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                  START FREE CONSULTATION
+                  LET'S PLAN MY RELOCATION MOVE
                   </button>
                   </Link>
                   </div>
@@ -190,9 +190,9 @@ export default function Home() {
                   Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
                   </div>
                   </div>
-            <Link to="/Chat" className="block mt-5">
+            <Link to="/RelocationIntake" className="block mt-5">
               <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                START FREE CONSULTATION
+                LET'S PLAN MY RELOCATION MOVE
               </button>
             </Link>
           </div>
@@ -256,9 +256,9 @@ export default function Home() {
             </p>
           </div>
 
-          <Link to="/Chat">
+          <Link to="/RelocationIntake">
             <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
-              Start with Charlie — Get Your Invitation <ArrowRight className="w-4 h-4" />
+              Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
         </div>
@@ -439,9 +439,9 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <Link to="/Chat">
+              <Link to="/RelocationIntake">
                 <button className="px-8 py-3 rounded-full font-bold text-sm tracking-wide gold-btn">
-                  Find My Agent with Charlie
+                  Find My Agent — Start Here
                 </button>
               </Link>
             </div>
@@ -466,9 +466,9 @@ export default function Home() {
           <p className="text-base mb-10 max-w-md mx-auto" style={{ color: '#fff' }}>
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
-          <Link to="/Chat">
+          <Link to="/RelocationIntake">
             <button className="px-10 py-4 rounded-full font-bold text-base tracking-wide gold-btn">
-              Talk to Charlie — It's Free
+              Let's Plan My Relocation Move
             </button>
           </Link>
         </div>

@@ -129,6 +129,7 @@ import SkipTraceResults from './pages/SkipTraceResults';
 import AgentExplainer from './pages/AgentExplainer';
 import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
+import RelocationIntake from './pages/RelocationIntake';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -159,6 +160,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/Home" replace />} />
       <Route path="/Home" element={<Home />} />
+      <Route path="/RelocationIntake" element={<RelocationIntake />} />
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
