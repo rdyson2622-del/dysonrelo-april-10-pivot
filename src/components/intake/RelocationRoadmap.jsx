@@ -97,7 +97,7 @@ const PHASES = [
   {
     number: 7,
     icon: Key,
-    title: 'Escrow & Closing',
+    title: 'Negotiating the Offer, Escrow & Closing',
     status: 'upcoming',
     tagline: 'The finish line — handled for you.',
     steps: [
