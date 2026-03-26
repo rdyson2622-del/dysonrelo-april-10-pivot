@@ -132,8 +132,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }
     if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next')) {
       return {
-        display: `Here's how Dyson & Dyson works:\n\n1. **Chat with me** — I orient you to the service\n2. **Gemini Live Session** — a private AI interview with Bob Dyson builds your full relocation profile\n3. **Agent Match** — we hand-select the best agents in your destination city\n4. **Relocation Plan** — moving, schools, utilities, healthcare all coordinated\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
-        spoken: `Here's how it works. Chat with me first. Then your private Gemini session with Bob Dyson builds your full relocation profile. From there, we match you with the right agent. All free.`
+        display: `Here's how Dyson & Dyson works:\n\n**For now and the next few weeks...** You can Chat with me — I orient you to the service providers via text. They instantly see all your requests.\n\nWhen you are committed to relocate with our team, we bring in our deep learning partner, Gemini. We begin **live sessions** with you while connected to Gemini for immediate answers — this helps us build your full relocation profile.\n\nOnce we have a detailed picture of your objectives, we look for the right **Agent Match** — we hand-select the best vetted agents in your destination city.\n\nAs we find homes of interest, we move to filling in your entire **Relocation Plan** — moving, schools, utilities, healthcare all coordinated with our deep learning partners.\n\nInterested? 👉 **[Start Your Gemini Session](/GeminiSession)**`,
+        spoken: `Here's how it works. For now, you chat with me and I orient you to the service. When you're committed to relocate with our team, we bring in Gemini for live sessions to build your full relocation profile. Then we find your agent match and coordinate your entire relocation plan. Start your Gemini session when you're ready.`
       };
     }
     // Default
