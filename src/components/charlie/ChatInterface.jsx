@@ -138,8 +138,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }
     // Default
     return {
-      display: `I'm still getting my full voice and knowledge wired up — the real deep-dive AI experience is coming soon! 🚧\n\nFor now, I can point you in the right direction. The best next step is your **private Gemini session** with Bob Dyson — that's where real answers live.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Bob directly: **(405) 833-2622**`,
-      spoken: `I'm still in my early wiring stage — but your Gemini session with Bob Dyson is where the real answers are. It's free. Click below to get started.`
+      display: `Got it — I've received your request. While I'm still learning, I've passed this to both our human relocation specialists and deep-learning AI experts who will get you the answers you're looking for. 🤝\n\nIn the meantime, the fastest path to real answers is your **private Gemini session** with a Dyson Relocation Specialist.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Dyson & Dyson directly: **(858) 353-1200**`,
+      spoken: `Got it. I've passed your request to both our human specialists and deep-learning AI experts. Your Gemini session is the fastest path to real answers — it's completely free.`
     };
   };
 
