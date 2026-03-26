@@ -40,20 +40,6 @@ const PHASES = [
   },
   {
     number: 3,
-    icon: MapPin,
-    title: 'Community Selection',
-    status: 'upcoming',
-    tagline: 'Finding your ideal neighborhoods.',
-    steps: [
-      'AI-driven neighborhood research',
-      'School district deep-dives',
-      'Commute & lifestyle analysis',
-      'Shortlist of 3–5 communities presented',
-    ],
-    dyson_role: 'Charlie and our team research your destination using your priorities — schools, commute, safety, lifestyle.',
-  },
-  {
-    number: 4,
     icon: Search,
     title: 'Property Search',
     status: 'upcoming',
@@ -65,6 +51,20 @@ const PHASES = [
       'Offer strategy developed with your agent',
     ],
     dyson_role: 'Charlie surfaces listings daily. Your agent handles showings. We stay in the loop on every step.',
+  },
+  {
+    number: 4,
+    icon: MapPin,
+    title: 'Community Selection',
+    status: 'upcoming',
+    tagline: 'Zeroing in on the right neighborhoods.',
+    steps: [
+      'AI-driven neighborhood research',
+      'School district deep-dives',
+      'Commute & lifestyle analysis',
+      'Shortlist of 3–5 communities presented',
+    ],
+    dyson_role: 'Charlie and our team research your destination using your priorities — schools, commute, safety, lifestyle.',
   },
   {
     number: 5,
