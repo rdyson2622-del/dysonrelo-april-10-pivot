@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
@@ -51,6 +51,8 @@ export default function RelocationIntake() {
   const [showScheduler, setShowScheduler] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
   const [agreedItems, setAgreedItems] = useState([]);
+  const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
+  const [scheduledCall, setScheduledCall] = useState(null);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -119,7 +121,7 @@ export default function RelocationIntake() {
 
 
 
-  if (showAgreement) {
+  if (showAgreement && !signTiming) {
     return (
       <div className="min-h-screen" style={{ background: '#808080' }}>
         <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
@@ -138,7 +140,117 @@ export default function RelocationIntake() {
               <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
             </div>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Charlie will hand you off to Gemini for your private relocation interview.
+              You have two options — sign now and keep the momentum going, or sign after our call when you've had a chance to chat with the Dyson team. Both are totally fine.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              onClick={() => setSignTiming('now')}
+              className="rounded-2xl p-6 border-2 transition-all text-left"
+              style={{ background: '#000', borderColor: GOLD }}>
+              <div className="flex items-center gap-3 mb-3">
+                <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
+                <span className="font-bold" style={{ color: GOLD }}>Sign Now</span>
+              </div>
+              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                Review and sign the agreement right now. You'll be all set before we talk.
+              </p>
+            </motion.button>
+
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              onClick={() => setSignTiming('after')}
+              className="rounded-2xl p-6 border-2 transition-all text-left hover:border-slate-500"
+              style={{ background: '#000', borderColor: 'rgba(255,255,255,0.2)' }}>
+              <div className="flex items-center gap-3 mb-3">
+                <Clock className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <span className="font-bold" style={{ color: '#fff' }}>Sign After Our Call</span>
+              </div>
+              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                We'll send it to you after we chat — gives you time to process everything.
+              </p>
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (showAgreement && signTiming === 'after') {
+    return (
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="min-h-screen flex items-center justify-center px-6 py-12" style={{ background: '#808080' }}>
+        <div className="max-w-md text-center">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+            style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
+            <CheckCircle2 className="w-8 h-8" style={{ color: GOLD }} />
+          </div>
+          <h2 className="text-2xl font-bold mb-3" style={{ color: '#fff' }}>You're All Set!</h2>
+          <p className="mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            We'll send you the service agreement and a thank you message after your call. For now, head to your roadmap to get started.
+          </p>
+          <button
+            onClick={async () => {
+              setSubmitting(true);
+              try {
+                await base44.entities.RelocationClient.create({
+                  full_name: form.full_name,
+                  email: form.email,
+                  phone: form.phone,
+                  current_city: form.current_city,
+                  destination_city: form.destination_city,
+                  move_date: form.move_date === 'asap' ? '' : form.move_date,
+                  budget: form.budget,
+                  family_size: form.family_size ? parseInt(form.family_size) : undefined,
+                  priorities: form.priorities.map(p => p.toLowerCase().replace(' ', '_')),
+                  notes: form.notes,
+                  status: 'in_consultation',
+                });
+                base44.integrations.Core.SendEmail({
+                  to: 'bob@dysonconcierge.com',
+                  subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
+                  body: `New client intake submitted (signing after call):\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Scheduled'}\n\nCLIENT PREFERENCE: Will sign agreement after call.`,
+                }).catch(() => {});
+              } catch (e) {
+                console.error('Intake submit error:', e);
+              }
+              setSubmitting(false);
+              setSubmitted(true);
+            }}
+            disabled={submitting}
+            className="w-full py-3 rounded-full text-sm font-bold tracking-wide gold-btn disabled:opacity-50"
+          >
+            {submitting ? 'Processing...' : 'Continue to My Roadmap'}
+          </button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  if (showAgreement && signTiming === 'now') {
+    return (
+      <div className="min-h-screen" style={{ background: '#808080' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+          <Link to="/Home">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
+          </Link>
+          <button onClick={() => { setSignTiming(null); setAgreedItems([]); }} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+        </nav>
+
+        <div className="max-w-2xl mx-auto px-6 py-12">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-2" style={{ color: GOLD }}>
+              <Zap className="w-4 h-4" />
+              <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
+            </div>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Sign now and you're locked in. We'll have everything ready for your call.
             </p>
           </motion.div>
 
@@ -229,6 +341,7 @@ export default function RelocationIntake() {
             form={form}
             onBack={() => setShowScheduler(false)}
             onScheduled={(callInfo) => {
+              setScheduledCall(callInfo);
               setShowScheduler(false);
               setShowAgreement(true);
             }}
