@@ -43,6 +43,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/relocation-intake" element={<RelocationIntake />} />
       <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
