@@ -396,28 +396,28 @@ export default function RelocationIntake() {
       <div className="max-w-2xl mx-auto px-6 py-12">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>DYSON & DYSON CONCIERGE</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD, fontSize: '0.14rem' }}>DYSON & DYSON CONCIERGE</p>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(2.52rem, 5.6vw, 3.92rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Let's Plan Your Move
           </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem' }}>
             Tell us about your relocation and we'll build your personalized plan — completely free.
           </p>
-        </motion.div>
+          </motion.div>
 
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 mb-10">
           {STEPS.map((label, i) => (
             <React.Fragment key={i}>
               <div className="flex flex-col items-center gap-1">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
                   style={{
                     background: i <= step ? GOLD : 'rgba(255,255,255,0.1)',
                     color: i <= step ? '#000' : 'rgba(255,255,255,0.4)',
                   }}>
                   {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
                 </div>
-                <span className="text-xs hidden sm:block" style={{ color: i === step ? GOLD : 'rgba(255,255,255,0.4)' }}>{label}</span>
+                <span className="text-sm hidden sm:block" style={{ color: i === step ? GOLD : 'rgba(255,255,255,0.4)' }}>{label}</span>
               </div>
               {i < STEPS.length - 1 && (
                 <div className="flex-1 h-px mb-5" style={{ background: i < step ? GOLD : 'rgba(255,255,255,0.15)', maxWidth: '60px' }} />
@@ -440,7 +440,7 @@ export default function RelocationIntake() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-6">
                 <Users className="w-5 h-5" style={{ color: GOLD }} />
-                <h2 className="font-bold text-lg" style={{ color: '#fff' }}>About You</h2>
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>About You</h2>
               </div>
               <Field label="Full Name *" value={form.full_name} onChange={v => set('full_name', v)} placeholder="Jane Smith" />
               <Field label="Email Address *" value={form.email} onChange={v => set('email', v)} placeholder="jane@email.com" type="email" />
@@ -455,16 +455,16 @@ export default function RelocationIntake() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-6">
                 <MapPin className="w-5 h-5" style={{ color: GOLD }} />
-                <h2 className="font-bold text-lg" style={{ color: '#fff' }}>Your Relocation</h2>
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Your Relocation</h2>
               </div>
               <Field label="Destination City *" value={form.destination_city} onChange={v => set('destination_city', v)} placeholder="Austin, TX" />
 
               <div>
-                <label className="block text-xs font-bold tracking-wider mb-2" style={{ color: GOLD }}>Moving Timeline *</label>
+                <label className="block text-sm font-bold tracking-wider mb-2" style={{ color: GOLD }}>Moving Timeline *</label>
                 <div className="grid grid-cols-2 gap-2">
                   {TIMELINE_OPTIONS.map(opt => (
                     <button key={opt.value} onClick={() => set('move_date', opt.value)}
-                      className="px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all"
+                      className="px-3 py-2.5 rounded-xl text-base font-medium text-left transition-all"
                       style={{
                         background: form.move_date === opt.value ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
                         border: `1px solid ${form.move_date === opt.value ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -477,11 +477,11 @@ export default function RelocationIntake() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold tracking-wider mb-2" style={{ color: GOLD }}>Home Budget *</label>
+                <label className="block text-sm font-bold tracking-wider mb-2" style={{ color: GOLD }}>Home Budget *</label>
                 <div className="grid grid-cols-2 gap-2">
                   {BUDGET_OPTIONS.map(opt => (
                     <button key={opt.value} onClick={() => set('budget', opt.value)}
-                      className="px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all"
+                      className="px-3 py-2.5 rounded-xl text-base font-medium text-left transition-all"
                       style={{
                         background: form.budget === opt.value ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
                         border: `1px solid ${form.budget === opt.value ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -500,13 +500,13 @@ export default function RelocationIntake() {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Sparkles className="w-5 h-5" style={{ color: GOLD }} />
-                <h2 className="font-bold text-lg" style={{ color: '#fff' }}>What Matters Most?</h2>
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>What Matters Most?</h2>
               </div>
-              <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Select all that apply — this helps us find the right neighborhoods and agent for you.</p>
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Select all that apply — this helps us find the right neighborhoods and agent for you.</p>
               <div className="flex flex-wrap gap-2 mb-6">
                 {PRIORITY_OPTIONS.map(p => (
                   <button key={p} onClick={() => togglePriority(p)}
-                    className="px-4 py-2 rounded-full text-sm font-medium transition-all"
+                    className="px-4 py-2 rounded-full text-base font-medium transition-all"
                     style={{
                       background: form.priorities.includes(p) ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
                       border: `1px solid ${form.priorities.includes(p) ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -517,13 +517,13 @@ export default function RelocationIntake() {
                 ))}
               </div>
               <div>
-                <label className="block text-xs font-bold tracking-wider mb-2" style={{ color: GOLD }}>Anything Else We Should Know?</label>
+                <label className="block text-sm font-bold tracking-wider mb-2" style={{ color: GOLD }}>Anything Else We Should Know?</label>
                 <textarea
                   value={form.notes}
                   onChange={e => set('notes', e.target.value)}
                   placeholder="Special circumstances, must-haves, deal-breakers..."
                   rows={4}
-                  className="w-full rounded-xl px-4 py-3 text-sm resize-none"
+                  className="w-full rounded-xl px-4 py-3 text-base resize-none"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
                 />
               </div>
@@ -535,7 +535,7 @@ export default function RelocationIntake() {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
-                <h2 className="font-bold text-lg" style={{ color: '#fff' }}>Confirm Your Profile</h2>
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Confirm Your Profile</h2>
               </div>
               <div className="space-y-3 mb-6">
                 {[
@@ -550,12 +550,12 @@ export default function RelocationIntake() {
                   { label: 'Priorities', value: form.priorities.join(', ') || 'None selected' },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-start gap-4 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span className="text-xs font-bold tracking-wider shrink-0" style={{ color: GOLD }}>{label}</span>
-                    <span className="text-sm text-right" style={{ color: '#fff' }}>{value}</span>
+                    <span className="text-sm font-bold tracking-wider shrink-0" style={{ color: GOLD }}>{label}</span>
+                    <span className="text-base text-right" style={{ color: '#fff' }}>{value}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <p className="text-sm text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 By submitting, you agree to be contacted by the Dyson & Dyson team. This service is always free to buyers.
               </p>
             </div>
@@ -566,7 +566,7 @@ export default function RelocationIntake() {
         <div className="flex items-center justify-between mt-6">
           {step > 0 ? (
             <button onClick={() => setStep(s => s - 1)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-base font-semibold transition-all"
               style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
@@ -576,13 +576,13 @@ export default function RelocationIntake() {
             <button
               onClick={() => setStep(s => s + 1)}
               disabled={!canNext()}
-              className="gold-btn px-7 py-2.5 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+              className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
               Continue <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button
               onClick={() => setShowScheduler(true)}
-              className="gold-btn px-7 py-2.5 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
+              className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2">
               Schedule Intro Call <ArrowRight className="w-4 h-4" />
             </button>
           )}
@@ -595,13 +595,13 @@ export default function RelocationIntake() {
 function Field({ label, value, onChange, placeholder, type = 'text' }) {
   return (
     <div>
-      <label className="block text-xs font-bold tracking-wider mb-1.5" style={{ color: '#D4AF37' }}>{label}</label>
+      <label className="block text-sm font-bold tracking-wider mb-1.5" style={{ color: '#D4AF37' }}>{label}</label>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-xl px-4 py-3 text-sm"
+        className="w-full rounded-xl px-4 py-3 text-base"
         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
       />
     </div>
