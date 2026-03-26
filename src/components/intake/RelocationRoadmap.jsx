@@ -149,7 +149,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             Your Relocation Roadmap
           </h1>
           <p className="text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            {clientName ? `${clientName}, here` : 'Here'} is every step of your journey to {destinationCity || 'your new home'} — and exactly what Dyson & Dyson handles for you at each stage.
+            {clientName ? `${clientName}, here` : 'Here'} is every step of your journey to {destinationCity || 'your new home'} — and exactly what Dyson&nbsp;&nbsp;& Dyson handles for you at each stage.
           </p>
           <p className="text-sm mt-3 font-semibold" style={{ color: GOLD }}>
             ✦ All 8 phases. Completely managed. Always free to you.
