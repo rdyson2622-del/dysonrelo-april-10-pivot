@@ -148,7 +148,7 @@ export default function RelocationIntake() {
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              onClick={() => setSignTiming('now')}
+              onClick={() => { setSignTiming('now'); setAgreedItems(SERVICE_AGREEMENTS); }}
               className="rounded-2xl p-6 border-2 transition-all text-left"
               style={{ background: '#000', borderColor: GOLD }}>
               <div className="flex items-center gap-3 mb-3">
