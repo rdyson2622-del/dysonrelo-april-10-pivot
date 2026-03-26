@@ -64,20 +64,22 @@ export default function PageNumberBadge() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-40 text-xs font-semibold"
+      className="fixed bottom-4 right-4 z-40 font-bold"
       style={{
-        color: 'rgba(212,175,55,0.7)',
-        opacity: 0.8,
+        color: '#D4AF37',
+        opacity: 1,
         pointerEvents: 'none',
-        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-        background: 'rgba(0,0,0,0.3)',
-        padding: '4px 8px',
-        borderRadius: '12px',
-        backdropFilter: 'blur(4px)',
+        textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 0 12px rgba(212,175,55,0.4)',
+        background: 'rgba(0,0,0,0.6)',
+        padding: '6px 12px',
+        borderRadius: '16px',
+        backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(212,175,55,0.4)',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
       }}
       title={displayTitle}
     >
-      <span style={{ fontSize: '0.75rem' }}>{displayCode}</span>
+      <span style={{ fontSize: '1rem', letterSpacing: '0.1em' }}>{displayCode}</span>
     </div>
   );
 }
