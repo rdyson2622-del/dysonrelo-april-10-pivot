@@ -129,27 +129,48 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Header with Back Button */}
+      {/* Header with Back Button and Commit CTA */}
       <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
         <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
-        <div className="w-20" />
+        <Link to="/RelocationIntake">
+          <button className="gold-btn px-4 py-2 rounded-full text-xs font-bold tracking-wide">
+            Commit to Start
+          </button>
+        </Link>
       </nav>
 
-      <div className="text-center px-6 pt-16 pb-10">
+      {/* Commit Banner for Non-Committed Users */}
+      <div className="px-6 md:px-14 py-6" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-sm font-bold mb-2" style={{ color: '#fff' }}>
+            🔒 Ready to start your relocation journey?
+          </p>
+          <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            Commit to our services to unlock your personalized relocation plan, agent matching, and full access to all 8 phases.
+          </p>
+          <Link to="/RelocationIntake">
+            <button className="gold-btn px-6 py-2.5 rounded-full text-sm font-bold tracking-wide">
+              Yes, I Want to Commit & Start My Relocation
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="text-center px-6 pt-10 pb-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
             style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
             <Sparkles className="w-8 h-8" style={{ color: GOLD }} />
           </div>
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOU'RE IN — WHAT HAPPENS NEXT</p>
+          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>THE COMPLETE RELOCATION PROCESS</p>
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Your Relocation Roadmap
           </h1>
           <p className="text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            {clientName ? `${clientName}, here` : 'Here'} is every step of your journey to {destinationCity || 'your new home'} — and exactly what Dyson&nbsp;&nbsp;& Dyson handles for you at each stage.
+            Here's every step of your journey — and exactly what Dyson & Dyson handles for you at each stage.
           </p>
           <p className="text-sm mt-3 font-semibold" style={{ color: GOLD }}>
             ✦ All 8 phases. Completely managed. Always free to you.

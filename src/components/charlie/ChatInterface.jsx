@@ -126,11 +126,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         spoken: `Our service is one hundred percent free to you as the buyer. Always. Your agent handles our compensation at close.`
       };
     }
-    if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next') || t.includes('move objective')) {
+    if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next') || t.includes('move objective') || t.includes('commit') || t.includes('relocation journey') || t.includes('process')) {
       return {
-        display: `Let me navigate you to where you can fill in your move objectives. This helps us understand your destination, timeline, budget, and priorities so we can serve you better.`,
-        spoken: `Let me navigate you to where you can fill in your move objectives. This helps us understand your destination, timeline, budget, and priorities.`,
-        navigate: '/RelocationIntake'
+        display: `Let me navigate you to our Relocation Journey page where you can see exactly how our process works and commit to get started with your personalized relocation plan.`,
+        spoken: `Let me navigate you to our Relocation Journey page where you can see exactly how our process works and commit to get started.`,
+        navigate: '/RelocationRoadmap'
       };
     }
     // Default
