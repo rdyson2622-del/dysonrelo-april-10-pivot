@@ -33,6 +33,7 @@ import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
+import Search from './pages/Search';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -75,8 +76,8 @@ const AuthenticatedApp = () => {
         <Route path="/Chat" element={<Chat />} />
         <Route path="/CityGuide" element={<Chat />} />
         <Route path="/city-guide" element={<Chat />} />
-        <Route path="/Search" element={<Chat />} />
-        <Route path="/search" element={<Chat />} />
+        <Route path="/Search" element={<Search />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/PropertyComparison" element={<Chat />} />
         <Route path="/property-comparison" element={<Chat />} />
       </Route>
