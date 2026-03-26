@@ -63,16 +63,16 @@ export default function CityGuideTeaser() {
   const [expandedCard, setExpandedCard] = useState(null);
 
   return (
-    <section className="py-20 px-6 md:px-14" style={{ background: '#808080', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+    <section className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-10">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>COMING FOR YOU — AFTER YOU COMMIT</p>
           <h2 className="display-heading mb-4" style={{
-            fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)',
+            fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
             lineHeight: 1.2,
-            letterSpacing: '0.22em',
+            letterSpacing: '0.28em',
             color: '#fff'
           }}>
             Your Personal<br />
