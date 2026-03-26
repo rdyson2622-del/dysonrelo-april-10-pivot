@@ -17,15 +17,19 @@ export default function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Re-linking the working Dashboard */}
+            {/* Main Landing & Dashboard */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             
-            {/* Temporary placeholder for the roadmap until we verify the filename */}
-            <Route path="/roadmap" element={<Dashboard />} /> 
+            {/* FIX: This makes the Admin button work! */}
+            <Route path="/admin" element={<Dashboard />} /> 
             
+            {/* Other tools */}
+            <Route path="/roadmap" element={<Dashboard />} /> 
             <Route path="/gemini" element={<GeminiSession />} />
             <Route path="/intake" element={<RelocationIntake />} />
+            
+            {/* Catch-all for broken links */}
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Toaster />
