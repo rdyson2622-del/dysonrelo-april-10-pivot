@@ -166,7 +166,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const tabs = [
     ...(profile ? [] : [{ id: 'onboard', label: 'Get Started', icon: ClipboardList }]),
     { id: 'chat', label: 'Chat', icon: MessageCircle },
-    ...(profile ? [{ id: 'plan', label: 'Move Plan', icon: Map }] : []),
+    ...(profile ? [{ id: 'plan', label: 'My Relocation Plan', icon: Map }] : []),
   ];
 
   return (

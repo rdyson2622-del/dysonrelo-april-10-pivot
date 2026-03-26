@@ -40,7 +40,7 @@ Budget: ${profile.budget || 'TBD'}
 Housing: ${profile.purchase_type || 'buying'}
 Priorities: ${priorities}
 
-Generate a personalized Move Business Plan. For each of these 8 steps, write 2-3 specific, actionable sentences tailored to their exact situation. Be specific to ${profile.destination_city}. Be warm, expert, and encouraging.
+Generate a personalized Relocation Plan. For each of these 8 steps, write 2-3 specific, actionable sentences tailored to their exact situation. Be specific to ${profile.destination_city}. Be warm, expert, and encouraging.
 
 Return a JSON object with these exact keys:
 city_research, home_search, moving_logistics, utilities, schools, healthcare, community, checklist
@@ -75,7 +75,7 @@ Each value should be a string with 2-3 sentences of specific, personalized guida
           <Loader2 className="w-8 h-8" style={{ color: GOLD }} />
         </motion.div>
         <div className="text-center">
-          <p className="font-bold text-sm" style={{ color: GOLD }}>Building your Move Business Plan...</p>
+          <p className="font-bold text-sm" style={{ color: GOLD }}>Building your Relocation Plan...</p>
           <p className="text-xs mt-1" style={{ color: '#555' }}>Personalizing every step for {profile.destination_city}</p>
         </div>
       </div>
@@ -85,7 +85,7 @@ Each value should be a string with 2-3 sentences of specific, personalized guida
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-4 pt-3 pb-2" style={{ borderBottom: '1px solid #1a1a1a' }}>
-        <p className="font-bold text-sm" style={{ color: GOLD }}>Your Move Business Plan</p>
+        <p className="font-bold text-sm" style={{ color: GOLD }}>My Relocation Plan</p>
         <p className="text-xs mt-0.5" style={{ color: '#555' }}>
           {profile.current_city} → {profile.destination_city} • {profile.move_date}
         </p>
