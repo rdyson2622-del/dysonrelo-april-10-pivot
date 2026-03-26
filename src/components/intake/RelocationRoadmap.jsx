@@ -41,7 +41,7 @@ const PHASES = [
   {
     number: 3,
     icon: Search,
-    title: 'Property Search',
+    title: 'Property Search & Selection',
     status: 'upcoming',
     tagline: 'AI-powered matching to your exact criteria.',
     steps: [
