@@ -39,7 +39,7 @@ export default function Home() {
               Dashboard
             </button>
           </Link>
-          <Link to="/Admin">
+          <Link to="/admin">
             <button className="text-sm px-4 py-2 rounded-full font-semibold transition-all hover:opacity-90 gold-btn">
               Admin
             </button>

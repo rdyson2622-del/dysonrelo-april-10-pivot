@@ -5,17 +5,17 @@ import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
-  { label: 'Overview', path: '/Admin', icon: LayoutDashboard },
-  { label: 'Search Listing Profiles', path: '/AdminSearchProfiles', icon: Search },
-  { label: 'Listing Owners Info', path: '/AdminOwners', icon: Home },
-  { label: 'Listing Outreach Campaigns', path: '/AdminOutreachCampaigns', icon: SendHorizontal },
-  { label: 'Clients', path: '/AdminClients', icon: UserCheck },
-  { label: 'Presentation Library', path: '/AdminPresentationLibrary', icon: FileText },
-  { label: 'Communications', path: '/AdminCommunications', icon: MessageCircle },
-  { label: 'Flagged Messages', path: '/AdminFlaggedConversations', icon: Flag },
-  { label: 'Referral Management', path: '/AdminReferrals', icon: LinkIcon },
-  { label: "Charlie's Scripts", path: '/AdminCharlieScripts', icon: ScrollText },
-  { label: 'Business Plan', path: '/BusinessPlan', icon: BookOpen },
+  { label: 'Overview', path: '/admin', icon: LayoutDashboard },
+  { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
+  { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
+  { label: 'Listing Outreach Campaigns', path: '/admin/outreach-campaigns', icon: SendHorizontal },
+  { label: 'Clients', path: '/admin/clients', icon: UserCheck },
+  { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
+  { label: 'Communications', path: '/admin/communications', icon: MessageCircle },
+  { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
+  { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
+  { label: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
+  { label: 'Business Plan', path: '/business-plan', icon: BookOpen },
 ];
 
 export default function AdminSidebar() {
@@ -43,7 +43,7 @@ export default function AdminSidebar() {
     <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
       {/* Logo */}
       <div className="p-6 flex items-center gap-3" style={{ background: '#000', borderBottom: '1px solid #D4AF3733' }}>
-        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
+        <Link to="/home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
         <div>
           <h1 className="font-black text-sm tracking-tight" style={{ color: '#fff' }}>CONCIERGE</h1>
           <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
@@ -101,7 +101,7 @@ export default function AdminSidebar() {
       {/* Preview & Back */}
       <div className="p-3 space-y-1 pb-20" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
         <Link
-          to="/GeminiSession"
+          to="/gemini"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
           style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}
         >
@@ -109,7 +109,7 @@ export default function AdminSidebar() {
           Preview Client Flow
         </Link>
         <Link
-          to="/Dashboard"
+          to="/dashboard"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
           style={{ color: '#aaa' }}
         >
@@ -117,7 +117,7 @@ export default function AdminSidebar() {
           Client Dashboard
         </Link>
         <Link
-          to="/Chat"
+          to="/chat"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
           style={{ color: '#aaa' }}
         >

@@ -62,7 +62,7 @@ export default function AdminPresentationLibrary() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/Admin">
+          <Link to="/admin">
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <ArrowLeft className="w-4 h-4" />
             </Button>

@@ -62,7 +62,7 @@ export default function Dashboard() {
               Talk to Charlie
             </button>
           </Link>
-          <Link to="/Admin">
+          <Link to="/admin">
             <button className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold transition-all"
               style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
               <LayoutDashboard className="w-3.5 h-3.5" /> Admin

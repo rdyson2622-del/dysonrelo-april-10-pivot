@@ -807,7 +807,7 @@ export default function BusinessPlan() {
       {/* Header */}
       <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4" style={{ background: 'rgba(255,255,255,0.9)', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
         <div className="flex items-center gap-4">
-          <Link to="/Admin">
+          <Link to="/admin">
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <ArrowLeft className="w-4 h-4" />
             </Button>
