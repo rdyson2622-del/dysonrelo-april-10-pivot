@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
+import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -239,38 +240,14 @@ export default function RelocationIntake() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#808080' }}>
-      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
-        <Link to="/Home" className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          <ArrowLeft className="w-4 h-4" /> Back to Home
-        </Link>
-      </nav>
-      <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-lg">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-            style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
-            <CheckCircle2 className="w-10 h-10" style={{ color: GOLD }} />
-          </div>
-          <h1 className="display-heading mb-4" style={{ fontSize: '2.5rem', letterSpacing: '0.2em', color: '#fff' }}>
-            You're In.
-          </h1>
-          <p className="text-base mb-2" style={{ color: '#fff' }}>
-            Welcome to Dyson & Dyson Concierge Relocation, <strong style={{ color: GOLD }}>{form.full_name}</strong>.
-          </p>
-          <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            Bob Dyson's team has received your relocation profile. We'll be in touch shortly to schedule your private session and begin building your plan.
-          </p>
-          <p className="text-xs mb-8" style={{ color: 'rgba(212,175,55,0.7)' }}>
-            Remember — this service is 100% free to you as the buyer. Always.
-          </p>
-          <Link to="/Dashboard">
-            <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide">
-              Go to My Dashboard <ArrowRight className="inline w-4 h-4 ml-1" />
-            </button>
+      <div>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4 sticky top-0 z-50" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+          <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
+          <Link to="/Home" className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <ArrowLeft className="w-4 h-4" /> Back to Home
           </Link>
-        </motion.div>
-        </div>
+        </nav>
+        <RelocationRoadmap clientName={form.full_name} destinationCity={form.destination_city} />
       </div>
     );
   }
