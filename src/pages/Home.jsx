@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import CharlieTopHat from '../components/brand/CharlieTopHat';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
+import CityGuideTeaser from '../components/home/CityGuideTeaser';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const GOLD = '#D4AF37';
@@ -263,6 +264,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* City Guide Teaser */}
+      <CityGuideTeaser />
 
       {/* V2V Agent Recruitment Card */}
       <section className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
