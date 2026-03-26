@@ -64,7 +64,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }).catch(() => {});
   }, []);
 
-  const WELCOME_MESSAGE = `Hi! I'm Charlie — your Dyson & Dyson site guide. 👋\n\nI'm here to show you around and point you in the right direction. I'm not an advisor yet — that's coming soon when I'll be powered by Google AI Studio with full voice and knowledge.\n\nFor now, tell me what you're curious about and I'll direct you to the right place.`;
+  const WELCOME_MESSAGE = `Hi! I'm Charlie — your Dyson & Dyson site guide. 👋\n\nI'm here to show you around and point you in the right direction. For now, tell me what you're curious about and I'll direct you to the right place.\n\nAnd soon — we'll actually be voice-to-voice. I'm excited to meet you that way and be able to provide answers and save all your information instantly. 🎙️`;
 
   const [messages, setMessages] = useState([
     {
