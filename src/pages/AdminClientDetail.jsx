@@ -1,120 +1,108 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic, ScrollText, MapPin, GitCompare } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Phone, Mail, MapPin } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
 
-import ClientHeader from '@/components/admin/client-detail/ClientHeader';
-import ClientProfileTab from '@/components/admin/client-detail/ClientProfileTab';
-import ClientGeminiTab from '@/components/admin/client-detail/ClientGeminiTab';
-import ClientChatTab from '@/components/admin/client-detail/ClientChatTab';
-import ClientTasksTab from '@/components/admin/client-detail/ClientTasksTab';
-import ClientQuickContact from '@/components/admin/client-detail/ClientQuickContact';
-import ClientSessionMonitor from '@/components/admin/client-detail/ClientSessionMonitor';
-import ClientTransactionTimeline from '@/components/admin/client-detail/ClientTransactionTimeline';
-import CityGuideResearch from '@/components/admin/CityGuideResearch';
-import PropertyResearchPanel from '@/components/admin/PropertyResearchPanel';
+export default function AdminOwnerDetail() {
+  const [searchParams] = useSearchParams();
+  const clientId = searchParams.get('id');
 
-const GOLD = '#D4AF37';
-
-const TABS = [
-  { id: 'profile',   label: 'Profile',        icon: User },
-  { id: 'gemini',    label: 'AI / Gemini',    icon: Sparkles },
-  { id: 'session',   label: 'Live Session',   icon: Mic },
-  { id: 'chat',      label: 'Chat History',   icon: MessageCircle },
-  { id: 'tasks',     label: 'Move Tasks',     icon: CheckSquare },
-  { id: 'timeline',  label: 'Transaction Log',icon: ScrollText },
-  { id: 'cityguide',   label: 'City Research',    icon: MapPin },
-  { id: 'properties',  label: 'Property Compare', icon: GitCompare },
-  { id: 'contact',     label: 'Quick Contact',    icon: Phone },
-];
-
-export default function AdminClientDetail() {
-  const { clientId } = useParams();
-  const [activeTab, setActiveTab] = useState('profile');
-
-  const { data: client, isLoading } = useQuery({
-    queryKey: ['relocation-client', clientId],
-    queryFn: () => base44.entities.RelocationClient.filter({ id: clientId }),
-    select: (data) => data[0],
+  const { data: client } = useQuery({
+    queryKey: ['admin-client-detail', clientId],
+    queryFn: () => base44.entities.RelocationClient.get(clientId),
+    enabled: !!clientId,
   });
 
-  if (isLoading) {
-    return (
-      <div className="p-8 min-h-screen flex items-center justify-center" style={{ background: '#A9A9A9' }}>
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-yellow-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const { data: tasks = [] } = useQuery({
+    queryKey: ['admin-client-tasks', clientId],
+    queryFn: () => base44.entities.RelocationTask.filter({ client_id: clientId }, '-created_date'),
+    enabled: !!clientId,
+  });
 
   if (!client) {
     return (
-      <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
-        <div className="text-center py-12 rounded-2xl" style={{ background: 'rgba(255,255,255,0.85)' }}>
-          <p className="font-medium" style={{ color: 'rgba(0,0,0,0.4)' }}>Client not found</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 min-h-screen" style={{ background: '#A9A9A9' }}>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        {/* Header card with contact info + status */}
-        <ClientHeader client={client} />
-
-        {/* Tab bar */}
-        <div className="flex gap-1 mb-6 p-1 rounded-2xl overflow-x-auto" style={{ background: 'rgba(0,0,0,0.12)' }}>
-          {TABS.map(tab => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap shrink-0"
-                style={{
-                  background: active ? '#fff' : 'transparent',
-                  color: active ? '#000' : 'rgba(0,0,0,0.55)',
-                  boxShadow: active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
-                  border: active ? `1px solid ${GOLD}44` : '1px solid transparent',
-                }}
-              >
-                <Icon className="w-4 h-4" style={{ color: active ? GOLD : 'inherit' }} />
-                {tab.label}
-              </button>
-            );
-          })}
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6">
+          <Link to="/admin/clients">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold">{client.full_name}</h1>
+            <p className="text-muted-foreground">Relocation Client</p>
+          </div>
         </div>
 
-        {/* Tab content */}
-        <motion.div key={activeTab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}>
-          {activeTab === 'profile'  && <ClientProfileTab client={client} />}
-          {activeTab === 'gemini'   && <ClientGeminiTab client={client} />}
-          {activeTab === 'session'  && <ClientSessionMonitor client={client} />}
-          {activeTab === 'chat'     && <ClientChatTab client={client} />}
-          {activeTab === 'tasks'    && <ClientTasksTab client={client} />}
-          {activeTab === 'timeline'  && <ClientTransactionTimeline client={client} />}
-          {activeTab === 'cityguide' && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <CityGuideResearch client={client} />
-            </div>
-          )}
-          {activeTab === 'properties' && (
-            <div className="rounded-2xl p-6" style={{ background: 'rgba(0,0,0,0.5)' }}>
-              <div className="mb-4">
-                <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>PROPERTY COMPARISON RESEARCH</p>
-                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Select a property the client added to fill in research findings or auto-research with Gemini.
-                </p>
+        {/* Client Info */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Contact Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span>{client.email}</span>
               </div>
-              <PropertyResearchPanel clientId={client.id} />
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-muted-foreground" />
+                <span>{client.phone || '—'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-muted-foreground" />
+                <span>{client.current_city || '—'} → {client.destination_city}</span>
+              </div>
+              <div>
+                <span className="text-sm font-medium">Timeline: </span>
+                <span className="text-sm">{client.move_date || '—'}</span>
+              </div>
             </div>
-          )}
-          {activeTab === 'contact'  && <ClientQuickContact client={client} />}
-        </motion.div>
-      </motion.div>
+          </CardContent>
+        </Card>
+
+        {/* Tasks */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Relocation Tasks ({tasks.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {tasks.length === 0 ? (
+              <p className="text-muted-foreground">No tasks yet</p>
+            ) : (
+              <div className="space-y-2">
+                {tasks.map((task) => (
+                  <div key={task.id} className="flex items-center justify-between p-3 rounded-lg bg-muted">
+                    <div>
+                      <p className="font-medium">{task.title}</p>
+                      <p className="text-sm text-muted-foreground">{task.category}</p>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      task.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      task.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {task.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

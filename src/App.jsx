@@ -16,7 +16,7 @@ import GeminiSession from './pages/GeminiSession';
 import Admin from './pages/Admin';
 import CharlieScripts from './pages/CharlieScripts';
 import AdminClients from './pages/AdminClients';
-import AdminOwnerDetail from './pages/AdminOwnerDetail';
+import AdminClientDetail from './pages/AdminClientDetail';
 import AdminCommunications from './pages/AdminCommunications';
 import Explainers from './pages/Explainers';
 
@@ -50,7 +50,7 @@ const AuthenticatedApp = () => {
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/scripts" element={<CharlieScripts />} />
       <Route path="/admin/clients" element={<AdminClients />} />
-      <Route path="/admin/owner-detail" element={<AdminOwnerDetail />} />
+      <Route path="/admin/client-detail" element={<AdminClientDetail />} />
       <Route path="/admin/communications" element={<AdminCommunications />} />
       <Route path="/explainers" element={<Explainers />} />
       <Route path="*" element={<PageNotFound />} />

@@ -6,8 +6,7 @@ const Admin = () => {
 
   const adminModules = [
     { name: 'AI Charlie Scripts', path: '/admin/scripts', icon: '🤖', description: 'Edit Dyson Advisor & Commitment Gate logic' },
-    { name: 'Client Pipeline', path: '/admin/clients', icon: '📈', description: 'View 17% progress and relocation leads' },
-    { name: 'Property Candidates', path: '/admin/properties', icon: '🏠', description: 'Manage properties Charlie is tracking' },
+    { name: 'Client Pipeline', path: '/admin/clients', icon: '📈', description: 'View relocation leads and track progress' },
     { name: 'Communications', path: '/admin/communications', icon: '💬', description: 'Review outreach and emails' }
   ];
 
