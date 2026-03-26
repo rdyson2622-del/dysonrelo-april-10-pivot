@@ -241,6 +241,11 @@ export default function RelocationIntake() {
   }
 
   if (showAgreement && signTiming === 'now') {
+    // Auto-check all items when on "sign now" path
+    React.useEffect(() => {
+      setAgreedItems(SERVICE_AGREEMENTS);
+    }, []);
+
     return (
       <div className="min-h-screen" style={{ background: '#808080' }}>
         <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
