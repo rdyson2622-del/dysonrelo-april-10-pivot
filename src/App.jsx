@@ -59,13 +59,13 @@ const AuthenticatedApp = () => {
       {/* Consumer Routes with Sidebar Layout */}
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/relocation-intake" element={<RelocationIntake />} />
-        <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
-        <Route path="/gemini" element={<GeminiSession />} />
-        <Route path="/explainers" element={<Explainers />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/RelocationIntake" element={<RelocationIntake />} />
+        <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
+        <Route path="/GeminiSession" element={<GeminiSession />} />
+        <Route path="/Explainers" element={<Explainers />} />
+        <Route path="/Chat" element={<Chat />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
