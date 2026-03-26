@@ -41,7 +41,14 @@ const PRIORITY_OPTIONS = [
   'Healthcare', 'Religious Community', 'Nightlife', 'Shopping', 'Dining',
 ];
 
-const STEPS = ['Your Info', 'Your Move', 'Priorities', 'Confirm'];
+const STEPS = ['Your Info', 'Your Move', 'Priorities', 'Confirm', 'Phase 2: Agent Match', 'Phase 3: Property Search', 'Phase 4: Community Research', 'Phase 5: Due Diligence'];
+
+const PHASE_STEPS = [
+  { num: '2', title: 'Agent Match', desc: 'Your vetted local expert, hand-picked.' },
+  { num: '3', title: 'Property Search & Selection', desc: 'AI-powered matching to your exact criteria.' },
+  { num: '4', title: 'Community & Neighborhood Research', desc: 'Zeroing in on the right neighborhoods.' },
+  { num: '5', title: 'Environmental & Property Due Diligence', desc: 'Know exactly what you\'re buying.' },
+];
 
 export default function RelocationIntake() {
   const navigate = useNavigate();
@@ -68,6 +75,10 @@ export default function RelocationIntake() {
     family_size: '',
     priorities: [],
     notes: '',
+    agent_preferences: '',
+    property_preferences: '',
+    neighborhood_notes: '',
+    due_diligence_notes: '',
   });
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -114,7 +125,7 @@ export default function RelocationIntake() {
       base44.integrations.Core.SendEmail({
         to: 'bob@dysonconcierge.com',
         subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
-        body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Skipped'}`,
+        body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nAGENT PREFERENCES: ${form.agent_preferences}\nPROPERTY CRITERIA: ${form.property_preferences}\nNEIGHBORHOOD NOTES: ${form.neighborhood_notes}\nDUE DILIGENCE: ${form.due_diligence_notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Scheduled'}`,
       }).catch(() => {});
 
       setSubmitting(false);
@@ -553,33 +564,81 @@ export default function RelocationIntake() {
               </p>
             </div>
           )}
+
+          {/* STEP 4 — Phase 2: Agent Match */}
+          {step === 4 && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <Users className="w-5 h-5" style={{ color: GOLD }} />
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Agent Match Preferences</h2>
+              </div>
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>What type of agent personality would work best for you?</p>
+              <textarea value={form.agent_preferences} onChange={e => set('agent_preferences', e.target.value)} placeholder="e.g., Direct communicator, detail-oriented, patient with first-time buyers..." rows={4} className="w-full rounded-xl px-4 py-3 text-base resize-none" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+            </div>
+          )}
+
+          {/* STEP 5 — Phase 3: Property Search */}
+          {step === 5 && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <MapPin className="w-5 h-5" style={{ color: GOLD }} />
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Property Search Criteria</h2>
+              </div>
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Beyond budget, any specific property features or deal-breakers?</p>
+              <textarea value={form.property_preferences} onChange={e => set('property_preferences', e.target.value)} placeholder="e.g., Must have updated kitchen, 3+ bedrooms, yard for dogs..." rows={4} className="w-full rounded-xl px-4 py-3 text-base resize-none" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+            </div>
+          )}
+
+          {/* STEP 6 — Phase 4: Community Research */}
+          {step === 6 && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <MapPin className="w-5 h-5" style={{ color: GOLD }} />
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Neighborhood Research</h2>
+              </div>
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Any neighborhoods you're already considering? Any you want to avoid?</p>
+              <textarea value={form.neighborhood_notes} onChange={e => set('neighborhood_notes', e.target.value)} placeholder="e.g., Interested in suburbs near good schools, avoid downtown noise..." rows={4} className="w-full rounded-xl px-4 py-3 text-base resize-none" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+            </div>
+          )}
+
+          {/* STEP 7 — Phase 5: Due Diligence */}
+          {step === 7 && (
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <Shield className="w-5 h-5" style={{ color: GOLD }} />
+                <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Due Diligence Priorities</h2>
+              </div>
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>What inspections or research are most important to you?</p>
+              <textarea value={form.due_diligence_notes} onChange={e => set('due_diligence_notes', e.target.value)} placeholder="e.g., Foundation inspection, radon test, flood zone check, solar potential..." rows={4} className="w-full rounded-xl px-4 py-3 text-base resize-none" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+            </div>
+          )}
         </motion.div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between mt-6">
-          {step > 0 ? (
-            <button onClick={() => setStep(s => s - 1)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-base font-semibold transition-all"
-              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          ) : <div />}
+         <div className="flex items-center justify-between mt-6">
+           {step > 0 ? (
+             <button onClick={() => setStep(s => s - 1)}
+               className="flex items-center gap-2 px-5 py-2.5 rounded-full text-base font-semibold transition-all"
+               style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
+               <ArrowLeft className="w-4 h-4" /> Back
+             </button>
+           ) : <div />}
 
-          {step < STEPS.length - 1 ? (
-            <button
-              onClick={() => setStep(s => s + 1)}
-              disabled={!canNext()}
-              className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
-              Continue <ArrowRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowScheduler(true)}
-              className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2">
-              Schedule Intro Call <ArrowRight className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+           {step < STEPS.length - 1 ? (
+             <button
+               onClick={() => setStep(s => s + 1)}
+               disabled={!canNext()}
+               className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+               Continue <ArrowRight className="w-4 h-4" />
+             </button>
+           ) : (
+             <button
+               onClick={() => setShowScheduler(true)}
+               className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2">
+               Schedule Intro Call <ArrowRight className="w-4 h-4" />
+             </button>
+           )}
+         </div>
       </div>
     </div>
   );
