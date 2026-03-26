@@ -69,7 +69,7 @@ const PHASES = [
   {
     number: 5,
     icon: ClipboardCheck,
-    title: 'Due Diligence',
+    title: 'Environmental & Property Due Diligence',
     status: 'upcoming',
     tagline: 'Know exactly what you\'re buying.',
     steps: [
