@@ -111,9 +111,9 @@ const PHASES = [
   {
     number: 8,
     icon: Truck,
-    title: 'Move-In & Settlement',
+    title: 'Upon Property Settlement — Complete All Move & Move-In Checklist Action Steps',
     status: 'upcoming',
-    tagline: 'Arrive ready. Settle in fast.',
+    tagline: 'Arrive ready. Every detail handled.',
     steps: [
       'Moving company vetted & booked',
       'Utilities transferred & activated',
