@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Calendar, DollarSign, Users, Home, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+const SERVICE_AGREEMENTS = [
+  'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
+  'I agree to work exclusively with a Dyson & Dyson referred agent for my destination purchase.',
+  'I consent to this conversation being recorded and summarized to build my relocation profile.',
+  'I understand my profile will be reviewed by Dyson & Dyson staff to match me with the right agent.',
+  'I agree that all official transaction communications will flow through the Dyson platform.',
+];
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -37,6 +45,8 @@ export default function RelocationIntake() {
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showAgreement, setShowAgreement] = useState(false);
+  const [agreedItems, setAgreedItems] = useState([]);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -67,6 +77,14 @@ export default function RelocationIntake() {
     return true;
   };
 
+  const toggleAgreement = (item) => {
+    setAgreedItems(prev =>
+      prev.includes(item) ? prev.filter(x => x !== item) : [...prev, item]
+    );
+  };
+
+  const allAgreed = agreedItems.length === SERVICE_AGREEMENTS.length;
+
   const handleSubmit = async () => {
     setSubmitting(true);
     await base44.entities.RelocationClient.create({
@@ -93,6 +111,87 @@ export default function RelocationIntake() {
     setSubmitting(false);
     setSubmitted(true);
   };
+
+  if (showAgreement) {
+    return (
+      <div className="min-h-screen" style={{ background: '#808080' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+          <Link to="/Home">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
+          </Link>
+          <button onClick={() => setShowAgreement(false)} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+        </nav>
+
+        <div className="max-w-2xl mx-auto px-6 py-12">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-2" style={{ color: GOLD }}>
+              <Zap className="w-4 h-4" />
+              <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
+            </div>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Charlie will hand you off to Gemini for your private relocation interview.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="rounded-2xl p-8"
+            style={{ background: '#000', border: '1px solid rgba(212,175,55,0.25)' }}
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Shield className="w-6 h-6" style={{ color: GOLD }} />
+              <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Service Agreement</h2>
+            </div>
+            <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>Please check each item to confirm you understand</p>
+
+            <div className="space-y-3 mb-8">
+              {SERVICE_AGREEMENTS.map((item, i) => {
+                const checked = agreedItems.includes(item);
+                return (
+                  <button
+                    key={i}
+                    onClick={() => toggleAgreement(item)}
+                    className="w-full flex items-start gap-3 p-4 rounded-xl text-left transition-all"
+                    style={{
+                      background: checked ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.04)',
+                      border: `1px solid ${checked ? GOLD : 'rgba(255,255,255,0.1)'}`,
+                    }}
+                  >
+                    <div className="w-5 h-5 rounded flex items-center justify-center shrink-0 mt-0.5 transition-all"
+                      style={{
+                        background: checked ? GOLD : 'transparent',
+                        border: `2px solid ${checked ? GOLD : 'rgba(255,255,255,0.3)'}`,
+                      }}>
+                      {checked && <CheckCircle2 className="w-3 h-3" style={{ color: '#000' }} />}
+                    </div>
+                    <span className="text-sm leading-relaxed" style={{ color: checked ? '#fff' : 'rgba(255,255,255,0.7)' }}>
+                      {item}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              disabled={!allAgreed || submitting}
+              className="w-full py-4 rounded-xl text-sm font-bold tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed gold-btn"
+            >
+              {submitting ? 'Submitting...' : 'I Agree — Start My Session'} <Zap className="w-4 h-4" />
+            </button>
+
+            <p className="text-xs text-center mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              By proceeding you agree to Dyson & Dyson's terms of service and privacy policy.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
@@ -324,10 +423,9 @@ export default function RelocationIntake() {
             </button>
           ) : (
             <button
-              onClick={handleSubmit}
-              disabled={submitting}
+              onClick={() => setShowAgreement(true)}
               className="gold-btn px-7 py-2.5 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-              {submitting ? 'Submitting...' : 'Submit My Profile'} <ArrowRight className="w-4 h-4" />
+              Review & Agree <ArrowRight className="w-4 h-4" />
             </button>
           )}
         </div>
