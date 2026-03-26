@@ -99,7 +99,7 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Preview & Back */}
-      <div className="p-3 space-y-1" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
+      <div className="p-3 space-y-1 pb-20" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
         <Link
           to="/GeminiSession"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
