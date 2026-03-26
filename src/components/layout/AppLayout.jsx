@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
@@ -7,6 +7,13 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function AppLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Don't show FloatingCharlie on pages that already have embedded chat
+  const hideFloatingCharlie = ['/Chat', '/Dashboard'].some(path => 
+    location.pathname.startsWith(path)
+  );
+  
   return (
     <div className="flex min-h-screen" style={{ background: '#A9A9A9' }}>
       {/* Left sidebar — desktop only */}
@@ -27,7 +34,7 @@ export default function AppLayout() {
         </div>
         <Outlet />
       </div>
-      <FloatingCharlie />
+      {!hideFloatingCharlie && <FloatingCharlie />}
       <PWAInstallPrompt />
     </div>
   );
