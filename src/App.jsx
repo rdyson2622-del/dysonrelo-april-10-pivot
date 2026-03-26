@@ -73,6 +73,12 @@ const AuthenticatedApp = () => {
         <Route path="/Explainers" element={<Explainers />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/Chat" element={<Chat />} />
+        <Route path="/CityGuide" element={<Chat />} />
+        <Route path="/city-guide" element={<Chat />} />
+        <Route path="/Search" element={<Chat />} />
+        <Route path="/search" element={<Chat />} />
+        <Route path="/PropertyComparison" element={<Chat />} />
+        <Route path="/property-comparison" element={<Chat />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
