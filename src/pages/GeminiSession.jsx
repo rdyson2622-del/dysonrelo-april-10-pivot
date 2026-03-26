@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Clock, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import CommitmentGate from '../components/charlie/CommitmentGate';
@@ -42,6 +42,8 @@ export default function GeminiSession() {
     setStage('done');
   };
 
+  const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#4a4a4a' }}>
       {/* Header */}
@@ -63,11 +65,59 @@ export default function GeminiSession() {
       </header>
 
       {/* Content */}
-      <div className={`flex-1 w-full mx-auto flex flex-col ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`} style={{ minHeight: 0 }}>
-        <AnimatePresence mode="wait">
+       <div className={`flex-1 w-full mx-auto flex flex-col ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`} style={{ minHeight: 0 }}>
+         <AnimatePresence mode="wait">
 
-          {/* COMMITMENT GATE */}
-          {stage === 'gate' && (
+           {/* SIGN TIMING CHOICE */}
+           {!signTiming && (
+             <motion.div key="timing" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4 pt-4">
+               <div className="text-center mb-6">
+                 <div className="flex items-center justify-center gap-2 mb-2" style={{ color: GOLD }}>
+                   <Zap className="w-4 h-4" />
+                   <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
+                 </div>
+                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                   You have two options — sign now and keep the momentum going, or sign after our call when you've had a chance to chat with the Dyson team. Both are totally fine.
+                 </p>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                 <motion.button
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   onClick={() => setSignTiming('now')}
+                   className="rounded-2xl p-6 border-2 transition-all text-left"
+                   style={{ background: '#3a3a3a', borderColor: GOLD }}>
+                   <div className="flex items-center gap-3 mb-3">
+                     <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
+                     <span className="font-bold" style={{ color: GOLD }}>Sign Now</span>
+                   </div>
+                   <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                     Review and sign the agreement right now. You'll be all set before we talk.
+                   </p>
+                 </motion.button>
+
+                 <motion.button
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.1 }}
+                   onClick={() => setSignTiming('after')}
+                   className="rounded-2xl p-6 border-2 transition-all text-left hover:border-slate-500"
+                   style={{ background: '#3a3a3a', borderColor: 'rgba(255,255,255,0.2)' }}>
+                   <div className="flex items-center gap-3 mb-3">
+                     <Clock className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                     <span className="font-bold" style={{ color: '#fff' }}>Sign After Our Call</span>
+                   </div>
+                   <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                     We'll send it to you after we chat — gives you time to process everything.
+                   </p>
+                 </motion.button>
+               </div>
+             </motion.div>
+           )}
+
+           {/* COMMITMENT GATE */}
+           {stage === 'gate' && signTiming && (
             <motion.div key="gate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
               style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
