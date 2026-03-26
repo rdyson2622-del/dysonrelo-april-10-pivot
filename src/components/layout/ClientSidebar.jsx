@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MessageCircle, MapPin, Home, Zap, Settings, Phone } from 'lucide-react';
+import { LayoutDashboard, MapPin, Home, Zap, Settings, Phone } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
   { label: 'My Dashboard',     path: '/Dashboard',   icon: LayoutDashboard },
-  { label: 'Chat with Charlie', path: '/Chat',        icon: MessageCircle },
   { label: 'City Guide',        path: '/CityGuide',   icon: MapPin },
   { label: 'Search Homes',      path: '/Search',      icon: Home },
   { label: 'Gemini Session',    path: '/GeminiSession', icon: Zap },
