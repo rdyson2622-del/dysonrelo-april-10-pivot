@@ -7,7 +7,7 @@ import ChatBubble from './ChatBubble';
 import OnboardingFlow from './OnboardingFlow';
 import MovePlan from './MovePlan';
 import { base44 } from '@/api/base44Client';
-import { speakAsCharlie, stopCharlie } from './charlieVoice';
+
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -75,13 +75,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
-
-  // Cleanup on unmount only
-  useEffect(() => {
-    return () => stopCharlie();
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -145,7 +139,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
   const handleSend = async (text) => {
     const messageText = (text || input).trim();
-    if (!messageText || isTyping || isSpeaking) return;
+    if (!messageText || isTyping) return;
 
     const userMsg = { role: 'user', content: messageText, type: 'text' };
     setMessages(prev => [...prev, userMsg]);
@@ -153,13 +147,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
     // Small delay to feel natural
     setIsTyping(true);
-    stopCharlie();
     setTimeout(() => {
-      const { display, spoken } = getSpokeResponse(messageText);
+      const { display } = getSpokeResponse(messageText);
       const charlieMsg = { role: 'charlie', content: display, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
-      speakAsCharlie(spoken, () => setIsSpeaking(true), () => setIsSpeaking(false));
     }, 1200);
   };
 
@@ -183,7 +175,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#f5f5f5' }}>
-            {isTyping ? 'Looking that up...' : isSpeaking ? 'Speaking...' : 'Site Guide • Full AI Coming Soon'}
+            {isTyping ? 'Looking that up...' : 'Site Guide • Full AI Coming Soon'}
           </p>
         </div>
 
@@ -263,7 +255,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
                 className="flex-1 text-sm border-0 rounded-lg"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
-              <Button type="submit" size="icon" disabled={!input.trim() || isTyping || isSpeaking}
+              <Button type="submit" size="icon" disabled={!input.trim() || isTyping}
                 className="shrink-0 rounded-lg"
                 style={{ background: GOLD, color: '#000' }}>
                 <Send className="w-4 h-4" />
