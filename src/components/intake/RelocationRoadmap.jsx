@@ -83,7 +83,7 @@ const PHASES = [
   {
     number: 6,
     icon: FileText,
-    title: 'Contracting',
+    title: 'Purchase Agreement Review & Selection of Service Providers',
     status: 'upcoming',
     tagline: 'Negotiate with confidence.',
     steps: [
