@@ -142,7 +142,7 @@ export default function RelocationActionSteps() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           <p className="text-sm font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ACTION STEPS</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(3.6rem, 8vw, 5.6rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Your Relocation Checklist
           </h1>
           <p className="text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
