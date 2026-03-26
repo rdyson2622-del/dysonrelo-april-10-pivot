@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, DollarSign, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, UserCheck, FileSignature, Clock, TrendingUp, RotateCcw, MapPinned, Wallet, Building, ClipboardList, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, ChevronRight, UserCheck, FileSignature, Clock, TrendingUp, RotateCcw, MapPinned, Wallet, Building, ClipboardList, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,14 +79,57 @@ export default function RelocationProfileCard({ clientId }) {
   const destState = parseDestState(client?.notes);
   const timeline = parseTimeline(client?.notes);
 
-  // Calculate milestone progress
-  const milestones = [
-    { label: 'Profile Created', complete: true },
-    { label: 'Agent Selected', complete: !!client?.agent_name },
-    { label: 'Buyer Broker Signed', complete: !!client?.buyer_broker_signed },
+  // Full relocation journey milestones
+  const allMilestones = [
+    { id: 'profile', label: 'Profile Created', complete: true, phase: 'intake', guidance: 'Your journey begins here. Share your destination, timeline, and priorities.' },
+    { id: 'agent', label: 'Agent Selected', complete: !!client?.agent_name, phase: 'intake', guidance: 'We present 3-5 vetted agents based on your personality fit and needs.' },
+    { id: 'buyer_broker', label: 'Buyer Broker Signed', complete: !!client?.buyer_broker_signed, phase: 'intake', guidance: 'Formalize your relationship with your chosen agent. Unlocks full City Guide access.' },
+    { id: 'search', label: 'Property Search Started', complete: !!client?.agent_selected_date, phase: 'search', guidance: 'Your agent begins curating listings based on your exact criteria.' },
+    { id: 'viewed', label: 'Properties Viewed', complete: false, phase: 'search', guidance: 'Tour homes with your agent. We track every property you see.' },
+    { id: 'top_pick', label: 'Top Pick Identified', complete: false, phase: 'search', guidance: 'You find a property that feels right. Time for due diligence.' },
+    { id: 'offer', label: 'Offer Submitted', complete: false, phase: 'offer', guidance: 'Your agent crafts a competitive offer based on market analysis.' },
+    { id: 'negotiation', label: 'Negotiation Complete', complete: false, phase: 'offer', guidance: 'Terms agreed upon. Moving toward contract.' },
+    { id: 'contract', label: 'Under Contract', complete: false, phase: 'escrow', guidance: 'Congratulations! Now the real work begins — inspections, appraisal, financing.' },
+    { id: 'inspection', label: 'Inspection Complete', complete: false, phase: 'escrow', guidance: 'Professional inspection reveals the true condition of the property.' },
+    { id: 'appraisal', label: 'Appraisal Complete', complete: false, phase: 'escrow', guidance: 'Lender verifies the property value matches the loan amount.' },
+    { id: 'financing', label: 'Financing Secured', complete: false, phase: 'escrow', guidance: 'Final loan approval received. Clear to close!' },
+    { id: 'closing', label: 'Closing Day', complete: !!client?.escrow_complete_date, phase: 'closing', guidance: 'Sign documents, transfer funds, receive keys. You did it!' },
+    { id: 'moved', label: 'Moved In', complete: false, phase: 'post', guidance: 'Welcome home! Charlie helps with utilities, services, and settling in.' },
   ];
-  const completedMilestones = milestones.filter(m => m.complete).length;
-  const progressPercent = Math.round((completedMilestones / milestones.length) * 100);
+
+  // Determine current active phase based on client status
+  const getCurrentPhase = () => {
+    if (client?.status === 'moved' || client?.escrow_complete_date) return 'post';
+    if (client?.status === 'under_contract') return 'escrow';
+    if (client?.status === 'actively_searching') return 'search';
+    if (client?.buyer_broker_signed) return 'search';
+    if (client?.agent_name) return 'intake';
+    return 'intake';
+  };
+
+  const currentPhase = getCurrentPhase();
+  
+  // Filter milestones based on current progress (show all up to current phase + next phase)
+  const visibleMilestones = allMilestones.filter(m => {
+    const phaseOrder = ['intake', 'search', 'offer', 'escrow', 'closing', 'post'];
+    const currentIdx = phaseOrder.indexOf(currentPhase);
+    const milestoneIdx = phaseOrder.indexOf(m.phase);
+    return milestoneIdx <= currentIdx + 1; // Show current phase + next phase
+  });
+
+  // Calculate progress based on visible milestones
+  const completedMilestones = visibleMilestones.filter(m => m.complete).length;
+  const progressPercent = Math.round((completedMilestones / visibleMilestones.length) * 100);
+
+  // Mid-journey pivot detection
+  const hasMidJourneyIssue = () => {
+    // Check for common pivot scenarios based on client data
+    if (client?.notes?.includes('pivot') || client?.notes?.includes('restart')) return true;
+    if (client?.status === 'inactive' && client?.buyer_broker_signed) return true;
+    return false;
+  };
+
+  const showPivotGuidance = hasMidJourneyIssue();
 
   return (
     <motion.div
@@ -120,7 +163,7 @@ export default function RelocationProfileCard({ clientId }) {
                   {progressPercent}%
                 </span>
               </div>
-              <span className="text-xs" style={{ color: '#888' }}>{completedMilestones}/{milestones.length} complete</span>
+              <span className="text-xs" style={{ color: '#888' }}>{completedMilestones}/{visibleMilestones.length} complete</span>
             </div>
             {!editing ? (
               <Button variant="ghost" size="sm" onClick={() => setEditing(true)}
@@ -230,34 +273,103 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
           </div>
 
-          {/* Milestones Row */}
+          {/* Milestones Row - Full Journey */}
           <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
-            <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#666' }}>Your Milestones</p>
-            <div className="flex flex-wrap gap-2">
-              {milestones.map((m, i) => (
-                <div 
-                  key={i}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl"
-                  style={{ 
-                    background: m.complete ? 'rgba(34,197,94,0.1)' : '#0a0a0a',
-                    border: m.complete ? '1px solid rgba(34,197,94,0.3)' : '1px solid #333'
-                  }}>
-                  <div 
-                    className="w-5 h-5 rounded-full flex items-center justify-center"
-                    style={{ background: m.complete ? '#22c55e' : '#333' }}>
-                    {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs text-white">{i + 1}</span>}
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Your Relocation Journey</p>
+              <span className="text-xs px-2 py-1 rounded-full" style={{ background: '#0a0a0a', color: '#888', border: '1px solid #333' }}>
+                Phase: <span style={{ color: GOLD, textTransform: 'capitalize' }}>{currentPhase}</span>
+              </span>
+            </div>
+            
+            {/* Mid-Journey Pivot Alert */}
+            {showPivotGuidance && (
+              <div className="mb-4 p-3 rounded-xl" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: '#f59e0b' }}>Mid-Journey Pivot Detected</p>
+                    <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      Changes happen. Your profile adapts. Charlie can guide you through timeline shifts, destination changes, or starting fresh with a new agent.
+                    </p>
                   </div>
-                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : '#888' }}>
-                    {m.label}
+                </div>
+              </div>
+            )}
+
+            {/* Milestones by Phase */}
+            <div className="space-y-3">
+              {['intake', 'search', 'offer', 'escrow', 'closing', 'post'].map(phase => {
+                const phaseMilestones = visibleMilestones.filter(m => m.phase === phase);
+                if (phaseMilestones.length === 0) return null;
+                
+                const isActivePhase = phase === currentPhase;
+                const isPastPhase = ['intake', 'search', 'offer', 'escrow', 'closing', 'post'].indexOf(phase) < ['intake', 'search', 'offer', 'escrow', 'closing', 'post'].indexOf(currentPhase);
+                
+                return (
+                  <div key={phase} className="rounded-xl p-3" style={{ 
+                    background: isActivePhase ? 'rgba(212,175,55,0.05)' : '#0a0a0a',
+                    border: isActivePhase ? `1px solid ${GOLD}33` : '1px solid #222'
+                  }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-bold uppercase" style={{ 
+                        color: isActivePhase ? GOLD : isPastPhase ? '#666' : '#444',
+                        textTransform: 'capitalize'
+                      }}>
+                        {phase === 'post' ? 'Post-Move' : phase} Phase
+                      </span>
+                      {isActivePhase && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: GOLD, color: '#000' }}>Current</span>}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {phaseMilestones.map((m, i) => (
+                        <div 
+                          key={m.id}
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-help transition-all hover:scale-105"
+                          style={{ 
+                            background: m.complete ? 'rgba(34,197,94,0.1)' : isActivePhase ? 'rgba(212,175,55,0.1)' : '#151515',
+                            border: m.complete ? '1px solid rgba(34,197,94,0.3)' : isActivePhase ? `1px solid ${GOLD}44` : '1px solid #2a2a2a'
+                          }}
+                          title={m.guidance}
+                        >
+                          <div 
+                            className="w-5 h-5 rounded-full flex items-center justify-center"
+                            style={{ background: m.complete ? '#22c55e' : isActivePhase ? GOLD : '#333' }}>
+                            {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs text-white">{allMilestones.findIndex(am => am.id === m.id) + 1}</span>}
+                          </div>
+                          <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : '#666' }}>
+                            {m.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Progress summary */}
+            <div className="mt-4 flex items-center justify-between p-3 rounded-xl" style={{ background: '#0a0a0a', border: '1px solid #222' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" 
+                  style={{ 
+                    background: `conic-gradient(${GOLD} ${progressPercent * 3.6}deg, #333 0deg)`,
+                    color: '#fff'
+                  }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+                    {progressPercent}%
                   </span>
                 </div>
-              ))}
+                <div>
+                  <p className="text-sm font-bold" style={{ color: '#fff' }}>Journey Progress</p>
+                  <p className="text-xs" style={{ color: '#888' }}>{completedMilestones} of {visibleMilestones.length} milestones complete</p>
+                </div>
+              </div>
+              {!client?.buyer_broker_signed && (
+                <p className="text-xs text-right max-w-[200px]" style={{ color: '#666' }}>
+                  Complete intake milestones to unlock full City Guide
+                </p>
+              )}
             </div>
-            {!client?.buyer_broker_signed && (
-              <p className="text-xs mt-3" style={{ color: '#666' }}>
-                Complete milestones to unlock your full City Guide and personalized research.
-              </p>
-            )}
           </div>
 
           {/* Priorities */}
