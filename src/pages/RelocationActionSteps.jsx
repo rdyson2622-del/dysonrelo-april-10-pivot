@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, Circle, MapPin, UserCheck, Home, Search, Building2, FileText, Key, Truck, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Circle, MapPin, UserCheck, Home, Search, Building2, FileText, Key, Truck, ChevronDown, ChevronUp, Smartphone, Download, Share } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -160,7 +160,7 @@ export default function RelocationActionSteps() {
 
       <main className="max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
           <p className="text-sm font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ACTION STEPS</p>
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Your Relocation Checklist
@@ -168,6 +168,73 @@ export default function RelocationActionSteps() {
           <p className="text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Work through each phase — answer the questions, track progress, and we'll store everything for your reference.
           </p>
+        </motion.div>
+
+        {/* PWA Install Guide */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="rounded-2xl p-6 mb-8"
+          style={{ background: 'rgba(212,175,55,0.08)', border: `2px solid ${GOLD}` }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <Smartphone className="w-6 h-6" style={{ color: GOLD }} />
+            <h2 className="font-bold text-xl" style={{ color: '#fff' }}>Add Dyson Relocation to Your Home Screen</h2>
+          </div>
+          <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            For quick access to your relocation checklist and Charlie, add this app to your phone's home screen. It works like a native app — fast and always available.
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* iOS Instructions */}
+            <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.2)' }}>
+                  <Share className="w-4 h-4" style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-bold" style={{ color: '#fff' }}>iPhone / iPad</h3>
+              </div>
+              <ol className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>1.</span>
+                  Tap the <strong>Share</strong> icon (arrow pointing up from box) at bottom of Safari
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>2.</span>
+                  Scroll down and tap <strong>"Add to Home Screen"</strong>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>3.</span>
+                  Tap <strong>"Add"</strong> in top right — done!
+                </li>
+              </ol>
+            </div>
+
+            {/* Android Instructions */}
+            <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.2)' }}>
+                  <Download className="w-4 h-4" style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-bold" style={{ color: '#fff' }}>Android (Chrome)</h3>
+              </div>
+              <ol className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>1.</span>
+                  Tap the <strong>three dots</strong> menu in top right of Chrome
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>2.</span>
+                  Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold" style={{ color: GOLD }}>3.</span>
+                  Confirm by tapping <strong>"Add"</strong> or <strong>"Install"</strong> — done!
+                </li>
+              </ol>
+            </div>
+          </div>
         </motion.div>
 
         {/* Phases */}
