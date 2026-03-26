@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight } from 'lucide-react';
+import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
@@ -19,6 +20,24 @@ const navItems = [
 
 export default function AdminSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [pageCode, setPageCode] = useState('');
+
+  const handlePageJump = (e) => {
+    e.preventDefault();
+    if (!pageCode.trim()) return;
+
+    // Parse page code (e.g., "1C" → page 1, or just "14" → page 14)
+    const match = pageCode.toUpperCase().match(/^(\d+)([A-Z])?$/);
+    if (match) {
+      const pageNum = match[1];
+      const pageData = PAGE_REGISTRY[pageNum];
+      if (pageData) {
+        navigate(pageData.path);
+        setPageCode('');
+      }
+    }
+  };
 
   return (
     <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
@@ -29,6 +48,33 @@ export default function AdminSidebar() {
           <h1 className="font-black text-sm tracking-tight" style={{ color: '#fff' }}>CONCIERGE</h1>
           <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
         </div>
+      </div>
+
+      {/* Quick Page Jump */}
+      <div className="px-3 py-3" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        <form onSubmit={handlePageJump} className="flex gap-2">
+          <input
+            type="text"
+            value={pageCode}
+            onChange={(e) => setPageCode(e.target.value.toUpperCase())}
+            placeholder="Go to page (e.g., 1C, 14)"
+            className="flex-1 px-3 py-2 rounded-lg text-sm font-medium"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(212,175,55,0.25)',
+              color: '#fff',
+              outline: 'none',
+            }}
+          />
+          <button
+            type="submit"
+            className="px-3 py-2 rounded-lg flex items-center justify-center transition-all"
+            style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
+          >
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
+        <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Type page # or code (1-31, 1A, 14B)</p>
       </div>
 
       {/* Nav */}
