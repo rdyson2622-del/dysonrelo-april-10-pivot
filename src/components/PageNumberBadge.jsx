@@ -64,7 +64,7 @@ export default function PageNumberBadge() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-40 font-bold"
+      className="fixed bottom-4 left-4 z-40 font-bold"
       style={{
         color: '#D4AF37',
         opacity: 1,
