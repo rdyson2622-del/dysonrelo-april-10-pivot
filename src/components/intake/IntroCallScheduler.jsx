@@ -59,9 +59,9 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
           style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
           <CheckCircle2 className="w-8 h-8" style={{ color: GOLD }} />
         </div>
-        <h2 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Call Scheduled!</h2>
-        <p className="text-sm mb-1" style={{ color: GOLD }}>{selectedDay.label} at {selectedTime} (Pacific)</p>
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Moving to service agreement...</p>
+        <h2 className="font-bold mb-2" style={{ color: '#fff', fontSize: '1.5rem' }}>Call Scheduled!</h2>
+        <p className="mb-1" style={{ color: GOLD, fontSize: '1rem' }}>{selectedDay.label} at {selectedTime} (Pacific)</p>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem' }}>Moving to service agreement...</p>
       </motion.div>
     );
   }
@@ -76,9 +76,9 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
         <Phone className="w-6 h-6" style={{ color: GOLD }} />
-        <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Let's Talk First</h2>
+        <h2 className="font-bold" style={{ color: '#fff', fontSize: '2rem' }}>Let's Talk First</h2>
       </div>
-      <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.55)' }}>
+      <p className="mb-6" style={{ color: 'rgba(255,255,255,0.55)', fontSize: '1rem' }}>
         Before you commit to anything, let's have a real conversation. Pick a 15-minute slot — Bob Dyson's team will call you personally.
       </p>
 
@@ -88,9 +88,9 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
         <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
           style={{ background: GOLD, color: '#000' }}>BD</div>
         <div>
-          <p className="text-sm font-bold" style={{ color: '#fff' }}>Bob Dyson's Team • 15-Min Intro Call</p>
-          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            We'll call <span style={{ color: GOLD }}>{form.phone || form.email}</span> — no pressure, just answers.
+          <p className="font-bold" style={{ color: '#fff', fontSize: '1rem' }}>Bob Dyson's Team • 15-Min Intro Call</p>
+          <p className="mt-0.5" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem' }}>
+            We'll call <span style={{ color: GOLD }}>(858) 353-1200</span> — no pressure, just answers.
           </p>
         </div>
       </div>
@@ -99,14 +99,15 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
       <div className="mb-5">
         <div className="flex items-center gap-2 mb-3">
           <Calendar className="w-4 h-4" style={{ color: GOLD }} />
-          <span className="text-xs font-bold tracking-wider" style={{ color: GOLD }}>CHOOSE A DAY</span>
+          <span className="font-bold tracking-wider" style={{ color: GOLD, fontSize: '0.875rem' }}>CHOOSE A DAY</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {DAYS.map(day => (
             <button
               key={day.value}
               onClick={() => { setSelectedDay(day); setSelectedTime(null); }}
-              className="px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all"
+              className="px-3 py-2.5 rounded-xl font-medium text-left transition-all"
+              style={{ fontSize: '0.95rem' }}
               style={{
                 background: selectedDay?.value === day.value ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
                 border: `1px solid ${selectedDay?.value === day.value ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -124,14 +125,15 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Clock className="w-4 h-4" style={{ color: GOLD }} />
-            <span className="text-xs font-bold tracking-wider" style={{ color: GOLD }}>CHOOSE A TIME (PACIFIC)</span>
+            <span className="font-bold tracking-wider" style={{ color: GOLD, fontSize: '0.875rem' }}>CHOOSE A TIME (PACIFIC)</span>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {TIME_SLOTS.map(t => (
               <button
                 key={t}
                 onClick={() => setSelectedTime(t)}
-                className="px-2 py-2 rounded-xl text-xs font-medium transition-all text-center"
+                className="px-2 py-2 rounded-xl font-medium transition-all text-center"
+                style={{ fontSize: '0.95rem' }}
                 style={{
                   background: selectedTime === t ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
                   border: `1px solid ${selectedTime === t ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -149,21 +151,22 @@ export default function IntroCallScheduler({ form, onBack, onScheduled }) {
       <div className="flex items-center justify-between mt-2">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all"
-          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all"
+          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '1rem' }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         <button
           onClick={handleConfirm}
           disabled={!canConfirm}
-          className="gold-btn px-7 py-2.5 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="gold-btn px-7 py-2.5 rounded-full font-bold tracking-wide flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{ fontSize: '1rem' }}
         >
           Confirm Call <ArrowRight className="w-4 h-4" />
         </button>
       </div>
 
-      <p className="text-xs text-center mt-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
+      <p className="text-center mt-4" style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.875rem' }}>
         You can still skip ahead to the service agreement if you prefer.{' '}
         <button onClick={() => onScheduled(null)} className="underline hover:opacity-70" style={{ color: 'rgba(255,255,255,0.35)' }}>
           Skip for now
