@@ -55,7 +55,7 @@ const PHASES = [
   {
     number: 4,
     icon: MapPin,
-    title: 'Community Selection',
+    title: 'Community & Neighborhood Research',
     status: 'upcoming',
     tagline: 'Zeroing in on the right neighborhoods.',
     steps: [
