@@ -95,35 +95,34 @@ export default function RelocationIntake() {
   const allAgreed = agreedItems.length === SERVICE_AGREEMENTS.length;
 
   const handleSubmit = async () => {
-  setSubmitting(true);
-  try {
-    const client = await base44.entities.RelocationClient.create({
-      full_name: form.full_name,
-      email: form.email,
-      phone: form.phone,
-      current_city: form.current_city,
-      destination_city: form.destination_city,
-      move_date: form.move_date === 'asap' ? '' : form.move_date,
-      budget: form.budget,
-      family_size: form.family_size ? parseInt(form.family_size) : undefined,
-      priorities: form.priorities.map(p => p.toLowerCase().replace(' ', '_')),
-      notes: form.notes,
-      status: 'in_consultation',
-    });
+    setSubmitting(true);
+    try {
+      await base44.entities.RelocationClient.create({
+        full_name: form.full_name,
+        email: form.email,
+        phone: form.phone,
+        current_city: form.current_city,
+        destination_city: form.destination_city,
+        move_date: form.move_date === 'asap' ? '' : form.move_date,
+        budget: form.budget,
+        family_size: form.family_size ? parseInt(form.family_size) : undefined,
+        priorities: form.priorities.map(p => p.toLowerCase().replace(' ', '_')),
+        notes: form.notes,
+        status: 'in_consultation',
+      });
 
-    // Send email asynchronously without blocking
-    base44.integrations.Core.SendEmail({
-      to: 'bob@dysonconcierge.com',
-      subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
-      body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Skipped'}`,
-    }).catch(() => {});
+      base44.integrations.Core.SendEmail({
+        to: 'bob@dysonconcierge.com',
+        subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
+        body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Skipped'}`,
+      }).catch(() => {});
 
-    setSubmitting(false);
-    setSubmitted(true);
-  } catch (e) {
-    console.error('Intake submit error:', e);
-    setSubmitting(false);
-  }
+      setSubmitting(false);
+      navigate('/RelocationRoadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city));
+    } catch (e) {
+      console.error('Intake submit error:', e);
+      setSubmitting(false);
+    }
   };
 
 
