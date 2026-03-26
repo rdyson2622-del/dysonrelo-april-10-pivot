@@ -95,7 +95,7 @@ export default function CityGuideTeaser() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
               className="rounded-2xl overflow-hidden"
-              style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}
+              style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}
             >
               <div className="p-5">
                 <div className="flex items-start gap-3 mb-3">
@@ -103,16 +103,16 @@ export default function CityGuideTeaser() {
                     <cat.icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-sm mb-1" style={{ color: '#fff' }}>{cat.label}</h3>
-                    <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>{cat.preview}</p>
+                    <h3 className="font-bold mb-1" style={{ color: '#fff', fontSize: '0.95rem' }}>{cat.label}</h3>
+                    <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.875rem' }}>{cat.preview}</p>
                   </div>
                 </div>
 
                 {/* Why we wait — expandable */}
                 <button
                   onClick={() => setExpandedCard(expandedCard === cat.key ? null : cat.key)}
-                  className="flex items-center gap-1 text-xs font-semibold transition-colors"
-                  style={{ color: expandedCard === cat.key ? GOLD : 'rgba(255,255,255,0.35)' }}
+                  className="flex items-center gap-1 font-semibold transition-colors"
+                  style={{ color: expandedCard === cat.key ? GOLD : 'rgba(255,255,255,0.35)', fontSize: '0.875rem' }}
                 >
                   {expandedCard === cat.key ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                   Why we personalize this
@@ -125,8 +125,8 @@ export default function CityGuideTeaser() {
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <p className="text-xs mt-2 pl-3 leading-relaxed border-l-2"
-                        style={{ borderColor: GOLD, color: 'rgba(255,255,255,0.55)' }}>
+                      <p className="mt-2 pl-3 leading-relaxed border-l-2"
+                        style={{ borderColor: GOLD, color: 'rgba(255,255,255,0.55)', fontSize: '0.875rem' }}>
                         {cat.why}
                       </p>
                     </motion.div>
@@ -138,7 +138,7 @@ export default function CityGuideTeaser() {
               <div className="px-5 py-2.5 flex items-center gap-1.5 border-t"
                 style={{ borderColor: 'rgba(212,175,55,0.15)', background: 'rgba(212,175,55,0.05)' }}>
                 <Clock className="w-3 h-3" style={{ color: GOLD }} />
-                <span className="text-xs font-semibold" style={{ color: 'rgba(212,175,55,0.8)' }}>
+                <span className="font-semibold" style={{ color: 'rgba(212,175,55,0.8)', fontSize: '0.875rem' }}>
                   Unlocks after agent selection + Buyer Broker Agreement
                 </span>
               </div>
@@ -147,10 +147,10 @@ export default function CityGuideTeaser() {
         </div>
 
         {/* How it unlocks strip */}
-        <div className="rounded-2xl p-6 mb-8" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
+        <div className="rounded-2xl p-6 mb-8" style={{ background: '#1a1a1a', border: `1px solid rgba(212,175,55,0.25)` }}>
           <div className="flex items-center gap-2 mb-5">
             <Sparkles className="w-4 h-4" style={{ color: GOLD }} />
-            <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>HOW FULL ACCESS UNLOCKS</p>
+            <p className="font-bold tracking-[0.3em]" style={{ color: GOLD, fontSize: '0.875rem' }}>HOW FULL ACCESS UNLOCKS</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -164,8 +164,8 @@ export default function CityGuideTeaser() {
                   style={{ borderColor: 'rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.08)' }}>
                   <step.icon className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <p className="text-xs font-bold leading-snug mb-0.5" style={{ color: '#fff' }}>{step.label}</p>
-                <p className="text-xs leading-snug" style={{ color: 'rgba(255,255,255,0.4)' }}>{step.desc}</p>
+                <p className="font-bold leading-snug mb-0.5" style={{ color: '#fff', fontSize: '0.875rem' }}>{step.label}</p>
+                <p className="leading-snug" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -173,7 +173,7 @@ export default function CityGuideTeaser() {
 
         {/* CTA */}
         <div className="text-center">
-          <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="mb-5" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.95rem' }}>
             Start your relocation profile and unlock personalized city intelligence when the time is right.
           </p>
           <Link to="/RelocationIntake">
