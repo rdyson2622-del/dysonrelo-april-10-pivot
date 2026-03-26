@@ -114,6 +114,8 @@ export default function RelocationIntake() {
       }).catch(() => {});
     } catch (e) {
       console.error('Intake submit error:', e);
+      setSubmitting(false);
+      return;
     }
     setSubmitting(false);
     setSubmitted(true);
