@@ -33,14 +33,14 @@ export default function Home() {
         style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}
       >
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
-        <div className="flex items-center gap-2">
-          <Link to="/Dashboard">
-            <button className="text-sm px-4 py-2 rounded-full transition-all hover:bg-white/5" style={{ color: '#fff', fontWeight: 500 }}>
+        <div className="flex items-center gap-3">
+          <Link to="/dashboard">
+            <button className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-white/20 hover:border-white/40 hover:bg-white/5" style={{ color: '#fff', background: 'transparent' }}>
               Dashboard
             </button>
           </Link>
           <Link to="/admin">
-            <button className="text-sm px-4 py-2 rounded-full font-semibold transition-all hover:opacity-90 gold-btn">
+            <button className="px-5 py-2.5 rounded-full text-sm font-bold transition-all gold-btn">
               Admin
             </button>
           </Link>
@@ -88,7 +88,7 @@ export default function Home() {
                   Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
-              <Link to="/Dashboard">
+              <Link to="/dashboard">
                 <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
                   style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
                   My Dashboard <ArrowRight className="w-4 h-4" />
