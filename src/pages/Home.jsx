@@ -48,7 +48,7 @@ export default function Home() {
       </nav>
 
       {/* Hero — full viewport landing screen */}
-      <section className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
+      <section id="hero" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
         {/* Deep background radial glow */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
@@ -201,7 +201,7 @@ export default function Home() {
       </section>
 
       {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
-      <section className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+      <section id="promise" className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
@@ -216,7 +216,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div id="services" className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {services.map((s, i) => (
             <motion.div
               key={i}
@@ -266,10 +266,12 @@ export default function Home() {
       </section>
 
       {/* City Guide Teaser */}
-      <CityGuideTeaser />
+      <div id="city-guide-teaser">
+        <CityGuideTeaser />
+      </div>
 
       {/* V2V Agent Recruitment Card */}
-      <section className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
+      <section id="voice-to-voice" className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -297,7 +299,7 @@ export default function Home() {
       </section>
 
       {/* Bob Dyson Leadership Section */}
-      <section className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+      <section id="bob-leadership" className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
@@ -342,7 +344,7 @@ export default function Home() {
       </section>
 
       {/* Intelligent Orchestration */}
-      <section className="max-w-7xl mx-auto px-6 md:px-14 py-24">
+      <section id="orchestration" className="max-w-7xl mx-auto px-6 md:px-14 py-24">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>⚙️</div>
@@ -402,7 +404,7 @@ export default function Home() {
 
 
       {/* Agent highlight */}
-      <section className="max-w-7xl mx-auto px-6 md:px-14 pb-24">
+      <section id="agent-selection" className="max-w-7xl mx-auto px-6 md:px-14 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -457,7 +459,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 text-center relative overflow-hidden"
+      <section id="cta" className="py-20 px-6 text-center relative overflow-hidden"
         style={{ borderTop: '1px solid rgba(212,175,55,0.1)', background: 'rgba(212,175,55,0.015)' }}>
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 100%, rgba(212,175,55,0.06) 0%, transparent 60%)' }} />
@@ -479,7 +481,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: '#000' }}>
+      <footer id="footer" className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: '#000' }}>
         <div className="font-bold tracking-widest text-xs mb-2" style={{ color: 'rgba(212,175,55,0.7)' }}>CONCIERGE RELOCATION SERVICES</div>
         <p className="text-base" style={{ color: '#fff', fontSize: '1.5rem' }}>The Dyson & Dyson Companies / Concierge Relocation Program     Free to Buyers     CA.DRE # 02303118</p>
       </footer>

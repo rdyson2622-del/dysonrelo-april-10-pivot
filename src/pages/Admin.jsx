@@ -54,13 +54,13 @@ export default function Admin() {
 
   return (
     <div className="p-8 min-h-screen" style={{ background: '#A9A9A9' }}>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div id="header" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Admin Overview</h1>
         <p className="mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>Manage your listing owners and relocation clients</p>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+      <div id="quick-stats" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         <StatCard title="Listing Owners" value={owners.length} icon={Home} color="orange" delay={0} />
         <StatCard title="Contacted" value={contacted} icon={Users} color="blue" delay={0.05} />
         <StatCard title="Converted" value={converted} icon={UserCheck} color="green" delay={0.1} />
@@ -114,6 +114,7 @@ export default function Admin() {
 
       {/* Recent Activity */}
       <motion.div
+        id="recent-activity"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
