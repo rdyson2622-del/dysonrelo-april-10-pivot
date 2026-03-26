@@ -140,6 +140,7 @@ export default function RelocationIntake() {
             onBack={() => setShowScheduler(false)}
             onScheduled={(callInfo) => {
               setScheduledCall(callInfo);
+              setAgreedItems([]); // reset checkboxes every time
               setShowScheduler(false);
               setShowAgreement(true);
             }}
@@ -156,7 +157,7 @@ export default function RelocationIntake() {
           <Link to="/Home">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
           </Link>
-          <button onClick={() => { setShowAgreement(false); setShowScheduler(true); }} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <button onClick={() => { setShowAgreement(false); setShowScheduler(true); setAgreedItems([]); }} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
         </nav>
@@ -216,9 +217,15 @@ export default function RelocationIntake() {
             <button
               onClick={handleSubmit}
               disabled={!allAgreed || submitting}
-              className="w-full py-4 rounded-xl text-sm font-bold tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed gold-btn"
+              className="w-full py-4 rounded-xl text-sm font-bold tracking-wider flex items-center justify-center gap-2 transition-all"
+              style={{
+                background: allAgreed ? 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' : 'rgba(255,255,255,0.08)',
+                color: allAgreed ? '#000' : 'rgba(255,255,255,0.3)',
+                cursor: allAgreed ? 'pointer' : 'not-allowed',
+                border: allAgreed ? 'none' : '1px solid rgba(255,255,255,0.1)',
+              }}
             >
-              {submitting ? 'Submitting...' : 'I Agree — Start My Session'} <Zap className="w-4 h-4" />
+              {submitting ? 'Submitting...' : allAgreed ? 'I Agree — Start My Session' : `Check all ${SERVICE_AGREEMENTS.length - agreedItems.length} remaining items`} <Zap className="w-4 h-4" />
             </button>
 
             <p className="text-xs text-center mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
