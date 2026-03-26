@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic, ScrollText, MapPin } from 'lucide-react';
+import { User, Sparkles, MessageCircle, CheckSquare, Phone, Mic, ScrollText, MapPin, GitCompare } from 'lucide-react';
 
 import ClientHeader from '@/components/admin/client-detail/ClientHeader';
 import ClientProfileTab from '@/components/admin/client-detail/ClientProfileTab';
@@ -14,6 +14,7 @@ import ClientQuickContact from '@/components/admin/client-detail/ClientQuickCont
 import ClientSessionMonitor from '@/components/admin/client-detail/ClientSessionMonitor';
 import ClientTransactionTimeline from '@/components/admin/client-detail/ClientTransactionTimeline';
 import CityGuideResearch from '@/components/admin/CityGuideResearch';
+import PropertyResearchPanel from '@/components/admin/PropertyResearchPanel';
 
 const GOLD = '#D4AF37';
 
@@ -24,8 +25,9 @@ const TABS = [
   { id: 'chat',      label: 'Chat History',   icon: MessageCircle },
   { id: 'tasks',     label: 'Move Tasks',     icon: CheckSquare },
   { id: 'timeline',  label: 'Transaction Log',icon: ScrollText },
-  { id: 'cityguide', label: 'City Research',  icon: MapPin },
-  { id: 'contact',   label: 'Quick Contact',  icon: Phone },
+  { id: 'cityguide',   label: 'City Research',    icon: MapPin },
+  { id: 'properties',  label: 'Property Compare', icon: GitCompare },
+  { id: 'contact',     label: 'Quick Contact',    icon: Phone },
 ];
 
 export default function AdminClientDetail() {
@@ -97,6 +99,17 @@ export default function AdminClientDetail() {
           {activeTab === 'cityguide' && (
             <div className="bg-white rounded-2xl border border-slate-200 p-6">
               <CityGuideResearch client={client} />
+            </div>
+          )}
+          {activeTab === 'properties' && (
+            <div className="rounded-2xl p-6" style={{ background: 'rgba(0,0,0,0.5)' }}>
+              <div className="mb-4">
+                <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>PROPERTY COMPARISON RESEARCH</p>
+                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Select a property the client added to fill in research findings or auto-research with Gemini.
+                </p>
+              </div>
+              <PropertyResearchPanel clientId={client.id} />
             </div>
           )}
           {activeTab === 'contact'  && <ClientQuickContact client={client} />}

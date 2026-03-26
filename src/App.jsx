@@ -131,6 +131,7 @@ import AdminListingAgentExplainer from './pages/AdminListingAgentExplainer';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import RelocationIntake from './pages/RelocationIntake';
 import RelocationRoadmap from './components/intake/RelocationRoadmap';
+import PropertyComparison from './pages/PropertyComparison';
 
 import AppLayout from './components/layout/AppLayout';
 import AdminLayout from './components/layout/AdminLayout';
@@ -163,6 +164,7 @@ const AuthenticatedApp = () => {
       <Route path="/Home" element={<Home />} />
       <Route path="/RelocationIntake" element={<RelocationIntake />} />
       <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
+      <Route path="/PropertyComparison" element={<PropertyComparison />} />
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
       <Route path="/GeminiSession" element={<GeminiSession />} />
