@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -46,8 +47,10 @@ export default function RelocationIntake() {
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showScheduler, setShowScheduler] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
   const [agreedItems, setAgreedItems] = useState([]);
+  const [scheduledCall, setScheduledCall] = useState(null);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -106,12 +109,45 @@ export default function RelocationIntake() {
     base44.integrations.Core.SendEmail({
       to: 'bob@dysonconcierge.com',
       subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
-      body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}`,
+      body: `New client intake submitted:\n\nName: ${form.full_name}\nEmail: ${form.email}\nPhone: ${form.phone}\nFrom: ${form.current_city}\nTo: ${form.destination_city}\nTimeline: ${form.move_date}\nBudget: ${form.budget}\nFamily Size: ${form.family_size}\nPriorities: ${form.priorities.join(', ')}\nNotes: ${form.notes}\n\nINTRO CALL: ${scheduledCall ? `${scheduledCall.day?.label} at ${scheduledCall.time} (Pacific)` : 'Skipped'}`,
     }).catch(() => {});
 
     setSubmitting(false);
     setSubmitted(true);
   };
+
+  if (showScheduler && !showAgreement) {
+    return (
+      <div className="min-h-screen" style={{ background: '#808080' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+          <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
+          <button onClick={() => setShowScheduler(false)} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+        </nav>
+        <div className="max-w-2xl mx-auto px-6 py-12">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+            <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ALMOST THERE</p>
+            <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', letterSpacing: '0.18em', color: '#fff' }}>
+              Meet Us Before You Commit
+            </h1>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Schedule a quick 15-minute intro call so you can put a real voice to the name.
+            </p>
+          </motion.div>
+          <IntroCallScheduler
+            form={form}
+            onBack={() => setShowScheduler(false)}
+            onScheduled={(callInfo) => {
+              setScheduledCall(callInfo);
+              setShowScheduler(false);
+              setShowAgreement(true);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (showAgreement) {
     return (
@@ -120,7 +156,7 @@ export default function RelocationIntake() {
           <Link to="/Home">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
           </Link>
-          <button onClick={() => setShowAgreement(false)} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <button onClick={() => { setShowAgreement(false); setShowScheduler(true); }} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
         </nav>
@@ -432,9 +468,9 @@ export default function RelocationIntake() {
             </button>
           ) : (
             <button
-              onClick={() => setShowAgreement(true)}
+              onClick={() => setShowScheduler(true)}
               className="gold-btn px-7 py-2.5 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-              Review & Agree <ArrowRight className="w-4 h-4" />
+              Schedule Intro Call <ArrowRight className="w-4 h-4" />
             </button>
           )}
         </div>
