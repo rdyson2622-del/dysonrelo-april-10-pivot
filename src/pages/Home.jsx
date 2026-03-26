@@ -152,7 +152,7 @@ export default function Home() {
                   </section>
 
                   {/* Charlie Card Section — portrait only (below hero) */}
-                  <section id="charlie-card" className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+                  <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.92, y: 20 }}
                       whileInView={{ opacity: 1, scale: 1, y: 0 }}
