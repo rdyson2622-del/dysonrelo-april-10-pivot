@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Zap } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -195,7 +196,14 @@ export default function RelocationIntake() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ background: '#808080' }}>
+      <div className="min-h-screen flex flex-col" style={{ background: '#808080' }}>
+      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
+        <Link to="/Home" className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <ArrowLeft className="w-4 h-4" /> Back to Home
+        </Link>
+      </nav>
+      <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-lg">
           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
             style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
@@ -219,6 +227,7 @@ export default function RelocationIntake() {
             </button>
           </Link>
         </motion.div>
+        </div>
       </div>
     );
   }

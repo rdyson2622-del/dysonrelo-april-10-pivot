@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake,
+  ArrowRight, ArrowLeft, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake,
   MapPin, Shield, Users, Sparkles
 } from 'lucide-react';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
@@ -52,10 +52,8 @@ export default function AgentExplainer() {
         style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}
       >
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
-        <Link to="/">
-          <button className="text-sm px-4 py-2 rounded-full transition-all hover:bg-white/5" style={{ color: '#fff', fontWeight: 500 }}>
-            Back to Home
-          </button>
+        <Link to="/Home" className="flex items-center gap-2 text-sm font-semibold transition-all hover:opacity-70" style={{ color: '#fff' }}>
+          <ArrowLeft className="w-4 h-4" /> Back
         </Link>
       </nav>
 
