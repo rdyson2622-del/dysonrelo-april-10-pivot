@@ -307,7 +307,7 @@ export default function RelocationIntake() {
             <button
               onClick={handleSubmit}
               disabled={!allAgreed || submitting}
-              className="w-full py-4 rounded-xl text-sm font-bold tracking-wider flex items-center justify-center gap-2 transition-all"
+              className="w-full py-4 rounded-xl text-base font-bold tracking-wider flex items-center justify-center gap-2 transition-all"
               style={{
                 background: allAgreed ? 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' : 'rgba(255,255,255,0.08)',
                 color: allAgreed ? '#000' : 'rgba(255,255,255,0.3)',
@@ -315,7 +315,8 @@ export default function RelocationIntake() {
                 border: allAgreed ? 'none' : '1px solid rgba(255,255,255,0.1)',
               }}
             >
-              {submitting ? 'Submitting...' : allAgreed ? 'I Agree — Start My Session' : `Check all ${SERVICE_AGREEMENTS.length - agreedItems.length} remaining items`} <Zap className="w-4 h-4" />
+              {submitting ? 'Processing...' : allAgreed ? 'I Agree — Start My Session' : `Check all ${SERVICE_AGREEMENTS.length - agreedItems.length} remaining items`}
+              {allAgreed && <Zap className="w-4 h-4" />}
             </button>
 
             <p className="text-xs text-center mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
