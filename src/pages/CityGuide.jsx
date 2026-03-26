@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, MapPin, GraduationCap, DollarSign, Heart, Building2, TreePine, MessageCircle, ArrowRight, Sparkles, Clock, CheckCircle2, Send, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Search, MapPin, GraduationCap, DollarSign, Heart, Building2, TreePine, MessageCircle, ArrowRight, Sparkles, Clock, CheckCircle2, Send, Loader2, ChevronDown, ChevronUp, Shield, Footprints, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
 const categories = [
+  {
+    key: 'map',
+    label: 'Interactive Map',
+    icon: MapPin,
+    color: 'bg-indigo-500',
+    prompt: 'neighborhood map with safety, walkability, and schools',
+    preview: 'Interactive map showing neighborhood safety scores, walkability ratings, and school locations for your destination city.',
+    why: 'Visual data helps you understand neighborhoods at a glance — see safety, walkability, and schools overlaid on one map.',
+    isMap: true,
+  },
   {
     key: 'neighborhoods',
     label: 'Neighborhoods',
@@ -90,6 +102,11 @@ export default function CityGuide() {
   const [urgentSent, setUrgentSent] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
 
+  // Map data state
+  const [mapData, setMapData] = useState(null);
+  const [mapLoading, setMapLoading] = useState(false);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+
   useEffect(() => {
     base44.auth.me().then(user => {
       if (!user) { setCommitted(false); return; }
@@ -125,6 +142,32 @@ export default function CityGuide() {
       setResult('Research failed. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMapData = async () => {
+    if (!submittedCity) return;
+    setSelectedCategory(categories.find(c => c.key === 'map'));
+    setMapLoading(true);
+    setMapData(null);
+    try {
+      // Use LLM to get neighborhood data with coordinates
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `For ${submittedCity}, provide neighborhood data in JSON format. Include 8-12 neighborhoods with: name, approximate latitude/longitude, safety score (1-100), walkability score (1-100), and 2-3 top schools nearby with ratings. Format as JSON array: [{"name": "Neighborhood", "lat": 0.0, "lng": 0.0, "safety": 0-100, "walkability": 0-100, "schools": [{"name": "School Name", "rating": 1-10, "distance": "0.5 miles"}]}]`,
+        add_context_from_internet: true,
+        model: 'gemini_3_flash',
+      });
+      let data = typeof response === 'string' ? JSON.parse(response) : response?.data;
+      if (Array.isArray(data)) {
+        setMapData(data);
+      } else {
+        setMapData([]);
+      }
+    } catch (error) {
+      console.error('Map data error:', error);
+      setMapData([]);
+    } finally {
+      setMapLoading(false);
     }
   };
 
@@ -343,8 +386,8 @@ export default function CityGuide() {
                 <motion.button
                   key={cat.key}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                  onClick={() => searchCity(cat)}
-                  disabled={!submittedCity || loading}
+                  onClick={() => cat.isMap ? fetchMapData() : searchCity(cat)}
+                  disabled={!submittedCity || loading || mapLoading}
                   className={`p-5 rounded-2xl border-2 text-left transition-all ${
                     selectedCategory?.key === cat.key ? 'shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'
                   } disabled:opacity-40 disabled:cursor-not-allowed`}
@@ -360,7 +403,21 @@ export default function CityGuide() {
             </div>
 
             <AnimatePresence>
-              {loading && (
+              {mapLoading && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="bg-white rounded-2xl border-2 p-8 text-center mb-6"
+                  style={{ borderColor: 'rgba(212,175,55,0.3)' }}>
+                  <div className="w-8 h-8 border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-sm font-semibold text-slate-700">
+                    Loading <span style={{ color: GOLD }}>Interactive Map</span> for {submittedCity}...
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">Fetching neighborhood data with safety, walkability, and schools</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {loading && !mapLoading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   className="bg-white rounded-2xl border-2 p-8 text-center mb-6"
                   style={{ borderColor: 'rgba(212,175,55,0.3)' }}>
@@ -373,8 +430,198 @@ export default function CityGuide() {
               )}
             </AnimatePresence>
 
+            {/* Interactive Map Display */}
             <AnimatePresence>
-              {result && !loading && (
+              {mapData && !mapLoading && selectedCategory?.key === 'map' && (
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  className="bg-white rounded-2xl border-2 overflow-hidden mb-6"
+                  style={{ borderColor: 'rgba(212,175,55,0.3)' }}>
+                  {/* Map Header */}
+                  <div className="flex items-center gap-2 px-6 py-4 border-b border-slate-100" style={{ background: '#f9fafb' }}>
+                    <div className={`w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center`}>
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-900">Interactive Map — {submittedCity}</h3>
+                      <p className="text-xs text-slate-500">Safety scores • Walkability • Schools</p>
+                    </div>
+                  </div>
+
+                  {/* Legend */}
+                  <div className="px-6 py-3 flex flex-wrap gap-4 border-b border-slate-100" style={{ background: '#fafafa' }}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-green-500" />
+                      <span className="text-xs font-medium text-slate-600">Safety 80-100</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <span className="text-xs font-medium text-slate-600">Safety 50-79</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-red-500" />
+                      <span className="text-xs font-medium text-slate-600">Safety &lt;50</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-blue-500" />
+                      <span className="text-xs font-medium text-slate-600">Schools</span>
+                    </div>
+                  </div>
+
+                  {/* Map Container */}
+                  <div className="h-[500px] w-full">
+                    <MapContainer
+                      center={[mapData[0]?.lat || 30.2672, mapData[0]?.lng || -97.7431]}
+                      zoom={11}
+                      scrollWheelZoom={false}
+                      className="h-full w-full"
+                      style={{ border: 'none' }}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      {mapData.map((neighborhood, idx) => {
+                        const safetyColor = neighborhood.safety >= 80 ? '#22c55e' : neighborhood.safety >= 50 ? '#eab308' : '#ef4444';
+                        return (
+                          <CircleMarker
+                            key={idx}
+                            center={[neighborhood.lat, neighborhood.lng]}
+                            radius={12}
+                            fillColor={safetyColor}
+                            color="#fff"
+                            weight={2}
+                            opacity={1}
+                            fillOpacity={0.7}
+                            eventHandlers={{
+                              click: () => setSelectedNeighborhood(neighborhood)
+                            }}
+                          >
+                            <Popup>
+                              <div className="p-2 min-w-[200px]">
+                                <h4 className="font-bold text-sm mb-2 text-slate-900">{neighborhood.name}</h4>
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-1.5">
+                                      <Shield className="w-3.5 h-3.5 text-slate-500" />
+                                      <span className="text-xs text-slate-600">Safety:</span>
+                                    </div>
+                                    <span className="text-xs font-bold" style={{ color: safetyColor }}>{neighborhood.safety}/100</span>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-1.5">
+                                      <Footprints className="w-3.5 h-3.5 text-slate-500" />
+                                      <span className="text-xs text-slate-600">Walkability:</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-slate-700">{neighborhood.walkability}/100</span>
+                                  </div>
+                                  {neighborhood.schools && neighborhood.schools.length > 0 && (
+                                    <div className="pt-2 border-t border-slate-200">
+                                      <div className="flex items-center gap-1.5 mb-1.5">
+                                        <GraduationCap className="w-3.5 h-3.5 text-slate-500" />
+                                        <span className="text-xs font-semibold text-slate-700">Nearby Schools</span>
+                                      </div>
+                                      {neighborhood.schools.map((school, sIdx) => (
+                                        <div key={sIdx} className="flex items-center justify-between py-1">
+                                          <span className="text-xs text-slate-600 truncate flex-1">{school.name}</span>
+                                          <span className="text-xs font-bold text-blue-600 ml-2">{school.rating}/10</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </Popup>
+                          </CircleMarker>
+                        );
+                      })}
+                    </MapContainer>
+                  </div>
+
+                  {/* Selected Neighborhood Details */}
+                  {selectedNeighborhood && (
+                    <div className="px-6 py-4 border-t border-slate-100" style={{ background: '#f9fafb' }}>
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-lg mb-3 text-slate-900">{selectedNeighborhood.name}</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: '#fff', border: '1px solid #e5e7eb' }}>
+                              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(34,197,94,0.1)' }}>
+                                <Shield className="w-5 h-5 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-slate-500">Safety Score</p>
+                                <p className="text-lg font-bold text-slate-900">{selectedNeighborhood.safety}/100</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: '#fff', border: '1px solid #e5e7eb' }}>
+                              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(59,130,246,0.1)' }}>
+                                <Footprints className="w-5 h-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-xs text-slate-500">Walkability</p>
+                                <p className="text-lg font-bold text-slate-900">{selectedNeighborhood.walkability}/100</p>
+                              </div>
+                            </div>
+                          </div>
+                          {selectedNeighborhood.schools && selectedNeighborhood.schools.length > 0 && (
+                            <div className="mt-4 p-4 rounded-xl" style={{ background: '#fff', border: '1px solid #e5e7eb' }}>
+                              <div className="flex items-center gap-2 mb-3">
+                                <GraduationCap className="w-4 h-4 text-blue-600" />
+                                <p className="text-sm font-bold text-slate-900">Nearby Schools</p>
+                              </div>
+                              <div className="space-y-2">
+                                {selectedNeighborhood.schools.map((school, idx) => (
+                                  <div key={idx} className="flex items-center justify-between p-2 rounded-lg" style={{ background: '#f9fafb' }}>
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium text-slate-900">{school.name}</p>
+                                      {school.distance && <p className="text-xs text-slate-500">{school.distance}</p>}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: '#3b82f6', color: '#fff' }}>
+                                        <span className="text-xs font-bold">{school.rating}</span>
+                                      </div>
+                                      <span className="text-xs text-slate-500">/10</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => setSelectedNeighborhood(null)}
+                          className="ml-4 p-2 rounded-full hover:bg-slate-100 transition-colors"
+                        >
+                          <ArrowLeft className="w-4 h-4 text-slate-400" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CTA */}
+                  <div className="px-6 py-4" style={{ background: '#0d0d0d', borderTop: `1px solid ${GOLD}` }}>
+                    <p className="text-sm font-semibold mb-1" style={{ color: '#fff' }}>
+                      Want a personalized neighborhood tour in {submittedCity}?
+                    </p>
+                    <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      Charlie can match you with neighborhoods based on your family's specific needs.
+                    </p>
+                    <Link to="/Chat">
+                      <button className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold"
+                        style={{ background: GOLD, color: '#000' }}>
+                        <MessageCircle className="w-4 h-4" />
+                        Talk to Charlie — It's Free
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Standard Research Results */}
+            <AnimatePresence>
+              {result && !loading && !mapLoading && selectedCategory?.key !== 'map' && (
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                   className="bg-white rounded-2xl border-2 p-6 mb-6"
                   style={{ borderColor: 'rgba(212,175,55,0.3)' }}>
