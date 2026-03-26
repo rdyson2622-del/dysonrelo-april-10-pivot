@@ -5,7 +5,7 @@ import { queryClientInstance } from '@/lib/query-client';
 import { AuthProvider } from '@/lib/AuthContext';
 import { Toaster } from "@/components/ui/toaster";
 
-// Verified paths from your sidebar
+// Verified paths
 import Dashboard from './pages/Dashboard';
 import GeminiSession from './pages/GeminiSession';
 import RelocationIntake from './pages/RelocationIntake';
@@ -17,19 +17,20 @@ export default function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Main Landing & Dashboard */}
+            {/* The Home Base */}
             <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             
-            {/* FIX: This makes the Admin button work! */}
-            <Route path="/admin" element={<Dashboard />} /> 
+            {/* ACTIVATING THE ADMIN BUTTONS */}
+            <Route path="/admin" element={<Dashboard />} />
+            <Route path="/Admin" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             
             {/* Other tools */}
             <Route path="/roadmap" element={<Dashboard />} /> 
             <Route path="/gemini" element={<GeminiSession />} />
             <Route path="/intake" element={<RelocationIntake />} />
             
-            {/* Catch-all for broken links */}
+            {/* Catch-all */}
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Toaster />
