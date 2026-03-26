@@ -45,6 +45,9 @@ const STEPS = ['Your Info', 'Your Move', 'Priorities', 'Confirm'];
 
 export default function RelocationIntake() {
   const navigate = useNavigate();
+  const searchParams = new URLSearchParams(window.location.search);
+  const clientName = searchParams.get('name');
+  const destination = searchParams.get('destination');
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -219,9 +222,11 @@ export default function RelocationIntake() {
                 }).catch(() => {});
               } catch (e) {
                 console.error('Intake submit error:', e);
+                setSubmitting(false);
+                return;
               }
               setSubmitting(false);
-              setSubmitted(true);
+              navigate('/RelocationRoadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city));
             }}
             disabled={submitting}
             className="w-full py-3 rounded-full text-sm font-bold tracking-wide gold-btn disabled:opacity-50"
