@@ -57,13 +57,6 @@ export default function RelocationIntake() {
   const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
   const [scheduledCall, setScheduledCall] = useState(null);
 
-  // Auto-check all agreement items when "sign now" path is selected
-  React.useEffect(() => {
-    if (showAgreement && signTiming === 'now') {
-      setAgreedItems(SERVICE_AGREEMENTS);
-    }
-  }, [showAgreement, signTiming]);
-
   const [form, setForm] = useState({
     full_name: '',
     email: '',
@@ -162,7 +155,7 @@ export default function RelocationIntake() {
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              onClick={() => { setSignTiming('now'); setAgreedItems(SERVICE_AGREEMENTS); }}
+              onClick={() => setSignTiming('now')}
               className="rounded-2xl p-6 border-2 transition-all text-left"
               style={{ background: '#000', borderColor: GOLD }}>
               <div className="flex items-center gap-3 mb-3">
