@@ -29,10 +29,9 @@ export default function Explainers() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-14 py-4 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
-        <Link to="/Home" className="flex items-center gap-2 hover:opacity-70 transition-opacity" style={{ transform: 'translateY(calc(15% * 0.5))' }}>
-          <ArrowLeft className="w-4 h-4" style={{ color: '#000' }} />
-          <span className="text-sm font-semibold" style={{ color: '#000' }}>Back</span>
+        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
+        <Link to="/Home" className="flex items-center gap-2 text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <ArrowLeft className="w-4 h-4" /> Back
         </Link>
       </nav>
 
