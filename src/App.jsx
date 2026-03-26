@@ -8,12 +8,17 @@ import PageNotFound from './lib/PageNotFound';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 // Page Imports
+import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import RelocationIntake from './pages/RelocationIntake';
 import RelocationRoadmap from './components/intake/RelocationRoadmap';
 import GeminiSession from './pages/GeminiSession';
 import Admin from './pages/Admin';
 import CharlieScripts from './pages/CharlieScripts';
+import AdminClients from './pages/AdminClients';
+import AdminOwnerDetail from './pages/AdminOwnerDetail';
+import AdminCommunications from './pages/AdminCommunications';
+import Explainers from './pages/Explainers';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -37,13 +42,17 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/intake" element={<RelocationIntake />} />
-      <Route path="/roadmap" element={<RelocationRoadmap />} />
+      <Route path="/relocation-intake" element={<RelocationIntake />} />
+      <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
       <Route path="/gemini" element={<GeminiSession />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/scripts" element={<CharlieScripts />} />
+      <Route path="/admin/clients" element={<AdminClients />} />
+      <Route path="/admin/owner-detail" element={<AdminOwnerDetail />} />
+      <Route path="/admin/communications" element={<AdminCommunications />} />
+      <Route path="/explainers" element={<Explainers />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
