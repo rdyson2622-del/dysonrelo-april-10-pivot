@@ -62,7 +62,7 @@ export default function CommitmentGate({ onCommit }) {
             {[
               "Gemini will interview you about your relocation — destination, lifestyle, budget, family needs",
               "Your answers are saved to your private profile — reviewed only by Dyson staff",
-              "We use your profile to hand-select the best agent match for your personality and needs",
+              "We use your profile to hand-select the best agents that best match for your personality and needs. You then select the ones you would like to interview. We then set up those interviews.",
               "This entire service is FREE to you",
             ].map((item, i) => (
               <div key={i} className="flex gap-3 items-start">
