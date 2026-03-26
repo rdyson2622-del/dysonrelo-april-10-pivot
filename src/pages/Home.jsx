@@ -152,53 +152,53 @@ export default function Home() {
                   </section>
 
                   {/* Charlie Card Section — portrait only (below hero) */}
-                  <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-                  <motion.div
-                  initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative w-full max-w-sm"
-                  >
-                  <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
-                  style={{ background: 'rgba(212,175,55,0.12)' }} />
-                  <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
-                  style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
-                  AI-POWERED
-                  </div>
-                  <div className="flex justify-center mb-5 mt-2">
-                  <img
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
-                  alt="Charlie"
-                  className="h-48 w-auto object-contain"
-                  style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
-                  />
-                  </div>
-                  <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
-                  CHARLIE — YOUR RELOCATION MANAGER
-                  </p>
-                  <div className="space-y-2">
-                  <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                  style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
-                  </div>
-                  <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
-                  We're moving to Austin, TX in June!
-                  </div>
-                  <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                  style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
-                  </div>
-                  </div>
-            <Link to="/RelocationIntake" className="block mt-5">
-              <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                LET'S PLAN MY RELOCATION MOVE
-              </button>
-            </Link>
-          </div>
-        </motion.div>
-      </section>
+                  <section id="charlie-card" className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative w-full max-w-sm"
+                    >
+                      <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
+                        style={{ background: 'rgba(212,175,55,0.12)' }} />
+                      <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
+                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
+                          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
+                          AI-POWERED
+                        </div>
+                        <div className="flex justify-center mb-5 mt-2">
+                          <img
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
+                            alt="Charlie"
+                            className="h-48 w-auto object-contain"
+                            style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
+                          />
+                        </div>
+                        <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
+                          CHARLIE — YOUR RELOCATION MANAGER
+                        </p>
+                        <div className="space-y-2">
+                          <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                            style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
+                          </div>
+                          <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
+                            We're moving to Austin, TX in June!
+                          </div>
+                          <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                            style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
+                          </div>
+                        </div>
+                        <Link to="/RelocationIntake" className="block mt-5">
+                          <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
+                            LET'S PLAN MY RELOCATION MOVE
+                          </button>
+                        </Link>
+                      </div>
+                    </motion.div>
+                  </section>
 
       {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
       <section id="promise" className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
@@ -215,8 +215,11 @@ export default function Home() {
             <em>We intentionally work with a limited number of families at any given time. This isn't exclusivity — it's commitment. Real relocation management requires deep local focus, market expertise, timeline coordination, and relentless attention to detail. We're not scaling a service. We're delivering one.</em>
           </p>
         </div>
+      </section>
 
-        <div id="services" className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      {/* Services Grid — separate section */}
+      <section id="services" className="py-10 px-6 md:px-14" style={{ background: '#000' }}>
+        <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((s, i) => (
             <motion.div
               key={i}
@@ -236,7 +239,10 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
+      </section>
 
+      {/* Gemini Session CTA */}
+      <section id="gemini-cta" className="py-16 px-6 md:px-14" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-base font-semibold mb-4" style={{ color: '#e5e5e5' }}>
             Seeing the full scope of what's ahead can feel overwhelming.<br />
@@ -252,10 +258,10 @@ export default function Home() {
             <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
                This session is <strong style={{ color: '#fff' }}>by invitation only</strong> — we're selective about who we work with to ensure everyone gets the intensive, hands-on attention they deserve. We don't have unlimited capacity because we refuse to compromise on quality. Once we have your info and can confirm we're the right fit for your move, Charlie schedules it. No cost to you, ever.
              </p>
-            <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
-              We are not a member of any real estate association by design, but are a licensed brokerage firm — The Dyson & Dyson Companies, Inc. Ca. DRE # 02303118. (858) 353 1200
-            </p>
-          </div>
+             <p className="text-sm leading-relaxed" style={{ color: '#e5e5e5' }}>
+               We are not a member of any real estate association by design, but are a licensed brokerage firm — The Dyson & Dyson Companies, Inc. Ca. DRE # 02303118. (858) 353 1200
+             </p>
+           </div>
 
           <Link to="/RelocationIntake">
             <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">

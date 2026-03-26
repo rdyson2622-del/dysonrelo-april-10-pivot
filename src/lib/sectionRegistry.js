@@ -5,15 +5,17 @@ export const PAGE_SECTIONS = {
   // PAGE 1: Home
   '/Home': {
     '1.A': { id: 'hero', name: 'Hero Section', description: 'Main landing with logo and Charlie card' },
-    '1.B': { id: 'services', name: 'Services Grid', description: '8 service cards (AI Concierge, Agent Selection, etc.)' },
-    '1.C': { id: 'promise', name: 'Dyson Promise', description: 'We move with you section' },
-    '1.D': { id: 'city-guide-teaser', name: 'City Guide Preview', description: '6 category teaser cards' },
-    '1.E': { id: 'voice-to-voice', name: 'V2V Agent Recruitment', description: '1927 Parallel card' },
-    '1.F': { id: 'bob-leadership', name: 'Bob Dyson Leadership', description: '54+ years experience section' },
-    '1.G': { id: 'orchestration', name: 'Intelligent Orchestration', description: '22 AI agents grid' },
-    '1.H': { id: 'agent-selection', name: 'Agent Selection Process', description: 'Your agent, your choice section' },
-    '1.I': { id: 'cta', name: 'CTA Section', description: 'Ready for fresh start' },
-    '1.J': { id: 'footer', name: 'Footer', description: 'Bottom disclaimer' },
+    '1.B': { id: 'charlie-card', name: 'Charlie Card (Mobile)', description: 'AI chat demo card for portrait view' },
+    '1.C': { id: 'promise', name: 'Dyson Promise', description: 'We move with you header section' },
+    '1.D': { id: 'services', name: 'Services Grid', description: '8 service cards (AI Concierge, Agent Selection, etc.)' },
+    '1.E': { id: 'gemini-cta', name: 'Gemini Session CTA', description: 'Invitation-only session callout' },
+    '1.F': { id: 'city-guide-teaser', name: 'City Guide Preview', description: '6 category teaser cards' },
+    '1.G': { id: 'voice-to-voice', name: 'V2V Agent Recruitment', description: '1927 Parallel card' },
+    '1.H': { id: 'bob-leadership', name: 'Bob Dyson Leadership', description: '54+ years experience section' },
+    '1.I': { id: 'orchestration', name: 'Intelligent Orchestration', description: '22 AI agents grid' },
+    '1.J': { id: 'agent-selection', name: 'Agent Selection Process', description: 'Your agent, your choice section' },
+    '1.K': { id: 'cta', name: 'CTA Section', description: 'Ready for fresh start' },
+    '1.L': { id: 'footer', name: 'Footer', description: 'Bottom disclaimer' },
   },
 
   // PAGE 2: Dashboard
