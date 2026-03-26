@@ -82,16 +82,42 @@ export const getCurrentSection = (pathname, scrollY) => {
   const sections = getSectionsForPage(pathname);
   const sectionEntries = Object.entries(sections);
   
+  // Find the section whose top is closest to (but above) a trigger point near the top of viewport
+  const triggerPoint = 120; // pixels from top of viewport
+  let currentSection = null;
+  let minDistance = Infinity;
+  
   for (const [code, section] of sectionEntries) {
     const element = document.getElementById(section.id);
     if (element) {
       const rect = element.getBoundingClientRect();
-      // If section is in viewport (top third of screen)
-      if (rect.top <= window.innerHeight * 0.3 && rect.bottom >= window.innerHeight * 0.3) {
-        return { code, ...section };
+      
+      // Check if section is visible in viewport
+      if (rect.top <= window.innerHeight - 100 && rect.bottom >= triggerPoint) {
+        // Calculate distance from trigger point to section top
+        const distance = Math.abs(rect.top - triggerPoint);
+        
+        // Prefer sections where top is at or below trigger point
+        if (rect.top >= triggerPoint - 50 && distance < minDistance) {
+          minDistance = distance;
+          currentSection = { code, ...section };
+        }
       }
     }
   }
   
-  return null;
+  // Fallback: if no section found, return the last one whose top is above trigger
+  if (!currentSection) {
+    for (const [code, section] of sectionEntries.reverse()) {
+      const element = document.getElementById(section.id);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top < triggerPoint) {
+          return { code, ...section };
+        }
+      }
+    }
+  }
+  
+  return currentSection;
 };
