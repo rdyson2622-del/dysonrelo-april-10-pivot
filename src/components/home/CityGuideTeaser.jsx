@@ -103,7 +103,7 @@ export default function CityGuideTeaser() {
                     <cat.icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold mb-1" style={{ color: '#fff', fontSize: '0.95rem' }}>{cat.label}</h3>
+                    <h3 className="font-bold mb-1" style={{ color: '#fff', fontSize: '1.425rem' }}>{cat.label}</h3>
                     <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.875rem' }}>{cat.preview}</p>
                   </div>
                 </div>
