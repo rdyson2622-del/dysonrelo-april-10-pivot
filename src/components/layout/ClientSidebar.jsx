@@ -64,7 +64,7 @@ export default function ClientSidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+      <div className="px-3 py-4 pb-8 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
         <Link to="/Admin">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-white/5 transition-all"
             style={{ color: 'rgba(212,175,55,0.6)' }}>
