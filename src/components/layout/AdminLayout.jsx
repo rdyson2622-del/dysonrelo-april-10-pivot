@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
+import PageNumberBadge from '../PageNumberBadge';
 import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft } from 'lucide-react';
 
@@ -29,6 +30,7 @@ export default function AdminLayout() {
           </div>
           <Outlet />
         </div>
+        <PageNumberBadge />
       </main>
     </div>
   );

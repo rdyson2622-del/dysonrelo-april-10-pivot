@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
+import PageNumberBadge from '../PageNumberBadge';
 import { ArrowLeft } from 'lucide-react';
 
 export default function AppLayout() {
@@ -34,6 +35,7 @@ export default function AppLayout() {
         </div>
         <Outlet />
       </div>
+      <PageNumberBadge />
       {!hideFloatingCharlie && <FloatingCharlie />}
       <PWAInstallPrompt />
     </div>
