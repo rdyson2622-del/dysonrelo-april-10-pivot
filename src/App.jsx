@@ -164,7 +164,6 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Navigate to="/Home" replace />} />
       <Route path="/Home" element={<Home />} />
       <Route path="/RelocationIntake" element={<RelocationIntake />} />
-      <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
       <Route path="/PropertyComparison" element={<PropertyComparison />} />
       <Route path="/Explainers" element={<Explainers />} />
       <Route path="/AgentExplainer" element={<AgentExplainer />} />
@@ -174,6 +173,7 @@ const AuthenticatedApp = () => {
       {/* App routes with floating Charlie */}
       <Route element={<AppLayout />}>
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/RelocationActionSteps" element={<RelocationActionSteps />} />
         <Route path="/Chat" element={<Chat />} />
         <Route path="/CityGuide" element={<CityGuide />} />
