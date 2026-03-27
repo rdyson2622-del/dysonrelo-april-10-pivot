@@ -1,151 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Edit2, CheckCircle2, XCircle, Search, Play, Download, Loader2, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, Trash2, Edit2, CheckCircle2, XCircle, Search, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import SearchProfilesProcessGuide from '../components/admin/SearchProfilesProcessGuide';
+import { Link } from 'react-router-dom';
 
 const GOLD = '#D4AF37';
-
-function SearchResults({ search }) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
-  const [error, setError] = useState(null);
-
-  const runSearch = async () => {
-    setLoading(true);
-    setError(null);
-    setResults(null);
-    setOpen(true);
-    try {
-      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
-        city: search.city,
-        state: search.state,
-        min_price: search.min_price,
-        max_results: 50,
-        days_listed: 1,
-      });
-      if (res.data?.error) {
-        setError(res.data.error + (res.data.details ? `\n${res.data.details}` : ''));
-      } else {
-        setResults(res.data);
-      }
-    } catch (err) {
-      setError(err?.response?.data?.error || err?.message || 'Search failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const downloadCSV = () => {
-    if (!results?.properties?.length) return;
-    const headers = ['First Name', 'Last Name', 'Property Address', 'Property City', 'Property State', 'Property Zip'];
-    const rows = results.properties.map(p => {
-      const parts = (p.owner_name || '').split(' ');
-      return ['', '', p.street, p.city, p.state, p.zip]
-        .map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',');
-    });
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `skip-trace-${search.city.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  return (
-    <div className="mt-3 border-t border-slate-100 pt-3">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={runSearch}
-          disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-50"
-          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}
-        >
-          {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
-          {loading ? 'Searching...' : 'Run Search Now'}
-        </button>
-
-        {results && (
-          <>
-            <button
-              onClick={() => setOpen(o => !o)}
-              className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg"
-              style={{ background: '#f0f9f0', color: '#16a34a', border: '1px solid #bbf7d0' }}
-            >
-              {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              {results.count} listings found
-            </button>
-            <button
-              onClick={downloadCSV}
-              className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg"
-              style={{ background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe' }}
-            >
-              <Download className="w-3 h-3" /> Download CSV
-            </button>
-            <a
-              href="https://app.batchdata.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg"
-              style={{ background: '#fefce8', color: '#854d0e', border: '1px solid #fef08a' }}
-            >
-              <ExternalLink className="w-3 h-3" /> Upload to BatchData
-            </a>
-          </>
-        )}
-
-        {error && (
-          <span className="text-xs text-red-500 ml-2">⚠ {error.split('\n')[0]}</span>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {open && results?.properties?.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-3 overflow-hidden"
-          >
-            <div className="rounded-lg border border-slate-200 overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr style={{ background: '#f8f8f8', borderBottom: '1px solid #e5e5e5' }}>
-                    {['Address', 'City', 'ST', 'Zip', 'List Price', 'DOM', 'Beds', 'Baths'].map(h => (
-                      <th key={h} className="text-left px-3 py-2 font-bold" style={{ color: '#666' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.properties.map((p, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }} className="hover:bg-slate-50">
-                      <td className="px-3 py-2 font-medium" style={{ color: '#000' }}>{p.street || '—'}</td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.city}</td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.state}</td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.zip || '—'}</td>
-                      <td className="px-3 py-2 font-semibold" style={{ color: GOLD }}>
-                        {p.list_price ? '$' + Number(p.list_price).toLocaleString() : '—'}
-                      </td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.days_on_market ?? '—'}</td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.beds || '—'}</td>
-                      <td className="px-3 py-2" style={{ color: '#666' }}>{p.baths || '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 const PROPERTY_TYPES = [
   { value: 'single_family', label: 'Single Family' },
@@ -274,7 +136,7 @@ export default function AdminSearchProfiles() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: '#000' }}>Search Listing Profiles</h1>
-          <p className="text-sm mt-1" style={{ color: '#666' }}>Create daily automated searches for new listings</p>
+          <p className="text-sm mt-1" style={{ color: '#666' }}>Save your PropStream search criteria for reference</p>
         </div>
         <Button
           onClick={() => {
@@ -486,10 +348,21 @@ export default function AdminSearchProfiles() {
         </motion.div>
       )}
 
-      {/* Process Guide */}
-      {searches.length === 0 && (
-        <SearchProfilesProcessGuide />
-      )}
+      {/* PropStream workflow banner */}
+      <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
+        <span className="text-lg">💡</span>
+        <div className="flex-1">
+          <p className="text-sm font-semibold" style={{ color: '#92400e' }}>Automated listing search is not available on your BatchData plan.</p>
+          <p className="text-sm mt-1" style={{ color: '#b45309' }}>
+            Use these saved profiles as reference when running searches manually in <strong>PropStream</strong>, then import the exported CSV on the Skip Trace page.
+          </p>
+        </div>
+        <Link to="/admin/skip-trace"
+          className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap"
+          style={{ background: GOLD, color: '#000' }}>
+          Go to Skip Trace <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
 
       {/* Searches List */}
        <div className="space-y-3">
@@ -528,7 +401,7 @@ export default function AdminSearchProfiles() {
                     ))}
                   </div>
                 )}
-                <SearchResults search={search} />
+
               </div>
 
               <div className="flex gap-2">
