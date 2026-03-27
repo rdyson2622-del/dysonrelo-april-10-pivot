@@ -358,8 +358,8 @@ export default function AdminSkipTrace() {
           ))}
         </motion.div>
 
-        {/* PropStream Importer — always visible */}
-        <PropStreamCSVImporter />
+        {/* PropStream Importer — only for Single Lookup mode */}
+        {mode === 'single' && <PropStreamCSVImporter />}
 
         {/* Content */}
         <motion.div key={mode} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
