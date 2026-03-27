@@ -68,23 +68,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Failed to parse BatchData response', raw: responseText.substring(0, 500) }, { status: 502 });
     }
 
-    const results = data?.results || data?.data || [];
-    const result = results[0];
+    // BatchData returns results.persons array
+    const persons = data?.results?.persons || [];
+    const person = persons[0];
 
-    if (!result) {
-      return Response.json({ error: 'No results returned from BatchData for this address' }, { status: 404 });
+    if (!person) {
+      return Response.json({ error: 'No owner found for this address' }, { status: 404 });
     }
 
-    // Extract owner info — handle various BatchData response structures
-    const ownerData = result?.owner || result?.owners?.[0] || result?.person || result;
-    const ownerName = ownerData?.name?.full
-      || ownerData?.ownerName
-      || ownerData?.fullName
-      || [ownerData?.name?.first, ownerData?.name?.last].filter(Boolean).join(' ')
-      || 'Unknown Owner';
-
-    const phones = ownerData?.phones || ownerData?.phoneNumbers || result?.phones || [];
-    const emails = ownerData?.emails || ownerData?.emailAddresses || result?.emails || [];
+    const ownerName = [person?.name?.first, person?.name?.last].filter(Boolean).join(' ') || 'Unknown Owner';
+    const phones = person?.phoneNumbers || person?.phones || [];
+    const emails = person?.emails || [];
 
     return Response.json({
       success: true,
@@ -93,13 +87,15 @@ Deno.serve(async (req) => {
       state,
       owner_name: ownerName,
       phones: phones.map(p => ({
-        number: p.number || p.phone || p,
-        type: p.type || p.phoneType || null,
+        number: p.number || p,
+        type: p.type || null,
+        carrier: p.carrier || null,
+        reachable: p.reachable || null,
       })).filter(p => p.number),
       emails: emails.map(e => ({
-        email: e.email || e.address || e,
+        email: e.email || e,
       })).filter(e => e.email),
-      raw_result: result  // pass full result for debugging
+      raw_result: person
     });
 
   } catch (error) {
