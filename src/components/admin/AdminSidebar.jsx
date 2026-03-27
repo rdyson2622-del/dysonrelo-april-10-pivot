@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint } from 'lucide-react';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
   { label: 'Overview', path: '/admin', icon: LayoutDashboard },
   { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
+  { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
   { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
   { label: 'Listing Outreach Campaigns', path: '/admin/outreach-campaigns', icon: SendHorizontal },
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
