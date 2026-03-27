@@ -135,9 +135,7 @@ export default function PropStreamCSVImporter() {
             </p>
           </div>
         </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
-          {open ? 'Close' : 'Open'}
-        </span>
+
       </button>
 
       <AnimatePresence>
