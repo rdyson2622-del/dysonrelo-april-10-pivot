@@ -198,11 +198,29 @@ function BulkBuilder() {
 
   return (
     <>
+      {/* Step 0: Go to PropStream */}
+      <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
+        <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>STEP 0 — PREPARE YOUR CSV IN PROPSTREAM</p>
+        <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.65)' }}>
+          Go to PropStream and create your search or export your saved list. You'll return here with the CSV file.
+        </p>
+        <a
+          href="https://www.propstream.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 transition-all hover:opacity-90"
+          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}
+        >
+          <ExternalLink className="w-4 h-4" />
+          Open PropStream & Login
+        </a>
+      </div>
+
       {/* Step 1: Import PropStream CSV */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
-        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 1 — IMPORT PROPSTREAM EXPORT</p>
+        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 2 — IMPORT PROPSTREAM EXPORT</p>
         <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          In PropStream → My Lists → select your list → Export CSV, then upload it here.
+          Upload the CSV you exported from PropStream. Addresses will auto-populate the table below.
         </p>
 
         {!fileName ? (
@@ -253,7 +271,7 @@ function BulkBuilder() {
         <>
           <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
             <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(212,175,55,0.05)' }}>
-              <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>STEP 2 — REVIEW & EDIT, THEN DOWNLOAD FOR BATCHDATA</p>
+              <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>STEP 3 — REVIEW & EDIT, THEN DOWNLOAD FOR BATCHDATA</p>
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{rows.length} rows</span>
             </div>
             <div className="grid grid-cols-12 gap-2 px-4 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
@@ -341,8 +359,9 @@ export default function AdminSkipTrace() {
         'Add them to the Listing Owners database manually',
       ]
     : [
-        'In PropStream → My Lists → open your saved list → Export CSV',
-        'Upload that CSV here in Step 1 — addresses auto-populate the table',
+        'Click "Open PropStream & Login" to go to PropStream.com',
+        'In PropStream → create a search or open your saved list → Export CSV',
+        'Return here and upload that CSV in Step 2 — addresses auto-populate the table',
         'Review & edit addresses, then click "Download CSV for BatchData"',
         'Open BatchData → Skip Trace → Bulk Upload → upload the CSV file',
         'BatchData returns owner names, phones & emails for all addresses',
