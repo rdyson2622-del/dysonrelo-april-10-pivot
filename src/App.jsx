@@ -34,6 +34,7 @@ import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
 import Search from './pages/Search';
+import AdminSkipTrace from './pages/AdminSkipTrace';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -96,6 +97,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />
         <Route path="/admin/referrals" element={<AdminReferrals />} />
         <Route path="/admin/charlie-scripts" element={<AdminCharlieScripts />} />
+        <Route path="/admin/skip-trace" element={<AdminSkipTrace />} />
         <Route path="/business-plan" element={<BusinessPlan />} />
       </Route>
       

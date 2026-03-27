@@ -18,6 +18,7 @@ const adminModules = [
   { name: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag, description: 'Review flagged conversations', color: '#EF4444' },
   { name: 'Referral Management', path: '/admin/referrals', icon: LinkIcon, description: 'Track agent referrals and fees', color: '#14B8A6' },
   { name: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText, description: 'Edit AI advisor scripts and responses', color: '#F97316' },
+  { name: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Search, description: 'Find owner name & contact info by property address via BatchData', color: '#D4AF37' },
   { name: 'Business Plan', path: '/business-plan', icon: BookOpen, description: 'View business plan and projections', color: '#6366F1' },
 ];
 
