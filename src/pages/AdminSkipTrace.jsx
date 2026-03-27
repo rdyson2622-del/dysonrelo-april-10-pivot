@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Download, ExternalLink, Copy, MapPin } from 'lucide-react';
+import { Plus, Trash2, Download, ExternalLink, Copy, MapPin, Search, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import PropStreamCSVImporter from '../components/admin/PropStreamCSVImporter';
 
 const GOLD = '#D4AF37';
@@ -100,13 +101,51 @@ function SingleLookup() {
 }
 
 function BulkBuilder() {
-  const [rows, setRows] = useState([emptyRow()]);
+  // Step 1: search criteria
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('CA');
+  const [minPrice, setMinPrice] = useState('');
+  const [daysListed, setDaysListed] = useState('3');
+  const [maxResults, setMaxResults] = useState('25');
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
 
-  const updateRow = (i, field, val) => {
-    setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: val } : r));
+  // Step 2: address table (populated from search or manual)
+  const [rows, setRows] = useState([]);
+  const [searched, setSearched] = useState(false);
+
+  const handleSearch = async () => {
+    if (!city.trim()) return;
+    setSearching(true);
+    setSearchError(null);
+    try {
+      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
+        city: city.trim(),
+        state,
+        min_price: parseInt(minPrice) || 0,
+        max_results: parseInt(maxResults) || 25,
+        days_listed: parseInt(daysListed) || 3,
+      });
+      if (res.data?.error) {
+        setSearchError(res.data.error);
+        setRows([]);
+      } else {
+        const props = res.data?.properties || [];
+        setRows(props.map(p => ({ street: p.street || '', city: p.city || '', state: p.state || '', zip: p.zip || '' })));
+        if (props.length === 0) setSearchError('No listings found. Try adjusting your criteria.');
+      }
+    } catch (err) {
+      setSearchError(err?.response?.data?.error || err?.message || 'Search failed');
+      setRows([]);
+    } finally {
+      setSearching(false);
+      setSearched(true);
+    }
   };
+
+  const updateRow = (i, field, val) => setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: val } : r));
   const addRow = () => setRows(prev => [...prev, emptyRow()]);
-  const removeRow = (i) => setRows(prev => prev.length === 1 ? prev : prev.filter((_, idx) => idx !== i));
+  const removeRow = (i) => setRows(prev => prev.filter((_, idx) => idx !== i));
 
   const validRows = rows.filter(r => r.street.trim() && r.city.trim() && r.state.trim());
 
@@ -128,92 +167,138 @@ function BulkBuilder() {
     URL.revokeObjectURL(url);
   };
 
-  const handlePaste = (e) => {
-    const text = e.clipboardData?.getData('text') || '';
-    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-    if (lines.length < 2) return;
-    e.preventDefault();
-    const parsed = lines.map(line => {
-      const parts = line.split(',').map(p => p.trim());
-      return { street: parts[0] || '', city: parts[1] || '', state: parts[2] || '', zip: parts[3] || '' };
-    }).filter(r => r.street);
-    if (parsed.length) setRows(parsed);
-  };
-
   return (
     <>
-      <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
-        <div className="grid grid-cols-12 gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(212,175,55,0.05)' }}>
-          <div className="col-span-5 text-xs font-bold tracking-widest" style={{ color: GOLD }}>STREET ADDRESS</div>
-          <div className="col-span-3 text-xs font-bold tracking-widest" style={{ color: GOLD }}>CITY</div>
-          <div className="col-span-2 text-xs font-bold tracking-widest" style={{ color: GOLD }}>STATE</div>
-          <div className="col-span-1 text-xs font-bold tracking-widest" style={{ color: GOLD }}>ZIP</div>
-          <div className="col-span-1" />
+      {/* Step 1: Search Criteria */}
+      <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
+        <p className="text-xs font-bold tracking-widest mb-4" style={{ color: GOLD }}>STEP 1 — SEARCH CRITERIA</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>CITY *</label>
+            <input value={city} onChange={e => setCity(e.target.value)} placeholder="Los Angeles"
+              className="w-full rounded-xl px-3 py-2.5 text-sm"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>STATE</label>
+            <select value={state} onChange={e => setState(e.target.value)}
+              className="w-full rounded-xl px-3 py-2.5 text-sm"
+              style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }}>
+              {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MIN PRICE</label>
+            <input value={minPrice} onChange={e => setMinPrice(e.target.value)} placeholder="500000" type="number"
+              className="w-full rounded-xl px-3 py-2.5 text-sm"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>DAYS LISTED ≤</label>
+            <input value={daysListed} onChange={e => setDaysListed(e.target.value)} placeholder="3" type="number" min="1"
+              className="w-full rounded-xl px-3 py-2.5 text-sm"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
+          </div>
         </div>
-
-        <div onPaste={handlePaste}>
-          {rows.map((row, i) => (
-            <div key={i} className="grid grid-cols-12 gap-2 px-4 py-2 items-center"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <div className="col-span-5">
-                <input value={row.street} onChange={e => updateRow(i, 'street', e.target.value)}
-                  placeholder="123 Main St" className="w-full rounded-lg px-3 py-2 text-sm"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
-              </div>
-              <div className="col-span-3">
-                <input value={row.city} onChange={e => updateRow(i, 'city', e.target.value)}
-                  placeholder="Los Angeles" className="w-full rounded-lg px-3 py-2 text-sm"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
-              </div>
-              <div className="col-span-2">
-                <select value={row.state} onChange={e => updateRow(i, 'state', e.target.value)}
-                  className="w-full rounded-lg px-3 py-2 text-sm"
-                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', color: row.state ? '#fff' : 'rgba(255,255,255,0.3)', outline: 'none' }}>
-                  <option value="">ST</option>
-                  {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-              <div className="col-span-1">
-                <input value={row.zip} onChange={e => updateRow(i, 'zip', e.target.value)}
-                  placeholder="90210" maxLength={5} className="w-full rounded-lg px-3 py-2 text-sm"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
-              </div>
-              <div className="col-span-1 flex justify-center">
-                <button onClick={() => removeRow(i)} className="p-1.5 rounded-lg hover:opacity-70">
-                  <Trash2 className="w-4 h-4" style={{ color: '#EF4444' }} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="px-4 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <button onClick={addRow}
-            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-80"
-            style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.2)' }}>
-            <Plus className="w-4 h-4" /> Add Address
+        <div className="flex items-center gap-3">
+          <button onClick={handleSearch} disabled={searching || !city.trim()}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
+            {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            {searching ? 'Searching...' : 'Find Listings'}
           </button>
+          {searched && !searchError && rows.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4" style={{ color: '#22C55E' }} />
+              <span className="text-sm font-semibold" style={{ color: '#22C55E' }}>{rows.length} listings found</span>
+            </div>
+          )}
+          {searchError && (
+            <div className="flex items-center gap-1.5">
+              <AlertCircle className="w-4 h-4" style={{ color: '#EF4444' }} />
+              <span className="text-xs" style={{ color: '#EF4444' }}>{searchError}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      <p className="text-xs mb-4 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>
-        Tip: Paste comma-separated lines (street, city, state, zip) into any field to bulk-import.
-      </p>
+      {/* Step 2: Address Table */}
+      {(rows.length > 0 || searched) && (
+        <>
+          <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(212,175,55,0.05)' }}>
+              <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>STEP 2 — REVIEW & EDIT ADDRESSES</p>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{rows.length} rows</span>
+            </div>
+            <div className="grid grid-cols-12 gap-2 px-4 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+              <div className="col-span-5 text-xs font-bold tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>STREET ADDRESS</div>
+              <div className="col-span-3 text-xs font-bold tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>CITY</div>
+              <div className="col-span-2 text-xs font-bold tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>STATE</div>
+              <div className="col-span-1 text-xs font-bold tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>ZIP</div>
+              <div className="col-span-1" />
+            </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <button onClick={downloadCSV} disabled={!validRows.length}
-          className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
-          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
-          <Download className="w-4 h-4" />
-          Download CSV ({validRows.length} address{validRows.length !== 1 ? 'es' : ''})
-        </button>
-        <a href="https://app.batchdata.com" target="_blank" rel="noopener noreferrer"
-          className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 hover:opacity-80 transition-all"
-          style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
-          <ExternalLink className="w-4 h-4" />
-          Open BatchData — Log In & Upload
-        </a>
-      </div>
+            <div>
+              {rows.map((row, i) => (
+                <div key={i} className="grid grid-cols-12 gap-2 px-4 py-2 items-center"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div className="col-span-5">
+                    <input value={row.street} onChange={e => updateRow(i, 'street', e.target.value)}
+                      placeholder="123 Main St" className="w-full rounded-lg px-3 py-2 text-sm"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+                  </div>
+                  <div className="col-span-3">
+                    <input value={row.city} onChange={e => updateRow(i, 'city', e.target.value)}
+                      placeholder="Los Angeles" className="w-full rounded-lg px-3 py-2 text-sm"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+                  </div>
+                  <div className="col-span-2">
+                    <select value={row.state} onChange={e => updateRow(i, 'state', e.target.value)}
+                      className="w-full rounded-lg px-3 py-2 text-sm"
+                      style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', color: row.state ? '#fff' : 'rgba(255,255,255,0.3)', outline: 'none' }}>
+                      <option value="">ST</option>
+                      {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div className="col-span-1">
+                    <input value={row.zip} onChange={e => updateRow(i, 'zip', e.target.value)}
+                      placeholder="90210" maxLength={5} className="w-full rounded-lg px-3 py-2 text-sm"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
+                  </div>
+                  <div className="col-span-1 flex justify-center">
+                    <button onClick={() => removeRow(i)} className="p-1.5 rounded-lg hover:opacity-70">
+                      <Trash2 className="w-4 h-4" style={{ color: '#EF4444' }} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="px-4 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <button onClick={addRow}
+                className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-80"
+                style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.2)' }}>
+                <Plus className="w-4 h-4" /> Add Address
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <button onClick={downloadCSV} disabled={!validRows.length}
+              className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
+              <Download className="w-4 h-4" />
+              Download CSV ({validRows.length} address{validRows.length !== 1 ? 'es' : ''})
+            </button>
+            <a href="https://app.batchdata.com" target="_blank" rel="noopener noreferrer"
+              className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 hover:opacity-80 transition-all"
+              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+              <ExternalLink className="w-4 h-4" />
+              Open BatchData — Log In & Upload
+            </a>
+          </div>
+        </>
+      )}
     </>
   );
 }
