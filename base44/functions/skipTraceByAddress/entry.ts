@@ -25,7 +25,8 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${BATCHDATA_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
         requests: [{
@@ -42,6 +43,12 @@ Deno.serve(async (req) => {
     const responseText = await response.text();
     console.log("BatchData response status:", response.status);
     console.log("BatchData response (first 2000 chars):", responseText.substring(0, 2000));
+
+    if (response.status === 401) {
+      return Response.json({
+        error: 'BatchData API key is invalid or expired. Please update the BATCHDATA_API_KEY secret in your app settings.'
+      }, { status: 502 });
+    }
 
     if (!response.ok) {
       return Response.json({
