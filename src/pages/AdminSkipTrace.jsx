@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Download, ExternalLink, Copy, MapPin, Search, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { Plus, Trash2, Download, ExternalLink, Copy, MapPin, Upload, FileText, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import PropStreamCSVImporter from '../components/admin/PropStreamCSVImporter';
 
 const GOLD = '#D4AF37';
@@ -100,52 +99,80 @@ function SingleLookup() {
   );
 }
 
-function BulkBuilder() {
-  // Step 1: search criteria
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('CA');
-  const [minPrice, setMinPrice] = useState('');
-  const [daysListed, setDaysListed] = useState('3');
-  const [maxResults, setMaxResults] = useState('25');
-  const [searching, setSearching] = useState(false);
-  const [searchError, setSearchError] = useState(null);
+// CSV column detection helpers (same logic as PropStreamCSVImporter)
+const BULK_COLUMN_MAP = {
+  street: ['property address', 'property street', 'street address', 'address', 'prop address', 'site address', 'street'],
+  city: ['property city', 'city', 'prop city', 'site city'],
+  state: ['property state', 'state', 'prop state', 'site state', 'st'],
+  zip: ['property zip', 'zip', 'zip code', 'postal code', 'prop zip', 'site zip'],
+};
 
-  // Step 2: address table (populated from search or manual)
-  const [rows, setRows] = useState([]);
-  const [searched, setSearched] = useState(false);
+function findBulkColumn(headers, candidates) {
+  const lower = headers.map(h => h.toLowerCase());
+  for (const c of candidates) {
+    const idx = lower.findIndex(h => h.includes(c));
+    if (idx !== -1) return idx;
+  }
+  return -1;
+}
 
-  const handleSearch = async () => {
-    if (!city.trim()) return;
-    setSearching(true);
-    setSearchError(null);
-    try {
-      const res = await base44.functions.invoke('searchListingsForSkipTrace', {
-        city: city.trim(),
-        state,
-        min_price: parseInt(minPrice) || 0,
-        max_results: parseInt(maxResults) || 25,
-        days_listed: parseInt(daysListed) || 3,
-      });
-      if (res.data?.error) {
-        setSearchError(res.data.error);
-        setRows([]);
-      } else {
-        const props = res.data?.properties || [];
-        setRows(props.map(p => ({ street: p.street || '', city: p.city || '', state: p.state || '', zip: p.zip || '' })));
-        if (props.length === 0) setSearchError('No listings found. Try adjusting your criteria.');
-      }
-    } catch (err) {
-      setSearchError(err?.response?.data?.error || err?.message || 'Search failed');
-      setRows([]);
-    } finally {
-      setSearching(false);
-      setSearched(true);
+function parseBulkCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return { headers: [], rows: [] };
+  const parseRow = (line) => {
+    const result = []; let current = ''; let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQuotes = !inQuotes; }
+      else if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
+      else { current += ch; }
     }
+    result.push(current.trim());
+    return result;
   };
+  const headers = parseRow(lines[0]).map(h => h.replace(/^"|"$/g, '').trim());
+  const rows = lines.slice(1).map(l => parseRow(l).map(v => v.replace(/^"|"$/g, '').trim()));
+  return { headers, rows };
+}
+
+function BulkBuilder() {
+  const [rows, setRows] = useState([]);
+  const [fileName, setFileName] = useState('');
+  const [importError, setImportError] = useState('');
+  const fileRef = useRef();
+
+  const handleFile = (file) => {
+    if (!file) return;
+    setFileName(file.name);
+    setImportError('');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const { headers, rows: csvRows } = parseBulkCSV(e.target.result);
+      if (!headers.length) { setImportError('Could not parse CSV file.'); return; }
+      const mapping = {};
+      for (const [field, candidates] of Object.entries(BULK_COLUMN_MAP)) {
+        mapping[field] = findBulkColumn(headers, candidates);
+      }
+      if (mapping.street < 0) { setImportError('Could not find an address column in this CSV. Make sure it is a PropStream export.'); return; }
+      const parsed = csvRows
+        .map(row => ({
+          street: mapping.street >= 0 ? row[mapping.street] || '' : '',
+          city: mapping.city >= 0 ? row[mapping.city] || '' : '',
+          state: mapping.state >= 0 ? row[mapping.state] || '' : '',
+          zip: mapping.zip >= 0 ? row[mapping.zip] || '' : '',
+        }))
+        .filter(r => r.street.trim());
+      setRows(parsed);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleDrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
 
   const updateRow = (i, field, val) => setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: val } : r));
   const addRow = () => setRows(prev => [...prev, emptyRow()]);
   const removeRow = (i) => setRows(prev => prev.filter((_, idx) => idx !== i));
+  const reset = () => { setRows([]); setFileName(''); setImportError(''); if (fileRef.current) fileRef.current.value = ''; };
 
   const validRows = rows.filter(r => r.street.trim() && r.city.trim() && r.state.trim());
 
@@ -169,71 +196,62 @@ function BulkBuilder() {
 
   return (
     <>
-      {/* Step 1: Search Criteria */}
+      {/* Step 1: Import PropStream CSV */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
-        <p className="text-xs font-bold tracking-widest mb-4" style={{ color: GOLD }}>STEP 1 — SEARCH CRITERIA</p>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
-          <div className="col-span-2 sm:col-span-1" style={{ gridColumn: 'span 1' }}>
-            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>CITY *</label>
-            <input value={city} onChange={e => setCity(e.target.value)} placeholder="Los Angeles"
-              className="w-full rounded-xl px-3 py-2.5 text-sm"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
+        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 1 — IMPORT PROPSTREAM EXPORT</p>
+        <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          In PropStream → My Lists → select your list → Export CSV, then upload it here.
+        </p>
+
+        {!fileName ? (
+          <div
+            onDrop={handleDrop}
+            onDragOver={e => e.preventDefault()}
+            onClick={() => fileRef.current?.click()}
+            className="rounded-xl flex flex-col items-center justify-center py-10 cursor-pointer transition-all hover:opacity-80"
+            style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}
+          >
+            <FileText className="w-10 h-10 mb-3" style={{ color: GOLD }} />
+            <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop PropStream CSV here</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
+            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={e => handleFile(e.target.files[0])} />
           </div>
-          <div>
-            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>STATE</label>
-            <select value={state} onChange={e => setState(e.target.value)}
-              className="w-full rounded-xl px-3 py-2.5 text-sm"
-              style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }}>
-              {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MIN PRICE</label>
-            <input value={minPrice} onChange={e => setMinPrice(e.target.value)} placeholder="500000" type="number"
-              className="w-full rounded-xl px-3 py-2.5 text-sm"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
-          </div>
-          <div>
-            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>DAYS LISTED ≤</label>
-            <input value={daysListed} onChange={e => setDaysListed(e.target.value)} placeholder="3" type="number" min="1"
-              className="w-full rounded-xl px-3 py-2.5 text-sm"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
-          </div>
-          <div>
-            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MAX HOMES</label>
-            <input value={maxResults} onChange={e => setMaxResults(e.target.value)} placeholder="25" type="number" min="1" max="200"
-              className="w-full rounded-xl px-3 py-2.5 text-sm"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <button onClick={handleSearch} disabled={searching || !city.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
-            {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            {searching ? 'Searching...' : 'Find Listings'}
-          </button>
-          {searched && !searchError && rows.length > 0 && (
-            <div className="flex items-center gap-1.5">
+        ) : (
+          <div className="flex items-center justify-between rounded-xl px-4 py-3"
+            style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)' }}>
+            <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" style={{ color: '#22C55E' }} />
-              <span className="text-sm font-semibold" style={{ color: '#22C55E' }}>{rows.length} listings found</span>
+              <span className="text-sm font-semibold" style={{ color: '#fff' }}>{fileName}</span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>— {rows.length} addresses loaded</span>
             </div>
-          )}
-          {searchError && (
-            <div className="flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4" style={{ color: '#EF4444' }} />
-              <span className="text-xs" style={{ color: '#EF4444' }}>{searchError}</span>
-            </div>
-          )}
+            <button onClick={reset} className="p-1 hover:opacity-70">
+              <X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.4)' }} />
+            </button>
+          </div>
+        )}
+
+        {importError && (
+          <div className="flex items-center gap-2 mt-3">
+            <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#EF4444' }} />
+            <span className="text-xs" style={{ color: '#EF4444' }}>{importError}</span>
+          </div>
+        )}
+
+        <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <button onClick={addRow}
+            className="flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.2)' }}>
+            <Plus className="w-4 h-4" /> Or add addresses manually
+          </button>
         </div>
       </div>
 
       {/* Step 2: Address Table */}
-      {(rows.length > 0 || searched) && (
+      {rows.length > 0 && (
         <>
           <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
             <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(212,175,55,0.05)' }}>
-              <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>STEP 2 — REVIEW & EDIT ADDRESSES</p>
+              <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>STEP 2 — REVIEW & EDIT, THEN DOWNLOAD FOR BATCHDATA</p>
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{rows.length} rows</span>
             </div>
             <div className="grid grid-cols-12 gap-2 px-4 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
@@ -294,7 +312,7 @@ function BulkBuilder() {
               className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
               style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
               <Download className="w-4 h-4" />
-              Download CSV ({validRows.length} address{validRows.length !== 1 ? 'es' : ''})
+              Download CSV for BatchData ({validRows.length} address{validRows.length !== 1 ? 'es' : ''})
             </button>
             <a href="https://app.batchdata.com" target="_blank" rel="noopener noreferrer"
               className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 hover:opacity-80 transition-all"
@@ -321,10 +339,10 @@ export default function AdminSkipTrace() {
         'Add them to the Listing Owners database manually',
       ]
     : [
-        'Add all your property addresses in the table above',
-        'Click "Download CSV" — formatted for BatchData bulk upload',
-        'Click "Open BatchData" and log into your account',
-        'Go to Skip Trace → Bulk Upload → upload the CSV file',
+        'In PropStream → My Lists → open your saved list → Export CSV',
+        'Upload that CSV here in Step 1 — addresses auto-populate the table',
+        'Review & edit addresses, then click "Download CSV for BatchData"',
+        'Open BatchData → Skip Trace → Bulk Upload → upload the CSV file',
         'BatchData returns owner names, phones & emails for all addresses',
         'Download their results and add owners to your Listing Owners database',
       ];
