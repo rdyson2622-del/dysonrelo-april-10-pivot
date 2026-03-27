@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Users, Home, UserCheck, Search, SendHorizontal, Flag,
-  BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight
+  BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -11,6 +11,7 @@ const GOLD = '#D4AF37';
 const adminModules = [
   { name: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search, description: 'Find and manage property search profiles', color: '#3B82F6' },
   { name: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Search, description: 'Find owner name & contact info by property address via BatchData', color: '#D4AF37' },
+  { name: 'Bulk Skip Trace Builder', path: '/admin/bulk-skip-trace', icon: Download, description: 'Search active listings by city/price → download CSV for BatchData bulk upload', color: '#22C55E' },
   { name: 'Listing Owners Info', path: '/admin/owners', icon: Home, description: 'View and manage listing owner database', color: '#10B981' },
   { name: 'Listing Outreach Campaigns', path: '/admin/outreach-campaigns', icon: SendHorizontal, description: 'Manage seller outreach campaigns', color: '#F59E0B' },
   { name: 'Clients', path: '/admin/clients', icon: UserCheck, description: 'View relocation leads and track progress', color: '#8B5CF6' },
