@@ -68,32 +68,34 @@ function SingleLookup() {
         </div>
 
         {fullAddress && (
-          <div className="rounded-xl px-4 py-3 flex items-center justify-between gap-3"
-            style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
-              <span className="text-sm font-semibold" style={{ color: '#fff' }}>{fullAddress}</span>
+          <>
+            <div className="rounded-xl px-4 py-3 flex items-center justify-between gap-3"
+              style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+                <span className="text-sm font-semibold" style={{ color: '#fff' }}>{fullAddress}</span>
+              </div>
+              <button onClick={copyAddress} className="p-1 rounded hover:opacity-70 shrink-0 flex items-center gap-1">
+                <Copy className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                {copied && <span className="text-xs" style={{ color: GOLD }}>Copied!</span>}
+              </button>
             </div>
-            <button onClick={copyAddress} className="p-1 rounded hover:opacity-70 shrink-0 flex items-center gap-1">
-              <Copy className="w-3.5 h-3.5" style={{ color: GOLD }} />
-              {copied && <span className="text-xs" style={{ color: GOLD }}>Copied!</span>}
-            </button>
-          </div>
-        )}
 
-        <a
-          href="https://app.batchdata.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', display: 'flex' }}
-        >
-          <ExternalLink className="w-4 h-4" />
-          Open BatchData — Run Skip Trace
-        </a>
-        <p className="text-center text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Copy the address above, then paste it into BatchData's Skip Trace tool after logging in.
-        </p>
+            <a
+              href="https://app.batchdata.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', display: 'flex' }}
+            >
+              <ExternalLink className="w-4 h-4" />
+              Open BatchData — Run Skip Trace
+            </a>
+            <p className="text-center text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Copy the address above, then paste it into BatchData's Skip Trace tool after logging in.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
