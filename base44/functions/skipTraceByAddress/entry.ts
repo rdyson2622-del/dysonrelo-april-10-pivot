@@ -15,6 +15,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'BATCHDATA_API_KEY not configured' }, { status: 500 });
     }
 
+    console.log("API key length:", BATCHDATA_API_KEY.length);
+    console.log("API key first 8 chars:", BATCHDATA_API_KEY.substring(0, 8));
+    console.log("API key last 4 chars:", BATCHDATA_API_KEY.slice(-4));
+
     const { street, city, state, zip } = await req.json();
 
     if (!street || !city || !state) {
