@@ -172,8 +172,8 @@ function BulkBuilder() {
       {/* Step 1: Search Criteria */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
         <p className="text-xs font-bold tracking-widest mb-4" style={{ color: GOLD }}>STEP 1 — SEARCH CRITERIA</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-          <div className="col-span-2 sm:col-span-1">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
+          <div className="col-span-2 sm:col-span-1" style={{ gridColumn: 'span 1' }}>
             <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>CITY *</label>
             <input value={city} onChange={e => setCity(e.target.value)} placeholder="Los Angeles"
               className="w-full rounded-xl px-3 py-2.5 text-sm"
@@ -196,6 +196,12 @@ function BulkBuilder() {
           <div>
             <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>DAYS LISTED ≤</label>
             <input value={daysListed} onChange={e => setDaysListed(e.target.value)} placeholder="3" type="number" min="1"
+              className="w-full rounded-xl px-3 py-2.5 text-sm"
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
+          </div>
+          <div>
+            <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MAX HOMES</label>
+            <input value={maxResults} onChange={e => setMaxResults(e.target.value)} placeholder="25" type="number" min="1" max="200"
               className="w-full rounded-xl px-3 py-2.5 text-sm"
               style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', outline: 'none' }} />
           </div>
