@@ -20,18 +20,28 @@ export default function AdminSkipTrace() {
     setResult(null);
     setError(null);
 
-    const res = await base44.functions.invoke('skipTraceByAddress', {
-      street: street.trim(),
-      city: city.trim(),
-      state: state.trim(),
-      zip: zip.trim(),
-    });
+    try {
+      const res = await base44.functions.invoke('skipTraceByAddress', {
+        street: street.trim(),
+        city: city.trim(),
+        state: state.trim(),
+        zip: zip.trim(),
+      });
 
-    setLoading(false);
-    if (res.data?.error) {
-      setError(res.data.error);
-    } else {
-      setResult(res.data);
+      if (res.data?.error) {
+        setError(res.data.error);
+      } else {
+        setResult(res.data);
+      }
+    } catch (err) {
+      const msg = err?.response?.data?.error || err?.message || 'Lookup failed';
+      if (msg.includes('403') || msg.includes('permission')) {
+        setError('BatchData API key does not have Skip Trace permissions. Please enable Skip Trace access on your BatchData account at app.batchdata.com.');
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
