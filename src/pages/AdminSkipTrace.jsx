@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Trash2, Download, ExternalLink, Copy, MapPin } from 'lucide-react';
+import PropStreamCSVImporter from '../components/admin/PropStreamCSVImporter';
 
 const GOLD = '#D4AF37';
 
@@ -265,6 +266,9 @@ export default function AdminSkipTrace() {
             </button>
           ))}
         </motion.div>
+
+        {/* PropStream Importer — always visible */}
+        <PropStreamCSVImporter />
 
         {/* Content */}
         <motion.div key={mode} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
