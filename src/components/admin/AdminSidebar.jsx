@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone } from 'lucide-react';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -16,6 +16,8 @@ const navItems = [
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
   { label: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
+  { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
+  { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
   { label: 'Business Plan', path: '/business-plan', icon: BookOpen },
 ];
 
