@@ -566,11 +566,11 @@ export default function RelocationProfileCard({ clientId }) {
         <button onClick={() => setShowCautions(s => !s)}
           className="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)' }}>
-              <AlertTriangle className="w-5 h-5" style={{ color: '#f59e0b' }} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)' }}>
+              <AlertTriangle className="w-5 h-5" style={{ color: '#ef4444' }} />
             </div>
             <div className="text-left">
-              <p className="text-sm font-bold" style={{ color: '#f59e0b' }}>Things That Change Mid-Journey</p>
+              <p className="text-sm font-bold" style={{ color: '#ef4444' }}>Things That Change Mid-Journey</p>
               <p className="text-xs" style={{ color: '#888' }}>Be ready for these common pivots</p>
             </div>
           </div>
