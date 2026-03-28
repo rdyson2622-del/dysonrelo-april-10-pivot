@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, DollarSign, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, ChevronRight, UserCheck, FileSignature, Clock, TrendingUp, RotateCcw, MapPinned, Wallet, Building, ClipboardList, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, ChevronRight, UserCheck, FileSignature, Clock, TrendingUp, RotateCcw, MapPinned, Wallet, Building, ClipboardList, Sparkles, Info } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,7 @@ export default function RelocationProfileCard({ clientId }) {
   const [showCautions, setShowCautions] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({});
+  const [selectedMilestone, setSelectedMilestone] = useState(null);
 
   useEffect(() => {
     if (!clientId) return;
@@ -322,14 +323,14 @@ export default function RelocationProfileCard({ clientId }) {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {phaseMilestones.map((m, i) => (
-                        <div 
+                        <button 
                           key={m.id}
-                          className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-help transition-all hover:scale-105"
+                          onClick={() => setSelectedMilestone(m)}
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:brightness-110"
                           style={{ 
                             background: m.complete ? 'rgba(34,197,94,0.15)' : isActivePhase ? 'rgba(212,175,55,0.12)' : 'rgba(0,0,0,0.2)',
                             border: m.complete ? '1px solid rgba(34,197,94,0.35)' : isActivePhase ? `1px solid ${GOLD}44` : '1px solid rgba(255,255,255,0.08)'
                           }}
-                          title={m.guidance}
                         >
                           <div 
                             className="w-5 h-5 rounded-full flex items-center justify-center"
@@ -339,7 +340,7 @@ export default function RelocationProfileCard({ clientId }) {
                           <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : 'rgba(255,255,255,0.75)' }}>
                             {m.label}
                           </span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -457,6 +458,78 @@ export default function RelocationProfileCard({ clientId }) {
           )}
         </AnimatePresence>
       </div>
+      {/* Milestone Detail Modal */}
+      <AnimatePresence>
+        {selectedMilestone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.7)' }}
+            onClick={() => setSelectedMilestone(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl overflow-hidden"
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}44` }}
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid #333' }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center"
+                    style={{ background: selectedMilestone.complete ? '#22c55e' : GOLD }}>
+                    {selectedMilestone.complete
+                      ? <Check className="w-4 h-4 text-black" />
+                      : <span className="text-sm font-bold text-black">{allMilestones.findIndex(m => m.id === selectedMilestone.id) + 1}</span>
+                    }
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: '#fff' }}>{selectedMilestone.label}</p>
+                    <p className="text-xs capitalize" style={{ color: selectedMilestone.complete ? '#4ade80' : '#888' }}>
+                      {selectedMilestone.complete ? '✓ Complete' : `${selectedMilestone.phase} phase`}
+                    </p>
+                  </div>
+                </div>
+                <button onClick={() => setSelectedMilestone(null)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                  <X className="w-4 h-4" style={{ color: '#888' }} />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="px-5 py-5">
+                <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                    {selectedMilestone.guidance}
+                  </p>
+                </div>
+
+                {/* Status badge */}
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-xs px-3 py-1.5 rounded-full font-semibold"
+                    style={{
+                      background: selectedMilestone.complete ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)',
+                      color: selectedMilestone.complete ? '#4ade80' : '#888',
+                      border: selectedMilestone.complete ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                    {selectedMilestone.complete ? 'Milestone Complete' : 'Not Yet Reached'}
+                  </span>
+                  <button onClick={() => setSelectedMilestone(null)}
+                    className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:brightness-110"
+                    style={{ background: GOLD, color: '#000' }}>
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
