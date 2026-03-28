@@ -486,10 +486,10 @@ export default function RelocationProfileCard({ clientId }) {
                 <button
                   key={m.id}
                   onClick={() => setSelectedMilestone(m)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 cursor-pointer transition-all hover:scale-105 hover:brightness-125"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 cursor-pointer transition-all hover:brightness-110"
                   style={{
-                    background: '#000',
-                    border: m.complete ? '1px solid rgba(34,197,94,0.5)' : `1px solid ${GOLD}55`,
+                    background: m.complete ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)',
+                    border: m.complete ? '1px solid rgba(34,197,94,0.4)' : `1px solid ${GOLD}44`,
                     minWidth: 'max-content',
                   }}
                 >
@@ -497,7 +497,7 @@ export default function RelocationProfileCard({ clientId }) {
                     style={{ background: m.complete ? '#22c55e' : GOLD }}>
                     {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs font-bold text-black">{i + 1}</span>}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : GOLD }}>
+                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : '#fff' }}>
                     {m.label}
                   </span>
                   {m.id === 'buyer_broker' && m.complete && bbStatus && bbStatus.daysLeft <= 30 && (
@@ -511,7 +511,7 @@ export default function RelocationProfileCard({ clientId }) {
 
               {/* Divider dot between intake and forward */}
               <div className="flex items-center px-1 shrink-0">
-                <div className="w-1 h-1 rounded-full" style={{ background: `${GOLD}44` }} />
+                <div className="w-1 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }} />
               </div>
 
               {/* Forward journey pills */}
@@ -521,15 +521,15 @@ export default function RelocationProfileCard({ clientId }) {
                   <button
                     key={fm.id}
                     onClick={() => setForwardMilestone(fm)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:scale-105 hover:brightness-125"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:brightness-110"
                     style={{
-                      background: '#000',
-                      border: `1px solid rgba(255,255,255,0.15)`,
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
                       minWidth: 'max-content',
                     }}
                   >
                     <Icon className="w-4 h-4" style={{ color: '#666' }} />
-                    <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>{fm.label}</span>
+                    <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{fm.label}</span>
                   </button>
                 );
               })}
