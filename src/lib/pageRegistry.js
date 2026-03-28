@@ -36,6 +36,11 @@ export const PAGE_REGISTRY = {
   29: { name: 'Business Plan', path: '/BusinessPlan', section: 'Admin' },
   30: { name: 'Skip Trace Results', path: '/SkipTraceResults', section: 'Admin' },
   31: { name: 'Listing Agent Explainer', path: '/AdminListingAgentExplainer', section: 'Admin' },
+  32: { name: 'Skip Trace Lookup', path: '/admin/skip-trace', section: 'Admin' },
+  33: { name: 'Bulk Skip Trace', path: '/admin/bulk-skip-trace', section: 'Admin' },
+  34: { name: 'Admin Client Detail', path: '/admin/client-detail', section: 'Admin' },
+  35: { name: 'Admin Scripts', path: '/admin/scripts', section: 'Admin' },
+  36: { name: 'Documents', path: '/AdminDocuments', section: 'Admin' },
 };
 
 // Helper function: Get page number by path
