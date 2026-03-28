@@ -208,8 +208,8 @@ export default function CityGuide() {
             {/* Hero */}
             <div className="text-center">
               <p className="text-2xl font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>CITY GUIDE</p>
-              <h1 className="display-heading text-5xl md:text-6xl mb-3" style={{ color: '#111' }}>Here's What's Coming For You</h1>
-              <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+              <h1 className="display-heading text-5xl md:text-6xl mb-3" style={{ color: '#fff' }}>Here's What's Coming For You</h1>
+              <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 Our City Guide delivers <strong>hyper-personalized</strong> research across 6 categories — but we hold it until the right moment so every insight is actually useful to your family.
               </p>
             </div>
