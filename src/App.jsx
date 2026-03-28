@@ -34,6 +34,8 @@ import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
 import Search from './pages/Search';
+import CityGuide from './pages/CityGuide';
+import PropertyComparison from './pages/PropertyComparison';
 import AdminSkipTrace from './pages/AdminSkipTrace';
 import AdminBulkSkipTrace from './pages/AdminBulkSkipTrace';
 
@@ -76,12 +78,13 @@ const AuthenticatedApp = () => {
         <Route path="/Explainers" element={<Explainers />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/Chat" element={<Chat />} />
-        <Route path="/CityGuide" element={<Chat />} />
-        <Route path="/city-guide" element={<Chat />} />
+        <Route path="/CityGuide" element={<CityGuide />} />
+        <Route path="/city-guide" element={<CityGuide />} />
+...
         <Route path="/Search" element={<Search />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/PropertyComparison" element={<Chat />} />
-        <Route path="/property-comparison" element={<Chat />} />
+        <Route path="/PropertyComparison" element={<PropertyComparison />} />
+        <Route path="/property-comparison" element={<PropertyComparison />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}

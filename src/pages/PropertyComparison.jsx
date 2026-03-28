@@ -152,7 +152,6 @@ export default function PropertyComparison() {
             </button>
           </div>
         )}
-      </div>
 
       {showAddModal && clientId && (
         <AddPropertyModal
@@ -161,6 +160,6 @@ export default function PropertyComparison() {
           onAdded={refresh}
         />
       )}
-    </div>
+      </div>
   );
 }
