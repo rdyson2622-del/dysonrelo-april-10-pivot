@@ -139,9 +139,9 @@ export default function RelocationProfileCard({ clientId }) {
       className="mb-8 space-y-4"
     >
       {/* Main Profile Card */}
-      <div className="rounded-3xl overflow-hidden" style={{ background: '#2a2a2a', border: `1px solid ${GOLD}33` }}>
+      <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.13)', border: `1px solid ${GOLD}44` }}>
         {/* Header with Progress */}
-        <div className="px-6 py-5 flex items-center justify-between" style={{ background: '#1a1a1a', borderBottom: `1px solid ${GOLD}22` }}>
+        <div className="px-6 py-5 flex items-center justify-between" style={{ background: 'rgba(0,0,0,0.25)', borderBottom: `1px solid ${GOLD}22` }}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}33` }}>
               <Sparkles className="w-5 h-5" style={{ color: GOLD }} />
@@ -153,13 +153,13 @@ export default function RelocationProfileCard({ clientId }) {
           </div>
           <div className="flex items-center gap-3">
             {/* Progress Ring */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: '#0a0a0a', border: '1px solid #333' }}>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" 
                 style={{ 
                   background: `conic-gradient(${GOLD} ${progressPercent * 3.6}deg, #333 0deg)`,
                   color: '#fff'
                 }}>
-                <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+                <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
                   {progressPercent}%
                 </span>
               </div>
@@ -189,9 +189,9 @@ export default function RelocationProfileCard({ clientId }) {
         <div className="p-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Destination */}
-            <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}15` }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <MapPin className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Destination</span>
@@ -202,7 +202,7 @@ export default function RelocationProfileCard({ clientId }) {
                   onChange={e => setForm(p => ({ ...p, destination_city: e.target.value }))}
                   placeholder="City, State" 
                   className="border-0 rounded-lg h-9 text-sm" 
-                  style={{ background: '#0a0a0a', color: '#fff' }} 
+                  style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }} 
                 />
               ) : (
                 <p className="font-bold text-lg" style={{ color: '#fff' }}>
@@ -212,9 +212,9 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Timeline */}
-            <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}15` }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <Calendar className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Timeline</span>
@@ -224,7 +224,7 @@ export default function RelocationProfileCard({ clientId }) {
                   value={form.move_date || ''} 
                   onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
                   className="w-full rounded-lg h-9 text-sm px-3 border-0"
-                  style={{ background: '#0a0a0a', color: '#fff' }}>
+                  style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }}>
                   <option value="">Select...</option>
                   {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
@@ -236,9 +236,9 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Budget */}
-            <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}15` }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <DollarSign className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Budget</span>
@@ -248,7 +248,7 @@ export default function RelocationProfileCard({ clientId }) {
                   value={form.budget || ''} 
                   onChange={e => setForm(p => ({ ...p, budget: e.target.value }))}
                   className="w-full rounded-lg h-9 text-sm px-3 border-0"
-                  style={{ background: '#0a0a0a', color: '#fff' }}>
+                  style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }}>
                   <option value="">Select...</option>
                   {BUDGET_OPTIONS.map(b => <option key={b} value={b}>{b}</option>)}
                 </select>
@@ -260,9 +260,9 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Status */}
-            <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}15` }}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <TrendingUp className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Status</span>
@@ -277,7 +277,7 @@ export default function RelocationProfileCard({ clientId }) {
           <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Your Relocation Journey</p>
-              <span className="text-xs px-2 py-1 rounded-full" style={{ background: '#0a0a0a', color: '#888', border: '1px solid #333' }}>
+              <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', color: '#ccc', border: '1px solid rgba(255,255,255,0.15)' }}>
                 Phase: <span style={{ color: GOLD, textTransform: 'capitalize' }}>{currentPhase}</span>
               </span>
             </div>
@@ -308,8 +308,8 @@ export default function RelocationProfileCard({ clientId }) {
                 
                 return (
                   <div key={phase} className="rounded-xl p-3" style={{ 
-                    background: isActivePhase ? 'rgba(212,175,55,0.05)' : '#0a0a0a',
-                    border: isActivePhase ? `1px solid ${GOLD}33` : '1px solid #222'
+                    background: isActivePhase ? 'rgba(212,175,55,0.1)' : 'rgba(0,0,0,0.2)',
+                    border: isActivePhase ? `1px solid ${GOLD}44` : '1px solid rgba(255,255,255,0.1)'
                   }}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs font-bold uppercase" style={{ 
@@ -326,14 +326,14 @@ export default function RelocationProfileCard({ clientId }) {
                           key={m.id}
                           className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-help transition-all hover:scale-105"
                           style={{ 
-                            background: m.complete ? 'rgba(34,197,94,0.1)' : isActivePhase ? 'rgba(212,175,55,0.1)' : '#151515',
-                            border: m.complete ? '1px solid rgba(34,197,94,0.3)' : isActivePhase ? `1px solid ${GOLD}44` : '1px solid #2a2a2a'
+                            background: m.complete ? 'rgba(34,197,94,0.15)' : isActivePhase ? 'rgba(212,175,55,0.12)' : 'rgba(0,0,0,0.2)',
+                            border: m.complete ? '1px solid rgba(34,197,94,0.35)' : isActivePhase ? `1px solid ${GOLD}44` : '1px solid rgba(255,255,255,0.08)'
                           }}
                           title={m.guidance}
                         >
                           <div 
                             className="w-5 h-5 rounded-full flex items-center justify-center"
-                            style={{ background: m.complete ? '#22c55e' : isActivePhase ? GOLD : '#333' }}>
+                            style={{ background: m.complete ? '#22c55e' : isActivePhase ? GOLD : 'rgba(255,255,255,0.2)' }}>
                             {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs text-white">{allMilestones.findIndex(am => am.id === m.id) + 1}</span>}
                           </div>
                           <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : '#666' }}>
@@ -348,14 +348,14 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
             
             {/* Progress summary */}
-            <div className="mt-4 flex items-center justify-between p-3 rounded-xl" style={{ background: '#0a0a0a', border: '1px solid #222' }}>
+            <div className="mt-4 flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.12)' }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" 
                   style={{ 
                     background: `conic-gradient(${GOLD} ${progressPercent * 3.6}deg, #333 0deg)`,
                     color: '#fff'
                   }}>
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
                     {progressPercent}%
                   </span>
                 </div>
@@ -390,7 +390,7 @@ export default function RelocationProfileCard({ clientId }) {
       </div>
 
       {/* Things That Change Panel */}
-      <div className="rounded-3xl overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+      <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
         <button
           onClick={() => setShowCautions(s => !s)}
           className="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-white/5"
@@ -428,8 +428,8 @@ export default function RelocationProfileCard({ clientId }) {
                         key={i} 
                         className="group rounded-2xl p-4 transition-all hover:scale-[1.02]"
                         style={{ 
-                          background: '#0a0a0a', 
-                          border: '1px solid #222',
+                          background: 'rgba(0,0,0,0.25)', 
+                          border: '1px solid rgba(255,255,255,0.1)',
                         }}>
                         <div className="flex items-start gap-3">
                           <div 
@@ -446,7 +446,7 @@ export default function RelocationProfileCard({ clientId }) {
                     );
                   })}
                 </div>
-                <div className="mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl" style={{ background: '#0a0a0a', border: '1px dashed #333' }}>
+                <div className="mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(255,255,255,0.2)' }}>
                   <Sparkles className="w-4 h-4" style={{ color: GOLD }} />
                   <p className="text-sm" style={{ color: '#888' }}>
                     Any of these happen? Just tell <span style={{ color: GOLD }}>Charlie</span> — your profile updates instantly.
