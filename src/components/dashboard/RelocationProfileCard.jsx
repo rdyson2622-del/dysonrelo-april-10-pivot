@@ -555,7 +555,7 @@ export default function RelocationProfileCard({ clientId }) {
       </div>
 
       {/* Things That Change Panel */}
-      <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
+      <div className="rounded-3xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
         <button onClick={() => setShowCautions(s => !s)}
           className="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-white/5">
           <div className="flex items-center gap-3">
