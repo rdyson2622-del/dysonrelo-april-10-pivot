@@ -469,7 +469,7 @@ export default function RelocationProfileCard({ clientId }) {
           {/* ─── ALL MILESTONE PILLS — single horizontal scroll row ─── */}
           <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Intake Phase</p>
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#e5e5e5' }}>Intake Phase</p>
               <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: `1px solid ${GOLD}33` }}>
                 Current
               </span>
@@ -541,13 +541,13 @@ export default function RelocationProfileCard({ clientId }) {
                 );
               })}
             </div>
-            <p className="text-xs mt-1.5" style={{ color: '#444' }}>Tap any step for details · Scroll to see full journey →</p>
+            <p className="text-xs mt-1.5" style={{ color: '#e5e5e5' }}>Tap any step for details · Scroll to see full journey →</p>
           </div>
 
           {/* Priorities */}
           {client?.priorities?.length > 0 && (
             <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#666' }}>Your Priorities</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#e5e5e5' }}>Your Priorities</p>
               <div className="flex flex-wrap gap-2">
                 {client.priorities.map(p => (
                   <span key={p} className="px-3 py-1.5 rounded-full text-sm font-medium"
