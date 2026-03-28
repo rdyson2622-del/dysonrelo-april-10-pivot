@@ -68,9 +68,42 @@ export default function GeminiSession() {
        <div className={`flex-1 w-full mx-auto flex flex-col ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`} style={{ minHeight: 0 }}>
          <AnimatePresence mode="wait">
 
+           {/* CONTEXT EXPLAINER - shown before signing */}
+           {!signTiming && (
+             <motion.div key="explainer" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4 pt-4">
+               <div className="rounded-2xl p-6 mb-6" style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+                 <div className="space-y-4">
+                   <div>
+                     <h2 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>What's This Session About?</h2>
+                     <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                       You're about to have a voice conversation with Gemini, an advanced AI advisor, guided by a Dyson & Dyson relocation specialist. We'll discuss your destination, lifestyle priorities, budget, timeline, and family needs — everything that matters for your move.
+                     </p>
+                   </div>
+                   <div>
+                     <h3 className="text-sm font-bold mb-2 uppercase tracking-wider" style={{ color: GOLD }}>Why This Matters</h3>
+                     <ul className="text-sm space-y-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                       <li className="flex gap-3">
+                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                         <span><span style={{ color: GOLD, fontWeight: 600 }}>Your profile:</span> Answers are saved privately and reviewed only by our team to match you with the right agent.</span>
+                       </li>
+                       <li className="flex gap-3">
+                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                         <span><span style={{ color: GOLD, fontWeight: 600 }}>No surprises:</span> The conversation is recorded and summarized — nothing is lost or misunderstood.</span>
+                       </li>
+                       <li className="flex gap-3">
+                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                         <span><span style={{ color: GOLD, fontWeight: 600 }}>It's completely free:</span> This entire service costs you nothing. Agent fees are handled separately.</span>
+                       </li>
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+             </motion.div>
+           )}
+
            {/* SIGN TIMING CHOICE */}
            {!signTiming && (
-             <motion.div key="timing" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4 pt-4">
+             <motion.div key="timing" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4">
                <div className="text-center mb-6">
                  <div className="flex items-center justify-center gap-2 mb-2" style={{ color: GOLD }}>
                    <Zap className="w-4 h-4" />
