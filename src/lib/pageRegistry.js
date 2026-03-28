@@ -4,7 +4,7 @@
 export const PAGE_REGISTRY = {
   // ========== PUBLIC / CLIENT PAGES ==========
   1: { name: 'Home', path: '/Home', section: 'Public' },
-  2: { name: 'Dashboard', path: '/Dashboard', section: 'Client' },
+  2: { name: 'My Progress', path: '/Dashboard', section: 'Client' },
   3: { name: 'Chat with Charlie', path: '/Chat', section: 'Client' },
   4: { name: 'City Guide', path: '/CityGuide', section: 'Client' },
   5: { name: 'Property Search', path: '/Search', section: 'Client' },
