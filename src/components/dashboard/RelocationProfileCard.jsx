@@ -345,9 +345,9 @@ export default function RelocationProfileCard({ clientId }) {
       className="mb-8 space-y-4"
     >
       {/* Main Profile Card */}
-      <div className="rounded-3xl overflow-hidden" style={{ background: '#4a4a4a', border: `1px solid ${GOLD}44` }}>
+      <div className="rounded-3xl overflow-hidden" style={{ background: '#808080', border: `1px solid ${GOLD}44` }}>
         {/* Header */}
-        <div className="px-6 py-5 flex items-center justify-between" style={{ background: '#3a3a3a', borderBottom: `1px solid ${GOLD}22` }}>
+        <div className="px-6 py-5 flex items-center justify-between" style={{ background: '#707070', borderBottom: `1px solid ${GOLD}22` }}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}33` }}>
               <Sparkles className="w-5 h-5" style={{ color: GOLD }} />
