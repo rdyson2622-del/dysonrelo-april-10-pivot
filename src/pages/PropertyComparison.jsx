@@ -39,26 +39,20 @@ export default function PropertyComparison() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>MOST PROBABLE PROPERTIES</p>
-          <div className="flex items-end justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="display-heading" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', letterSpacing: '0.18em', color: '#fff' }}>
-                My Property Comparison
-              </h1>
-              <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Add homes you've toured. Our team (and Gemini) will research each one across all 6 categories so you can decide with confidence.
-              </p>
-            </div>
-            {clientId && (
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold shrink-0"
-                style={{ background: GOLD, color: '#000' }}>
-                <Plus className="w-4 h-4" /> Add a Property
-              </button>
-            )}
-          </div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
+          <p className="text-2xl font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>MOST PROBABLE PROPERTIES</p>
+          <h1 className="display-heading text-5xl md:text-6xl mb-3" style={{ color: '#fff' }}>My Property Comparison</h1>
+          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Add homes you've toured. Our team (and Gemini) will research each one across all 6 categories so you can decide with confidence.
+          </p>
+          {clientId && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold mx-auto"
+              style={{ background: GOLD, color: '#000' }}>
+              <Plus className="w-4 h-4" /> Add a Property
+            </button>
+          )}
         </motion.div>
 
         {!clientId && (
