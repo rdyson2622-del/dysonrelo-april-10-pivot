@@ -459,7 +459,7 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
           </div>
 
-          {/* ─── INTAKE MILESTONE PILLS ─── */}
+          {/* ─── ALL MILESTONE PILLS — single horizontal scroll row ─── */}
           <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Intake Phase</p>
@@ -469,7 +469,7 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {showPivotGuidance && (
-              <div className="mb-4 p-3 rounded-xl" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
+              <div className="mb-3 p-3 rounded-xl" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
                   <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -479,16 +479,18 @@ export default function RelocationProfileCard({ clientId }) {
               </div>
             )}
 
-            {/* 3 intake pills */}
-            <div className="flex flex-wrap gap-2">
+            {/* Single horizontal scroll: intake pills + forward journey pills */}
+            <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+              {/* Intake pills */}
               {intakeMilestones.map((m, i) => (
                 <button
                   key={m.id}
                   onClick={() => setSelectedMilestone(m)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:brightness-125"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 cursor-pointer transition-all hover:scale-105 hover:brightness-125"
                   style={{
                     background: '#000',
                     border: m.complete ? '1px solid rgba(34,197,94,0.5)' : `1px solid ${GOLD}55`,
+                    minWidth: 'max-content',
                   }}
                 >
                   <div className="w-5 h-5 rounded-full flex items-center justify-center"
@@ -498,7 +500,6 @@ export default function RelocationProfileCard({ clientId }) {
                   <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : GOLD }}>
                     {m.label}
                   </span>
-                  {/* Buyer broker urgency badge */}
                   {m.id === 'buyer_broker' && m.complete && bbStatus && bbStatus.daysLeft <= 30 && (
                     <span className="text-xs px-1.5 py-0.5 rounded-full font-bold"
                       style={{ background: bbStatus.daysLeft <= 14 ? '#ef4444' : '#f59e0b', color: '#000' }}>
@@ -507,47 +508,33 @@ export default function RelocationProfileCard({ clientId }) {
                   )}
                 </button>
               ))}
-            </div>
 
-            {/* ─── FORWARD PROGRESS SCROLL (shown after buyer broker signed) ─── */}
-            {buyerBrokerSigned && (
-              <div className="mt-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1" style={{ background: `${GOLD}22` }} />
-                  <p className="text-xs font-bold uppercase tracking-wider px-2" style={{ color: '#555' }}>Journey Ahead</p>
-                  <div className="h-px flex-1" style={{ background: `${GOLD}22` }} />
-                </div>
-                {/* Horizontal scroll row */}
-                <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-                  {FORWARD_MILESTONES.map((fm) => {
-                    const Icon = fm.icon;
-                    return (
-                      <button
-                        key={fm.id}
-                        onClick={() => setForwardMilestone(fm)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:scale-105 hover:brightness-125"
-                        style={{
-                          background: '#000',
-                          border: `1px solid ${GOLD}44`,
-                          minWidth: 'max-content',
-                        }}
-                      >
-                        <Icon className="w-4 h-4" style={{ color: GOLD }} />
-                        <span className="text-sm font-medium" style={{ color: '#fff' }}>{fm.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="text-xs mt-1" style={{ color: '#555' }}>← Tap any step for reminder info · Scroll for more →</p>
+              {/* Divider dot between intake and forward */}
+              <div className="flex items-center px-1 shrink-0">
+                <div className="w-1 h-1 rounded-full" style={{ background: `${GOLD}44` }} />
               </div>
-            )}
 
-            {/* Progress summary */}
-            {!client?.buyer_broker_signed && (
-              <p className="mt-3 text-xs" style={{ color: '#555' }}>
-                Complete intake milestones to unlock full City Guide and forward journey tracking.
-              </p>
-            )}
+              {/* Forward journey pills */}
+              {FORWARD_MILESTONES.map((fm) => {
+                const Icon = fm.icon;
+                return (
+                  <button
+                    key={fm.id}
+                    onClick={() => setForwardMilestone(fm)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:scale-105 hover:brightness-125"
+                    style={{
+                      background: '#000',
+                      border: `1px solid rgba(255,255,255,0.15)`,
+                      minWidth: 'max-content',
+                    }}
+                  >
+                    <Icon className="w-4 h-4" style={{ color: '#666' }} />
+                    <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>{fm.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs mt-1.5" style={{ color: '#444' }}>Tap any step for details · Scroll to see full journey →</p>
           </div>
 
           {/* Priorities */}
