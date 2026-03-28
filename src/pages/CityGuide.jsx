@@ -192,6 +192,7 @@ export default function CityGuide() {
   const cityReady = !!submittedCity;
 
   return (
+    <div className="min-h-screen" style={{ background: '#808080' }}>
     <div className="max-w-3xl mx-auto px-4 py-8">
 
         {/* Loading */}
@@ -650,6 +651,7 @@ export default function CityGuide() {
             )}
           </div>
         )}
+    </div>
     </div>
   );
 }

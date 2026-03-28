@@ -37,6 +37,7 @@ export default function PropertyComparison() {
   const eliminated = properties.filter(p => p.status === 'eliminated');
 
   return (
+    <div className="min-h-screen" style={{ background: '#808080' }}>
     <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
@@ -155,5 +156,6 @@ export default function PropertyComparison() {
         />
       )}
       </div>
+    </div>
   );
 }
