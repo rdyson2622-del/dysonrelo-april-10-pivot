@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, DollarSign, Users, Star, Edit3, Check, X, AlertTriangle, ChevronDown, ChevronUp, ChevronRight, UserCheck, FileSignature, Clock, TrendingUp, RotateCcw, MapPinned, Wallet, Building, ClipboardList, Sparkles, Info } from 'lucide-react';
+import {
+  MapPin, Calendar, DollarSign, Edit3, Check, X, AlertTriangle,
+  ChevronDown, ChevronUp, Clock, TrendingUp, RotateCcw, MapPinned,
+  Wallet, Building, ClipboardList, Sparkles, Info, Phone, Mail,
+  FileSignature, UserCheck, Home, Search, FileText, Key, Truck,
+  ShieldCheck, DollarSign as DollarIcon, Scale, CheckCircle2
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +25,103 @@ const CAUTIONS = [
 const BUDGET_OPTIONS = ['Under $300,000', '$300k – $500k', '$500k – $750k', '$750k – $1 million', '$1M – $1.5M', 'Over $1.5 million'];
 const TIMELINES = ['Within 3 months', '3–6 months', '6–12 months', '12+ months', 'Just exploring'];
 
+// Forward progress milestones shown as horizontal scroll after Buyer Broker
+const FORWARD_MILESTONES = [
+  {
+    id: 'search_active',
+    label: 'Property Search',
+    icon: Search,
+    phase: 'search',
+    reminder: 'Your agent is actively searching based on your criteria. New listings matching your profile are reviewed daily. Expect curated shortlists — not a firehose of homes.',
+    tip: 'Refine your must-haves vs. nice-to-haves now so your agent can narrow fast.'
+  },
+  {
+    id: 'properties_viewed',
+    label: 'Touring Homes',
+    icon: Home,
+    phase: 'search',
+    reminder: 'You\'ll tour homes in batches — typically 4–8 at a time. Take notes and photos. Charlie tracks every property you see.',
+    tip: 'Your gut feeling matters. Rate each home 1–5 on your Property Comparison page.'
+  },
+  {
+    id: 'offer',
+    label: 'Offer Made',
+    icon: FileText,
+    phase: 'offer',
+    reminder: 'Your agent crafts a competitive offer based on comps, days on market, and seller motivation. Be ready to move fast in competitive markets.',
+    tip: 'Pre-approval letter should already be in hand before touring. If not, do it now.'
+  },
+  {
+    id: 'negotiation',
+    label: 'Negotiation',
+    icon: Scale,
+    phase: 'offer',
+    reminder: 'Counter-offers are normal. Stay calm and trust your agent\'s read on the seller. Focus on net price, not just list price.',
+    tip: 'Decide your walk-away number before negotiations start — emotions run high.'
+  },
+  {
+    id: 'under_contract',
+    label: 'Under Contract',
+    icon: FileSignature,
+    phase: 'escrow',
+    reminder: 'Congratulations! You\'re under contract. Now begins the due diligence period — inspection, appraisal, and financing contingencies.',
+    tip: 'Do NOT make major financial changes (new credit, job change) during this period.'
+  },
+  {
+    id: 'inspection',
+    label: 'Inspection',
+    icon: ShieldCheck,
+    phase: 'escrow',
+    reminder: 'A professional inspector examines the home top to bottom. Expect a 200–400 item report. Most findings are normal — focus on big-ticket items.',
+    tip: 'Attend the inspection in person. It\'s educational and worth every minute.'
+  },
+  {
+    id: 'appraisal',
+    label: 'Appraisal',
+    icon: DollarIcon,
+    phase: 'escrow',
+    reminder: 'Your lender orders an independent appraisal to confirm the home\'s value. If it comes in low, you\'ll negotiate with the seller or cover the gap.',
+    tip: 'Your agent can provide the appraiser with comparable sales data to support value.'
+  },
+  {
+    id: 'clear_to_close',
+    label: 'Clear to Close',
+    icon: CheckCircle2,
+    phase: 'escrow',
+    reminder: 'Final loan approval is in. You\'ll receive a Closing Disclosure 3 days before closing. Review every line item carefully.',
+    tip: 'Wire funds early — closing day wires can delay possession if they arrive late.'
+  },
+  {
+    id: 'closing',
+    label: 'Closing Day',
+    icon: Key,
+    phase: 'closing',
+    reminder: 'You\'ll sign a stack of documents, pay closing costs, and receive the keys. The whole process takes 1–2 hours.',
+    tip: 'Bring government-issued ID. Everything else your agent and escrow officer will handle.'
+  },
+  {
+    id: 'moved_in',
+    label: 'Moved In!',
+    icon: Truck,
+    phase: 'post',
+    reminder: 'Welcome home! Now it\'s time to set up utilities, update your address, find local services, and get settled. Charlie can help with all of it.',
+    tip: 'File your homestead exemption right away — deadlines vary by state.'
+  },
+];
+
+// 90-day countdown for buyer broker
+function getBuyerBrokerStatus(signedDate) {
+  if (!signedDate) return null;
+  const signed = new Date(signedDate);
+  const expiry = new Date(signed);
+  expiry.setDate(expiry.getDate() + 90);
+  const now = new Date();
+  const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+  const daysUsed = 90 - daysLeft;
+  const percent = Math.min(100, Math.max(0, Math.round((daysUsed / 90) * 100)));
+  return { daysLeft, percent, expiry, signed };
+}
+
 export default function RelocationProfileCard({ clientId }) {
   const [client, setClient] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -26,6 +129,7 @@ export default function RelocationProfileCard({ clientId }) {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({});
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+  const [forwardMilestone, setForwardMilestone] = useState(null);
 
   useEffect(() => {
     if (!clientId) return;
@@ -35,7 +139,6 @@ export default function RelocationProfileCard({ clientId }) {
           setClient(results[0]);
           setForm({
             destination_city: results[0].destination_city || '',
-            destination_state: '',
             move_date: results[0].move_date || '',
             budget: results[0].budget || '',
             notes: results[0].notes || '',
@@ -45,7 +148,6 @@ export default function RelocationProfileCard({ clientId }) {
       .catch(() => {});
   }, [clientId]);
 
-  // Try to parse destination state from notes
   const parseDestState = (notes) => {
     if (!notes) return '';
     const match = notes.match(/Destination:[^,]+,\s*([A-Z]{2})/);
@@ -80,57 +182,160 @@ export default function RelocationProfileCard({ clientId }) {
   const destState = parseDestState(client?.notes);
   const timeline = parseTimeline(client?.notes);
 
-  // Full relocation journey milestones
-  const allMilestones = [
-    { id: 'profile', label: 'Profile Created', complete: true, phase: 'intake', guidance: 'Your journey begins here. Share your destination, timeline, and priorities.' },
-    { id: 'agent', label: 'Agent Selected', complete: !!client?.agent_name, phase: 'intake', guidance: 'We present 3-5 vetted agents based on your personality fit and needs.' },
-    { id: 'buyer_broker', label: 'Buyer Broker Signed', complete: !!client?.buyer_broker_signed, phase: 'intake', guidance: 'Formalize your relationship with your chosen agent. Unlocks full City Guide access.' },
-    { id: 'search', label: 'Property Search Started', complete: !!client?.agent_selected_date, phase: 'search', guidance: 'Your agent begins curating listings based on your exact criteria.' },
-    { id: 'viewed', label: 'Properties Viewed', complete: false, phase: 'search', guidance: 'Tour homes with your agent. We track every property you see.' },
-    { id: 'top_pick', label: 'Top Pick Identified', complete: false, phase: 'search', guidance: 'You find a property that feels right. Time for due diligence.' },
-    { id: 'offer', label: 'Offer Submitted', complete: false, phase: 'offer', guidance: 'Your agent crafts a competitive offer based on market analysis.' },
-    { id: 'negotiation', label: 'Negotiation Complete', complete: false, phase: 'offer', guidance: 'Terms agreed upon. Moving toward contract.' },
-    { id: 'contract', label: 'Under Contract', complete: false, phase: 'escrow', guidance: 'Congratulations! Now the real work begins — inspections, appraisal, financing.' },
-    { id: 'inspection', label: 'Inspection Complete', complete: false, phase: 'escrow', guidance: 'Professional inspection reveals the true condition of the property.' },
-    { id: 'appraisal', label: 'Appraisal Complete', complete: false, phase: 'escrow', guidance: 'Lender verifies the property value matches the loan amount.' },
-    { id: 'financing', label: 'Financing Secured', complete: false, phase: 'escrow', guidance: 'Final loan approval received. Clear to close!' },
-    { id: 'closing', label: 'Closing Day', complete: !!client?.escrow_complete_date, phase: 'closing', guidance: 'Sign documents, transfer funds, receive keys. You did it!' },
-    { id: 'moved', label: 'Moved In', complete: false, phase: 'post', guidance: 'Welcome home! Charlie helps with utilities, services, and settling in.' },
+  const intakeMilestones = [
+    {
+      id: 'profile', label: 'Profile Created', complete: true, phase: 'intake',
+      guidance: 'Your journey begins here. Share your destination, timeline, and priorities.',
+      type: 'basic'
+    },
+    {
+      id: 'agent', label: 'Agent Selected', complete: !!client?.agent_name, phase: 'intake',
+      guidance: 'We present 3-5 vetted agents based on your personality fit and needs.',
+      type: 'agent'
+    },
+    {
+      id: 'buyer_broker', label: 'Buyer Broker Signed', complete: !!client?.buyer_broker_signed, phase: 'intake',
+      guidance: 'Formalize your relationship with your chosen agent. Unlocks full City Guide access.',
+      type: 'buyer_broker'
+    },
   ];
 
-  // Determine current active phase based on client status
-  const getCurrentPhase = () => {
-    if (client?.status === 'moved' || client?.escrow_complete_date) return 'post';
-    if (client?.status === 'under_contract') return 'escrow';
-    if (client?.status === 'actively_searching') return 'search';
-    if (client?.buyer_broker_signed) return 'search';
-    if (client?.agent_name) return 'intake';
-    return 'intake';
+  const completedIntake = intakeMilestones.filter(m => m.complete).length;
+  const buyerBrokerSigned = !!client?.buyer_broker_signed;
+  const bbStatus = getBuyerBrokerStatus(client?.buyer_broker_signed_date);
+
+  const showPivotGuidance = client?.notes?.includes('pivot') || client?.notes?.includes('restart') ||
+    (client?.status === 'inactive' && client?.buyer_broker_signed);
+
+  // --- Modal rendering helpers ---
+  const renderMilestoneModal = (m) => {
+    if (!m) return null;
+
+    if (m.type === 'agent') {
+      return (
+        <div className="px-5 py-5 space-y-4">
+          {client?.agent_name ? (
+            <>
+              {/* Agent card */}
+              <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}33` }}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
+                    style={{ background: GOLD, color: '#000' }}>
+                    {client.agent_name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-bold" style={{ color: '#fff' }}>{client.agent_name}</p>
+                    {client.assigned_agent && (
+                      <p className="text-xs" style={{ color: '#888' }}>{client.assigned_agent}</p>
+                    )}
+                  </div>
+                </div>
+                {client.agent_selected_date && (
+                  <div className="flex items-center gap-2 text-xs mb-2" style={{ color: '#aaa' }}>
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>Selected: {new Date(client.agent_selected_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                  </div>
+                )}
+                {/* Contact info rows */}
+                <div className="space-y-2 mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                      {client.assigned_agent || 'Email on file'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>Contact via Charlie or your dashboard</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start gap-2 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{m.guidance}</p>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>{m.guidance}</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (m.type === 'buyer_broker') {
+      const urgencyColor = bbStatus
+        ? bbStatus.daysLeft <= 14 ? '#ef4444'
+          : bbStatus.daysLeft <= 30 ? '#f59e0b'
+          : '#22c55e'
+        : GOLD;
+
+      return (
+        <div className="px-5 py-5 space-y-4">
+          {client?.buyer_broker_signed ? (
+            <>
+              {/* Countdown */}
+              {bbStatus && (
+                <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.3)', border: `1px solid ${urgencyColor}44` }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-bold uppercase tracking-wider" style={{ color: urgencyColor }}>
+                      Agreement Expires In
+                    </p>
+                    <span className="text-2xl font-black" style={{ color: urgencyColor }}>
+                      {bbStatus.daysLeft > 0 ? `${bbStatus.daysLeft}d` : 'EXPIRED'}
+                    </span>
+                  </div>
+                  {/* Progress bar */}
+                  <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                    <div className="h-full rounded-full transition-all" style={{ width: `${bbStatus.percent}%`, background: urgencyColor }} />
+                  </div>
+                  <div className="flex justify-between mt-1">
+                    <span className="text-xs" style={{ color: '#666' }}>
+                      Signed: {bbStatus.signed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                    <span className="text-xs" style={{ color: '#666' }}>
+                      Expires: {bbStatus.expiry.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  </div>
+                  {bbStatus.daysLeft <= 30 && bbStatus.daysLeft > 0 && (
+                    <div className="mt-3 flex items-center gap-2 p-2 rounded-lg" style={{ background: `${urgencyColor}15`, border: `1px solid ${urgencyColor}33` }}>
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0" style={{ color: urgencyColor }} />
+                      <p className="text-xs font-semibold" style={{ color: urgencyColor }}>
+                        {bbStatus.daysLeft <= 14 ? 'Renewal urgent — contact your agent today.' : 'Agreement expiring soon — discuss renewal with your agent.'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="flex items-start gap-2 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <FileSignature className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  This agreement gives your agent the right to represent you exclusively for up to 90 days. It also unlocks your full City Guide access and all Dyson & Dyson research tools.
+                </p>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>{m.guidance}</p>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // basic
+    return (
+      <div className="px-5 py-5">
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>{m.guidance}</p>
+        </div>
+      </div>
+    );
   };
-
-  const currentPhase = getCurrentPhase();
-  
-  // Filter milestones based on current progress (show all up to current phase + next phase)
-  const visibleMilestones = allMilestones.filter(m => {
-    const phaseOrder = ['intake', 'search', 'offer', 'escrow', 'closing', 'post'];
-    const currentIdx = phaseOrder.indexOf(currentPhase);
-    const milestoneIdx = phaseOrder.indexOf(m.phase);
-    return milestoneIdx <= currentIdx + 1; // Show current phase + next phase
-  });
-
-  // Calculate progress based on visible milestones
-  const completedMilestones = visibleMilestones.filter(m => m.complete).length;
-  const progressPercent = Math.round((completedMilestones / visibleMilestones.length) * 100);
-
-  // Mid-journey pivot detection
-  const hasMidJourneyIssue = () => {
-    // Check for common pivot scenarios based on client data
-    if (client?.notes?.includes('pivot') || client?.notes?.includes('restart')) return true;
-    if (client?.status === 'inactive' && client?.buyer_broker_signed) return true;
-    return false;
-  };
-
-  const showPivotGuidance = hasMidJourneyIssue();
 
   return (
     <motion.div
@@ -141,7 +346,7 @@ export default function RelocationProfileCard({ clientId }) {
     >
       {/* Main Profile Card */}
       <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.13)', border: `1px solid ${GOLD}44` }}>
-        {/* Header with Progress */}
+        {/* Header */}
         <div className="px-6 py-5 flex items-center justify-between" style={{ background: 'rgba(0,0,0,0.25)', borderBottom: `1px solid ${GOLD}22` }}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}33` }}>
@@ -153,18 +358,8 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {/* Progress Ring */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" 
-                style={{ 
-                  background: `conic-gradient(${GOLD} ${progressPercent * 3.6}deg, #333 0deg)`,
-                  color: '#fff'
-                }}>
-                <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                  {progressPercent}%
-                </span>
-              </div>
-              <span className="text-xs" style={{ color: '#888' }}>{completedMilestones}/{visibleMilestones.length} complete</span>
+              <span className="text-xs" style={{ color: '#888' }}>{completedIntake}/{intakeMilestones.length} intake</span>
             </div>
             {!editing ? (
               <Button variant="ghost" size="sm" onClick={() => setEditing(true)}
@@ -198,13 +393,9 @@ export default function RelocationProfileCard({ clientId }) {
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Destination</span>
               </div>
               {editing ? (
-                <Input 
-                  value={form.destination_city} 
-                  onChange={e => setForm(p => ({ ...p, destination_city: e.target.value }))}
-                  placeholder="City, State" 
-                  className="border-0 rounded-lg h-9 text-sm" 
-                  style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }} 
-                />
+                <Input value={form.destination_city} onChange={e => setForm(p => ({ ...p, destination_city: e.target.value }))}
+                  placeholder="City, State" className="border-0 rounded-lg h-9 text-sm"
+                  style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }} />
               ) : (
                 <p className="font-bold text-lg" style={{ color: '#fff' }}>
                   {client?.destination_city ? `${client.destination_city}${destState ? `, ${destState}` : ''}` : '—'}
@@ -221,18 +412,14 @@ export default function RelocationProfileCard({ clientId }) {
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Timeline</span>
               </div>
               {editing ? (
-                <select 
-                  value={form.move_date || ''} 
-                  onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
+                <select value={form.move_date || ''} onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
                   className="w-full rounded-lg h-9 text-sm px-3 border-0"
                   style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }}>
                   <option value="">Select...</option>
                   {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               ) : (
-                <p className="font-bold text-lg" style={{ color: '#fff' }}>
-                  {client?.move_date || timeline || '—'}
-                </p>
+                <p className="font-bold text-lg" style={{ color: '#fff' }}>{client?.move_date || timeline || '—'}</p>
               )}
             </div>
 
@@ -245,9 +432,7 @@ export default function RelocationProfileCard({ clientId }) {
                 <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Budget</span>
               </div>
               {editing ? (
-                <select 
-                  value={form.budget || ''} 
-                  onChange={e => setForm(p => ({ ...p, budget: e.target.value }))}
+                <select value={form.budget || ''} onChange={e => setForm(p => ({ ...p, budget: e.target.value }))}
                   className="w-full rounded-lg h-9 text-sm px-3 border-0"
                   style={{ background: 'rgba(0,0,0,0.4)', color: '#fff' }}>
                   <option value="">Select...</option>
@@ -274,103 +459,95 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
           </div>
 
-          {/* Milestones Row - Full Journey */}
+          {/* ─── INTAKE MILESTONE PILLS ─── */}
           <div className="mt-4 pt-4" style={{ borderTop: '1px solid #333' }}>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Your Relocation Journey</p>
-              <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', color: '#ccc', border: '1px solid rgba(255,255,255,0.15)' }}>
-                Phase: <span style={{ color: GOLD, textTransform: 'capitalize' }}>{currentPhase}</span>
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Intake Phase</p>
+              <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: `1px solid ${GOLD}33` }}>
+                Current
               </span>
             </div>
-            
-            {/* Mid-Journey Pivot Alert */}
+
             {showPivotGuidance && (
               <div className="mb-4 p-3 rounded-xl" style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
-                  <div>
-                    <p className="text-sm font-bold" style={{ color: '#f59e0b' }}>Mid-Journey Pivot Detected</p>
-                    <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      Changes happen. Your profile adapts. Charlie can guide you through timeline shifts, destination changes, or starting fresh with a new agent.
-                    </p>
-                  </div>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    Mid-journey pivot detected. Tell Charlie — your profile adapts.
+                  </p>
                 </div>
               </div>
             )}
 
-            {/* Milestones by Phase */}
-            <div className="space-y-3">
-              {['intake', 'search', 'offer', 'escrow', 'closing', 'post'].map(phase => {
-                const phaseMilestones = visibleMilestones.filter(m => m.phase === phase);
-                if (phaseMilestones.length === 0) return null;
-                
-                const isActivePhase = phase === currentPhase;
-                const isPastPhase = ['intake', 'search', 'offer', 'escrow', 'closing', 'post'].indexOf(phase) < ['intake', 'search', 'offer', 'escrow', 'closing', 'post'].indexOf(currentPhase);
-                
-                return (
-                  <div key={phase} className="rounded-xl p-3" style={{ 
-                    background: isActivePhase ? 'rgba(212,175,55,0.1)' : 'rgba(0,0,0,0.2)',
-                    border: isActivePhase ? `1px solid ${GOLD}44` : '1px solid rgba(255,255,255,0.1)'
-                  }}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-bold uppercase" style={{ 
-                        color: isActivePhase ? GOLD : isPastPhase ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.35)',
-                        textTransform: 'capitalize'
-                      }}>
-                        {phase === 'post' ? 'Post-Move' : phase} Phase
-                      </span>
-                      {isActivePhase && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: GOLD, color: '#000' }}>Current</span>}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {phaseMilestones.map((m, i) => (
-                        <button 
-                          key={m.id}
-                          onClick={() => setSelectedMilestone(m)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:brightness-110"
-                          style={{ 
-                            background: m.complete ? 'rgba(34,197,94,0.15)' : isActivePhase ? 'rgba(212,175,55,0.12)' : 'rgba(0,0,0,0.2)',
-                            border: m.complete ? '1px solid rgba(34,197,94,0.35)' : isActivePhase ? `1px solid ${GOLD}44` : '1px solid rgba(255,255,255,0.08)'
-                          }}
-                        >
-                          <div 
-                            className="w-5 h-5 rounded-full flex items-center justify-center"
-                            style={{ background: m.complete ? '#22c55e' : isActivePhase ? GOLD : 'rgba(255,255,255,0.2)' }}>
-                            {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs text-white">{allMilestones.findIndex(am => am.id === m.id) + 1}</span>}
-                          </div>
-                          <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : 'rgba(255,255,255,0.75)' }}>
-                            {m.label}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
+            {/* 3 intake pills */}
+            <div className="flex flex-wrap gap-2">
+              {intakeMilestones.map((m, i) => (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedMilestone(m)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer transition-all hover:scale-105 hover:brightness-110"
+                  style={{
+                    background: m.complete ? 'rgba(34,197,94,0.15)' : 'rgba(212,175,55,0.12)',
+                    border: m.complete ? '1px solid rgba(34,197,94,0.35)' : `1px solid ${GOLD}44`,
+                  }}
+                >
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ background: m.complete ? '#22c55e' : GOLD }}>
+                    {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs font-bold text-black">{i + 1}</span>}
                   </div>
-                );
-              })}
-            </div>
-            
-            {/* Progress summary */}
-            <div className="mt-4 flex items-center justify-between p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" 
-                  style={{ 
-                    background: `conic-gradient(${GOLD} ${progressPercent * 3.6}deg, #333 0deg)`,
-                    color: '#fff'
-                  }}>
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                    {progressPercent}%
+                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : '#fff' }}>
+                    {m.label}
                   </span>
-                </div>
-                <div>
-                  <p className="text-sm font-bold" style={{ color: '#fff' }}>Journey Progress</p>
-                  <p className="text-xs" style={{ color: '#888' }}>{completedMilestones} of {visibleMilestones.length} milestones complete</p>
-                </div>
-              </div>
-              {!client?.buyer_broker_signed && (
-                <p className="text-xs text-right max-w-[200px]" style={{ color: '#666' }}>
-                  Complete intake milestones to unlock full City Guide
-                </p>
-              )}
+                  {/* Buyer broker urgency badge */}
+                  {m.id === 'buyer_broker' && m.complete && bbStatus && bbStatus.daysLeft <= 30 && (
+                    <span className="text-xs px-1.5 py-0.5 rounded-full font-bold"
+                      style={{ background: bbStatus.daysLeft <= 14 ? '#ef4444' : '#f59e0b', color: '#000' }}>
+                      {bbStatus.daysLeft}d
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
+
+            {/* ─── FORWARD PROGRESS SCROLL (shown after buyer broker signed) ─── */}
+            {buyerBrokerSigned && (
+              <div className="mt-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-px flex-1" style={{ background: `${GOLD}22` }} />
+                  <p className="text-xs font-bold uppercase tracking-wider px-2" style={{ color: '#555' }}>Journey Ahead</p>
+                  <div className="h-px flex-1" style={{ background: `${GOLD}22` }} />
+                </div>
+                {/* Horizontal scroll row */}
+                <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+                  {FORWARD_MILESTONES.map((fm) => {
+                    const Icon = fm.icon;
+                    return (
+                      <button
+                        key={fm.id}
+                        onClick={() => setForwardMilestone(fm)}
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:scale-105 hover:brightness-110"
+                        style={{
+                          background: 'rgba(0,0,0,0.25)',
+                          border: '1px solid rgba(255,255,255,0.12)',
+                          minWidth: 'max-content',
+                        }}
+                      >
+                        <Icon className="w-4 h-4" style={{ color: '#888' }} />
+                        <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>{fm.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs mt-1" style={{ color: '#555' }}>← Tap any step for reminder info · Scroll for more →</p>
+              </div>
+            )}
+
+            {/* Progress summary */}
+            {!client?.buyer_broker_signed && (
+              <p className="mt-3 text-xs" style={{ color: '#555' }}>
+                Complete intake milestones to unlock full City Guide and forward journey tracking.
+              </p>
+            )}
           </div>
 
           {/* Priorities */}
@@ -392,10 +569,8 @@ export default function RelocationProfileCard({ clientId }) {
 
       {/* Things That Change Panel */}
       <div className="rounded-3xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-        <button
-          onClick={() => setShowCautions(s => !s)}
-          className="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-white/5"
-        >
+        <button onClick={() => setShowCautions(s => !s)}
+          className="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-white/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)' }}>
               <AlertTriangle className="w-5 h-5" style={{ color: '#f59e0b' }} />
@@ -413,28 +588,17 @@ export default function RelocationProfileCard({ clientId }) {
 
         <AnimatePresence>
           {showCautions && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
               <div className="px-6 pb-6">
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {CAUTIONS.map((c, i) => {
                     const Icon = c.icon;
                     return (
-                      <div 
-                        key={i} 
-                        className="group rounded-2xl p-4 transition-all hover:scale-[1.02]"
-                        style={{ 
-                          background: 'rgba(0,0,0,0.25)', 
-                          border: '1px solid rgba(255,255,255,0.1)',
-                        }}>
+                      <div key={i} className="rounded-2xl p-4 transition-all hover:scale-[1.02]"
+                        style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)' }}>
                         <div className="flex items-start gap-3">
-                          <div 
-                            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                             style={{ background: `${c.color}15`, border: `1px solid ${c.color}30` }}>
                             <Icon className="w-5 h-5" style={{ color: c.color }} />
                           </div>
@@ -447,7 +611,8 @@ export default function RelocationProfileCard({ clientId }) {
                     );
                   })}
                 </div>
-                <div className="mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(255,255,255,0.2)' }}>
+                <div className="mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl"
+                  style={{ background: 'rgba(0,0,0,0.2)', border: '1px dashed rgba(255,255,255,0.2)' }}>
                   <Sparkles className="w-4 h-4" style={{ color: GOLD }} />
                   <p className="text-sm" style={{ color: '#888' }}>
                     Any of these happen? Just tell <span style={{ color: GOLD }}>Charlie</span> — your profile updates instantly.
@@ -458,17 +623,14 @@ export default function RelocationProfileCard({ clientId }) {
           )}
         </AnimatePresence>
       </div>
-      {/* Milestone Detail Modal */}
+
+      {/* ─── INTAKE MILESTONE MODAL ─── */}
       <AnimatePresence>
         {selectedMilestone && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             style={{ background: 'rgba(0,0,0,0.7)' }}
-            onClick={() => setSelectedMilestone(null)}
-          >
+            onClick={() => setSelectedMilestone(null)}>
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -476,22 +638,20 @@ export default function RelocationProfileCard({ clientId }) {
               transition={{ type: 'spring', stiffness: 300, damping: 28 }}
               className="w-full max-w-sm rounded-2xl overflow-hidden"
               style={{ background: '#1a1a1a', border: `1px solid ${GOLD}44` }}
-              onClick={e => e.stopPropagation()}
-            >
-              {/* Modal Header */}
+              onClick={e => e.stopPropagation()}>
+              {/* Header */}
               <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid #333' }}>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full flex items-center justify-center"
                     style={{ background: selectedMilestone.complete ? '#22c55e' : GOLD }}>
                     {selectedMilestone.complete
                       ? <Check className="w-4 h-4 text-black" />
-                      : <span className="text-sm font-bold text-black">{allMilestones.findIndex(m => m.id === selectedMilestone.id) + 1}</span>
-                    }
+                      : <span className="text-sm font-bold text-black">{intakeMilestones.findIndex(m => m.id === selectedMilestone.id) + 1}</span>}
                   </div>
                   <div>
                     <p className="text-sm font-bold" style={{ color: '#fff' }}>{selectedMilestone.label}</p>
-                    <p className="text-xs capitalize" style={{ color: selectedMilestone.complete ? '#4ade80' : '#888' }}>
-                      {selectedMilestone.complete ? '✓ Complete' : `${selectedMilestone.phase} phase`}
+                    <p className="text-xs" style={{ color: selectedMilestone.complete ? '#4ade80' : '#888' }}>
+                      {selectedMilestone.complete ? '✓ Complete' : 'Intake phase'}
                     </p>
                   </div>
                 </div>
@@ -499,32 +659,71 @@ export default function RelocationProfileCard({ clientId }) {
                   <X className="w-4 h-4" style={{ color: '#888' }} />
                 </button>
               </div>
+              {renderMilestoneModal(selectedMilestone)}
+              {/* Footer */}
+              <div className="px-5 pb-5 flex justify-end">
+                <button onClick={() => setSelectedMilestone(null)}
+                  className="text-xs px-4 py-1.5 rounded-full font-semibold hover:brightness-110"
+                  style={{ background: GOLD, color: '#000' }}>
+                  Got it
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-              {/* Modal Body */}
-              <div className="px-5 py-5">
+      {/* ─── FORWARD MILESTONE MODAL ─── */}
+      <AnimatePresence>
+        {forwardMilestone && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.7)' }}
+            onClick={() => setForwardMilestone(null)}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 16 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl overflow-hidden"
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}44` }}
+              onClick={e => e.stopPropagation()}>
+              {/* Header */}
+              <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid #333' }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${GOLD}20`, border: `1px solid ${GOLD}44` }}>
+                    {React.createElement(forwardMilestone.icon, { className: 'w-4 h-4', style: { color: GOLD } })}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: '#fff' }}>{forwardMilestone.label}</p>
+                    <p className="text-xs capitalize" style={{ color: '#888' }}>{forwardMilestone.phase} phase</p>
+                  </div>
+                </div>
+                <button onClick={() => setForwardMilestone(null)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                  <X className="w-4 h-4" style={{ color: '#888' }} />
+                </button>
+              </div>
+              {/* Body */}
+              <div className="px-5 py-5 space-y-3">
                 <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
                   <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
                   <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                    {selectedMilestone.guidance}
+                    {forwardMilestone.reminder}
                   </p>
                 </div>
-
-                {/* Status badge */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-xs px-3 py-1.5 rounded-full font-semibold"
-                    style={{
-                      background: selectedMilestone.complete ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)',
-                      color: selectedMilestone.complete ? '#4ade80' : '#888',
-                      border: selectedMilestone.complete ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(255,255,255,0.1)'
-                    }}>
-                    {selectedMilestone.complete ? 'Milestone Complete' : 'Not Yet Reached'}
-                  </span>
-                  <button onClick={() => setSelectedMilestone(null)}
-                    className="text-xs px-4 py-1.5 rounded-full font-semibold transition-all hover:brightness-110"
-                    style={{ background: GOLD, color: '#000' }}>
-                    Got it
-                  </button>
+                <div className="flex items-start gap-3 p-3 rounded-xl" style={{ background: 'rgba(212,175,55,0.07)', border: `1px solid ${GOLD}22` }}>
+                  <Sparkles className="w-4 h-4 mt-0.5 shrink-0" style={{ color: GOLD }} />
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    <span style={{ color: GOLD }} className="font-semibold">Pro tip: </span>{forwardMilestone.tip}
+                  </p>
                 </div>
+              </div>
+              <div className="px-5 pb-5 flex justify-end">
+                <button onClick={() => setForwardMilestone(null)}
+                  className="text-xs px-4 py-1.5 rounded-full font-semibold hover:brightness-110"
+                  style={{ background: GOLD, color: '#000' }}>
+                  Got it
+                </button>
               </div>
             </motion.div>
           </motion.div>
