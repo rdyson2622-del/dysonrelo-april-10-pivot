@@ -390,7 +390,7 @@ export default function RelocationProfileCard({ clientId }) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <MapPin className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Destination</span>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Destination</span>
               </div>
               {editing ? (
                 <Input value={form.destination_city} onChange={e => setForm(p => ({ ...p, destination_city: e.target.value }))}
@@ -409,7 +409,7 @@ export default function RelocationProfileCard({ clientId }) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <Calendar className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Timeline</span>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Timeline</span>
               </div>
               {editing ? (
                 <select value={form.move_date || ''} onChange={e => setForm(p => ({ ...p, move_date: e.target.value }))}
@@ -429,7 +429,7 @@ export default function RelocationProfileCard({ clientId }) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <DollarSign className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Budget</span>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Budget</span>
               </div>
               {editing ? (
                 <select value={form.budget || ''} onChange={e => setForm(p => ({ ...p, budget: e.target.value }))}
@@ -440,7 +440,14 @@ export default function RelocationProfileCard({ clientId }) {
                 </select>
               ) : (
                 <p className="font-bold text-lg" style={{ color: '#fff' }}>
-                  {client?.budget?.replace(/_/g, ' ').replace(/k/g, 'K').replace(/m/g, 'M') || '—'}
+                  {client?.budget ? {
+                    under_200k: 'Under $200K',
+                    '200k_400k': '$200K – $400K',
+                    '400k_600k': '$400K – $600K',
+                    '600k_800k': '$600K – $800K',
+                    '800k_1m': '$800K – $1M',
+                    over_1m: 'Over $1M',
+                  }[client.budget] || client.budget.replace(/_/g, ' ') : '—'}
                 </p>
               )}
             </div>
@@ -451,7 +458,7 @@ export default function RelocationProfileCard({ clientId }) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <TrendingUp className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#666' }}>Status</span>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: GOLD }}>Status</span>
               </div>
               <p className="font-bold text-lg capitalize" style={{ color: GOLD }}>
                 {client?.status?.replace(/_/g, ' ') || 'New Lead'}
