@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Home, Search as SearchIcon, Plus, MessageCircle, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React from 'react';
 import { motion } from 'framer-motion';
 import ChatInterface from '../components/charlie/ChatInterface';
 
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
 export default function Search() {
@@ -23,28 +18,15 @@ export default function Search() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 px-6 py-3 flex items-center gap-3 frosted-dark" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <Link to="/Dashboard">
-          <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: '#D4AF37' }}>
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" /></Link>
-        <div>
-          <h1 className="text-base font-black" style={{ color: '#ffffff' }}>Property Search</h1>
-          <p className="text-xs" style={{ color: '#D4AF37' }}>Find your new home</p>
-        </div>
-      </header>
-
       <main className="flex-1 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md text-center"
         >
-          <h2 className="text-2xl font-bold mb-2 tracking-wide" style={{ color: '#fff' }}>Where do you prefer to search?</h2>
-          <p className="text-sm mb-8" style={{ color: '#999' }}>Pick your platform and start browsing listings</p>
+          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>SEARCH HOMES</p>
+          <h1 className="display-heading text-5xl md:text-6xl mb-4" style={{ color: '#fff' }}>Find Your New Home</h1>
+          <p className="text-sm mb-10" style={{ color: '#999' }}>Pick your platform and start browsing listings</p>
           
           <div className="space-y-3">
             <button
