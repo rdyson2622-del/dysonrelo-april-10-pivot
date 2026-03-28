@@ -1,0 +1,114 @@
+{
+  "name": "TargetAudienceProfile",
+  "type": "object",
+  "properties": {
+    "audience_name": {
+      "type": "string",
+      "description": "Audience segment name (e.g., 'Recently Listed Seniors in LA')"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of this audience segment"
+    },
+    "audience_type": {
+      "type": "string",
+      "enum": [
+        "recently_listed_homes",
+        "title_affiliate_data",
+        "corporate_relocations",
+        "rental_expiration",
+        "lease_end_dates",
+        "custom_list",
+        "other"
+      ],
+      "description": "Category of audience"
+    },
+    "primary_cities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Cities this audience is concentrated in"
+    },
+    "estimated_size": {
+      "type": "number",
+      "description": "Estimated number of people in this segment"
+    },
+    "key_characteristics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Demographics, psychographics, or behavioral traits"
+    },
+    "data_source": {
+      "type": "string",
+      "description": "Where this data comes from (MLS, title affiliate, subscription service, etc.)"
+    },
+    "legal_compliance_notes": {
+      "type": "string",
+      "description": "TCPA, GDPR, and other legal compliance info for contacting this segment"
+    },
+    "contact_method_preference": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "email",
+          "sms",
+          "phone",
+          "direct_mail",
+          "social_media",
+          "referral"
+        ]
+      },
+      "description": "Preferred outreach methods for this audience"
+    },
+    "estimated_move_probability": {
+      "type": "string",
+      "enum": [
+        "very_high",
+        "high",
+        "moderate",
+        "low"
+      ],
+      "description": "Likelihood they'll relocate based on profile"
+    },
+    "move_timeline": {
+      "type": "string",
+      "description": "Expected moving window (e.g., '3-6 months', '6-12 months')"
+    },
+    "destination_cities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Cities they're likely moving to (if known)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "prospect",
+        "active_outreach",
+        "in_campaign",
+        "converted",
+        "archived"
+      ],
+      "default": "prospect",
+      "description": "Current status of this audience segment"
+    },
+    "created_campaign_id": {
+      "type": "string",
+      "description": "Reference to MarketingCampaign ID if an outreach campaign was created"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes and observations"
+    }
+  },
+  "required": [
+    "audience_name",
+    "audience_type",
+    "status"
+  ]
+}

@@ -39,6 +39,7 @@ import PropertyComparison from './pages/PropertyComparison';
 import AdminSkipTrace from './pages/AdminSkipTrace';
 import AdminBulkSkipTrace from './pages/AdminBulkSkipTrace';
 import AdminMarketingCampaigns from './pages/AdminMarketingCampaigns';
+import AdminTargetAudiences from './pages/AdminTargetAudiences';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -105,6 +106,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/skip-trace" element={<AdminSkipTrace />} />
         <Route path="/admin/bulk-skip-trace" element={<AdminBulkSkipTrace />} />
         <Route path="/admin/marketing-campaigns" element={<AdminMarketingCampaigns />} />
+        <Route path="/admin/target-audiences" element={<AdminTargetAudiences />} />
         <Route path="/business-plan" element={<BusinessPlan />} />
       </Route>
       

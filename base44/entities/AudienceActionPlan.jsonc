@@ -1,0 +1,132 @@
+{
+  "name": "AudienceActionPlan",
+  "type": "object",
+  "properties": {
+    "audience_id": {
+      "type": "string",
+      "description": "Reference to TargetAudienceProfile ID"
+    },
+    "action_title": {
+      "type": "string",
+      "description": "Name of this action (e.g., 'Initial Email Outreach')"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "outreach_campaign",
+        "nurture_sequence",
+        "lead_scoring",
+        "data_enrichment",
+        "list_refinement",
+        "conversion_push",
+        "retention",
+        "other"
+      ],
+      "description": "Type of action to take"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this action does and why"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium",
+      "description": "Priority level"
+    },
+    "sequence_order": {
+      "type": "number",
+      "description": "Order to execute (1 = first, 2 = second, etc.)"
+    },
+    "target_volume": {
+      "type": "number",
+      "description": "Number of people to target with this action"
+    },
+    "communication_channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "phone",
+        "direct_mail",
+        "social_media",
+        "referral",
+        "multi_channel"
+      ],
+      "description": "How we'll reach them"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "Reference to MarketingCampaign if this action is a campaign"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Which message template to use"
+    },
+    "scheduled_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When to start this action"
+    },
+    "scheduled_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When to end this action"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "paused",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Current status"
+    },
+    "launch_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When it was launched"
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When it was completed"
+    },
+    "results_metrics": {
+      "type": "object",
+      "properties": {
+        "contacts_reached": {
+          "type": "number"
+        },
+        "responses": {
+          "type": "number"
+        },
+        "conversions": {
+          "type": "number"
+        },
+        "revenue_generated": {
+          "type": "number"
+        }
+      },
+      "description": "Performance results after execution"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes and learnings"
+    }
+  },
+  "required": [
+    "audience_id",
+    "action_title",
+    "action_type",
+    "status"
+  ]
+}
