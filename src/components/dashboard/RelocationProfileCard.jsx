@@ -313,7 +313,7 @@ export default function RelocationProfileCard({ clientId }) {
                   }}>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs font-bold uppercase" style={{ 
-                        color: isActivePhase ? GOLD : isPastPhase ? '#666' : '#444',
+                        color: isActivePhase ? GOLD : isPastPhase ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.35)',
                         textTransform: 'capitalize'
                       }}>
                         {phase === 'post' ? 'Post-Move' : phase} Phase
@@ -336,7 +336,7 @@ export default function RelocationProfileCard({ clientId }) {
                             style={{ background: m.complete ? '#22c55e' : isActivePhase ? GOLD : 'rgba(255,255,255,0.2)' }}>
                             {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs text-white">{allMilestones.findIndex(am => am.id === m.id) + 1}</span>}
                           </div>
-                          <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : '#666' }}>
+                          <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : isActivePhase ? '#fff' : 'rgba(255,255,255,0.75)' }}>
                             {m.label}
                           </span>
                         </div>
