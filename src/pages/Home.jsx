@@ -34,7 +34,7 @@ export default function Home() {
       >
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
         <div className="flex items-center gap-3">
-          <Link to="/dashboard">
+          <Link to="/RelocationRoadmap">
             <button className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-white/20 hover:border-white/40 hover:bg-white/5" style={{ color: '#fff', background: 'transparent' }}>
               Dashboard
             </button>
@@ -88,12 +88,12 @@ export default function Home() {
                   Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
-              <Link to="/dashboard">
-                <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
-                  style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                  My Dashboard <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
+              <Link to="/RelocationRoadmap">
+                 <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
+                   style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                   My Roadmap <ArrowRight className="w-4 h-4" />
+                 </button>
+               </Link>
             </div>
             {/* Scroll cue — portrait only */}
             <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity }} className="mt-12 md:hidden flex flex-col items-center gap-1" style={{ color: 'rgba(212,175,55,0.5)' }}>
