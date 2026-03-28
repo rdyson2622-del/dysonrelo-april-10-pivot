@@ -74,14 +74,14 @@ export default function GeminiSession() {
                <div className="rounded-2xl p-6 mb-6" style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
                  <div className="space-y-4">
                    <div>
-                     <h2 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>What's This Session About?</h2>
-                     <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                     <h2 className="serif-heading text-2xl md:text-3xl mb-3" style={{ color: '#fff' }}>What's This Session About?</h2>
+                     <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e5e5e5' }}>
                        You're about to have a voice conversation with Gemini, an advanced AI advisor, guided by a Dyson & Dyson relocation specialist. We'll discuss your destination, lifestyle priorities, budget, timeline, and family needs — everything that matters for your move.
                      </p>
                    </div>
                    <div>
-                     <h3 className="text-sm font-bold mb-2 uppercase tracking-wider" style={{ color: GOLD }}>Why This Matters</h3>
-                     <ul className="text-sm space-y-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                     <p className="text-xs font-bold mb-3 uppercase tracking-[0.2em]" style={{ color: GOLD }}>Why This Matters</p>
+                     <ul className="text-sm md:text-base space-y-2.5" style={{ color: '#e5e5e5' }}>
                        <li className="flex gap-3">
                          <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
                          <span><span style={{ color: GOLD, fontWeight: 600 }}>Your profile:</span> Answers are saved privately and reviewed only by our team to match you with the right agent.</span>
