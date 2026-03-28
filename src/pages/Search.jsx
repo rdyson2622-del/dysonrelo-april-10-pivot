@@ -17,7 +17,7 @@ export default function Search() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#080808' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#808080' }}>
       <main className="flex-1 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
