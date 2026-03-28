@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Plus, Home } from 'lucide-react';
 import AddPropertyModal from '@/components/cityguide/AddPropertyModal';
 import PropertyComparisonCard from '@/components/cityguide/PropertyComparisonCard';
-import AppLayout from '@/components/layout/AppLayout';
 
 const GOLD = '#D4AF37';
 
@@ -38,8 +37,7 @@ export default function PropertyComparison() {
   const eliminated = properties.filter(p => p.status === 'eliminated');
 
   return (
-    <AppLayout>
-      <div className="max-w-7xl mx-auto px-6 py-10">
+    <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>MOST PROBABLE PROPERTIES</p>
@@ -163,6 +161,6 @@ export default function PropertyComparison() {
           onAdded={refresh}
         />
       )}
-    </AppLayout>
+    </div>
   );
 }
