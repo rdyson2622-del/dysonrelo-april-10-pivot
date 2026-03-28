@@ -45,7 +45,7 @@ export default function GeminiSession() {
   const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#4a4a4a' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#808080' }}>
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
@@ -58,8 +58,8 @@ export default function GeminiSession() {
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto cursor-pointer" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-black" style={{ color: '#ffffff' }}>Gemini Live Interview</h1>
-          <p className="text-sm" style={{ color: GOLD }}>Powered by Google Gemini • Your Private Relocation Session</p>
+          <p className="text-xs font-bold tracking-[0.3em] mb-0.5" style={{ color: GOLD }}>GEMINI LIVE INTERVIEW</p>
+          <h1 className="display-heading text-4xl md:text-5xl" style={{ color: '#fff' }}>Your Private Session</h1>
         </div>
         <LayoutToggleButton />
       </header>
