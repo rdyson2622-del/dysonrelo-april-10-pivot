@@ -6,8 +6,8 @@ const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
-  { label: 'My Dashboard',     path: '/Dashboard',        icon: LayoutDashboard },
   { label: 'My Roadmap',       path: '/RelocationRoadmap',   icon: Map },
+  { label: 'My Progress',      path: '/Dashboard',        icon: LayoutDashboard },
   { label: 'Property Compare', path: '/PropertyComparison', icon: GitCompare },
   { label: 'City Guide',       path: '/CityGuide',           icon: MapPin },
   { label: 'Search Homes',     path: '/Search',           icon: Home },
