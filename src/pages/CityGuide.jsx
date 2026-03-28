@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, Search, MapPin, GraduationCap, DollarSign, Heart, Building2, TreePine, MessageCircle, ArrowRight, Sparkles, Clock, CheckCircle2, Send, Loader2, ChevronDown, ChevronUp, Shield, Footprints, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,6 @@ import ReactMarkdown from 'react-markdown';
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
 const categories = [
@@ -87,7 +86,6 @@ const WHY_STEPS = [
 ];
 
 export default function CityGuide() {
-  const navigate = useNavigate();
   const [city, setCity] = useState('');
   const [submittedCity, setSubmittedCity] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -194,20 +192,7 @@ export default function CityGuide() {
   const cityReady = !!submittedCity;
 
   return (
-    <div className="min-h-screen" style={{ background: '#f8f8f8' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3"
-        style={{ background: '#000', borderBottom: `1px solid rgba(212,175,55,0.2)` }}>
-        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
-          <ArrowLeft className="w-4 h-4 text-white" />
-        </button>
-        <Link to="/Home" className="flex-1 flex justify-center">
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-9 w-auto" />
-        </Link>
-        <div className="w-8" />
-      </header>
-
-      <main className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
 
         {/* Loading */}
         {committed === null && (
@@ -665,7 +650,6 @@ export default function CityGuide() {
             )}
           </div>
         )}
-      </main>
     </div>
   );
 }
