@@ -207,7 +207,7 @@ export default function CityGuide() {
 
             {/* Hero */}
             <div className="text-center">
-              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
+              <p className="text-2xl font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>CITY GUIDE</p>
               <h1 className="display-heading text-5xl md:text-6xl mb-3" style={{ color: '#111' }}>Here's What's Coming For You</h1>
               <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
                 Our City Guide delivers <strong>hyper-personalized</strong> research across 6 categories — but we hold it until the right moment so every insight is actually useful to your family.
@@ -337,7 +337,7 @@ export default function CityGuide() {
         {committed === true && (
           <div>
             <div className="text-center mb-8">
-              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>CITY GUIDE</p>
+              <p className="text-2xl font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>CITY GUIDE</p>
               <h1 className="display-heading text-5xl md:text-6xl mb-2" style={{ color: '#111' }}>Research Your New City</h1>
               <p className="text-sm text-slate-500">Enter a destination city, then tap any category to get AI-powered research.</p>
             </div>
