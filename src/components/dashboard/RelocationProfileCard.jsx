@@ -354,12 +354,12 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
             <div>
               <p className="text-sm font-bold" style={{ color: '#fff' }}>Your Relocation Profile</p>
-              <p className="text-xs" style={{ color: '#888' }}>This drives everything we do for you</p>
+              <p className="text-xs" style={{ color: '#e5e5e5' }}>This drives everything we do for you</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <span className="text-xs" style={{ color: '#888' }}>{completedIntake}/{intakeMilestones.length} intake</span>
+              <span className="text-xs" style={{ color: '#e5e5e5' }}>{completedIntake}/{intakeMilestones.length} intake</span>
             </div>
             {!editing ? (
               <Button variant="ghost" size="sm" onClick={() => setEditing(true)}
