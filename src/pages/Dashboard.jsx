@@ -74,7 +74,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
           className="rounded-3xl p-8"
-          style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}
+          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}
         >
           <h2 className="text-xs font-bold tracking-[0.2em] mb-5" style={{ color: GOLD }}>QUICK ACCESS</h2>
           <div className="flex flex-wrap gap-3">
@@ -103,7 +103,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="rounded-3xl p-8"
-          style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}
+          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}
         >
           <h2 className="text-xs font-bold tracking-[0.2em] mb-6" style={{ color: GOLD }}>NEXT STEPS</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

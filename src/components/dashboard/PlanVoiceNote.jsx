@@ -84,7 +84,7 @@ export default function PlanVoiceNote({ clientId, onPlanUpdated }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="rounded-xl p-4 border"
-      style={{ background: 'rgba(212,175,55,0.05)', border: `1px solid ${GOLD}33` }}
+      style={{ background: '#000', border: `1px solid ${GOLD}33` }}
     >
       <div className="flex items-center gap-3">
         <div className="flex-1">
