@@ -486,10 +486,10 @@ export default function RelocationProfileCard({ clientId }) {
                 <button
                   key={m.id}
                   onClick={() => setSelectedMilestone(m)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 cursor-pointer transition-all hover:brightness-110"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 cursor-pointer transition-all hover:brightness-125"
                   style={{
-                    background: m.complete ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)',
-                    border: m.complete ? '1px solid rgba(34,197,94,0.4)' : `1px solid ${GOLD}44`,
+                    background: '#000',
+                    border: m.complete ? '1px solid rgba(34,197,94,0.5)' : `1px solid ${GOLD}66`,
                     minWidth: 'max-content',
                   }}
                 >
@@ -497,7 +497,7 @@ export default function RelocationProfileCard({ clientId }) {
                     style={{ background: m.complete ? '#22c55e' : GOLD }}>
                     {m.complete ? <Check className="w-3 h-3 text-black" /> : <span className="text-xs font-bold text-black">{i + 1}</span>}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : '#fff' }}>
+                  <span className="text-sm font-medium" style={{ color: m.complete ? '#4ade80' : GOLD }}>
                     {m.label}
                   </span>
                   {m.id === 'buyer_broker' && m.complete && bbStatus && bbStatus.daysLeft <= 30 && (
@@ -521,15 +521,15 @@ export default function RelocationProfileCard({ clientId }) {
                   <button
                     key={fm.id}
                     onClick={() => setForwardMilestone(fm)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:brightness-110"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0 transition-all hover:brightness-125"
                     style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: '#000',
+                      border: '1px solid rgba(255,255,255,0.2)',
                       minWidth: 'max-content',
                     }}
                   >
-                    <Icon className="w-4 h-4" style={{ color: '#666' }} />
-                    <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{fm.label}</span>
+                    <Icon className="w-4 h-4" style={{ color: '#aaa' }} />
+                    <span className="text-sm font-medium" style={{ color: '#fff' }}>{fm.label}</span>
                   </button>
                 );
               })}
