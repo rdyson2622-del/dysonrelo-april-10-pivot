@@ -385,7 +385,7 @@ export default function RelocationProfileCard({ clientId }) {
         <div className="p-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Destination */}
-            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="rounded-2xl p-4" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <MapPin className="w-4 h-4" style={{ color: GOLD }} />
@@ -404,7 +404,7 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Timeline */}
-            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="rounded-2xl p-4" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <Calendar className="w-4 h-4" style={{ color: GOLD }} />
@@ -424,7 +424,7 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Budget */}
-            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="rounded-2xl p-4" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <DollarSign className="w-4 h-4" style={{ color: GOLD }} />
@@ -446,7 +446,7 @@ export default function RelocationProfileCard({ clientId }) {
             </div>
 
             {/* Status */}
-            <div className="rounded-2xl p-4" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <div className="rounded-2xl p-4" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}20` }}>
                   <TrendingUp className="w-4 h-4" style={{ color: GOLD }} />
