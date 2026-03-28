@@ -1,0 +1,150 @@
+{
+  "name": "MarketingCampaign",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string",
+      "description": "Campaign name (e.g., 'Q2 Relocating Families')"
+    },
+    "theme": {
+      "type": "string",
+      "description": "Campaign theme/narrative"
+    },
+    "target_audience": {
+      "type": "string",
+      "enum": [
+        "relocating_families",
+        "real_estate_agents",
+        "corporate_hr",
+        "general_awareness",
+        "lead_nurture",
+        "existing_clients"
+      ],
+      "description": "Primary audience segment"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Campaign budget in USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "content_creation",
+        "scheduled",
+        "active",
+        "completed",
+        "paused"
+      ],
+      "default": "planning",
+      "description": "Campaign workflow stage"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Campaign launch date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Campaign end date"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "linkedin",
+          "facebook",
+          "instagram",
+          "tiktok",
+          "twitter",
+          "youtube",
+          "pinterest",
+          "email",
+          "sms"
+        ]
+      },
+      "description": "Distribution platforms"
+    },
+    "description": {
+      "type": "string",
+      "description": "Campaign overview and goals"
+    },
+    "key_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Core talking points for content"
+    },
+    "content_pillars": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pillar_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "post_count": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Content themes (e.g., testimonials, tips, behind-the-scenes)"
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "milestone_name": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_progress",
+              "completed"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Campaign phase milestones"
+    },
+    "total_posts_planned": {
+      "type": "number",
+      "description": "Total posts across all platforms"
+    },
+    "posts_created": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of posts created so far"
+    },
+    "posts_scheduled": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of posts scheduled"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal campaign notes"
+    }
+  },
+  "required": [
+    "campaign_name",
+    "target_audience",
+    "status"
+  ]
+}

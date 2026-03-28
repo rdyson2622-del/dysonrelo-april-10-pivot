@@ -1,0 +1,149 @@
+{
+  "name": "SocialPost",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "Reference to MarketingCampaign ID"
+    },
+    "content_pillar": {
+      "type": "string",
+      "description": "Which pillar this post belongs to (e.g., 'Testimonials', 'Tips')"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "linkedin",
+        "facebook",
+        "instagram",
+        "tiktok",
+        "twitter",
+        "youtube",
+        "pinterest",
+        "email",
+        "sms"
+      ],
+      "description": "Target platform"
+    },
+    "copy_variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "variant_id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "word_count": {
+            "type": "number"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "professional",
+              "friendly",
+              "urgent",
+              "inspirational"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "description": "Multiple copy options per post"
+    },
+    "selected_copy": {
+      "type": "string",
+      "description": "The chosen copy variant"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Generated or uploaded image"
+    },
+    "image_prompt": {
+      "type": "string",
+      "description": "AI prompt used to generate image"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Platform-specific hashtags"
+    },
+    "cta": {
+      "type": "string",
+      "enum": [
+        "sign_up",
+        "learn_more",
+        "schedule_call",
+        "visit_app",
+        "contact_us",
+        "none"
+      ],
+      "description": "Call-to-action type"
+    },
+    "cta_url": {
+      "type": "string",
+      "description": "URL for CTA (app link, landing page, etc.)"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When post should publish"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_review",
+        "approved",
+        "scheduled",
+        "published",
+        "failed"
+      ],
+      "default": "draft",
+      "description": "Post workflow status"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual publish timestamp"
+    },
+    "posted_url": {
+      "type": "string",
+      "description": "Link to published post"
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "impressions": {
+          "type": "number"
+        },
+        "clicks": {
+          "type": "number"
+        },
+        "engagements": {
+          "type": "number"
+        },
+        "conversions": {
+          "type": "number"
+        }
+      },
+      "description": "Post performance metrics"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes on this post"
+    }
+  },
+  "required": [
+    "campaign_id",
+    "platform",
+    "status"
+  ]
+}
