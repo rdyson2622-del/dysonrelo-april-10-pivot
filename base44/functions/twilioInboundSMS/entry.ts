@@ -109,6 +109,41 @@ Deno.serve(async (req) => {
       });
     }
 
+    // 🚨 Email admin immediately when anyone replies to our SMS
+    if (aiReply && from) {
+      try {
+        const adminUsers = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
+        const ownerLabel = campaign ? `${campaign.owner_name} (${campaign.property_address})` : `Unknown — ${from}`;
+        const emailPromises = adminUsers.map(admin =>
+          base44.asServiceRole.integrations.Core.SendEmail({
+            to: admin.email,
+            from_name: 'Dyson & Dyson System',
+            subject: `🔔 SMS REPLY RECEIVED — ${ownerLabel}`,
+            body: `INBOUND SMS REPLY
+==========================================
+
+FROM: ${from}
+OWNER: ${ownerLabel}
+STAGE: ${campaign?.workflow_stage || 'unknown'}
+
+THEIR MESSAGE:
+"${messageBody}"
+
+CHARLIE'S AUTO-REPLY:
+"${aiReply}"
+
+==========================================
+ACTION: Log in to review and follow up if needed.
+dysonrelo.com/admin/outreach-campaigns
+==========================================`
+          })
+        );
+        await Promise.all(emailPromises);
+      } catch (notifyErr) {
+        console.error('Admin notification failed:', notifyErr.message);
+      }
+    }
+
     // Always return TwiML to Twilio
     return new Response('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
       headers: { 'Content-Type': 'text/xml' }

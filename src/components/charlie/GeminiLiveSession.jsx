@@ -97,6 +97,12 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
     setStatus('connecting');
     setError(null);
 
+    // Track session start
+    base44.analytics.track({
+      eventName: 'gemini_session_started',
+      properties: { destination_city: clientInfo?.destination_city || 'unknown', silent_mode: silentMode }
+    });
+
     try {
       // Get session token from backend
       const res = await base44.functions.invoke('geminiLiveProxy', {
@@ -248,6 +254,17 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
     }
 
     const res = await base44.functions.invoke('geminiDebrief', debrief);
+
+    // Track session complete
+    base44.analytics.track({
+      eventName: 'gemini_session_completed',
+      properties: {
+        duration_seconds: sessionDuration,
+        transcript_length: transcriptRef.current.length,
+        tasks_created: res.data?.tasks?.length || 0,
+        destination_city: res.data?.profile?.destination_city || 'unknown',
+      }
+    });
 
     setStatus('complete');
     if (onSessionComplete) {

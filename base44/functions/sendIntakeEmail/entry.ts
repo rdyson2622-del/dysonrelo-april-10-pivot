@@ -50,11 +50,18 @@ ${form.additional_notes || 'None'}
 Ready for your call with ${clientInfo.name}.
     `.trim();
 
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: user.email,
-      subject,
-      body,
-    });
+    // Send to ALL admin users, not just the logged-in user
+    const adminUsers = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
+    const recipients = adminUsers.length > 0 ? adminUsers : [{ email: user.email }];
+
+    await Promise.all(recipients.map(admin =>
+      base44.asServiceRole.integrations.Core.SendEmail({
+        to: admin.email,
+        from_name: 'Dyson & Dyson System',
+        subject: `🚨 NEW INTAKE: ${clientInfo.name} → ${form.destination_city}, ${form.destination_state}`,
+        body,
+      })
+    ));
 
     return Response.json({ success: true });
   } catch (error) {

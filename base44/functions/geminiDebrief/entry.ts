@@ -132,6 +132,55 @@ Extract the following into a JSON object. Use null for anything not mentioned:
       flag_status: 'reviewed',
     });
 
+    // 🚨 CRITICAL: Email admin immediately — Gemini session completed
+    const adminUsers = await base44.asServiceRole.entities.User.filter({ role: 'admin' });
+    const emailPromises = adminUsers.map(admin =>
+      base44.asServiceRole.integrations.Core.SendEmail({
+        to: admin.email,
+        from_name: 'Dyson & Dyson System',
+        subject: `🚨 NEW GEMINI SESSION COMPLETE — ${clientData.full_name} → ${profile.destination_city}`,
+        body: `NEW CLIENT GEMINI SESSION COMPLETED
+==========================================
+
+CLIENT: ${clientData.full_name}
+EMAIL: ${clientData.email}
+PHONE: ${clientData.phone || 'Not provided'}
+
+DESTINATION: ${profile.destination_city}
+BUDGET: ${profile.budget_range || 'Not specified'}
+TIMELINE: ${profile.move_timeline || 'Not specified'}
+PURCHASE TYPE: ${profile.purchase_type || 'Not specified'}
+FAMILY: ${profile.family_details || 'Not specified'}
+EMPLOYMENT: ${profile.employment || 'Not specified'}
+
+SUMMARY:
+${profile.summary || 'No summary generated'}
+
+PRIORITIES: ${(profile.priorities || []).join(', ') || 'None listed'}
+
+AGENT PERSONALITY MATCH:
+${profile.agent_personality_match || 'Not specified'}
+
+SPECIAL NEEDS:
+${profile.special_needs || 'None'}
+
+ACTION ITEMS CREATED: ${tasks.length}
+${(profile.action_items || []).map(a => '  • ' + a).join('\n')}
+
+==========================================
+ACTION REQUIRED: Log into admin and match this client with an agent.
+dysonrelo.com/admin/clients
+==========================================`
+      })
+    );
+    await Promise.all(emailPromises);
+
+    // Track analytics event
+    await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: `Log this event silently: Gemini session completed for ${clientData.full_name} going to ${profile.destination_city}. Return just: {"logged": true}`,
+      response_json_schema: { type: 'object', properties: { logged: { type: 'boolean' } } }
+    }).catch(() => {}); // non-blocking
+
     return Response.json({ profile, tasks, clientId });
 
   } catch (error) {

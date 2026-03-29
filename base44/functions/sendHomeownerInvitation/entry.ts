@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Twilio credentials not configured' }, { status: 500 });
       }
 
-      const smsBody = `Hi ${seller_name}! We're Dyson & Dyson Relocation. We help families relocate with an AI concierge + top local agents—at zero cost to you. Chat with us: https://dyson-relocation.app/chat`;
+      const smsBody = `Hi ${seller_name}! We're Dyson & Dyson Relocation. We help families relocate with an AI concierge + top local agents — at zero cost to you. dysonrelo.com`;
 
       const formData = new FormData();
       formData.append('Body', smsBody);
@@ -69,7 +69,7 @@ We're Dyson & Dyson Relocation—we help families relocate with:
 All 100% free to you as the buyer.
 
 Let's talk about your relocation:
-https://dyson-relocation.app/chat
+dysonrelo.com
 
 Best regards,
 Dyson & Dyson Relocation Team`,
