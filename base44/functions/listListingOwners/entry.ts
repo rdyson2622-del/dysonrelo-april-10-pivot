@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
     }
 
     // Query Test database for ListingOwner records
-    const owners = await base44.asServiceRole.entities.ListingOwner.list();
+    const owners = await base44.asServiceRole.entities.ListingOwner.list('', 0, { data_env: 'dev' });
     
     return Response.json(owners);
   } catch (error) {
