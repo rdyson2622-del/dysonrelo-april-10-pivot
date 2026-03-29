@@ -8,6 +8,7 @@ import { Plus, Edit3, Trash2, Calendar, Target, Zap, CheckCircle2 } from 'lucide
 import CampaignBuilder from '@/components/admin/marketing/CampaignBuilder';
 import CampaignContentGenerator from '@/components/admin/marketing/CampaignContentGenerator';
 import CampaignScheduleCalendar from '@/components/admin/marketing/CampaignScheduleCalendar';
+import CampaignPostReview from '@/components/admin/marketing/CampaignPostReview';
 
 const GOLD = '#D4AF37';
 
@@ -212,6 +213,9 @@ function CampaignDetail({ campaign, onEdit }) {
           </div>
         </div>
       </div>
+
+      {/* Email Post Review — Legal sign-off before sending */}
+      <CampaignPostReview campaignId={campaign.id} />
 
       {/* Content Generator */}
       <CampaignContentGenerator campaignId={campaign.id} />
