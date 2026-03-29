@@ -2,6 +2,10 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Trash2, Download, ExternalLink, Copy, MapPin, Upload, FileText, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import PropStreamCSVImporter from '../components/admin/PropStreamCSVImporter';
+import * as XLSX from 'xlsx';
+
+// make xlsx available for BulkBuilder
+if (typeof window !== 'undefined') window.__XLSX__ = XLSX;
 
 const GOLD = '#D4AF37';
 
@@ -149,24 +153,49 @@ function BulkBuilder() {
     setImportError('');
     const reader = new FileReader();
     reader.onload = (e) => {
-      const { headers, rows: csvRows } = parseBulkCSV(e.target.result);
-      if (!headers.length) { setImportError('Could not parse CSV file.'); return; }
-      const mapping = {};
-      for (const [field, candidates] of Object.entries(BULK_COLUMN_MAP)) {
-        mapping[field] = findBulkColumn(headers, candidates);
-      }
-      if (mapping.street < 0) { setImportError('Could not find an address column in this CSV. Make sure it is a PropStream export.'); return; }
-      const parsed = csvRows
-        .map(row => ({
-          street: mapping.street >= 0 ? row[mapping.street] || '' : '',
-          city: mapping.city >= 0 ? row[mapping.city] || '' : '',
-          state: mapping.state >= 0 ? row[mapping.state] || '' : '',
-          zip: mapping.zip >= 0 ? row[mapping.zip] || '' : '',
-        }))
-        .filter(r => r.street.trim());
-      setRows(parsed);
+      try {
+        const XLSX = window.__XLSX__;
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        if (jsonRows.length < 2) { setImportError('File appears empty.'); return; }
+        const headers = jsonRows[0].map(h => String(h).trim());
+        const csvRows = jsonRows.slice(1).map(r => headers.map((_, i) => String(r[i] || '').trim()));
+
+        // Check for single combined address column
+        const lowerH = headers.map(h => h.toLowerCase());
+        const singleIdx = lowerH.findIndex(h => h === 'address' || h === 'property address');
+        if (singleIdx >= 0 && findBulkColumn(headers, BULK_COLUMN_MAP.city) === -1) {
+          const split = csvRows.map(row => {
+            const parts = row[singleIdx].split(',').map(p => p.trim());
+            if (parts.length >= 3) {
+              const stateZip = parts[2].trim().split(/\s+/);
+              return { street: parts[0], city: parts[1], state: stateZip[0] || '', zip: stateZip[1] || '' };
+            }
+            return null;
+          }).filter(Boolean);
+          setRows(split);
+          return;
+        }
+
+        const mapping = {};
+        for (const [field, candidates] of Object.entries(BULK_COLUMN_MAP)) {
+          mapping[field] = findBulkColumn(headers, candidates);
+        }
+        if (mapping.street < 0) { setImportError('Could not find an address column. Make sure it is a PropStream export.'); return; }
+        const parsed = csvRows
+          .map(row => ({
+            street: mapping.street >= 0 ? row[mapping.street] || '' : '',
+            city: mapping.city >= 0 ? row[mapping.city] || '' : '',
+            state: mapping.state >= 0 ? row[mapping.state] || '' : '',
+            zip: mapping.zip >= 0 ? row[mapping.zip] || '' : '',
+          }))
+          .filter(r => r.street.trim());
+        setRows(parsed);
+      } catch { setImportError('Could not parse file.'); }
     };
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
   };
 
   const handleDrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
@@ -234,7 +263,7 @@ function BulkBuilder() {
             <FileText className="w-10 h-10 mb-3" style={{ color: GOLD }} />
             <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop PropStream CSV here</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
-            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={e => handleFile(e.target.files[0])} />
+            <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => handleFile(e.target.files[0])} />
           </div>
         ) : (
           <div className="flex items-center justify-between rounded-xl px-4 py-3"

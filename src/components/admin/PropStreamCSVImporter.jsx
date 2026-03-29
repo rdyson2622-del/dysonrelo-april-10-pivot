@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Download, ExternalLink, CheckCircle2, AlertCircle, X, FileText } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 const GOLD = '#D4AF37';
 
@@ -13,32 +14,8 @@ const COLUMN_MAP = {
   owner: ['owner name', 'owner 1 first name', 'owner name 1', 'first name', 'owner', 'seller name'],
 };
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return { headers: [], rows: [] };
-  
-  // Handle quoted fields
-  const parseRow = (line) => {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') { inQuotes = !inQuotes; }
-      else if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
-      else { current += ch; }
-    }
-    result.push(current.trim());
-    return result;
-  };
-
-  const headers = parseRow(lines[0]).map(h => h.replace(/^"|"$/g, '').trim());
-  const rows = lines.slice(1).map(l => parseRow(l).map(v => v.replace(/^"|"$/g, '').trim()));
-  return { headers, rows };
-}
-
 function findColumn(headers, candidates) {
-  const lower = headers.map(h => h.toLowerCase());
+  const lower = headers.map(h => h.toLowerCase().trim());
   for (const candidate of candidates) {
     const idx = lower.findIndex(h => h.includes(candidate));
     if (idx !== -1) return idx;
@@ -46,31 +23,96 @@ function findColumn(headers, candidates) {
   return -1;
 }
 
+// Parse a combined address string like "123 Main St, Santa Monica, CA 90402"
+function splitCombinedAddress(addr) {
+  if (!addr) return { street: '', city: '', state: '', zip: '' };
+  // Try: "Street, City, ST ZIP" or "Street, City, ST, ZIP"
+  const parts = addr.split(',').map(p => p.trim());
+  if (parts.length >= 3) {
+    const street = parts[0];
+    const city = parts[1];
+    // Last part might be "CA 90402" or just "CA"
+    const lastPart = parts[parts.length - 1].trim();
+    const stateZipMatch = lastPart.match(/^([A-Z]{2})\s*(\d{5})?$/);
+    if (stateZipMatch) {
+      return { street, city, state: stateZipMatch[1], zip: stateZipMatch[2] || '' };
+    }
+    // Or state and zip are separate parts
+    if (parts.length >= 4) {
+      const state = parts[2].trim();
+      const zip = parts[3].trim();
+      return { street, city, state, zip };
+    }
+    return { street, city, state: lastPart, zip: '' };
+  }
+  // Fallback: just use whole thing as street
+  return { street: addr, city: '', state: '', zip: '' };
+}
+
+function parseFileToRows(file, callback) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+      if (jsonRows.length < 1) { callback(null, 'Empty file'); return; }
+
+      const headers = jsonRows[0].map(h => String(h).trim());
+      const dataRows = jsonRows.slice(1).map(r => r.map(v => String(v).trim()));
+
+      callback({ headers, rows: dataRows });
+    } catch (err) {
+      callback(null, 'Could not parse file: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
 export default function PropStreamCSVImporter() {
   const [open, setOpen] = useState(false);
   const [parsed, setParsed] = useState(null);
   const [mapping, setMapping] = useState(null);
+  const [isCombined, setIsCombined] = useState(false); // single "Address" column mode
   const [fileName, setFileName] = useState('');
+  const [parseError, setParseError] = useState('');
   const fileRef = useRef();
 
   const handleFile = (file) => {
     if (!file) return;
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const { headers, rows } = parseCSV(e.target.result);
-      if (!headers.length) return;
+    setParseError('');
 
-      // Auto-detect column mapping
+    parseFileToRows(file, (result, err) => {
+      if (err) { setParseError(err); return; }
+      const { headers, rows } = result;
+
+      // Try to detect columns
       const detected = {};
       for (const [field, candidates] of Object.entries(COLUMN_MAP)) {
         detected[field] = findColumn(headers, candidates);
       }
 
+      // Check if we only have a combined "Address" column (street not found but address col is there)
+      const streetIdx = detected.street;
+      const hasSeparateCols = streetIdx >= 0 && detected.city >= 0 && detected.state >= 0;
+
+      if (!hasSeparateCols && streetIdx >= 0) {
+        // Single address column — we'll split it
+        setIsCombined(true);
+      } else if (!hasSeparateCols) {
+        setParseError('Could not find address columns. Make sure this is a PropStream export with an "Address" or "Property Address" column.');
+        return;
+      } else {
+        setIsCombined(false);
+      }
+
       setParsed({ headers, rows });
       setMapping(detected);
-    };
-    reader.readAsText(file);
+    });
   };
 
   const handleDrop = (e) => {
@@ -78,30 +120,40 @@ export default function PropStreamCSVImporter() {
     handleFile(e.dataTransfer.files[0]);
   };
 
-  const validRows = parsed?.rows.filter(row => {
-    const street = mapping?.street >= 0 ? row[mapping.street] : '';
-    const city = mapping?.city >= 0 ? row[mapping.city] : '';
-    const state = mapping?.state >= 0 ? row[mapping.state] : '';
-    return street && city && state;
-  }) || [];
+  // Build normalized address rows for preview & download
+  const normalizedRows = React.useMemo(() => {
+    if (!parsed || !mapping) return [];
+    return parsed.rows
+      .filter(row => row.some(v => v.trim()))
+      .map(row => {
+        if (isCombined) {
+          const rawAddr = mapping.street >= 0 ? row[mapping.street] : '';
+          const parts = splitCombinedAddress(rawAddr);
+          return { ...parts, owner: mapping.owner >= 0 ? row[mapping.owner] : '' };
+        }
+        return {
+          street: mapping.street >= 0 ? row[mapping.street] : '',
+          city: mapping.city >= 0 ? row[mapping.city] : '',
+          state: mapping.state >= 0 ? row[mapping.state] : '',
+          zip: mapping.zip >= 0 ? row[mapping.zip] : '',
+          owner: mapping.owner >= 0 ? row[mapping.owner] : '',
+        };
+      })
+      .filter(r => r.street.trim());
+  }, [parsed, mapping, isCombined]);
+
+  const validRows = normalizedRows.filter(r => r.street && r.city && r.state);
 
   const downloadBatchDataCSV = () => {
-    if (!validRows.length) return;
-
+    if (!normalizedRows.length) return;
     const headers = ['First Name', 'Last Name', 'Property Address', 'Property City', 'Property State', 'Property Zip'];
-    const dataRows = validRows.map(row => {
-      const ownerFull = mapping?.owner >= 0 ? (row[mapping.owner] || '') : '';
-      const parts = ownerFull.split(' ');
+    const dataRows = normalizedRows.map(r => {
+      const parts = (r.owner || '').split(' ');
       const firstName = parts[0] || '';
       const lastName = parts.slice(1).join(' ') || '';
-      const street = mapping?.street >= 0 ? row[mapping.street] : '';
-      const city = mapping?.city >= 0 ? row[mapping.city] : '';
-      const state = mapping?.state >= 0 ? row[mapping.state] : '';
-      const zip = mapping?.zip >= 0 ? row[mapping.zip] : '';
-      return [firstName, lastName, street, city, state, zip]
+      return [firstName, lastName, r.street, r.city, r.state, r.zip]
         .map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',');
     });
-
     const csv = [headers.join(','), ...dataRows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -116,6 +168,8 @@ export default function PropStreamCSVImporter() {
     setParsed(null);
     setMapping(null);
     setFileName('');
+    setParseError('');
+    setIsCombined(false);
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -131,11 +185,10 @@ export default function PropStreamCSVImporter() {
           <div className="text-left">
             <p className="font-bold text-sm" style={{ color: '#fff' }}>Import PropStream Export</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              Upload your PropStream CSV → auto-convert to BatchData format → download & upload to BatchData
+              Upload your PropStream CSV or Excel → auto-convert to BatchData format → download & upload to BatchData
             </p>
           </div>
         </div>
-
       </button>
 
       <AnimatePresence>
@@ -148,13 +201,13 @@ export default function PropStreamCSVImporter() {
           >
             <div className="rounded-2xl p-6 mt-2" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}>
 
-              {/* Step 1: Instructions */}
+              {/* Instructions */}
               <div className="mb-5 rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}>
                 <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>HOW IT WORKS</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
-                    { step: '1', text: 'In PropStream → My Properties → select your list → Export CSV' },
-                    { step: '2', text: 'Upload that CSV here — we auto-detect and map the address columns' },
+                    { step: '1', text: 'In PropStream → My Properties → select your list → Export CSV or Excel' },
+                    { step: '2', text: 'Upload that file here — we auto-detect address columns (including combined "Address" columns)' },
                     { step: '3', text: 'Download the BatchData-formatted CSV → upload to app.batchdata.com → get owner contacts' },
                   ].map(s => (
                     <div key={s.step} className="flex items-start gap-2">
@@ -176,8 +229,8 @@ export default function PropStreamCSVImporter() {
                   style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}
                 >
                   <FileText className="w-10 h-10 mb-3" style={{ color: GOLD }} />
-                  <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop PropStream CSV here</p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
+                  <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop PropStream CSV or Excel here</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse — .csv, .xlsx, .xls supported</p>
                   <input
                     ref={fileRef}
                     type="file"
@@ -191,12 +244,17 @@ export default function PropStreamCSVImporter() {
                   {/* File loaded summary */}
                   <div className="flex items-center justify-between rounded-xl px-4 py-3 mb-4"
                     style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)' }}>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <CheckCircle2 className="w-4 h-4" style={{ color: '#22C55E' }} />
                       <span className="text-sm font-semibold" style={{ color: '#fff' }}>{fileName}</span>
                       <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                        — {parsed.rows.length} rows, {validRows.length} valid addresses found
+                        — {parsed.rows.length} rows, {normalizedRows.length} valid addresses found
                       </span>
+                      {isCombined && (
+                        <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>
+                          Combined address column — auto-split ✓
+                        </span>
+                      )}
                     </div>
                     <button onClick={reset} className="p-1 hover:opacity-70">
                       <X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.4)' }} />
@@ -210,18 +268,17 @@ export default function PropStreamCSVImporter() {
                       {Object.entries(COLUMN_MAP).map(([field]) => {
                         const colIdx = mapping[field];
                         const colName = colIdx >= 0 ? parsed.headers[colIdx] : null;
+                        const isAutoSplit = isCombined && (field === 'city' || field === 'state' || field === 'zip');
                         return (
                           <div key={field} className="flex items-center gap-2">
-                            {colName ? (
+                            {colName || isAutoSplit ? (
                               <CheckCircle2 className="w-3 h-3 shrink-0" style={{ color: '#22C55E' }} />
                             ) : (
                               <AlertCircle className="w-3 h-3 shrink-0" style={{ color: '#F59E0B' }} />
                             )}
-                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                              {field}:
-                            </span>
-                            <span className="text-xs font-semibold" style={{ color: colName ? '#fff' : '#F59E0B' }}>
-                              {colName || 'not found'}
+                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{field}:</span>
+                            <span className="text-xs font-semibold" style={{ color: (colName || isAutoSplit) ? '#fff' : '#F59E0B' }}>
+                              {isAutoSplit ? 'auto-split' : (colName || 'not found')}
                             </span>
                           </div>
                         );
@@ -230,7 +287,7 @@ export default function PropStreamCSVImporter() {
                   </div>
 
                   {/* Preview table */}
-                  {validRows.length > 0 && (
+                  {normalizedRows.length > 0 && (
                     <div className="rounded-xl overflow-hidden mb-4" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                       <div className="px-4 py-2 text-xs font-bold tracking-widest" style={{ background: 'rgba(212,175,55,0.08)', color: GOLD }}>
                         PREVIEW (first 5 rows)
@@ -245,13 +302,13 @@ export default function PropStreamCSVImporter() {
                             </tr>
                           </thead>
                           <tbody>
-                            {validRows.slice(0, 5).map((row, i) => (
+                            {normalizedRows.slice(0, 5).map((row, i) => (
                               <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                <td className="px-3 py-2" style={{ color: '#fff' }}>{mapping.street >= 0 ? row[mapping.street] : '—'}</td>
-                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{mapping.city >= 0 ? row[mapping.city] : '—'}</td>
-                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{mapping.state >= 0 ? row[mapping.state] : '—'}</td>
-                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{mapping.zip >= 0 ? row[mapping.zip] : '—'}</td>
-                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{mapping.owner >= 0 ? row[mapping.owner] : '—'}</td>
+                                <td className="px-3 py-2" style={{ color: '#fff' }}>{row.street || '—'}</td>
+                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{row.city || '—'}</td>
+                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{row.state || '—'}</td>
+                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{row.zip || '—'}</td>
+                                <td className="px-3 py-2" style={{ color: 'rgba(255,255,255,0.7)' }}>{row.owner || '—'}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -264,12 +321,12 @@ export default function PropStreamCSVImporter() {
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={downloadBatchDataCSV}
-                      disabled={!validRows.length}
+                      disabled={!normalizedRows.length}
                       className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30"
                       style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}
                     >
                       <Download className="w-4 h-4" />
-                      Download for BatchData ({validRows.length} addresses)
+                      Download for BatchData ({normalizedRows.length} addresses)
                     </button>
                     <a
                       href="https://app.batchdata.com"
@@ -282,6 +339,13 @@ export default function PropStreamCSVImporter() {
                       Open BatchData → Upload CSV
                     </a>
                   </div>
+                </div>
+              )}
+
+              {parseError && (
+                <div className="flex items-center gap-2 mt-4 p-3 rounded-xl" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)' }}>
+                  <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#EF4444' }} />
+                  <span className="text-xs" style={{ color: '#EF4444' }}>{parseError}</span>
                 </div>
               )}
             </div>
