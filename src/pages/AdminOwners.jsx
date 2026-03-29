@@ -32,10 +32,6 @@ export default function AdminOwners() {
           phone: owner.phone,
           owner_name: owner.owner_name,
         });
-        await base44.entities.ListingOwner.update(owner.id, {
-          contact_status: 'contacted',
-          last_contacted: new Date().toISOString().split('T')[0],
-        });
         success++;
       } catch {}
     }
@@ -46,7 +42,7 @@ export default function AdminOwners() {
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
-    queryFn: () => base44.entities.ListingOwner.list(),
+    queryFn: () => base44.entities.ListingOwner.list('', 0, { data_env: 'dev' }),
   });
 
   const filtered = owners.filter(owner =>
@@ -56,19 +52,19 @@ export default function AdminOwners() {
   );
 
   const handleAdd = async (formData) => {
-    await base44.entities.ListingOwner.create(formData);
+    await base44.entities.ListingOwner.create(formData, { data_env: 'dev' });
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     setShowForm(false);
   };
 
   const handleEdit = async (formData) => {
-    await base44.entities.ListingOwner.update(editingOwner.id, formData);
+    await base44.entities.ListingOwner.update(editingOwner.id, formData, { data_env: 'dev' });
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     setEditingOwner(null);
   };
 
   const handleDelete = async (id) => {
-    await base44.entities.ListingOwner.delete(id);
+    await base44.entities.ListingOwner.delete(id, { data_env: 'dev' });
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     setDeleteConfirm(null);
   };
@@ -78,7 +74,7 @@ export default function AdminOwners() {
     await base44.entities.ListingOwner.update(id, {
       contact_status: status,
       last_contacted: new Date().toISOString().split('T')[0],
-    });
+    }, { data_env: 'dev' });
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
 
