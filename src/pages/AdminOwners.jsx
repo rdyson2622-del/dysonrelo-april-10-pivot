@@ -42,7 +42,10 @@ export default function AdminOwners() {
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
-    queryFn: () => base44.functions.invoke('listListingOwners', {}),
+    queryFn: async () => {
+      const response = await base44.functions.invoke('listListingOwners', {});
+      return response.data || [];
+    },
   });
 
   const filtered = owners.filter(owner =>
