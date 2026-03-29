@@ -43,6 +43,7 @@ function getCampaignStepInfo(campaign) {
   if (campaign.workflow_stage === 'processing') return { stage: 'processing', step: 7, nextAction: 'Charlie is engaged' };
   if (campaign.workflow_stage === 'profile_complete') return { stage: 'profile_complete', step: 6, nextAction: 'Engage Charlie' };
   if (campaign.workflow_stage === 'response') return { stage: 'response', step: 5, nextAction: 'Complete profile & engage Charlie' };
+  if (!days && days !== 0) return { stage: 'outreach', step: 1, nextAction: 'Initial SMS not sent yet — send from Listing Owners page', days: null };
   if (hasDay14) return { stage: 'followup_day14', step: 4, nextAction: 'Awaiting response after final follow-up', days };
   if (hasDay7) return { stage: 'followup_day7', step: 3, nextAction: days >= 14 ? 'Day 14 final follow-up ready to send' : `Day 14 sends in ${14 - days} days`, days };
   if (hasDay3) return { stage: 'followup_day3', step: 2, nextAction: days >= 7 ? 'Day 7 follow-up ready to send' : `Day 7 sends in ${7 - days} days`, days };
