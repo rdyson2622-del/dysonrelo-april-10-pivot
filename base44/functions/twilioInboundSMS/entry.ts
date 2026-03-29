@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
     const isOptOut = lowerBody.includes('stop') || lowerBody.includes('opt out') || lowerBody.includes('unsubscribe') || lowerBody.includes('remove');
 
     if (!isOptOut) {
-      aiReply = `Thanks for reaching out! Someone from our team will be in touch with you shortly. You can also reach us directly at (858) 353-1200.`;
+      aiReply = `Thanks for reaching out! Someone from our team will be in touch shortly. Learn more about us at dysonrelo.com or call/text Bob directly at (858) 353-1200.`;
     }
 
     // Update campaign if found

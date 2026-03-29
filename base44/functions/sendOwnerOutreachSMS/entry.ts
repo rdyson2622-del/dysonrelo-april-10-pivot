@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     const firstName = owner_name ? owner_name.split(' ')[0] : 'there';
 
-    const messageBody = `Hi ${firstName}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed for sale — are you planning to relocate? If so, we offer a completely FREE concierge service to help you find your next home, connect with a top local agent, and manage your entire move. Reply YES to learn more, or STOP to opt out.`;
+    const messageBody = `Hi ${firstName}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed — are you planning to relocate? We offer a FREE concierge service to find your next home & manage your entire move. Learn more: dysonrelo.com — Reply YES or call Bob at (858) 353-1200. Reply STOP to opt out.`;
 
     const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
