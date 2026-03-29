@@ -1,7 +1,8 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Download, ExternalLink, CheckCircle2, AlertCircle, X, FileText } from 'lucide-react';
+import { Upload, Download, CheckCircle2, AlertCircle, X, FileText, DatabaseZap } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
@@ -12,6 +13,9 @@ const COLUMN_MAP = {
   state: ['property state', 'state', 'prop state', 'site state', 'st'],
   zip: ['property zip', 'zip', 'zip code', 'postal code', 'prop zip', 'site zip'],
   owner: ['owner name', 'owner 1 first name', 'owner name 1', 'first name', 'owner', 'seller name'],
+  phone: ['phone', 'phone number', 'mobile', 'cell', 'owner phone', 'contact phone'],
+  email: ['email', 'email address', 'owner email', 'contact email'],
+  price: ['list price', 'listing price', 'price', 'est. value', 'estimated value', 'value'],
 };
 
 function findColumn(headers, candidates) {
@@ -76,9 +80,11 @@ export default function PropStreamCSVImporter() {
   const [open, setOpen] = useState(false);
   const [parsed, setParsed] = useState(null);
   const [mapping, setMapping] = useState(null);
-  const [isCombined, setIsCombined] = useState(false); // single "Address" column mode
+  const [isCombined, setIsCombined] = useState(false);
   const [fileName, setFileName] = useState('');
   const [parseError, setParseError] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState(null);
   const fileRef = useRef();
 
   const handleFile = (file) => {
@@ -137,6 +143,9 @@ export default function PropStreamCSVImporter() {
           state: mapping.state >= 0 ? row[mapping.state] : '',
           zip: mapping.zip >= 0 ? row[mapping.zip] : '',
           owner: mapping.owner >= 0 ? row[mapping.owner] : '',
+          phone: mapping.phone >= 0 ? row[mapping.phone] : '',
+          email: mapping.email >= 0 ? row[mapping.email] : '',
+          price: mapping.price >= 0 ? row[mapping.price] : '',
         };
       })
       .filter(r => r.street.trim());
@@ -162,6 +171,29 @@ export default function PropStreamCSVImporter() {
     a.download = `propstream-outreach-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const importToListingOwners = async () => {
+    setImporting(true);
+    setImportResult(null);
+    let success = 0, skipped = 0;
+    for (const row of normalizedRows) {
+      if (!row.owner && !row.street) { skipped++; continue; }
+      const priceNum = row.price ? parseFloat(String(row.price).replace(/[^0-9.]/g, '')) : undefined;
+      await base44.entities.ListingOwner.create({
+        owner_name: row.owner || 'Unknown Owner',
+        property_address: [row.street, row.zip].filter(Boolean).join(' '),
+        property_city: row.city,
+        property_state: row.state,
+        phone: row.phone || undefined,
+        email: row.email || undefined,
+        listing_price: priceNum || undefined,
+        contact_status: 'not_contacted',
+      });
+      success++;
+    }
+    setImporting(false);
+    setImportResult({ success, skipped });
   };
 
   const reset = () => {
@@ -320,15 +352,36 @@ export default function PropStreamCSVImporter() {
                   {/* Action buttons */}
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                      onClick={downloadBatchDataCSV}
-                      disabled={!normalizedRows.length}
-                      className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30"
+                      onClick={importToListingOwners}
+                      disabled={!normalizedRows.length || importing}
+                      className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-50"
                       style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}
                     >
-                      <Download className="w-4 h-4" />
-                      Download Clean CSV ({normalizedRows.length} records)
+                      {importing ? (
+                        <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Importing...</>
+                      ) : (
+                        <><DatabaseZap className="w-4 h-4" /> Import {normalizedRows.length} Records → Listing Owners</>
+                      )}
+                    </button>
+                    <button
+                      onClick={downloadBatchDataCSV}
+                      disabled={!normalizedRows.length}
+                      className="py-3 px-5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-30"
+                      style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
+                    >
+                      <Download className="w-4 h-4" /> Download CSV
                     </button>
                   </div>
+
+                  {importResult && (
+                    <div className="mt-3 flex items-center gap-2 p-3 rounded-xl" style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)' }}>
+                      <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#22C55E' }} />
+                      <span className="text-sm font-semibold" style={{ color: '#22C55E' }}>
+                        ✓ {importResult.success} owners imported to Listing Owners database!
+                        {importResult.skipped > 0 && ` (${importResult.skipped} skipped)`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
