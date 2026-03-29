@@ -41,6 +41,7 @@ import AdminBulkSkipTrace from './pages/AdminBulkSkipTrace';
 import AdminMarketingCampaigns from './pages/AdminMarketingCampaigns';
 import AdminTargetAudiences from './pages/AdminTargetAudiences';
 import AdminCampaignRoadmap from './pages/AdminCampaignRoadmap';
+import AdminSocialLaunch from './pages/AdminSocialLaunch';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -109,6 +110,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/marketing-campaigns" element={<AdminMarketingCampaigns />} />
         <Route path="/admin/target-audiences" element={<AdminTargetAudiences />} />
         <Route path="/admin/campaign-roadmap" element={<AdminCampaignRoadmap />} />
+        <Route path="/admin/social-launch" element={<AdminSocialLaunch />} />
         <Route path="/business-plan" element={<BusinessPlan />} />
       </Route>
       
