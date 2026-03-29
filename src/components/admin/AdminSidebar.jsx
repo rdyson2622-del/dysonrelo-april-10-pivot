@@ -18,6 +18,7 @@ const navItems = [
   { label: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
   { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
+  { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
   { label: 'Business Plan', path: '/business-plan', icon: BookOpen },
 ];
 
