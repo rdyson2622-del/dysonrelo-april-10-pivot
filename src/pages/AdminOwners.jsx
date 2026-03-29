@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Upload } from 'lucide-react';
+import { Plus, Search, Upload, Send } from 'lucide-react';
 import OwnersList from '@/components/admin/OwnersList';
 import OwnerForm from '@/components/admin/OwnerForm';
 import OwnerImportCSV from '@/components/admin/OwnerImportCSV';
@@ -14,7 +14,35 @@ export default function AdminOwners() {
   const [editingOwner, setEditingOwner] = useState(null);
   const [search, setSearch] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [sendingAll, setSendingAll] = useState(false);
+  const [sendAllResult, setSendAllResult] = useState(null);
   const queryClient = useQueryClient();
+
+  const sendAllSMS = async () => {
+    const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted');
+    if (!unsent.length) return;
+    if (!confirm(`Send the first outreach SMS to ${unsent.length} owners who haven't been contacted yet?`)) return;
+    setSendingAll(true);
+    setSendAllResult(null);
+    let success = 0;
+    for (const owner of unsent) {
+      try {
+        await base44.functions.invoke('sendOwnerOutreachSMS', {
+          listing_owner_id: owner.id,
+          phone: owner.phone,
+          owner_name: owner.owner_name,
+        });
+        await base44.entities.ListingOwner.update(owner.id, {
+          contact_status: 'contacted',
+          last_contacted: new Date().toISOString().split('T')[0],
+        });
+        success++;
+      } catch {}
+    }
+    setSendingAll(false);
+    setSendAllResult(success);
+    queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+  };
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
@@ -56,19 +84,41 @@ export default function AdminOwners() {
 
   return (
     <div className="p-8 min-h-screen bg-white">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Listing Owners</h1>
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Listing Owners</h1>
+          <p className="text-sm text-slate-500 mt-1">
+            {owners.filter(o => o.contact_status === 'not_contacted' && o.phone).length} owners ready to contact
+          </p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
           <Button variant="outline" onClick={() => setShowImport(true)}>
             <Upload className="w-4 h-4 mr-2" />
             Import CSV
           </Button>
-          <Button onClick={() => { setEditingOwner(null); setShowForm(true); }} className="bg-slate-900 hover:bg-slate-800">
+          <Button onClick={() => { setEditingOwner(null); setShowForm(true); }} variant="outline">
             <Plus className="w-4 h-4 mr-2" />
             Add Owner
           </Button>
+          <Button
+            onClick={sendAllSMS}
+            disabled={sendingAll || !owners.filter(o => o.phone && o.contact_status === 'not_contacted').length}
+            className="gap-2 bg-slate-900 hover:bg-slate-700 text-white"
+          >
+            {sendingAll ? (
+              <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
+            ) : (
+              <><Send className="w-4 h-4" /> Send First SMS to All</>
+            )}
+          </Button>
         </div>
       </div>
+
+      {sendAllResult !== null && (
+        <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg px-4 py-3 text-sm font-semibold">
+          ✓ Sent to {sendAllResult} owners successfully!
+        </div>
+      )}
 
       <div className="mb-6">
         <div className="relative">
@@ -87,6 +137,7 @@ export default function AdminOwners() {
         onEdit={(owner) => { setEditingOwner(owner); setShowForm(true); }}
         onDelete={(id) => setDeleteConfirm(id)}
         onStatusChange={handleStatusChange}
+        onSmsSent={() => queryClient.invalidateQueries({ queryKey: ['listingOwners'] })}
       />
 
       <OwnerForm

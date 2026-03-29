@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, Trash2, Edit2, MoreHorizontal } from 'lucide-react';
+import { Phone, Mail, Trash2, Edit2, MoreHorizontal, Send, CheckCircle2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { base44 } from '@/api/base44Client';
 
 const statusColors = {
   not_contacted: 'bg-slate-100 text-slate-600',
@@ -19,7 +20,31 @@ const statusColors = {
   converted: 'bg-purple-100 text-purple-700',
 };
 
-export default function OwnersList({ owners, onEdit, onDelete, onStatusChange }) {
+export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, onSmsSent }) {
+  const [sending, setSending] = useState(null);
+  const [sent, setSent] = useState({});
+  const [error, setError] = useState(null);
+
+  const sendSMS = async (owner) => {
+    if (!owner.phone) { setError(`No phone number for ${owner.owner_name}`); return; }
+    setSending(owner.id);
+    setError(null);
+    try {
+      await base44.functions.invoke('sendOwnerOutreachSMS', {
+        listing_owner_id: owner.id,
+        phone: owner.phone,
+        owner_name: owner.owner_name,
+      });
+      setSent(prev => ({ ...prev, [owner.id]: true }));
+      onStatusChange?.(owner.id, 'contacted');
+      onSmsSent?.();
+    } catch (e) {
+      setError(`Failed to send to ${owner.owner_name}: ${e.message}`);
+    } finally {
+      setSending(null);
+    }
+  };
+
   if (!owners?.length) {
     return (
       <div className="text-center py-12 text-slate-400">
@@ -31,6 +56,9 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange })
 
   return (
     <div className="space-y-3">
+      {error && (
+        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2">{error}</div>
+      )}
       {owners.map((owner, i) => (
         <motion.div
           key={owner.id}
@@ -72,6 +100,27 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange })
               </div>
             </div>
             <div className="flex gap-2 items-center">
+              {owner.phone && (
+                sent[owner.id] || owner.contact_status === 'contacted' || owner.contact_status === 'in_conversation' ? (
+                  <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Sent
+                  </span>
+                ) : (
+                  <Button
+                    size="sm"
+                    disabled={sending === owner.id}
+                    onClick={() => sendSMS(owner)}
+                    className="gap-1 text-xs h-8 bg-slate-900 hover:bg-slate-700 text-white"
+                  >
+                    {sending === owner.id ? (
+                      <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-3 h-3" />
+                    )}
+                    Send SMS
+                  </Button>
+                )
+              )}
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(owner)}>
                 <Edit2 className="w-4 h-4" />
               </Button>
