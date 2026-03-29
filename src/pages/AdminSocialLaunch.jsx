@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Copy, CheckCheck, Linkedin, Send, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Copy, CheckCheck, Linkedin, Send, ExternalLink, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 
-const POSTS = [
+const LAUNCH_CAMPAIGN_NAME = 'dysonrelo.com Launch — Social Media';
+
+const SEED_POSTS = [
   {
-    id: 1,
     label: 'Post 1 — The Introduction',
+    platform: 'linkedin',
+    content_pillar: 'Launch Announcement',
+    status: 'approved',
     linkedin: `Big news — after 54 years in real estate, we just launched something that changes everything about how families relocate.
 
 Introducing dysonrelo.com — your AI-powered concierge relocation manager.
@@ -38,8 +42,10 @@ Try it tonight → dysonrelo.com
 #Relocation #RealEstate #MovingMadeSimple #DysonRelo`,
   },
   {
-    id: 2,
     label: 'Post 2 — The Value Hook',
+    platform: 'linkedin',
+    content_pillar: 'Value Proposition',
+    status: 'approved',
     linkedin: `Most families spend 200+ hours managing a relocation on their own.
 
 Wrong schools. Wrong neighborhood. Wrong agent.
@@ -93,6 +99,78 @@ export default function AdminSocialLaunch() {
   const [posting, setPosting] = useState(null);
   const [posted, setPosted] = useState({});
   const [error, setError] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [campaignId, setCampaignId] = useState(null);
+  const [seeding, setSeeding] = useState(true);
+
+  useEffect(() => {
+    seedCampaignAndPosts();
+  }, []);
+
+  const seedCampaignAndPosts = async () => {
+    setSeeding(true);
+    try {
+      // Find or create the launch campaign
+      const existingCampaigns = await base44.entities.MarketingCampaign.filter({ campaign_name: LAUNCH_CAMPAIGN_NAME });
+      let campaign;
+      if (existingCampaigns.length > 0) {
+        campaign = existingCampaigns[0];
+      } else {
+        campaign = await base44.entities.MarketingCampaign.create({
+          campaign_name: LAUNCH_CAMPAIGN_NAME,
+          target_audience: 'relocating_families',
+          status: 'active',
+          platforms: ['linkedin', 'facebook', 'tiktok', 'youtube', 'instagram'],
+          description: '2-post launch campaign announcing dysonrelo.com to the world.',
+          key_messages: [
+            '54 years of real estate experience behind an AI platform',
+            'Charlie handles the entire relocation — free of charge',
+            'We vet and present local agents — you pick',
+          ],
+          total_posts_planned: 2,
+          theme: 'Platform Launch',
+        });
+      }
+      setCampaignId(campaign.id);
+
+      // Find or create the posts
+      const existingPosts = await base44.entities.SocialPost.filter({ campaign_id: campaign.id });
+
+      const seededPosts = [];
+      for (let i = 0; i < SEED_POSTS.length; i++) {
+        const seed = SEED_POSTS[i];
+        const existing = existingPosts.find(p => p.content_pillar === seed.content_pillar);
+        if (existing) {
+          seededPosts.push({ ...existing, label: seed.label, linkedin: existing.selected_copy || seed.linkedin, loomly: seed.loomly });
+        } else {
+          const created = await base44.entities.SocialPost.create({
+            campaign_id: campaign.id,
+            platform: seed.platform,
+            content_pillar: seed.content_pillar,
+            selected_copy: seed.linkedin,
+            copy_variants: [
+              { variant_id: 'linkedin', text: seed.linkedin, tone: 'professional', selected: true },
+              { variant_id: 'loomly', text: seed.loomly, tone: 'friendly', selected: false },
+            ],
+            hashtags: seed.linkedin.match(/#\w+/g) || [],
+            cta: 'visit_app',
+            cta_url: 'https://dysonrelo.com',
+            status: seed.status,
+            notes: seed.label,
+          });
+          seededPosts.push({ ...created, label: seed.label, linkedin: seed.linkedin, loomly: seed.loomly });
+        }
+      }
+      setPosts(seededPosts);
+
+      // Update campaign post count
+      await base44.entities.MarketingCampaign.update(campaign.id, { posts_created: seededPosts.length });
+    } catch (err) {
+      setError('Setup error: ' + err.message);
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const copyText = (text, key) => {
     navigator.clipboard.writeText(text);
@@ -100,18 +178,34 @@ export default function AdminSocialLaunch() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const postToLinkedIn = async (post) => {
-    setPosting(post.id);
+  const postToLinkedIn = async (post, idx) => {
+    setPosting(idx);
     setError(null);
     try {
       await base44.functions.invoke('postToLinkedIn', { text: post.linkedin });
-      setPosted(prev => ({ ...prev, [post.id]: true }));
+      // Mark post as published in DB
+      await base44.entities.SocialPost.update(post.id, {
+        status: 'published',
+        published_date: new Date().toISOString(),
+      });
+      setPosted(prev => ({ ...prev, [idx]: true }));
     } catch (err) {
-      setError(`Post ${post.id} failed: ${err.message}`);
+      setError(`Post ${idx + 1} failed: ${err.message}`);
     } finally {
       setPosting(null);
     }
   };
+
+  if (seeding) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-slate-500">Syncing with Marketing Campaigns...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -122,10 +216,17 @@ export default function AdminSocialLaunch() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </Link>
-        <div>
+        <div className="flex-1">
           <h1 className="font-bold text-slate-900">Social Media Launch</h1>
           <p className="text-xs text-slate-500">2-post campaign — dysonrelo.com launch</p>
         </div>
+        {campaignId && (
+          <Link to="/admin/marketing-campaigns">
+            <Button variant="outline" size="sm" className="gap-1 text-xs">
+              <Zap className="w-3 h-3" /> View in Marketing Campaigns
+            </Button>
+          </Link>
+        )}
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-8 space-y-8">
@@ -143,9 +244,9 @@ export default function AdminSocialLaunch() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">{error}</div>
         )}
 
-        {POSTS.map((post, i) => (
+        {posts.map((post, i) => (
           <motion.div
-            key={post.id}
+            key={i}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
@@ -154,14 +255,20 @@ export default function AdminSocialLaunch() {
             {/* Post Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold tracking-widest text-slate-400 uppercase">Campaign Drop {post.id}</span>
-                <p className="font-semibold text-slate-900 mt-0.5">{post.label}</p>
+                <span className="text-xs font-bold tracking-widest text-slate-400 uppercase">Campaign Drop {i + 1}</span>
+                <p className="font-semibold text-slate-900 mt-0.5">{post.label || post.notes}</p>
               </div>
-              {posted[post.id] && (
-                <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full flex items-center gap-1">
-                  <CheckCheck className="w-3 h-3" /> Posted to LinkedIn
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {post.status === 'published' || posted[i] ? (
+                  <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full flex items-center gap-1">
+                    <CheckCheck className="w-3 h-3" /> Posted to LinkedIn
+                  </span>
+                ) : (
+                  <span className="text-xs font-bold text-amber-600 bg-amber-100 px-3 py-1 rounded-full">
+                    Approved — Ready to Post
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="p-6 space-y-5">
@@ -176,22 +283,22 @@ export default function AdminSocialLaunch() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyText(post.linkedin, `li-${post.id}`)}
+                    onClick={() => copyText(post.linkedin, `li-${i}`)}
                     className="gap-1 text-xs"
                   >
-                    {copied === `li-${post.id}` ? <CheckCheck className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    {copied === `li-${post.id}` ? 'Copied' : 'Copy'}
+                    {copied === `li-${i}` ? <CheckCheck className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                    {copied === `li-${i}` ? 'Copied' : 'Copy'}
                   </Button>
                 </div>
                 <pre className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed font-sans">{post.linkedin}</pre>
                 <Button
-                  onClick={() => postToLinkedIn(post)}
-                  disabled={posting === post.id || posted[post.id]}
+                  onClick={() => postToLinkedIn(post, i)}
+                  disabled={posting === i || post.status === 'published' || posted[i]}
                   className="w-full gap-2 bg-[#0A66C2] hover:bg-[#0A66C2]/90 text-white"
                 >
-                  {posting === post.id ? (
+                  {posting === i ? (
                     <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Posting...</>
-                  ) : posted[post.id] ? (
+                  ) : post.status === 'published' || posted[i] ? (
                     <><CheckCheck className="w-4 h-4" /> Posted ✓</>
                   ) : (
                     <><Send className="w-4 h-4" /> Post to LinkedIn Now</>
@@ -215,11 +322,11 @@ export default function AdminSocialLaunch() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyText(post.loomly, `lm-${post.id}`)}
+                    onClick={() => copyText(post.loomly, `lm-${i}`)}
                     className="gap-1 text-xs shrink-0"
                   >
-                    {copied === `lm-${post.id}` ? <CheckCheck className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    {copied === `lm-${post.id}` ? 'Copied!' : 'Copy'}
+                    {copied === `lm-${i}` ? <CheckCheck className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                    {copied === `lm-${i}` ? 'Copied!' : 'Copy'}
                   </Button>
                 </div>
                 <pre className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed font-sans">{post.loomly}</pre>
