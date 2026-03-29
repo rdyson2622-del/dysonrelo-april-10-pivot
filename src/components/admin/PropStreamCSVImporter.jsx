@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Download, ExternalLink, CheckCircle2, AlertCircle, X, FileText } from 'lucide-react';
 import * as XLSX from 'xlsx';
