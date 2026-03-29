@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, Trash2, Edit2, MoreHorizontal, Send, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, Trash2, Edit2, MoreHorizontal, Send, CheckCircle2, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { base44 } from '@/api/base44Client';
+import OwnerSMSScriptModal from './OwnerSMSScriptModal';
 
 const statusColors = {
   not_contacted: 'bg-slate-100 text-slate-600',
@@ -24,6 +25,7 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
   const [sending, setSending] = useState(null);
   const [sent, setSent] = useState({});
   const [error, setError] = useState(null);
+  const [scriptOwner, setScriptOwner] = useState(null);
 
   const sendSMS = async (owner) => {
     if (!owner.phone) { setError(`No phone number for ${owner.owner_name}`); return; }
@@ -56,6 +58,7 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
 
   return (
     <div className="space-y-3">
+      {scriptOwner && <OwnerSMSScriptModal owner={scriptOwner} onClose={() => setScriptOwner(null)} />}
       {error && (
         <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2">{error}</div>
       )}
@@ -121,6 +124,9 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
                   </Button>
                 )
               )}
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-700" onClick={() => setScriptOwner(owner)} title="View SMS Script">
+                <FileText className="w-4 h-4" />
+              </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(owner)}>
                 <Edit2 className="w-4 h-4" />
               </Button>
