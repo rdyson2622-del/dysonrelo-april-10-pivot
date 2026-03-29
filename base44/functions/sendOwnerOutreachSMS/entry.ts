@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     // Fetch the Day 1 SMS template from MessageTemplate
     const templates = await base44.asServiceRole.entities.MessageTemplate.filter({ 
       name: 'Owner Outreach SMS #1 - Day 1' 
-    }, { data_env: 'dev' });
+    });
     
     if (!templates.length) {
       return Response.json({ error: 'SMS template not found' }, { status: 404 });
@@ -52,33 +52,39 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
     }
 
+    // Fetch ListingOwner from test DB to verify it exists
+    const owner = await base44.entities.ListingOwner.get(listing_owner_id);
+    if (!owner) {
+      return Response.json({ error: 'Owner not found' }, { status: 404 });
+    }
+
     // Auto-create or update the campaign record
-    const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id }, { data_env: 'dev' });
+    const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
 
     if (existingCampaigns.length > 0) {
       await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existingCampaigns[0].id, {
         sms_sent_date: new Date().toISOString(),
         workflow_stage: 'outreach',
         notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
-      }, { data_env: 'dev' });
+      });
     } else {
       // Auto-create campaign record so it appears in the pipeline
       await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
         listing_owner_id,
         owner_name: owner_name || 'Unknown',
         owner_phone: phone,
-        property_address: '',
+        property_address: owner.property_address || '',
         workflow_stage: 'outreach',
         sms_sent_date: new Date().toISOString(),
         notes: `[${new Date().toLocaleDateString()}] Campaign auto-created. Initial outreach SMS sent.`,
-      }, { data_env: 'dev' });
+      });
     }
 
     // Also update ListingOwner contact status
-    await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
+    await base44.entities.ListingOwner.update(listing_owner_id, {
       contact_status: 'contacted',
       last_contacted: new Date().toISOString().split('T')[0],
-    }, { data_env: 'dev' });
+    });
 
     return Response.json({ success: true, message_sid: result.sid });
   } catch (error) {
