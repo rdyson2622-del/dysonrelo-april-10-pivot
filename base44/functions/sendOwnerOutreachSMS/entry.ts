@@ -18,9 +18,17 @@ Deno.serve(async (req) => {
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    const firstName = owner_name ? owner_name.split(' ')[0] : 'there';
+    // Fetch the Day 1 SMS template from MessageTemplate
+    const templates = await base44.asServiceRole.entities.MessageTemplate.filter({ 
+      name: 'Owner Outreach SMS #1 - Day 1' 
+    });
+    
+    if (!templates.length) {
+      return Response.json({ error: 'SMS template not found' }, { status: 404 });
+    }
 
-    const messageBody = `Hi ${firstName}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed — are you planning to relocate? We offer a FREE concierge service to find your next home & manage your entire move. Learn more: dysonrelo.com — Reply YES or call Bob at (858) 353-1200. Reply STOP to opt out.`;
+    let messageBody = templates[0].content;
+    messageBody = messageBody.replace(/\{\{owner_name\}\}/g, owner_name || 'there');
 
     const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
