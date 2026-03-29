@@ -43,31 +43,70 @@ Deno.serve(async (req) => {
 
     const lowerBody = messageBody.toLowerCase().trim();
 
-    // Generate AI response using Gemini
+    // SCRIPTED RESPONSE TREE — Charlie does NOT improvise.
+    // Every reply is a pre-approved message. No free-form AI generation.
     let aiReply = '';
 
-    try {
-      const context = campaign
-        ? `You are Charlie, an AI concierge from Dyson & Dyson Concierge Relocation Services. You are responding to a property owner named ${campaign.owner_name} who is selling their home at ${campaign.property_address}. The owner replied to your outreach SMS. Their message: "${messageBody}". Be warm, professional, and helpful. If they said YES or are interested, ask where they are planning to move and their timeline. Keep your reply under 160 characters if possible, or split into 2 short messages. Do NOT use hashtags or emojis excessively.`
-        : `You are Charlie, an AI concierge from Dyson & Dyson Concierge Relocation Services. Someone replied to one of our SMS campaigns from number ${from}. Their message: "${messageBody}". Be warm, professional, and helpful. Ask them if they are selling a home and planning to relocate.`;
+    const firstName = campaign?.owner_name ? campaign.owner_name.split(' ')[0] : '';
+    const greeting = firstName ? `Hi ${firstName}` : 'Hi there';
 
-      const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
-      const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: context }] }],
-            generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
-          })
-        }
-      );
+    if (lowerBody.includes('stop') || lowerBody.includes('opt out') || lowerBody.includes('unsubscribe') || lowerBody.includes('remove')) {
+      // Handled below — no reply sent
+      aiReply = null;
 
-      const geminiData = await geminiRes.json();
-      aiReply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    } catch (aiErr) {
-      aiReply = `Thanks for your reply! I'm Charlie from Dyson & Dyson. Are you planning to relocate? We can help you find your next home completely free. What city are you moving to?`;
+    } else if (
+      lowerBody === 'yes' ||
+      lowerBody === 'y' ||
+      lowerBody.includes('interested') ||
+      lowerBody.includes('tell me more') ||
+      lowerBody.includes('more info') ||
+      lowerBody.includes('how does') ||
+      lowerBody.includes('sounds good') ||
+      lowerBody.includes('sure')
+    ) {
+      // INTERESTED — hand off to a real person, do NOT ask questions
+      aiReply = `${greeting}! Great to hear from you. Bob Dyson from Dyson & Dyson will reach out to you personally within 24 hours to walk you through our free relocation service. No pressure — just a conversation. Talk soon!`;
+
+    } else if (
+      lowerBody.includes('not interested') ||
+      lowerBody.includes('no thanks') ||
+      lowerBody.includes('no thank you') ||
+      lowerBody === 'no' ||
+      lowerBody === 'n' ||
+      lowerBody.includes('not moving') ||
+      lowerBody.includes('not relocating')
+    ) {
+      // NOT INTERESTED — thank them and close gracefully
+      aiReply = `No problem at all, ${firstName ? firstName : 'thank you'}! We wish you all the best with your sale. If anything changes down the road, don't hesitate to reach out. Take care!`;
+
+    } else if (
+      lowerBody.includes('already have') ||
+      lowerBody.includes('have an agent') ||
+      lowerBody.includes('working with') ||
+      lowerBody.includes('have a realtor') ||
+      lowerBody.includes('have a broker')
+    ) {
+      // HAS AN AGENT
+      aiReply = `That's great — glad you're taken care of! Just so you know, our service works alongside your current agent on the destination side. But no worries if now isn't the right time. Wishing you a smooth sale!`;
+
+    } else if (
+      lowerBody.includes('who is this') ||
+      lowerBody.includes('who are you') ||
+      lowerBody.includes('what is this') ||
+      lowerBody.includes('what company') ||
+      lowerBody.includes('how did you get') ||
+      lowerBody.includes('how do you have')
+    ) {
+      // SKEPTICAL / WHO ARE YOU
+      aiReply = `This is Dyson & Dyson Concierge Relocation — a licensed CA brokerage (DRE #02303118). We saw your home listed and reach out to sellers who may be relocating to offer free help finding a home in their destination city. Reply STOP anytime to opt out.`;
+
+    } else if (lowerBody.includes('call') || lowerBody.includes('phone') || lowerBody.includes('talk') || lowerBody.includes('speak')) {
+      // WANTS A CALL
+      aiReply = `Absolutely! Bob Dyson will give you a call directly. We'll be in touch within 24 hours. What's the best time of day to reach you?`;
+
+    } else {
+      // ANYTHING ELSE — do NOT try to answer. Route to human.
+      aiReply = `Thanks for your message! A member of our team will follow up with you shortly. If you have any questions in the meantime, feel free to reply here.`;
     }
 
     // Update campaign if found
