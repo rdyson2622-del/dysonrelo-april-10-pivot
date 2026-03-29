@@ -9,7 +9,7 @@ export const TEMPLATE_SEEDS = [
     category: "initial_outreach",
     communication_type: "sms",
     description: "Opening message to introduce our services and begin conversation",
-    content: "Hi {{owner_name}}, we help people relocating from {{property_address}} get settled in their new city with local expert guidance. Are you planning a move? We'd love to help.",
+    content: "Hi {{owner_name}}, we help people relocating from {{property_address}} get settled in their new city with local expert guidance — completely free to you. Are you planning a move? We'd love to help. dysonrelo.com",
     placeholders: ["owner_name", "property_address"]
   },
   {
@@ -27,7 +27,7 @@ export const TEMPLATE_SEEDS = [
     category: "trust_building",
     communication_type: "sms",
     description: "Emphasize nationwide coverage and local expertise",
-    content: "{{owner_name}}, we have boots on the ground in all 50 states + Canada, UK, Australia. Every city has vetted local contacts and service providers we personally know. Your move will be handled by someone who knows {{destination_city}}.",
+    content: "{{owner_name}}, we have boots on the ground in all 50 states + Canada, UK, Australia. Every city has vetted local contacts and service providers we personally know. Your move will be handled by someone who knows {{destination_city}}. dysonrelo.com",
     placeholders: ["owner_name", "destination_city"]
   },
   {
@@ -43,7 +43,7 @@ export const TEMPLATE_SEEDS = [
     category: "trust_building",
     communication_type: "sms",
     description: "Highlight vetted contacts",
-    content: "We don't just give you names. We have relationships with the best movers, schools, utilities, contractors in {{destination_city}}. And we coordinate it all for you.",
+    content: "We don't just give you names. We have relationships with the best movers, schools, utilities, contractors in {{destination_city}}. And we coordinate it all for you — at no cost. dysonrelo.com",
     placeholders: ["destination_city"]
   },
 
@@ -53,7 +53,7 @@ export const TEMPLATE_SEEDS = [
     category: "information_gathering",
     communication_type: "sms",
     description: "Ask discovery questions",
-    content: "{{owner_name}}, to help you best: When are you targeting the move to {{destination_city}}? And what's most important—schools, commute, neighborhood vibe, budget?",
+    content: "{{owner_name}}, to help you best: When are you targeting the move to {{destination_city}}? And what's most important — schools, commute, neighborhood vibe, budget? We manage the whole process, free to you. dysonrelo.com",
     placeholders: ["owner_name", "destination_city"]
   },
   {
@@ -79,7 +79,7 @@ export const TEMPLATE_SEEDS = [
     category: "task_coordination",
     communication_type: "sms",
     description: "Highlight our network",
-    content: "{{owner_name}}, instead of researching moving companies, schools, contractors—we have pre-vetted options ready for you in {{destination_city}}. We'll coordinate all of it.",
+    content: "{{owner_name}}, instead of researching moving companies, schools, contractors — we have pre-vetted options ready for you in {{destination_city}}. We'll coordinate all of it, free to you. dysonrelo.com",
     placeholders: ["owner_name", "destination_city"]
   },
 
@@ -89,7 +89,7 @@ export const TEMPLATE_SEEDS = [
     category: "follow_up",
     communication_type: "sms",
     description: "First follow-up",
-    content: "{{owner_name}}, just checking in. Still considering the move to {{destination_city}}? Happy to answer any questions about the process.",
+    content: "{{owner_name}}, just checking in. Still considering the move to {{destination_city}}? Happy to answer any questions about the process — no cost, no pressure. dysonrelo.com",
     placeholders: ["owner_name", "destination_city"]
   },
   {
@@ -115,7 +115,7 @@ export const TEMPLATE_SEEDS = [
     category: "charlie_intro",
     communication_type: "sms",
     description: "Quick Charlie intro for engaged leads",
-    content: "{{owner_name}}, ready to talk details? Our AI Charlie will dig into {{destination_city}}, ask the right questions, and map your entire relocation. Then we execute. Want to try it?",
+    content: "{{owner_name}}, ready to talk details? Our AI Charlie will dig into {{destination_city}}, ask the right questions, and map your entire relocation. Then we execute — free to you as the buyer. dysonrelo.com",
     placeholders: ["owner_name", "destination_city"]
   },
 
