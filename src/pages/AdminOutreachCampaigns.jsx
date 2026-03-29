@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Send, Filter, Search } from 'lucide-react';
+import { ArrowLeft, Send, Search, Home, Ban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
@@ -49,14 +49,11 @@ export default function AdminOutreachCampaigns() {
 
   const updateStage = useMutation({
     mutationFn: async ({ campaign_id, new_stage, ...data }) => {
-      // Update the campaign stage
       await base44.functions.invoke('updateCampaignStage', {
         campaign_id,
         new_stage,
         ...data
       });
-
-      // Generate tasks for the new stage
       const campaign = campaigns.find((c) => c.id === campaign_id);
       if (campaign) {
         await base44.functions.invoke('generateOutreachTasks', {
@@ -70,6 +67,21 @@ export default function AdminOutreachCampaigns() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['outreach_campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['outreach_tasks'] });
+      setSelectedCampaign(null);
+    }
+  });
+
+  const closeCampaign = useMutation({
+    mutationFn: async ({ campaign_id, reason }) => {
+      await base44.entities.OwnerOutreachCampaign.update(campaign_id, {
+        workflow_stage: 'closed',
+        notes: campaigns.find(c => c.id === campaign_id)?.notes
+          ? campaigns.find(c => c.id === campaign_id).notes + `\n[${new Date().toLocaleDateString()}] CLOSED — ${reason}. All SMS stopped.`
+          : `[${new Date().toLocaleDateString()}] CLOSED — ${reason}. All SMS stopped.`
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['outreach_campaigns'] });
       setSelectedCampaign(null);
     }
   });
@@ -118,7 +130,7 @@ export default function AdminOutreachCampaigns() {
             <option value="response">Response</option>
             <option value="profile_complete">Profile Complete</option>
             <option value="processing">Processing</option>
-            <option value="closed">Closed</option>
+            <option value="closed">Closed / Opted Out / Sold</option>
           </select>
         </div>
       </header>
@@ -138,7 +150,7 @@ export default function AdminOutreachCampaigns() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-lg border border-slate-200 p-5 hover:shadow-md transition-all cursor-pointer"
+                className={`bg-white rounded-lg border p-5 hover:shadow-md transition-all cursor-pointer ${campaign.workflow_stage === 'closed' ? 'border-red-200 bg-red-50/30' : 'border-slate-200'}`}
                 onClick={() => setSelectedCampaign(campaign)}
               >
                 <div className="grid grid-cols-5 gap-4 items-start">
@@ -174,7 +186,7 @@ export default function AdminOutreachCampaigns() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end gap-2 flex-wrap">
                     {campaign.workflow_stage === 'outreach' && !campaign.sms_sent_date && (
                       <Button
                         size="sm"
@@ -189,6 +201,41 @@ export default function AdminOutreachCampaigns() {
                         <Send className="w-3 h-3" />
                         Send SMS
                       </Button>
+                    )}
+                    {campaign.workflow_stage !== 'closed' && (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Mark ${campaign.owner_name}'s property as SOLD and stop all SMS?`)) {
+                              closeCampaign.mutate({ campaign_id: campaign.id, reason: 'Property sold' });
+                            }
+                          }}
+                          className="gap-1 border-amber-300 text-amber-700 hover:bg-amber-50"
+                        >
+                          <Home className="w-3 h-3" />
+                          Sold
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Mark ${campaign.owner_name} as opted out and stop all SMS?`)) {
+                              closeCampaign.mutate({ campaign_id: campaign.id, reason: 'Owner opted out / STOP request' });
+                            }
+                          }}
+                          className="gap-1 border-red-300 text-red-700 hover:bg-red-50"
+                        >
+                          <Ban className="w-3 h-3" />
+                          Opt-Out
+                        </Button>
+                      </>
+                    )}
+                    {campaign.workflow_stage === 'closed' && (
+                      <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">⛔ Stopped</span>
                     )}
                   </div>
                 </div>
@@ -233,6 +280,43 @@ export default function AdminOutreachCampaigns() {
               <PropertyDetailsPanel campaign={selectedCampaign} />
 
               <OutreachTaskList campaign_id={selectedCampaign.id} />
+
+              {/* Compliance Actions */}
+              <div className="rounded-lg border border-red-200 bg-red-50/40 p-4 space-y-2">
+                <p className="text-xs font-bold text-red-700 uppercase tracking-wider">⚖️ Compliance — Stop All SMS</p>
+                {selectedCampaign.workflow_stage === 'closed' ? (
+                  <p className="text-sm text-red-600 font-semibold">⛔ This campaign is closed. No further SMS will be sent.</p>
+                ) : (
+                  <div className="flex gap-2 flex-wrap">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        if (confirm(`Mark ${selectedCampaign.owner_name}'s property as SOLD and stop all SMS?`)) {
+                          closeCampaign.mutate({ campaign_id: selectedCampaign.id, reason: 'Property sold' });
+                        }
+                      }}
+                      className="gap-1 border-amber-300 text-amber-700 hover:bg-amber-50"
+                    >
+                      <Home className="w-3 h-3" />
+                      Property Sold — Stop SMS
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        if (confirm(`Mark ${selectedCampaign.owner_name} as opted out / STOP request and close this campaign?`)) {
+                          closeCampaign.mutate({ campaign_id: selectedCampaign.id, reason: 'Owner opted out / STOP request' });
+                        }
+                      }}
+                      className="gap-1 border-red-300 text-red-700 hover:bg-red-50"
+                    >
+                      <Ban className="w-3 h-3" />
+                      Opted Out / STOP Request
+                    </Button>
+                  </div>
+                )}
+              </div>
 
               <OutreachWorkflow
                 campaign={selectedCampaign}
