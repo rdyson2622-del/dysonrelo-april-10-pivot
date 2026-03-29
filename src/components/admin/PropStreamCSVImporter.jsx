@@ -159,7 +159,7 @@ export default function PropStreamCSVImporter() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `batchdata-upload-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `propstream-outreach-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -185,7 +185,7 @@ export default function PropStreamCSVImporter() {
           <div className="text-left">
             <p className="font-bold text-sm" style={{ color: '#fff' }}>Import PropStream Export</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              Upload your PropStream CSV or Excel → auto-convert to BatchData format → download & upload to BatchData
+              Upload your PropStream CSV or Excel → preview & download a clean outreach-ready CSV
             </p>
           </div>
         </div>
@@ -206,9 +206,9 @@ export default function PropStreamCSVImporter() {
                 <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>HOW IT WORKS</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
-                    { step: '1', text: 'In PropStream → My Properties → select your list → Export CSV or Excel' },
-                    { step: '2', text: 'Upload that file here — we auto-detect address columns (including combined "Address" columns)' },
-                    { step: '3', text: 'Download the BatchData-formatted CSV → upload to app.batchdata.com → get owner contacts' },
+                    { step: '1', text: 'In PropStream → My Properties → select your list → Export CSV or Excel (contact info is already included)' },
+                    { step: '2', text: 'Upload that file here — we auto-detect all columns including owner name, phone, email, and address' },
+                    { step: '3', text: 'Preview your data and download a clean, standardized CSV ready for outreach — no BatchData needed' },
                   ].map(s => (
                     <div key={s.step} className="flex items-start gap-2">
                       <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5"
@@ -326,18 +326,8 @@ export default function PropStreamCSVImporter() {
                       style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}
                     >
                       <Download className="w-4 h-4" />
-                      Download for BatchData ({normalizedRows.length} addresses)
+                      Download Clean CSV ({normalizedRows.length} records)
                     </button>
-                    <a
-                      href="https://app.batchdata.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 hover:opacity-80"
-                      style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Open BatchData → Upload CSV
-                    </a>
                   </div>
                 </div>
               )}
