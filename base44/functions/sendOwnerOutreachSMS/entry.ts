@@ -44,17 +44,33 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
     }
 
-    // Update the campaign record
-    const campaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({
-      listing_owner_id
-    });
+    // Auto-create or update the campaign record
+    const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
 
-    if (campaigns.length > 0) {
-      await base44.asServiceRole.entities.OwnerOutreachCampaign.update(campaigns[0].id, {
+    if (existingCampaigns.length > 0) {
+      await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existingCampaigns[0].id, {
         sms_sent_date: new Date().toISOString(),
-        workflow_stage: 'outreach'
+        workflow_stage: 'outreach',
+        notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
+      });
+    } else {
+      // Auto-create campaign record so it appears in the pipeline
+      await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
+        listing_owner_id,
+        owner_name: owner_name || 'Unknown',
+        owner_phone: phone,
+        property_address: '',
+        workflow_stage: 'outreach',
+        sms_sent_date: new Date().toISOString(),
+        notes: `[${new Date().toLocaleDateString()}] Campaign auto-created. Initial outreach SMS sent.`,
       });
     }
+
+    // Also update ListingOwner contact status
+    await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
+      contact_status: 'contacted',
+      last_contacted: new Date().toISOString().split('T')[0],
+    });
 
     return Response.json({ success: true, message_sid: result.sid });
   } catch (error) {

@@ -42,6 +42,7 @@ import AdminMarketingCampaigns from './pages/AdminMarketingCampaigns';
 import AdminTargetAudiences from './pages/AdminTargetAudiences';
 import AdminCampaignRoadmap from './pages/AdminCampaignRoadmap';
 import AdminSocialLaunch from './pages/AdminSocialLaunch';
+import AdminOutreachPipeline from './pages/AdminOutreachPipeline';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -101,6 +102,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/search-profiles" element={<AdminSearchProfiles />} />
         <Route path="/admin/owners" element={<AdminOwners />} />
         <Route path="/admin/outreach-campaigns" element={<AdminOutreachCampaigns />} />
+        <Route path="/admin/outreach-pipeline" element={<AdminOutreachPipeline />} />
         <Route path="/admin/presentation-library" element={<AdminPresentationLibrary />} />
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />
         <Route path="/admin/referrals" element={<AdminReferrals />} />
