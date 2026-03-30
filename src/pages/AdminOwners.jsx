@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -25,31 +25,42 @@ export default function AdminOwners() {
     queryFn: () => base44.entities.ListingOwner.list('-created_date', 200),
   });
 
-  const sendAllSMS = async () => {
-    const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted');
+  const BATCH_SIZE = 25;
+  const [batchOffset, setBatchOffset] = useState(0);
+
+  // Reset batch offset when owner count changes (after new import)
+  useEffect(() => { setBatchOffset(0); setSendAllResult(null); }, [owners.length]);
+
+  const getUnsentOwners = () => owners.filter(o => o.phone && o.contact_status === 'not_contacted');
+
+  const sendBatchSMS = async () => {
+    const unsent = getUnsentOwners();
     if (!unsent.length) return;
-    if (!confirm(`Send the first outreach SMS to ${unsent.length} owners who haven't been contacted yet?`)) return;
+    const batch = unsent.slice(batchOffset, batchOffset + BATCH_SIZE);
+    if (!batch.length) return;
+
+    if (!confirm(`Send outreach SMS to the next ${batch.length} owners (batch ${Math.floor(batchOffset / BATCH_SIZE) + 1})?\n\nMessages will be spaced 3 minutes apart. Do NOT close this tab until complete.`)) return;
+
     setSendingAll(true);
     setSendAllResult(null);
-    const data_env = getDataEnv();
-    let success = 0;
-    for (const owner of unsent) {
-      try {
-        await base44.functions.invoke('sendOwnerOutreachSMS', {
-          listing_owner_id: owner.id,
-          phone: owner.phone,
-          owner_name: owner.owner_name,
-          property_address: owner.property_address,
-          data_env,
-        });
-        success++;
-      } catch (e) {
-        console.error(`Failed for ${owner.owner_name}:`, e.message);
-      }
+
+    try {
+      const res = await base44.functions.invoke('sendBatchOutreachSMS', {
+        owners: batch.map(o => ({
+          listing_owner_id: o.id,
+          phone: o.phone,
+          owner_name: o.owner_name,
+          property_address: o.property_address,
+        })),
+      });
+      setSendAllResult(res.data);
+      setBatchOffset(prev => prev + BATCH_SIZE);
+    } catch (e) {
+      setSendAllResult({ error: e.message });
+    } finally {
+      setSendingAll(false);
+      queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     }
-    setSendingAll(false);
-    setSendAllResult(success);
-    queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
 
   const filtered = owners.filter(owner =>
@@ -103,23 +114,41 @@ export default function AdminOwners() {
             <Plus className="w-4 h-4 mr-2" />
             Add Owner
           </Button>
-          <Button
-            onClick={sendAllSMS}
-            disabled={sendingAll || !owners.filter(o => o.phone && o.contact_status === 'not_contacted').length}
-            className="gap-2 bg-slate-900 hover:bg-slate-700 text-white"
-          >
-            {sendingAll ? (
-              <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
-            ) : (
-              <><Send className="w-4 h-4" /> Send First SMS to All</>
-            )}
-          </Button>
+          {(() => {
+            const unsent = getUnsentOwners();
+            const batchNum = Math.floor(batchOffset / BATCH_SIZE) + 1;
+            const remaining = unsent.slice(batchOffset);
+            const nextBatchCount = Math.min(BATCH_SIZE, remaining.length);
+            return (
+              <Button
+                onClick={sendBatchSMS}
+                disabled={sendingAll || nextBatchCount === 0}
+                className="gap-2 bg-slate-900 hover:bg-slate-700 text-white"
+              >
+                {sendingAll ? (
+                  <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending Batch {batchNum}...</>
+                ) : nextBatchCount === 0 ? (
+                  <><Send className="w-4 h-4" /> All Batches Sent</>
+                ) : (
+                  <><Send className="w-4 h-4" /> Send Batch {batchNum} ({nextBatchCount} owners)</>
+                )}
+              </Button>
+            );
+          })()}
         </div>
       </div>
 
       {sendAllResult !== null && (
-        <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg px-4 py-3 text-sm font-semibold">
-          ✓ Sent to {sendAllResult} owners successfully!
+        <div className={`mb-4 border rounded-lg px-4 py-3 text-sm font-semibold ${sendAllResult.error ? 'bg-red-50 border-red-200 text-red-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
+          {sendAllResult.error
+            ? `✗ Error: ${sendAllResult.error}`
+            : `✓ Batch queued: ${sendAllResult.sent} sent, ${sendAllResult.failed || 0} failed, ${sendAllResult.skipped || 0} skipped. Messages spaced 3 min apart.`
+          }
+          {!sendAllResult.error && getUnsentOwners().slice(batchOffset).length > 0 && (
+            <span className="ml-2 text-slate-600 font-normal">
+              ({getUnsentOwners().slice(batchOffset).length} owners remaining — click button to send next batch)
+            </span>
+          )}
         </div>
       )}
 
