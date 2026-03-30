@@ -25,15 +25,15 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all(
-      TEMPLATE_NAMES.map(t =>
-        base44.entities.MessageTemplate.filter({ name: t.name }, '-updated_date', 5)
-          .then(results => ({ ...t, content: results[0]?.content || null }))
-      )
-    ).then(mapped => {
-      setTemplates(mapped);
-      setLoading(false);
-    });
+    base44.entities.MessageTemplate.list('-updated_date', 200)
+      .then(all => {
+        const mapped = TEMPLATE_NAMES.map(t => {
+          const match = all.find(r => r.name && r.name.trim() === t.name.trim());
+          return { ...t, content: match?.content || null };
+        });
+        setTemplates(mapped);
+        setLoading(false);
+      });
   }, []);
 
   const script = templates[activeIdx];
