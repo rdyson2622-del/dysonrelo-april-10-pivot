@@ -42,10 +42,7 @@ export default function AdminOwners() {
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
-    queryFn: async () => {
-      const response = await base44.functions.invoke('listListingOwners', {});
-      return response.data || [];
-    },
+    queryFn: () => base44.entities.ListingOwner.list('-created_date', 200),
   });
 
   const filtered = owners.filter(owner =>

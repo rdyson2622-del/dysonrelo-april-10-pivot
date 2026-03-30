@@ -9,8 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Query Test database for ListingOwner records
-    const owners = await base44.entities.ListingOwner.list('', 100, { data_env: 'dev' });
+    const owners = await base44.asServiceRole.entities.ListingOwner.list('-created_date', 200);
     
     return Response.json(owners);
   } catch (error) {
