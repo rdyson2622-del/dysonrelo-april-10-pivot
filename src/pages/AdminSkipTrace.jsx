@@ -400,36 +400,36 @@ function BulkBuilder() {
         )}
       </div>
 
-      {/* Step 3 — Import or Patch */}
+      {/* Step 3 — Import or Patch (always visible once CSV loaded) */}
       {rows.length > 0 && !importResult && (
         <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
-          <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>STEP 3 — IMPORT OR PATCH</p>
+          <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>STEP 3 — WHAT WOULD YOU LIKE TO DO?</p>
 
-          {/* New import */}
-          <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            Fresh import: adds all {rows.length} owners as new records.
-          </p>
-          <button onClick={importToListingOwners} disabled={importing || patching}
-            className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 mb-3"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
-            {importing
-              ? <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Importing...</>
-              : <><Users className="w-4 h-4" /> Import {rows.length} Owners as New Records</>
-            }
-          </button>
-
-          {/* Patch existing */}
-          <div className="rounded-xl p-3 mb-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <p className="text-xs font-bold mb-1" style={{ color: '#fff' }}>Already imported these addresses?</p>
-            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Use "Patch" to fill in missing names + cell numbers on your existing 207 records — matches by street address.
+          {/* Patch existing — PRIMARY action shown first */}
+          <div className="rounded-xl p-4 mb-3" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.35)' }}>
+            <p className="text-xs font-bold mb-1" style={{ color: GOLD }}>✦ Already imported these addresses? Patch them.</p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              Matches by street address and fills in any missing names + cell numbers on your existing records. Won't create duplicates.
             </p>
             <button onClick={patchExistingOwners} disabled={importing || patching}
-              className="w-full py-2.5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40"
-              style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: GOLD }}>
+              className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
               {patching
-                ? <><div className="w-4 h-4 border-2 border-yellow-500/30 border-t-yellow-400 rounded-full animate-spin" /> Patching existing records...</>
-                : <>✦ Patch Existing Records (fill missing names + phones)</>
+                ? <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Patching {rows.length} records...</>
+                : <>✦ Patch Existing Records — Fill Missing Names + Phones ({rows.length} from CSV)</>
+              }
+            </button>
+          </div>
+
+          {/* New import — secondary */}
+          <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <p className="text-xs font-bold mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Or: Fresh import (adds as new records)</p>
+            <button onClick={importToListingOwners} disabled={importing || patching}
+              className="w-full py-2.5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 mt-2"
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.6)' }}>
+              {importing
+                ? <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Importing...</>
+                : <><Users className="w-4 h-4" /> Import {rows.length} Owners as New Records</>
               }
             </button>
           </div>
