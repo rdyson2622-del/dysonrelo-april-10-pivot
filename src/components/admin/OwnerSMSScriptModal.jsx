@@ -25,17 +25,15 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.MessageTemplate.list('-updated_date', 100)
-      .then(allSms => {
-        const mapped = TEMPLATE_NAMES.map(t => {
-          // Find by name, pick the most recently updated if duplicates exist
-          const matches = allSms.filter(r => r.name === t.name);
-          const found = matches[0]; // list is sorted by -updated_date so first = newest
-          return { ...t, content: found?.content || null };
-        });
-        setTemplates(mapped);
-        setLoading(false);
-      });
+    Promise.all(
+      TEMPLATE_NAMES.map(t =>
+        base44.entities.MessageTemplate.filter({ name: t.name }, '-updated_date', 5)
+          .then(results => ({ ...t, content: results[0]?.content || null }))
+      )
+    ).then(mapped => {
+      setTemplates(mapped);
+      setLoading(false);
+    });
   }, []);
 
   const script = templates[activeIdx];
