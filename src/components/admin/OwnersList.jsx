@@ -38,6 +38,7 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
         listing_owner_id: owner.id,
         phone: owner.phone,
         owner_name: owner.owner_name,
+        property_address: owner.property_address,
         data_env: getDataEnv(),
       });
       setSent(prev => ({ ...prev, [owner.id]: true }));

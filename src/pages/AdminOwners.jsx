@@ -20,6 +20,11 @@ export default function AdminOwners() {
 
   const getDataEnv = () => localStorage.getItem('base44_data_env') || 'prod';
 
+  const { data: owners = [] } = useQuery({
+    queryKey: ['listingOwners'],
+    queryFn: () => base44.entities.ListingOwner.list('-created_date', 200),
+  });
+
   const sendAllSMS = async () => {
     const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted');
     if (!unsent.length) return;
@@ -34,20 +39,18 @@ export default function AdminOwners() {
           listing_owner_id: owner.id,
           phone: owner.phone,
           owner_name: owner.owner_name,
+          property_address: owner.property_address,
           data_env,
         });
         success++;
-      } catch {}
+      } catch (e) {
+        console.error(`Failed for ${owner.owner_name}:`, e.message);
+      }
     }
     setSendingAll(false);
     setSendAllResult(success);
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
-
-  const { data: owners = [] } = useQuery({
-    queryKey: ['listingOwners'],
-    queryFn: () => base44.entities.ListingOwner.list('-created_date', 200),
-  });
 
   const filtered = owners.filter(owner =>
     owner.owner_name?.toLowerCase().includes(search.toLowerCase()) ||
