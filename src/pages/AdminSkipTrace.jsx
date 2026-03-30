@@ -141,16 +141,8 @@ function parseBulkCSV(text) {
   return { headers, rows };
 }
 
-function BulkBuilder() {
-  const [rows, setRows] = useState([]);
-  const [fileName, setFileName] = useState('');
-  const [importError, setImportError] = useState('');
-  const fileRef = useRef();
-
-  const handleFile = (file) => {
-    if (!file) return;
-    setFileName(file.name);
-    setImportError('');
+function parseFileToRows(file) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
@@ -159,11 +151,10 @@ function BulkBuilder() {
         const workbook = XLSX.read(data, { type: 'array' });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-        if (jsonRows.length < 2) { setImportError('File appears empty.'); return; }
+        if (jsonRows.length < 2) { reject(new Error('File appears empty.')); return; }
         const headers = jsonRows[0].map(h => String(h).trim());
         const csvRows = jsonRows.slice(1).map(r => headers.map((_, i) => String(r[i] || '').trim()));
 
-        // Check for single combined address column
         const lowerH = headers.map(h => h.toLowerCase());
         const singleIdx = lowerH.findIndex(h => h === 'address' || h === 'property address');
         if (singleIdx >= 0 && findBulkColumn(headers, BULK_COLUMN_MAP.city) === -1) {
@@ -175,7 +166,7 @@ function BulkBuilder() {
             }
             return null;
           }).filter(Boolean);
-          setRows(split);
+          resolve(split);
           return;
         }
 
@@ -183,7 +174,7 @@ function BulkBuilder() {
         for (const [field, candidates] of Object.entries(BULK_COLUMN_MAP)) {
           mapping[field] = findBulkColumn(headers, candidates);
         }
-        if (mapping.street < 0) { setImportError('Could not find an address column. Make sure it is a PropStream export.'); return; }
+        if (mapping.street < 0) { reject(new Error('Could not find an address column.')); return; }
         const parsed = csvRows
           .map(row => ({
             street: mapping.street >= 0 ? row[mapping.street] || '' : '',
@@ -192,18 +183,43 @@ function BulkBuilder() {
             zip: mapping.zip >= 0 ? row[mapping.zip] || '' : '',
           }))
           .filter(r => r.street.trim());
-        setRows(parsed);
-      } catch { setImportError('Could not parse file.'); }
+        resolve(parsed);
+      } catch { reject(new Error('Could not parse file.')); }
     };
     reader.readAsArrayBuffer(file);
+  });
+}
+
+function BulkBuilder() {
+  const [loadedFiles, setLoadedFiles] = useState([]); // [{name, count}]
+  const [rows, setRows] = useState([]);
+  const [importError, setImportError] = useState('');
+  const fileRef = useRef();
+
+  const handleFiles = async (files) => {
+    setImportError('');
+    for (const file of Array.from(files)) {
+      try {
+        const newRows = await parseFileToRows(file);
+        setRows(prev => {
+          // Deduplicate by street address
+          const existing = new Set(prev.map(r => r.street.toLowerCase().trim()));
+          const unique = newRows.filter(r => !existing.has(r.street.toLowerCase().trim()));
+          return [...prev, ...unique];
+        });
+        setLoadedFiles(prev => [...prev, { name: file.name, count: newRows.length }]);
+      } catch (err) {
+        setImportError(`${file.name}: ${err.message}`);
+      }
+    }
   };
 
-  const handleDrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+  const handleDrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
 
   const updateRow = (i, field, val) => setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: val } : r));
   const addRow = () => setRows(prev => [...prev, emptyRow()]);
   const removeRow = (i) => setRows(prev => prev.filter((_, idx) => idx !== i));
-  const reset = () => { setRows([]); setFileName(''); setImportError(''); if (fileRef.current) fileRef.current.value = ''; };
+  const reset = () => { setRows([]); setLoadedFiles([]); setImportError(''); if (fileRef.current) fileRef.current.value = ''; };
 
   const validRows = rows.filter(r => r.street.trim() && r.city.trim() && r.state.trim());
 
@@ -229,9 +245,9 @@ function BulkBuilder() {
     <>
       {/* Step 0: Go to PropStream */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
-        <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>STEP 0 — PREPARE YOUR CSV IN PROPSTREAM</p>
+        <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>STEP 0 — PREPARE YOUR CSVs IN PROPSTREAM</p>
         <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.65)' }}>
-          Go to PropStream and create your search or export your saved list. You'll return here with the CSV file.
+          Export as many lists as you need from PropStream. You can upload all of them here — duplicates are removed automatically.
         </p>
         <a
           href="https://www.propstream.com"
@@ -245,39 +261,51 @@ function BulkBuilder() {
         </a>
       </div>
 
-      {/* Step 1: Import PropStream CSV */}
+      {/* Step 1: Import PropStream CSVs — supports multiple files */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
-        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 2 — IMPORT PROPSTREAM EXPORT</p>
+        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 2 — UPLOAD YOUR PROPSTREAM EXPORTS</p>
         <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Upload the CSV you exported from PropStream. Addresses will auto-populate the table below.
+          Upload one or more CSVs. All files are merged into a single de-duplicated list.
         </p>
 
-        {!fileName ? (
-          <div
-            onDrop={handleDrop}
-            onDragOver={e => e.preventDefault()}
-            onClick={() => fileRef.current?.click()}
-            className="rounded-xl flex flex-col items-center justify-center py-10 cursor-pointer transition-all hover:opacity-80"
-            style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}
-          >
-            <FileText className="w-10 h-10 mb-3" style={{ color: GOLD }} />
-            <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop PropStream CSV here</p>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
-            <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => handleFile(e.target.files[0])} />
-          </div>
-        ) : (
-          <div className="flex items-center justify-between rounded-xl px-4 py-3"
-            style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)' }}>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" style={{ color: '#22C55E' }} />
-              <span className="text-sm font-semibold" style={{ color: '#fff' }}>{fileName}</span>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>— {rows.length} addresses loaded</span>
+        {/* Loaded files summary */}
+        {loadedFiles.length > 0 && (
+          <div className="mb-3 space-y-2">
+            {loadedFiles.map((f, i) => (
+              <div key={i} className="flex items-center gap-2 rounded-xl px-4 py-2.5"
+                style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)' }}>
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#22C55E' }} />
+                <span className="text-sm font-medium" style={{ color: '#fff' }}>{f.name}</span>
+                <span className="text-xs ml-auto" style={{ color: 'rgba(255,255,255,0.45)' }}>{f.count} rows</span>
+              </div>
+            ))}
+            <div className="flex items-center justify-between px-1 pt-1">
+              <span className="text-xs font-bold" style={{ color: GOLD }}>
+                {rows.length} total addresses (duplicates removed)
+              </span>
+              <button onClick={reset} className="text-xs hover:opacity-70" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Clear all
+              </button>
             </div>
-            <button onClick={reset} className="p-1 hover:opacity-70">
-              <X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.4)' }} />
-            </button>
           </div>
         )}
+
+        {/* Drop zone — always visible so more files can be added */}
+        <div
+          onDrop={handleDrop}
+          onDragOver={e => e.preventDefault()}
+          onClick={() => fileRef.current?.click()}
+          className="rounded-xl flex flex-col items-center justify-center py-8 cursor-pointer transition-all hover:opacity-80"
+          style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}
+        >
+          <Upload className="w-8 h-8 mb-2" style={{ color: GOLD }} />
+          <p className="font-bold mb-0.5" style={{ color: '#fff' }}>
+            {loadedFiles.length === 0 ? 'Drop PropStream CSVs here' : 'Drop another CSV to add more'}
+          </p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse · multiple files OK</p>
+          <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" multiple className="hidden"
+            onChange={e => handleFiles(e.target.files)} />
+        </div>
 
         {importError && (
           <div className="flex items-center gap-2 mt-3">
