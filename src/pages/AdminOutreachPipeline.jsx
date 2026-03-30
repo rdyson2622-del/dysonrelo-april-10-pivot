@@ -218,9 +218,10 @@ export default function AdminOutreachPipeline() {
   const [autoResult, setAutoResult] = useState(null);
   const queryClient = useQueryClient();
 
+  // Campaigns are always stored in prod (created by backend function via asServiceRole)
   const { data: campaigns = [], isLoading } = useQuery({
     queryKey: ['outreach_pipeline'],
-    queryFn: () => base44.entities.OwnerOutreachCampaign.list('-sms_sent_date'),
+    queryFn: () => base44.entities.OwnerOutreachCampaign.list('-sms_sent_date', 200),
   });
 
   const filtered = campaigns.filter(c => {

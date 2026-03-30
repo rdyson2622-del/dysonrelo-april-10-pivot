@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    // Fetch the Day 1 SMS template (always from prod - templates live in prod only)
+    // Fetch the Day 1 SMS template — always from prod since templates live there
     const templates = await base44.asServiceRole.entities.MessageTemplate.filter({ 
       name: 'Owner Outreach SMS #1 - Day 1' 
     });
@@ -53,37 +53,48 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
     }
 
-    // SMS sent successfully — now update DB records
-    // Note: asServiceRole entity operations always use prod DB in this SDK version.
-    // For dev/test mode, we still update prod to keep campaign records in sync,
-    // but we gracefully handle any errors so they don't block the success response.
+    // SMS sent — now update DB records in the correct environment
+    const entityOpts = data_env === 'dev' ? { data_env: 'dev' } : undefined;
+
     try {
-      const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
+      const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter(
+        { listing_owner_id }, undefined, undefined, entityOpts
+      );
 
       if (existingCampaigns.length > 0) {
-        await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existingCampaigns[0].id, {
-          sms_sent_date: new Date().toISOString(),
-          workflow_stage: 'outreach',
-          notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
-        });
+        await base44.asServiceRole.entities.OwnerOutreachCampaign.update(
+          existingCampaigns[0].id,
+          {
+            sms_sent_date: new Date().toISOString(),
+            workflow_stage: 'outreach',
+            notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
+          },
+          entityOpts
+        );
       } else {
-        await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
-          listing_owner_id,
-          owner_name: owner_name || 'Unknown',
-          owner_phone: phone,
-          property_address: property_address || '',
-          workflow_stage: 'outreach',
-          sms_sent_date: new Date().toISOString(),
-          notes: `[${new Date().toLocaleDateString()}] Campaign auto-created. Initial outreach SMS sent.`,
-        });
+        await base44.asServiceRole.entities.OwnerOutreachCampaign.create(
+          {
+            listing_owner_id,
+            owner_name: owner_name || 'Unknown',
+            owner_phone: phone,
+            property_address: property_address || '',
+            workflow_stage: 'outreach',
+            sms_sent_date: new Date().toISOString(),
+            notes: `[${new Date().toLocaleDateString()}] Campaign auto-created. Initial outreach SMS sent.`,
+          },
+          entityOpts
+        );
       }
 
-      await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
-        contact_status: 'contacted',
-        last_contacted: new Date().toISOString().split('T')[0],
-      });
+      await base44.asServiceRole.entities.ListingOwner.update(
+        listing_owner_id,
+        {
+          contact_status: 'contacted',
+          last_contacted: new Date().toISOString().split('T')[0],
+        },
+        entityOpts
+      );
     } catch (dbErr) {
-      // DB update failed (e.g. test DB mismatch) but SMS was sent — log and continue
       console.error('DB update after SMS failed:', dbErr.message);
     }
 
