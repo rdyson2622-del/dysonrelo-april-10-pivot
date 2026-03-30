@@ -90,25 +90,91 @@ function SingleLookup() {
 
 // ── Column detection helpers ───────────────────────────────────────────────
 
-const COLUMN_MAP = {
-  owner_name: ['owner', 'owner name', 'seller', 'seller name', 'taxpayer name', 'contact name', 'name', 'full name'],
-  phone:      ['phone', 'mobile', 'cell', 'phone number', 'phone 1', 'mobile phone', 'cell phone', 'owner phone', 'contact phone'],
-  email:      ['email', 'email address', 'owner email', 'contact email'],
-  street:     ['property address', 'property street', 'street address', 'address', 'prop address', 'site address', 'street'],
-  city:       ['property city', 'city', 'prop city', 'site city'],
-  state:      ['property state', 'state', 'prop state', 'site state', 'st'],
-  zip:        ['property zip', 'zip', 'zip code', 'postal code', 'prop zip', 'site zip'],
-  listing_price: ['list price', 'listing price', 'price', 'asking price', 'sale price'],
-};
+// PropStream skip trace exports use columns like:
+// "First Name", "Last Name", "Cell Phone 1", "Cell Phone 2", "Phone 1", "Email 1"
+// "Property Address", "Property City", "Property State", "Property Zip", "Estimated Value"
+// We support all these plus generic fallbacks.
 
-function findCol(headers, candidates) {
-  const lower = headers.map(h => h.toLowerCase());
+function findColExact(headers, candidates) {
+  const lower = headers.map(h => h.toLowerCase().trim());
   for (const c of candidates) {
-    const idx = lower.findIndex(h => h.includes(c));
+    const idx = lower.indexOf(c.toLowerCase());
     if (idx !== -1) return idx;
   }
   return -1;
 }
+
+function findColContains(headers, candidates) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  for (const c of candidates) {
+    const idx = lower.findIndex(h => h.includes(c.toLowerCase()));
+    if (idx !== -1) return idx;
+  }
+  return -1;
+}
+
+function findCol(headers, candidates) {
+  // Try exact match first, then contains
+  const exact = findColExact(headers, candidates);
+  if (exact !== -1) return exact;
+  return findColContains(headers, candidates);
+}
+
+// Find the best phone number from a row — tries columns in priority order
+function extractBestPhone(row, headers) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  // Priority: Cell Phone 1, Cell Phone 2, Phone 1, Mobile, Phone, then any column with "cell" or "phone"
+  const priority = [
+    'cell phone 1', 'cell phone1', 'cellphone1',
+    'cell phone 2', 'cell phone2',
+    'cell phone 3', 'cell phone3',
+    'phone 1', 'phone1',
+    'mobile phone 1', 'mobile 1', 'mobile1',
+    'phone 2', 'phone2',
+    'mobile', 'cell', 'phone',
+    'owner phone', 'contact phone',
+  ];
+  for (const p of priority) {
+    const idx = lower.indexOf(p);
+    if (idx !== -1 && row[idx] && row[idx].trim()) return row[idx].trim();
+  }
+  // Fallback: any column containing "cell" or "phone"
+  for (let i = 0; i < lower.length; i++) {
+    if ((lower[i].includes('cell') || lower[i].includes('phone')) && row[i] && row[i].trim()) {
+      return row[i].trim();
+    }
+  }
+  return '';
+}
+
+// Combine First Name + Last Name if no single name column
+function extractOwnerName(row, headers) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  // Try single name columns first
+  const singleCol = findColExact(headers, [
+    'owner name', 'seller name', 'taxpayer name', 'contact name', 'full name', 'name', 'owner', 'seller',
+  ]);
+  if (singleCol !== -1 && row[singleCol] && row[singleCol].trim()) return row[singleCol].trim();
+
+  // Try First + Last (PropStream skip trace format)
+  const firstIdx = lower.indexOf('first name');
+  const lastIdx = lower.indexOf('last name');
+  if (firstIdx !== -1 || lastIdx !== -1) {
+    const first = firstIdx !== -1 ? (row[firstIdx] || '').trim() : '';
+    const last = lastIdx !== -1 ? (row[lastIdx] || '').trim() : '';
+    const combined = [first, last].filter(Boolean).join(' ');
+    if (combined) return combined;
+  }
+
+  return '';
+}
+
+const STREET_CANDIDATES = ['property address', 'property street', 'street address', 'address', 'prop address', 'site address', 'mailing address', 'street'];
+const CITY_CANDIDATES   = ['property city', 'city', 'prop city', 'site city', 'mailing city'];
+const STATE_CANDIDATES  = ['property state', 'state', 'prop state', 'site state', 'mailing state'];
+const ZIP_CANDIDATES    = ['property zip', 'zip code', 'zip', 'postal code', 'prop zip', 'site zip', 'mailing zip'];
+const PRICE_CANDIDATES  = ['list price', 'listing price', 'estimated value', 'price', 'asking price', 'sale price', 'value'];
+const EMAIL_CANDIDATES  = ['email 1', 'email1', 'email address', 'email', 'owner email', 'contact email'];
 
 function parseFileToRows(file) {
   return new Promise((resolve, reject) => {
@@ -124,26 +190,33 @@ function parseFileToRows(file) {
         const headers = jsonRows[0].map(h => String(h).trim());
         const csvRows = jsonRows.slice(1).map(r => headers.map((_, i) => String(r[i] || '').trim()));
 
-        const m = {};
-        for (const [field, candidates] of Object.entries(COLUMN_MAP)) {
-          m[field] = findCol(headers, candidates);
+        const streetIdx     = findCol(headers, STREET_CANDIDATES);
+        const cityIdx       = findCol(headers, CITY_CANDIDATES);
+        const stateIdx      = findCol(headers, STATE_CANDIDATES);
+        const zipIdx        = findCol(headers, ZIP_CANDIDATES);
+        const priceIdx      = findCol(headers, PRICE_CANDIDATES);
+        const emailIdx      = findCol(headers, EMAIL_CANDIDATES);
+
+        if (streetIdx < 0) {
+          console.warn('Headers found:', headers);
+          reject('Could not find address column in: ' + file.name + '\nHeaders: ' + headers.slice(0, 10).join(', '));
+          return;
         }
-        if (m.street < 0) { reject('Could not find address column in: ' + file.name); return; }
 
         const parsed = csvRows
           .map(row => ({
-            owner_name:    m.owner_name    >= 0 ? row[m.owner_name]    : '',
-            phone:         m.phone         >= 0 ? row[m.phone]         : '',
-            email:         m.email         >= 0 ? row[m.email]         : '',
-            street:                                row[m.street]        || '',
-            city:          m.city          >= 0 ? row[m.city]          : '',
-            state:         m.state         >= 0 ? row[m.state]         : '',
-            zip:           m.zip           >= 0 ? row[m.zip]           : '',
-            listing_price: m.listing_price >= 0 ? row[m.listing_price] : '',
+            owner_name:    extractOwnerName(row, headers),
+            phone:         extractBestPhone(row, headers),
+            email:         emailIdx >= 0 ? row[emailIdx] : '',
+            street:        row[streetIdx] || '',
+            city:          cityIdx  >= 0 ? row[cityIdx]  : '',
+            state:         stateIdx >= 0 ? row[stateIdx] : '',
+            zip:           zipIdx   >= 0 ? row[zipIdx]   : '',
+            listing_price: priceIdx >= 0 ? row[priceIdx] : '',
           }))
           .filter(r => r.street.trim());
         resolve(parsed);
-      } catch { reject('Could not parse: ' + file.name); }
+      } catch (err) { reject('Could not parse: ' + file.name + ' — ' + err.message); }
     };
     reader.readAsArrayBuffer(file);
   });
@@ -156,6 +229,7 @@ function BulkBuilder() {
   const [fileNames, setFileNames] = useState([]);
   const [importError, setImportError] = useState('');
   const [importing, setImporting] = useState(false);
+  const [patching, setPatching] = useState(false);
   const [importResult, setImportResult] = useState(null);
   const fileRef = useRef();
 
@@ -208,6 +282,39 @@ function BulkBuilder() {
     }
   };
 
+  // Patch existing ListingOwner records that are missing name/phone — match by address
+  const patchExistingOwners = async () => {
+    setPatching(true);
+    setImportResult(null);
+    try {
+      const existing = await base44.entities.ListingOwner.list('-created_date', 500);
+      let patched = 0;
+      for (const row of rows) {
+        if (!row.phone && !row.owner_name) continue;
+        const streetLower = row.street.toLowerCase().trim();
+        const match = existing.find(o => {
+          const addr = (o.property_address || '').toLowerCase();
+          return addr.includes(streetLower) || streetLower.includes(addr.split(',')[0]?.trim());
+        });
+        if (match) {
+          const updates = {};
+          if (row.phone && !match.phone) updates.phone = row.phone;
+          if (row.owner_name && (!match.owner_name || match.owner_name === 'Unknown')) updates.owner_name = row.owner_name;
+          if (row.email && !match.email) updates.email = row.email;
+          if (Object.keys(updates).length > 0) {
+            await base44.entities.ListingOwner.update(match.id, updates);
+            patched++;
+          }
+        }
+      }
+      setImportResult({ patched, count: 0 });
+    } catch (err) {
+      setImportError('Patch failed: ' + (err.message || err));
+    } finally {
+      setPatching(false);
+    }
+  };
+
   const phoneCount = rows.filter(r => r.phone).length;
 
   return (
@@ -257,11 +364,31 @@ function BulkBuilder() {
                 <span className="text-xs ml-2" style={{ color: phoneCount > 0 ? '#22C55E' : 'rgba(255,255,255,0.35)' }}>
                   · {phoneCount} with cell numbers
                 </span>
+                {phoneCount === 0 && (
+                  <span className="block text-xs mt-1" style={{ color: '#EF4444' }}>
+                    ⚠ No phones found — check detected columns below
+                  </span>
+                )}
               </div>
               <button onClick={reset} className="text-xs hover:opacity-70 flex items-center gap-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 <X className="w-3 h-3" /> Clear
               </button>
             </div>
+            {/* Preview first 3 rows */}
+            {rows.length > 0 && (
+              <div className="mt-2 rounded-lg overflow-hidden text-xs" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div className="px-3 py-1.5 font-bold tracking-widest" style={{ color: GOLD, background: 'rgba(255,255,255,0.04)' }}>
+                  PREVIEW (first 3 rows)
+                </div>
+                {rows.slice(0, 3).map((r, i) => (
+                  <div key={i} className="px-3 py-2 flex gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)' }}>
+                    <span className="truncate w-36">{r.owner_name || <em style={{color:'#EF4444'}}>no name</em>}</span>
+                    <span className="truncate w-32" style={{ color: r.phone ? '#22C55E' : '#EF4444' }}>{r.phone || 'no phone'}</span>
+                    <span className="truncate flex-1">{r.street}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -273,21 +400,39 @@ function BulkBuilder() {
         )}
       </div>
 
-      {/* Step 3 — Import */}
+      {/* Step 3 — Import or Patch */}
       {rows.length > 0 && !importResult && (
         <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
-          <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>STEP 3 — IMPORT INTO LISTING OWNERS</p>
-          <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            Adds all {rows.length} owners to your Listing Owners database, ready for SMS outreach.
+          <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>STEP 3 — IMPORT OR PATCH</p>
+
+          {/* New import */}
+          <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
+            Fresh import: adds all {rows.length} owners as new records.
           </p>
-          <button onClick={importToListingOwners} disabled={importing}
-            className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40"
+          <button onClick={importToListingOwners} disabled={importing || patching}
+            className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 mb-3"
             style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
             {importing
               ? <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Importing...</>
-              : <><Users className="w-4 h-4" /> Import {rows.length} Owners to Database</>
+              : <><Users className="w-4 h-4" /> Import {rows.length} Owners as New Records</>
             }
           </button>
+
+          {/* Patch existing */}
+          <div className="rounded-xl p-3 mb-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <p className="text-xs font-bold mb-1" style={{ color: '#fff' }}>Already imported these addresses?</p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              Use "Patch" to fill in missing names + cell numbers on your existing 207 records — matches by street address.
+            </p>
+            <button onClick={patchExistingOwners} disabled={importing || patching}
+              className="w-full py-2.5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40"
+              style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: GOLD }}>
+              {patching
+                ? <><div className="w-4 h-4 border-2 border-yellow-500/30 border-t-yellow-400 rounded-full animate-spin" /> Patching existing records...</>
+                : <>✦ Patch Existing Records (fill missing names + phones)</>
+              }
+            </button>
+          </div>
         </div>
       )}
 
@@ -296,13 +441,18 @@ function BulkBuilder() {
           style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)' }}>
           <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#22C55E' }} />
           <div>
-            <p className="font-bold text-sm mb-1" style={{ color: '#22C55E' }}>✓ {importResult.count} owners imported!</p>
+            {importResult.count > 0 && (
+              <p className="font-bold text-sm mb-1" style={{ color: '#22C55E' }}>✓ {importResult.count} owners imported!</p>
+            )}
+            {importResult.patched !== undefined && (
+              <p className="font-bold text-sm mb-1" style={{ color: '#22C55E' }}>✓ {importResult.patched} existing records patched with names + phones!</p>
+            )}
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Go to <strong>Admin → Listing Owners</strong> to send outreach SMS to your new contacts.
+              Go to <strong>Admin → Listing Owners</strong> to review and start outreach.
             </p>
             <button onClick={reset} className="mt-3 text-xs font-semibold hover:opacity-80 px-3 py-1.5 rounded-lg"
               style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}>
-              Upload More CSVs
+              Upload Another CSV
             </button>
           </div>
         </div>
