@@ -1,12 +1,20 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function AdminClients() {
+  const queryClient = useQueryClient();
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this client? This cannot be undone.')) return;
+    await base44.entities.RelocationClient.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['admin-clients'] });
+  };
+
   const { data: clients, isLoading } = useQuery({
     queryKey: ['admin-clients'],
     queryFn: () => base44.entities.RelocationClient.list('-created_date'),
@@ -65,7 +73,7 @@ export default function AdminClients() {
                         <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => handleDelete(client.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
