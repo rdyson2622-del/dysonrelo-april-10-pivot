@@ -52,8 +52,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
     }
 
-    // Fetch ListingOwner from test DB to verify it exists
-    const owner = await base44.entities.ListingOwner.get(listing_owner_id);
+    // Fetch ListingOwner via service role so it works in both prod and test DB
+    const owner = await base44.asServiceRole.entities.ListingOwner.get(listing_owner_id);
     if (!owner) {
       return Response.json({ error: 'Owner not found' }, { status: 404 });
     }
@@ -68,7 +68,6 @@ Deno.serve(async (req) => {
         notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
       });
     } else {
-      // Auto-create campaign record so it appears in the pipeline
       await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
         listing_owner_id,
         owner_name: owner_name || 'Unknown',
@@ -80,8 +79,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Also update ListingOwner contact status
-    await base44.entities.ListingOwner.update(listing_owner_id, {
+    // Update ListingOwner contact status via service role
+    await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
       contact_status: 'contacted',
       last_contacted: new Date().toISOString().split('T')[0],
     });
