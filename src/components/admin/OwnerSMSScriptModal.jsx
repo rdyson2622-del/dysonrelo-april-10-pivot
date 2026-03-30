@@ -25,21 +25,19 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.MessageTemplate.list('-updated_date', 200)
-      .then(all => {
-        console.log('MessageTemplate sample record:', JSON.stringify(all[0]));
-        const mapped = TEMPLATE_NAMES.map(t => {
-          // Try both flat and nested data structures
-          const match = all.find(r => {
-            const name = r.name || r.data?.name;
-            return name && name.trim() === t.name.trim();
-          });
-          const content = match?.content || match?.data?.content || null;
-          return { ...t, content };
-        });
-        setTemplates(mapped);
-        setLoading(false);
+    // Fetch all pages to ensure we get the outreach templates
+    Promise.all([
+      base44.entities.MessageTemplate.list('-created_date', 200),
+      base44.entities.MessageTemplate.list('created_date', 200),
+    ]).then(([batch1, batch2]) => {
+      const all = [...batch1, ...batch2];
+      const mapped = TEMPLATE_NAMES.map(t => {
+        const match = all.find(r => r.name && r.name.trim() === t.name.trim());
+        return { ...t, content: match?.content || null };
       });
+      setTemplates(mapped);
+      setLoading(false);
+    });
   }, []);
 
   const script = templates[activeIdx];
