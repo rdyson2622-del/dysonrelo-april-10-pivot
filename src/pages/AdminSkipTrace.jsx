@@ -230,18 +230,16 @@ function BulkBuilder() {
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
         <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 2 — UPLOAD YOUR SKIP-TRACED CSV EXPORTS</p>
         <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Upload 1, 2, or 3 PropStream result CSVs. Owner names + phones are read automatically. Duplicates removed.
+          Upload your PropStream skip trace export. Owner names + phone numbers are read automatically.
         </p>
 
         <div onDrop={handleDrop} onDragOver={e => e.preventDefault()} onClick={() => fileRef.current?.click()}
           className="rounded-xl flex flex-col items-center justify-center py-10 cursor-pointer transition-all hover:opacity-80"
           style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}>
           <Upload className="w-10 h-10 mb-3" style={{ color: GOLD }} />
-          <p className="font-bold mb-1" style={{ color: '#fff' }}>
-            {fileNames.length === 0 ? 'Drop PropStream CSV(s) here' : 'Drop another CSV to add more'}
-          </p>
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse · multiple files OK</p>
-          <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" multiple className="hidden" onChange={e => handleFiles(e.target.files)} />
+          <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop your PropStream CSV here</p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
+          <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => handleFiles(e.target.files)} />
         </div>
 
         {fileNames.length > 0 && (
@@ -255,13 +253,13 @@ function BulkBuilder() {
             ))}
             <div className="flex items-center justify-between pt-2">
               <div>
-                <span className="text-xs font-bold" style={{ color: GOLD }}>{rows.length} total records (deduplicated)</span>
+                <span className="text-xs font-bold" style={{ color: GOLD }}>{rows.length} records</span>
                 <span className="text-xs ml-2" style={{ color: phoneCount > 0 ? '#22C55E' : 'rgba(255,255,255,0.35)' }}>
                   · {phoneCount} with cell numbers
                 </span>
               </div>
               <button onClick={reset} className="text-xs hover:opacity-70 flex items-center gap-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                <X className="w-3 h-3" /> Clear all
+                <X className="w-3 h-3" /> Clear
               </button>
             </div>
           </div>
@@ -330,7 +328,7 @@ export default function AdminSkipTrace() {
         'Log into PropStream and open your saved property list',
         'Select all records → click Skip Trace → PropStream finds cell numbers',
         'Export the skip-traced results as a CSV file',
-        'Return here and upload the CSV (or all 3 CSVs at once)',
+        'Return here and upload the CSV',
         'Click "Import Owners to Database" — done, ready for SMS outreach',
       ];
 
@@ -349,7 +347,7 @@ export default function AdminSkipTrace() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           className="flex rounded-xl p-1 mb-6 w-fit"
           style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}>
-          {[{ id: 'bulk', label: 'Bulk Import (3 CSVs)' }, { id: 'single', label: 'Single Address' }].map(opt => (
+          {[{ id: 'bulk', label: 'Import CSV' }, { id: 'single', label: 'Single Address' }].map(opt => (
             <button key={opt.id} onClick={() => setMode(opt.id)}
               className="px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all"
               style={{
