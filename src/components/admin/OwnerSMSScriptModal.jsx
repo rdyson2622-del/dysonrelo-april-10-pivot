@@ -27,9 +27,15 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
   useEffect(() => {
     base44.entities.MessageTemplate.list('-updated_date', 200)
       .then(all => {
+        console.log('MessageTemplate sample record:', JSON.stringify(all[0]));
         const mapped = TEMPLATE_NAMES.map(t => {
-          const match = all.find(r => r.name && r.name.trim() === t.name.trim());
-          return { ...t, content: match?.content || null };
+          // Try both flat and nested data structures
+          const match = all.find(r => {
+            const name = r.name || r.data?.name;
+            return name && name.trim() === t.name.trim();
+          });
+          const content = match?.content || match?.data?.content || null;
+          return { ...t, content };
         });
         setTemplates(mapped);
         setLoading(false);
