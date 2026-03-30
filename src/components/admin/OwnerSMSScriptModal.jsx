@@ -24,15 +24,13 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.MessageTemplate.filter({ communication_type: 'sms', category: 'initial_outreach' })
-      .then(allSms => {
-        // Also fetch trust_building and follow_up for Day 3, 7, 14
-        return base44.entities.MessageTemplate.filter({ communication_type: 'sms' });
-      })
+    base44.entities.MessageTemplate.list('-updated_date', 100)
       .then(allSms => {
         const mapped = TEMPLATE_NAMES.map(t => {
-          const found = allSms.find(r => r.name === t.name);
-          return { ...t, content: found?.content || '(Template not found)' };
+          // Find by name, pick the most recently updated if duplicates exist
+          const matches = allSms.filter(r => r.name === t.name);
+          const found = matches[0]; // list is sorted by -updated_date so first = newest
+          return { ...t, content: found?.content || null };
         });
         setTemplates(mapped);
         setLoading(false);
@@ -101,7 +99,7 @@ export default function OwnerSMSScriptModal({ owner, onClose }) {
               </div>
 
               <div className="rounded-2xl bg-slate-900 text-white text-sm leading-relaxed p-5 whitespace-pre-wrap font-mono">
-                {fillTemplate(script.content, owner)}
+                {script.content ? fillTemplate(script.content, owner) : <span className="text-slate-400 italic">No template found with name "{script.name}" — go to Admin Templates to create it.</span>}
               </div>
 
               <div className="flex gap-4 mt-3 text-xs text-slate-400">
