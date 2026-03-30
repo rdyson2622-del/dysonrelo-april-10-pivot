@@ -84,24 +84,19 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
       const uploadRes = await base44.integrations.Core.UploadFile({ file });
       const fileUrl = uploadRes.file_url;
 
-      // Extract data — use a broad schema so AI returns all fields as strings first
+      // Extract data — use a permissive array schema to get all rows with all columns as-is
       const extractRes = await base44.integrations.Core.ExtractDataFromUploadedFile({
         file_url: fileUrl,
         json_schema: {
           type: 'object',
-          description: 'Extract ALL rows from the CSV. Preserve original column names as keys.',
+          description: 'Extract all rows from the CSV. Return an array of objects with all available columns preserved.',
           properties: {
-            owner_name: { type: 'string', description: 'Owner or seller name — may be labeled: owner name, seller name, taxpayer name, contact name' },
-            phone: { type: 'string', description: 'Phone number — may be labeled: phone, mobile, cell, owner phone, seller phone' },
-            email: { type: 'string', description: 'Email address' },
-            property_address: { type: 'string', description: 'Street address — may be labeled: address, list address, site address, street address' },
-            property_city: { type: 'string', description: 'City — may be labeled: city, list city, site city' },
-            property_state: { type: 'string', description: 'State — may be labeled: state, st, list state' },
-            listing_price: { type: 'number', description: 'List price — may be labeled: price, list price, listing price, asking price' },
-            moving_to: { type: 'string', description: 'Destination/relocation city if present' },
-            notes: { type: 'string', description: 'Any remarks or notes' },
-          },
-          required: ['owner_name', 'property_address'],
+            rows: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'Array of all CSV rows — preserve original column names as keys'
+            }
+          }
         },
       });
 
@@ -109,9 +104,10 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
         throw new Error(extractRes.details || 'Failed to extract CSV data');
       }
 
-      let records = Array.isArray(extractRes.output) ? extractRes.output : [extractRes.output];
+      // Handle both array response and rows property
+      let records = extractRes.output.rows || (Array.isArray(extractRes.output) ? extractRes.output : [extractRes.output]);
 
-      // Apply column mapping as a safety net on top of AI extraction
+      // Apply column mapping to normalize headers
       records = records.map(mapRow);
 
       // Filter out rows missing required fields
