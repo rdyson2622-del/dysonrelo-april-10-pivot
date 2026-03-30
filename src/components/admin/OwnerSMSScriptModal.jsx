@@ -11,6 +11,7 @@ const TEMPLATE_NAMES = [
 ];
 
 function fillTemplate(content, owner) {
+  if (!content) return '';
   const firstName = owner?.owner_name ? owner.owner_name.split(' ')[0] : 'there';
   return content
     .replace(/\{\{owner_name\}\}/g, firstName)
