@@ -27,6 +27,8 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
   const [error, setError] = useState(null);
   const [scriptOwner, setScriptOwner] = useState(null);
 
+  const getDataEnv = () => localStorage.getItem('base44_data_env') || 'prod';
+
   const sendSMS = async (owner) => {
     if (!owner.phone) { setError(`No phone number for ${owner.owner_name}`); return; }
     setSending(owner.id);
@@ -36,6 +38,7 @@ export default function OwnersList({ owners, onEdit, onDelete, onStatusChange, o
         listing_owner_id: owner.id,
         phone: owner.phone,
         owner_name: owner.owner_name,
+        data_env: getDataEnv(),
       });
       setSent(prev => ({ ...prev, [owner.id]: true }));
       onStatusChange?.(owner.id, 'contacted');

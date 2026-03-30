@@ -8,7 +8,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { listing_owner_id, phone, owner_name } = await req.json();
+    const { listing_owner_id, phone, owner_name, data_env } = await req.json();
+    const entityOpts = data_env === 'dev' ? { data_env: 'dev' } : {};
 
     if (!phone || !listing_owner_id) {
       return Response.json({ error: 'Missing phone or listing_owner_id' }, { status: 400 });
@@ -21,7 +22,7 @@ Deno.serve(async (req) => {
     // Fetch the Day 1 SMS template from MessageTemplate
     const templates = await base44.asServiceRole.entities.MessageTemplate.filter({ 
       name: 'Owner Outreach SMS #1 - Day 1' 
-    });
+    }, undefined, undefined, entityOpts);
     
     if (!templates.length) {
       return Response.json({ error: 'SMS template not found' }, { status: 404 });
@@ -52,21 +53,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'Twilio error', details: result }, { status: 500 });
     }
 
-    // Fetch ListingOwner via service role so it works in both prod and test DB
-    const owner = await base44.asServiceRole.entities.ListingOwner.get(listing_owner_id);
+    // Fetch ListingOwner via service role (respects data_env for test/prod)
+    const owner = await base44.asServiceRole.entities.ListingOwner.get(listing_owner_id, entityOpts);
     if (!owner) {
       return Response.json({ error: 'Owner not found' }, { status: 404 });
     }
 
     // Auto-create or update the campaign record
-    const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
+    const existingCampaigns = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id }, undefined, undefined, entityOpts);
 
     if (existingCampaigns.length > 0) {
       await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existingCampaigns[0].id, {
         sms_sent_date: new Date().toISOString(),
         workflow_stage: 'outreach',
         notes: (existingCampaigns[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS sent.`,
-      });
+      }, entityOpts);
     } else {
       await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
         listing_owner_id,
@@ -76,14 +77,14 @@ Deno.serve(async (req) => {
         workflow_stage: 'outreach',
         sms_sent_date: new Date().toISOString(),
         notes: `[${new Date().toLocaleDateString()}] Campaign auto-created. Initial outreach SMS sent.`,
-      });
+      }, entityOpts);
     }
 
     // Update ListingOwner contact status via service role
     await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
       contact_status: 'contacted',
       last_contacted: new Date().toISOString().split('T')[0],
-    });
+    }, entityOpts);
 
     return Response.json({ success: true, message_sid: result.sid });
   } catch (error) {

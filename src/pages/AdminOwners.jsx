@@ -18,12 +18,15 @@ export default function AdminOwners() {
   const [sendAllResult, setSendAllResult] = useState(null);
   const queryClient = useQueryClient();
 
+  const getDataEnv = () => localStorage.getItem('base44_data_env') || 'prod';
+
   const sendAllSMS = async () => {
     const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted');
     if (!unsent.length) return;
     if (!confirm(`Send the first outreach SMS to ${unsent.length} owners who haven't been contacted yet?`)) return;
     setSendingAll(true);
     setSendAllResult(null);
+    const data_env = getDataEnv();
     let success = 0;
     for (const owner of unsent) {
       try {
@@ -31,6 +34,7 @@ export default function AdminOwners() {
           listing_owner_id: owner.id,
           phone: owner.phone,
           owner_name: owner.owner_name,
+          data_env,
         });
         success++;
       } catch {}
