@@ -7,28 +7,39 @@ import { Upload, AlertCircle, CheckCircle2 } from 'lucide-react';
 // Column name aliases — covers PropStream, Board of Realtors MLS, and generic formats
 const COLUMN_MAP = {
   owner_name: [
+    // Skip trace format (Owner 1 First + Last combined in mapRow below)
     'owner_name', 'owner name', 'seller name', 'seller', 'list owner', 'owner',
     'contact name', 'name', 'full name', 'taxpayer name', 'tax owner',
   ],
   phone: [
+    // Skip trace exports: Phone 1 is primary
+    'phone 1', 'phone1', 'phone_1',
     'phone', 'owner phone', 'seller phone', 'mobile', 'cell', 'phone number',
-    'contact phone', 'primary phone', 'phone 1', 'mobilephone', 'cellphone',
+    'contact phone', 'primary phone', 'mobilephone', 'cellphone',
   ],
   email: [
-    'email', 'owner email', 'seller email', 'email address', 'contact email',
-    'e-mail', 'primary email',
+    'email 1', 'email1', 'email_1',
+    'email', 'owner email', 'seller email', 'email address', 'contact email', 'e-mail',
   ],
   property_address: [
-    'property_address', 'property address', 'address', 'street address',
+    // Skip trace format uses "Address"
+    'address',
+    'property_address', 'property address', 'street address',
     'list address', 'listing address', 'full address', 'site address', 'prop address',
   ],
   property_city: [
-    'property_city', 'property city', 'city', 'list city', 'listing city', 'site city',
+    'city',
+    'property_city', 'property city', 'list city', 'listing city', 'site city',
   ],
   property_state: [
-    'property_state', 'property state', 'state', 'list state', 'listing state', 'site state', 'st',
+    'state',
+    'property_state', 'property state', 'list state', 'listing state', 'site state', 'st',
+  ],
+  zip: [
+    'zip', 'zip code', 'postal code',
   ],
   listing_price: [
+    'mls amount', 'est. value', 'last sale amount',
     'listing_price', 'listing price', 'list price', 'price', 'asking price',
     'sale price', 'sold price', 'current price', 'amount',
   ],
@@ -47,7 +58,6 @@ function normalizeKey(str) {
 // Map a raw CSV row (with whatever column names) to our standard schema
 function mapRow(rawRow) {
   const normalized = {};
-  // Build a lookup from normalized key → original value
   for (const [origKey, val] of Object.entries(rawRow)) {
     normalized[normalizeKey(origKey)] = val;
   }
@@ -61,6 +71,20 @@ function mapRow(rawRow) {
       }
     }
   }
+
+  // Handle split first/last name fields from skip trace exports
+  if (!mapped.owner_name) {
+    const first = normalized['owner 1 first name'] || normalized['owner1 first name'] || normalized['first name'] || '';
+    const last  = normalized['owner 1 last name']  || normalized['owner1 last name']  || normalized['last name']  || '';
+    const combined = [first, last].filter(Boolean).join(' ').trim();
+    if (combined) mapped.owner_name = combined;
+  }
+
+  // Append unit # to address if present
+  if (mapped.property_address && normalized['unit #'] && normalized['unit #'].trim()) {
+    mapped.property_address = mapped.property_address + ' #' + normalized['unit #'].trim();
+  }
+
   return mapped;
 }
 
