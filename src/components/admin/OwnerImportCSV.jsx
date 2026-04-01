@@ -244,12 +244,12 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={() => { setError(null); setResult(null); setDetectedFormat(null); onClose(); }}>
             {result ? 'Close' : 'Cancel'}
           </Button>
-          {!result && !error && (
-            <Button disabled={loading}>
-              {loading ? 'Processing...' : 'Select File'}
+          {error && (
+            <Button onClick={() => { setError(null); setResult(null); }}>
+              Try Again
             </Button>
           )}
         </DialogFooter>
