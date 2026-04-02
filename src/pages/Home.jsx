@@ -71,7 +71,7 @@ export default function Home() {
             </div>
             <h1 className="display-heading" style={{ marginBottom: '1.5rem', display: 'block', width: '100%', textAlign: 'center' }}>
               <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#D4AF37', fontSize: 'clamp(2rem, 5vw, 4.5rem)', letterSpacing: '0.28em', lineHeight: 1.15 }}>CONCIERGE</span>
-              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(1.8rem, 4.5vw, 4rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Relocation Management</span>
+              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(0.9rem, 2.25vw, 2rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Relocation Management</span>
             </h1>
             <p className="text-base leading-relaxed mb-2" style={{ color: '#fff', fontWeight: 400 }}>
               Meet Charlie — your AI Relocation Manager backed by The Dyson & Dyson Companies and 54+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home — we don't sell. We manage your entire relocation.
