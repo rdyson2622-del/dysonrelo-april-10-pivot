@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Calendar, Users, DollarSign, CheckCircle2, Megaphone } from 'lucide-react';
+import { ArrowLeft, Search, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { motion } from 'framer-motion';
-
-const STATUS_COLORS = {
-  planning: 'bg-slate-100 text-slate-800',
-  content_creation: 'bg-blue-100 text-blue-800',
-  scheduled: 'bg-amber-100 text-amber-800',
-  active: 'bg-green-100 text-green-800',
-  completed: 'bg-emerald-100 text-emerald-800',
-  paused: 'bg-red-100 text-red-800'
-};
+import CampaignCard from '@/components/admin/CampaignCard';
 
 export default function AdminOutreachCampaigns() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +17,23 @@ export default function AdminOutreachCampaigns() {
     queryFn: () => base44.entities.MarketingCampaign.list('-created_date', 100),
     initialData: []
   });
+
+  const { data: socialPosts = [] } = useQuery({
+    queryKey: ['social_posts'],
+    queryFn: () => base44.entities.SocialPost.list('-created_date', 500),
+    initialData: []
+  });
+
+  // Calculate opt-outs per campaign from social posts
+  const optOutCounts = useMemo(() => {
+    const counts = {};
+    for (const post of socialPosts) {
+      if (post.campaign_id && post.performance?.conversions !== undefined) {
+        counts[post.campaign_id] = (counts[post.campaign_id] || 0) + (post.performance.conversions || 0);
+      }
+    }
+    return counts;
+  }, [socialPosts]);
 
   const filteredCampaigns = campaigns.filter(c => {
     const matchSearch = c.campaign_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -94,69 +102,13 @@ export default function AdminOutreachCampaigns() {
           </div>
         ) : (
           <div className="grid gap-4">
-            {filteredCampaigns.map((campaign, idx) => (
-              <motion.div
+            {filteredCampaigns.map((campaign) => (
+              <CampaignCard
                 key={campaign.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                className="bg-white rounded-lg border border-slate-200 p-5 hover:shadow-md transition-all cursor-pointer"
+                campaign={campaign}
+                optOutCount={optOutCounts[campaign.id] || 0}
                 onClick={() => setSelectedCampaign(campaign)}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-start">
-                  {/* Campaign Name */}
-                  <div className="md:col-span-2">
-                    <p className="font-semibold text-slate-900 text-sm">{campaign.campaign_name}</p>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-1">{campaign.description}</p>
-                  </div>
-
-                  {/* Status Badge */}
-                  <div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[campaign.status]}`}>
-                      {campaign.status}
-                    </span>
-                  </div>
-
-                  {/* Dates */}
-                  <div className="text-sm">
-                    <div className="flex items-center gap-1 text-slate-600 mb-1">
-                      <Calendar className="w-3 h-3" />
-                      <span className="text-xs text-slate-500">Run:</span>
-                    </div>
-                    <p className="text-xs font-medium">
-                      {campaign.start_date ? new Date(campaign.start_date).toLocaleDateString() : 'TBD'} 
-                      {campaign.end_date && ` - ${new Date(campaign.end_date).toLocaleDateString()}`}
-                    </p>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="text-sm">
-                    <div className="flex items-center gap-1 text-slate-600 mb-1">
-                      <Users className="w-3 h-3" />
-                      <span className="text-xs text-slate-500">Platforms:</span>
-                    </div>
-                    <p className="text-xs font-medium">{campaign.platforms?.length || 0} platforms</p>
-                  </div>
-
-                  {/* Budget */}
-                  <div className="text-sm">
-                    <div className="flex items-center gap-1 text-slate-600 mb-1">
-                      <DollarSign className="w-3 h-3" />
-                      <span className="text-xs text-slate-500">Budget:</span>
-                    </div>
-                    <p className="text-xs font-medium">${campaign.budget?.toLocaleString() || '0'}</p>
-                  </div>
-
-                  {/* Progress */}
-                  <div className="text-sm">
-                    <div className="flex items-center gap-1 text-slate-600 mb-1">
-                      <CheckCircle2 className="w-3 h-3" />
-                      <span className="text-xs text-slate-500">Posts:</span>
-                    </div>
-                    <p className="text-xs font-medium">{campaign.posts_created || 0}/{campaign.total_posts_planned || 0}</p>
-                  </div>
-                </div>
-              </motion.div>
+              />
             ))}
           </div>
         )}
