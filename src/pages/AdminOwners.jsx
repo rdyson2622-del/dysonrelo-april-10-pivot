@@ -220,10 +220,17 @@ export default function AdminOwners() {
   const [activeCampaigns, setActiveCampaigns] = useState({}); // { city: { estimatedSent, total, failed, remainingMinutes } }
   const queryClient = useQueryClient();
 
-  // Auto-clear batch result after 5 seconds
+  // Auto-clear batch result and status after 5 seconds
   React.useEffect(() => {
     if (batchResult) {
-      const timer = setTimeout(() => setBatchResult(null), 5000);
+      const timer = setTimeout(() => {
+        setBatchResult(null);
+        setBatchStatuses(prev => {
+          const next = { ...prev };
+          delete next[batchResult.city];
+          return next;
+        });
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [batchResult]);
