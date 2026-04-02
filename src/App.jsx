@@ -45,6 +45,7 @@ import AdminSocialLaunch from './pages/AdminSocialLaunch';
 import AdminOutreachPipeline from './pages/AdminOutreachPipeline';
 import AdminBatchSMSLog from './pages/AdminBatchSMSLog';
 import AdminOptIns from './pages/AdminOptIns';
+import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -106,6 +107,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/outreach-campaigns" element={<AdminOutreachCampaigns />} />
         <Route path="/admin/outreach-pipeline" element={<AdminOutreachPipeline />} />
         <Route path="/admin/batch-sms-log" element={<AdminBatchSMSLog />} />
+        <Route path="/admin/active-campaigns" element={<AdminActiveCampaigns />} />
         <Route path="/admin/opt-ins" element={<AdminOptIns />} />
         <Route path="/admin/presentation-library" element={<AdminPresentationLibrary />} />
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />

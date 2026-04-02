@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,7 @@ function fmt(price) {
   return `$${n}`;
 }
 
-function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelected, onStatusChange, onSendBatch, sendingBatch, batchStatus }) {
+function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelected, onStatusChange, onSendBatch, sendingBatch, batchStatus, activeCampaign }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(new Set());
@@ -54,7 +54,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
         className="flex items-center justify-between px-4 py-3 bg-slate-50 cursor-pointer hover:bg-slate-100 transition"
         onClick={() => setOpen(v => !v)}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-1">
           {open ? <ChevronDown className="w-4 h-4 text-slate-500" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
           <MapPin className="w-4 h-4 text-slate-400" />
           <span className="font-semibold text-slate-800">{city || 'Unknown City'}</span>
@@ -67,6 +67,11 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
             }`}>
               {batchStatus === 'in_progress' ? '⏳ In Progress' :
                batchStatus === 'completed' ? '✓ Completed' : '⏳ Pending'}
+            </span>
+          )}
+          {activeCampaign && (
+            <span className="ml-auto text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+              {activeCampaign.progress}% • {activeCampaign.estimatedSent}/{activeCampaign.total} sent
             </span>
           )}
         </div>
@@ -159,18 +164,24 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
                     <td className="px-4 py-2.5 text-slate-500 max-w-[160px] truncate">{owner.email || '—'}</td>
                     <td className="px-4 py-2.5 text-slate-700 whitespace-nowrap font-medium">{fmt(owner.listing_price)}</td>
                     <td className="px-4 py-2.5">
-                      <select
-                        value={owner.contact_status || 'not_contacted'}
-                        onChange={e => onStatusChange(owner.id, e.target.value)}
-                        className={`text-xs rounded-full px-2 py-1 font-medium border-0 cursor-pointer ${STATUS_COLORS[owner.contact_status] || STATUS_COLORS.not_contacted}`}
-                      >
-                        <option value="not_contacted">Not Contacted</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="in_conversation">In Conversation</option>
-                        <option value="interested">Interested</option>
-                        <option value="not_interested">Not Interested</option>
-                        <option value="converted">Converted</option>
-                      </select>
+                      <div className="flex items-center gap-2">
+                        {owner.contact_status === 'not_contacted' && activeCampaign ? (
+                          <span className="text-xs rounded-full px-2 py-1 font-medium bg-green-100 text-green-700">⏳ Queued</span>
+                        ) : (
+                          <select
+                            value={owner.contact_status || 'not_contacted'}
+                            onChange={e => onStatusChange(owner.id, e.target.value)}
+                            className={`text-xs rounded-full px-2 py-1 font-medium border-0 cursor-pointer ${STATUS_COLORS[owner.contact_status] || STATUS_COLORS.not_contacted}`}
+                          >
+                            <option value="not_contacted">Not Contacted</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="in_conversation">In Conversation</option>
+                            <option value="interested">Interested</option>
+                            <option value="not_interested">Not Interested</option>
+                            <option value="converted">Converted</option>
+                          </select>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
@@ -205,12 +216,44 @@ export default function AdminOwners() {
   const [sendingBatchCity, setSendingBatchCity] = useState(null);
   const [batchResult, setBatchResult] = useState(null);
   const [batchStatuses, setBatchStatuses] = useState({}); // { city: 'pending' | 'in_progress' | 'completed' }
+  const [activeCampaigns, setActiveCampaigns] = useState({}); // { city: { estimatedSent, total, failed, remainingMinutes } }
   const queryClient = useQueryClient();
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
     queryFn: () => base44.entities.ListingOwner.list('-created_date', 2000),
   });
+
+  const { data: batchLogs = [] } = useQuery({
+    queryKey: ['batchSmsLogs'],
+    queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 100),
+    refetchInterval: 5000, // Auto-refresh every 5 seconds for live progress
+  });
+
+  // Update active campaigns status
+  React.useEffect(() => {
+    const now = new Date();
+    const active = {};
+    batchLogs.forEach(log => {
+      const sentAt = new Date(log.sent_at);
+      const elapsedMs = now - sentAt;
+      const elapsedMinutes = Math.floor(elapsedMs / 60000);
+      const totalMinutes = log.sent_count * 3;
+      const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
+      
+      if (remainingMinutes > 0) {
+        const estimatedSent = Math.min(log.sent_count, Math.floor(elapsedMinutes / 3));
+        active[log.city] = {
+          estimatedSent,
+          total: log.sent_count,
+          failed: log.failed_count || 0,
+          remainingMinutes,
+          progress: Math.min(100, Math.round((estimatedSent / log.sent_count) * 100)),
+        };
+      }
+    });
+    setActiveCampaigns(active);
+  }, [batchLogs]);
 
   // Group by city
   const grouped = useMemo(() => {
@@ -331,9 +374,37 @@ export default function AdminOwners() {
   };
 
   const totalUnsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted').length;
+  const totalActive = Object.keys(activeCampaigns).length;
+  const totalQueued = Object.values(activeCampaigns).reduce((sum, c) => sum + c.total, 0);
+  const totalSent = Object.values(activeCampaigns).reduce((sum, c) => sum + c.estimatedSent, 0);
 
   return (
     <div className="p-6 min-h-screen bg-white">
+      {/* Active Campaigns Stats Bar */}
+      {totalActive > 0 && (
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-slate-50 rounded-xl border border-blue-200 p-4 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div>
+              <p className="text-xs text-slate-600 font-medium">ACTIVE CAMPAIGNS</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">{totalSent} / {totalQueued} sent</p>
+            </div>
+            <div className="flex gap-4">
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Cities</p>
+                <p className="text-lg font-bold text-blue-600">{totalActive}</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Failed</p>
+                <p className="text-lg font-bold text-red-600">{Object.values(activeCampaigns).reduce((sum, c) => sum + c.failed, 0)}</p>
+              </div>
+            </div>
+          </div>
+          <a href="/admin/active-campaigns" className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+            View Live Dashboard →
+          </a>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
         <div>
@@ -396,6 +467,7 @@ export default function AdminOwners() {
           onSendBatch={handleSendBatch}
           sendingBatch={sendingBatchCity === city}
           batchStatus={batchStatuses[city] || null}
+          activeCampaign={activeCampaigns[city]}
         />
       ))}
 
