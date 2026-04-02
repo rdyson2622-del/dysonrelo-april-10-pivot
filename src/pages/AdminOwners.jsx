@@ -334,18 +334,34 @@ export default function AdminOwners() {
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
 
+  const [sendingBatchCities, setSendingBatchCities] = useState(new Set());
+  const [confirmDialog, setConfirmDialog] = useState(null);
+
   const handleSendBatch = async (city, cityOwners) => {
     const unsent = cityOwners.filter(o => o.phone);
     if (!unsent.length) return;
+
+    // Show confirmation dialog
     const estMinutes = unsent.length * 3;
     const estHours = (estMinutes / 60).toFixed(1);
-    if (!confirm(`Send outreach SMS to ALL ${unsent.length} owners in ${city}?\n\nMessages will be spaced 3 minutes apart and scheduled automatically (~${estHours} hrs total). You only need to click once.`)) return;
+    setConfirmDialog({
+      city,
+      count: unsent.length,
+      estHours,
+      owners: unsent,
+    });
+  };
 
-    setSendingBatchCity(city);
+  const confirmSendBatch = async (city, owners) => {
+    setConfirmDialog(null);
+    if (sendingBatchCities.has(city)) return; // Already sending
+    const unsent = owners.filter(o => o.phone);
+
+    setSendingBatchCities(prev => new Set(prev).add(city));
     setBatchResult(null);
     setBatchStatuses(prev => ({ ...prev, [city]: 'in_progress' }));
+    
     try {
-      // Step 1: Prepare batch
       const prepRes = await base44.functions.invoke('prepareBatchOutreachSMS', {
         city,
         owners: unsent.map(o => ({
@@ -359,11 +375,9 @@ export default function AdminOwners() {
       if (!prepRes.data.success) {
         setBatchResult({ city, error: prepRes.data.error });
         setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
-        setSendingBatchCity(null);
         return;
       }
 
-      // Step 2: Send prepared batch
       const sendRes = await base44.functions.invoke('sendPreparedBatchSMS', {
         city,
         prepared_batch: prepRes.data.prepared_batch,
@@ -372,11 +386,15 @@ export default function AdminOwners() {
       setBatchResult({ city, ...sendRes.data });
       setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
       queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+      
+      // Disable button for 10 seconds
+      setTimeout(() => {
+        setSendingBatchCities(prev => { const next = new Set(prev); next.delete(city); return next; });
+      }, 10000);
     } catch (e) {
       setBatchResult({ city, error: e.message });
       setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
-    } finally {
-      setSendingBatchCity(null);
+      setSendingBatchCities(prev => { const next = new Set(prev); next.delete(city); return next; });
     }
   };
 
@@ -499,7 +517,7 @@ export default function AdminOwners() {
           onDeleteSelected={handleDeleteSelected}
           onStatusChange={handleStatusChange}
           onSendBatch={handleSendBatch}
-          sendingBatch={sendingBatchCity === city}
+          sendingBatch={sendingBatchCities.has(city)}
           batchStatus={batchStatuses[city] || null}
           activeCampaign={activeCampaigns[city]}
         />
@@ -530,6 +548,26 @@ export default function AdminOwners() {
             <div className="flex gap-3 justify-end">
               <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
               <Button variant="destructive" onClick={() => handleDelete(deleteConfirm)}>Delete</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full mx-4">
+            <h2 className="font-semibold text-lg mb-1">Send {confirmDialog.count} Messages?</h2>
+            <p className="text-slate-600 text-sm mb-4">
+              {confirmDialog.city} · ~{confirmDialog.estHours} hours to deliver (3-min spacing)
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-xs text-blue-800">
+              <strong>⚠️ Important:</strong> You can only click once. The button will be disabled for 10 seconds to prevent duplicate sends.
+            </div>
+            <div className="flex gap-3 justify-end">
+              <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancel</Button>
+              <Button onClick={() => confirmSendBatch(confirmDialog.city, confirmDialog.owners)} className="bg-blue-600 hover:bg-blue-700">
+                Send All
+              </Button>
             </div>
           </div>
         </div>
