@@ -326,7 +326,7 @@ export default function AdminOwners() {
   };
 
   const handleSendBatch = async (city, cityOwners) => {
-    const unsent = cityOwners.filter(o => o.phone && o.contact_status === 'not_contacted');
+    const unsent = cityOwners.filter(o => o.phone);
     if (!unsent.length) return;
     const estMinutes = unsent.length * 3;
     const estHours = (estMinutes / 60).toFixed(1);
