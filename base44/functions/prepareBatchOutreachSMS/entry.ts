@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     // Fetch template
     const templates = await base44.asServiceRole.entities.MessageTemplate.filter({
-      name: 'Owner Outreach SMS #1 - Initial',
+      name: 'Owner Outreach SMS #1 - Day 1',
     });
 
     if (!templates.length) {
