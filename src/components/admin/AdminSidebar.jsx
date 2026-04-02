@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap } from 'lucide-react';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
   { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
   { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
+  { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: Zap },
   { label: 'Outreach Campaigns (Legacy)', path: '/admin/outreach-campaigns', icon: MessageCircle },
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
   { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },

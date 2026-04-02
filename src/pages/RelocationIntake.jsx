@@ -108,6 +108,7 @@ export default function RelocationIntake() {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
+      // Create RelocationClient record
       await base44.entities.RelocationClient.create({
         full_name: form.full_name,
         email: form.email,
@@ -120,6 +121,23 @@ export default function RelocationIntake() {
         priorities: form.priorities.map(p => p.toLowerCase().replace(' ', '_')),
         notes: form.notes,
         status: 'in_consultation',
+      });
+
+      // Capture OptIn for real-time tracking
+      await base44.entities.OptIn.create({
+        email: form.email,
+        phone: form.phone || undefined,
+        full_name: form.full_name,
+        source: 'relocation_intake',
+        opted_in_at: new Date().toISOString(),
+        initial_data: {
+          destination_city: form.destination_city,
+          move_date: form.move_date,
+          budget: form.budget,
+          priorities: form.priorities,
+          family_size: form.family_size,
+        },
+        status: 'new',
       });
 
       base44.integrations.Core.SendEmail({

@@ -1,0 +1,57 @@
+{
+  "name": "OptIn",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Email address of the new prospect"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number if provided"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Name of the prospect"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "relocation_intake",
+        "chat_initiation",
+        "sms_reply",
+        "manual"
+      ],
+      "description": "How they engaged with us"
+    },
+    "opted_in_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the opt-in occurred"
+    },
+    "initial_data": {
+      "type": "object",
+      "description": "Captured data from their first interaction"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "converted",
+        "unresponsive"
+      ],
+      "default": "new",
+      "description": "Lead status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes"
+    }
+  },
+  "required": [
+    "source",
+    "opted_in_at"
+  ]
+}
