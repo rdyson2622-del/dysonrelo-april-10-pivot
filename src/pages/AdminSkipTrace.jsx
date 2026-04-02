@@ -156,12 +156,22 @@ function extractOwnerName(row, headers) {
   ]);
   if (singleCol !== -1 && row[singleCol] && row[singleCol].trim()) return row[singleCol].trim();
 
-  // Try First + Last (PropStream skip trace format)
+  // PropStream skip trace export: "Owner 1 First Name" / "Owner 1 Last Name"
+  const o1FirstIdx = lower.indexOf('owner 1 first name');
+  const o1LastIdx  = lower.indexOf('owner 1 last name');
+  if (o1FirstIdx !== -1 || o1LastIdx !== -1) {
+    const first = o1FirstIdx !== -1 ? (row[o1FirstIdx] || '').trim() : '';
+    const last  = o1LastIdx  !== -1 ? (row[o1LastIdx]  || '').trim() : '';
+    const combined = [first, last].filter(Boolean).join(' ');
+    if (combined) return combined;
+  }
+
+  // Generic first/last fallback
   const firstIdx = lower.indexOf('first name');
-  const lastIdx = lower.indexOf('last name');
+  const lastIdx  = lower.indexOf('last name');
   if (firstIdx !== -1 || lastIdx !== -1) {
     const first = firstIdx !== -1 ? (row[firstIdx] || '').trim() : '';
-    const last = lastIdx !== -1 ? (row[lastIdx] || '').trim() : '';
+    const last  = lastIdx  !== -1 ? (row[lastIdx]  || '').trim() : '';
     const combined = [first, last].filter(Boolean).join(' ');
     if (combined) return combined;
   }
@@ -419,31 +429,31 @@ function BulkBuilder() {
         <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
           <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>STEP 3 — WHAT WOULD YOU LIKE TO DO?</p>
 
-          {/* Patch existing — PRIMARY action shown first */}
+          {/* Import as New — PRIMARY action */}
           <div className="rounded-xl p-4 mb-3" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.35)' }}>
-            <p className="text-xs font-bold mb-1" style={{ color: GOLD }}>✦ Already imported these addresses? Patch them.</p>
+            <p className="text-xs font-bold mb-1" style={{ color: GOLD }}>✦ New addresses? Import them as fresh records.</p>
             <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              Matches by street address and fills in any missing names + cell numbers on your existing records. Won't create duplicates.
+              Adds all {rows.length} owners as new Listing Owner records, ready for SMS outreach.
             </p>
-            <button onClick={patchExistingOwners} disabled={importing || patching}
+            <button onClick={importToListingOwners} disabled={importing || patching}
               className="w-full py-3 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40"
               style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000' }}>
-              {patching
-                ? <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Patching {rows.length} records...</>
-                : <>✦ Patch Existing Records — Fill Missing Names + Phones ({rows.length} from CSV)</>
+              {importing
+                ? <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Importing {rows.length} records...</>
+                : <><Users className="w-4 h-4" /> Import {rows.length} Owners to Database</>
               }
             </button>
           </div>
 
-          {/* New import — secondary */}
+          {/* Patch existing — secondary */}
           <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-bold mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Or: Fresh import (adds as new records)</p>
-            <button onClick={importToListingOwners} disabled={importing || patching}
+            <p className="text-xs font-bold mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Already imported these addresses? Fill in missing names + phones instead.</p>
+            <button onClick={patchExistingOwners} disabled={importing || patching}
               className="w-full py-2.5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 mt-2"
               style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.6)' }}>
-              {importing
-                ? <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Importing...</>
-                : <><Users className="w-4 h-4" /> Import {rows.length} Owners as New Records</>
+              {patching
+                ? <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Patching...</>
+                : <>✦ Patch Existing Records ({rows.length} from CSV)</>
               }
             </button>
           </div>
