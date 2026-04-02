@@ -25,9 +25,10 @@ function fmt(price) {
   return `$${n}`;
 }
 
-function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteAll, onStatusChange, onSendBatch, sendingBatch }) {
+function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelected, onStatusChange, onSendBatch, sendingBatch }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState(new Set());
 
   const filtered = owners.filter(o =>
     !search ||
@@ -37,8 +38,14 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
   );
 
   const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted').length;
-  const isUnknownName = (name) => !name || name.trim() === '' || /^unknown/i.test(name.trim());
-  const unknownCount = owners.filter(o => isUnknownName(o.owner_name)).length;
+
+  const toggleSelect = (id) => setSelected(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+  const allChecked = filtered.length > 0 && filtered.every(o => selected.has(o.id));
+  const toggleAll = () => setSelected(allChecked ? new Set() : new Set(filtered.map(o => o.id)));
 
   return (
     <div className="mb-4 border border-slate-200 rounded-xl overflow-hidden">
@@ -54,6 +61,16 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
           <span className="text-xs text-slate-500 ml-1">({owners.length} owners{unsent > 0 ? `, ${unsent} unsent` : ''})</span>
         </div>
         <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+          {selected.size > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 border-red-400 text-red-700 hover:bg-red-50 text-xs"
+              onClick={(e) => { e.stopPropagation(); onDeleteSelected(Array.from(selected), () => setSelected(new Set())); }}
+            >
+              <Trash2 className="w-3 h-3" /> Delete Selected ({selected.size})
+            </Button>
+          )}
           <Button
             size="sm"
             variant="outline"
@@ -100,6 +117,9 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wide">
+                  <th className="px-4 py-2 w-8">
+                    <input type="checkbox" checked={allChecked} onChange={toggleAll} className="cursor-pointer" />
+                  </th>
                   <th className="text-left px-4 py-2 font-medium">Owner Name</th>
                   <th className="text-left px-4 py-2 font-medium">Address</th>
                   <th className="text-left px-4 py-2 font-medium">Phone</th>
@@ -111,7 +131,10 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
               </thead>
               <tbody>
                 {filtered.map((owner, i) => (
-                  <tr key={owner.id} className={`border-b border-slate-100 hover:bg-slate-50 transition ${i % 2 === 0 ? '' : 'bg-slate-50/40'}`}>
+                  <tr key={owner.id} className={`border-b border-slate-100 hover:bg-slate-50 transition ${selected.has(owner.id) ? 'bg-red-50/40' : i % 2 === 0 ? '' : 'bg-slate-50/40'}`}>
+                    <td className="px-4 py-2.5 w-8">
+                      <input type="checkbox" checked={selected.has(owner.id)} onChange={() => toggleSelect(owner.id)} className="cursor-pointer" />
+                    </td>
                     <td className="px-4 py-2.5 font-medium text-slate-900 max-w-[160px] truncate">{owner.owner_name || '—'}</td>
                     <td className="px-4 py-2.5 text-slate-600 max-w-[200px] truncate">{owner.property_address || '—'}</td>
                     <td className="px-4 py-2.5 text-slate-600 whitespace-nowrap">{owner.phone || <span className="text-slate-300">no phone</span>}</td>
@@ -144,7 +167,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400 text-sm">No results</td></tr>
+                  <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400 text-sm">No results</td></tr>
                 )}
               </tbody>
             </table>
@@ -199,6 +222,17 @@ export default function AdminOwners() {
       catch (e) { await sleep(500); }
     }
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+  };
+
+  const handleDeleteSelected = async (ids, onDone) => {
+    if (!confirm(`Delete ${ids.length} selected record(s)? This cannot be undone.`)) return;
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    for (const id of ids) {
+      try { await base44.entities.ListingOwner.delete(id); await sleep(300); }
+      catch (e) { await sleep(500); }
+    }
+    queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+    onDone?.();
   };
 
   const handleDeleteUnknowns = async (city, cityOwners) => {
@@ -333,7 +367,7 @@ export default function AdminOwners() {
           onEdit={(owner) => { setEditingOwner(owner); setShowForm(true); }}
           onDelete={(id) => setDeleteConfirm(id)}
           onDeleteAll={handleDeleteAll}
-          onDeleteUnknowns={handleDeleteUnknowns}
+          onDeleteSelected={handleDeleteSelected}
           onStatusChange={handleStatusChange}
           onSendBatch={handleSendBatch}
           sendingBatch={sendingBatchCity === city}
