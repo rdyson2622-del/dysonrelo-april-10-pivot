@@ -140,14 +140,14 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Active Campaigns Widget */}
-      {activeCampaigns.length > 0 && (
-        <div className="mx-3 mb-4 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-          <Link to="/admin/active-campaigns" className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Live Campaigns</span>
-            <ArrowRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
-          </Link>
-          <div className="space-y-2">
-            {activeCampaigns.slice(0, 3).map(camp => (
+      <div className="mx-3 mb-4 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+        <Link to="/admin/active-campaigns" className="flex items-center justify-between mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Live Campaigns</span>
+          <ArrowRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
+        </Link>
+        <div className="space-y-2">
+          {activeCampaigns.length > 0 ? (
+            activeCampaigns.slice(0, 3).map(camp => (
               <div key={camp.city} className="text-xs">
                 <div className="flex items-center justify-between mb-1">
                   <span style={{ color: '#ccc' }}>{camp.city}</span>
@@ -163,10 +163,12 @@ export default function AdminSidebar() {
                   {camp.estimatedSent}/{camp.total} sent
                 </div>
               </div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No active campaigns</p>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Preview & Back */}
       <div className="p-3 space-y-1 pb-20" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
