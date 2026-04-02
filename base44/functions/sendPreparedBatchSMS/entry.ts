@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
 
         // Success - update database
         try {
-          const existing = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id }, undefined, undefined, 'dev');
+          const existing = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
           if (existing.length > 0) {
             await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existing[0].id, {
               sms_sent_date: new Date().toISOString(),
