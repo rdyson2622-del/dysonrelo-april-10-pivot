@@ -69,35 +69,23 @@ Deno.serve(async (req) => {
       formDataNoSchedule.append('From', fromNumber);
       formDataNoSchedule.append('Body', messageBody);
 
-      // Try scheduled send first, fallback to immediate
-      let response;
-      let usedScheduled = false;
-
+      // Schedule all messages with proper timing (no immediate fallback)
       const messagingSid = Deno.env.get('TWILIO_MESSAGING_SERVICE_SID');
-      if (messagingSid && i > 0) {
-        formData.set('MessagingServiceSid', messagingSid);
-        response = await fetch(twilioUrl, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-        });
-        usedScheduled = response.ok;
+      if (!messagingSid) {
+        return Response.json({ 
+          error: 'TWILIO_MESSAGING_SERVICE_SID not configured. Cannot schedule messages without it.' 
+        }, { status: 400 });
       }
 
-      if (!usedScheduled) {
-        // No scheduling SID or scheduling failed — send immediately
-        response = await fetch(twilioUrl, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formDataNoSchedule.toString(),
-        });
-      }
+      formData.set('MessagingServiceSid', messagingSid);
+      const response = await fetch(twilioUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+      });
 
       const result = await response.json();
 
