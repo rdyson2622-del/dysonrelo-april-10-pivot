@@ -45,6 +45,12 @@ export default function AdminOutreachPipeline() {
     refetchInterval: 10000
   });
 
+  const { data: batchSmsLogs = [] } = useQuery({
+    queryKey: ['batch_sms_logs'],
+    queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 500),
+    initialData: []
+  });
+
   // Filter by time range and campaign
   const filteredOptIns = useMemo(() => {
     const now = new Date();
@@ -106,6 +112,25 @@ export default function AdminOutreachPipeline() {
   const converted = filteredOptIns.filter(o => o.status === 'converted').length;
   const conversionRate = totalOptIns > 0 ? ((converted / totalOptIns) * 100).toFixed(1) : 0;
   const totalOptOuts = filteredOptOuts.length;
+
+  // Calculate total sends for selected campaigns
+  const totalSends = useMemo(() => {
+    if (selectedCampaigns.length === 0) {
+      return batchSmsLogs.reduce((sum, log) => sum + (log.sent_count || 0), 0);
+    }
+    return batchSmsLogs
+      .filter(log => {
+        return selectedCampaigns.some(cid => {
+          const c = campaigns.find(x => x.id === cid);
+          if (!c) return false;
+          const logDate = new Date(log.sent_at);
+          const startDate = c.start_date ? new Date(c.start_date) : null;
+          const endDate = c.end_date ? new Date(c.end_date) : null;
+          return (!startDate || logDate >= startDate) && (!endDate || logDate <= endDate);
+        });
+      })
+      .reduce((sum, log) => sum + (log.sent_count || 0), 0);
+  }, [batchSmsLogs, selectedCampaigns, campaigns]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -180,10 +205,25 @@ export default function AdminOutreachPipeline() {
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Top-level Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-xl border border-slate-200 p-5"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-slate-500 font-medium">SMS Sends</p>
+                <p className="text-3xl font-bold text-blue-600 mt-1">{totalSends}</p>
+              </div>
+              <MessageCircle className="w-8 h-8 text-blue-500 opacity-20" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
             className="bg-white rounded-xl border border-slate-200 p-5"
           >
             <div className="flex items-center justify-between">
@@ -198,7 +238,7 @@ export default function AdminOutreachPipeline() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
+            transition={{ delay: 0.1 }}
             className="bg-white rounded-xl border border-slate-200 p-5"
           >
             <div className="flex items-center justify-between">
@@ -213,7 +253,7 @@ export default function AdminOutreachPipeline() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.15 }}
             className="bg-white rounded-xl border border-slate-200 p-5"
           >
             <div className="flex items-center justify-between">
@@ -228,7 +268,7 @@ export default function AdminOutreachPipeline() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
+            transition={{ delay: 0.2 }}
             className="bg-white rounded-xl border border-slate-200 p-5"
           >
             <div className="flex items-center justify-between">
