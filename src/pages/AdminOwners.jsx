@@ -96,7 +96,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           ) : (
            <Button
              size="sm"
-             className="gap-1.5 bg-emerald-100 text-emerald-700 text-xs cursor-not-allowed"
+             className="gap-1.5 bg-red-100 text-red-700 text-xs cursor-not-allowed"
              disabled
            >
              ✓ Sent
