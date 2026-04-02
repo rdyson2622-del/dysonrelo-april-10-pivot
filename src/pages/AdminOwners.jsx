@@ -38,6 +38,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
   );
 
   const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted').length;
+  const unsentInCity = owners.filter(o => o.property_city === city && o.phone && o.contact_status === 'not_contacted').length;
 
   const toggleSelect = (id) => setSelected(prev => {
     const next = new Set(prev);
@@ -80,19 +81,27 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           >
             <Trash2 className="w-3 h-3" /> Delete All ({owners.length})
           </Button>
-          {unsent > 0 && (
-            <Button
-              size="sm"
-              className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs"
-              disabled={sendingBatch}
-              onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
-            >
-              {sendingBatch ? (
-                <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
-              ) : (
-                <><Send className="w-3 h-3" /> Send All ({unsent})</>
-              )}
-            </Button>
+          {unsentInCity > 0 ? (
+           <Button
+             size="sm"
+             className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs"
+             disabled={sendingBatch}
+             onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
+           >
+             {sendingBatch ? (
+               <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
+             ) : (
+               <><Send className="w-3 h-3" /> Send All ({unsentInCity})</>
+             )}
+           </Button>
+          ) : (
+           <Button
+             size="sm"
+             className="gap-1.5 bg-emerald-100 text-emerald-700 text-xs cursor-not-allowed"
+             disabled
+           >
+             ✓ Sent
+           </Button>
           )}
         </div>
       </div>
