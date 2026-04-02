@@ -25,7 +25,7 @@ function fmt(price) {
   return `$${n}`;
 }
 
-function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelected, onStatusChange, onSendBatch, sendingBatch }) {
+function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelected, onStatusChange, onSendBatch, sendingBatch, batchStatus }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(new Set());
@@ -59,6 +59,16 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           <MapPin className="w-4 h-4 text-slate-400" />
           <span className="font-semibold text-slate-800">{city || 'Unknown City'}</span>
           <span className="text-xs text-slate-500 ml-1">({owners.length} owners{unsent > 0 ? `, ${unsent} unsent` : ''})</span>
+          {batchStatus && (
+            <span className={`ml-2 px-2 py-1 rounded-full text-xs font-semibold ${
+              batchStatus === 'in_progress' ? 'bg-green-100 text-green-700' :
+              batchStatus === 'completed' ? 'bg-red-100 text-red-700' :
+              'bg-yellow-100 text-yellow-700'
+            }`}>
+              {batchStatus === 'in_progress' ? '⏳ In Progress' :
+               batchStatus === 'completed' ? '✓ Completed' : '⏳ Pending'}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
           {selected.size > 0 && (
@@ -194,6 +204,7 @@ export default function AdminOwners() {
   const [globalSearch, setGlobalSearch] = useState('');
   const [sendingBatchCity, setSendingBatchCity] = useState(null);
   const [batchResult, setBatchResult] = useState(null);
+  const [batchStatuses, setBatchStatuses] = useState({}); // { city: 'pending' | 'in_progress' | 'completed' }
   const queryClient = useQueryClient();
 
   const { data: owners = [] } = useQuery({
@@ -270,6 +281,7 @@ export default function AdminOwners() {
 
     setSendingBatchCity(city);
     setBatchResult(null);
+    setBatchStatuses(prev => ({ ...prev, [city]: 'in_progress' }));
     try {
       const res = await base44.functions.invoke('sendBatchOutreachSMS', {
         city,
@@ -281,9 +293,11 @@ export default function AdminOwners() {
         })),
       });
       setBatchResult({ city, ...res.data });
+      setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
       queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     } catch (e) {
       setBatchResult({ city, error: e.message });
+      setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
     } finally {
       setSendingBatchCity(null);
     }
@@ -381,6 +395,7 @@ export default function AdminOwners() {
           onStatusChange={handleStatusChange}
           onSendBatch={handleSendBatch}
           sendingBatch={sendingBatchCity === city}
+          batchStatus={batchStatuses[city] || null}
         />
       ))}
 
