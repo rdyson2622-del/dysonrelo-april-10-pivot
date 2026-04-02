@@ -179,9 +179,9 @@ const EMAIL_CANDIDATES  = ['email 1', 'email1', 'email address', 'email', 'owner
 function parseFileToRows(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    reader.onerror = () => reject('Could not read file: ' + file.name);
     reader.onload = (e) => {
       try {
-        const XLSX = window.__XLSX__;
         const data = new Uint8Array(e.target.result);
         const wb = XLSX.read(data, { type: 'array' });
         const sheet = wb.Sheets[wb.SheetNames[0]];
@@ -230,6 +230,7 @@ function BulkBuilder() {
   const [importError, setImportError] = useState('');
   const [importing, setImporting] = useState(false);
   const [patching, setPatching] = useState(false);
+  const [parsing, setParsing] = useState(false);
   const [importResult, setImportResult] = useState(null);
   const fileRef = useRef();
 
@@ -237,6 +238,7 @@ function BulkBuilder() {
     if (!files?.length) return;
     setImportError('');
     setImportResult(null);
+    setParsing(true);
     try {
       const allParsed = await Promise.all(Array.from(files).map(parseFileToRows));
       const merged = allParsed.flat();
@@ -251,7 +253,9 @@ function BulkBuilder() {
       });
       setFileNames(prev => [...prev, ...Array.from(files).map(f => f.name)]);
     } catch (err) {
-      setImportError(typeof err === 'string' ? err : 'Import failed');
+      setImportError(typeof err === 'string' ? err : (err?.message || 'Import failed — check file format'));
+    } finally {
+      setParsing(false);
     }
     if (fileRef.current) fileRef.current.value = '';
   };
@@ -340,12 +344,22 @@ function BulkBuilder() {
           Upload your PropStream skip trace export. Owner names + phone numbers are read automatically.
         </p>
 
-        <div onDrop={handleDrop} onDragOver={e => e.preventDefault()} onClick={() => fileRef.current?.click()}
-          className="rounded-xl flex flex-col items-center justify-center py-10 cursor-pointer transition-all hover:opacity-80"
-          style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}>
-          <Upload className="w-10 h-10 mb-3" style={{ color: GOLD }} />
-          <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop your PropStream CSV here</p>
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse</p>
+        <div onDrop={handleDrop} onDragOver={e => e.preventDefault()} onClick={() => !parsing && fileRef.current?.click()}
+          className="rounded-xl flex flex-col items-center justify-center py-10 transition-all"
+          style={{ border: '2px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)', cursor: parsing ? 'wait' : 'pointer' }}>
+          {parsing ? (
+            <>
+              <div className="w-10 h-10 border-2 rounded-full animate-spin mb-3" style={{ borderColor: 'rgba(212,175,55,0.3)', borderTopColor: GOLD }} />
+              <p className="font-bold mb-1" style={{ color: '#fff' }}>Reading file…</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Detecting columns and parsing rows</p>
+            </>
+          ) : (
+            <>
+              <Upload className="w-10 h-10 mb-3" style={{ color: GOLD }} />
+              <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop your PropStream CSV here</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse · .csv, .xlsx, .xls</p>
+            </>
+          )}
           <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => handleFiles(e.target.files)} />
         </div>
 
