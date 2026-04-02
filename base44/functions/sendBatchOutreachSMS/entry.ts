@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
       // Schedule each message: start at 5 min (300s) + i * 3 minutes (180s) in the future
       // This ensures the first message is at least 5 min in future as required by Twilio
       const sendAt = new Date(now.getTime() + (300 + i * DELAY_SECONDS) * 1000);
-      const sendAtISO = sendAt.toISOString().replace('Z', '+0000'); // Twilio format
+      const sendAtISO = sendAt.toISOString(); // Twilio accepts ISO 8601 with Z
 
       let messageBody = templateContent.replace(/\{\{owner_name\}\}/g, owner_name || 'there');
 
