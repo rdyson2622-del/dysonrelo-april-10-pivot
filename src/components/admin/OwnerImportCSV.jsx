@@ -1,98 +1,156 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { Upload, AlertCircle, CheckCircle2 } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
-// Column name aliases — covers PropStream, Board of Realtors MLS, and generic formats
-const COLUMN_MAP = {
-  owner_name: [
-    // Skip trace format (Owner 1 First + Last combined in mapRow below)
-    'owner_name', 'owner name', 'seller name', 'seller', 'list owner', 'owner',
-    'contact name', 'name', 'full name', 'taxpayer name', 'tax owner',
-  ],
-  phone: [
-    // Skip trace exports: Phone 1 is primary
-    'phone 1', 'phone1', 'phone_1',
-    'phone', 'owner phone', 'seller phone', 'mobile', 'cell', 'phone number',
-    'contact phone', 'primary phone', 'mobilephone', 'cellphone',
-  ],
-  email: [
-    'email 1', 'email1', 'email_1',
-    'email', 'owner email', 'seller email', 'email address', 'contact email', 'e-mail',
-  ],
-  property_address: [
-    // Skip trace format uses "Address"
-    'address',
-    'property_address', 'property address', 'street address',
-    'list address', 'listing address', 'full address', 'site address', 'prop address',
-  ],
-  property_city: [
-    'city',
-    'property_city', 'property city', 'list city', 'listing city', 'site city',
-  ],
-  property_state: [
-    'state',
-    'property_state', 'property state', 'list state', 'listing state', 'site state', 'st',
-  ],
-  zip: [
-    'zip', 'zip code', 'postal code',
-  ],
-  listing_price: [
-    'mls amount', 'est. value', 'last sale amount',
-    'listing_price', 'listing price', 'list price', 'price', 'asking price',
-    'sale price', 'sold price', 'current price', 'amount',
-  ],
-  moving_to: [
-    'moving_to', 'moving to', 'destination', 'relocating to', 'new location',
-  ],
-  notes: [
-    'notes', 'comments', 'remarks', 'agent remarks', 'public remarks', 'note',
-  ],
-};
+// ── Column detection helpers (same logic as AdminSkipTrace) ────────────────
 
-function normalizeKey(str) {
-  return str?.toString().toLowerCase().trim().replace(/\s+/g, ' ');
+function findColExact(headers, candidates) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  for (const c of candidates) {
+    const idx = lower.indexOf(c.toLowerCase());
+    if (idx !== -1) return idx;
+  }
+  return -1;
 }
 
-// Map a raw CSV row (with whatever column names) to our standard schema
-function mapRow(rawRow) {
-  const normalized = {};
-  for (const [origKey, val] of Object.entries(rawRow)) {
-    normalized[normalizeKey(origKey)] = val;
+function findColContains(headers, candidates) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  for (const c of candidates) {
+    const idx = lower.findIndex(h => h.includes(c.toLowerCase()));
+    if (idx !== -1) return idx;
+  }
+  return -1;
+}
+
+function findCol(headers, candidates) {
+  const exact = findColExact(headers, candidates);
+  if (exact !== -1) return exact;
+  return findColContains(headers, candidates);
+}
+
+function extractOwnerName(row, headers) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+
+  // Single name columns
+  const singleCol = findColExact(headers, [
+    'owner name', 'seller name', 'taxpayer name', 'contact name', 'full name', 'name', 'owner', 'seller',
+  ]);
+  if (singleCol !== -1 && row[singleCol]?.trim()) return row[singleCol].trim();
+
+  // PropStream skip trace: "Owner 1 First Name" / "Owner 1 Last Name"
+  const o1FirstIdx = lower.indexOf('owner 1 first name');
+  const o1LastIdx  = lower.indexOf('owner 1 last name');
+  if (o1FirstIdx !== -1 || o1LastIdx !== -1) {
+    const first = o1FirstIdx !== -1 ? (row[o1FirstIdx] || '').trim() : '';
+    const last  = o1LastIdx  !== -1 ? (row[o1LastIdx]  || '').trim() : '';
+    const combined = [first, last].filter(Boolean).join(' ');
+    if (combined) return combined;
   }
 
-  const mapped = {};
-  for (const [field, aliases] of Object.entries(COLUMN_MAP)) {
-    for (const alias of aliases) {
-      if (normalized[alias] !== undefined && normalized[alias] !== '') {
-        mapped[field] = normalized[alias];
-        break;
-      }
+  // Generic first/last
+  const firstIdx = lower.indexOf('first name');
+  const lastIdx  = lower.indexOf('last name');
+  if (firstIdx !== -1 || lastIdx !== -1) {
+    const first = firstIdx !== -1 ? (row[firstIdx] || '').trim() : '';
+    const last  = lastIdx  !== -1 ? (row[lastIdx]  || '').trim() : '';
+    const combined = [first, last].filter(Boolean).join(' ');
+    if (combined) return combined;
+  }
+
+  return '';
+}
+
+function extractBestPhone(row, headers) {
+  const lower = headers.map(h => h.toLowerCase().trim());
+  const priority = [
+    'cell phone 1', 'cell phone1', 'cellphone1',
+    'cell phone 2', 'cell phone2',
+    'phone 1', 'phone1',
+    'mobile phone 1', 'mobile 1', 'mobile1',
+    'phone 2', 'phone2',
+    'mobile', 'cell', 'phone',
+    'owner phone', 'contact phone',
+  ];
+  for (const p of priority) {
+    const idx = lower.indexOf(p);
+    if (idx !== -1 && row[idx]?.trim()) return row[idx].trim();
+  }
+  for (let i = 0; i < lower.length; i++) {
+    if ((lower[i].includes('cell') || lower[i].includes('phone')) && row[i]?.trim()) {
+      return row[i].trim();
     }
   }
-
-  // Handle split first/last name fields from skip trace exports
-  if (!mapped.owner_name) {
-    const first = normalized['owner 1 first name'] || normalized['owner1 first name'] || normalized['first name'] || '';
-    const last  = normalized['owner 1 last name']  || normalized['owner1 last name']  || normalized['last name']  || '';
-    const combined = [first, last].filter(Boolean).join(' ').trim();
-    if (combined) mapped.owner_name = combined;
-  }
-
-  // Append unit # to address if present
-  if (mapped.property_address && normalized['unit #'] && normalized['unit #'].trim()) {
-    mapped.property_address = mapped.property_address + ' #' + normalized['unit #'].trim();
-  }
-
-  return mapped;
+  return '';
 }
+
+const STREET_CANDIDATES = ['property address', 'property street', 'street address', 'address', 'prop address', 'site address', 'mailing address', 'street'];
+const CITY_CANDIDATES   = ['property city', 'city', 'prop city', 'site city', 'mailing city'];
+const STATE_CANDIDATES  = ['property state', 'state', 'prop state', 'site state', 'mailing state'];
+const ZIP_CANDIDATES    = ['property zip', 'zip code', 'zip', 'postal code'];
+const PRICE_CANDIDATES  = ['list price', 'listing price', 'estimated value', 'price', 'asking price', 'est. value', 'mls amount'];
+const EMAIL_CANDIDATES  = ['email 1', 'email1', 'email address', 'email', 'owner email', 'contact email'];
+
+function parseXLSX(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject('Could not read file: ' + file.name);
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const wb = XLSX.read(data, { type: 'array' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        if (jsonRows.length < 2) { resolve([]); return; }
+
+        const headers = jsonRows[0].map(h => String(h).trim());
+        const dataRows = jsonRows.slice(1).map(r => headers.map((_, i) => String(r[i] || '').trim()));
+
+        const streetIdx = findCol(headers, STREET_CANDIDATES);
+        if (streetIdx < 0) {
+          reject('Could not find address column.\nHeaders found: ' + headers.slice(0, 12).join(', '));
+          return;
+        }
+
+        const cityIdx  = findCol(headers, CITY_CANDIDATES);
+        const stateIdx = findCol(headers, STATE_CANDIDATES);
+        const zipIdx   = findCol(headers, ZIP_CANDIDATES);
+        const priceIdx = findCol(headers, PRICE_CANDIDATES);
+        const emailIdx = findCol(headers, EMAIL_CANDIDATES);
+
+        const parsed = dataRows
+          .map(row => ({
+            owner_name:    extractOwnerName(row, headers),
+            phone:         extractBestPhone(row, headers),
+            email:         emailIdx  >= 0 ? row[emailIdx]  : '',
+            street:        row[streetIdx] || '',
+            city:          cityIdx   >= 0 ? row[cityIdx]   : '',
+            state:         stateIdx  >= 0 ? row[stateIdx]  : '',
+            zip:           zipIdx    >= 0 ? row[zipIdx]    : '',
+            listing_price: priceIdx  >= 0 ? row[priceIdx]  : '',
+          }))
+          .filter(r => r.street.trim());
+
+        resolve({ rows: parsed, headers });
+      } catch (err) {
+        reject('Could not parse file: ' + err.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// ── Component ──────────────────────────────────────────────────────────────
 
 export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [detectedFormat, setDetectedFormat] = useState(null);
+  const fileRef = useRef();
+
+  const reset = () => { setError(null); setResult(null); if (fileRef.current) fileRef.current.value = ''; };
 
   const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
@@ -101,78 +159,39 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
     setLoading(true);
     setError(null);
     setResult(null);
-    setDetectedFormat(null);
 
     try {
-      // Upload file to get URL
-      const uploadRes = await base44.integrations.Core.UploadFile({ file });
-      const fileUrl = uploadRes.file_url;
+      const { rows, headers } = await parseXLSX(file);
 
-      // Extract data — use a permissive array schema to get all rows with all columns as-is
-      const extractRes = await base44.integrations.Core.ExtractDataFromUploadedFile({
-        file_url: fileUrl,
-        json_schema: {
-          type: 'object',
-          description: 'Extract all rows from the CSV. Return an array of objects with all available columns preserved.',
-          properties: {
-            rows: {
-              type: 'array',
-              items: { type: 'object' },
-              description: 'Array of all CSV rows — preserve original column names as keys'
-            }
-          }
-        },
-      });
+      if (!rows.length) throw new Error('No data rows found in file.');
 
-      if (extractRes.status !== 'success' || !extractRes.output) {
-        throw new Error(extractRes.details || 'Failed to extract CSV data');
-      }
+      // Relax validation — accept rows with just an address even if no name
+      const valid = rows.filter(r => r.street.trim());
+      if (!valid.length) throw new Error('No rows with a property address found.');
 
-      // Handle both array response and rows property
-      let records = extractRes.output.rows || (Array.isArray(extractRes.output) ? extractRes.output : [extractRes.output]);
-
-      // Apply column mapping to normalize headers
-      records = records.map(mapRow);
-
-      // Filter out rows missing required fields
-      const valid = records.filter(r => r.owner_name && r.property_address);
-
-      if (!valid.length) {
-        throw new Error('No valid rows found. Make sure the file has owner name and property address columns.');
-      }
-
-      // Detect source format for display
-      const sampleKeys = Object.keys(records[0] || {}).map(normalizeKey);
-      const isMLSFormat = sampleKeys.some(k => ['list price', 'list address', 'list city', 'seller name'].includes(k));
-      const isPropStream = sampleKeys.some(k => ['taxpayer name', 'tax owner', 'prop address'].includes(k));
-      setDetectedFormat(isPropStream ? 'PropStream' : isMLSFormat ? 'Board of Realtors MLS' : 'Standard CSV');
-
-      // Create records in prod (matches batch send behavior)
-      // Batch in chunks of 25 to avoid timeouts
-      let totalCreated = 0;
       const toInsert = valid.map(r => ({
-        owner_name: String(r.owner_name || ''),
-        email: String(r.email || ''),
-        phone: String(r.phone || ''),
-        property_address: String(r.property_address || ''),
-        property_city: String(r.property_city || ''),
-        property_state: String(r.property_state || ''),
-        listing_price: r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
-        moving_to: String(r.moving_to || ''),
-        notes: String(r.notes || ''),
-        contact_status: 'not_contacted',
+        owner_name:       String(r.owner_name || 'Unknown'),
+        phone:            String(r.phone || ''),
+        email:            String(r.email || ''),
+        property_address: String([r.street, r.city, r.state].filter(Boolean).join(', ')),
+        property_city:    String(r.city || ''),
+        property_state:   String(r.state || ''),
+        listing_price:    r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
+        contact_status:   'not_contacted',
       }));
+
+      // Batch in chunks of 25
       const CHUNK = 25;
+      let totalCreated = 0;
       for (let i = 0; i < toInsert.length; i += CHUNK) {
         const created = await base44.entities.ListingOwner.bulkCreate(toInsert.slice(i, i + CHUNK));
         totalCreated += created.length;
       }
-      const created = { length: totalCreated };
 
       setResult({ count: totalCreated });
       onImportComplete?.();
     } catch (err) {
-      setError(err.message || 'Import failed');
+      setError(typeof err === 'string' ? err : (err.message || 'Import failed'));
     } finally {
       setLoading(false);
     }
@@ -186,20 +205,11 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
         </DialogHeader>
 
         <div className="space-y-4">
-          {!result && !error && (
+          {!result && (
             <>
               <div className="text-sm text-slate-600 space-y-1">
-                <p className="font-semibold text-slate-800">Accepts both formats automatically:</p>
-                <div className="flex gap-4 mt-1">
-                  <div className="bg-blue-50 border border-blue-200 rounded px-3 py-2 text-xs text-blue-800 flex-1">
-                    <p className="font-bold mb-1">✓ PropStream Export</p>
-                    <p className="text-blue-600">Taxpayer Name, Prop Address, Phone, List Price…</p>
-                  </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded px-3 py-2 text-xs text-emerald-800 flex-1">
-                    <p className="font-bold mb-1">✓ Board of Realtors MLS</p>
-                    <p className="text-emerald-600">Seller Name, List Address, Mobile, List Price…</p>
-                  </div>
-                </div>
+                <p className="font-semibold text-slate-800">Accepts PropStream & MLS exports automatically.</p>
+                <p className="text-xs text-slate-500">Owner names, phones, addresses, and prices are detected automatically from column headers.</p>
               </div>
               <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-8 cursor-pointer hover:border-slate-400 transition">
                 {loading ? (
@@ -210,29 +220,23 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
                 ) : (
                   <>
                     <Upload className="w-6 h-6 text-slate-400 mb-2" />
-                    <span className="text-sm font-medium text-slate-700">Select CSV file</span>
-                    <span className="text-xs text-slate-400 mt-1">PropStream or MLS export</span>
+                    <span className="text-sm font-medium text-slate-700">Select CSV / Excel file</span>
+                    <span className="text-xs text-slate-400 mt-1">.csv, .xlsx, .xls</span>
                   </>
                 )}
-                <input
-                  type="file"
-                  accept=".csv,.xlsx"
-                  onChange={handleFileSelect}
-                  disabled={loading}
-                  className="hidden"
-                />
+                <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" onChange={handleFileSelect} disabled={loading} className="hidden" />
               </label>
-            </>
-          )}
 
-          {error && (
-            <div className="flex gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-red-900">Import failed</p>
-                <p className="text-sm text-red-800">{error}</p>
-              </div>
-            </div>
+              {error && (
+                <div className="flex gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-red-900">Import failed</p>
+                    <p className="text-sm text-red-800 whitespace-pre-wrap">{error}</p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {result && (
@@ -241,23 +245,16 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
               <div>
                 <p className="font-semibold text-green-900">Success!</p>
                 <p className="text-sm text-green-800">{result.count} owners imported</p>
-                {detectedFormat && (
-                  <p className="text-xs text-green-700 mt-1">Format detected: <strong>{detectedFormat}</strong></p>
-                )}
               </div>
             </div>
           )}
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => { setError(null); setResult(null); setDetectedFormat(null); onClose(); }}>
+          <Button variant="outline" onClick={() => { reset(); onClose(); }}>
             {result ? 'Close' : 'Cancel'}
           </Button>
-          {error && (
-            <Button onClick={() => { setError(null); setResult(null); }}>
-              Try Again
-            </Button>
-          )}
+          {error && <Button onClick={reset}>Try Again</Button>}
         </DialogFooter>
       </DialogContent>
     </Dialog>
