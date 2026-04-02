@@ -33,36 +33,65 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
 
-  // Fetch batch logs for active campaigns
+  // Fetch listing owners and batch logs
+  const { data: owners = [] } = useQuery({
+    queryKey: ['listingOwners'],
+    queryFn: () => base44.entities.ListingOwner.list('-created_date', 2000),
+    refetchInterval: 5000,
+  });
+
   const { data: batchLogs = [] } = useQuery({
     queryKey: ['batchSmsLogs'],
     queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 100),
     refetchInterval: 5000,
   });
 
-  // Calculate active campaigns
-  const activeCampaigns = React.useMemo(() => {
+  // Calculate campaign status by city
+  const activeCampaigns = useMemo(() => {
     const now = new Date();
-    const active = [];
-    batchLogs.forEach(log => {
-      const sentAt = new Date(log.sent_at);
-      const elapsedMs = now - sentAt;
-      const elapsedMinutes = Math.floor(elapsedMs / 60000);
-      const totalMinutes = log.sent_count * 3;
-      const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
-      
-      if (remainingMinutes > 0) {
-        const estimatedSent = Math.min(log.sent_count, Math.floor(elapsedMinutes / 3));
-        active.push({
-          city: log.city,
-          estimatedSent,
-          total: log.sent_count,
-          progress: Math.min(100, Math.round((estimatedSent / log.sent_count) * 100)),
-        });
+    const cityMap = {};
+
+    // Group owners by city
+    owners.forEach(owner => {
+      const city = owner.property_city?.trim() || 'Unknown';
+      if (!cityMap[city]) {
+        cityMap[city] = { total: 0, unsent: 0, inProgress: false, progress: 0 };
+      }
+      cityMap[city].total++;
+      if (owner.phone && owner.contact_status === 'not_contacted') {
+        cityMap[city].unsent++;
       }
     });
-    return active;
-  }, [batchLogs]);
+
+    // Mark cities with active batch sends
+    batchLogs.forEach(log => {
+      if (cityMap[log.city]) {
+        const sentAt = new Date(log.sent_at);
+        const elapsedMs = now - sentAt;
+        const elapsedMinutes = Math.floor(elapsedMs / 60000);
+        const totalMinutes = log.sent_count * 3;
+        const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
+        
+        if (remainingMinutes > 0) {
+          const estimatedSent = Math.min(log.sent_count, Math.floor(elapsedMinutes / 3));
+          cityMap[log.city].inProgress = true;
+          cityMap[log.city].progress = Math.min(100, Math.round((estimatedSent / log.sent_count) * 100));
+        }
+      }
+    });
+
+    // Return only cities with unsent messages or active sends, sorted by unsent count
+    return Object.entries(cityMap)
+      .filter(([_, data]) => data.unsent > 0 || data.inProgress)
+      .map(([city, data]) => ({
+        city,
+        total: data.total,
+        unsent: data.unsent,
+        inProgress: data.inProgress,
+        progress: data.progress,
+      }))
+      .sort((a, b) => b.unsent - a.unsent);
+  }, [owners, batchLogs]);
 
   const handlePageJump = (e) => {
     e.preventDefault();
@@ -151,21 +180,26 @@ export default function AdminSidebar() {
               <div key={camp.city} className="text-xs">
                 <div className="flex items-center justify-between mb-1">
                   <span style={{ color: '#ccc' }}>{camp.city}</span>
-                  <span style={{ color: '#D4AF37' }} className="font-semibold">{camp.progress}%</span>
+                  <span style={{ color: camp.inProgress ? '#D4AF37' : 'rgba(255,255,255,0.5)' }} className="font-semibold text-xs">
+                    {camp.inProgress ? '⏳ Sending' : '⏸ Pending'}
+                  </span>
                 </div>
                 <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                   <div 
                     className="h-full transition-all" 
-                    style={{ width: `${camp.progress}%`, background: 'linear-gradient(90deg, #D4AF37, #e8c84a)' }}
+                    style={{ 
+                      width: `${camp.inProgress ? camp.progress : 0}%`, 
+                      background: camp.inProgress ? 'linear-gradient(90deg, #D4AF37, #e8c84a)' : 'rgba(255,255,255,0.1)'
+                    }}
                   />
                 </div>
                 <div style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs mt-0.5">
-                  {camp.estimatedSent}/{camp.total} sent
+                  {camp.unsent} unsent of {camp.total}
                 </div>
               </div>
             ))
           ) : (
-            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No active campaigns</p>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No pending campaigns</p>
           )}
         </div>
       </div>
