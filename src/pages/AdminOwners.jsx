@@ -59,7 +59,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           <MapPin className="w-4 h-4 text-slate-400" />
           <span className="font-semibold text-slate-800">{city || 'Unknown City'}</span>
           <span className="text-xs text-slate-500 ml-1">({owners.length} owners{unsent > 0 ? `, ${unsent} unsent` : ''})</span>
-          {batchStatus && (
+          {(unsent > 0 || batchStatus) && (
             <span className={`ml-2 px-2 py-1 rounded-full text-xs font-semibold ${
               batchStatus === 'in_progress' ? 'bg-green-100 text-green-700' :
               batchStatus === 'completed' ? 'bg-red-100 text-red-700' :
