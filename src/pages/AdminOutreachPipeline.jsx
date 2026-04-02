@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Zap, Mail, MessageCircle, Phone, TrendingDown, Users, Percent } from 'lucide-react';
+import { ArrowLeft, Zap, Mail, MessageCircle, Phone, TrendingDown, Users, Percent, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -22,7 +22,14 @@ const STATUS_COLORS = {
 };
 
 export default function AdminOutreachPipeline() {
-  const [timeRange, setTimeRange] = useState('all'); // all, 7days, 30days
+  const [timeRange, setTimeRange] = useState('all');
+  const [selectedCampaigns, setSelectedCampaigns] = useState([]); // empty = all campaigns
+
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['marketing_campaigns'],
+    queryFn: () => base44.entities.MarketingCampaign.list('-created_date', 100),
+    initialData: []
+  });
 
   const { data: optIns = [] } = useQuery({
     queryKey: ['opt_ins'],
@@ -38,26 +45,52 @@ export default function AdminOutreachPipeline() {
     refetchInterval: 10000
   });
 
-  // Filter by time range
+  // Filter by time range and campaign
   const filteredOptIns = useMemo(() => {
     const now = new Date();
     return optIns.filter(opt => {
       const date = new Date(opt.opted_in_at);
-      if (timeRange === '7days') return (now - date) / (1000 * 60 * 60 * 24) <= 7;
-      if (timeRange === '30days') return (now - date) / (1000 * 60 * 60 * 24) <= 30;
-      return true;
+      const timeMatch = 
+        timeRange === 'all' ? true :
+        timeRange === '7days' ? (now - date) / (1000 * 60 * 60 * 24) <= 7 :
+        timeRange === '30days' ? (now - date) / (1000 * 60 * 60 * 24) <= 30 : true;
+      
+      // If campaigns selected, match by campaign date range
+      if (selectedCampaigns.length > 0) {
+        return timeMatch && selectedCampaigns.some(cid => {
+          const c = campaigns.find(x => x.id === cid);
+          if (!c) return false;
+          const startDate = c.start_date ? new Date(c.start_date) : null;
+          const endDate = c.end_date ? new Date(c.end_date) : null;
+          return (!startDate || date >= startDate) && (!endDate || date <= endDate);
+        });
+      }
+      return timeMatch;
     });
-  }, [optIns, timeRange]);
+  }, [optIns, timeRange, selectedCampaigns, campaigns]);
 
   const filteredOptOuts = useMemo(() => {
     const now = new Date();
     return optOuts.filter(opt => {
       const date = new Date(opt.opted_out_at);
-      if (timeRange === '7days') return (now - date) / (1000 * 60 * 60 * 24) <= 7;
-      if (timeRange === '30days') return (now - date) / (1000 * 60 * 60 * 24) <= 30;
-      return true;
+      const timeMatch = 
+        timeRange === 'all' ? true :
+        timeRange === '7days' ? (now - date) / (1000 * 60 * 60 * 24) <= 7 :
+        timeRange === '30days' ? (now - date) / (1000 * 60 * 60 * 24) <= 30 : true;
+      
+      // If campaigns selected, match by campaign date range
+      if (selectedCampaigns.length > 0) {
+        return timeMatch && selectedCampaigns.some(cid => {
+          const c = campaigns.find(x => x.id === cid);
+          if (!c) return false;
+          const startDate = c.start_date ? new Date(c.start_date) : null;
+          const endDate = c.end_date ? new Date(c.end_date) : null;
+          return (!startDate || date >= startDate) && (!endDate || date <= endDate);
+        });
+      }
+      return timeMatch;
     });
-  }, [optOuts, timeRange]);
+  }, [optOuts, timeRange, selectedCampaigns, campaigns]);
 
   // Calculate funnel metrics
   const bySource = useMemo(() => {
@@ -90,25 +123,58 @@ export default function AdminOutreachPipeline() {
           </div>
         </div>
 
-        {/* Time Range Filter */}
-        <div className="px-6 py-4 flex gap-2">
-          {[
-            { key: 'all', label: 'All Time' },
-            { key: '30days', label: 'Last 30 Days' },
-            { key: '7days', label: 'Last 7 Days' }
-          ].map(opt => (
-            <button
-              key={opt.key}
-              onClick={() => setTimeRange(opt.key)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                timeRange === opt.key
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
+        {/* Time Range & Campaign Filter */}
+        <div className="px-6 py-4 space-y-4">
+          <div className="flex gap-2">
+            {[
+              { key: 'all', label: 'All Time' },
+              { key: '30days', label: 'Last 30 Days' },
+              { key: '7days', label: 'Last 7 Days' }
+            ].map(opt => (
+              <button
+                key={opt.key}
+                onClick={() => setTimeRange(opt.key)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  timeRange === opt.key
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {campaigns.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCampaigns([])}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedCampaigns.length === 0
+                    ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                All Campaigns
+              </button>
+              {campaigns.map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => setSelectedCampaigns(prev =>
+                    prev.includes(c.id) ? prev.filter(id => id !== c.id) : [...prev, c.id]
+                  )}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${
+                    selectedCampaigns.includes(c.id)
+                      ? 'bg-purple-100 text-purple-700 border border-purple-300'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <Megaphone className="w-3 h-3" />
+                  {c.campaign_name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
