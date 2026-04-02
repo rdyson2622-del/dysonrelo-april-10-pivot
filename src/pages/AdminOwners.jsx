@@ -196,8 +196,15 @@ export default function AdminOwners() {
     const toDelete = cityOwners.filter(o => (!o.phone || o.phone.trim() === '') && (!o.owner_name || o.owner_name.trim() === '' || o.owner_name.trim().toLowerCase() === 'unknown'));
     if (!toDelete.length) return;
     if (!confirm(`Delete ${toDelete.length} records with no name/phone in ${city}? This cannot be undone.`)) return;
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     for (const o of toDelete) {
-      await base44.entities.ListingOwner.delete(o.id);
+      try {
+        await base44.entities.ListingOwner.delete(o.id);
+        await sleep(300);
+      } catch (e) {
+        // skip not-found or already deleted
+        await sleep(500);
+      }
     }
     queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
   };
