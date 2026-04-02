@@ -110,7 +110,7 @@ function parseXLSX(file) {
 
         const streetIdx = findCol(headers, STREET_CANDIDATES);
         if (streetIdx < 0) {
-          reject('Could not find address column.\nHeaders found: ' + headers.slice(0, 12).join(', '));
+          reject('Could not find address column.\n\nAll headers in your file:\n' + headers.join(' | '));
           return;
         }
 
