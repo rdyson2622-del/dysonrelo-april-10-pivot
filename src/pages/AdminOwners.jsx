@@ -154,7 +154,7 @@ export default function AdminOwners() {
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
-    queryFn: () => base44.entities.ListingOwner.list('-created_date', 500),
+    queryFn: () => base44.entities.ListingOwner.list('-created_date', 2000),
   });
 
   // Group by city
