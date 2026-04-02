@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -30,6 +32,37 @@ export default function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
+
+  // Fetch batch logs for active campaigns
+  const { data: batchLogs = [] } = useQuery({
+    queryKey: ['batchSmsLogs'],
+    queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 100),
+    refetchInterval: 5000,
+  });
+
+  // Calculate active campaigns
+  const activeCampaigns = React.useMemo(() => {
+    const now = new Date();
+    const active = [];
+    batchLogs.forEach(log => {
+      const sentAt = new Date(log.sent_at);
+      const elapsedMs = now - sentAt;
+      const elapsedMinutes = Math.floor(elapsedMs / 60000);
+      const totalMinutes = log.sent_count * 3;
+      const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
+      
+      if (remainingMinutes > 0) {
+        const estimatedSent = Math.min(log.sent_count, Math.floor(elapsedMinutes / 3));
+        active.push({
+          city: log.city,
+          estimatedSent,
+          total: log.sent_count,
+          progress: Math.min(100, Math.round((estimatedSent / log.sent_count) * 100)),
+        });
+      }
+    });
+    return active;
+  }, [batchLogs]);
 
   const handlePageJump = (e) => {
     e.preventDefault();
@@ -105,6 +138,35 @@ export default function AdminSidebar() {
           );
         })}
       </nav>
+
+      {/* Active Campaigns Widget */}
+      {activeCampaigns.length > 0 && (
+        <div className="mx-3 mb-4 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+          <Link to="/admin/active-campaigns" className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Live Campaigns</span>
+            <ArrowRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
+          </Link>
+          <div className="space-y-2">
+            {activeCampaigns.slice(0, 3).map(camp => (
+              <div key={camp.city} className="text-xs">
+                <div className="flex items-center justify-between mb-1">
+                  <span style={{ color: '#ccc' }}>{camp.city}</span>
+                  <span style={{ color: '#D4AF37' }} className="font-semibold">{camp.progress}%</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                  <div 
+                    className="h-full transition-all" 
+                    style={{ width: `${camp.progress}%`, background: 'linear-gradient(90deg, #D4AF37, #e8c84a)' }}
+                  />
+                </div>
+                <div style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs mt-0.5">
+                  {camp.estimatedSent}/{camp.total} sent
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Preview & Back */}
       <div className="p-3 space-y-1 pb-20" style={{ background: '#000', borderTop: '1px solid #1a1a1a' }}>
