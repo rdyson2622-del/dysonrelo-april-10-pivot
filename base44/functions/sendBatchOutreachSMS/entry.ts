@@ -48,9 +48,10 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Schedule each message i * 3 minutes in the future
-      const sendAt = new Date(now.getTime() + i * DELAY_SECONDS * 1000);
-      const sendAtISO = sendAt.toISOString().replace('.000', ''); // Twilio format
+      // Schedule each message: start at 5 min (300s) + i * 3 minutes (180s) in the future
+      // This ensures the first message is at least 5 min in future as required by Twilio
+      const sendAt = new Date(now.getTime() + (300 + i * DELAY_SECONDS) * 1000);
+      const sendAtISO = sendAt.toISOString().replace('Z', '+0000'); // Twilio format
 
       let messageBody = templateContent.replace(/\{\{owner_name\}\}/g, owner_name || 'there');
 
