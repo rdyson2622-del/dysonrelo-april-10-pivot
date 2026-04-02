@@ -98,7 +98,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           {unsent > 0 ? (
            <Button
              size="sm"
-             className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs"
+             className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs whitespace-nowrap flex-shrink-0"
              disabled={sendingBatch}
              onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
            >
