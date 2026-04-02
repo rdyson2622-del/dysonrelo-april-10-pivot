@@ -25,7 +25,7 @@ function fmt(price) {
   return `$${n}`;
 }
 
-function CityGroup({ city, owners, onEdit, onDelete, onStatusChange, onSendBatch, sendingBatch }) {
+function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onStatusChange, onSendBatch, sendingBatch }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -37,6 +37,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onStatusChange, onSendBatch
   );
 
   const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted').length;
+  const unknownCount = owners.filter(o => (!o.phone || o.phone.trim() === '') && (!o.owner_name || o.owner_name.trim() === '' || o.owner_name.trim().toLowerCase() === 'unknown')).length;
 
   return (
     <div className="mb-4 border border-slate-200 rounded-xl overflow-hidden">
@@ -51,20 +52,33 @@ function CityGroup({ city, owners, onEdit, onDelete, onStatusChange, onSendBatch
           <span className="font-semibold text-slate-800">{city || 'Unknown City'}</span>
           <span className="text-xs text-slate-500 ml-1">({owners.length} owners{unsent > 0 ? `, ${unsent} unsent` : ''})</span>
         </div>
-        {unsent > 0 && (
-          <Button
-            size="sm"
-            className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs"
-            disabled={sendingBatch}
-            onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
-          >
-            {sendingBatch ? (
-              <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
-            ) : (
-              <><Send className="w-3 h-3" /> Send Batch ({Math.min(25, unsent)})</>
-            )}
-          </Button>
-        )}
+        <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+          {unknownCount > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 border-red-300 text-red-600 hover:bg-red-50 text-xs"
+              disabled={sendingBatch}
+              onClick={(e) => { e.stopPropagation(); onDeleteUnknowns(city, owners); }}
+            >
+              <Trash2 className="w-3 h-3" /> Delete Unknowns ({unknownCount})
+            </Button>
+          )}
+          {unsent > 0 && (
+            <Button
+              size="sm"
+              className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs"
+              disabled={sendingBatch}
+              onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
+            >
+              {sendingBatch ? (
+                <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
+              ) : (
+                <><Send className="w-3 h-3" /> Send Batch ({Math.min(25, unsent)})</>
+              )}
+            </Button>
+          )}
+        </div>
       </div>
 
       {open && (
@@ -177,6 +191,16 @@ export default function AdminOwners() {
     // Sort cities alphabetically
     return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   }, [owners, globalSearch]);
+
+  const handleDeleteUnknowns = async (city, cityOwners) => {
+    const toDelete = cityOwners.filter(o => (!o.phone || o.phone.trim() === '') && (!o.owner_name || o.owner_name.trim() === '' || o.owner_name.trim().toLowerCase() === 'unknown'));
+    if (!toDelete.length) return;
+    if (!confirm(`Delete ${toDelete.length} records with no name/phone in ${city}? This cannot be undone.`)) return;
+    for (const o of toDelete) {
+      await base44.entities.ListingOwner.delete(o.id);
+    }
+    queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+  };
 
   const handleSendBatch = async (city, cityOwners) => {
     const unsent = cityOwners.filter(o => o.phone && o.contact_status === 'not_contacted');
@@ -291,6 +315,7 @@ export default function AdminOwners() {
           owners={cityOwners}
           onEdit={(owner) => { setEditingOwner(owner); setShowForm(true); }}
           onDelete={(id) => setDeleteConfirm(id)}
+          onDeleteUnknowns={handleDeleteUnknowns}
           onStatusChange={handleStatusChange}
           onSendBatch={handleSendBatch}
           sendingBatch={sendingBatchCity === city}
