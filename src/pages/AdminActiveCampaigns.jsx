@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 
 export default function AdminActiveCampaigns() {
   const [activeCampaigns, setActiveCampaigns] = useState([]);
+  const [queuedCampaigns, setQueuedCampaigns] = useState([]);
 
   // Fetch all batch logs and refresh every 5 seconds for active campaigns
   const { data: batchLogs = [] } = useQuery({
@@ -16,35 +17,44 @@ export default function AdminActiveCampaigns() {
     refetchInterval: 5000, // Auto-refresh every 5 seconds
   });
 
-  // Calculate active campaigns
+  // Calculate active and queued campaigns
   useEffect(() => {
     const now = new Date();
-    const active = batchLogs
-      .filter(log => {
-        const sentAt = new Date(log.sent_at);
-        const totalMinutes = log.sent_count * 3;
-        const elapsedMinutes = (now - sentAt) / 60000;
-        return elapsedMinutes < totalMinutes;
-      })
-      .map(log => {
-        const sentAt = new Date(log.sent_at);
+    
+    const active = [];
+    const queued = [];
+
+    batchLogs.forEach(log => {
+      const sentAt = new Date(log.sent_at);
+      const totalMinutes = log.sent_count * 3;
+      const elapsedMinutes = (now - sentAt) / 60000;
+
+      if (elapsedMinutes < totalMinutes) {
+        // Still in progress
         const elapsedMs = now - sentAt;
-        const elapsedMinutes = Math.floor(elapsedMs / 60000);
-        const totalMinutes = log.sent_count * 3;
-        const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
         const estimatedSent = Math.min(log.sent_count, Math.floor(elapsedMinutes / 3));
+        const remainingMinutes = Math.max(0, totalMinutes - elapsedMinutes);
         const progress = Math.min(100, Math.round((estimatedSent / log.sent_count) * 100));
         
-        return {
+        active.push({
           ...log,
           estimatedSent,
           remainingMinutes,
           progress,
           eta: new Date(now.getTime() + remainingMinutes * 60000),
-        };
-      });
+        });
+      } else if (elapsedMinutes < 10 && log.failed_count === 0) {
+        // Recently completed successfully (show as "just sent")
+        queued.push({
+          ...log,
+          status: 'completed',
+          completedAt: sentAt,
+        });
+      }
+    });
 
     setActiveCampaigns(active);
+    setQueuedCampaigns(queued);
   }, [batchLogs]);
 
   const totalQueued = activeCampaigns.reduce((sum, c) => sum + c.sent_count, 0);
@@ -115,8 +125,26 @@ export default function AdminActiveCampaigns() {
           </div>
         )}
 
+        {/* Recently Completed */}
+        {queuedCampaigns.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-slate-900 mb-3">Recently Sent</h2>
+            <div className="space-y-2">
+              {queuedCampaigns.map(camp => (
+                <div key={camp.id} className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-emerald-900">{camp.city}</p>
+                    <p className="text-xs text-emerald-700">{camp.sent_count} messages sent {new Date(camp.sent_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</p>
+                  </div>
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Campaign Cards */}
-        {activeCampaigns.length === 0 ? (
+        {activeCampaigns.length === 0 && queuedCampaigns.length === 0 ? (
           <div className="text-center py-16 text-slate-400">
             <Send className="w-10 h-10 mx-auto mb-3 opacity-30" />
             <p className="font-medium">No active campaigns</p>
