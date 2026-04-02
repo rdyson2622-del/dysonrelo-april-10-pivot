@@ -61,30 +61,34 @@ Deno.serve(async (req) => {
         }
 
         // Success - update database
-        const existing = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
-        if (existing.length > 0) {
-          await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existing[0].id, {
-            sms_sent_date: new Date().toISOString(),
-            workflow_stage: 'outreach',
-            notes: (existing[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS queued (batch position ${batchPosition}).`,
-          });
-        } else {
-          await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
-            listing_owner_id,
-            owner_name: owner_name || 'Unknown',
-            owner_phone: phone,
-            property_address: property_address || '',
-            workflow_stage: 'outreach',
-            sms_sent_date: new Date().toISOString(),
-            notes: `[${new Date().toLocaleDateString()}] Initial outreach SMS queued (batch position ${batchPosition}).`,
-          });
-        }
+        try {
+          const existing = await base44.asServiceRole.entities.OwnerOutreachCampaign.filter({ listing_owner_id });
+          if (existing.length > 0) {
+            await base44.asServiceRole.entities.OwnerOutreachCampaign.update(existing[0].id, {
+              sms_sent_date: new Date().toISOString(),
+              workflow_stage: 'outreach',
+              notes: (existing[0].notes || '') + `\n[${new Date().toLocaleDateString()}] Initial outreach SMS queued (batch position ${batchPosition}).`,
+            });
+          } else {
+            await base44.asServiceRole.entities.OwnerOutreachCampaign.create({
+              listing_owner_id,
+              owner_name: owner_name || 'Unknown',
+              owner_phone: phone,
+              property_address: property_address || '',
+              workflow_stage: 'outreach',
+              sms_sent_date: new Date().toISOString(),
+              notes: `[${new Date().toLocaleDateString()}] Initial outreach SMS queued (batch position ${batchPosition}).`,
+            });
+          }
 
-        await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
-          contact_status: 'contacted',
-          last_contacted: new Date().toISOString().split('T')[0],
-        });
-        console.log('Updated ListingOwner contact_status for', listing_owner_id);
+          await base44.asServiceRole.entities.ListingOwner.update(listing_owner_id, {
+            contact_status: 'contacted',
+            last_contacted: new Date().toISOString().split('T')[0],
+          });
+          console.log('Updated ListingOwner contact_status for', listing_owner_id);
+        } catch (dbErr) {
+          console.error('DB update failed for', listing_owner_id, ':', dbErr.message);
+        }
 
         results.push({ listing_owner_id, owner_name, status: 'queued', message_sid: result.sid });
         sent++;
