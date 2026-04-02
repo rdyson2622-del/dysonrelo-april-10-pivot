@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -6,10 +6,16 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, CheckCircle2, Send } from 'lucide-react';
 
 export default function AdminBatchSMSLog() {
-  const { data: logs = [], isLoading } = useQuery({
+  const { data: logs = [], isLoading, refetch } = useQuery({
     queryKey: ['batchSMSLogs'],
     queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 500),
+    refetchInterval: 5000, // Auto-refresh every 5 seconds
+    staleTime: 0, // Always consider data stale
   });
+
+  React.useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (isLoading) {
     return (
