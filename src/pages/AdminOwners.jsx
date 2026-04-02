@@ -25,7 +25,7 @@ function fmt(price) {
   return `$${n}`;
 }
 
-function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onStatusChange, onSendBatch, sendingBatch }) {
+function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteAll, onStatusChange, onSendBatch, sendingBatch }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -37,7 +37,8 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onStatusC
   );
 
   const unsent = owners.filter(o => o.phone && o.contact_status === 'not_contacted').length;
-  const unknownCount = owners.filter(o => (!o.phone || o.phone.trim() === '') && (!o.owner_name || o.owner_name.trim() === '' || o.owner_name.trim().toLowerCase() === 'unknown')).length;
+  const isUnknownName = (name) => !name || name.trim() === '' || /^unknown/i.test(name.trim());
+  const unknownCount = owners.filter(o => isUnknownName(o.owner_name)).length;
 
   return (
     <div className="mb-4 border border-slate-200 rounded-xl overflow-hidden">
@@ -53,11 +54,20 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onStatusC
           <span className="text-xs text-slate-500 ml-1">({owners.length} owners{unsent > 0 ? `, ${unsent} unsent` : ''})</span>
         </div>
         <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1.5 border-red-400 text-red-700 hover:bg-red-50 text-xs"
+            disabled={sendingBatch}
+            onClick={(e) => { e.stopPropagation(); onDeleteAll(city, owners); }}
+          >
+            <Trash2 className="w-3 h-3" /> Delete All ({owners.length})
+          </Button>
           {unknownCount > 0 && (
             <Button
               size="sm"
               variant="outline"
-              className="gap-1.5 border-red-300 text-red-600 hover:bg-red-50 text-xs"
+              className="gap-1.5 border-orange-300 text-orange-600 hover:bg-orange-50 text-xs"
               disabled={sendingBatch}
               onClick={(e) => { e.stopPropagation(); onDeleteUnknowns(city, owners); }}
             >
@@ -192,8 +202,19 @@ export default function AdminOwners() {
     return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   }, [owners, globalSearch]);
 
+  const handleDeleteAll = async (city, cityOwners) => {
+    if (!confirm(`Delete ALL ${cityOwners.length} records in ${city}? This cannot be undone.`)) return;
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    for (const o of cityOwners) {
+      try { await base44.entities.ListingOwner.delete(o.id); await sleep(300); }
+      catch (e) { await sleep(500); }
+    }
+    queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
+  };
+
   const handleDeleteUnknowns = async (city, cityOwners) => {
-    const toDelete = cityOwners.filter(o => (!o.phone || o.phone.trim() === '') && (!o.owner_name || o.owner_name.trim() === '' || o.owner_name.trim().toLowerCase() === 'unknown'));
+    const isUnknownName = (name) => !name || name.trim() === '' || /^unknown/i.test(name.trim());
+    const toDelete = cityOwners.filter(o => isUnknownName(o.owner_name));
     if (!toDelete.length) return;
     if (!confirm(`Delete ${toDelete.length} records with no name/phone in ${city}? This cannot be undone.`)) return;
     const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -322,6 +343,7 @@ export default function AdminOwners() {
           owners={cityOwners}
           onEdit={(owner) => { setEditingOwner(owner); setShowForm(true); }}
           onDelete={(id) => setDeleteConfirm(id)}
+          onDeleteAll={handleDeleteAll}
           onDeleteUnknowns={handleDeleteUnknowns}
           onStatusChange={handleStatusChange}
           onSendBatch={handleSendBatch}
