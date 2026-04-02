@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No owners provided' }, { status: 400 });
     }
 
-    const batch = owners.slice(0, 25); // Hard cap at 25
+    const batch = owners; // Send all provided owners
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');

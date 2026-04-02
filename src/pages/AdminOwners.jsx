@@ -90,7 +90,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
               {sendingBatch ? (
                 <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
               ) : (
-                <><Send className="w-3 h-3" /> Send Batch ({Math.min(25, unsent)})</>
+                <><Send className="w-3 h-3" /> Send All ({unsent})</>
               )}
             </Button>
           )}
@@ -255,15 +255,16 @@ export default function AdminOwners() {
 
   const handleSendBatch = async (city, cityOwners) => {
     const unsent = cityOwners.filter(o => o.phone && o.contact_status === 'not_contacted');
-    const batch = unsent.slice(0, 25);
-    if (!batch.length) return;
-    if (!confirm(`Send outreach SMS to ${batch.length} owners in ${city}?\n\nMessages will be spaced 3 minutes apart.`)) return;
+    if (!unsent.length) return;
+    const estMinutes = unsent.length * 3;
+    const estHours = (estMinutes / 60).toFixed(1);
+    if (!confirm(`Send outreach SMS to ALL ${unsent.length} owners in ${city}?\n\nMessages will be spaced 3 minutes apart and scheduled automatically (~${estHours} hrs total). You only need to click once.`)) return;
 
     setSendingBatchCity(city);
     setBatchResult(null);
     try {
       const res = await base44.functions.invoke('sendBatchOutreachSMS', {
-        owners: batch.map(o => ({
+        owners: unsent.map(o => ({
           listing_owner_id: o.id,
           phone: o.phone,
           owner_name: o.owner_name,
@@ -333,7 +334,7 @@ export default function AdminOwners() {
         <div className={`mb-4 border rounded-lg px-4 py-3 text-sm font-semibold ${batchResult.error ? 'bg-red-50 border-red-200 text-red-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
           {batchResult.error
             ? `✗ ${batchResult.city}: ${batchResult.error}`
-            : `✓ ${batchResult.city}: ${batchResult.sent} sent, ${batchResult.failed || 0} failed. Messages spaced 3 min apart.`
+            : `✓ ${batchResult.city}: ${batchResult.sent} messages queued, ${batchResult.failed || 0} failed. All scheduled automatically, spaced 3 min apart.`
           }
           <button onClick={() => setBatchResult(null)} className="ml-3 text-slate-400 hover:text-slate-600">✕</button>
         </div>
