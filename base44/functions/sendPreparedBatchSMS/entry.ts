@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
 
     // Log batch result
     try {
-      await base44.asServiceRole.entities.BatchSMSLog.create({
+      const logRecord = await base44.asServiceRole.entities.BatchSMSLog.create({
         city,
         batch_size: prepared_batch.length,
         sent_count: sent,
@@ -110,8 +110,10 @@ Deno.serve(async (req) => {
         sent_by: user.email,
         estimated_duration_minutes: sent * 3,
       });
+      console.log('BatchSMSLog created:', logRecord.id);
     } catch (logErr) {
-      console.error('Failed to log batch result:', logErr.message);
+      console.error('CRITICAL: Failed to create BatchSMSLog', { city, sent, failed, error: logErr.message });
+      // Still return success for SMS send, but log the DB failure
     }
 
     return Response.json({
