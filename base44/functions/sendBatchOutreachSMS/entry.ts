@@ -142,6 +142,22 @@ Deno.serve(async (req) => {
     const failed = results.filter(r => r.status === 'failed').length;
     const skipped = results.filter(r => r.status === 'skipped').length;
 
+    // Log batch result
+    try {
+      await base44.asServiceRole.entities.BatchSMSLog.create({
+        city: body.city || 'Unknown',
+        batch_size: batch.length,
+        sent_count: sent,
+        failed_count: failed,
+        skipped_count: skipped,
+        sent_at: new Date().toISOString(),
+        sent_by: user.email,
+        estimated_duration_minutes: batch.length * 3,
+      });
+    } catch (logErr) {
+      console.error('Failed to log batch result:', logErr.message);
+    }
+
     return Response.json({
       success: true,
       sent,

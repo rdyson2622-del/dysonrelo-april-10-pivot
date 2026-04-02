@@ -264,6 +264,7 @@ export default function AdminOwners() {
     setBatchResult(null);
     try {
       const res = await base44.functions.invoke('sendBatchOutreachSMS', {
+        city,
         owners: unsent.map(o => ({
           listing_owner_id: o.id,
           phone: o.phone,

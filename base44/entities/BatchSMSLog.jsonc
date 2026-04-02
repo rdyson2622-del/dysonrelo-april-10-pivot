@@ -1,0 +1,48 @@
+{
+  "name": "BatchSMSLog",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "description": "City where batch was sent"
+    },
+    "batch_size": {
+      "type": "number",
+      "description": "Total owners in batch"
+    },
+    "sent_count": {
+      "type": "number",
+      "description": "Successfully queued messages"
+    },
+    "failed_count": {
+      "type": "number",
+      "description": "Failed messages"
+    },
+    "skipped_count": {
+      "type": "number",
+      "description": "Skipped (missing phone/id)"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When batch was initiated"
+    },
+    "sent_by": {
+      "type": "string",
+      "description": "Admin email who sent batch"
+    },
+    "estimated_duration_minutes": {
+      "type": "number",
+      "description": "Estimated time to send all (batch_size * 3)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "city",
+    "batch_size",
+    "sent_at"
+  ]
+}
