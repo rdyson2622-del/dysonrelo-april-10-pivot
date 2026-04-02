@@ -156,24 +156,18 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
                     <td className="px-4 py-2.5 text-slate-500 max-w-[160px] truncate">{owner.email || '—'}</td>
                     <td className="px-4 py-2.5 text-slate-700 whitespace-nowrap font-medium">{fmt(owner.listing_price)}</td>
                     <td className="px-4 py-2.5">
-                      <div className="flex items-center gap-2">
-                        {owner.contact_status === 'not_contacted' && activeCampaign ? (
-                          <span className="text-xs rounded-full px-2 py-1 font-medium bg-green-100 text-green-700">⏳ Queued</span>
-                        ) : (
-                          <select
-                            value={owner.contact_status || 'not_contacted'}
-                            onChange={e => onStatusChange(owner.id, e.target.value)}
-                            className={`text-xs rounded-full px-2 py-1 font-medium border-0 cursor-pointer ${STATUS_COLORS[owner.contact_status] || STATUS_COLORS.not_contacted}`}
-                          >
-                            <option value="not_contacted">Not Contacted</option>
-                            <option value="contacted">Contacted</option>
-                            <option value="in_conversation">In Conversation</option>
-                            <option value="interested">Interested</option>
-                            <option value="not_interested">Not Interested</option>
-                            <option value="converted">Converted</option>
-                          </select>
-                        )}
-                      </div>
+                      <select
+                        value={owner.contact_status || 'not_contacted'}
+                        onChange={e => onStatusChange(owner.id, e.target.value)}
+                        className={`text-xs rounded-full px-2 py-1 font-medium border-0 cursor-pointer ${STATUS_COLORS[owner.contact_status] || STATUS_COLORS.not_contacted}`}
+                      >
+                        <option value="not_contacted">Not Contacted</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="in_conversation">In Conversation</option>
+                        <option value="interested">Interested</option>
+                        <option value="not_interested">Not Interested</option>
+                        <option value="converted">Converted</option>
+                      </select>
                     </td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
