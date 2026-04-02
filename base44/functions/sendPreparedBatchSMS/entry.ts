@@ -85,8 +85,9 @@ Deno.serve(async (req) => {
             contact_status: 'contacted',
             last_contacted: new Date().toISOString().split('T')[0],
           });
+          console.log('Updated ListingOwner contact_status for', listing_owner_id);
         } catch (dbErr) {
-          console.error('DB update failed for', listing_owner_id, dbErr.message);
+          console.error('CRITICAL: Failed to update ListingOwner', { listing_owner_id, error: dbErr.message, stack: dbErr.stack });
         }
 
         results.push({ listing_owner_id, owner_name, status: 'queued', message_sid: result.sid });
