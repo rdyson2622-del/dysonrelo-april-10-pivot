@@ -197,7 +197,7 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) { reset(); onClose?.(); } }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Import Owners from CSV</DialogTitle>
@@ -250,7 +250,7 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => { reset(); onClose(); }}>
+          <Button variant="outline" onClick={() => { reset(); onClose?.(); }}>
             {result ? 'Close' : 'Cancel'}
           </Button>
           {error && <Button onClick={reset}>Try Again</Button>}
