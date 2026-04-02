@@ -1,0 +1,36 @@
+{
+  "name": "OptOut",
+  "type": "object",
+  "properties": {
+    "phone": {
+      "type": "string",
+      "description": "Phone number that opted out"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "twilio_sms",
+        "manual"
+      ],
+      "description": "How the opt-out was recorded"
+    },
+    "opted_out_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the opt-out occurred"
+    },
+    "campaign_city": {
+      "type": "string",
+      "description": "Which city batch this was for (if applicable)"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Opt-out reason or notes"
+    }
+  },
+  "required": [
+    "phone",
+    "source",
+    "opted_out_at"
+  ]
+}

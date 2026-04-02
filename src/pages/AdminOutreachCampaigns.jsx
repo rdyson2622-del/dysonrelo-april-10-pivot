@@ -18,22 +18,41 @@ export default function AdminOutreachCampaigns() {
     initialData: []
   });
 
-  const { data: socialPosts = [] } = useQuery({
-    queryKey: ['social_posts'],
-    queryFn: () => base44.entities.SocialPost.list('-created_date', 500),
+  const { data: batchSmsLogs = [] } = useQuery({
+    queryKey: ['batch_sms_logs'],
+    queryFn: () => base44.entities.BatchSMSLog.list('-sent_at', 200),
     initialData: []
   });
 
-  // Calculate opt-outs per campaign from social posts
+  const { data: optOuts = [] } = useQuery({
+    queryKey: ['opt_outs'],
+    queryFn: () => base44.entities.OptOut.list('-opted_out_at', 500),
+    initialData: []
+  });
+
+  // Calculate opt-out counts per campaign by city
   const optOutCounts = useMemo(() => {
     const counts = {};
-    for (const post of socialPosts) {
-      if (post.campaign_id && post.performance?.conversions !== undefined) {
-        counts[post.campaign_id] = (counts[post.campaign_id] || 0) + (post.performance.conversions || 0);
-      }
+    for (const log of batchSmsLogs) {
+      const cityOptOuts = optOuts.filter(o => o.campaign_city === log.city).length;
+      counts[log.city] = cityOptOuts;
     }
     return counts;
-  }, [socialPosts]);
+  }, [batchSmsLogs, optOuts]);
+
+  // Group BatchSMSLogs by campaign (estimate: logs in same date range = same campaign)
+  const batchLogsByCampaign = useMemo(() => {
+    const map = {};
+    for (const campaign of campaigns) {
+      map[campaign.id] = batchSmsLogs.filter(log => {
+        const logDate = new Date(log.sent_at);
+        const startDate = campaign.start_date ? new Date(campaign.start_date) : null;
+        const endDate = campaign.end_date ? new Date(campaign.end_date) : null;
+        return (!startDate || logDate >= startDate) && (!endDate || logDate <= endDate);
+      });
+    }
+    return map;
+  }, [campaigns, batchSmsLogs]);
 
   const filteredCampaigns = campaigns.filter(c => {
     const matchSearch = c.campaign_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -102,14 +121,19 @@ export default function AdminOutreachCampaigns() {
           </div>
         ) : (
           <div className="grid gap-4">
-            {filteredCampaigns.map((campaign) => (
-              <CampaignCard
-                key={campaign.id}
-                campaign={campaign}
-                optOutCount={optOutCounts[campaign.id] || 0}
-                onClick={() => setSelectedCampaign(campaign)}
-              />
-            ))}
+            {filteredCampaigns.map((campaign) => {
+              const logsForCampaign = batchLogsByCampaign[campaign.id] || [];
+              const totalOptOuts = logsForCampaign.reduce((sum, log) => sum + (optOutCounts[log.city] || 0), 0);
+              return (
+                <CampaignCard
+                  key={campaign.id}
+                  campaign={campaign}
+                  batchSmsLogs={logsForCampaign}
+                  optOutCount={totalOptOuts}
+                  onClick={() => setSelectedCampaign(campaign)}
+                />
+              );
+            })}
           </div>
         )}
       </main>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Users, DollarSign, CheckCircle2, TrendingDown, Clock } from 'lucide-react';
+import { Calendar, AlertCircle, CheckCircle2, TrendingDown, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const STATUS_COLORS = {
@@ -23,12 +23,23 @@ function getMilestoneStatus(milestones) {
   return { completed, total: milestones.length, pct: Math.round((completed / milestones.length) * 100) };
 }
 
-export default function CampaignCard({ campaign, optOutCount = 0, onClick }) {
+function formatDateRange(startDate, endDate) {
+  if (!startDate) return 'TBD';
+  const start = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const end = endDate ? new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  return end ? `${start} — ${end}` : start;
+}
+
+export default function CampaignCard({ campaign, batchSmsLogs = [], optOutCount = 0, onClick }) {
   const statusConfig = STATUS_COLORS[campaign.status] || STATUS_COLORS.planning;
   const postProgress = campaign.total_posts_planned ? Math.round((campaign.posts_created || 0) / campaign.total_posts_planned * 100) : 0;
   const milestoneStatus = getMilestoneStatus(campaign.milestones);
   const lastUpdated = campaign.updated_date ? new Date(campaign.updated_date) : null;
-  const isOnTrack = postProgress >= 50; // Simple heuristic: 50% posts by midpoint
+  
+  // Get SMS batch dates for this campaign (if applicable)
+  const smsBatchDates = batchSmsLogs.length > 0 
+    ? batchSmsLogs.map(log => new Date(log.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }))
+    : [];
 
   return (
     <motion.div
@@ -89,43 +100,41 @@ export default function CampaignCard({ campaign, optOutCount = 0, onClick }) {
           </div>
         ) : null}
 
-        {/* Stats row */}
-        <div className="grid grid-cols-4 gap-2">
-          {/* Dates */}
+        {/* Stats row - SMS focused */}
+        <div className="grid grid-cols-3 gap-3">
+          {/* Campaign Date Range */}
           <div>
             <div className="flex items-center gap-1 text-slate-600 mb-1">
               <Calendar className="w-3 h-3" />
             </div>
-            <p className="text-xs font-medium text-slate-700">
-              {campaign.start_date ? new Date(campaign.start_date).toLocaleDateString() : 'TBD'}
-            </p>
-            <p className="text-xs text-slate-400">{campaign.end_date ? new Date(campaign.end_date).toLocaleDateString() : '—'}</p>
+            <p className="text-xs font-medium text-slate-700">{formatDateRange(campaign.start_date, campaign.end_date)}</p>
+            <p className="text-xs text-slate-400">campaign period</p>
           </div>
 
-          {/* Platforms */}
+          {/* SMS Send Dates (from BatchSMSLog) */}
           <div>
             <div className="flex items-center gap-1 text-slate-600 mb-1">
-              <Users className="w-3 h-3" />
+              <Clock className="w-3 h-3" />
             </div>
-            <p className="text-xs font-bold text-slate-700">{campaign.platforms?.length || 0}</p>
-            <p className="text-xs text-slate-400">platforms</p>
-          </div>
-
-          {/* Budget */}
-          <div>
-            <div className="flex items-center gap-1 text-slate-600 mb-1">
-              <DollarSign className="w-3 h-3" />
-            </div>
-            <p className="text-xs font-bold text-slate-700">${campaign.budget?.toLocaleString() || '0'}</p>
-            <p className="text-xs text-slate-400">budget</p>
+            {smsBatchDates.length > 0 ? (
+              <>
+                <p className="text-xs font-medium text-slate-700">{smsBatchDates[0]}</p>
+                <p className="text-xs text-slate-400">{smsBatchDates.length} batch{smsBatchDates.length > 1 ? 'es' : ''}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-medium text-slate-500">No sends yet</p>
+                <p className="text-xs text-slate-400">—</p>
+              </>
+            )}
           </div>
 
           {/* Opt-outs */}
           <div>
             <div className="flex items-center gap-1 text-slate-600 mb-1">
-              <TrendingDown className="w-3 h-3" />
+              {optOutCount > 0 ? <AlertCircle className="w-3 h-3 text-red-500" /> : <TrendingDown className="w-3 h-3" />}
             </div>
-            <p className="text-xs font-bold text-slate-700">{optOutCount}</p>
+            <p className={`text-xs font-bold ${optOutCount > 0 ? 'text-red-600' : 'text-slate-700'}`}>{optOutCount}</p>
             <p className="text-xs text-slate-400">opt-outs</p>
           </div>
         </div>
