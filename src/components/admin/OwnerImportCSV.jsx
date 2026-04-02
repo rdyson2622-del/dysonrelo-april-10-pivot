@@ -165,9 +165,8 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
 
       if (!rows.length) throw new Error('No data rows found in file.');
 
-      // Relax validation — accept rows with just an address even if no name
       const valid = rows.filter(r => r.street.trim());
-      if (!valid.length) throw new Error('No rows with a property address found.');
+      if (!valid.length) throw new Error('No rows with a property address found. Check that your file has an address column.');
 
       const toInsert = valid.map(r => ({
         owner_name:       String(r.owner_name || 'Unknown'),
