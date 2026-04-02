@@ -171,13 +171,13 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
                     </td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
-                        {owner.contact_status === 'not_contacted' && owner.phone && (
+                        {owner.phone && (
                           <button 
                             onClick={() => onSendBatch(city, [owner])}
-                            className="p-1.5 rounded hover:bg-blue-100 text-blue-600 hover:text-blue-800 transition"
-                            title="Send SMS to this owner only"
+                            className="px-2.5 py-1 rounded text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white transition"
+                            title="Send SMS to this owner"
                           >
-                            <Send className="w-3.5 h-3.5" />
+                            Send
                           </button>
                         )}
                         <button onClick={() => onEdit(owner)} className="p-1.5 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition">
