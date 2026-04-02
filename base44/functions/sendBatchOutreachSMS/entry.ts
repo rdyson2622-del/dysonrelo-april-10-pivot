@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
     const templateContent = templates[0].content;
     const DELAY_SECONDS = 180; // 3 minutes between each SMS
     const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+    const messagingSid = Deno.env.get('TWILIO_MESSAGING_SERVICE_SID');
 
     const results = [];
     const now = new Date();
@@ -48,37 +49,22 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Schedule each message: start at 5 min (300s) + i * 3 minutes (180s) in the future
-      // This ensures the first message is at least 5 min in future as required by Twilio
-      const sendAt = new Date(now.getTime() + (300 + i * DELAY_SECONDS) * 1000);
-      const sendAtISO = sendAt.toISOString(); // Twilio accepts ISO 8601 with Z
+      // Schedule each message: start at 10 min (600s) + i * 3 minutes (180s) in the future
+      // Twilio SendAt expects ISO 8601 format without milliseconds
+      // Recalculate now to account for processing time
+      const currentTime = new Date();
+      const sendAtDate = new Date(currentTime.getTime() + (600 + i * DELAY_SECONDS) * 1000);
+      const sendAtISO = sendAtDate.toISOString().replace(/\.\d{3}Z$/, 'Z');
 
       let messageBody = templateContent.replace(/\{\{owner_name\}\}/g, owner_name || 'there');
 
       const formData = new URLSearchParams();
       formData.append('To', phone);
-      formData.append('From', fromNumber);
+      formData.append('MessagingServiceSid', messagingSid);
       formData.append('Body', messageBody);
       formData.append('SendAt', sendAtISO);
       formData.append('ScheduleType', 'fixed');
-      formData.append('MessagingServiceSid', Deno.env.get('TWILIO_MESSAGING_SERVICE_SID') || '');
-
-      // If no messaging service SID, send immediately (first message) or with a plain send
-      // Fallback: send immediately without scheduling for simpler setups
-      const formDataNoSchedule = new URLSearchParams();
-      formDataNoSchedule.append('To', phone);
-      formDataNoSchedule.append('From', fromNumber);
-      formDataNoSchedule.append('Body', messageBody);
-
-      // Schedule all messages with proper timing (no immediate fallback)
-      const messagingSid = Deno.env.get('TWILIO_MESSAGING_SERVICE_SID');
-      if (!messagingSid) {
-        return Response.json({ 
-          error: 'TWILIO_MESSAGING_SERVICE_SID not configured. Cannot schedule messages without it.' 
-        }, { status: 400 });
-      }
-
-      formData.set('MessagingServiceSid', messagingSid);
+      
       const response = await fetch(twilioUrl, {
         method: 'POST',
         headers: {
