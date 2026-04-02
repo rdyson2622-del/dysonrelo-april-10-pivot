@@ -75,7 +75,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center gap-2 flex-wrap justify-end" onClick={e => e.stopPropagation()}>
           {selected.size > 0 && (
             <Button
               size="sm"
