@@ -91,14 +91,23 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
             </Button>
           )}
           {selected.size > 0 && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="gap-1.5 border-red-400 text-red-700 hover:bg-red-50 text-xs"
-              onClick={(e) => { e.stopPropagation(); onDeleteSelected(Array.from(selected), () => setSelected(new Set())); }}
-            >
-              <Trash2 className="w-3 h-3" /> Delete ({selected.size})
-            </Button>
+            <>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners.filter(o => selected.has(o.id))); }}
+              >
+                <Send className="w-3 h-3" /> Send ({selected.size})
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 border-red-400 text-red-700 hover:bg-red-50 text-xs"
+                onClick={(e) => { e.stopPropagation(); onDeleteSelected(Array.from(selected), () => setSelected(new Set())); }}
+              >
+                <Trash2 className="w-3 h-3" /> Delete ({selected.size})
+              </Button>
+            </>
           )}
           <Button
             size="sm"
