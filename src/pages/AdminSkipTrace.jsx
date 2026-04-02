@@ -287,8 +287,16 @@ function BulkBuilder() {
         listing_price: r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
         contact_status: 'not_contacted',
       }));
-      const created = await base44.entities.ListingOwner.bulkCreate(records);
-      setImportResult({ count: created.length });
+
+      // Batch in chunks of 25 to avoid timeouts
+      const CHUNK = 25;
+      let totalCreated = 0;
+      for (let i = 0; i < records.length; i += CHUNK) {
+        const chunk = records.slice(i, i + CHUNK);
+        const created = await base44.entities.ListingOwner.bulkCreate(chunk);
+        totalCreated += created.length;
+      }
+      setImportResult({ count: totalCreated });
     } catch (err) {
       setImportError('Import failed: ' + (err.message || err));
     } finally {
