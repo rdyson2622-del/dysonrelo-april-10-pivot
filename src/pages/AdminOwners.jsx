@@ -326,7 +326,8 @@ export default function AdminOwners() {
     setBatchResult(null);
     setBatchStatuses(prev => ({ ...prev, [city]: 'in_progress' }));
     try {
-      const res = await base44.functions.invoke('sendBatchOutreachSMS', {
+      // Step 1: Prepare batch
+      const prepRes = await base44.functions.invoke('prepareBatchOutreachSMS', {
         city,
         owners: unsent.map(o => ({
           listing_owner_id: o.id,
@@ -335,7 +336,21 @@ export default function AdminOwners() {
           property_address: o.property_address,
         })),
       });
-      setBatchResult({ city, ...res.data });
+
+      if (!prepRes.data.success) {
+        setBatchResult({ city, error: prepRes.data.error });
+        setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
+        setSendingBatchCity(null);
+        return;
+      }
+
+      // Step 2: Send prepared batch
+      const sendRes = await base44.functions.invoke('sendPreparedBatchSMS', {
+        city,
+        prepared_batch: prepRes.data.prepared_batch,
+      });
+
+      setBatchResult({ city, ...sendRes.data });
       setBatchStatuses(prev => ({ ...prev, [city]: 'completed' }));
       queryClient.invalidateQueries({ queryKey: ['listingOwners'] });
     } catch (e) {
