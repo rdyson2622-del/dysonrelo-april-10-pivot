@@ -76,6 +76,20 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap justify-end" onClick={e => e.stopPropagation()}>
+          {unsent > 0 && (
+            <Button
+              size="sm"
+              className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs whitespace-nowrap"
+              disabled={sendingBatch}
+              onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
+            >
+              {sendingBatch ? (
+                <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
+              ) : (
+                <><Send className="w-3 h-3" /> Send All ({unsent})</>
+              )}
+            </Button>
+          )}
           {selected.size > 0 && (
             <Button
               size="sm"
@@ -83,7 +97,7 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
               className="gap-1.5 border-red-400 text-red-700 hover:bg-red-50 text-xs"
               onClick={(e) => { e.stopPropagation(); onDeleteSelected(Array.from(selected), () => setSelected(new Set())); }}
             >
-              <Trash2 className="w-3 h-3" /> Delete Selected ({selected.size})
+              <Trash2 className="w-3 h-3" /> Delete ({selected.size})
             </Button>
           )}
           <Button
@@ -93,30 +107,8 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
             disabled={sendingBatch}
             onClick={(e) => { e.stopPropagation(); onDeleteAll(city, owners); }}
           >
-            <Trash2 className="w-3 h-3" /> Delete All ({owners.length})
+            <Trash2 className="w-3 h-3" /> Delete All
           </Button>
-          {unsent > 0 ? (
-           <Button
-             size="sm"
-             className="gap-1.5 bg-slate-900 hover:bg-slate-700 text-white text-xs whitespace-nowrap flex-shrink-0"
-             disabled={sendingBatch}
-             onClick={(e) => { e.stopPropagation(); onSendBatch(city, owners); }}
-           >
-             {sendingBatch ? (
-               <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
-             ) : (
-               <><Send className="w-3 h-3" /> Send All ({unsent})</>
-             )}
-           </Button>
-          ) : (
-           <Button
-             size="sm"
-             className="gap-1.5 bg-red-100 text-red-700 text-xs cursor-not-allowed"
-             disabled
-           >
-             ✓ Sent
-           </Button>
-          )}
         </div>
       </div>
 
@@ -185,6 +177,15 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteAll, onDeleteSelect
                     </td>
                     <td className="px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
+                        {owner.contact_status === 'not_contacted' && owner.phone && (
+                          <button 
+                            onClick={() => onSendBatch(city, [owner])}
+                            className="p-1.5 rounded hover:bg-blue-100 text-blue-600 hover:text-blue-800 transition"
+                            title="Send SMS to this owner only"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         <button onClick={() => onEdit(owner)} className="p-1.5 rounded hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition">
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -218,6 +219,14 @@ export default function AdminOwners() {
   const [batchStatuses, setBatchStatuses] = useState({}); // { city: 'pending' | 'in_progress' | 'completed' }
   const [activeCampaigns, setActiveCampaigns] = useState({}); // { city: { estimatedSent, total, failed, remainingMinutes } }
   const queryClient = useQueryClient();
+
+  // Auto-clear batch result after 5 seconds
+  React.useEffect(() => {
+    if (batchResult) {
+      const timer = setTimeout(() => setBatchResult(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [batchResult]);
 
   const { data: owners = [] } = useQuery({
     queryKey: ['listingOwners'],
