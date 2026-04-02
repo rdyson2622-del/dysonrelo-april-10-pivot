@@ -26,7 +26,7 @@ function fmt(price) {
 }
 
 function CityGroup({ city, owners, onEdit, onDelete, onStatusChange, onSendBatch, sendingBatch }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
 
   const filtered = owners.filter(o =>
