@@ -76,7 +76,7 @@ export default function Home() {
             <p className="text-base leading-relaxed mb-2" style={{ color: '#fff', fontWeight: 400 }}>
               Meet Charlie — your AI Relocation Manager backed by The Dyson & Dyson Companies and 54+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home —
             </p>
-            <p className="mb-4" style={{ color: '#fff', fontWeight: 700, fontSize: 'clamp(0.75rem, 1.5vw, 1.25rem)', lineHeight: 1.2 }}>
+            <p className="mb-4" style={{ color: '#fff', fontWeight: 700, fontSize: 'clamp(0.675rem, 1.35vw, 1.125rem)', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
               We don't sell Real Estate, We manage your entire relocation process.
             </p>
             <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.8)' }}>
