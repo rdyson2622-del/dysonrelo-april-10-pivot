@@ -148,22 +148,28 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
       setDetectedFormat(isPropStream ? 'PropStream' : isMLSFormat ? 'Board of Realtors MLS' : 'Standard CSV');
 
       // Create records in prod (matches batch send behavior)
-      const created = await base44.entities.ListingOwner.bulkCreate(
-        valid.map(r => ({
-          owner_name: r.owner_name || '',
-          email: r.email || '',
-          phone: r.phone || '',
-          property_address: r.property_address || '',
-          property_city: r.property_city || '',
-          property_state: r.property_state || '',
-          listing_price: r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) : undefined,
-          moving_to: r.moving_to || '',
-          notes: r.notes || '',
-          contact_status: 'not_contacted',
-        }))
-      );
+      // Batch in chunks of 25 to avoid timeouts
+      let totalCreated = 0;
+      const toInsert = valid.map(r => ({
+        owner_name: String(r.owner_name || ''),
+        email: String(r.email || ''),
+        phone: String(r.phone || ''),
+        property_address: String(r.property_address || ''),
+        property_city: String(r.property_city || ''),
+        property_state: String(r.property_state || ''),
+        listing_price: r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
+        moving_to: String(r.moving_to || ''),
+        notes: String(r.notes || ''),
+        contact_status: 'not_contacted',
+      }));
+      const CHUNK = 25;
+      for (let i = 0; i < toInsert.length; i += CHUNK) {
+        const created = await base44.entities.ListingOwner.bulkCreate(toInsert.slice(i, i + CHUNK));
+        totalCreated += created.length;
+      }
+      const created = { length: totalCreated };
 
-      setResult({ count: created.length });
+      setResult({ count: totalCreated });
       onImportComplete?.();
     } catch (err) {
       setError(err.message || 'Import failed');
