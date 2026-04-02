@@ -63,17 +63,6 @@ function CityGroup({ city, owners, onEdit, onDelete, onDeleteUnknowns, onDeleteA
           >
             <Trash2 className="w-3 h-3" /> Delete All ({owners.length})
           </Button>
-          {unknownCount > 0 && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="gap-1.5 border-orange-300 text-orange-600 hover:bg-orange-50 text-xs"
-              disabled={sendingBatch}
-              onClick={(e) => { e.stopPropagation(); onDeleteUnknowns(city, owners); }}
-            >
-              <Trash2 className="w-3 h-3" /> Delete Unknowns ({unknownCount})
-            </Button>
-          )}
           {unsent > 0 && (
             <Button
               size="sm"
