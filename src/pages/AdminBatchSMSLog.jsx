@@ -31,6 +31,25 @@ export default function AdminBatchSMSLog() {
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Batch SMS Logs</h1>
         <p className="text-sm text-slate-500 mb-6">{logs.length} total batches sent</p>
 
+        {/* SMS Template */}
+        <Card className="mb-6 bg-slate-900 border-slate-700">
+          <CardContent className="pt-5">
+            <div className="flex gap-3 items-start">
+              <Send className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="font-semibold text-white">Active SMS Template — Day 1 Initial Outreach</h3>
+                  <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded-full font-medium">LIVE</span>
+                </div>
+                <div className="bg-slate-800 rounded-lg px-4 py-3 text-sm text-slate-100 leading-relaxed border border-slate-600">
+                  Hi {'{{owner_name}}'}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed — We offer our FREE Concierge Relocation Services to manage your entire move & find your next home. Learn more from: https://dysonrelo.com and a testimonial at https://youtu.be/In_JbQXZoy0 — Reply YES or call Bob at (858) 353-1200. Reply STOP to opt out.
+                </div>
+                <p className="text-xs text-slate-400 mt-2">Placeholder: <code className="bg-slate-700 text-yellow-300 px-1 rounded">{'{{owner_name}}'}</code> is replaced with each owner's name at send time.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Purpose & Instructions */}
         <Card className="mb-6 bg-blue-50 border-blue-200">
           <CardContent className="pt-5">
