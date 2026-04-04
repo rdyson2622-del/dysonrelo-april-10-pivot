@@ -2,138 +2,201 @@ import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
-import { Upload, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Upload, AlertCircle, CheckCircle2, Eye, ChevronRight } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
-// ── Column detection helpers (same logic as AdminSkipTrace) ────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// COLUMN DETECTION — handles PropStream MLS export, PropStream SkipTrace export,
+// BatchData, and generic MLS/CSV formats
+// ─────────────────────────────────────────────────────────────────────────────
 
-function findColExact(headers, candidates) {
-  const lower = headers.map(h => h.toLowerCase().trim());
-  for (const c of candidates) {
-    const idx = lower.indexOf(c.toLowerCase());
-    if (idx !== -1) return idx;
-  }
-  return -1;
-}
-
-function findColContains(headers, candidates) {
-  const lower = headers.map(h => h.toLowerCase().trim());
-  for (const c of candidates) {
-    const idx = lower.findIndex(h => h.includes(c.toLowerCase()));
-    if (idx !== -1) return idx;
-  }
-  return -1;
-}
+function normalize(s) { return String(s || '').toLowerCase().trim(); }
 
 function findCol(headers, candidates) {
-  const exact = findColExact(headers, candidates);
-  if (exact !== -1) return exact;
-  return findColContains(headers, candidates);
+  const norm = headers.map(normalize);
+  // 1. Exact match
+  for (const c of candidates) {
+    const i = norm.indexOf(normalize(c));
+    if (i !== -1) return i;
+  }
+  // 2. Contains match
+  for (const c of candidates) {
+    const i = norm.findIndex(h => h.includes(normalize(c)));
+    if (i !== -1) return i;
+  }
+  return -1;
 }
 
+// ── NAME extraction ───────────────────────────────────────────────────────────
 function extractOwnerName(row, headers) {
-  const lower = headers.map(h => h.toLowerCase().trim());
+  const norm = headers.map(normalize);
 
-  // Single name columns
-  const singleCol = findColExact(headers, [
-    'owner name', 'seller name', 'taxpayer name', 'contact name', 'full name', 'name', 'owner', 'seller',
-  ]);
-  if (singleCol !== -1 && row[singleCol]?.trim()) return row[singleCol].trim();
-
-  // PropStream skip trace: "Owner 1 First Name" / "Owner 1 Last Name"
-  const o1FirstIdx = lower.indexOf('owner 1 first name');
-  const o1LastIdx  = lower.indexOf('owner 1 last name');
-  if (o1FirstIdx !== -1 || o1LastIdx !== -1) {
-    const first = o1FirstIdx !== -1 ? (row[o1FirstIdx] || '').trim() : '';
-    const last  = o1LastIdx  !== -1 ? (row[o1LastIdx]  || '').trim() : '';
-    const combined = [first, last].filter(Boolean).join(' ');
+  // PropStream SkipTrace: "Owner 1 First Name" + "Owner 1 Last Name"
+  const skipFirst = norm.indexOf('owner 1 first name');
+  const skipLast  = norm.indexOf('owner 1 last name');
+  if (skipFirst !== -1 || skipLast !== -1) {
+    const f = skipFirst !== -1 ? row[skipFirst] : '';
+    const l = skipLast  !== -1 ? row[skipLast]  : '';
+    const combined = [f, l].filter(Boolean).join(' ').trim();
     if (combined) return combined;
   }
 
-  // Generic first/last
-  const firstIdx = lower.indexOf('first name');
-  const lastIdx  = lower.indexOf('last name');
+  // PropStream MLS: single "Owner Name" or "Seller Name"
+  const singleCandidates = [
+    'owner name', 'seller name', 'taxpayer name', 'contact name',
+    'full name', 'name', 'owner', 'seller', 'client name',
+  ];
+  const singleIdx = findCol(headers, singleCandidates);
+  if (singleIdx !== -1 && row[singleIdx]?.trim()) return row[singleIdx].trim();
+
+  // Generic first + last
+  const firstIdx = findCol(headers, ['first name', 'firstname', 'first']);
+  const lastIdx  = findCol(headers, ['last name', 'lastname', 'last']);
   if (firstIdx !== -1 || lastIdx !== -1) {
-    const first = firstIdx !== -1 ? (row[firstIdx] || '').trim() : '';
-    const last  = lastIdx  !== -1 ? (row[lastIdx]  || '').trim() : '';
-    const combined = [first, last].filter(Boolean).join(' ');
+    const f = firstIdx !== -1 ? row[firstIdx] : '';
+    const l = lastIdx  !== -1 ? row[lastIdx]  : '';
+    const combined = [f, l].filter(Boolean).join(' ').trim();
     if (combined) return combined;
   }
 
   return '';
+}
+
+// ── PHONE extraction — tries all phone columns in priority order ──────────────
+function cleanPhone(raw) {
+  if (!raw) return '';
+  // Remove all non-digits
+  const digits = String(raw).replace(/\D/g, '');
+  if (!digits) return '';
+  // Strip leading country code 1
+  const stripped = digits.startsWith('1') && digits.length === 11 ? digits.slice(1) : digits;
+  if (stripped.length !== 10) return String(raw).trim(); // keep original if not 10 digits
+  // Format as (XXX) XXX-XXXX
+  return `(${stripped.slice(0,3)}) ${stripped.slice(3,6)}-${stripped.slice(6)}`;
 }
 
 function extractBestPhone(row, headers) {
-  const lower = headers.map(h => h.toLowerCase().trim());
-  const priority = [
-    'cell phone 1', 'cell phone1', 'cellphone1',
-    'cell phone 2', 'cell phone2',
+  const norm = headers.map(normalize);
+
+  // PropStream SkipTrace priority — cell phones first
+  const skipTracePriority = [
+    'cell phone 1', 'cell phone1', 'cellphone1', 'cell1',
+    'cell phone 2', 'cell phone2', 'cellphone2', 'cell2',
+    'cell phone 3', 'cell phone3', 'cellphone3', 'cell3',
     'phone 1', 'phone1',
-    'mobile phone 1', 'mobile 1', 'mobile1',
     'phone 2', 'phone2',
-    'mobile', 'cell', 'phone',
+    'phone 3', 'phone3',
+    'mobile phone 1', 'mobile1', 'mobile 1',
+    'mobile phone 2', 'mobile2', 'mobile 2',
     'owner phone', 'contact phone',
+    'mobile', 'cell', 'phone',
   ];
-  for (const p of priority) {
-    const idx = lower.indexOf(p);
-    if (idx !== -1 && row[idx]?.trim()) return row[idx].trim();
-  }
-  for (let i = 0; i < lower.length; i++) {
-    if ((lower[i].includes('cell') || lower[i].includes('phone')) && row[i]?.trim()) {
-      return row[i].trim();
+
+  for (const p of skipTracePriority) {
+    const idx = norm.indexOf(p);
+    if (idx !== -1 && row[idx]?.trim()) {
+      const cleaned = cleanPhone(row[idx]);
+      if (cleaned) return cleaned;
     }
   }
+
+  // Fallback: any column containing "cell" or "phone"
+  for (let i = 0; i < norm.length; i++) {
+    if ((norm[i].includes('cell') || norm[i].includes('phone')) && row[i]?.trim()) {
+      const cleaned = cleanPhone(row[i]);
+      if (cleaned) return cleaned;
+    }
+  }
+
   return '';
 }
 
-const STREET_CANDIDATES = ['property address', 'property street', 'street address', 'address', 'prop address', 'site address', 'mailing address', 'street'];
-const CITY_CANDIDATES   = ['property city', 'city', 'prop city', 'site city', 'mailing city'];
-const STATE_CANDIDATES  = ['property state', 'state', 'prop state', 'site state', 'mailing state'];
-const ZIP_CANDIDATES    = ['property zip', 'zip code', 'zip', 'postal code'];
-const PRICE_CANDIDATES  = ['list price', 'listing price', 'estimated value', 'price', 'asking price', 'est. value', 'mls amount'];
-const EMAIL_CANDIDATES  = ['email 1', 'email1', 'email address', 'email', 'owner email', 'contact email'];
+// ── ADDRESS extraction ────────────────────────────────────────────────────────
+// PropStream MLS uses "Property Address", SkipTrace uses "Property Street Address"
+const STREET_CANDIDATES = [
+  'property street address', 'property address', 'site address', 'street address',
+  'prop address', 'mailing address', 'address', 'street', 'situs address',
+];
+const CITY_CANDIDATES = [
+  'property city', 'site city', 'prop city', 'mailing city', 'city',
+];
+const STATE_CANDIDATES = [
+  'property state', 'site state', 'prop state', 'mailing state', 'state',
+];
+const ZIP_CANDIDATES = [
+  'property zip', 'property zip code', 'site zip', 'zip code', 'zip', 'postal code',
+];
+const PRICE_CANDIDATES = [
+  'list price', 'listing price', 'estimated value', 'est value', 'est. value',
+  'asking price', 'price', 'mls amount', 'sale price', 'assessed value',
+];
+const EMAIL_CANDIDATES = [
+  'email 1', 'email1', 'email address', 'owner email', 'contact email', 'email',
+];
 
-function parseXLSX(file) {
+// ─────────────────────────────────────────────────────────────────────────────
+// PARSE — handles XLSX, XLS, and CSV
+// ─────────────────────────────────────────────────────────────────────────────
+function parseFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject('Could not read file: ' + file.name);
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target.result);
-        const wb = XLSX.read(data, { type: 'array' });
+        const wb = XLSX.read(data, { type: 'array', raw: false });
         const sheet = wb.Sheets[wb.SheetNames[0]];
         const jsonRows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-        if (jsonRows.length < 2) { resolve([]); return; }
 
-        const headers = jsonRows[0].map(h => String(h).trim());
-        const dataRows = jsonRows.slice(1).map(r => headers.map((_, i) => String(r[i] || '').trim()));
+        if (jsonRows.length < 2) { resolve({ rows: [], headers: [] }); return; }
 
-        const streetIdx = findCol(headers, STREET_CANDIDATES);
+        // Find the actual header row — skip blank leading rows
+        let headerRowIdx = 0;
+        for (let i = 0; i < Math.min(5, jsonRows.length); i++) {
+          const row = jsonRows[i];
+          const nonEmpty = row.filter(c => String(c).trim()).length;
+          if (nonEmpty >= 3) { headerRowIdx = i; break; }
+        }
+
+        const rawHeaders = jsonRows[headerRowIdx].map(h => String(h).trim());
+        const dataRows = jsonRows.slice(headerRowIdx + 1)
+          .map(r => rawHeaders.map((_, i) => String(r[i] || '').trim()))
+          .filter(r => r.some(c => c)); // skip entirely blank rows
+
+        // Detect file type for diagnostic
+        const normHeaders = rawHeaders.map(normalize);
+        const isSkipTrace = normHeaders.some(h => h.includes('owner 1 first') || h.includes('cell phone 1'));
+        const isMLS = normHeaders.some(h => h.includes('list price') || h.includes('mls'));
+
+        const streetIdx = findCol(rawHeaders, STREET_CANDIDATES);
         if (streetIdx < 0) {
-          reject('Could not find address column.\n\nAll headers in your file:\n' + headers.join(' | '));
+          reject(
+            `❌ Could not find a property address column.\n\n` +
+            `Detected ${rawHeaders.length} columns:\n${rawHeaders.slice(0, 20).join(' | ')}\n\n` +
+            `💡 Expected columns like: "Property Address", "Property Street Address", or "Address"\n` +
+            `Make sure row 1 is the header row and the file is not filtered/grouped.`
+          );
           return;
         }
 
-        const cityIdx  = findCol(headers, CITY_CANDIDATES);
-        const stateIdx = findCol(headers, STATE_CANDIDATES);
-        const zipIdx   = findCol(headers, ZIP_CANDIDATES);
-        const priceIdx = findCol(headers, PRICE_CANDIDATES);
-        const emailIdx = findCol(headers, EMAIL_CANDIDATES);
+        const cityIdx  = findCol(rawHeaders, CITY_CANDIDATES);
+        const stateIdx = findCol(rawHeaders, STATE_CANDIDATES);
+        const zipIdx   = findCol(rawHeaders, ZIP_CANDIDATES);
+        const priceIdx = findCol(rawHeaders, PRICE_CANDIDATES);
+        const emailIdx = findCol(rawHeaders, EMAIL_CANDIDATES);
 
-        const parsed = dataRows
-          .map(row => ({
-            owner_name:    extractOwnerName(row, headers),
-            phone:         extractBestPhone(row, headers),
-            email:         emailIdx  >= 0 ? row[emailIdx]  : '',
-            street:        row[streetIdx] || '',
-            city:          cityIdx   >= 0 ? row[cityIdx]   : '',
-            state:         stateIdx  >= 0 ? row[stateIdx]  : '',
-            zip:           zipIdx    >= 0 ? row[zipIdx]    : '',
-            listing_price: priceIdx  >= 0 ? row[priceIdx]  : '',
-          }))
-          .filter(r => r.street.trim());
+        const rows = dataRows.map(row => ({
+          owner_name:    extractOwnerName(row, rawHeaders),
+          phone:         extractBestPhone(row, rawHeaders),
+          email:         emailIdx  >= 0 ? row[emailIdx]  : '',
+          street:        streetIdx >= 0 ? row[streetIdx] : '',
+          city:          cityIdx   >= 0 ? row[cityIdx]   : '',
+          state:         stateIdx  >= 0 ? row[stateIdx]  : '',
+          zip:           zipIdx    >= 0 ? row[zipIdx]    : '',
+          listing_price: priceIdx  >= 0 ? row[priceIdx]  : '',
+        })).filter(r => r.street.trim());
 
-        resolve({ rows: parsed, headers });
+        resolve({ rows, headers: rawHeaders, fileType: isSkipTrace ? 'PropStream SkipTrace' : isMLS ? 'PropStream MLS' : 'Generic CSV' });
       } catch (err) {
         reject('Could not parse file: ' + err.message);
       }
@@ -142,44 +205,57 @@ function parseXLSX(file) {
   });
 }
 
-// ── Component ──────────────────────────────────────────────────────────────
-
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
 export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
   const [loading, setLoading] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [preview, setPreview] = useState(null); // { rows, headers, fileType }
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const fileRef = useRef();
 
-  const reset = () => { setError(null); setResult(null); if (fileRef.current) fileRef.current.value = ''; };
+  const reset = () => {
+    setError(null); setResult(null); setPreview(null);
+    if (fileRef.current) fileRef.current.value = '';
+  };
 
   const handleFileSelect = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setLoading(true);
     setError(null);
     setResult(null);
+    setPreview(null);
 
     try {
-      const { rows, headers } = await parseXLSX(file);
+      const parsed = await parseFile(file);
+      if (!parsed.rows.length) throw new Error('No rows with a property address found.');
+      setPreview(parsed);
+    } catch (err) {
+      setError(typeof err === 'string' ? err : err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      if (!rows.length) throw new Error('No data rows found in file.');
+  const handleImport = async () => {
+    if (!preview?.rows) return;
+    setImporting(true);
 
-      const valid = rows.filter(r => r.street.trim());
-      if (!valid.length) throw new Error('No rows with a property address found. Check that your file has an address column.');
-
-      const toInsert = valid.map(r => ({
-        owner_name:       String(r.owner_name || 'Unknown'),
-        phone:            String(r.phone || ''),
-        email:            String(r.email || ''),
-        property_address: String([r.street, r.city, r.state].filter(Boolean).join(', ')),
-        property_city:    String(r.city || ''),
-        property_state:   String(r.state || ''),
+    try {
+      const toInsert = preview.rows.map(r => ({
+        owner_name:       r.owner_name || 'Unknown',
+        phone:            r.phone || '',
+        email:            r.email || '',
+        property_address: [r.street, r.city, r.state].filter(Boolean).join(', '),
+        property_city:    r.city || '',
+        property_state:   r.state || '',
         listing_price:    r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
         contact_status:   'not_contacted',
       }));
 
-      // Batch in chunks of 25
       const CHUNK = 25;
       let totalCreated = 0;
       for (let i = 0; i < toInsert.length; i += CHUNK) {
@@ -188,39 +264,48 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
       }
 
       setResult({ count: totalCreated });
+      setPreview(null);
       onImportComplete?.();
     } catch (err) {
-      setError(typeof err === 'string' ? err : (err.message || 'Import failed'));
+      setError(err.message || 'Import failed');
     } finally {
-      setLoading(false);
+      setImporting(false);
     }
   };
 
+  const withPhone = preview?.rows.filter(r => r.phone).length ?? 0;
+  const withName  = preview?.rows.filter(r => r.owner_name).length ?? 0;
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) { reset(); onClose?.(); } }}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Import Owners from CSV</DialogTitle>
+          <DialogTitle>Import Listing Owners</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          {!result && (
+
+          {/* Step 1: Upload */}
+          {!preview && !result && (
             <>
-              <div className="text-sm text-slate-600 space-y-1">
-                <p className="font-semibold text-slate-800">Accepts PropStream & MLS exports automatically.</p>
-                <p className="text-xs text-slate-500">Owner names, phones, addresses, and prices are detected automatically from column headers.</p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 space-y-1">
+                <p className="font-bold text-sm">✅ Supports both PropStream formats automatically:</p>
+                <p>• <strong>MLS Export</strong> — columns like "Property Address", "List Price", "Owner Name"</p>
+                <p>• <strong>SkipTrace Export</strong> — columns like "Property Street Address", "Owner 1 First Name", "Cell Phone 1"</p>
+                <p className="text-blue-600 mt-1">Phones are auto-formatted to (XXX) XXX-XXXX for Twilio compatibility.</p>
               </div>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-8 cursor-pointer hover:border-slate-400 transition">
+
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-8 cursor-pointer hover:border-slate-500 transition">
                 {loading ? (
                   <>
                     <div className="w-6 h-6 border-2 border-slate-300 border-t-slate-700 rounded-full animate-spin mb-2" />
-                    <span className="text-sm font-medium text-slate-600">Processing…</span>
+                    <span className="text-sm font-medium text-slate-600">Reading file…</span>
                   </>
                 ) : (
                   <>
-                    <Upload className="w-6 h-6 text-slate-400 mb-2" />
-                    <span className="text-sm font-medium text-slate-700">Select CSV / Excel file</span>
-                    <span className="text-xs text-slate-400 mt-1">.csv, .xlsx, .xls</span>
+                    <Upload className="w-8 h-8 text-slate-400 mb-2" />
+                    <span className="text-sm font-semibold text-slate-700">Click to select CSV / Excel file</span>
+                    <span className="text-xs text-slate-400 mt-1">.csv, .xlsx, .xls — PropStream MLS or SkipTrace export</span>
                   </>
                 )}
                 <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" onChange={handleFileSelect} disabled={loading} className="hidden" />
@@ -230,30 +315,110 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
                 <div className="flex gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
                   <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-red-900">Import failed</p>
-                    <p className="text-sm text-red-800 whitespace-pre-wrap">{error}</p>
+                    <p className="font-semibold text-red-900 mb-1">Could not parse file</p>
+                    <p className="text-sm text-red-800 whitespace-pre-wrap font-mono text-xs">{error}</p>
                   </div>
                 </div>
               )}
             </>
           )}
 
+          {/* Step 2: Preview */}
+          {preview && !result && (
+            <>
+              {/* Stats */}
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { label: 'File Type', value: preview.fileType, color: 'text-blue-700 bg-blue-50' },
+                  { label: 'Total Rows', value: preview.rows.length, color: 'text-slate-700 bg-slate-50' },
+                  { label: 'With Phone', value: `${withPhone} (${Math.round(withPhone/preview.rows.length*100)}%)`, color: withPhone > 0 ? 'text-green-700 bg-green-50' : 'text-red-700 bg-red-50' },
+                  { label: 'With Name', value: withName, color: 'text-slate-700 bg-slate-50' },
+                ].map(s => (
+                  <div key={s.label} className={`rounded-lg p-2 text-center ${s.color}`}>
+                    <p className="text-xs text-slate-500">{s.label}</p>
+                    <p className="font-bold text-sm mt-0.5">{s.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {withPhone === 0 && (
+                <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-3 text-sm text-yellow-800">
+                  ⚠️ <strong>No phone numbers found.</strong> This looks like a PropStream MLS export — you need to run SkipTrace first to get phone numbers, then re-import that file.
+                </div>
+              )}
+
+              {/* Preview table */}
+              <div className="border border-slate-200 rounded-lg overflow-hidden">
+                <div className="bg-slate-50 px-3 py-2 flex items-center gap-2 border-b border-slate-200">
+                  <Eye className="w-3.5 h-3.5 text-slate-500" />
+                  <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">Preview (first 8 rows)</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead className="bg-slate-100">
+                      <tr>
+                        <th className="text-left px-3 py-2 text-slate-500 font-medium">Owner Name</th>
+                        <th className="text-left px-3 py-2 text-slate-500 font-medium">Phone</th>
+                        <th className="text-left px-3 py-2 text-slate-500 font-medium">Address</th>
+                        <th className="text-left px-3 py-2 text-slate-500 font-medium">City</th>
+                        <th className="text-left px-3 py-2 text-slate-500 font-medium">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {preview.rows.slice(0, 8).map((r, i) => (
+                        <tr key={i} className={`border-t border-slate-100 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'}`}>
+                          <td className="px-3 py-2 font-medium text-slate-800">{r.owner_name || <span className="text-red-400">missing</span>}</td>
+                          <td className="px-3 py-2 text-slate-600">{r.phone || <span className="text-slate-300">—</span>}</td>
+                          <td className="px-3 py-2 text-slate-600 max-w-[160px] truncate">{r.street}</td>
+                          <td className="px-3 py-2 text-slate-500">{r.city}</td>
+                          <td className="px-3 py-2 text-slate-500">{r.listing_price ? `$${Number(String(r.listing_price).replace(/[^0-9.]/g,'')).toLocaleString()}` : '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-400 text-center">
+                Showing {Math.min(8, preview.rows.length)} of {preview.rows.length} rows
+              </p>
+            </>
+          )}
+
+          {/* Success */}
           {result && (
-            <div className="flex gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <div className="flex gap-3 p-5 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
               <div>
-                <p className="font-semibold text-green-900">Success!</p>
-                <p className="text-sm text-green-800">{result.count} owners imported</p>
+                <p className="font-bold text-green-900 text-lg">{result.count} owners imported! 🎉</p>
+                <p className="text-sm text-green-700 mt-1">All records are now in your Listing Owners database, ready to send SMS.</p>
               </div>
             </div>
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => { reset(); onClose?.(); }}>
             {result ? 'Close' : 'Cancel'}
           </Button>
-          {error && <Button onClick={reset}>Try Again</Button>}
+          {error && <Button variant="outline" onClick={reset}>Try Different File</Button>}
+          {preview && !result && (
+            <>
+              <Button variant="outline" onClick={reset}>
+                ← Different File
+              </Button>
+              <Button
+                onClick={handleImport}
+                disabled={importing}
+                className="bg-slate-900 hover:bg-slate-700 text-white gap-2"
+              >
+                {importing
+                  ? <><div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Importing...</>
+                  : <><ChevronRight className="w-3.5 h-3.5" /> Import {preview.rows.length} Owners</>
+                }
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
