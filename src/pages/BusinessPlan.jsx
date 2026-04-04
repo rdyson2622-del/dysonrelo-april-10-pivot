@@ -682,6 +682,127 @@ All interviews are tracked in the AdminInterviews panel:
 This gate is what separates a serious relocation management firm from a lead generation website. We earn trust with agents by only sending them clients we've personally vetted.`
   },
   {
+    id: 'sms-campaign-process',
+    title: '📲 SMS Campaign Process (Step-by-Step)',
+    icon: Zap,
+    content: `SMS OUTREACH CAMPAIGN — COMPLETE OPERATIONAL GUIDE
+From PropStream → SkipTrace → Base44 → Twilio → Inbox
+
+This is the end-to-end process for every outbound SMS campaign. Follow these steps in order every time. Do not skip phases.
+
+────────────────────────────────
+PHASE 1 — GET YOUR LIST FROM PROPSTREAM MLS
+────────────────────────────────
+1. Log into PropStream (propstream.com)
+2. Search by city/zip, filter by: Active Listings, desired property type, price range
+3. Export the list as CSV or Excel — this is your MLS Export
+⚠️ IMPORTANT: This file has addresses and prices but NO phone numbers yet.
+   Do NOT import this file into Base44 — you will get a warning that phones are missing.
+
+────────────────────────────────
+PHASE 2 — RUN SKIPTRACE IN PROPSTREAM
+────────────────────────────────
+1. In PropStream, upload or select your MLS list
+2. Run SkipTrace on the list (costs credits — approx. $0.10–$0.15 per record)
+3. Wait for SkipTrace to complete — PropStream emails you when it's done
+4. Download the SkipTrace Export
+   ✅ THIS is the file you import into Base44 — NOT the MLS export
+   The SkipTrace file contains: "Owner 1 First Name", "Owner 1 Last Name", "Cell Phone 1", "Cell Phone 2", "Property Street Address", etc.
+
+────────────────────────────────
+PHASE 3 — IMPORT INTO BASE44
+────────────────────────────────
+1. In the Admin panel, go to: Admin → Listing Owners (sidebar)
+2. Click "Import CSV" (top right)
+3. Select your SkipTrace Export file (.xlsx or .csv)
+4. A PREVIEW SCREEN appears — verify:
+   • Owner names look correct (First + Last combined properly)
+   • Phone numbers are formatted as (XXX) XXX-XXXX
+   • Addresses are present
+   • File type detected as "PropStream SkipTrace"
+5. Review the stats: Total Rows, With Phone %, With Name count
+   ⚠️ If "With Phone" is 0% — you uploaded the MLS file, not the SkipTrace file. Go back.
+6. Click "Import X Owners" to commit all records
+✅ All contacts are now in the database with status: "not_contacted"
+
+────────────────────────────────
+PHASE 4 — SEND THE SMS CAMPAIGN
+────────────────────────────────
+1. Go to: Admin → Compose SMS (sidebar)
+2. STEP 1 — Select a template:
+   • "Owner Outreach SMS #1 — Day 1 Initial Outreach" for first contact
+   • "Day 3 Follow-Up" or "Day 7 Follow-Up" for re-engagement
+3. STEP 2 — Filter and select contacts:
+   • Use the City dropdown to narrow to the city you just imported
+   • Click "Select All" to grab all contacts with phone numbers
+   • Use the 👁 eye icon on any row to preview the filled message for that specific owner
+4. STEP 3 — Review the send summary:
+   • Confirm template name, recipient count, and "Immediate" delivery
+   • Review the selected names list
+5. Click "Send Now to X Contacts"
+✅ Messages fire immediately via Twilio. Contact statuses auto-update to "contacted."
+
+────────────────────────────────
+PHASE 5 — MONITOR REPLIES (AUTOMATIC)
+────────────────────────────────
+All replies are tracked automatically — no manual action needed:
+
+SMS Replies (via Twilio webhook):
+• "STOP" / "Unsubscribe" → contact_status = not_interested, logged to OptOut table
+• "YES" / "Interested" → contact_status = interested, logged to OptIn table
+• Any other reply → contact_status = in_conversation, logged with reply content
+
+Email Replies to Bob's Gmail (via Gmail automation):
+• Gmail is monitored in real-time for any email that matches an owner's email address
+• "YES" / "Interested" keywords → contact_status = interested
+• "STOP" / "Not Interested" → contact_status = not_interested, logged to OptOut
+• All other replies → contact_status = in_conversation, email content saved to notes
+
+────────────────────────────────
+PHASE 6 — FOLLOW-UP SENDS (MANUAL CONTROL)
+────────────────────────────────
+After the initial send, you are in full control of follow-up timing:
+
+Day 3 Follow-Up:
+1. Go to Compose SMS
+2. Filter by City, then filter contacts showing "not_contacted" or "contacted" but no reply
+3. Select the Day 3 Follow-Up template
+4. Send
+
+Day 7 Follow-Up:
+• Same process — use the Day 7 template
+• At this point, if no reply, consider moving status to "not_interested" and archiving
+
+────────────────────────────────
+PHASE 7 — TRACK EVERYTHING
+────────────────────────────────
+• Admin → Batch SMS Logs: every city, send count, success rate, estimated duration, history
+• Admin → Outreach Pipeline: funnel metrics, opt-in rates, conversion breakdown
+• Admin → New Opt-Ins: everyone who responded YES — hot leads ready for follow-up
+• Admin → Listing Owners: individual contact statuses per city, notes, phone numbers
+• Admin → Active Campaigns: real-time view of any in-progress sends
+
+────────────────────────────────
+RULES — READ BEFORE EVERY CAMPAIGN
+────────────────────────────────
+✅ Always import the SkipTrace file, NOT the MLS file (MLS has no phones)
+✅ Always check the Preview step before importing — catches formatting problems first
+✅ Never re-import the same city twice — check Listing Owners first to avoid duplicates
+✅ One city per campaign — keeps logs clean and errors isolated
+✅ Do not send follow-up to anyone marked "not_interested" or "interested" — filter them out
+✅ Confirm Twilio SMS budget before sending batches over 500 contacts
+
+────────────────────────────────
+WHAT EACH TOOL IS FOR
+────────────────────────────────
+• Compose SMS → Sending messages (manual, on-demand, you control when)
+• Listing Owners → Viewing/editing all contacts by city, checking statuses
+• Batch SMS Logs → Audit trail of every campaign ever sent
+• Outreach Pipeline → Funnel analytics — how many converted, how many opted out
+• New Opt-Ins → Hot list of people who said YES (follow these up immediately)
+• Active Campaigns → Real-time progress of any in-flight batch`
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -925,7 +1046,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#f5f5f5' }}
         >
-          <p>Business Plan v3.0 • Last Updated: March 20, 2026 • Updated: Executive Summary, Consumer Value, Competitive Advantages, Growth Roadmap, + Interview Gate, Listing Agent Model, Presentation Library</p>
+          <p>Business Plan v3.1 • Last Updated: April 4, 2026 • Added: SMS Campaign Process (Phase 1–7), PropStream → SkipTrace → Base44 → Twilio workflow, Gmail auto-reply tracking</p>
         </motion.div>
       </main>
     </div>
