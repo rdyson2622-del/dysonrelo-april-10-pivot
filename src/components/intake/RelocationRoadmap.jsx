@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { base44 } from '@/api/base44Client';
 import {
   CheckCircle2, ArrowRight, ChevronDown, ChevronUp,
   UserCheck, MapPin, Home, Search, ClipboardCheck,
@@ -127,9 +128,30 @@ const PHASES = [
 
 export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [expanded, setExpanded] = useState(1);
+  const [clientId, setClientId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const city = destinationCity || urlParams.get('city') || '';
+
+  useEffect(() => {
+    const checkClient = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.email) {
+          const clients = await base44.entities.RelocationClient.filter({ email: user.email });
+          if (clients.length > 0) {
+            setClientId(clients[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Error checking client:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkClient();
+  }, []);
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
@@ -199,12 +221,14 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
               style={{
                 border: isActive ? `2px solid ${GOLD}` : '1px solid rgba(255,255,255,0.1)',
                 background: isActive ? 'rgba(212,175,55,0.07)' : '#000',
+                opacity: clientId ? 1 : 0.6,
               }}
             >
               {/* Phase Header */}
               <button
+                disabled={!clientId}
                 className="w-full flex items-center gap-4 px-5 py-4 text-left"
-                onClick={() => setExpanded(isOpen ? null : phase.number)}
+                onClick={() => clientId && setExpanded(isOpen ? null : phase.number)}
               >
                 {/* Number / Icon */}
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
@@ -243,8 +267,15 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
                 }
               </button>
 
+              {/* Lock overlay when not submitted */}
+              {!clientId && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-2xl z-10">
+                  <p className="text-xs font-bold text-center px-4" style={{ color: 'rgba(255,255,255,0.8)' }}>Submit your info to unlock</p>
+                </div>
+              )}
+
               {/* Expanded Detail */}
-              {isOpen && (
+              {isOpen && clientId && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
