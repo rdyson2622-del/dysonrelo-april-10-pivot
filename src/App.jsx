@@ -72,7 +72,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Consumer Routes with Sidebar Layout */}
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/home" element={<Home />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
