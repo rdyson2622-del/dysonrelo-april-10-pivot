@@ -166,7 +166,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             <Sparkles className="w-8 h-8" style={{ color: GOLD }} />
           </div>
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>THE COMPLETE RELOCATION PROCESS</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Your Relocation Roadmap
           </h1>
           <p className="text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
