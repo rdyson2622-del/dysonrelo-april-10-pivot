@@ -33,19 +33,19 @@ const HeroMinimal = () => {
 
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4" style={{ paddingTop: '0.5rem', paddingBottom: '3rem' }}>
-      <div className="text-center mb-8">
+      <div className="text-center mb-12">
         <div className="flex justify-center mb-6">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
             alt="Dyson & Dyson"
-            className="h-[6.6rem] w-auto"
+            className="h-[5rem] w-auto"
           />
         </div>
-        <h1 className="display-heading mb-3" style={{ lineHeight: 1.2 }}>
-          <span className="text-white block" style={{ fontSize: 'clamp(2.025rem, 4.86vw, 4.05rem)', letterSpacing: '0.25em' }}>CONCIERGE</span>
-          <span className="gold-text-gradient block" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', letterSpacing: '0.3em' }}>RELOCATION MANAGEMENT</span>
+        <p className="text-xs font-medium tracking-widest text-gray-500 mb-4">DO THIS INSTEAD OF TRYING TO THINK:</p>
+        <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>
+          Where does your lifestyle take you next?
         </h1>
-        <p className="text-gray-400 text-base mt-2">54 Years of Expertise. AI-Powered Precision.</p>
+        <p className="text-lg mb-6" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
@@ -54,7 +54,7 @@ const HeroMinimal = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Considering a move? Where are you going?"
+            placeholder="City, State or Zip Code"
             disabled={scanning}
             className="w-full bg-[#1A1A1A] border-2 border-[#D4AF37]/30 text-white rounded-full py-5 px-8 pl-14 text-xl focus:outline-none focus:border-[#D4AF37] transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)] disabled:opacity-70"
           />
