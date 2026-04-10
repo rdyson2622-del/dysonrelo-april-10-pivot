@@ -349,12 +349,12 @@ export default function AdminSearchProfiles() {
       )}
 
       {/* PropStream workflow banner */}
-      <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: '#fffbeb', border: '1px solid #fde68a' }}>
-        <span className="text-lg">💡</span>
+      <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+        <span className="text-lg">📍</span>
         <div className="flex-1">
-          <p className="text-sm font-semibold" style={{ color: '#92400e' }}>Automated listing search is not available on your BatchData plan.</p>
-          <p className="text-sm mt-1" style={{ color: '#b45309' }}>
-            Use these saved profiles as reference when running searches manually in <strong>PropStream</strong>, then import the exported CSV on the Skip Trace page.
+          <p className="text-sm font-semibold" style={{ color: '#000' }}>Save your PropStream search criteria for reference</p>
+          <p className="text-sm mt-1" style={{ color: '#666' }}>
+            Search for listings in PropStream, export the results as CSV, then skip trace them on the <strong>Skip Trace page</strong> to get phone numbers and contact details.
           </p>
         </div>
         <Link to="/admin/skip-trace"
