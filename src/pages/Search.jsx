@@ -26,7 +26,8 @@ export default function Search() {
         >
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>SEARCH HOMES</p>
           <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Find Your New Home</h1>
-          <p className="text-sm mb-10" style={{ color: '#999' }}>Pick your platform and start browsing listings</p>
+          <p className="text-sm mb-3" style={{ color: '#fff' }}>Pick your platform and start browsing listings</p>
+          <p className="text-xs mb-10 leading-relaxed" style={{ color: '#ccc' }}>⚠️ These links open external websites. Click the back arrow at the top left of your browser to return to our site.</p>
           
           <div className="space-y-2">
             <button
