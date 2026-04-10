@@ -51,12 +51,14 @@ export default function Search() {
             </div>
           </form>
           
-          <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto text-xs tracking-widest font-bold uppercase" style={{ color: '#888' }}>
-            <div>100% FREE FOR BUYERS</div>
-            <div>•</div>
-            <div>HUMAN-MANAGED</div>
-            <div colSpan="3" style={{ color: '#888' }}>•</div>
-            <div colSpan="3">NATIONWIDE NETWORK</div>
+          <div className="max-w-xl mx-auto text-xs tracking-widest font-bold uppercase" style={{ color: '#888' }}>
+            <div className="flex items-center justify-between mb-2">
+              <div>100% FREE FOR BUYERS</div>
+              <div>•</div>
+              <div>HUMAN-MANAGED</div>
+            </div>
+            <div className="text-center">•</div>
+            <div className="text-center">NATIONWIDE NETWORK</div>
           </div>
         </motion.div>
       </main>
