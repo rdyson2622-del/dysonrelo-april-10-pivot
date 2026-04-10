@@ -127,7 +127,7 @@ const PHASES = [
 ];
 
 export default function RelocationRoadmap({ clientName, destinationCity }) {
-  const [expanded, setExpanded] = useState(1);
+  const [expanded, setExpanded] = useState(null);
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
@@ -282,15 +282,12 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
                 </div>
               )}
 
-              {/* Expanded Detail - Phases 2-8 show content but with forward progress gate */}
-              {isOpen && (
-                clientId ? (
-                  // User completed Phase 1 - show full content
-                  <ExpandedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
-                ) : (
-                  // User hasn't completed Phase 1 - show content but with gate
-                  <LockedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
-                )
+              {/* Expanded Detail - Show content only if clientId exists OR if phase > 1 */}
+              {isOpen && clientId && (
+                <ExpandedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
+              )}
+              {isOpen && !clientId && phase.number > 1 && (
+                <LockedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
               )}
             </motion.div>
           );
