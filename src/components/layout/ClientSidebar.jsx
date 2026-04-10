@@ -94,7 +94,7 @@ export default function ClientSidebar() {
       <div className="px-3 py-4 pb-8 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
         <Link to="/admin">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-white/5 transition-all"
-            style={{ color: 'rgba(212,175,55,0.6)' }}>
+            style={{ color: '#fff' }}>
             <Settings className="w-4 h-4 shrink-0" />
             Admin Panel
           </div>
