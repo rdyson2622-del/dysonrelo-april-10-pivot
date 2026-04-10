@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Edit2, Check, X } from 'lucide-react';
+import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GOLD = '#D4AF37';
@@ -13,9 +13,10 @@ const sections = [
     icon: FileText,
     content: `Dyson & Dyson Concierge Relocation Services is a fully independent relocation management company — not a brokerage, not an agent network, not a listing service. We manage the entire relocation experience for families moving across the country, from first question to final walkthrough. The service is 100% free to buyers. Always.
 
-Founded by Bob Dyson — 40+ years in real estate, former Chief Pilot for the Governor of Oklahoma, builder of Red Carpet Corporation of America (500 to 1,600+ offices, 45,000 agents, 42 states) — Dyson & Dyson combines decades of real estate mastery with cutting-edge AI. This is not a startup guessing at a market. It is an expert-led platform built by someone who has seen the industry from every angle.
+THE LEGACY:
+Founded by Bob Dyson — builder of Red Carpet Corporation of America, growing it from 500 to 1,600+ offices with 45,000 agents across 42 states. Bob served as Chief Pilot for the Governor of Oklahoma and has operated at every level of real estate for 54+ years. We use this legacy of scale to vet every local agent we partner with today. That credibility is irreplaceable and not reproducible by any tech company.
 
-Market Opportunity: 8-9 million households relocate annually in the US. The relocation market is fragmented and painful — consumers coordinate real estate agents, movers, utilities, schools, and healthcare across multiple vendors with no central guide. Dyson consolidates this into one managed experience.
+Market Opportunity: 8–9 million households relocate annually in the US. The relocation market is fragmented and painful — consumers coordinate real estate agents, movers, utilities, schools, and healthcare across multiple vendors with no central guide. Dyson consolidates this into one managed experience.
 
 The Dyson Philosophy: We intentionally work with a limited number of families at any given time. This is not exclusivity for its own sake — it is a commitment to quality. Real relocation management demands intensive focus, deep local knowledge, timeline coordination, and relentless attention to detail. We are not scaling a service. We are delivering one.
 
@@ -216,36 +217,45 @@ Unit Economics: Higher-priced markets (Austin, Denver, Seattle, Florida) generat
   },
   {
     id: 'growth-roadmap',
-    title: 'Growth Roadmap',
+    title: 'Growth Roadmap & SMS Workflow',
     icon: TrendingUp,
-    content: `Phase 1 — NOW (Platform Build & Initial Clients):
-• Charlie live 24/7 for inbound inquiries
-• Gemini Session pipeline fully operational (Commitment Gate → Live Session → Debrief → Profile)
-• Admin panel: Clients, Outreach Campaigns, Communications, Presentation Library, Interviews
-• Listing Agent outreach active (skip trace → SMS → campaign → referral proposal)
-• Interview & approval workflow: clients interviewed by Bob, approved/rejected before agent matching
-• Presentation Library: Listing Agent, Client Intro, Receiving Agent (in development), AI Explainer
+    content: `SMS OUTREACH ENGINE — 5-STEP ACQUISITION SYSTEM
 
-Phase 2 (Months 3-9): Listing Agent Distribution Channel
-• Systematically recruit listing agents in top relocating markets (Austin, Denver, Charlotte, Nashville, Phoenix)
-• Every agent gets a Dyson Presentation Kit — client intro, agent explainer, referral agreement
-• Launch Receiving Agent network: vet and contract top 10 agents in each destination market
-• Complete Receiving Agent Presentation and onboarding materials
+1. DATA AGGREGATION via PropStream
+Log into PropStream, search active listings by city/zip/price range, and export the MLS list. This file has addresses and prices — but NO phone numbers yet. Do NOT import into Base44 at this stage.
 
-Phase 3 (Months 9-18): Scale Intake
-• Increase client intake volume as systems mature
-• Corporate relocation partnerships (employer-sponsored relocation benefits)
-• Build Delta Report automation: every Gemini session triggers buyer + agent email updates
-• Launch data licensing to agents/brokers (neighborhood intelligence, market trends)
+2. SKIP TRACING for Direct Contact
+Run SkipTrace on your MLS list inside PropStream (~$0.10–$0.15/record). Download the SkipTrace Export — it contains Owner Name, Cell Phone 1, Cell Phone 2, Property Address. THIS is the file you import into Base44.
 
-Phase 4 (Year 2+): Adjacent Markets & International
-• International expansion (Canada, UK, Mexico — expats and cross-border relocations)
-• Rental relocation product (high-volume, lower AOV)
-• Insurance partnerships (home, auto, life — relocating families need all three)
-• Real estate investment syndication (help relocators invest in destination markets)
+3. BASE44 CRM INTEGRATION
+In Admin → Listing Owners → Import CSV. Select your SkipTrace file. Preview confirms owner names, phone formatting, address presence. Click "Import X Owners." All contacts enter the system as: not_contacted.
+
+4. TWILIO / SMS MULTI-PHASE OUTREACH (Phase 1–7)
+• Phase 1 — Get list from PropStream MLS
+• Phase 2 — Run SkipTrace in PropStream
+• Phase 3 — Import SkipTrace into Base44
+• Phase 4 — Send campaign via Admin → Compose SMS
+• Phase 5 — Monitor replies automatically: STOP → opt_out, YES → opt_in, other → in_conversation
+• Phase 6 — Day 3 and Day 7 follow-up sends
+• Phase 7 — Track everything: Batch SMS Logs, Outreach Pipeline, New Opt-Ins, Active Campaigns
+
+5. GMAIL AUTO-REPLY TRACKING
+Bob's Gmail is monitored in real-time for replies matching an owner's email. YES → interested. STOP → OptOut table. All other replies → in_conversation with content saved to notes.
+
+────────────────────────────────
+PHASE EXPANSION ROADMAP
+────────────────────────────────
+
+Phase 1 — NOW: Charlie live 24/7, Gemini Session pipeline operational, Admin panel fully active, Listing Agent outreach running.
+
+Phase 2 (Months 3–9): Recruit agents in Austin, Denver, Charlotte, Nashville, Phoenix. Launch Receiving Agent network.
+
+Phase 3 (Months 9–18): Scale intake, corporate relocation partnerships, Delta Report automation.
+
+Phase 4 (Year 2+): Canada, UK, Mexico expansion. Rental product, insurance partnerships, investment syndication.
 
 THE FLYWHEEL:
-One family → two potential transactions (buy + sell) → two referral fees → agent refers their next relocating client → more families → growing agent network → better data → better matches → more families.`
+One family → two potential transactions (buy + sell) → two referral fees → agent refers next client → more families → better data → better matches → more families.`
   },
   {
     id: 'key-metrics',
@@ -902,24 +912,9 @@ STRATEGIC VALUE:
 
 export default function BusinessPlan() {
   const [expandedSection, setExpandedSection] = useState('executive-summary');
-  const [editingSectionId, setEditingSectionId] = useState(null);
-  const [editContent, setEditContent] = useState('');
-  const [localSections, setLocalSections] = useState(sections);
-
-  const startEdit = (section) => {
-    setEditingSectionId(section.id);
-    setEditContent(section.content);
-  };
-
-  const saveEdit = () => {
-    setLocalSections(prev => prev.map(s => s.id === editingSectionId ? { ...s, content: editContent } : s));
-    setEditingSectionId(null);
-  };
-
-  const cancelEdit = () => setEditingSectionId(null);
+  const [localSections] = useState(sections);
 
   const exportToPDF = () => {
-    // Placeholder for PDF export functionality
     alert('PDF export coming soon. For now, use browser Print to PDF.');
   };
 
@@ -1003,35 +998,15 @@ export default function BusinessPlan() {
                   className="p-8 rounded-2xl"
                   style={{ background: 'rgba(255,255,255,0.9)' }}
                 >
-                  <div className="flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-3">
-                      {React.createElement(section.icon, { className: 'w-6 h-6', style: { color: GOLD } })}
-                      <h2 className="serif-heading text-2xl" style={{ color: '#000' }}>{section.title}</h2>
-                    </div>
-                    {editingSectionId === section.id ? (
-                      <div className="flex gap-2">
-                        <Button size="sm" onClick={saveEdit} className="gap-1.5" style={{ background: GOLD, color: '#000' }}><Check className="w-3.5 h-3.5" /> Save</Button>
-                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="w-3.5 h-3.5" /></Button>
-                      </div>
-                    ) : (
-                      <Button size="sm" variant="outline" onClick={() => startEdit(section)} className="gap-1.5"><Edit2 className="w-3.5 h-3.5" /> Edit</Button>
-                    )}
+                  <div className="flex items-center gap-3 mb-6">
+                    {React.createElement(section.icon, { className: 'w-6 h-6', style: { color: GOLD } })}
+                    <h2 className="serif-heading text-2xl" style={{ color: '#000' }}>{section.title}</h2>
                   </div>
-                  {editingSectionId === section.id ? (
-                    <textarea
-                      value={editContent}
-                      onChange={e => setEditContent(e.target.value)}
-                      rows={20}
-                      className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm font-mono leading-relaxed resize-y"
-                      style={{ minHeight: 300 }}
-                    />
-                  ) : (
-                    <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
-                      {section.content.split('\n\n').map((para, i) => (
-                        <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">{para}</p>
-                      ))}
-                    </div>
-                  )}
+                  <div className="prose prose-sm max-w-none" style={{ color: '#333' }}>
+                    {section.content.split('\n\n').map((para, i) => (
+                      <p key={i} className="mb-4 leading-relaxed whitespace-pre-wrap text-sm">{para}</p>
+                    ))}
+                  </div>
                 </motion.div>
               )
             ))}
