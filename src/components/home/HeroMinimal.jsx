@@ -15,10 +15,19 @@ const HeroMinimal = () => {
   return (
     <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4">
       <div className="text-center mb-12">
-        <h1 className="text-white text-4xl md:text-6xl font-light mb-4 tracking-tight">
-          CONCIERGE <span className="text-[#D4AF37]">Relocation Management</span>
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
+            alt="Dyson & Dyson"
+            className="h-24 w-auto"
+          />
+        </div>
+        <h1 className="text-white font-light mb-3 tracking-tight" style={{ fontSize: 'clamp(1.6rem, 4vw, 3.5rem)', lineHeight: 1.2 }}>
+          <span className="text-[#D4AF37] font-semibold tracking-[0.15em] uppercase">CONCIERGE</span>
+          <br />
+          <span className="text-white tracking-[0.08em] text-2xl md:text-3xl">Relocation Management</span>
         </h1>
-        <p className="text-gray-400 text-lg">54 Years of Expertise. AI-Powered Precision.</p>
+        <p className="text-gray-400 text-base mt-2">54 Years of Expertise. AI-Powered Precision.</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
