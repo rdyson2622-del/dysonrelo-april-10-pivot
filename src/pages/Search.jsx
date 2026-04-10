@@ -28,29 +28,29 @@ export default function Search() {
           <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Find Your New Home</h1>
           <p className="text-sm mb-10" style={{ color: '#999' }}>Pick your platform and start browsing listings</p>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             <button
               onClick={() => handleSearch('zillow')}
-              className="w-full p-6 rounded-2xl font-bold text-lg transition-all border-2 flex flex-col items-center gap-3 hover:scale-105"
+              className="w-full p-3 rounded-xl font-bold text-sm transition-all border-2 flex items-center justify-center gap-2 hover:scale-105"
               style={{ borderColor: '#D4AF37', background: '#1a1a1a', color: '#D4AF37' }}
             >
-              <span className="text-4xl">🏠</span>
+              <span className="text-xl">🏠</span>
               Zillow
             </button>
             <button
               onClick={() => handleSearch('realtor')}
-              className="w-full p-6 rounded-2xl font-bold text-lg transition-all border-2 flex flex-col items-center gap-3 hover:scale-105"
+              className="w-full p-3 rounded-xl font-bold text-sm transition-all border-2 flex items-center justify-center gap-2 hover:scale-105"
               style={{ borderColor: '#D4AF37', background: '#1a1a1a', color: '#D4AF37' }}
             >
-              <span className="text-4xl">🔑</span>
+              <span className="text-xl">🔑</span>
               Realtor.com
             </button>
             <button
               onClick={() => handleSearch('redfin')}
-              className="w-full p-6 rounded-2xl font-bold text-lg transition-all border-2 flex flex-col items-center gap-3 hover:scale-105"
+              className="w-full p-3 rounded-xl font-bold text-sm transition-all border-2 flex items-center justify-center gap-2 hover:scale-105"
               style={{ borderColor: '#D4AF37', background: '#1a1a1a', color: '#D4AF37' }}
             >
-              <span className="text-4xl">🔴</span>
+              <span className="text-xl">🔴</span>
               Redfin
             </button>
           </div>
