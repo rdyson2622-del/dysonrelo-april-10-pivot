@@ -22,10 +22,9 @@ const HeroMinimal = () => {
             className="h-24 w-auto"
           />
         </div>
-        <h1 className="text-white font-light mb-3 tracking-tight" style={{ fontSize: 'clamp(1.6rem, 4vw, 3.5rem)', lineHeight: 1.2 }}>
-          <span className="text-[#D4AF37] font-semibold tracking-[0.15em] uppercase">CONCIERGE</span>
-          <br />
-          <span className="text-white tracking-[0.08em] text-2xl md:text-3xl">Relocation Management</span>
+        <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: 1.15 }}>
+          <span className="text-white block">CONCIERGE</span>
+          <span className="gold-text-gradient block">RELOCATION MANAGEMENT</span>
         </h1>
         <p className="text-gray-400 text-base mt-2">54 Years of Expertise. AI-Powered Precision.</p>
       </div>
