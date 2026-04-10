@@ -72,7 +72,7 @@ export default function AdminCharlieScripts() {
   const SCRIPT_TYPES = ['greeting', 'response', 'gate', 'cta', 'fallback', 'system_prompt'];
 
   return (
-    <div className="p-6 min-h-screen" style={{ background: '#121212', color: '#fff' }}>
+    <div className="p-6 min-h-screen" style={{ background: '#808080', color: '#fff' }}>
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
