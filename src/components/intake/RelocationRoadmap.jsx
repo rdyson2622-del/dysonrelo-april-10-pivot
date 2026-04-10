@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   CheckCircle2, ArrowRight, ChevronDown, ChevronUp,
@@ -126,6 +126,9 @@ const PHASES = [
 
 export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [expanded, setExpanded] = useState(1);
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const city = destinationCity || urlParams.get('city') || '';
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
@@ -167,7 +170,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
           </div>
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>THE COMPLETE RELOCATION PROCESS</p>
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#fff' }}>
-            Your Relocation Roadmap
+            {city ? `Your ${city} Roadmap` : 'Your Relocation Roadmap'}
           </h1>
           <p className="text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
             Here's every step of your journey — and exactly what Dyson & Dyson handles for you at each stage.
