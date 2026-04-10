@@ -258,6 +258,33 @@ THE FLYWHEEL:
 One family → two potential transactions (buy + sell) → two referral fees → agent refers next client → more families → better data → better matches → more families.`
   },
   {
+    id: 'social-launch',
+    title: 'Social Launch & Content Strategy',
+    icon: Share2,
+    content: `SOCIAL MEDIA PILLAR — POSITIONING BOB DYSON AS THE ORACLE OF RELOCATION
+
+The Goal:
+Position Bob Dyson as the "Oracle of Relocation" by leveraging his 54-year industry legacy. No competitor can match this combination of scale, longevity, and current AI adoption.
+
+Content Pillars:
+1. "Then vs. Now" — Historic vs. modern real estate comparisons. Side-by-side snapshots of what buying a home looked like in 1972, 1995, 2010, and today. Data-driven, shareable, and impossible to argue with.
+
+2. "AI Charlie" Spotlights — Showcasing the precision of the relocation engine. Short-form demos of Charlie in action: answering neighborhood questions, comparing schools, walking a buyer through the commitment gate. Show the product, not just the promise.
+
+3. "The 1927 Parallel" — Authority deep dives. The signature series connecting the invention of synchronized sound in film to the emergence of voice-to-voice AI in real estate. Frames Charlie as the "talkie moment" for the industry.
+
+Posting Frequency:
+3x weekly high-authority posts on LinkedIn and Instagram. Consistent 90-day cadence builds algorithmic momentum and audience trust before any paid amplification.
+
+Call to Action:
+Every post directs users to the Gold Pill search bar — "Considering a move? Where are you going?" — to start their custom relocation roadmap. One destination. One action.
+
+Platform Notes:
+• LinkedIn: Long-form authority content targeting listing agents, corporate HR relocation coordinators, and real estate professionals.
+• Instagram: Visual storytelling — then/now photos, Charlie clips, neighborhood reels.
+• Engagement: Every comment replied to within 24 hours. Every DM from a relocating family routed to Charlie intake.`
+  },
+  {
     id: 'key-metrics',
     title: 'Key Metrics to Track',
     icon: BarChart3,
@@ -811,31 +838,6 @@ WHAT EACH TOOL IS FOR
 • Outreach Pipeline → Funnel analytics — how many converted, how many opted out
 • New Opt-Ins → Hot list of people who said YES (follow these up immediately)
 • Active Campaigns → Real-time progress of any in-flight batch`
-  },
-  {
-    id: 'social-launch',
-    title: 'Social Launch & Content Strategy',
-    icon: Share2,
-    content: `SOCIAL MEDIA PILLAR — POSITIONING BOB DYSON AS THE ORACLE OF RELOCATION
-
-The Goal:
-Position Bob Dyson as the definitive authority on American relocation using the 54-year legacy as the foundation. No other voice in the relocation space has his combination of scale (1,600 offices, 45,000 agents), longevity (54+ years), and current AI adoption. We make that story impossible to ignore.
-
-Content Types:
-• "Then vs. Now" Real Estate Comparisons — Side-by-side snapshots of what buying a home looked like in 1972, 1995, 2010, and today. Data-driven. Shareable. Positions Bob as someone who has seen every market cycle firsthand.
-• AI "Charlie" Feature Spotlights — Short-form demos of what Charlie actually does: answering neighborhood questions, comparing schools, walking a buyer through the commitment gate. Shows the product, not just the promise.
-• "The 1927 Parallel" Deep Dives — The signature series. Connects the invention of synchronized sound in film to the emergence of voice-to-voice AI in real estate. Frames Charlie as the "talkie moment" for the industry. Builds brand mythology.
-
-Frequency:
-3x weekly high-authority posts across LinkedIn and Instagram. Consistent cadence over 90 days builds algorithmic momentum and audience trust before any paid amplification.
-
-Call to Action:
-Every post drives users to the Gold Pill search bar — "Considering a move? Where are you going?" — for a custom relocation roadmap. One clear destination. One clear action.
-
-Platform Strategy:
-• LinkedIn: Long-form authority content targeting listing agents, corporate HR relocation coordinators, and real estate professionals. Bob's voice, Bob's credentials.
-• Instagram: Visual storytelling — then/now photos, Charlie feature clips, neighborhood reels. Aspirational and accessible.
-• Engagement Protocol: Every comment replied to within 24 hours. Every DM from a relocating family routed directly to Charlie intake.`
   },
   {
     id: 'risks-mitigations',
