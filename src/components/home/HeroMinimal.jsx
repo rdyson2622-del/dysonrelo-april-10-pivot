@@ -42,12 +42,14 @@ const HeroMinimal = () => {
           />
         </div>
         <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
-        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '3rem' }}>Relocation Management</p>
-        <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</h1>
-        <p className="text-lg mb-6" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
+        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '6rem' }}>Relocation Management</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
+        <div className="text-center mb-6">
+          <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</h1>
+          <p className="text-lg" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
+        </div>
         <div className="relative group">
           <input
             type="text"
