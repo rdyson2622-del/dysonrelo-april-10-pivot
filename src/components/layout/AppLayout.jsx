@@ -38,14 +38,24 @@ export default function AppLayout() {
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
+          <div className="flex-1" />
           {isAdmin && (
-            <Link
-              to="/admin"
-              className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
-            >
-              Admin Panel
-            </Link>
+            <>
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
+                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
+              >
+                Client Dashboard
+              </Link>
+              <Link
+                to="/admin"
+                className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
+                style={{ background: '#D4AF37', color: '#000' }}
+              >
+                Admin Panel
+              </Link>
+            </>
           )}
         </div>
         <Outlet />
