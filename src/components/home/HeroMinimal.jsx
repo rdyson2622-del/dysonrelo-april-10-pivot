@@ -43,6 +43,8 @@ const HeroMinimal = () => {
         </div>
         <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
         <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '3rem' }}>Relocation Management</p>
+        <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</h1>
+        <p className="text-lg mb-6" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
@@ -51,7 +53,7 @@ const HeroMinimal = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder=""
+            placeholder="City, State or Zip Code"
             disabled={scanning}
             className="w-full bg-[#1A1A1A] border-2 border-[#D4AF37]/30 text-white rounded-full py-5 px-8 pl-14 text-xl focus:outline-none focus:border-[#D4AF37] transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)] disabled:opacity-70"
           />
