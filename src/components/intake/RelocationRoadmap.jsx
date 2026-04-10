@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import {
@@ -131,6 +131,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
   const city = destinationCity || urlParams.get('city') || '';
 
@@ -229,7 +230,13 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
               {/* Phase Header */}
               <button
                 className="w-full flex items-center gap-4 px-5 py-4 text-left"
-                onClick={() => setExpanded(isOpen ? null : phase.number)}
+                onClick={() => {
+                  if (phase.number === 1 && !clientId) {
+                    navigate('/RelocationIntake');
+                  } else {
+                    setExpanded(isOpen ? null : phase.number);
+                  }
+                }}
               >
                 {/* Number / Icon */}
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
