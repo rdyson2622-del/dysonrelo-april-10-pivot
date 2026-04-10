@@ -41,8 +41,8 @@ export default function PropertyComparison() {
     <div className="max-w-7xl mx-auto px-6 py-10">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
-          <p className="text-2xl font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>MOST PROBABLE PROPERTIES</p>
-          <h1 className="display-heading text-5xl md:text-6xl mb-3" style={{ color: '#fff' }}>My Property Comparison</h1>
+          <p className="text-sm font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>MOST PROBABLE PROPERTIES</p>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.6rem)', color: '#fff' }}>My Property Comparison</h1>
           <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Add homes you've toured. Our team (and Gemini) will research each one across all 6 categories so you can decide with confidence.
           </p>
