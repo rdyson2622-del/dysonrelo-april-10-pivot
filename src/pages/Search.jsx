@@ -24,6 +24,7 @@ export default function Search() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md text-center"
         >
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-12 w-auto mx-auto mb-6" />
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>SEARCH HOMES</p>
           <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Find Your New Home</h1>
           <p className="text-sm mb-3" style={{ color: '#fff' }}>Pick your platform and start browsing listings</p>
