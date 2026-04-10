@@ -15,9 +15,9 @@ const navItems = [
 ];
 
 const authorityLinks = [
-  { label: '54-Year Legacy', to: '/Explainers' },
-  { label: 'The 1927 Parallel', to: '/Explainers' },
-  { label: '21 AI Concierges', to: '/Explainers' },
+  { label: '54-Year Legacy', to: '/Explainers#legacy' },
+  { label: 'The 1927 Parallel', to: '/Explainers#1927' },
+  { label: '21 AI Concierges', to: '/Home#orchestration' },
 ];
 
 export default function ClientSidebar() {

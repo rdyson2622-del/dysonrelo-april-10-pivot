@@ -57,6 +57,7 @@ export default function Explainers() {
 
         {/* Comparison Cards */}
         <motion.div
+          id="1927"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -117,6 +118,7 @@ export default function Explainers() {
 
         {/* History Section */}
         <motion.div
+          id="legacy"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
