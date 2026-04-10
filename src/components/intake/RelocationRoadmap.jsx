@@ -169,21 +169,23 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
       </nav>
 
       {/* Commit Banner for Non-Committed Users */}
-      <div className="px-6 md:px-14 py-6" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-sm font-bold mb-2" style={{ color: '#fff' }}>
-            🔒 Ready to start your relocation journey?
-          </p>
-          <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Commit to our services to unlock your personalized relocation plan, agent matching, and full access to all 8 phases.
-          </p>
-          <Link to="/RelocationIntake">
-            <button className="gold-btn px-6 py-2.5 rounded-full text-sm font-bold tracking-wide">
-              Yes, I Want to Commit & Start My Relocation
-            </button>
-          </Link>
+      {!clientId && !loading && (
+        <div className="px-6 md:px-14 py-6" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-sm font-bold mb-2" style={{ color: '#fff' }}>
+              🔒 Ready to start your relocation journey?
+            </p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              Commit to our services to unlock your personalized relocation plan, agent matching, and full access to all 8 phases.
+            </p>
+            <Link to="/RelocationIntake">
+              <button className="gold-btn px-6 py-2.5 rounded-full text-sm font-bold tracking-wide">
+                Yes, I Want to Commit & Start My Relocation
+              </button>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="text-center px-6 pt-10 pb-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -217,7 +219,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07, duration: 0.4 }}
-              className="rounded-2xl overflow-hidden"
+              className="rounded-2xl overflow-hidden relative"
               style={{
                 border: isActive ? `2px solid ${GOLD}` : '1px solid rgba(255,255,255,0.1)',
                 background: isActive ? 'rgba(212,175,55,0.07)' : '#000',
