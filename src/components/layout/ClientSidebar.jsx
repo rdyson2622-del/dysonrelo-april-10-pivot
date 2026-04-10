@@ -32,7 +32,7 @@ export default function ClientSidebar() {
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
         </Link>
-        <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: 'rgba(212,175,55,0.6)' }}>
+        <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
           CLIENT PORTAL
         </p>
       </div>
@@ -47,7 +47,7 @@ export default function ClientSidebar() {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
                 style={{
                   background: active ? GOLD : 'transparent',
-                  color: active ? '#000' : 'rgba(255,255,255,0.75)',
+                  color: active ? '#000' : '#fff',
                 }}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -60,7 +60,7 @@ export default function ClientSidebar() {
 
       {/* Heritage & Authority */}
       <div className="pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="text-[10px] uppercase tracking-[2px] mb-3 px-2 opacity-70" style={{ color: GOLD }}>
+        <div className="text-[10px] uppercase tracking-[2px] mb-3 px-2 font-bold" style={{ color: GOLD }}>
           Our Authority
         </div>
         <nav className="space-y-1">
@@ -69,7 +69,7 @@ export default function ClientSidebar() {
               key={label}
               to={to}
               className="block px-2 py-1 text-sm transition-colors hover:text-[#D4AF37]"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
+              style={{ color: '#fff' }}
             >
               {label}
             </Link>
@@ -80,14 +80,14 @@ export default function ClientSidebar() {
       {/* Human Help */}
       <div className="mx-3 mb-3 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
         <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>NEED A HUMAN?</p>
-        <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>We're here Mon–Sat, 9am–7pm PT</p>
+        <p className="text-xs mb-2" style={{ color: '#fff' }}>We're here Mon–Sat, 9am–7pm PT</p>
         <a href="tel:+18583531200" className="flex items-center gap-2 group">
           <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
           <span className="text-sm font-bold tracking-wide group-hover:underline" style={{ color: '#fff' }}>
             (858) 353-1200
           </span>
         </a>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Dyson Relo Direct Line</p>
+        <p className="text-xs mt-1" style={{ color: '#fff' }}>Dyson Relo Direct Line</p>
       </div>
 
       {/* Footer */}
