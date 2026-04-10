@@ -282,9 +282,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
                   <ExpandedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
                 ) : (
                   // User hasn't completed Phase 1 - show content but with gate
-                  phase.number > 1 ? (
-                    <LockedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
-                  ) : null
+                  <LockedPhaseContent phase={phase} isActive={isActive} GOLD={GOLD} />
                 )
               )}
             </motion.div>
