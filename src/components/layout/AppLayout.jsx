@@ -1,5 +1,6 @@
-import React from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
@@ -9,6 +10,11 @@ import { ArrowLeft } from 'lucide-react';
 export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+  }, []);
   
   // Don't show FloatingCharlie on pages that already have embedded chat
   const hideFloatingCharlie = ['/Chat', '/Dashboard'].some(path => 
@@ -23,8 +29,8 @@ export default function AppLayout() {
       </div>
       {/* Main content */}
       <div className="flex-1 overflow-auto">
-        {/* Back button */}
-        <div className="px-4 pt-4">
+        {/* Top controls */}
+        <div className="px-4 pt-4 flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
@@ -32,6 +38,15 @@ export default function AppLayout() {
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
+            >
+              Admin Panel
+            </Link>
+          )}
         </div>
         <Outlet />
       </div>
