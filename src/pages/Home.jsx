@@ -8,6 +8,8 @@ import {
 import CharlieTopHat from '../components/brand/CharlieTopHat';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 import CityGuideTeaser from '../components/home/CityGuideTeaser';
+import HeroMinimal from '../components/home/HeroMinimal';
+
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const GOLD = '#D4AF37';
@@ -47,161 +49,59 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero — full viewport landing screen */}
-      <section id="hero" className="relative overflow-hidden" style={{ minHeight: '100vh', background: '#808080' }}>
-        {/* Deep background radial glow */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%)',
-        }} />
-        {/* Top shimmer line */}
-        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.5) 50%, transparent 100%)' }} />
+      {/* Hero — Gold Pill Minimal */}
+      <section id="hero">
+        <HeroMinimal />
+      </section>
 
-        {/* Portrait: centered column. Landscape/desktop: two columns side by side */}
-        <div className="relative flex flex-col md:flex-row items-center md:items-center justify-center gap-12 px-6 md:px-14 w-full h-full" style={{ minHeight: '100vh', paddingTop: '5vh', paddingBottom: '5vh' }}>
-
-          {/* LEFT — hero slide */}
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center md:items-center justify-center text-center w-full md:w-auto md:flex-1 py-16 md:py-0"
-          >
-            <div className="mb-8 flex justify-center">
-              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-36 w-auto" />
+      {/* Charlie Card Section — portrait only (below hero) */}
+      <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-sm"
+        >
+          <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
+            style={{ background: 'rgba(212,175,55,0.12)' }} />
+          <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
+              AI-POWERED
             </div>
-            <h1 className="display-heading" style={{ marginBottom: '1.5rem', display: 'block', width: '100%', textAlign: 'center' }}>
-              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#D4AF37', fontSize: 'clamp(2rem, 5vw, 4.5rem)', letterSpacing: '0.28em', lineHeight: 1.15 }}>CONCIERGE</span>
-              <span style={{ display: 'block', textAlign: 'center', width: '100%', color: '#000', textTransform: 'none', fontSize: 'clamp(0.9rem, 2.25vw, 2rem)', letterSpacing: '0.18em', lineHeight: 1.15, whiteSpace: 'nowrap' }}>Relocation Management</span>
-            </h1>
-            <p className="text-base leading-relaxed mb-2" style={{ color: '#fff', fontWeight: 400 }}>
-              Meet Charlie — your AI Relocation Manager backed by The Dyson & Dyson Companies and 54+ years of real estate expertise. Whether you're planning to move, have already listed, or are searching for your new home —
-            </p>
-            <p className="mb-4" style={{ color: '#D4AF37', fontWeight: 700, fontSize: 'clamp(0.675rem, 1.35vw, 1.125rem)', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
-              We don't sell Real Estate, We manage your entire relocation process.
-            </p>
-            <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              Experienced relocation experts powered by AI. We handle data work so you get real insight. You get Charlie for 24/7 answers AND a real person who knows your market inside and out. We work with a limited number of clients at any given time because relocation management demands intensive focus — on your specific market, your lifestyle, your timeline. We're not racing toward a sale. We're focused on getting you home.
-            </p>
-            <p className="text-base font-semibold mb-10" style={{ color: '#D4AF37' }}>
-              ✦ Completely free to you as the buyer.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link to="/RelocationIntake">
-                <button className="gold-btn px-7 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2">
-                  Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-              <Link to="/RelocationRoadmap">
-                 <button className="px-7 py-3 rounded-full text-sm font-semibold flex items-center gap-2 transition-all hover:bg-white/5"
-                   style={{ background: '#000', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                   My Roadmap <ArrowRight className="w-4 h-4" />
-                 </button>
-               </Link>
+            <div className="flex justify-center mb-5 mt-2">
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
+                alt="Charlie"
+                className="h-48 w-auto object-contain"
+                style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
+              />
             </div>
-            {/* Scroll cue — portrait only */}
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity }} className="mt-12 md:hidden flex flex-col items-center gap-1" style={{ color: 'rgba(212,175,55,0.5)' }}>
-              <span className="text-xs tracking-widest">SCROLL</span>
-              <ArrowRight className="w-4 h-4 rotate-90" />
-            </motion.div>
-          </motion.div>
-
-          {/* RIGHT — Charlie card (landscape/desktop only inline; portrait shows below as separate section) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden md:flex relative w-full md:w-auto md:flex-1 justify-center py-16 md:py-0"
-          >
-            <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
-              style={{ background: 'rgba(212,175,55,0.12)' }} />
-            <div className="relative rounded-3xl p-7 w-full max-w-sm" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
-                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
-                AI-POWERED
+            <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
+              CHARLIE — YOUR RELOCATION MANAGER
+            </p>
+            <div className="space-y-2">
+              <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
               </div>
-              <div className="flex justify-center mb-5 mt-2">
-                <img
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
-                  alt="Charlie"
-                  className="h-48 w-auto object-contain"
-                  style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
-                />
+              <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
+                We're moving to Austin, TX in June!
               </div>
-              <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
-                CHARLIE — YOUR RELOCATION MANAGER
-              </p>
-              <div className="space-y-2">
-                <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                  style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
-                  </div>
-                  <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
-                  We're moving to Austin, TX in June!
-                  </div>
-                  <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                  style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
-                  </div>
-                  </div>
-                  <Link to="/RelocationIntake" className="block mt-5">
-                  <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                  LET'S PLAN MY RELOCATION MOVE
-                  </button>
-                  </Link>
-                  </div>
-                  </motion.div>
-
-                  </div>
-                  </section>
-
-                  {/* Charlie Card Section — portrait only (below hero) */}
-                  <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                      className="relative w-full max-w-sm"
-                    >
-                      <div className="absolute inset-0 rounded-3xl blur-3xl scale-110 pointer-events-none"
-                        style={{ background: 'rgba(212,175,55,0.12)' }} />
-                      <div className="relative rounded-3xl p-7" style={{ background: 'linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%)', border: '2px solid #D4AF37' }}>
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-widest"
-                          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)', color: '#000', boxShadow: '0 0 16px rgba(212,175,55,0.4)' }}>
-                          AI-POWERED
-                        </div>
-                        <div className="flex justify-center mb-5 mt-2">
-                          <img
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/626da9da8_Screenshot2026-02-06at123820PM.png"
-                            alt="Charlie"
-                            className="h-48 w-auto object-contain"
-                            style={{ filter: 'drop-shadow(0 0 20px rgba(212,175,55,0.3))' }}
-                          />
-                        </div>
-                        <p className="text-center text-xs font-bold tracking-widest mb-5" style={{ color: '#fff' }}>
-                          CHARLIE — YOUR RELOCATION MANAGER
-                        </p>
-                        <div className="space-y-2">
-                          <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                            style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                            Hello! I'm Charlie — your Relocation Manager from Dyson & Dyson. We manage selling your current home and finding your next one — completely free. Tell me where you're headed and I'll show you exactly what we'll do together. 🏙️
-                          </div>
-                          <div className="rounded-lg px-3 py-2 text-sm font-semibold gold-btn ml-auto w-fit">
-                            We're moving to Austin, TX in June!
-                          </div>
-                          <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-                            style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                            Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
-                          </div>
-                        </div>
-                        <Link to="/RelocationIntake" className="block mt-5">
-                          <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
-                            LET'S PLAN MY RELOCATION MOVE
-                          </button>
-                        </Link>
-                      </div>
-                    </motion.div>
-                  </section>
+              <div className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                style={{ background: '#000', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                Perfect. Austin is booming and I know it well. Once you share your contact info, we'll schedule your private session with Bob Dyson and Gemini AI — and I'll start building your complete relocation plan. ✨
+              </div>
+            </div>
+            <Link to="/RelocationIntake" className="block mt-5">
+              <button className="w-full py-3 rounded-2xl text-sm font-bold tracking-wider gold-btn">
+                LET'S PLAN MY RELOCATION MOVE
+              </button>
+            </Link>
+          </div>
+        </motion.div>
+      </section>
 
       {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
       <section id="promise" className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
@@ -410,8 +310,6 @@ export default function Home() {
         </div>
       </section>
 
-
-
       {/* Agent highlight */}
       <section id="agent-selection" className="max-w-7xl mx-auto px-6 md:px-14 pb-24">
         <motion.div
@@ -421,7 +319,6 @@ export default function Home() {
           className="rounded-3xl p-10 md:p-16 relative overflow-hidden frosted-gold"
           style={{ border: '1px solid #D4AF37', background: '#000' }}
         >
-          {/* Subtle radial bg */}
           <div className="absolute inset-0 pointer-events-none" style={{
             background: 'radial-gradient(ellipse 60% 80% at 85% 50%, rgba(212,175,55,0.07) 0%, transparent 65%)',
           }} />
