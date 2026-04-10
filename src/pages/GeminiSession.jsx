@@ -59,7 +59,7 @@ export default function GeminiSession() {
         </Link>
         <div className="flex-1 text-center">
           <p className="text-xs font-bold tracking-[0.3em] mb-0.5" style={{ color: GOLD }}>GEMINI LIVE INTERVIEW</p>
-          <h1 className="display-heading text-5xl md:text-6xl" style={{ color: '#fff' }}>Your Private Session</h1>
+          <h1 className="display-heading whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Your Private Session</h1>
         </div>
         <LayoutToggleButton />
       </header>
