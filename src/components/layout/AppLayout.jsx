@@ -22,43 +22,46 @@ export default function AppLayout() {
   );
   
   return (
-    <div className="flex min-h-screen" style={{ background: '#A9A9A9' }}>
-      {/* Left sidebar — desktop only */}
-      <div className="hidden md:flex">
-        <ClientSidebar />
+    <div className="flex flex-col min-h-screen" style={{ background: '#A9A9A9' }}>
+      {/* Top bar spanning full width */}
+      <div className="px-4 py-4 flex items-center gap-3" style={{ background: '#A9A9A9' }}>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+          style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
+        >
+          <ArrowLeft className="w-4 h-4" /> Back
+        </button>
+        <div className="flex-1" />
+        {isAdmin && (
+          <>
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
+            >
+              Client Dashboard
+            </Link>
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
+              style={{ background: '#D4AF37', color: '#000' }}
+            >
+              Admin Panel
+            </Link>
+          </>
+        )}
       </div>
-      {/* Main content */}
-      <div className="flex-1 overflow-auto">
-        {/* Top controls */}
-        <div className="px-4 pt-4 flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
-          >
-            <ArrowLeft className="w-4 h-4" /> Back
-          </button>
-          <div className="flex-1" />
-          {isAdmin && (
-            <>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
-                style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
-              >
-                Client Dashboard
-              </Link>
-              <Link
-                to="/admin"
-                className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
-                style={{ background: '#D4AF37', color: '#000' }}
-              >
-                Admin Panel
-              </Link>
-            </>
-          )}
+      {/* Content area with sidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left sidebar — desktop only */}
+        <div className="hidden md:flex">
+          <ClientSidebar />
         </div>
-        <Outlet />
+        {/* Main content */}
+        <div className="flex-1 overflow-auto">
+          <Outlet />
+        </div>
       </div>
       <PageNumberBadge />
       {!hideFloatingCharlie && <FloatingCharlie />}
