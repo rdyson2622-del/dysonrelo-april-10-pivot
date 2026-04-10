@@ -231,12 +231,74 @@ export default function AdminSocialLaunch() {
 
       <main className="max-w-3xl mx-auto px-6 py-8 space-y-8">
 
+        {/* Oracle Strategy Section */}
+        <div className="bg-gradient-to-r from-amber-50 to-amber-100 border-2 border-amber-300 rounded-2xl p-8">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-bold text-amber-900 mb-3">📡 The Oracle of Relocation Strategy</h2>
+            <p className="text-sm text-amber-800 leading-relaxed mb-4">
+              Position <strong>Bob Dyson</strong> as the "Oracle of Relocation" — leveraging his 54-year industry legacy. No competitor can match this combination of scale, longevity, and current AI adoption.
+            </p>
+            
+            <div className="space-y-3 mb-5">
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">💼 Content Pillar 1: Then vs Now</p>
+                <p className="text-sm text-amber-800">Historic vs. modern real estate comparisons. Side-by-side snapshots: 1972, 1995, 2010, and today. Data-driven, shareable.</p>
+              </div>
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">🤖 Content Pillar 2: AI Charlie Spotlights</p>
+                <p className="text-sm text-amber-800">Showcasing precision. Short-form demos of Charlie in action: answering neighborhood questions, comparing schools, guiding through commitment.</p>
+              </div>
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">🎬 Content Pillar 3: The 1927 Parallel</p>
+                <p className="text-sm text-amber-800">Authority deep dives. Frames Charlie as the "talkie moment" for real estate — connecting synchronized sound in film to voice-to-voice AI.</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-4 border-l-4 border-amber-400">
+              <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-2">📅 Posting Cadence</p>
+              <p className="text-sm text-amber-800"><strong>3x weekly</strong> across LinkedIn and Instagram. Consistent 90-day run builds momentum before paid amplification.</p>
+              <p className="text-xs text-amber-700 mt-2">✦ Every comment replied to within 24h. Every DM from relocating family routed to Charlie intake.</p>
+            </div>
+          </div>
+        </div>
+
         {/* Loomly reminder */}
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
           <ExternalLink className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-semibold text-blue-800">Loomly Workflow</p>
             <p className="text-xs text-blue-700 mt-0.5">Copy each "Loomly / Other Platforms" script below and paste into <strong>loomly.com</strong> for Facebook, TikTok, YouTube & Instagram. LinkedIn posts directly from this page.</p>
+          </div>
+        </div>
+
+        {/* Oracle of Relocation Strategy */}
+        <div className="bg-gradient-to-r from-amber-50 to-amber-100 border-2 border-amber-300 rounded-2xl p-8">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-bold text-amber-900 mb-3">🔮 The Oracle of Relocation Strategy</h2>
+            <p className="text-sm text-amber-800 leading-relaxed mb-4">
+              Position <strong>Bob Dyson</strong> as the "Oracle of Relocation" — leveraging his 54-year industry legacy. No competitor can match this combination of scale, longevity, and current AI adoption.
+            </p>
+            
+            <div className="space-y-3 mb-5">
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">💼 Content Pillar 1: Then vs Now</p>
+                <p className="text-sm text-amber-800">Historic vs. modern real estate comparisons. Side-by-side snapshots: 1972, 1995, 2010, and today. Data-driven, shareable.</p>
+              </div>
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">🤖 Content Pillar 2: AI Charlie Spotlights</p>
+                <p className="text-sm text-amber-800">Showcasing precision. Short-form demos of Charlie in action: answering neighborhood questions, comparing schools, guiding through commitment.</p>
+              </div>
+              <div className="bg-white rounded-lg p-3 border border-amber-200">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-1">🎬 Content Pillar 3: The 1927 Parallel</p>
+                <p className="text-sm text-amber-800">Authority deep dives. Frames Charlie as the "talkie moment" for real estate — connecting synchronized sound in film to voice-to-voice AI.</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-4 border-l-4 border-amber-400">
+              <p className="text-xs font-bold text-amber-900 uppercase tracking-widest mb-2">📅 Posting Cadence</p>
+              <p className="text-sm text-amber-800"><strong>3x weekly</strong> across LinkedIn and Instagram. Consistent 90-day run builds momentum before paid amplification.</p>
+              <p className="text-xs text-amber-700 mt-2">✨ Every comment replied to within 24h. Every DM from relocating family routed to Charlie intake.</p>
+            </div>
           </div>
         </div>
 
@@ -335,11 +397,17 @@ export default function AdminSocialLaunch() {
           </motion.div>
         ))}
 
-        {/* Timing guidance */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-          <p className="font-semibold mb-1">📅 Posting Strategy</p>
-          <p><strong>Post 1</strong> — Tonight. Best window: 6–8pm PT</p>
-          <p><strong>Post 2</strong> — 48–72 hours later for maximum reach without overlap.</p>
+        {/* Timing & Approval Guidance */}
+        <div className="bg-slate-100 border border-slate-300 rounded-xl p-4 space-y-3 text-sm text-slate-800">
+          <div>
+            <p className="font-semibold mb-2">✅ Post Approval Status</p>
+            <p>Both posts are approved and ready to launch. LinkedIn posts directly from this interface. Loomly posts go to Facebook, TikTok, YouTube, and Instagram.</p>
+          </div>
+          <div className="border-t border-slate-300 pt-3">
+            <p className="font-semibold mb-2">📅 Posting Strategy</p>
+            <p><strong>Post 1</strong> — Tonight. Best window: 6–8pm PT</p>
+            <p><strong>Post 2</strong> — 48–72 hours later for maximum reach without overlap.</p>
+          </div>
         </div>
       </main>
     </div>
