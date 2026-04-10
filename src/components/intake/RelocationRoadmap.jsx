@@ -228,9 +228,8 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             >
               {/* Phase Header */}
               <button
-                disabled={!clientId}
                 className="w-full flex items-center gap-4 px-5 py-4 text-left"
-                onClick={() => clientId && setExpanded(isOpen ? null : phase.number)}
+                onClick={() => setExpanded(isOpen ? null : phase.number)}
               >
                 {/* Number / Icon */}
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
