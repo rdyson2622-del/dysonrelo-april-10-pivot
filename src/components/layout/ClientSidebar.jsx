@@ -14,12 +14,18 @@ const navItems = [
   { label: 'Gemini Session',   path: '/GeminiSession',    icon: Zap },
 ];
 
+const authorityLinks = [
+  { label: '54-Year Legacy', to: '/Explainers' },
+  { label: 'The 1927 Parallel', to: '/Explainers' },
+  { label: '21 AI Concierges', to: '/Explainers' },
+];
+
 export default function ClientSidebar() {
   const location = useLocation();
 
   return (
     <aside className="w-56 shrink-0 flex flex-col min-h-screen"
-      style={{ background: '#0d0d0d', borderRight: `1px solid rgba(212,175,55,0.15)` }}>
+      style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
       {/* Logo */}
       <div className="px-5 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
@@ -37,11 +43,13 @@ export default function ClientSidebar() {
           const active = location.pathname === path;
           return (
             <Link key={path} to={path}>
-              <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
+              <div
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
                 style={{
                   background: active ? GOLD : 'transparent',
                   color: active ? '#000' : 'rgba(255,255,255,0.75)',
-                }}>
+                }}
+              >
                 <Icon className="w-4 h-4 shrink-0" />
                 {label}
               </div>
@@ -52,14 +60,17 @@ export default function ClientSidebar() {
 
       {/* Heritage & Authority */}
       <div className="mt-2 pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="text-[10px] uppercase tracking-[2px] mb-3 px-2 opacity-70" style={{ color: GOLD }}>Our Authority</div>
+        <div className="text-[10px] uppercase tracking-[2px] mb-3 px-2 opacity-70" style={{ color: GOLD }}>
+          Our Authority
+        </div>
         <nav className="space-y-1">
-          {[
-            { label: '54-Year Legacy', to: '/Explainers' },
-            { label: 'The 1927 Parallel', to: '/Explainers' },
-            { label: '21 AI Concierges', to: '/Explainers' },
-          ].map(({ label, to }) => (
-            <Link key={label} to={to} className="block px-2 py-1 text-sm transition-colors hover:text-[#D4AF37]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          {authorityLinks.map(({ label, to }) => (
+            <Link
+              key={label}
+              to={to}
+              className="block px-2 py-1 text-sm transition-colors hover:text-[#D4AF37]"
+              style={{ color: 'rgba(255,255,255,0.5)' }}
+            >
               {label}
             </Link>
           ))}
@@ -67,7 +78,7 @@ export default function ClientSidebar() {
       </div>
 
       {/* Human Help */}
-      <div className="mx-3 mb-3 mt-4 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}> style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+      <div className="mx-3 mb-3 mt-4 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
         <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>NEED A HUMAN?</p>
         <p className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.55)' }}>We're here Mon–Sat, 9am–7pm PT</p>
         <a href="tel:+18583531200" className="flex items-center gap-2 group">
