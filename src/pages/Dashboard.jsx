@@ -38,34 +38,6 @@ export default function Dashboard() {
 
       <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
 
-        {/* Relocation Profile Card */}
-        {clientId ? (
-          <RelocationProfileCard clientId={clientId} />
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl p-8 text-center"
-            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}
-          >
-            <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              You don't have a relocation profile yet. Start your intake to track your progress here.
-            </p>
-            <Link to="/RelocationIntake">
-              <button className="px-6 py-2.5 rounded-full text-sm font-bold" style={{ background: GOLD, color: '#000' }}>
-                Start My Profile
-              </button>
-            </Link>
-          </motion.div>
-        )}
-
-        {/* Voice Note Section */}
-        {clientId && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <PlanVoiceNote clientId={clientId} />
-          </motion.div>
-        )}
-
         {/* Quick Access */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,6 +66,32 @@ export default function Dashboard() {
             </Link>
           </div>
         </motion.div>
+
+        {/* Relocation Profile / Voice Note */}
+        {clientId ? (
+          <>
+            <RelocationProfileCard clientId={clientId} />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <PlanVoiceNote clientId={clientId} />
+            </motion.div>
+          </>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl p-8 text-center"
+            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}
+          >
+            <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              You don't have a relocation profile yet. Start your intake to track your progress here.
+            </p>
+            <Link to="/RelocationIntake">
+              <button className="px-6 py-2.5 rounded-full text-sm font-bold" style={{ background: GOLD, color: '#000' }}>
+                Start My Profile
+              </button>
+            </Link>
+          </motion.div>
+        )}
 
         {/* Next Steps */}
         <motion.div
