@@ -419,7 +419,7 @@ export default function RelocationIntake() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD, fontSize: '0.14rem' }}>DYSON & DYSON CONCIERGE</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(2.52rem, 5.6vw, 3.92rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Let's Plan Your Move
           </h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem' }}>
