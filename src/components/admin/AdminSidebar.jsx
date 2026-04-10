@@ -26,7 +26,7 @@ const navItems = [
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
   { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
   { label: 'Social Media Launch', path: '/admin/social-launch', icon: Share2 },
-  { label: 'Business Plan', path: '/business-plan', icon: BookOpen },
+  { label: 'Business Plan', path: '/admin/business-plan', icon: BookOpen },
 ];
 
 export default function AdminSidebar() {
