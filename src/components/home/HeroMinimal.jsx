@@ -13,13 +13,13 @@ const HeroMinimal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4">
-      <div className="text-center mb-12">
+    <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="text-center mb-8">
         <div className="flex justify-center mb-6">
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
             alt="Dyson & Dyson"
-            className="h-24 w-auto"
+            className="h-[6.6rem] w-auto"
           />
         </div>
         <h1 className="display-heading mb-3" style={{ lineHeight: 1.2 }}>
