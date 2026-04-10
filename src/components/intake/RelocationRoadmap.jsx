@@ -134,7 +134,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
-        <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
+        <p className="hidden md:block text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
         <Link to="/RelocationIntake">
           <button className="gold-btn px-4 py-2 rounded-full text-xs font-bold tracking-wide">
             Commit to Start
