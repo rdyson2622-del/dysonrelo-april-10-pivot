@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard } from 'lucide-react';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
+import HeroMinimal from '@/components/home/HeroMinimal';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
@@ -32,11 +33,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Page Header */}
-      <div className="text-center pt-12 pb-8 px-6">
-        <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>MY PROGRESS</p>
-        <h1 className="display-heading text-5xl md:text-6xl" style={{ color: '#fff' }}>My Progress</h1>
-      </div>
+      {/* Hero Section */}
+      <HeroMinimal />
 
       <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
 

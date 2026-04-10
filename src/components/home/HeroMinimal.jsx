@@ -13,7 +13,7 @@ const HeroMinimal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+    <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center px-4" style={{ paddingTop: '0.5rem', paddingBottom: '3rem' }}>
       <div className="text-center mb-8">
         <div className="flex justify-center mb-6">
           <img
@@ -23,7 +23,7 @@ const HeroMinimal = () => {
           />
         </div>
         <h1 className="display-heading mb-3" style={{ lineHeight: 1.2 }}>
-          <span className="text-white block" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', letterSpacing: '0.25em' }}>CONCIERGE</span>
+          <span className="text-white block" style={{ fontSize: 'clamp(2.25rem, 5.4vw, 4.5rem)', letterSpacing: '0.25em' }}>CONCIERGE</span>
           <span className="gold-text-gradient block" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', letterSpacing: '0.3em' }}>RELOCATION MANAGEMENT</span>
         </h1>
         <p className="text-gray-400 text-base mt-2">54 Years of Expertise. AI-Powered Precision.</p>
