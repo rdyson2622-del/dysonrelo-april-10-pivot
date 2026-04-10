@@ -352,9 +352,9 @@ export default function AdminSearchProfiles() {
       <div className="rounded-xl p-4 flex items-start gap-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
         <span className="text-lg">📍</span>
         <div className="flex-1">
-          <p className="text-sm font-semibold" style={{ color: '#000' }}>Save your PropStream search criteria for reference</p>
-          <p className="text-sm mt-1" style={{ color: '#666' }}>
-            Search for listings in PropStream, export the results as CSV, then skip trace them on the <strong>Skip Trace page</strong> to get phone numbers and contact details.
+         <p className="text-sm font-semibold" style={{ color: '#000' }}>PropStream: Search & Skip Trace</p>
+         <p className="text-sm mt-1" style={{ color: '#666' }}>
+           Save search criteria here for reference. In PropStream, search listings by your criteria, export the CSV results, then use the Skip Trace page to extract phone numbers and contact details for outreach.
           </p>
         </div>
         <Link to="/admin/skip-trace"
