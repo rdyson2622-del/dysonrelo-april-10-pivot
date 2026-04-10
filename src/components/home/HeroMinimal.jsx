@@ -41,10 +41,7 @@ const HeroMinimal = () => {
             className="h-[5rem] w-auto"
           />
         </div>
-        <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>
-          WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?
-        </h1>
-        <p className="text-lg mb-6" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
+
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
