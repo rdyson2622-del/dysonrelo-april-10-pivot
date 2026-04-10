@@ -121,7 +121,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/target-audiences" element={<AdminTargetAudiences />} />
         <Route path="/admin/campaign-roadmap" element={<AdminCampaignRoadmap />} />
         <Route path="/admin/social-launch" element={<AdminSocialLaunch />} />
-        <Route path="/business-plan" element={<BusinessPlan />} />
+        <Route path="/admin/business-plan" element={<BusinessPlan />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
