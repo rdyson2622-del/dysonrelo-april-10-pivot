@@ -41,8 +41,8 @@ const HeroMinimal = () => {
             className="h-[5rem] w-auto"
           />
         </div>
-        <p className="display-heading" style={{ fontSize: '3.5rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
-        <p className="display-heading" style={{ fontSize: '3.5rem', color: '#D4AF37', marginBottom: '3rem' }}>Relocation Management</p>
+        <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
+        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '3rem' }}>Relocation Management</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
