@@ -29,25 +29,7 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
 
-      {/* Nav */}
-      <nav
-        className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-14 py-4"
-        style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}
-      >
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
-        <div className="flex items-center gap-3">
-          <Link to="/RelocationRoadmap">
-            <button className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-white/20 hover:border-white/40 hover:bg-white/5" style={{ color: '#fff', background: 'transparent' }}>
-              Dashboard
-            </button>
-          </Link>
-          <Link to="/admin">
-            <button className="px-5 py-2.5 rounded-full text-sm font-bold transition-all gold-btn">
-              Admin
-            </button>
-          </Link>
-        </div>
-      </nav>
+
 
       {/* Hero — Gold Pill Minimal */}
       <section id="hero">
