@@ -46,11 +46,11 @@ const HeroMinimal = () => {
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
-        <div className="text-center mb-6">
-          <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</h1>
-          <p className="text-lg" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
-        </div>
-        <div className="relative group">
+        <div className="relative group rounded-full px-8 py-6" style={{ background: '#1A1A1A', border: '2px solid rgba(212,175,55,0.3)' }}>
+          <div className="mb-4 text-center">
+            <p className="text-sm font-medium mb-1.5" style={{ color: '#fff', letterSpacing: '0.08em' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</p>
+            <p className="text-xs" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
+          </div>
           <input
             type="text"
             value={query}
