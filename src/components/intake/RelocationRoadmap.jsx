@@ -104,6 +104,7 @@ const PHASES = [
       'Title company selected & engaged',
       'Escrow opened & timeline set',
       'Lending & appraisal coordinated',
+      'Property inspection coordinated & scheduled',
       'Final walkthrough & close of escrow',
     ],
     dyson_role: 'We track every escrow milestone and make sure nothing falls through the cracks before you get your keys.',
