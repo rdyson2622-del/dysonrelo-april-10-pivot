@@ -26,10 +26,9 @@ export default function Search() {
         >
           <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="w-auto mx-auto mb-8" style={{ height: '60px' }} />
           
-          <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', color: '#fff', letterSpacing: '0.15em' }}>CONCIERGE</h1>
-          <p className="display-heading mb-6" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.4rem)', color: GOLD, letterSpacing: '0.15em' }}>RELOCATION MANAGEMENT</p>
-          
-          <p className="text-base mb-10" style={{ color: '#aaa' }}>54 Years of Expertise. AI-Powered Precision.</p>
+          <p className="text-sm mb-6" style={{ color: '#fff' }}>DO THIS INSTEAD OF TRYING TO THINK:</p>
+          <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>Where does your lifestyle take you next?</h1>
+          <p className="text-lg mb-10" style={{ color: GOLD, letterSpacing: '0.05em' }}>Enter your destination.</p>
           
           <form onSubmit={handleSearch} className="mb-16 max-w-xl mx-auto">
             <div className="flex items-center rounded-full border-2 px-6 py-4" style={{ borderColor: GOLD, background: '#1a1a1a' }}>
@@ -39,7 +38,7 @@ export default function Search() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="City, State or Zip Code"
-                className="flex-1 bg-transparent outline-none text-white placeholder-gray-500 text-sm"
+                className="flex-1 bg-transparent outline-none text-white placeholder-gray-400 text-base"
               />
               <button
                 type="submit"
