@@ -25,7 +25,7 @@ export default function Search() {
           className="w-full max-w-md text-center"
         >
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>SEARCH HOMES</p>
-          <h1 className="display-heading text-5xl md:text-6xl mb-4" style={{ color: '#fff' }}>Find Your New Home</h1>
+          <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Find Your New Home</h1>
           <p className="text-sm mb-10" style={{ color: '#999' }}>Pick your platform and start browsing listings</p>
           
           <div className="space-y-3">
