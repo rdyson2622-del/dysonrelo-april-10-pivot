@@ -157,6 +157,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
+      {!clientId && !loading && <ReadyToStart compact={true} />}
       {/* Header with Back Button and Commit CTA */}
       <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
