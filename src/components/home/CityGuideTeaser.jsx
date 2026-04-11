@@ -63,7 +63,7 @@ export default function CityGuideTeaser() {
   const [expandedCard, setExpandedCard] = useState(null);
 
   return (
-    <section className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+    <section className="py-20 px-6 md:px-14" style={{ background: '#6b6b6b', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}

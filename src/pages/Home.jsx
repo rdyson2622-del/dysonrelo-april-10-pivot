@@ -127,7 +127,7 @@ export default function Home() {
       </section>
 
       {/* Gemini Session CTA */}
-      <section id="gemini-cta" className="py-16 px-6 md:px-14" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+      <section id="gemini-cta" className="py-16 px-6 md:px-14" style={{ background: '#6b6b6b', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-3xl font-semibold mb-6 max-w-5xl mx-auto" style={{ color: '#e5e5e5' }}>
             Seeing the full scope of what's ahead can feel overwhelming.<br />
