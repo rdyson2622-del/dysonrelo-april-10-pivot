@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import ChatInterface from '../components/charlie/ChatInterface';
 
 const GOLD = '#D4AF37';
@@ -8,11 +8,20 @@ const GOLD = '#D4AF37';
 export default function Search() {
   const [location, setLocation] = useState('');
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const buildSearchUrl = (platform) => {
+    if (!location.trim()) return '#';
+    const query = encodeURIComponent(location);
+    const urls = {
+      zillow: `https://www.zillow.com/homes/for_sale/?searchQueryState={%22usersSearchTerm%22:%22${query}%22}`,
+      realtor: `https://www.realtor.com/homes/search/${query}`,
+      redfin: `https://www.redfin.com/search?utf8=%E2%9C%93&market=${query}`
+    };
+    return urls[platform] || '#';
+  };
+
+  const handleSearch = (platform) => {
     if (location.trim()) {
-      // Navigate to intake or roadmap with location
-      window.location.href = `/relocation-intake?city=${encodeURIComponent(location)}`;
+      window.open(buildSearchUrl(platform), '_blank');
     }
   };
 
@@ -26,12 +35,12 @@ export default function Search() {
         >
           <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="w-auto mx-auto mb-8" style={{ height: '60px' }} />
           
-          <p className="text-sm mb-6" style={{ color: '#fff' }}>DO THIS INSTEAD OF TRYING TO THINK:</p>
+          <p className="text-sm mb-6" style={{ color: '#fff' }}>SEARCH ACROSS ALL PLATFORMS:</p>
           <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#fff', letterSpacing: '0.08em', fontWeight: '500' }}>Where does your lifestyle take you next?</h1>
           <p className="text-lg mb-10" style={{ color: GOLD, letterSpacing: '0.05em' }}>Enter your destination.</p>
           
-          <form onSubmit={handleSearch} className="mb-16 max-w-xl mx-auto">
-            <div className="flex items-center rounded-full border-2 px-6 py-4" style={{ borderColor: GOLD, background: '#1a1a1a' }}>
+          <div className="mb-12 max-w-xl mx-auto">
+            <div className="flex items-center rounded-full border-2 px-6 py-4 mb-6" style={{ borderColor: GOLD, background: '#1a1a1a' }}>
               <span className="text-lg mr-3" style={{ color: GOLD }}>🔍</span>
               <input
                 type="text"
@@ -40,15 +49,35 @@ export default function Search() {
                 placeholder="City, State or Zip Code"
                 className="flex-1 bg-transparent outline-none text-white placeholder-gray-400 text-base"
               />
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
               <button
-                type="submit"
-                className="ml-3 p-2 rounded-full transition-all hover:scale-110"
+                onClick={() => handleSearch('zillow')}
+                disabled={!location.trim()}
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
                 style={{ background: GOLD, color: '#000' }}
               >
-                <ArrowRight className="w-5 h-5" />
+                Zillow <ExternalLink className="w-3 h-3" />
+              </button>
+              <button
+                onClick={() => handleSearch('realtor')}
+                disabled={!location.trim()}
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: GOLD, color: '#000' }}
+              >
+                Realtor <ExternalLink className="w-3 h-3" />
+              </button>
+              <button
+                onClick={() => handleSearch('redfin')}
+                disabled={!location.trim()}
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: GOLD, color: '#000' }}
+              >
+                Redfin <ExternalLink className="w-3 h-3" />
               </button>
             </div>
-          </form>
+          </div>
           
           <div className="max-w-xl mx-auto text-xs tracking-widest font-bold uppercase" style={{ color: '#888' }}>
             <div className="flex items-center justify-between mb-2">
