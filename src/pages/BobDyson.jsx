@@ -22,8 +22,8 @@ export default function BobDyson() {
           <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.48rem, 3.28vw, 2.62rem)', letterSpacing: '0.22em', color: '#fff' }}>
             THE DYSON & DYSON COMPANIES
           </h1>
-          <h2 className="display-heading" style={{ fontSize: 'clamp(1.2rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: GOLD }}>
-            54+ Years, 1000+ Properties, 1600+ Office Network
+          <h2 className="display-heading" style={{ fontSize: 'clamp(1.08rem, 2.7vw, 1.98rem)', letterSpacing: '0.18em', color: GOLD }}>
+            55 Years, 1000+ Properties, 1600+ Office Network
           </h2>
         </motion.div>
 
