@@ -103,7 +103,7 @@ export default function Home() {
       </section>
 
       {/* Services Grid — separate section */}
-      <section id="services" className="py-10 px-6 md:px-14" style={{ background: '#000' }}>
+      <section id="services" className="py-10 px-6 md:px-14" style={{ background: '#6b6b6b' }}>
         <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((s, i) => (
             <motion.div
