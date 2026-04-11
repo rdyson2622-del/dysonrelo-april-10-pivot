@@ -13,10 +13,10 @@ export default function ReadyToStart({ compact = false }) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="w-full px-4 py-4 rounded-2xl text-center"
+        className="w-full px-2 py-4 rounded-2xl text-center"
         style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}
       >
-        <h2 className="display-heading whitespace-nowrap" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', letterSpacing: '0.16em', color: '#fff', marginBottom: '0.5rem' }}>
+        <h2 className="display-heading whitespace-nowrap" style={{ fontSize: 'clamp(0.8rem, 2vw, 1rem)', letterSpacing: '0.08em', color: '#fff', marginBottom: '0.5rem' }}>
           Ready to start your relocation journey?
         </h2>
         <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
