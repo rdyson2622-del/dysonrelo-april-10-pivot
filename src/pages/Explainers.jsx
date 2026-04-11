@@ -47,7 +47,7 @@ export default function Explainers() {
             style={{ background: GOLD, color: '#000', border: '1px solid #000' }}>
             ✨ Introducing "Talkies"
           </div>
-          <h1 className="display-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem' }}>
+          <h1 className="display-heading whitespace-nowrap" style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', lineHeight: 1.1, letterSpacing: '0.28em', marginBottom: '1.5rem' }}>
             <span style={{ color: '#000' }}>THE MODERN </span><span className="gold-text-gradient">EVOLUTION</span>
           </h1>
           <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-12" style={{ color: '#fff' }}>
