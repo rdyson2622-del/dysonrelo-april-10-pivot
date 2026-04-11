@@ -49,6 +49,7 @@ import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 import AdminComposeSMS from './pages/AdminComposeSMS';
 import BobDyson from './pages/BobDyson';
 import AIAssistants from './pages/AIAssistants';
+import ReadyToStart from './components/dashboard/ReadyToStart';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -95,6 +96,7 @@ const AuthenticatedApp = () => {
         <Route path="/Search" element={<Search />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
+        <Route path="/ready-to-start" element={<ReadyToStart />} />
         <Route path="/search" element={<Search />} />
         <Route path="/PropertyComparison" element={<PropertyComparison />} />
         <Route path="/property-comparison" element={<PropertyComparison />} />
