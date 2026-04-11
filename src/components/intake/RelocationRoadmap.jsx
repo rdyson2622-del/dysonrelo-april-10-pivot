@@ -157,30 +157,16 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
     checkClient();
   }, []);
 
-  const handleScrollToRoadmap = () => {
-    setShowRoadmap(true);
-  };
-
   useEffect(() => {
-    if (showRoadmap && roadmapRef.current) {
-      roadmapRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [showRoadmap]);
-
-  if (!clientId && !loading) {
-    return <ReadyToStart onScrollToRoadmap={handleScrollToRoadmap} />;
-  }
+    // Roadmap always visible
+    setShowRoadmap(true);
+  }, []);
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {!showRoadmap && !clientId && !loading && (
-        <ReadyToStart onScrollToRoadmap={handleScrollToRoadmap} />
-      )}
-
-      {(showRoadmap || clientId) && (
         <>
-          {/* Header with Back Button and Commit CTA */}
-          <nav ref={roadmapRef} className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      {/* Header with Back Button and Commit CTA */}
+      <nav ref={roadmapRef} className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
             <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
@@ -300,23 +286,21 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         })}
       </div>
 
-          {/* Bottom CTA */}
-          <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
-            <div className="rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
-              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
-              <h3 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Check Your Dashboard</h3>
-              <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Your relocation profile is live. Bob's team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.
-              </p>
-              <Link to="/Dashboard">
-                <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
-                  Go to My Dashboard <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-            </div>
-          </div>
-        </>
-      )}
+      {/* Bottom CTA */}
+      <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
+        <div className="rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
+          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
+          <h3 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Ready to Start?</h3>
+          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            {clientId ? 'Your relocation profile is live. Bob\'s team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.' : 'Submit your information to unlock your complete roadmap and personalized relocation plan.'}
+          </p>
+          <Link to={clientId ? '/Dashboard' : '/RelocationIntake'}>
+            <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
+              {clientId ? 'Go to My Dashboard' : 'Start Your Relocation'} <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
@@ -324,35 +308,35 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 // Phase content when user has completed intake
 function ExpandedPhaseContent({ phase, isActive, GOLD }) {
   return (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="px-5 pb-5"
-                >
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>WHAT HAPPENS</p>
-                      <ul className="space-y-2">
-                        {phase.steps.map((step, j) => (
-                          <li key={j} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                            <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: isActive ? GOLD : 'rgba(255,255,255,0.3)' }} />
-                            {step}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: `1px solid rgba(212,175,55,0.15)` }}>
-                      <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>DYSON & DYSON'S ROLE</p>
-                      <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                        {phase.dyson_role}
-                      </p>
-                    </div>
-                  </div>
-                  </motion.div>
-                  );
-                  }
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.25 }}
+      className="px-5 pb-5"
+    >
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>WHAT HAPPENS</p>
+          <ul className="space-y-2">
+            {phase.steps.map((step, j) => (
+              <li key={j} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: isActive ? GOLD : 'rgba(255,255,255,0.3)' }} />
+                {step}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: `1px solid rgba(212,175,55,0.15)` }}>
+          <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>DYSON & DYSON'S ROLE</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            {phase.dyson_role}
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 // Locked phase content for users who haven't completed Phase 1
 function LockedPhaseContent({ phase, isActive, GOLD }) {
