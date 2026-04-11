@@ -38,7 +38,7 @@ const HeroMinimal = () => {
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
             alt="Dyson & Dyson"
-            className="h-[5rem] w-auto"
+            className="h-[5.75rem] w-auto"
           />
         </div>
         <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
