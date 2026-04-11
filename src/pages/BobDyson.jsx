@@ -10,7 +10,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 export default function BobDyson() {
   return (
     <div className="min-h-screen py-16 px-6 md:px-14" style={{ background: '#000', color: '#fff' }}>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Back */}
         <Link to="/" className="inline-flex items-center gap-2 text-sm mb-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
@@ -19,7 +19,7 @@ export default function BobDyson() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
-          <h1 className="display-heading mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', letterSpacing: '0.22em', color: '#fff' }}>
+          <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.48rem, 3.28vw, 2.62rem)', letterSpacing: '0.22em', color: '#fff' }}>
             THE DYSON & DYSON COMPANIES
           </h1>
           <h2 className="display-heading" style={{ fontSize: 'clamp(1.2rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: GOLD }}>
