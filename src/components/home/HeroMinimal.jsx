@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const HeroMinimal = () => {
@@ -57,10 +57,13 @@ const HeroMinimal = () => {
             onChange={(e) => setQuery(e.target.value)}
             placeholder=""
             disabled={scanning}
-            className="w-full bg-transparent text-white py-1.5 px-6 pl-9 text-base focus:outline-none disabled:opacity-70 placeholder-gray-500"
+            className="w-full bg-transparent text-white py-1.5 px-4 text-base focus:outline-none disabled:opacity-70 placeholder-gray-500"
           />
 
 
+          <button type="submit" disabled={scanning} className="mt-2 bg-[#D4AF37] px-5 py-1.5 rounded-full text-black text-xs font-bold tracking-wide hover:bg-[#B8962E] transition-colors disabled:opacity-50 flex items-center gap-1">
+            Search <ChevronRight className="w-3 h-3" />
+          </button>
         </div>
 
         {scanning && (
