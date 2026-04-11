@@ -57,9 +57,9 @@ const HeroMinimal = () => {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="City, State or Zip Code"
             disabled={scanning}
-            className="w-full bg-[#1A1A1A] border-2 border-[#D4AF37]/30 text-white rounded-full py-5 px-8 pl-14 text-xl focus:outline-none focus:border-[#D4AF37] transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.2)] disabled:opacity-70"
+            className="w-full bg-transparent text-white py-2 px-8 pl-10 text-xl focus:outline-none disabled:opacity-70 placeholder-gray-500"
           />
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#D4AF37] w-6 h-6" />
+          <Search className="absolute left-5 bottom-6 text-[#D4AF37] w-6 h-6" />
           <button type="submit" disabled={scanning} className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#D4AF37] p-3 rounded-full hover:bg-[#B8962E] transition-colors disabled:opacity-50">
             <ChevronRight className="text-black w-6 h-6" />
           </button>
