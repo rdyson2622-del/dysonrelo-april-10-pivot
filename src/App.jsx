@@ -93,8 +93,6 @@ const AuthenticatedApp = () => {
         <Route path="/Chat" element={<Chat />} />
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/city-guide" element={<CityGuide />} />
-...
-        <Route path="/Search" element={<Search />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
         <Route path="/ready-to-start" element={<ReadyToStart />} />
