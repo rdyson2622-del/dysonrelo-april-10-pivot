@@ -39,7 +39,49 @@ export default function ClientSidebar() {
 
       {/* Nav */}
       <nav className="px-3 py-4 space-y-1">
-        {navItems.map(({ label, path, icon: Icon }) => {
+        {/* My Dashboard */}
+        {(() => {
+          const item = navItems[0];
+          const Icon = item.icon;
+          const active = location.pathname === item.path;
+          return (
+            <Link to={item.path}>
+              <div
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
+                style={{
+                  background: active ? GOLD : 'transparent',
+                  color: active ? '#000' : '#fff',
+                }}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                {item.label}
+              </div>
+            </Link>
+          );
+        })()}
+      </nav>
+
+      {/* Quick Links */}
+      <div className="px-3 py-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          Quick Links
+        </div>
+        <div className="flex flex-col gap-2">
+          <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <MapPin className="w-3.5 h-3.5" /> City Guide
+          </Link>
+          <Link to="/Chat" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <Users className="w-3.5 h-3.5" /> Find Agent
+          </Link>
+          <Link to="/Search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <Home className="w-3.5 h-3.5" /> Search Homes
+          </Link>
+        </div>
+      </div>
+
+      {/* Rest of Nav */}
+      <nav className="px-3 space-y-1">
+        {navItems.slice(1).map(({ label, path, icon: Icon }) => {
           const active = location.pathname === path;
           return (
             <Link key={path} to={path}>
@@ -57,24 +99,6 @@ export default function ClientSidebar() {
           );
         })}
       </nav>
-
-      {/* Quick Access */}
-      <div className="px-3 py-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          Quick Links
-        </div>
-        <div className="flex flex-col gap-2">
-          <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-            <MapPin className="w-3.5 h-3.5" /> City Guide
-          </Link>
-          <Link to="/Chat" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-            <Users className="w-3.5 h-3.5" /> Find Agent
-          </Link>
-          <Link to="/Search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-            <Home className="w-3.5 h-3.5" /> Search Homes
-          </Link>
-        </div>
-      </div>
 
       {/* Heritage & Authority */}
       <div className="pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
