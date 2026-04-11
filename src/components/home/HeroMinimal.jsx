@@ -24,8 +24,8 @@ const HeroMinimal = () => {
       const pct = Math.min((elapsed / duration) * 100, 100);
       setProgress(pct);
       if (pct >= 100) {
-        clearInterval(interval);
-        navigate(`/Search?city=${encodeURIComponent(query.trim())}`);
+      clearInterval(interval);
+      navigate(`/relocation-intake?city=${encodeURIComponent(query.trim())}`);
       }
     }, 50);
     return () => clearInterval(interval);
