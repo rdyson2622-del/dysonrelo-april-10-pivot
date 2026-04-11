@@ -10,9 +10,9 @@ export default function AdminLayout() {
   const { landscape } = useLayout();
   const navigate = useNavigate();
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: '#808080' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: '#C4A882' }}>
       <AdminSidebar />
-      <main className="flex-1 overflow-auto relative" style={{ background: '#808080' }}>
+      <main className="flex-1 overflow-auto relative" style={{ background: '#C4A882' }}>
         {/* Top-right controls */}
         <div className="fixed top-3 right-3 z-50 flex items-center gap-2">
           <Link
