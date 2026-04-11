@@ -35,13 +35,13 @@ export default function Explainers() {
         </Link>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-6 md:px-14 py-24">
+      <main className="max-w-5xl mx-auto px-6 md:px-14 py-12">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-xs font-semibold tracking-widest"
             style={{ background: GOLD, color: '#000', border: '1px solid #000' }}>
