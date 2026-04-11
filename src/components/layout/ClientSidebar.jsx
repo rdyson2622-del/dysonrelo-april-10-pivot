@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search } from 'lucide-react';
+import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, ExternalLink } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -20,6 +20,19 @@ const authorityLinks = [
 
 export default function ClientSidebar() {
   const location = useLocation();
+  const [searchLocation, setSearchLocation] = useState('');
+  const [showSearchModal, setShowSearchModal] = useState(false);
+
+  const openSearchPlatform = (platform) => {
+    if (!searchLocation.trim()) return;
+    const query = encodeURIComponent(searchLocation);
+    const urls = {
+      zillow: `https://www.zillow.com/homes/for_sale/?searchQueryState={%22usersSearchTerm%22:%22${query}%22}`,
+      realtor: `https://www.realtor.com/homes/search/${query}`,
+      redfin: `https://www.redfin.com/search?utf8=%E2%9C%93&market=${query}`
+    };
+    window.open(urls[platform], '_blank');
+  };
 
   return (
     <aside className="w-56 shrink-0 flex flex-col min-h-screen"
@@ -65,9 +78,9 @@ export default function ClientSidebar() {
           Quick Links
         </div>
         <div className="flex flex-col gap-2">
-          <Link to="/Search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+          <button onClick={() => setShowSearchModal(true)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10 w-full text-left" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
-          </Link>
+          </button>
           <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
             <Users className="w-3.5 h-3.5" /> Find Agent
           </Link>
@@ -140,6 +153,39 @@ export default function ClientSidebar() {
           </div>
         </Link>
       </div>
+
+      {/* Search Modal */}
+      {showSearchModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowSearchModal(false)}>
+          <div className="bg-black rounded-2xl p-8 max-w-sm w-full mx-4 border" style={{ borderColor: 'rgba(212,175,55,0.3)' }} onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-xl mb-4" style={{ color: '#fff' }}>Search Homes</h3>
+            <input
+              type="text"
+              value={searchLocation}
+              onChange={e => setSearchLocation(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' && searchLocation.trim() && openSearchPlatform('zillow')}
+              placeholder="City, State or Zip Code"
+              className="w-full rounded-lg px-4 py-2 mb-4 text-sm" 
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
+              autoFocus
+            />
+            <div className="grid grid-cols-3 gap-2">
+              <button onClick={() => openSearchPlatform('zillow')} disabled={!searchLocation.trim()} className="py-2 rounded-lg font-bold text-xs transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1" style={{ background: '#D4AF37', color: '#000' }}>
+                Zillow <ExternalLink className="w-3 h-3" />
+              </button>
+              <button onClick={() => openSearchPlatform('realtor')} disabled={!searchLocation.trim()} className="py-2 rounded-lg font-bold text-xs transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1" style={{ background: '#D4AF37', color: '#000' }}>
+                Realtor <ExternalLink className="w-3 h-3" />
+              </button>
+              <button onClick={() => openSearchPlatform('redfin')} disabled={!searchLocation.trim()} className="py-2 rounded-lg font-bold text-xs transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1" style={{ background: '#D4AF37', color: '#000' }}>
+                Redfin <ExternalLink className="w-3 h-3" />
+              </button>
+            </div>
+            <button onClick={() => setShowSearchModal(false)} className="w-full mt-3 py-2 rounded-lg text-xs font-bold transition-all" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff' }}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }
