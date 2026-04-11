@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Mail, Phone, Star, ArrowRight, Loader2 } from 'lucide-react';
+import { MapPin, Mail, Check, User, Search, FileSignature, Loader2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -37,33 +37,55 @@ export default function FindAgent() {
 
   if (!client) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: '#808080' }}>
-        <div className="max-w-md text-center rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
-          <p className="text-sm mb-4" style={{ color: '#fff' }}>You need to complete your relocation profile first.</p>
-          <a href="/RelocationIntake" className="inline-block px-6 py-2 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
-            Start Profile
-          </a>
-        </div>
-      </div>
-    );
-  }
+      <div className="min-h-screen" style={{ background: '#808080' }}>
+        <div className="max-w-4xl mx-auto px-6 py-20 space-y-12">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
+              <User className="w-8 h-8" style={{ color: GOLD }} />
+            </div>
+            <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>Meet Your Perfect Agent</h1>
+            <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Start your relocation profile to unlock personalized agent matching.</p>
+            <a href="/RelocationIntake" className="inline-block px-8 py-3 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>Complete Your Profile</a>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-3xl p-8" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <h3 className="text-xl font-bold mb-6" style={{ color: '#fff' }}>How It Works</h3>
+            <div className="grid sm:grid-cols-2 gap-6">
+              {[{ icon: User, title: 'Tell Us About You', desc: 'Share your relocation destination, timeline, and preferences.' }, { icon: Search, title: 'We Vet Agents', desc: 'Deep dive into DRE records, production, and personality fit.' }, { icon: Check, title: 'You Choose', desc: '3–5 hand-picked finalists for your market.' }, { icon: FileSignature, title: 'Get Started', desc: 'Sign a buyer broker agreement and start your search.' }].map((step, i) => {
+                const StepIcon = step.icon;
+                return (
+                  <div key={i} className="flex gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${GOLD}20`, border: `1px solid ${GOLD}33` }}>
+                      <StepIcon className="w-6 h-6" style={{ color: GOLD }} />
+                    </div>
+                    <div>
+                      <p className="font-bold mb-1" style={{ color: '#fff' }}>{step.title}</p>
+                      <p className="text-sm" style={{ color: '#888' }}>{step.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            </motion.div>
+            </div>
+            </div>
+            );
+            }
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Header */}
-      <div className="max-w-5xl mx-auto px-6 py-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
-            Meet Your Agent
-          </h1>
-          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            We'll match you with a vetted local expert for {client.destination_city}
-          </p>
+      <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
+            <User className="w-8 h-8" style={{ color: GOLD }} />
+          </div>
+          <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>Your Agent Match</h1>
+          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.8)' }}>Vetted. Local. Perfect fit for {client.destination_city}.</p>
         </motion.div>
 
-        {/* Selection Status */}
+        {/* Agent Status Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="rounded-3xl p-8 mb-12" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
+          className="rounded-3xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
           {client.agent_name ? (
             <div className="text-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
