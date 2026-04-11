@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
@@ -132,6 +132,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showRoadmap, setShowRoadmap] = useState(false);
+  const roadmapRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
@@ -160,6 +161,12 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
     setShowRoadmap(true);
   };
 
+  useEffect(() => {
+    if (showRoadmap && roadmapRef.current) {
+      roadmapRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showRoadmap]);
+
   if (!clientId && !loading) {
     return <ReadyToStart onScrollToRoadmap={handleScrollToRoadmap} />;
   }
@@ -171,7 +178,8 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
       )}
 
       {(showRoadmap || clientId) && (
-        <>
+        <div ref={roadmapRef}>
+          <>
           {/* Header with Back Button and Commit CTA */}
           <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
             <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -309,6 +317,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             </div>
           </div>
         </>
+        </div>
       )}
     </div>
   );
