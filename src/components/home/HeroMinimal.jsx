@@ -59,10 +59,8 @@ const HeroMinimal = () => {
             disabled={scanning}
             className="w-full bg-transparent text-white py-1.5 px-6 pl-9 text-base focus:outline-none disabled:opacity-70 placeholder-gray-500"
           />
-          <Search className="absolute left-4 bottom-4 text-[#D4AF37] w-4 h-4" />
-          <button type="submit" disabled={scanning} className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#D4AF37] p-2 rounded-full hover:bg-[#B8962E] transition-colors disabled:opacity-50">
-            <ChevronRight className="text-black w-4 h-4" />
-          </button>
+
+
         </div>
 
         {scanning && (
