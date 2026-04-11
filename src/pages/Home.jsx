@@ -89,9 +89,9 @@ export default function Home() {
       <section id="promise" className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.09rem, 2.38vw, 1.9rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.28rem, 2.8vw, 2.24rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
             We don't send you a map.<br />
-            <span className="gold-text-gradient">We make the journey with you.</span>
+            <span className="gold-text-gradient" style={{ fontSize: 'clamp(1.09rem, 2.38vw, 1.9rem)' }}>We make the journey with you.</span>
           </h2>
           <p className="text-base max-w-2xl mx-auto mb-4" style={{ color: '#e5e5e5' }}>
             We are <strong style={{ color: GOLD }}>Relocation Managers</strong> — not agents, not a listing service, not a broker. We help families and professionals sell their current home and find their next one, anywhere in the country. Every step below is something Charlie and your Dyson team actively execute on your behalf, all the way through closing.
