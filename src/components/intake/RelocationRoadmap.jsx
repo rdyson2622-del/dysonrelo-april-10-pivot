@@ -155,6 +155,10 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
     checkClient();
   }, []);
 
+  if (!clientId && !loading) {
+    return <ReadyToStart />;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
       {/* Header with Back Button and Commit CTA */}
