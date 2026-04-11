@@ -162,29 +162,6 @@ export default function Home() {
       </div>
 
 
-      {/* Bob Dyson Leadership Section */}
-      <section id="bob-leadership" className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
-            <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
-              Bob Dyson:<br />
-              <span style={{ color: GOLD }}>54+ Years, 1000+ Properties, 1600+ Office Network</span>
-            </h2>
-          </div>
-          <div className="rounded-2xl p-8 mb-8" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: '#fff' }}>
-              Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma — at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America. Built on a legacy of managing over 1,600 offices nationwide, our relocation standards are second to none — that foundation of expertise is what Dyson & Dyson brings to every client today. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services — combining 54+ years of hands-on real estate expertise along with cutting-edge AI to serve families nationwide.
-            </p>
-            <p className="text-sm italic leading-relaxed" style={{ color: '#D4AF37', borderLeft: '3px solid #D4AF37', paddingLeft: '1rem' }}>
-              "{CORPORATE_PROFILE.bobsDedication}"
-            </p>
-          </div>
-          <p className="text-center mb-8" style={{ color: '#fff', fontSize: '1.5rem' }}>
-            <strong style={{ color: GOLD }}>At The Dyson & Dyson Companies:</strong> We don't sell real estate. We manage your entire move.
-          </p>
-        </div>
-      </section>
 
       {/* Intelligent Orchestration */}
       <section id="orchestration" className="max-w-7xl mx-auto px-6 md:px-14 py-24">
