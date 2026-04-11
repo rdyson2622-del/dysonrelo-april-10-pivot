@@ -38,7 +38,7 @@ export default function Dashboard() {
       {/* Hero Section */}
       <HeroMinimal />
 
-      <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
+      <main className="max-w-5xl mx-auto px-6 pt-20 pb-16 space-y-8">
 
         {/* Quick Access */}
         <motion.div
