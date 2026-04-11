@@ -64,7 +64,7 @@ export default function Explainers() {
           className="grid md:grid-cols-2 gap-6 mb-20"
         >
           {/* Then Card */}
-          <div className="rounded-3xl p-8 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
+          <div className="rounded-3xl p-5 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
                 <Volume2 className="w-6 h-6" style={{ color: GOLD }} />
@@ -77,20 +77,10 @@ export default function Explainers() {
             <p className="font-semibold" style={{ color: GOLD }}>
               It changed everything. Silent films became obsolete overnight.
             </p>
-            <button
-              onClick={() => handleSpeak('then', THEN_TEXT)}
-              disabled={speaking !== null}
-              className="mt-6 w-full py-3 rounded-full font-semibold transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: GOLD, color: '#000' }}>
-              <div className="flex items-center justify-center gap-2">
-                <Volume2 className="w-4 h-4" />
-                {speaking === 'then' ? 'Speaking...' : 'Hear Charlie read this'}
-              </div>
-            </button>
           </div>
 
           {/* Now Card */}
-          <div className="rounded-3xl p-8 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
+          <div className="rounded-3xl p-5 border" style={{ background: '#1a1a1a', borderColor: 'rgba(212,175,55,0.3)' }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
                 <Mic className="w-6 h-6" style={{ color: GOLD }} />
@@ -100,19 +90,9 @@ export default function Explainers() {
             <p className="leading-relaxed mb-6" style={{ color: '#fff' }}>
               We're experimenting with voice-to-voice technology that lets you talk naturally with Charlie — he understands your needs, explains complex processes, and guides you through every step.
             </p>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
               While Charlie is still learning the full range of our services, every conversation is backed up by the text chat box in the upper-right corner of each page — so you're always connected.
             </p>
-            <button
-              onClick={() => handleSpeak('now', NOW_TEXT)}
-              disabled={speaking !== null}
-              className="w-full py-3 rounded-full font-semibold transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: GOLD, color: '#000' }}>
-              <div className="flex items-center justify-center gap-2">
-                <Mic className="w-4 h-4" />
-                {speaking === 'now' ? 'Speaking...' : 'Hear Charlie read this'}
-              </div>
-            </button>
           </div>
         </motion.div>
 
