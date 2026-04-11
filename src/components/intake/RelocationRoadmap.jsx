@@ -131,6 +131,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [expanded, setExpanded] = useState(null);
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showRoadmap, setShowRoadmap] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
@@ -155,24 +156,34 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
     checkClient();
   }, []);
 
+  const handleScrollToRoadmap = () => {
+    setShowRoadmap(true);
+  };
+
   if (!clientId && !loading) {
-    return <ReadyToStart />;
+    return <ReadyToStart onScrollToRoadmap={handleScrollToRoadmap} />;
   }
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Header with Back Button and Commit CTA */}
-      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          <ArrowLeft className="w-4 h-4" /> Back
-        </button>
-        <p className="hidden md:block text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
-        <Link to="/RelocationIntake">
-          <button className="gold-btn px-4 py-2 rounded-full text-xs font-bold tracking-wide">
-            Commit to Start
-          </button>
-        </Link>
-      </nav>
+      {!showRoadmap && !clientId && !loading && (
+        <ReadyToStart onScrollToRoadmap={handleScrollToRoadmap} />
+      )}
+
+      {(showRoadmap || clientId) && (
+        <>
+          {/* Header with Back Button and Commit CTA */}
+          <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+            <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+            <p className="hidden md:block text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>YOUR ROADMAP</p>
+            <Link to="/RelocationIntake">
+              <button className="gold-btn px-4 py-2 rounded-full text-xs font-bold tracking-wide">
+                Commit to Start
+              </button>
+            </Link>
+          </nav>
 
 
 
@@ -282,21 +293,23 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         })}
       </div>
 
-      {/* Bottom CTA */}
-      <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
-        <div className="rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
-          <h3 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Check Your Dashboard</h3>
-          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Your relocation profile is live. Bob's team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.
-          </p>
-          <Link to="/Dashboard">
-            <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
-              Go to My Dashboard <ArrowRight className="w-4 h-4" />
-            </button>
-          </Link>
-        </div>
-      </div>
+          {/* Bottom CTA */}
+          <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
+            <div className="rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
+              <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Check Your Dashboard</h3>
+              <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                Your relocation profile is live. Bob's team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.
+              </p>
+              <Link to="/Dashboard">
+                <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
+                  Go to My Dashboard <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
