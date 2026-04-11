@@ -161,33 +161,6 @@ export default function Home() {
         <CityGuideTeaser />
       </div>
 
-      {/* V2V Agent Recruitment Card */}
-      <section id="voice-to-voice" className="px-6 md:px-14 py-10" style={{ background: '#808080' }}>
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="relative rounded-3xl px-6 py-5 frosted-dark flex flex-col md:flex-row md:items-center gap-4 w-full" style={{ background: '#111', border: '1px solid #D4AF37' }}>
-              <div className="flex items-center gap-3 shrink-0">
-                <img src={DYSON_LOGO} alt="D&D" className="h-10 w-auto" />
-                <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>VOICE-TO-VOICE</p>
-              </div>
-              <div className="flex-1">
-                <h3 className="serif-heading text-lg mb-1 leading-tight" style={{ color: '#fff' }}>The 1927 Parallel</h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
-                  Discover how AI is transforming real estate the way talkies transformed cinema. We all have an opportunity to expand our knowledge base and personal and business abilities in ways never dreamed.
-                </p>
-              </div>
-              <Link to="/Explainers" className="inline-flex items-center gap-2 text-xs font-bold shrink-0" style={{ color: GOLD }}>
-                EXPLORE <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Bob Dyson Leadership Section */}
       <section id="bob-leadership" className="py-20 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
