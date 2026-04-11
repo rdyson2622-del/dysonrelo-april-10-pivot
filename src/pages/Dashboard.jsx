@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -7,12 +7,14 @@ import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard } from 'lucide-
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
 import HeroMinimal from '@/components/home/HeroMinimal';
+import ReadyToStart from '@/components/dashboard/ReadyToStart';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
 export default function Dashboard() {
   const [clientId, setClientId] = useState(null);
+  const navigate = useNavigate();
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
@@ -67,30 +69,16 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Relocation Profile / Voice Note */}
-        {clientId ? (
+        {/* Ready to Start / Relocation Profile / Voice Note */}
+        {!clientId ? (
+          <ReadyToStart onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
+        ) : (
           <>
             <RelocationProfileCard clientId={clientId} />
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <PlanVoiceNote clientId={clientId} />
             </motion.div>
           </>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl p-8 text-center"
-            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}
-          >
-            <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              You don't have a relocation profile yet. Start your intake to track your progress here.
-            </p>
-            <Link to="/RelocationIntake">
-              <button className="px-6 py-2.5 rounded-full text-sm font-bold" style={{ background: GOLD, color: '#000' }}>
-                Start My Profile
-              </button>
-            </Link>
-          </motion.div>
         )}
 
         {/* Next Steps */}
