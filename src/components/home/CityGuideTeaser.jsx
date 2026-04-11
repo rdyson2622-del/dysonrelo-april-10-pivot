@@ -70,13 +70,12 @@ export default function CityGuideTeaser() {
         <div className="text-center mb-10">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>COMING FOR YOU — AFTER YOU COMMIT</p>
           <h2 className="display-heading mb-4" style={{
-            fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
             lineHeight: 1.2,
             letterSpacing: '0.28em',
             color: '#fff'
           }}>
-            Your Personal<br />
-            <span className="gold-text-gradient">City Intelligence Guide</span>
+            <span style={{ fontSize: 'clamp(1.35rem, 3vw, 2.625rem)' }}>Your Personal</span><br />
+            <span className="gold-text-gradient" style={{ fontSize: 'clamp(1.17rem, 2.6vw, 2.275rem)' }}>City Intelligence Guide</span>
           </h2>
           <p className="text-base max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
             Once you've selected your agent and signed your Buyer Broker Agreement, Charlie unlocks a
