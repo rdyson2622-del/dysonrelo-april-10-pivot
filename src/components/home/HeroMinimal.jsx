@@ -71,7 +71,7 @@ const HeroMinimal = () => {
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
               <p className="text-sm font-semibold tracking-wide" style={{ color: '#D4AF37' }}>
-                Charlie is vetting local agents against the Dyson 54-year standard...
+                Charlie is analyzing your destination market preparing for your profile information...
               </p>
             </div>
             <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)' }}>
