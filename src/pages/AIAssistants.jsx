@@ -43,7 +43,7 @@ export default function AIAssistants() {
           <div className="flex items-center justify-center gap-2 mb-4">
             <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>INTELLIGENT ORCHESTRATION</p>
           </div>
-          <h1 className="display-heading mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <h1 className="display-heading mb-4" style={{ fontSize: 'clamp(1.35rem, 3vw, 2.25rem)', letterSpacing: '0.18em', color: '#fff' }}>
             Each Assistant Specializes in One Domain
           </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
