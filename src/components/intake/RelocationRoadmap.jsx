@@ -164,7 +164,6 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-        <>
       {/* Header with Back Button and Commit CTA */}
       <nav ref={roadmapRef} className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
             <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -299,11 +298,11 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
               {clientId ? 'Go to My Dashboard' : 'Start Your Relocation'} <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+          </div>
+          </div>
+          );
+          }
 
 // Phase content when user has completed intake
 function ExpandedPhaseContent({ phase, isActive, GOLD }) {
