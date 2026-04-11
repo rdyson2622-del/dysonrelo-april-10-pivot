@@ -34,6 +34,10 @@ export default function ReadyToStart({ compact = false }) {
   }
 
   const handleCommit = () => {
+    navigate('/RelocationIntake');
+  };
+
+  const handleViewRoadmap = () => {
     navigate('/relocation-roadmap');
   };
 
@@ -63,13 +67,22 @@ export default function ReadyToStart({ compact = false }) {
         </p>
 
         {/* CTA Button */}
-        <button
-          onClick={handleCommit}
-          className="px-10 py-4 rounded-full font-bold text-base tracking-wider transition-all hover:opacity-90"
-          style={{ background: GOLD, color: '#000' }}
-        >
-          Yes, I Want to Commit & Start My Relocation
-        </button>
+        <div className="flex flex-col gap-3 items-center">
+          <button
+            onClick={handleCommit}
+            className="px-10 py-4 rounded-full font-bold text-base tracking-wider transition-all hover:opacity-90"
+            style={{ background: GOLD, color: '#000' }}
+          >
+            Yes, I Want to Commit & Start My Relocation
+          </button>
+          <button
+            onClick={handleViewRoadmap}
+            className="px-10 py-3 rounded-full font-bold text-base tracking-wider border transition-all hover:opacity-80"
+            style={{ background: 'transparent', color: GOLD, border: `2px solid ${GOLD}` }}
+          >
+            View Full Roadmap
+          </button>
+        </div>
       </motion.div>
     </div>
   );
