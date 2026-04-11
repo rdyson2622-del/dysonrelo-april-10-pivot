@@ -5,8 +5,33 @@ import { Sparkles } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-export default function ReadyToStart() {
+export default function ReadyToStart({ compact = false }) {
   const navigate = useNavigate();
+
+  if (compact) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-full px-4 py-4 rounded-2xl text-center"
+        style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}
+      >
+        <h2 className="display-heading whitespace-nowrap" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', letterSpacing: '0.16em', color: '#fff', marginBottom: '0.5rem' }}>
+          Ready to start your relocation journey?
+        </h2>
+        <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          Commit to our services to unlock your personalized relocation plan, agent matching, and full access to all 8 phases.
+        </p>
+        <button
+          onClick={() => navigate('/relocation-roadmap')}
+          className="px-6 py-2 rounded-full font-bold text-sm tracking-wider transition-all hover:opacity-90"
+          style={{ background: GOLD, color: '#000' }}
+        >
+          Yes, I Want to Commit & Start My Relocation
+        </button>
+      </motion.div>
+    );
+  }
 
   const handleCommit = () => {
     navigate('/relocation-roadmap');
