@@ -47,7 +47,7 @@ export default function AIAssistants() {
             Each Assistant Specializes in One Domain
           </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            but they communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
+            They communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
           </p>
         </motion.div>
 
