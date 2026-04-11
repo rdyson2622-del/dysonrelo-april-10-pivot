@@ -59,10 +59,10 @@ export default function AIAssistants() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.5 }}
-              className="flex flex-col items-center p-4 rounded-xl transition-all hover:scale-105"
+              className="flex flex-col items-center p-3 rounded-xl transition-all hover:scale-105"
               style={{ background: '#111', border: `1px solid ${GOLD}` }}
             >
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2"
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-2"
                 style={{ background: `${agent.color}22`, border: `1px solid ${agent.color}44` }}>
                 {agent.icon}
               </div>
