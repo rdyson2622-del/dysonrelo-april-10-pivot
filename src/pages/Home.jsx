@@ -10,8 +10,6 @@ import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 import CityGuideTeaser from '../components/home/CityGuideTeaser';
 import HeroMinimal from '../components/home/HeroMinimal';
 
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-
 const GOLD = '#D4AF37';
 
 const services = [
@@ -29,14 +27,12 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
 
-
-
-      {/* Hero — Gold Pill Minimal */}
+      {/* Hero */}
       <section id="hero">
         <HeroMinimal />
       </section>
 
-      {/* Charlie Card Section — portrait only (below hero) */}
+      {/* Charlie Card — mobile only */}
       <section className="md:hidden relative overflow-hidden py-20 px-6 flex justify-center" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -85,7 +81,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* WE MOVE WITH YOU — Journey Banner (RIGHT after hero) */}
+      {/* Promise */}
       <section id="promise" className="py-16 px-6 md:px-14" style={{ background: '#000', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>THE DYSON PROMISE</p>
@@ -102,7 +98,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Grid — separate section */}
+      {/* Services Grid */}
       <section id="services" className="py-10 px-6 md:px-14" style={{ background: '#6b6b6b' }}>
         <div className="max-w-5xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((s, i) => (
@@ -126,15 +122,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gemini Session CTA */}
+      {/* Gemini CTA */}
       <section id="gemini-cta" className="py-16 px-6 md:px-14" style={{ background: '#6b6b6b', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-3xl font-semibold mb-6 max-w-5xl mx-auto" style={{ color: '#e5e5e5' }}>
             Seeing the full scope of what's ahead can feel overwhelming.<br />
             <span style={{ color: GOLD }}>That's exactly the point — and exactly why we exist.</span>
           </p>
-
-          {/* Gemini 3-Way Session callout */}
           <div className="rounded-2xl p-6 mb-6 text-left" style={{ background: '#3a3a3a', border: '1px solid rgba(212,175,55,0.3)' }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
             <p className="text-sm leading-relaxed mb-3" style={{ color: '#e5e5e5' }}>
@@ -147,7 +141,6 @@ export default function Home() {
                We are not a member of any real estate association by design, but are a licensed brokerage firm — The Dyson & Dyson Companies, Inc. Ca. DRE # 02303118. (858) 353 1200
              </p>
            </div>
-
           <Link to="/RelocationIntake">
             <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide flex items-center gap-2 mx-auto">
               Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
@@ -161,9 +154,7 @@ export default function Home() {
         <CityGuideTeaser />
       </div>
 
-
-
-
+      {/* AI + Experts banner */}
       <section className="py-14 px-6 relative overflow-hidden"
         style={{ borderTop: '1px solid rgba(212,175,55,0.1)', borderBottom: '1px solid rgba(212,175,55,0.1)', background: '#000' }}>
         <div className="max-w-4xl mx-auto text-center">
@@ -182,58 +173,45 @@ export default function Home() {
         </div>
       </section>
 
-
-      <section id="agent-selection" className="max-w-7xl mx-auto px-6 md:px-14 pb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="rounded-3xl p-10 md:p-16 relative overflow-hidden frosted-gold"
-          style={{ border: '1px solid #D4AF37', background: '#000' }}
-        >
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'radial-gradient(ellipse 60% 80% at 85% 50%, rgba(212,175,55,0.07) 0%, transparent 65%)',
-          }} />
-          <div className="relative grid md:grid-cols-2 gap-10 items-center">
-            <div>
-              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>THE DYSON AGENT SELECTION PROCESS</p>
-              <h3 className="display-heading mb-5" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.4rem)', lineHeight: 1.25, letterSpacing: '0.22em', color: '#fff' }}>
-                Your agent. Your choice.<br /><span className="gold-text-gradient">Zero guesswork.</span>
-              </h3>
-              <p className="leading-relaxed mb-5" style={{ color: '#e5e5e5' }}>
-                Most people find an agent through Zillow, a yard sign, or a friend of a friend — with no idea whether they're any good. We eliminate that entirely.
-              </p>
-              <p className="leading-relaxed mb-6" style={{ color: '#e5e5e5' }}>
-                Before we show you a single name, Your Dyson Management Team interviews you on the type of agent you'd work best with — communication style, personality, pace. Then we pull from the <strong style={{ color: '#fff' }}>top 20 agents in your destination market</strong>, review their production records, check their DRE standing, and personally vet each one against Bob Dyson's 40+ years of market expertise. From that pool, we present you with <strong style={{ color: '#fff' }}>3 to 5 curated candidates</strong> — never more, never less.
-              </p>
-              <p className="leading-relaxed mb-7" style={{ color: '#e5e5e5' }}>
-                You choose the one who feels right. The moment you do, <strong style={{ color: '#fff' }}>we have boots on the ground</strong> — a dedicated expert who knows your market, knows your needs, and is accountable to us. No "I love me" agents chasing their next deal. No cold handoffs. Just a professional who's been briefed, vetted, and ready to go to work for you.
-              </p>
-              <ul className="space-y-2.5 mb-9 max-w-2xl">
-                {[
-                  'The Dyson Relo Team profiles your ideal agent before any names are shared',
-                  'Top 20 destination agents evaluated — production, DRE rating, personality',
-                  '3–5 personally vetted candidates presented for your review',
-                  'Your selection triggers immediate agent briefing & onboarding',
-                  'Zero cost to you as the buyer — always'
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm" style={{ color: '#fff' }}>
-                    <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/RelocationIntake">
-                <button className="px-8 py-3 rounded-full font-bold text-sm tracking-wide gold-btn">
-                  Find My Agent — Start Here
-                </button>
-              </Link>
+      {/* Agent Selection — centered, no logo */}
+      <section id="agent-selection" className="py-20 px-6 md:px-14" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <p className="text-xs font-bold tracking-[0.3em] mb-5" style={{ color: GOLD }}>THE DYSON AGENT SELECTION PROCESS</p>
+            <h3 className="display-heading mb-4" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', lineHeight: 1.2, letterSpacing: '0.22em', color: '#fff' }}>
+              Your agent. Your choice.<br /><span className="gold-text-gradient">Zero guesswork.</span>
+            </h3>
+            <div className="w-20 h-px mx-auto mb-8" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37, transparent)' }} />
+            <p className="leading-relaxed mb-5 text-base" style={{ color: '#e5e5e5' }}>
+              Most people find an agent through Zillow, a yard sign, or a friend of a friend — with no idea whether they're any good. We eliminate that entirely.
+            </p>
+            <p className="leading-relaxed mb-5 text-base" style={{ color: '#e5e5e5' }}>
+              Before we show you a single name, your Dyson Management Team interviews you on communication style, personality, and pace. Then we pull from the <strong style={{ color: '#fff' }}>top 20 agents in your destination market</strong>, review their production records, check their DRE standing, and personally vet each one against Bob Dyson's 40+ years of expertise. From that pool, we present you with <strong style={{ color: '#fff' }}>3 to 5 curated candidates</strong> — never more, never less.
+            </p>
+            <p className="leading-relaxed mb-10 text-base" style={{ color: '#e5e5e5' }}>
+              You choose the one who feels right. The moment you do, <strong style={{ color: '#fff' }}>we have boots on the ground</strong> — briefed, vetted, and ready. No cold handoffs. No "I love me" agents chasing their next deal.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10 text-left">
+              {[
+                'We profile your ideal agent before any names are shared',
+                'Top 20 destination agents evaluated — production, DRE, personality',
+                '3–5 personally vetted candidates presented for your review',
+                'Your selection triggers immediate agent briefing & onboarding',
+                'Zero cost to you as the buyer — always'
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                  <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+                  <span className="text-sm" style={{ color: '#fff' }}>{item}</span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-center">
-              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-40 w-auto opacity-90" />
-            </div>
-          </div>
-        </motion.div>
+            <Link to="/RelocationIntake">
+              <button className="px-10 py-4 rounded-full font-bold text-base tracking-wide gold-btn">
+                Find My Agent — Start Here
+              </button>
+            </Link>
+          </motion.div>
+        </div>
       </section>
 
       {/* CTA */}
