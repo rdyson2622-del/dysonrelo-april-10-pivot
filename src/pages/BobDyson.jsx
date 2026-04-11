@@ -1,0 +1,68 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { CORPORATE_PROFILE } from '../lib/corporateProfile';
+
+const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+
+export default function BobDyson() {
+  return (
+    <div className="min-h-screen py-16 px-6 md:px-14" style={{ background: '#000', color: '#fff' }}>
+      <div className="max-w-4xl mx-auto">
+        {/* Back */}
+        <Link to="/" className="inline-flex items-center gap-2 text-sm mb-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+        </Link>
+
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
+          <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
+          <h1 className="display-heading mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', letterSpacing: '0.18em', color: '#fff' }}>
+            Bob Dyson:
+          </h1>
+          <h2 className="display-heading" style={{ fontSize: 'clamp(1.2rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: GOLD }}>
+            54+ Years, 1000+ Properties, 1600+ Office Network
+          </h2>
+        </motion.div>
+
+        {/* Bio Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="rounded-2xl p-8 mb-8"
+          style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}
+        >
+          <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma — at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America. Built on a legacy of managing over 1,600 offices nationwide, our relocation standards are second to none — that foundation of expertise is what Dyson & Dyson brings to every client today. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services — combining 54+ years of hands-on real estate expertise along with cutting-edge AI to serve families nationwide.
+          </p>
+          <blockquote className="text-sm italic leading-relaxed" style={{ color: GOLD, borderLeft: `3px solid ${GOLD}`, paddingLeft: '1rem' }}>
+            "{CORPORATE_PROFILE.bobsDedication}"
+          </blockquote>
+        </motion.div>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-center text-xl font-semibold mb-10"
+          style={{ color: '#e5e5e5' }}
+        >
+          <span style={{ color: GOLD }}>At The Dyson & Dyson Companies:</span> We don't sell real estate. We manage your entire move.
+        </motion.p>
+
+        {/* CTA */}
+        <div className="text-center">
+          <Link to="/RelocationIntake">
+            <button className="gold-btn px-8 py-3 rounded-full text-sm font-bold tracking-wide inline-flex items-center gap-2">
+              Let's Plan My Relocation Move <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
