@@ -42,13 +42,13 @@ const HeroMinimal = () => {
           />
         </div>
         <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
-        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '6rem' }}>Relocation Management</p>
+        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '2rem' }}>Relocation Management</p>
       </div>
 
-      <form onSubmit={handleSearch} className="w-full max-w-2xl relative">
-        <div className="relative group rounded-full px-8 py-6" style={{ background: '#1A1A1A', border: '2px solid rgba(212,175,55,0.3)' }}>
-          <div className="mb-4 text-center">
-            <p className="text-sm font-medium mb-1.5" style={{ color: '#fff', letterSpacing: '0.08em' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</p>
+      <form onSubmit={handleSearch} className="w-full max-w-lg relative">
+        <div className="relative group rounded-full px-5 py-3" style={{ background: '#1A1A1A', border: '2px solid rgba(212,175,55,0.3)' }}>
+          <div className="mb-2 text-center">
+            <p className="text-xs font-medium mb-1" style={{ color: '#fff', letterSpacing: '0.08em' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</p>
             <p className="text-xs" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
           </div>
           <input
@@ -57,11 +57,11 @@ const HeroMinimal = () => {
             onChange={(e) => setQuery(e.target.value)}
             placeholder=""
             disabled={scanning}
-            className="w-full bg-transparent text-white py-2 px-8 pl-10 text-xl focus:outline-none disabled:opacity-70 placeholder-gray-500"
+            className="w-full bg-transparent text-white py-1.5 px-6 pl-9 text-base focus:outline-none disabled:opacity-70 placeholder-gray-500"
           />
-          <Search className="absolute left-5 bottom-6 text-[#D4AF37] w-6 h-6" />
-          <button type="submit" disabled={scanning} className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#D4AF37] p-3 rounded-full hover:bg-[#B8962E] transition-colors disabled:opacity-50">
-            <ChevronRight className="text-black w-6 h-6" />
+          <Search className="absolute left-4 bottom-4 text-[#D4AF37] w-4 h-4" />
+          <button type="submit" disabled={scanning} className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#D4AF37] p-2 rounded-full hover:bg-[#B8962E] transition-colors disabled:opacity-50">
+            <ChevronRight className="text-black w-4 h-4" />
           </button>
         </div>
 
