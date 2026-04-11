@@ -7,6 +7,7 @@ import {
   UserCheck, MapPin, Home, Search, ClipboardCheck,
   FileText, Key, Truck, Sparkles, ArrowLeft
 } from 'lucide-react';
+import ReadyToStart from '../dashboard/ReadyToStart';
 
 const GOLD = '#D4AF37';
 
@@ -169,21 +170,11 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         </Link>
       </nav>
 
-      {/* Commit Banner for Non-Committed Users */}
+      {/* Compact Ready to Start Panel */}
       {!clientId && !loading && (
-        <div className="px-6 md:px-14 py-6" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-sm font-bold mb-2" style={{ color: '#fff' }}>
-              🔒 Ready to start your relocation journey?
-            </p>
-            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Commit to our services to unlock your personalized relocation plan, agent matching, and full access to all 8 phases.
-            </p>
-            <Link to="/RelocationIntake">
-              <button className="gold-btn px-6 py-2.5 rounded-full text-sm font-bold tracking-wide">
-                Yes, I Want to Commit & Start My Relocation
-              </button>
-            </Link>
+        <div className="px-6 md:px-14 py-4" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
+          <div className="max-w-5xl mx-auto">
+            <ReadyToStart compact={true} />
           </div>
         </div>
       )}
