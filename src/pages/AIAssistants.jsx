@@ -43,7 +43,7 @@ export default function AIAssistants() {
           <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.625rem)', letterSpacing: '0.22em', color: '#fff' }}>
             THE DYSON & DYSON COMPANIES
           </h1>
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.35rem, 3vw, 2.25rem)', letterSpacing: '0.18em', color: '#D4AF37' }}>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#D4AF37' }}>
             Each Assistant Specializes in One Domain
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
