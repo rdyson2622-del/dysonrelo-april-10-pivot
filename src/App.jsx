@@ -17,6 +17,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import RelocationIntake from './pages/RelocationIntake';
 import RelocationRoadmap from './components/intake/RelocationRoadmap';
+import FindAgent from './pages/FindAgent';
 import GeminiSession from './pages/GeminiSession';
 import Admin from './pages/Admin';
 import CharlieScripts from './pages/CharlieScripts';
@@ -100,6 +101,8 @@ const AuthenticatedApp = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/PropertyComparison" element={<PropertyComparison />} />
         <Route path="/property-comparison" element={<PropertyComparison />} />
+        <Route path="/FindAgent" element={<FindAgent />} />
+        <Route path="/find-agent" element={<FindAgent />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
