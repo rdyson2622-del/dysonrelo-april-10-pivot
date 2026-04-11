@@ -55,7 +55,7 @@ const HeroMinimal = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="City, State or Zip Code"
+            placeholder=""
             disabled={scanning}
             className="w-full bg-transparent text-white py-2 px-8 pl-10 text-xl focus:outline-none disabled:opacity-70 placeholder-gray-500"
           />
