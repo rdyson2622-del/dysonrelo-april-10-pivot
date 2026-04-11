@@ -25,7 +25,7 @@ const adminModules = [
 
 export default function Admin() {
   return (
-    <div className="min-h-screen p-6" style={{ background: '#D8C4A8' }}>
+    <div className="min-h-screen p-6" style={{ background: '#808080' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
