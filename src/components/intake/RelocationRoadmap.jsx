@@ -155,6 +155,10 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
     checkClient();
   }, []);
 
+  if (!clientId && !loading) {
+    return <ReadyToStart />;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
       {/* Header with Back Button and Commit CTA */}
@@ -170,14 +174,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         </Link>
       </nav>
 
-      {/* Compact Ready to Start Panel */}
-      {!clientId && !loading && (
-        <div className="px-6 md:px-14 py-4" style={{ background: 'rgba(212,175,55,0.08)', borderBottom: '1px solid rgba(212,175,55,0.1)' }}>
-          <div className="max-w-5xl mx-auto">
-            <ReadyToStart compact={true} />
-          </div>
-        </div>
-      )}
+
 
       <div className="text-center px-6 pt-10 pb-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
