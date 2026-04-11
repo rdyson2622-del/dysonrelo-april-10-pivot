@@ -38,37 +38,7 @@ export default function Dashboard() {
       {/* Hero Section */}
       <HeroMinimal />
 
-      <main className="max-w-5xl mx-auto px-6 pt-20 pb-16 space-y-8">
-
-        {/* Quick Access */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="rounded-3xl p-8"
-          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}
-        >
-          <h2 className="text-xs font-bold tracking-[0.2em] mb-5" style={{ color: GOLD }}>QUICK ACCESS</h2>
-          <div className="flex flex-wrap gap-3">
-            <Link to="/CityGuide" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
-              <MapPin className="w-4 h-4" style={{ color: GOLD }} />
-              <span className="text-sm font-semibold text-white">City Guide</span>
-            </Link>
-            <Link to="/Chat" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
-              <Users className="w-4 h-4" style={{ color: GOLD }} />
-              <span className="text-sm font-semibold text-white">Find Agent</span>
-            </Link>
-            <Link to="/Search" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
-              <Home className="w-4 h-4" style={{ color: GOLD }} />
-              <span className="text-sm font-semibold text-white">Search Homes</span>
-            </Link>
-            <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-5 py-2.5 rounded-full transition-all hover:shadow-lg" style={{ background: GOLD }}>
-              <Map className="w-4 h-4 text-black" />
-              <span className="text-sm font-semibold text-black">My Roadmap</span>
-            </Link>
-          </div>
-        </motion.div>
-
+      <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
         {/* Ready to Start / Relocation Profile / Voice Note */}
         {!clientId ? (
           <ReadyToStart onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />

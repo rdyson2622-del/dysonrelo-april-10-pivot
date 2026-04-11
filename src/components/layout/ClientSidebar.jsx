@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Home, Zap, Settings, Phone, Map, GitCompare } from 'lucide-react';
+import { LayoutDashboard, MapPin, Home, Zap, Settings, Phone, Map, GitCompare, Users, Search } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -57,6 +57,24 @@ export default function ClientSidebar() {
           );
         })}
       </nav>
+
+      {/* Quick Access */}
+      <div className="px-3 py-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          Quick Links
+        </div>
+        <div className="flex flex-col gap-2">
+          <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <MapPin className="w-3.5 h-3.5" /> City Guide
+          </Link>
+          <Link to="/Chat" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <Users className="w-3.5 h-3.5" /> Find Agent
+          </Link>
+          <Link to="/Search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+            <Home className="w-3.5 h-3.5" /> Search Homes
+          </Link>
+        </div>
+      </div>
 
       {/* Heritage & Authority */}
       <div className="pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
