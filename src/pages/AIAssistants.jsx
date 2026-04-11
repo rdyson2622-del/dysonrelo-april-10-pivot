@@ -32,7 +32,7 @@ const AGENTS = [
 export default function AIAssistants() {
   return (
     <div className="min-h-screen py-16 px-6 md:px-14" style={{ background: '#6b6b6b', color: '#fff' }}>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Back */}
         <Link to="/" className="inline-flex items-center gap-2 text-sm mb-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
