@@ -22,7 +22,7 @@ export default function AppLayout() {
   );
   
   return (
-    <div className="flex flex-col min-h-screen" style={{ background: '#A9A9A9' }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>
       {/* Top bar spanning full width */}
       <div className="px-4 py-4 flex items-center gap-3" style={{ background: '#A9A9A9' }}>
         <button
