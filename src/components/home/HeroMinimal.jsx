@@ -46,7 +46,7 @@ const HeroMinimal = () => {
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-lg relative">
-        <div className="relative group rounded-full px-5 py-3" style={{ background: '#1A1A1A', border: '2px solid rgba(212,175,55,0.3)' }}>
+        <div className="relative group rounded-full px-5 py-4 flex flex-col items-center justify-center" style={{ background: '#1A1A1A', border: '2px solid rgba(212,175,55,0.3)' }}>
           <div className="mb-2 text-center">
             <p className="text-xs font-medium mb-1" style={{ color: '#fff', letterSpacing: '0.08em' }}>WHERE DOES YOUR LIFESTYLE TAKE YOU NEXT?</p>
             <p className="text-xs" style={{ color: '#D4AF37', letterSpacing: '0.05em' }}>Enter your destination.</p>
