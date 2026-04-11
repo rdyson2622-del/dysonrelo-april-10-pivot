@@ -178,8 +178,8 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-5" style={{ color: GOLD }}>THE DYSON AGENT SELECTION PROCESS</p>
-            <h3 className="display-heading mb-4" style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', lineHeight: 1.2, letterSpacing: '0.18em', color: '#fff', whiteSpace: 'nowrap' }}>
-              Your agent. Your choice. <span className="gold-text-gradient">Zero guesswork.</span>
+            <h3 className="display-heading mb-4" style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)', lineHeight: 1.2, letterSpacing: '0.18em', color: '#fff' }}>
+              Your agent. Your choice.<br /><span className="gold-text-gradient">Zero guesswork.</span>
             </h3>
             <div className="w-20 h-px mx-auto mb-8" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37, transparent)' }} />
             <p className="leading-relaxed mb-5 text-base" style={{ color: '#e5e5e5' }}>
