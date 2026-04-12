@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard } from 'lucide-react';
+import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard, Send } from 'lucide-react';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
 import HeroMinimal from '@/components/home/HeroMinimal';
 import ReadyToStart from '@/components/dashboard/ReadyToStart';
+import { toast } from "@/components/ui/use-toast";
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
 
 export default function Dashboard() {
   const [clientId, setClientId] = useState(null);
+  const [isCommitting, setIsCommitting] = useState(false);
   const navigate = useNavigate();
-
-  const { data: tasks = [] } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: () => base44.entities.RelocationTask.list('-created_date', 50),
-    initialData: [],
-  });
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -33,18 +29,64 @@ export default function Dashboard() {
     fetchClient();
   }, []);
 
+  // NEW: Function to handle the "Commit" action
+  const handleCommit = async () => {
+    if (!clientId) return;
+    setIsCommitting(true);
+    try {
+      // Creates a new 'Commitment' task in your database
+      await base44.entities.RelocationTask.create({
+        client: clientId,
+        title: "Client Committed to Relocation",
+        status: "Completed",
+        description: "User clicked 'Yes, I Want to Commit' from the dashboard."
+      });
+      
+      toast({
+        title: "Commitment Confirmed!",
+        description: "Your relocation concierge has been notified. We're moving forward!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not save commitment. Please call (858) 353-1200.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCommitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      {/* Hero Section */}
       <HeroMinimal />
 
       <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
-        {/* Ready to Start / Relocation Profile / Voice Note */}
         {!clientId ? (
           <ReadyToStart onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
         ) : (
           <>
             <RelocationProfileCard clientId={clientId} />
+            
+            {/* NEW COMMITMENT SECTION */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }} 
+              animate={{ opacity: 1, scale: 1 }}
+              className="rounded-3xl p-8 text-center"
+              style={{ background: 'linear-gradient(145deg, #1a1a1a, #000)', border: `2px solid ${GOLD}` }}
+            >
+              <h3 className="text-xl font-bold text-white mb-2">Ready to make your move official?</h3>
+              <p className="text-gray-400 mb-6 italic">"Where your lifestyle takes you next starts with one decision."</p>
+              <button
+                onClick={handleCommit}
+                disabled={isCommitting}
+                className="px-10 py-4 rounded-full font-bold transition-all hover:scale-105 active:scale-95"
+                style={{ background: GOLD, color: '#000' }}
+              >
+                {isCommitting ? "Shedding Wings..." : "YES, I WANT TO COMMIT"}
+              </button>
+            </motion.div>
+
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <PlanVoiceNote clientId={clientId} />
             </motion.div>
@@ -59,24 +101,23 @@ export default function Dashboard() {
           className="rounded-3xl p-8"
           style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}
         >
-          <h2 className="text-xs font-bold tracking-[0.2em] mb-6" style={{ color: GOLD }}>NEXT STEPS</h2>
+          <h2 className="text-xs font-bold tracking-[0.2em] mb-6" style={{ color: GOLD }}>CONCIERGE SERVICES</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: '📍', title: 'Research Your Destination', desc: 'Explore neighborhoods that match your lifestyle' },
-              { icon: '🏠', title: 'Find Your Perfect Home', desc: 'Browse listings and get expert recommendations' },
-              { icon: '👤', title: 'Connect with an Agent', desc: 'Meet a local expert who specializes in relocations' },
+              { icon: '📍', title: 'Research Destination', link: '/search' },
+              { icon: '🏠', title: 'Property Comparison', link: '/property-comparison' },
+              { icon: '👤', title: 'Talk to Bob', link: 'tel:8583531200' },
             ].map((step, i) => (
-              <div key={i} className="flex gap-4">
+              <Link to={step.link} key={i} className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors">
                 <span className="text-3xl">{step.icon}</span>
                 <div>
                   <h4 className="font-bold mb-1 text-white">{step.title}</h4>
-                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{step.desc}</p>
+                  <p className="text-xs text-gray-500">Tap to explore</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </motion.div>
-
       </main>
     </div>
   );
