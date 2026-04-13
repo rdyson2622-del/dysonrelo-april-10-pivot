@@ -41,7 +41,7 @@ const HeroMinimal = () => {
             className="h-[5.75rem] w-auto"
           />
         </div>
-        <p className="display-heading" style={{ fontSize: '3.325rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
+        <p className="display-heading" style={{ fontSize: '2.99rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
         <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '2rem' }}>Relocation Management</p>
       </div>
 
