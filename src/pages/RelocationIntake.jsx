@@ -430,6 +430,29 @@ export default function RelocationIntake() {
           </p>
           </motion.div>
 
+        {/* Insulation Factor — shown before form */}
+        <div className="rounded-2xl p-6 mb-10" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.35)' }}>
+          <p className="text-base font-bold mb-3" style={{ color: '#D4AF37' }}>Why We Hand-Select Your Local Team</p>
+          <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            We know that not every real estate experience has been a great one. Too often, buyers find themselves working with an agent who is more focused on closing a deal than truly understanding their needs. At Dyson & Dyson, we do things differently because we know that you need highly educated "boots on the ground" in your intended market.
+          </p>
+          <p className="text-xs font-bold tracking-widest mb-3" style={{ color: '#D4AF37' }}>TO ENSURE YOU HAVE THE ELITE REPRESENTATION YOU DESERVE:</p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>Personal Evaluation:</span>
+              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>Our Relocation specialists and AI Assistants collect & evaluate every agent in our network — reviewing their DRE license history, production records, and professional reputation.</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>Strategic Intelligence:</span>
+              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>We select candidates based on their deep-rooted local knowledge and their ability to act as your eyes and ears before you even arrive.</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>A Protective Shield:</span>
+              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>You will never be handed off to an unvetted stranger. Every agent we recommend has been screened and approved to insulate you from the "typical" industry experience.</span>
+            </div>
+          </div>
+        </div>
+
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 mb-10">
           {STEPS.map((label, i) => (
