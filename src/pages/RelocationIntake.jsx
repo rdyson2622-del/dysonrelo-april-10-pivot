@@ -425,6 +425,9 @@ export default function RelocationIntake() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem' }}>
             In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
           </p>
+          <p className="text-sm mt-4" style={{ color: '#D4AF37', fontSize: '1.05rem', fontStyle: 'italic' }}>
+            Our Best Practices seems like we are actually moving with you and ahead of you every step of the way all the way through close of escrow and beyond.
+          </p>
           </motion.div>
 
         {/* Step indicator */}
