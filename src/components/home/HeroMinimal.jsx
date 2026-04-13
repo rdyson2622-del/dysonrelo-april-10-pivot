@@ -42,7 +42,8 @@ const HeroMinimal = () => {
           />
         </div>
         <p className="display-heading" style={{ fontSize: '2.99rem', color: '#fff', marginBottom: '0.5rem' }}>Concierge</p>
-        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '2rem' }}>Relocation Management</p>
+        <p className="display-heading" style={{ fontSize: '2.275rem', color: '#D4AF37', marginBottom: '0.75rem' }}>Relocation Management</p>
+        <p className="text-sm italic" style={{ color: 'rgba(255,255,255,0.65)', letterSpacing: '0.03em', marginBottom: '2rem' }}>At The Dyson &amp; Dyson Companies: We don't sell real estate. We manage your entire move.</p>
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-lg relative">
