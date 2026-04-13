@@ -593,7 +593,21 @@ export default function RelocationIntake() {
                 <Users className="w-5 h-5" style={{ color: GOLD }} />
                 <h2 className="font-bold text-2xl" style={{ color: '#fff' }}>Agent Match Preferences</h2>
               </div>
-              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>What type of agent personality would work best for you?</p>
+
+              {/* Trust-building copy before agent mention */}
+              <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  We know that not every real estate experience has been a great one. Too often, buyers find themselves working with an agent who is more focused on closing a deal than truly understanding their needs.
+                </p>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  At Dyson & Dyson, we do things differently. <span style={{ color: '#D4AF37', fontWeight: '600' }}>Bob Dyson personally evaluates every agent in our network</span> — reviewing their DRE license history, production records, client feedback, and professional reputation before they ever meet one of our clients.
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: '#D4AF37', fontStyle: 'italic' }}>
+                  You will never be handed off to an unvetted stranger. Every agent we recommend has been screened, interviewed, and approved by our team — so you can move forward with complete confidence.
+                </p>
+              </div>
+
+              <p className="text-base mb-5" style={{ color: 'rgba(255,255,255,0.6)' }}>Now, tell us a little about the type of agent personality that would work best for you:</p>
               <textarea value={form.agent_preferences} onChange={e => set('agent_preferences', e.target.value)} placeholder="e.g., Direct communicator, detail-oriented, patient with first-time buyers..." rows={4} className="w-full rounded-xl px-4 py-3 text-base resize-none" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }} />
             </div>
           )}
