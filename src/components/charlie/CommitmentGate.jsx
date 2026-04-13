@@ -14,13 +14,19 @@ const COMMITMENTS = [
   "I agree that all official transaction communications will flow through the Dyson platform.",
 ];
 
+const WHY_MATTERS = [
+  { label: "Total Transparency:", text: "You, our team, and the AI hear everything at once. No 'telephone game' and no missed details." },
+  { label: "Instant Intelligence:", text: "Gemini provides deep-market analysis and lifestyle modeling on the fly to help us refine your search." },
+  { label: "Verifiable Accuracy:", text: "The session is captured in text and summarized, giving you a perfect record of our strategy." },
+  { label: "Elite Vetting:", text: 'This data is used exclusively by our human team to select the specific "boots on the ground" agent that fits your profile.' },
+];
+
 export default function CommitmentGate({ onCommit }) {
-  const [step, setStep] = useState('intro'); // intro | consent
+  const [step, setStep] = useState('intro');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [checked, setChecked] = useState([]);
 
-  // Auto-populate from logged-in user — no form needed
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user) {
@@ -51,26 +57,26 @@ export default function CommitmentGate({ onCommit }) {
               style={{ background: 'rgba(212,175,55,0.1)', border: `2px solid ${GOLD}` }}>
               <Mic className="w-10 h-10" style={{ color: GOLD }} />
             </div>
-            <h2 className="serif-heading font-bold" style={{ color: '#fff', letterSpacing: '-0.01em', fontSize: '2.7rem' }}>Meet Gemini — Your AI Relocation Advisor</h2>
-            <p className="leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5', fontSize: '1.35rem' }}>
-              You're about to have a live voice conversation with your Dyson Advisor and with Google Gemini — one of the most advanced AI systems in the world — The discussion is guided by the Dyson Representative through various Relocation questions and followed and saved in your App by Charlie, your Dyson Concierge.
+            <h2 className="serif-heading font-bold" style={{ color: '#fff', letterSpacing: '-0.01em', fontSize: '2.7rem' }}>What's This Session About?</h2>
+            <p className="leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5', fontSize: '1.15rem' }}>
+              You're about to join a collaborative strategy call with a Dyson & Dyson Relocation Specialist and Gemini, our advanced AI advisor.
+            </p>
+            <p className="leading-relaxed max-w-md mx-auto" style={{ color: '#f5f5f5', fontSize: '1.15rem' }}>
+              Think of this as a three-way brainstorm. We'll bring Gemini in via speakerphone to provide real-time data and insights while we discuss your destination, lifestyle priorities, budget, and timeline. Together, we'll build a move profile that covers every detail that matters to your family.
             </p>
           </div>
 
           <div className="rounded-2xl p-6 space-y-4" style={{ background: '#2a2a2a', border: `1px solid ${GOLD}33` }}>
-            <p className="font-bold uppercase tracking-widest" style={{ color: GOLD, fontSize: '0.9rem' }}>What happens in this session</p>
-            {[
-              "Gemini will interview you about your relocation — destination, lifestyle, budget, family needs",
-              "Your answers are saved to your private profile — reviewed only by Dyson staff",
-              "We use your profile to hand-select the best agents that best match for your personality and needs. You then select the ones you would like to interview. We then set up those interviews.",
-              "This entire service is FREE to you",
-            ].map((item, i) => (
+            <p className="font-bold uppercase tracking-widest" style={{ color: GOLD, fontSize: '0.9rem' }}>Why This Matters</p>
+            {WHY_MATTERS.map((item, i) => (
               <div key={i} className="flex gap-3 items-start">
-                <div className="w-6 h-6 rounded-full shrink-0 mt-0.5 flex items-center justify-center flex-shrink-0"
+                <div className="w-6 h-6 rounded-full shrink-0 mt-0.5 flex items-center justify-center"
                   style={{ background: 'transparent', border: `1.5px solid ${GOLD}` }}>
                   <Check className="w-3.5 h-3.5" style={{ color: GOLD }} strokeWidth={3} />
                 </div>
-                <p className="leading-relaxed" style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>{item}</p>
+                <p className="leading-relaxed" style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>
+                  <span style={{ color: GOLD, fontWeight: 600 }}>{item.label}</span> {item.text}
+                </p>
               </div>
             ))}
           </div>
