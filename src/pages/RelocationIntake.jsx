@@ -423,7 +423,7 @@ export default function RelocationIntake() {
             Let's Plan Your Move
           </h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem' }}>
-            Tell us about your relocation and we'll build your personalized plan — completely free.
+            In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
           </p>
           </motion.div>
 
