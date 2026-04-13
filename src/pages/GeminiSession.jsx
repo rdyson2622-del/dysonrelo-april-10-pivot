@@ -74,28 +74,35 @@ export default function GeminiSession() {
                <div className="rounded-2xl p-6 mb-6" style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
                  <div className="space-y-4">
                    <div>
-                     <h2 className="serif-heading text-2xl md:text-3xl mb-3" style={{ color: '#fff' }}>What's This Session About?</h2>
-                     <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e5e5e5' }}>
-                       You're about to have a voice conversation with Gemini, an advanced AI advisor, guided by a Dyson & Dyson relocation specialist. We'll discuss your destination, lifestyle priorities, budget, timeline, and family needs — everything that matters for your move.
-                     </p>
-                   </div>
-                   <div>
-                     <p className="text-xs font-bold mb-3 uppercase tracking-[0.2em]" style={{ color: GOLD }}>Why This Matters</p>
-                     <ul className="text-sm md:text-base space-y-2.5" style={{ color: '#e5e5e5' }}>
-                       <li className="flex gap-3">
-                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
-                         <span><span style={{ color: GOLD, fontWeight: 600 }}>Your profile:</span> Answers are saved privately and reviewed only by our team to match you with the right agent.</span>
-                       </li>
-                       <li className="flex gap-3">
-                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
-                         <span><span style={{ color: GOLD, fontWeight: 600 }}>No surprises:</span> The conversation is recorded and summarized — nothing is lost or misunderstood.</span>
-                       </li>
-                       <li className="flex gap-3">
-                         <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
-                         <span><span style={{ color: GOLD, fontWeight: 600 }}>It's completely free:</span> This entire service costs you nothing. Agent fees are handled separately.</span>
-                       </li>
-                     </ul>
-                   </div>
+                       <h2 className="serif-heading text-2xl md:text-3xl mb-3" style={{ color: '#fff' }}>What's This Session About?</h2>
+                       <p className="text-sm md:text-base leading-relaxed mb-2" style={{ color: '#e5e5e5' }}>
+                         You're about to join a collaborative strategy call with a Dyson & Dyson Relocation Specialist and Gemini, our advanced AI advisor.
+                       </p>
+                       <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e5e5e5' }}>
+                         Think of this as a three-way brainstorm. We'll bring Gemini in via speakerphone to provide real-time data and insights while we discuss your destination, lifestyle priorities, budget, and timeline. Together, we'll build a move profile that covers every detail that matters to your family.
+                       </p>
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold mb-3 uppercase tracking-[0.2em]" style={{ color: GOLD }}>Why This Matters</p>
+                       <ul className="text-sm md:text-base space-y-2.5" style={{ color: '#e5e5e5' }}>
+                         <li className="flex gap-3">
+                           <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                           <span><span style={{ color: GOLD, fontWeight: 600 }}>Total Transparency:</span> You, our team, and the AI hear everything at once. No "telephone game" and no missed details.</span>
+                         </li>
+                         <li className="flex gap-3">
+                           <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                           <span><span style={{ color: GOLD, fontWeight: 600 }}>Instant Intelligence:</span> Gemini provides deep-market analysis and lifestyle modeling on the fly to help us refine your search.</span>
+                         </li>
+                         <li className="flex gap-3">
+                           <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                           <span><span style={{ color: GOLD, fontWeight: 600 }}>Verifiable Accuracy:</span> The session is captured in text and summarized, giving you a perfect record of our strategy.</span>
+                         </li>
+                         <li className="flex gap-3">
+                           <span style={{ color: GOLD, fontWeight: 'bold' }}>✓</span>
+                           <span><span style={{ color: GOLD, fontWeight: 600 }}>Elite Vetting:</span> This data is used exclusively by our human team to select the specific <span style={{ color: GOLD, fontWeight: 600 }}>boots on the ground</span> agent that fits your profile.</span>
+                         </li>
+                       </ul>
+                     </div>
                  </div>
                </div>
              </motion.div>
