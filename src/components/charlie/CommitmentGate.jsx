@@ -18,7 +18,7 @@ const WHY_MATTERS = [
   { label: "Total Transparency:", text: "You, our team, and the AI hear everything at once. No 'telephone game' and no missed details." },
   { label: "Instant Intelligence:", text: "Gemini provides deep-market analysis and lifestyle modeling on the fly to help us refine your search." },
   { label: "Verifiable Accuracy:", text: "The session is captured in text and summarized, giving you a perfect record of our strategy." },
-  { label: "Elite Vetting:", text: 'This data is used exclusively by our human team to select the specific "boots on the ground" agent that fits your profile.' },
+  { label: "Elite Vetting:", text: null, textParts: ['This data is used exclusively by our human team to select the specific ', 'boots on the ground', ' agent that fits your profile.'] },
 ];
 
 export default function CommitmentGate({ onCommit }) {
@@ -75,7 +75,11 @@ export default function CommitmentGate({ onCommit }) {
                   <Check className="w-3.5 h-3.5" style={{ color: GOLD }} strokeWidth={3} />
                 </div>
                 <p className="leading-relaxed" style={{ color: '#f5f5f5', fontSize: '1.05rem' }}>
-                  <span style={{ color: GOLD, fontWeight: 600 }}>{item.label}</span> {item.text}
+                  <span style={{ color: GOLD, fontWeight: 600 }}>{item.label}</span>{' '}
+                  {item.textParts
+                    ? <>{item.textParts[0]}<span style={{ color: GOLD, fontWeight: 600 }}>{item.textParts[1]}</span>{item.textParts[2]}</>
+                    : item.text
+                  }
                 </p>
               </div>
             ))}
