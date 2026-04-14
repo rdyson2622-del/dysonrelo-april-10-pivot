@@ -1,47 +1,41 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    
-    // Auth check skipped for credential test
+    const accountSid = (Deno.env.get('TWILIO_ACCOUNT_SID') || '').trim();
+    const authToken = (Deno.env.get('TWILIO_AUTH_TOKEN') || '').trim();
 
-    const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID')?.trim();
-    const authToken = Deno.env.get('TWILIO_AUTH_TOKEN')?.trim();
-    console.log('SID starts with:', accountSid?.substring(0, 4), 'SID length:', accountSid?.length);
-    console.log('Token length:', authToken?.length);
+    console.log('=== TWILIO DEBUG ===');
+    console.log('SID length:', accountSid.length, '| first4:', accountSid.substring(0, 4));
+    console.log('Token length:', authToken.length);
 
     if (!accountSid || !authToken) {
       return Response.json({ error: 'Twilio credentials missing' }, { status: 400 });
     }
 
-    // Check account status
+    const credentials = btoa(`${accountSid}:${authToken}`);
     const accountUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}.json`;
+
     const accountRes = await fetch(accountUrl, {
-      headers: {
-        'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
-      },
+      headers: { 'Authorization': `Basic ${credentials}` },
     });
 
     const accountData = await accountRes.json();
+    console.log('Twilio response status:', accountRes.status);
 
     if (!accountRes.ok) {
       return Response.json({
         error: 'Twilio API error',
         status: accountRes.status,
         message: accountData.message || accountData.error_message,
+        sid_used: accountSid.substring(0, 8) + '...',
       }, { status: 400 });
     }
 
-    // Check balance
-    const balanceUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Balance.json`;
-    const balanceRes = await fetch(balanceUrl, {
-      headers: {
-        'Authorization': 'Basic ' + btoa(`${accountSid}:${authToken}`),
-      },
-    });
-
+    const balanceRes = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Balance.json`,
+      { headers: { 'Authorization': `Basic ${credentials}` } }
+    );
     const balanceData = await balanceRes.json();
 
     return Response.json({
@@ -51,8 +45,6 @@ Deno.serve(async (req) => {
         friendly_name: accountData.friendly_name,
         status: accountData.status,
         type: accountData.type,
-        date_created: accountData.date_created,
-        date_updated: accountData.date_updated,
       },
       balance: {
         balance: balanceData.balance,
@@ -61,9 +53,9 @@ Deno.serve(async (req) => {
       health: {
         is_active: accountData.status === 'active',
         has_balance: parseFloat(balanceData.balance) > 0,
-        message: 
+        message:
           accountData.status !== 'active' ? `⚠️ Account status: ${accountData.status}` :
-          parseFloat(balanceData.balance) <= 0 ? '⚠️ Account has no balance (zero credits)' :
+          parseFloat(balanceData.balance) <= 0 ? '⚠️ Account has no balance' :
           '✓ Account is active and has balance',
       },
     });
