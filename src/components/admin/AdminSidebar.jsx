@@ -14,6 +14,7 @@ const navItems = [
   { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
   { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
   { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
+  { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
   { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: Zap },
   { label: 'Outreach Campaigns (Legacy)', path: '/admin/outreach-campaigns', icon: MessageCircle },
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
