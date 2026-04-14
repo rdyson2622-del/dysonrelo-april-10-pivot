@@ -1,0 +1,85 @@
+{
+  "name": "SMSSequenceEnrollment",
+  "type": "object",
+  "properties": {
+    "sequence_id": {
+      "type": "string",
+      "description": "Reference to SMSSequence ID"
+    },
+    "sequence_name": {
+      "type": "string",
+      "description": "Sequence name (denormalized)"
+    },
+    "listing_owner_id": {
+      "type": "string",
+      "description": "Reference to ListingOwner ID"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_phone": {
+      "type": "string"
+    },
+    "property_address": {
+      "type": "string"
+    },
+    "enrolled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When enrollment started"
+    },
+    "enrolled_by": {
+      "type": "string",
+      "description": "Admin email who enrolled"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 0,
+      "description": "Last completed step index (0 = none yet)"
+    },
+    "next_step_due": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the next step should fire"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "paused",
+        "cancelled",
+        "opted_out"
+      ],
+      "default": "active"
+    },
+    "steps_log": {
+      "type": "array",
+      "description": "Log of sent steps",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step_number": {
+            "type": "number"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message_sid": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "sequence_id",
+    "listing_owner_id",
+    "owner_phone",
+    "enrolled_at"
+  ]
+}

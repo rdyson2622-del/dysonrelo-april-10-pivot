@@ -1,0 +1,50 @@
+{
+  "name": "SMSSequence",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Sequence name (e.g. '3-Touch Follow-Up')"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this sequence is for"
+    },
+    "steps": {
+      "type": "array",
+      "description": "Ordered list of SMS steps",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step_number": {
+            "type": "number"
+          },
+          "delay_days": {
+            "type": "number",
+            "description": "Days after previous step (or after initial contact for step 1)"
+          },
+          "delay_hours": {
+            "type": "number",
+            "description": "Additional hours offset"
+          },
+          "message": {
+            "type": "string",
+            "description": "SMS message body with {{placeholders}}"
+          },
+          "label": {
+            "type": "string",
+            "description": "Short label like 'Day 3 Follow-up'"
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "steps"
+  ]
+}
