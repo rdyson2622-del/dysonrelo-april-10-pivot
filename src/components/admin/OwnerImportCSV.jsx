@@ -214,6 +214,7 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
   const [preview, setPreview] = useState(null); // { rows, headers, fileType }
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [dragging, setDragging] = useState(false);
   const fileRef = useRef();
 
   const reset = () => {
@@ -221,14 +222,12 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
     if (fileRef.current) fileRef.current.value = '';
   };
 
-  const handleFileSelect = async (e) => {
-    const file = e.target.files?.[0];
+  const processFile = async (file) => {
     if (!file) return;
     setLoading(true);
     setError(null);
     setResult(null);
     setPreview(null);
-
     try {
       const parsed = await parseFile(file);
       if (!parsed.rows.length) throw new Error('No rows with a property address found.');
@@ -238,6 +237,15 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFileSelect = (e) => processFile(e.target.files?.[0]);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   const handleImport = async () => {
@@ -295,17 +303,33 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
                 <p className="text-blue-600 mt-1">Phones are auto-formatted to (XXX) XXX-XXXX for Twilio compatibility.</p>
               </div>
 
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg p-8 cursor-pointer hover:border-slate-500 transition">
+              <label
+                className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 cursor-pointer transition"
+                style={{
+                  borderColor: dragging ? '#3b82f6' : '#cbd5e1',
+                  background: dragging ? '#eff6ff' : 'transparent',
+                }}
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragEnter={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={handleDrop}
+              >
                 {loading ? (
                   <>
                     <div className="w-6 h-6 border-2 border-slate-300 border-t-slate-700 rounded-full animate-spin mb-2" />
                     <span className="text-sm font-medium text-slate-600">Reading file…</span>
                   </>
+                ) : dragging ? (
+                  <>
+                    <Upload className="w-8 h-8 text-blue-500 mb-2" />
+                    <span className="text-sm font-semibold text-blue-600">Drop it here!</span>
+                  </>
                 ) : (
                   <>
                     <Upload className="w-8 h-8 text-slate-400 mb-2" />
-                    <span className="text-sm font-semibold text-slate-700">Click to select CSV / Excel file</span>
-                    <span className="text-xs text-slate-400 mt-1">.csv, .xlsx, .xls — PropStream MLS or SkipTrace export</span>
+                    <span className="text-sm font-semibold text-slate-700">Drag & drop your CSV / Excel file here</span>
+                    <span className="text-xs text-slate-400 mt-1">or click to browse — .csv, .xlsx, .xls</span>
+                    <span className="text-xs text-slate-400">PropStream MLS or SkipTrace export</span>
                   </>
                 )}
                 <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" onChange={handleFileSelect} disabled={loading} className="hidden" />
