@@ -47,6 +47,7 @@ import AdminOutreachPipeline from './pages/AdminOutreachPipeline';
 import AdminBatchSMSLog from './pages/AdminBatchSMSLog';
 import AdminOutreachAnalytics from './pages/AdminOutreachAnalytics';
 import AdminSMSSequences from './pages/AdminSMSSequences';
+import AdminOwnerKanban from './pages/AdminOwnerKanban';
 import AdminOptIns from './pages/AdminOptIns';
 import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 import AdminComposeSMS from './pages/AdminComposeSMS';
@@ -119,6 +120,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/batch-sms-log" element={<AdminBatchSMSLog />} />
         <Route path="/admin/outreach-analytics" element={<AdminOutreachAnalytics />} />
         <Route path="/admin/sms-sequences" element={<AdminSMSSequences />} />
+        <Route path="/admin/owner-kanban" element={<AdminOwnerKanban />} />
         <Route path="/admin/compose-sms" element={<AdminComposeSMS />} />
         <Route path="/admin/active-campaigns" element={<AdminActiveCampaigns />} />
         <Route path="/admin/opt-ins" element={<AdminOptIns />} />

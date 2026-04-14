@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
   { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
   { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
+  { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
   { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
   { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
   { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
