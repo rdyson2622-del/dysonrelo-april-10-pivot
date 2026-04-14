@@ -18,7 +18,7 @@ const navItems = [
   { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
   { label: 'SMS Sequences', path: '/admin/sms-sequences', icon: MessageCircle },
   { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: Zap },
-  { label: 'Outreach Campaigns (Legacy)', path: '/admin/outreach-campaigns', icon: MessageCircle },
+
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
   { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
   { label: 'Communications', path: '/admin/communications', icon: MessageCircle },
@@ -172,38 +172,30 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      {/* Active Campaigns Widget */}
+      {/* Recent Batch SMS Widget */}
       <div className="mx-3 mb-4 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-        <Link to="/admin/active-campaigns" className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Live Campaigns</span>
+        <Link to="/admin/batch-sms-log" className="flex items-center justify-between mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Recent SMS Batches</span>
           <ArrowRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
         </Link>
         <div className="space-y-2">
-          {activeCampaigns.length > 0 ? (
-            activeCampaigns.slice(0, 3).map(camp => (
-              <div key={camp.city} className="text-xs">
-                <div className="flex items-center justify-between mb-1">
-                  <span style={{ color: '#ccc' }}>{camp.city}</span>
-                  <span style={{ color: camp.inProgress ? '#D4AF37' : 'rgba(255,255,255,0.5)' }} className="font-semibold text-xs">
-                    {camp.inProgress ? '⏳ Sending' : '⏸ Pending'}
+          {batchLogs.length > 0 ? (
+            batchLogs.slice(0, 4).map(log => (
+              <div key={log.id} className="text-xs">
+                <div className="flex items-center justify-between">
+                  <span style={{ color: '#ccc' }} className="truncate max-w-[120px]">{log.city || 'Unknown'}</span>
+                  <span style={{ color: '#D4AF37' }} className="font-semibold ml-1 flex-shrink-0">
+                    ✓ {log.sent_count || 0} sent
                   </span>
                 </div>
-                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                  <div 
-                    className="h-full transition-all" 
-                    style={{ 
-                      width: `${camp.inProgress ? camp.progress : 0}%`, 
-                      background: camp.inProgress ? 'linear-gradient(90deg, #D4AF37, #e8c84a)' : 'rgba(255,255,255,0.1)'
-                    }}
-                  />
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs mt-0.5">
-                  {camp.unsent} unsent of {camp.total}
+                <div style={{ color: 'rgba(255,255,255,0.4)' }} className="mt-0.5">
+                  {log.sent_at ? new Date(log.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+                  {log.failed_count > 0 && <span style={{ color: '#ef4444' }}> · {log.failed_count} failed</span>}
                 </div>
               </div>
             ))
           ) : (
-            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No pending campaigns</p>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No batches sent yet</p>
           )}
         </div>
       </div>
