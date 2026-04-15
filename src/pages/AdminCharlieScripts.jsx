@@ -60,19 +60,29 @@ export default function AdminCharlieScripts() {
         return;
       }
       const { audio } = res.data;
+      console.log('Audio blob size:', audio.length, 'bytes (base64)');
+      
       // Use direct data URI to bypass blob/object URL issues
       const el = new Audio(`data:audio/wav;base64,${audio}`);
       audioRef.current = el;
-      el.onended = () => { setPlayingId(null); };
-      el.onerror = (e) => { console.error('Audio error:', e); setPlayingId(null); };
+      el.onended = () => { console.log('Playback ended'); setPlayingId(null); };
+      el.onerror = (e) => { console.error('Audio error:', e.message, e.target.error); setPlayingId(null); };
       setLoadingAudioId(null);
       setPlayingId(id);
       
+      console.log('Audio element created, attempting play...');
+      
       // Resume AudioContext if suspended (browser autoplay policy)
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
+      if (audioCtx.state === 'suspended') { 
+        console.log('Resuming AudioContext...');
+        await audioCtx.resume(); 
+      }
       
-      await el.play();
+      const playPromise = el.play();
+      if (playPromise) {
+        playPromise.catch(err => console.error('Play failed:', err.message));
+      }
     } catch (err) {
       console.error('TTS error:', err.message);
       setLoadingAudioId(null);
