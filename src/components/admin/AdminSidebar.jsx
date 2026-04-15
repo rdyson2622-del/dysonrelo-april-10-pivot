@@ -24,9 +24,10 @@ const navItems = [
   { label: 'Communications', path: '/admin/communications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
-  { label: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
-  { label: "Charlie's Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
-  { label: "Charlie Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
+  { label: "CHARLIE'S BRAIN", isDivider: true },
+  { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
+  { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
+  { label: "Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
   { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
   { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
@@ -155,7 +156,14 @@ export default function AdminSidebar() {
 
       {/* Nav */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
+        {navItems.map((item, idx) => {
+          if (item.isDivider) {
+            return (
+              <div key={idx} className="pt-3 pb-1 px-3">
+                <p className="text-xs font-bold tracking-widest" style={{ color: '#A78BFA', opacity: 0.8 }}>⬡ {item.label}</p>
+              </div>
+            );
+          }
           const isActive = location.pathname === item.path;
           return (
             <Link

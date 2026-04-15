@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Users, Home, UserCheck, Search, SendHorizontal, Flag,
-  BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download
+  BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
+  Brain, AlertTriangle, Sparkles, Zap
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -19,7 +20,9 @@ const adminModules = [
   { name: 'Communications', path: '/admin/communications', icon: MessageCircle, description: 'Review outreach and emails', color: '#06B6D4' },
   { name: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag, description: 'Review flagged conversations', color: '#EF4444' },
   { name: 'Referral Management', path: '/admin/referrals', icon: LinkIcon, description: 'Track agent referrals and fees', color: '#14B8A6' },
-  { name: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText, description: 'Edit AI advisor scripts and responses', color: '#F97316' },
+  { name: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText, description: 'Edit what Charlie says on every page', color: '#F97316' },
+  { name: "Charlie's Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain, description: 'Train Charlie with Q&A pairs — auto-extract from docs', color: '#A78BFA' },
+  { name: "Charlie Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle, description: 'Review unanswered questions & save answers to KB', color: '#EF4444' },
   { name: 'Business Plan', path: '/business-plan', icon: BookOpen, description: 'View business plan and projections', color: '#6366F1' },
 ];
 
@@ -100,6 +103,43 @@ export default function Admin() {
               </Link>
             );
           })}
+        </motion.div>
+
+        {/* Charlie Command Center */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          className="mt-8 rounded-2xl p-6"
+          style={{ background: '#000', border: `1px solid #A78BFA44` }}
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#A78BFA22', border: '1px solid #A78BFA44' }}>
+              <Brain className="w-5 h-5" style={{ color: '#A78BFA' }} />
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-[0.3em]" style={{ color: '#A78BFA' }}>CHARLIE'S BRAIN</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Build, train & monitor your AI advisor</p>
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[
+              { label: "Scripts", sub: "What Charlie says", path: '/admin/charlie-scripts', icon: ScrollText, color: '#F97316' },
+              { label: "Knowledge Base", sub: "What Charlie knows", path: '/admin/charlie-knowledge-base', icon: Brain, color: '#A78BFA' },
+              { label: "Escalations", sub: "What Charlie missed", path: '/admin/charlie-escalations', icon: AlertTriangle, color: '#EF4444' },
+            ].map(item => {
+              const Icon = item.icon;
+              return (
+                <Link key={item.path} to={item.path}
+                  className="group rounded-xl p-4 transition-all hover:scale-[1.02]"
+                  style={{ background: '#0d0d0d', border: `1px solid ${item.color}33` }}>
+                  <Icon className="w-5 h-5 mb-2" style={{ color: item.color }} />
+                  <p className="font-bold text-sm" style={{ color: '#fff' }}>{item.label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.sub}</p>
+                </Link>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* Quick Actions */}
