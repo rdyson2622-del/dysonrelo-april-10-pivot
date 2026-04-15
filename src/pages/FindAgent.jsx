@@ -88,7 +88,7 @@ export default function FindAgent() {
           <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
             Agent Selection Done Right
           </h1>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <p className="text-lg max-w-3xl mx-auto" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Before you meet a single agent, there's something important you need to understand about how we protect you from one of real estate's most broken processes.
           </p>
         </motion.div>
