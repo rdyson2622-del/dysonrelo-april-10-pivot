@@ -94,7 +94,7 @@ const HeroMinimal = () => {
         <span className="text-[#D4AF37]/50">•</span>
         <span>Human-Managed</span>
         <span className="text-[#D4AF37]/50">•</span>
-        <span>Nationwide Network</span>
+        <span>International Network</span>
       </div>
     </div>
   );
