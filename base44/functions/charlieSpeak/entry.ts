@@ -1,7 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -11,9 +9,11 @@ Deno.serve(async (req) => {
     const { text } = await req.json();
     if (!text) return Response.json({ error: 'No text provided' }, { status: 400 });
 
-    console.log('API key present:', !!GEMINI_API_KEY, 'length:', GEMINI_API_KEY?.length);
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    console.log('Key length:', GEMINI_API_KEY?.length, 'starts with:', GEMINI_API_KEY?.slice(0, 4));
 
-    // Clean markdown, normalize whitespace
+    if (!GEMINI_API_KEY) return Response.json({ error: 'GEMINI_API_KEY not set' }, { status: 500 });
+
     const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ... ').trim();
 
     const response = await fetch(
@@ -34,11 +34,9 @@ Deno.serve(async (req) => {
     );
 
     const data = await response.json();
-
-    console.log('Gemini response status:', response.status);
+    console.log('Gemini status:', response.status, 'error:', data.error?.message);
 
     if (!response.ok) {
-      console.error('Gemini TTS error:', JSON.stringify(data));
       return Response.json({ error: data.error?.message || 'TTS failed' }, { status: 500 });
     }
 
