@@ -46,11 +46,11 @@ export default function CharlieVoicePresentation() {
   const [started, setStarted] = useState(false);
   const [presentationDone, setPresentationDone] = useState(false);
 
-  const synthRef = useRef(window.speechSynthesis);
   const recognitionRef = useRef(null);
   const scriptIndexRef = useRef(0);
   const isMountedRef = useRef(true);
   const muteRef = useRef(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     muteRef.current = muted;
@@ -60,7 +60,7 @@ export default function CharlieVoicePresentation() {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
-      synthRef.current?.cancel();
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
       recognitionRef.current?.stop();
     };
   }, []);
@@ -110,7 +110,7 @@ export default function CharlieVoicePresentation() {
     return recognition;
   }, [status, presentationDone]);
 
-  // Speak a single line
+  // Speak a single line using charlieSpeak backend
   const speakLine = useCallback((text, onEnd) => {
     if (!isMountedRef.current) return;
     if (muteRef.current) {
@@ -119,32 +119,30 @@ export default function CharlieVoicePresentation() {
       return;
     }
 
-    synthRef.current.cancel();
     setCurrentText(text);
     setStatus(STATE.SPEAKING);
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
 
-    // Pick a warm, clear voice
-    const voices = synthRef.current.getVoices();
-    const preferred = voices.find(v =>
-      v.name.includes('Google') && v.lang === 'en-US' && (v.name.includes('Male') || v.name.includes('Guy'))
-    ) || voices.find(v => v.lang === 'en-US' && !v.name.includes('Female')) || voices[0];
-    if (preferred) utterance.voice = preferred;
-
-    utterance.rate = 0.92;
-    utterance.pitch = 0.95;
-    utterance.volume = 1;
-
-    utterance.onend = () => {
-      if (isMountedRef.current) onEnd();
-    };
-
-    utterance.onerror = () => {
-      if (isMountedRef.current) onEnd();
-    };
-
-    synthRef.current.speak(utterance);
+    base44.functions.invoke('charlieSpeak', { text })
+      .then(res => {
+        if (!isMountedRef.current) return;
+        const { audio } = res.data;
+        const el = new Audio(`data:audio/wav;base64,${audio}`);
+        audioRef.current = el;
+        el.onended = () => {
+          if (isMountedRef.current) onEnd();
+        };
+        el.onerror = () => {
+          if (isMountedRef.current) onEnd();
+        };
+        el.play().catch(() => {
+          if (isMountedRef.current) onEnd();
+        });
+      })
+      .catch(() => {
+        if (isMountedRef.current) onEnd();
+      });
   }, []);
 
   // Run the presentation script sequentially
