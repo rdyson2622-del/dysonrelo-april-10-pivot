@@ -31,6 +31,8 @@ import AdminPresentationLibrary from './pages/AdminPresentationLibrary';
 import AdminFlaggedConversations from './pages/AdminFlaggedConversations';
 import AdminReferrals from './pages/AdminReferrals';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
+import AdminCharlieKnowledgeBase from './pages/AdminCharlieKnowledgeBase';
+import AdminCharlieEscalations from './pages/AdminCharlieEscalations';
 import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
@@ -128,6 +130,8 @@ const AuthenticatedApp = () => {
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />
         <Route path="/admin/referrals" element={<AdminReferrals />} />
         <Route path="/admin/charlie-scripts" element={<AdminCharlieScripts />} />
+        <Route path="/admin/charlie-knowledge-base" element={<AdminCharlieKnowledgeBase />} />
+        <Route path="/admin/charlie-escalations" element={<AdminCharlieEscalations />} />
         <Route path="/admin/skip-trace" element={<AdminSkipTrace />} />
         <Route path="/admin/bulk-skip-trace" element={<AdminBulkSkipTrace />} />
         <Route path="/admin/marketing-campaigns" element={<AdminMarketingCampaigns />} />

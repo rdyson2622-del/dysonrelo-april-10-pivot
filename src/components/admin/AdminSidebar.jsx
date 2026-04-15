@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
@@ -25,6 +25,8 @@ const navItems = [
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
   { label: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
+  { label: "Charlie's Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
+  { label: "Charlie Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
   { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
   { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
