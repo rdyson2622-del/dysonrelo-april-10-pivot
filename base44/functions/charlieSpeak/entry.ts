@@ -42,10 +42,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: data.error?.message || 'TTS failed' }, { status: 500 });
     }
 
-    const audio = data.audioContent;
-    if (!audio) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
+    const audioContent = data.audioContent;
+    if (!audioContent) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
 
-    return Response.json({ audio, mimeType: 'audio/wav' });
+    // Audio is base64-encoded LINEAR16 PCM — return as-is
+    return Response.json({ audio: audioContent, mimeType: 'audio/wav' });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
