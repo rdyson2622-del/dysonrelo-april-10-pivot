@@ -11,6 +11,8 @@ Deno.serve(async (req) => {
     const { text } = await req.json();
     if (!text) return Response.json({ error: 'No text provided' }, { status: 400 });
 
+    console.log('API key present:', !!GEMINI_API_KEY, 'length:', GEMINI_API_KEY?.length);
+
     // Clean markdown, normalize whitespace
     const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ... ').trim();
 
@@ -32,6 +34,8 @@ Deno.serve(async (req) => {
     );
 
     const data = await response.json();
+
+    console.log('Gemini response status:', response.status);
 
     if (!response.ok) {
       console.error('Gemini TTS error:', JSON.stringify(data));
