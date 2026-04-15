@@ -36,61 +36,45 @@ export default function AdminCharlieScripts() {
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [expandedScript, setExpandedScript] = useState(null);
   const [playingId, setPlayingId] = useState(null);
-  const [voices, setVoices] = useState([]);
-  const synthRef = useRef(window.speechSynthesis);
+  const [loadingAudioId, setLoadingAudioId] = useState(null);
+  const audioRef = useRef(null);
 
-  const [isIframe, setIsIframe] = useState(false);
+  useEffect(() => () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } }, []);
 
-  // Load voices — browsers load them async, must wait for voiceschanged
-  useEffect(() => {
-    // Detect iframe (preview) — speech synthesis won't work inside sandboxed iframes
-    try {
-      setIsIframe(window.self !== window.top);
-    } catch (e) {
-      setIsIframe(true);
-    }
-
-    const loadVoices = () => {
-      const v = window.speechSynthesis.getVoices();
-      if (v.length > 0) setVoices(v);
-    };
-    loadVoices();
-    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
-    return () => {
-      window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
-      synthRef.current?.cancel();
-    };
-  }, []);
-
-  const pickVoice = useCallback(() => {
-    return (
-      voices.find(v => v.name.includes('Google') && v.lang === 'en-US' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
-      voices.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('zira') && !v.name.toLowerCase().includes('victoria')) ||
-      voices.find(v => v.lang === 'en-US') ||
-      voices[0]
-    );
-  }, [voices]);
-
-  const speakText = useCallback((text, id) => {
-    if (playingId === id) {
-      synthRef.current.cancel();
+  const speakText = useCallback(async (text, id) => {
+    // Stop if already playing this one
+    if (playingId === id || loadingAudioId === id) {
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
       setPlayingId(null);
+      setLoadingAudioId(null);
       return;
     }
-    synthRef.current.cancel();
+    // Stop any current audio
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    setPlayingId(null);
+    setLoadingAudioId(id);
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice();
-    if (voice) utterance.voice = voice;
-    utterance.rate = 0.92;
-    utterance.pitch = 0.95;
-    utterance.volume = 1;
-    utterance.onend = () => setPlayingId(null);
-    utterance.onerror = () => setPlayingId(null);
-
-    setPlayingId(id);
-    synthRef.current.speak(utterance);
-  }, [playingId, pickVoice]);
+    try {
+      const res = await base44.functions.invoke('charlieSpeak', { text });
+      const { audio, mimeType } = res.data;
+      const byteChars = atob(audio);
+      const byteArr = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+      const blob = new Blob([byteArr], { type: mimeType || 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const el = new Audio(url);
+      audioRef.current = el;
+      el.onended = () => { setPlayingId(null); URL.revokeObjectURL(url); };
+      el.onerror = () => { setPlayingId(null); URL.revokeObjectURL(url); };
+      setLoadingAudioId(null);
+      setPlayingId(id);
+      await el.play();
+    } catch (err) {
+      setLoadingAudioId(null);
+      setPlayingId(null);
+      console.error('TTS error:', err);
+    }
+  }, [playingId, loadingAudioId]);
 
   const speakScript = useCallback((script, e) => {
     e.stopPropagation();
@@ -204,18 +188,6 @@ export default function AdminCharlieScripts() {
         </div>
       </div>
 
-      {/* Iframe audio warning */}
-      {isIframe && (
-        <div className="mx-6 mt-4 px-4 py-3 rounded-lg flex items-center gap-3 text-sm"
-          style={{ background: '#1a1200', border: '1px solid rgba(212,175,55,0.4)', color: '#D4AF37' }}>
-          <Volume2 size={16} />
-          <span>
-            <strong>Audio preview requires a full tab.</strong> Open this page directly (not in the preview panel) to use "Hear It" — 
-            <a href="/admin/charlie-scripts" target="_blank" rel="noopener noreferrer" className="underline ml-1 font-bold">Open in new tab →</a>
-          </span>
-        </div>
-      )}
-
       {/* Content */}
       <div className="px-6 py-4">
         {loading ? (
@@ -274,15 +246,19 @@ export default function AdminCharlieScripts() {
                               {/* Hear It button */}
                               <button
                                 onClick={(e) => speakScript(script, e)}
+                                disabled={loadingAudioId === script.id}
                                 title={playingId === script.id ? 'Stop' : 'Hear Charlie say this'}
-                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80"
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80 disabled:opacity-60"
                                 style={{
                                   background: playingId === script.id ? '#ef444422' : `${GOLD}22`,
                                   border: `1px solid ${playingId === script.id ? '#ef4444' : GOLD}66`,
                                   color: playingId === script.id ? '#ef4444' : GOLD,
+                                  minWidth: '72px',
                                 }}
                               >
-                                {playingId === script.id
+                                {loadingAudioId === script.id
+                                  ? <><span className="inline-block w-2.5 h-2.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> Loading</>
+                                  : playingId === script.id
                                   ? <><Square size={11} fill="currentColor" /> Stop</>
                                   : <><Volume2 size={11} /> Hear It</>}
                               </button>
@@ -364,11 +340,15 @@ export default function AdminCharlieScripts() {
             <div className="flex justify-between items-center px-6 py-4" style={{ borderTop: '1px solid #333' }}>
               <button
                 onClick={() => editingScript.script_text && speakText(editingScript.script_text, 'modal-preview')}
-                disabled={!editingScript.script_text}
+                disabled={!editingScript.script_text || loadingAudioId === 'modal-preview'}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80 disabled:opacity-30"
                 style={{ background: playingId === 'modal-preview' ? '#ef444422' : `${GOLD}22`, border: `1px solid ${playingId === 'modal-preview' ? '#ef4444' : GOLD}55`, color: playingId === 'modal-preview' ? '#ef4444' : GOLD }}
               >
-                {playingId === 'modal-preview' ? <><Square size={15} fill="currentColor" /> Stop</> : <><Volume2 size={15} /> Preview Voice</>}
+                {loadingAudioId === 'modal-preview'
+                  ? <><span className="inline-block w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> Loading...</>
+                  : playingId === 'modal-preview'
+                  ? <><Square size={15} fill="currentColor" /> Stop</>
+                  : <><Volume2 size={15} /> Preview Voice</>}
               </button>
               <div className="flex gap-3">
                 <button onClick={() => setEditingScript(null)} className="px-4 py-2 rounded-lg text-sm font-semibold" style={{ background: '#333', color: '#fff' }}>
