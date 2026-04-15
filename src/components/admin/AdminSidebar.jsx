@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
@@ -24,10 +24,11 @@ const navItems = [
   { label: 'Communications', path: '/admin/communications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
-  { label: "CHARLIE'S BRAIN", isDivider: true },
-  { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
-  { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
-  { label: "Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
+  { label: "CHARLIE'S BRAIN", isGroup: true, groupKey: 'charlie', children: [
+    { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
+    { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
+    { label: "Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
+  ]},
   { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
   { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
@@ -39,6 +40,12 @@ export default function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
+  const [openGroups, setOpenGroups] = useState(() => {
+    // Auto-open Charlie group if on a charlie page
+    return { charlie: true };
+  });
+
+  const toggleGroup = (key) => setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
 
   // Fetch listing owners and batch logs
   const { data: owners = [] } = useQuery({
@@ -157,10 +164,44 @@ export default function AdminSidebar() {
       {/* Nav */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {navItems.map((item, idx) => {
-          if (item.isDivider) {
+          if (item.isGroup) {
+            const isOpen = openGroups[item.groupKey];
+            const isChildActive = item.children?.some(c => location.pathname === c.path);
             return (
-              <div key={idx} className="pt-3 pb-1 px-3">
-                <p className="text-xs font-bold tracking-widest" style={{ color: '#A78BFA', opacity: 0.8 }}>⬡ {item.label}</p>
+              <div key={idx}>
+                <button
+                  onClick={() => toggleGroup(item.groupKey)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+                  style={{
+                    background: isChildActive ? 'rgba(167,139,250,0.1)' : 'transparent',
+                    color: '#A78BFA',
+                  }}
+                >
+                  <Brain className="w-4 h-4" />
+                  <span className="flex-1 text-left tracking-wide">{item.label}</span>
+                  {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
+                </button>
+                {isOpen && (
+                  <div className="ml-4 mt-0.5 space-y-0.5 border-l pl-3" style={{ borderColor: 'rgba(167,139,250,0.25)' }}>
+                    {item.children.map(child => {
+                      const isActive = location.pathname === child.path;
+                      return (
+                        <Link
+                          key={child.path}
+                          to={child.path}
+                          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: isActive ? 'rgba(167,139,250,0.15)' : 'transparent',
+                            color: isActive ? '#A78BFA' : 'rgba(255,255,255,0.75)',
+                          }}
+                        >
+                          <child.icon className="w-3.5 h-3.5" />
+                          {child.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           }
