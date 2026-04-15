@@ -262,15 +262,15 @@ export default function AdminCharlieScripts() {
                                   ? <><Square size={11} fill="currentColor" /> Stop</>
                                   : <><Volume2 size={11} /> Hear It</>}
                               </button>
-                              <button onClick={() => handleToggleActive(script)} title={script.is_active ? 'Deactivate' : 'Activate'}>
+                              <button onClick={(e) => { e.stopPropagation(); handleToggleActive(script); }} title={script.is_active ? 'Deactivate' : 'Activate'}>
                                 {script.is_active
                                   ? <ToggleRight size={18} style={{ color: GOLD }} />
                                   : <ToggleLeft size={18} style={{ color: '#444' }} />}
                               </button>
-                              <button onClick={() => setEditingScript({ ...script })} className="hover:opacity-70">
+                              <button onClick={(e) => { e.stopPropagation(); setEditingScript({ ...script }); }} className="hover:opacity-70">
                                 <Edit2 size={14} style={{ color: '#888' }} />
                               </button>
-                              <button onClick={() => handleDelete(script)} className="hover:opacity-70">
+                              <button onClick={(e) => { e.stopPropagation(); handleDelete(script); }} className="hover:opacity-70">
                                 <Trash2 size={14} style={{ color: '#ef4444' }} />
                               </button>
                             </div>
