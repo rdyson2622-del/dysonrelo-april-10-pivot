@@ -262,18 +262,11 @@ export default function CharlieVoicePresentation() {
     // Some browsers require a gesture. We attempt auto-start and catch failure.
     const timer = setTimeout(() => {
       if (!started && isMountedRef.current) {
-        // Attempt silent pre-start
-        try {
-          const testUtterance = new SpeechSynthesisUtterance('');
-          synthRef.current.speak(testUtterance);
-          handleStart();
-        } catch (e) {
-          // Will wait for tap
-        }
+        handleStart();
       }
     }, 800);
     return () => clearTimeout(timer);
-  }, []);
+  }, [started, handleStart]);
 
   const statusLabel = {
     [STATE.IDLE]: 'Initializing...',
@@ -426,6 +419,7 @@ export default function CharlieVoicePresentation() {
             transition={{ duration: 1.5, repeat: Infinity }}
             className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base mb-4"
             style={{ background: GOLD, color: '#000' }}
+            onClick={handleStart}
           >
             <Phone className="w-5 h-5" />
             Tap to Hear from Charlie
