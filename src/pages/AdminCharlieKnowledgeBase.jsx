@@ -238,7 +238,7 @@ export default function AdminCharlieKnowledgeBase() {
                                   </p>
                                 </>
                               ) : (
-                                <p className="text-xs" style={{ color: '#666' }}>
+                                <p className="text-sm" style={{ color: GOLD }}>
                                   {entry.answer?.length > 100 ? entry.answer.slice(0, 100) + '…' : entry.answer}
                                 </p>
                               )}
