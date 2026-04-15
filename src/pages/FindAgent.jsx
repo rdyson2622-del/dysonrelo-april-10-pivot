@@ -1,14 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Mail, Check, User, Search, FileSignature, Loader2 } from 'lucide-react';
+import { MapPin, Mail, Check, User, Search, FileSignature, Loader2, ShieldCheck, AlertTriangle, Star, ThumbsDown, Award } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+
+const WHY_SECTION = [
+  {
+    icon: ThumbsDown,
+    title: 'The Problem With How Agents Are Normally Selected',
+    content: `Most buyers find their agent the wrong way — a quick Zillow search, a friend's referral, or worse, the first person who calls them back. What follows is a parade of "I love me" agents competing for your business: polished presentations, rehearsed pitches, and promises they can't always keep. You end up feeling like the subject of a sales contest rather than a client being served.
+
+    Real estate agents consistently rank among the least trusted professionals in America — often placed below used car salesmen in consumer trust surveys. That's not because all agents are bad. It's because the system rewards self-promotion over client outcomes.`
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Why We Do It Completely Differently',
+    content: `At Dyson & Dyson, you never meet an agent until WE have already vetted them for you. No cold calls. No pitch meetings. No competing agents fighting over your listing.
+
+    We review 20+ agents in your destination market using DRE records, production history, buyer reviews, neighborhood specialization, and — critically — communication style and personality fit. We are not looking for the agent with the most listings. We are looking for the agent who is the best match for you specifically.
+
+    Only then do we present you with 3 to 5 hand-selected finalists. You make the final choice. You stay in control.`
+  },
+  {
+    icon: AlertTriangle,
+    title: 'Why This Step Cannot Be Rushed',
+    content: `The agent you choose will be your primary guide through one of the most significant financial and lifestyle decisions of your life. A mismatched agent — even a good one — can cost you time, money, and emotional energy.
+
+    This is why we insist on completing your full relocation profile, your Gemini strategy session, and your personal preferences review BEFORE we begin the matching process. We need to know you before we can find the right person for you.
+
+    Skipping this step and selecting your own agent is your right — but it eliminates our ability to guarantee the outcome, and forfeits the protections this process is designed to provide.`
+  },
+  {
+    icon: Award,
+    title: 'Our Standard for Every Agent in Our Network',
+    content: `Every agent we recommend must meet the Dyson & Dyson standard:
+
+    • Minimum 5 years active in the destination market
+    • Verified production history (closes, not just listings)
+    • Clean DRE record — no disciplinary actions
+    • Responsive communication — we test them before you meet them
+    • Willing to operate within our referral and management fee structure
+    • Personality-matched to your stated preferences
+
+    We don't partner with agents who lead with their own brand. We partner with agents who lead with their client's outcome.`
+  }
+];
 
 export default function FindAgent() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedAgent, setSelectedAgent] = useState(null);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -29,110 +70,137 @@ export default function FindAgent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#808080' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#121212' }}>
         <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
       </div>
     );
   }
 
-  if (!client) {
-    return (
-      <div className="min-h-screen" style={{ background: '#808080' }}>
-        <div className="max-w-4xl mx-auto px-6 py-20 space-y-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
-              <User className="w-8 h-8" style={{ color: GOLD }} />
-            </div>
-            <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>Meet Your Perfect Agent</h1>
-            <p className="text-lg mb-8" style={{ color: 'rgba(255,255,255,0.8)' }}>Start your relocation profile to unlock personalized agent matching.</p>
-            <a href="/RelocationIntake" className="inline-block px-8 py-3 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>Complete Your Profile</a>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-3xl p-8" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <h3 className="text-xl font-bold mb-6" style={{ color: '#fff' }}>How It Works</h3>
-            <div className="grid sm:grid-cols-2 gap-6">
-              {[{ icon: User, title: 'Tell Us About You', desc: 'Share your relocation destination, timeline, and preferences.' }, { icon: Search, title: 'We Vet Agents', desc: 'Deep dive into DRE records, production, and personality fit.' }, { icon: Check, title: 'You Choose', desc: '3–5 hand-picked finalists for your market.' }, { icon: FileSignature, title: 'Get Started', desc: 'Sign a buyer broker agreement and start your search.' }].map((step, i) => {
-                const StepIcon = step.icon;
-                return (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${GOLD}20`, border: `1px solid ${GOLD}33` }}>
-                      <StepIcon className="w-6 h-6" style={{ color: GOLD }} />
-                    </div>
-                    <div>
-                      <p className="font-bold mb-1" style={{ color: '#fff' }}>{step.title}</p>
-                      <p className="text-sm" style={{ color: '#888' }}>{step.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            </motion.div>
-            </div>
-            </div>
-            );
-            }
-
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
-      <div className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+    <div className="min-h-screen" style={{ background: '#121212' }}>
+      <div className="max-w-4xl mx-auto px-6 py-16 space-y-10">
+
+        {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
-            <User className="w-8 h-8" style={{ color: GOLD }} />
+            <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
           </div>
-          <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>Your Agent Match</h1>
-          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.8)' }}>Vetted. Local. Perfect fit for {client.destination_city}.</p>
+          <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
+            Agent Selection Done Right
+          </h1>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.75)' }}>
+            Before you meet a single agent, there's something important you need to understand about how we protect you from one of real estate's most broken processes.
+          </p>
         </motion.div>
 
-        {/* Agent Status Card */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="rounded-3xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
-          {client.agent_name ? (
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
-                <span className="text-2xl font-bold" style={{ color: GOLD }}>{client.agent_name.charAt(0)}</span>
-              </div>
-              <h2 className="text-2xl font-bold mb-1" style={{ color: '#fff' }}>{client.agent_name}</h2>
-              <p className="text-sm mb-4" style={{ color: '#888' }}>Your assigned agent</p>
-              {client.assigned_agent && (
-                <a href={`mailto:${client.assigned_agent}`} className="inline-flex items-center gap-2 px-6 py-2 rounded-full" style={{ background: GOLD, color: '#000', fontWeight: 'bold' }}>
-                  <Mail className="w-4 h-4" /> Contact Agent
-                </a>
-              )}
+        {/* Agent Status — only if client exists and has an agent */}
+        {client?.agent_name && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
+              <span className="text-2xl font-bold" style={{ color: GOLD }}>{client.agent_name.charAt(0)}</span>
             </div>
-          ) : (
-            <div className="text-center">
-              <p className="text-lg mb-4" style={{ color: '#fff' }}>Your agent matching process is in progress.</p>
-              <p className="text-sm" style={{ color: '#888' }}>
-                Bob's team is reviewing 20+ agents in {client.destination_city} based on your preferences. <br />
-                We'll present 3–5 finalists within 48 hours.
-              </p>
-            </div>
-          )}
-        </motion.div>
+            <h2 className="text-2xl font-bold mb-1" style={{ color: '#fff' }}>{client.agent_name}</h2>
+            <p className="text-sm mb-4" style={{ color: '#888' }}>Your assigned agent for {client.destination_city}</p>
+            {client.assigned_agent && (
+              <a href={`mailto:${client.assigned_agent}`} className="inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
+                <Mail className="w-4 h-4" /> Contact Agent
+              </a>
+            )}
+          </motion.div>
+        )}
 
-        {/* What Happens Next */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="rounded-3xl p-8" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.15)' }}>
-          <h3 className="text-xl font-bold mb-6" style={{ color: '#fff' }}>How Agent Matching Works</h3>
-          <div className="space-y-4">
+        {/* In-progress status — client exists but no agent yet */}
+        {client && !client.agent_name && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
+            <p className="text-lg mb-3" style={{ color: '#fff' }}>Your agent matching process is in progress.</p>
+            <p className="text-sm" style={{ color: '#888' }}>
+              Bob's team is reviewing agents in {client.destination_city} based on your profile.<br />
+              We'll present 3–5 finalists within 48 hours of your completed intake.
+            </p>
+          </motion.div>
+        )}
+
+        {/* No profile yet */}
+        {!client && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
+            <p className="text-lg mb-4" style={{ color: '#fff' }}>You haven't completed your relocation profile yet.</p>
+            <p className="text-sm mb-6" style={{ color: '#888' }}>
+              We need to know you before we can find the right agent for you. Complete your profile first — it takes about 5 minutes.
+            </p>
+            <a href="/relocation-intake" className="inline-block px-8 py-3 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
+              Complete Your Profile
+            </a>
+          </motion.div>
+        )}
+
+        {/* Why Section — always shown */}
+        <div className="space-y-6">
+          {WHY_SECTION.map((section, i) => {
+            const Icon = section.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.08 }}
+                className="rounded-3xl p-8"
+                style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.1)' }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${GOLD}20`, border: `1px solid ${GOLD}44` }}>
+                    <Icon className="w-5 h-5" style={{ color: GOLD }} />
+                  </div>
+                  <h3 className="text-lg font-bold" style={{ color: '#fff' }}>{section.title}</h3>
+                </div>
+                <div className="space-y-3">
+                  {section.content.split('\n\n').map((para, j) => (
+                    <p key={j} className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                      {para.trim()}
+                    </p>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* The 4-step process */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+          className="rounded-3xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}33` }}>
+          <h3 className="text-xl font-bold mb-6" style={{ color: GOLD }}>Our 4-Step Agent Selection Process</h3>
+          <div className="space-y-5">
             {[
-              { num: 1, title: 'Personality Interview', desc: 'We schedule a call to understand your style — hands-on or delegate?' },
-              { num: 2, title: 'Deep Vetting', desc: 'DRE records, production history, and reviews for 20+ local agents.' },
-              { num: 3, title: 'Your Choice', desc: 'You pick from 3–5 finalists who match your needs and personality.' },
-              { num: 4, title: 'Buyer Broker Agreement', desc: 'Formalize your relationship. Unlocks full tools and City Guide access.' },
+              { num: 1, title: 'Your Relocation Profile', desc: 'We learn your destination, timeline, budget, lifestyle priorities, and communication style before anything else.' },
+              { num: 2, title: 'Deep Market Vetting', desc: 'We research 20+ agents in your destination market — DRE records, production history, reviews, and personality fit.' },
+              { num: 3, title: 'Your Shortlist', desc: 'You receive 3–5 hand-selected finalists. No pitches. No competitions. Just a clear recommendation and your choice.' },
+              { num: 4, title: 'Buyer Broker Agreement', desc: 'Once you select your agent, you formalize the relationship. This unlocks your full City Guide, property tools, and concierge access.' },
             ].map((step, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold" style={{ background: GOLD, color: '#000' }}>
+              <div key={i} className="flex gap-4 items-start">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm" style={{ background: GOLD, color: '#000' }}>
                   {step.num}
                 </div>
                 <div>
-                  <p className="font-bold" style={{ color: '#fff' }}>{step.title}</p>
+                  <p className="font-bold mb-1" style={{ color: '#fff' }}>{step.title}</p>
                   <p className="text-sm" style={{ color: '#888' }}>{step.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </motion.div>
+
+        {/* Bottom CTA */}
+        {!client && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="text-center pb-8">
+            <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>Ready to let us find the right agent for you?</p>
+            <a href="/relocation-intake" className="inline-block px-10 py-3 rounded-full font-bold text-sm" style={{ background: GOLD, color: '#000' }}>
+              Start Your Relocation Profile →
+            </a>
+          </motion.div>
+        )}
+
       </div>
     </div>
   );
