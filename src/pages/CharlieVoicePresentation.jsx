@@ -213,7 +213,6 @@ export default function CharlieVoicePresentation() {
   // Handle what the user said — call Charlie backend
   const handleUserSpeech = useCallback(async (userText) => {
     if (!isMountedRef.current) return;
-    synthRef.current.cancel();
     recognitionRef.current?.stop();
 
     setStatus(STATE.THINKING);
@@ -442,7 +441,7 @@ export default function CharlieVoicePresentation() {
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          onClick={(e) => { e.stopPropagation(); setMuted(m => !m); if (!muted) synthRef.current.cancel(); }}
+          onClick={(e) => { e.stopPropagation(); setMuted(m => !m); if (!muted && audioRef.current) audioRef.current.pause(); }}
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full"
           style={{ background: '#1a1a1a', border: `1px solid ${muted ? '#ef4444' : '#333'}` }}
         >
