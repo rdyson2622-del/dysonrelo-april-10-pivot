@@ -59,43 +59,13 @@ export default function AdminCharlieScripts() {
         setLoadingAudioId(null);
         return;
       }
-      const { audio, format } = res.data;
-      const pcmBinary = atob(audio);
-      const pcmArr = new Uint8Array(pcmBinary.length);
-      for (let i = 0; i < pcmBinary.length; i++) pcmArr[i] = pcmBinary.charCodeAt(i);
+      const { audio } = res.data;
+      // Backend already returns complete WAV — just decode it
+      const wavBinary = atob(audio);
+      const wavArr = new Uint8Array(wavBinary.length);
+      for (let i = 0; i < wavBinary.length; i++) wavArr[i] = wavBinary.charCodeAt(i);
 
-      // Build WAV header (44 bytes)
-      const { sampleRate = 16000, channels = 1, bitDepth = 16 } = format || {};
-      const byteRate = sampleRate * channels * bitDepth / 8;
-      const blockAlign = channels * bitDepth / 8;
-      const dataSize = pcmArr.length;
-
-      const header = new ArrayBuffer(44);
-      const view = new DataView(header);
-
-      const writeStr = (offset, str) => {
-        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-      };
-
-      writeStr(0, 'RIFF');
-      view.setUint32(4, 36 + dataSize, true);
-      writeStr(8, 'WAVE');
-      writeStr(12, 'fmt ');
-      view.setUint32(16, 16, true);
-      view.setUint16(20, 1, true);
-      view.setUint16(22, channels, true);
-      view.setUint32(24, sampleRate, true);
-      view.setUint32(28, byteRate, true);
-      view.setUint16(32, blockAlign, true);
-      view.setUint16(34, bitDepth, true);
-      writeStr(36, 'data');
-      view.setUint32(40, dataSize, true);
-
-      const wavData = new Uint8Array(44 + pcmArr.length);
-      wavData.set(new Uint8Array(header), 0);
-      wavData.set(pcmArr, 44);
-
-      const blob = new Blob([wavData], { type: 'audio/wav' });
+      const blob = new Blob([wavArr], { type: 'audio/wav' });
       const url = URL.createObjectURL(blob);
       const el = new Audio(url);
       audioRef.current = el;
