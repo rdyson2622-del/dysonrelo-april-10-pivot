@@ -54,6 +54,7 @@ import AdminOptIns from './pages/AdminOptIns';
 import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 import AdminComposeSMS from './pages/AdminComposeSMS';
 import BobDyson from './pages/BobDyson';
+import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import AIAssistants from './pages/AIAssistants';
 import ReadyToStart from './components/dashboard/ReadyToStart';
 
@@ -106,6 +107,7 @@ const AuthenticatedApp = () => {
         <Route path="/property-comparison" element={<PropertyComparison />} />
         <Route path="/FindAgent" element={<FindAgent />} />
         <Route path="/find-agent" element={<FindAgent />} />
+        <Route path="/charlie-voice" element={<CharlieVoicePresentation />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}

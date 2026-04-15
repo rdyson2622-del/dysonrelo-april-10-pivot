@@ -28,6 +28,7 @@ const navItems = [
     { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
     { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
     { label: "Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
+    { label: "Voice Presentation", path: '/charlie-voice', icon: MessageCircle },
   ]},
   { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
   { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
