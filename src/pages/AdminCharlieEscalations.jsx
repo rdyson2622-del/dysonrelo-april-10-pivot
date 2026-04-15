@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { AlertTriangle, CheckCircle, Save, X, Search, Loader2, BookOpen, Clock, User, MessageSquare, RefreshCw } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Save, X, Search, Loader2, BookOpen, Clock, User, RefreshCw } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -50,7 +50,6 @@ export default function AdminCharlieEscalations() {
   }), [escalations, searchTerm, filterStatus]);
 
   const selected = escalations.find(e => e.id === selectedId);
-
   const openCount = escalations.filter(e => e.status === 'open').length;
 
   const handleReply = async () => {
@@ -136,7 +135,7 @@ export default function AdminCharlieEscalations() {
       </div>
 
       {/* Split Panel */}
-      <div className="flex flex-1 overflow-hidden" style={{ height: 'calc(100vh - 80px)' }}>
+      <div className="flex flex-1" style={{ height: 'calc(100vh - 80px)' }}>
         {/* List */}
         <div className="overflow-y-auto" style={{ width: '380px', minWidth: '320px', borderRight: '1px solid rgba(255,255,255,0.07)' }}>
           {loading ? (
@@ -179,7 +178,6 @@ export default function AdminCharlieEscalations() {
             </div>
           ) : (
             <div className="max-w-2xl space-y-6">
-              {/* Question */}
               <div className="rounded-xl p-5" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#666' }}>Consumer Question</p>
                 <p className="text-lg font-semibold" style={{ color: '#fff' }}>{selected.consumer_question}</p>
@@ -190,7 +188,6 @@ export default function AdminCharlieEscalations() {
                 </div>
               </div>
 
-              {/* Charlie's handoff line */}
               {selected.handoff_response && (
                 <div className="rounded-xl p-4" style={{ background: '#0d1a0d', border: '1px solid rgba(74,222,128,0.2)' }}>
                   <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#4ade80' }}>Charlie said to consumer</p>
@@ -198,7 +195,6 @@ export default function AdminCharlieEscalations() {
                 </div>
               )}
 
-              {/* Notifications */}
               {selected.notifications_sent && (
                 <div className="flex gap-3 text-xs">
                   {['sms', 'email', 'dashboard'].map(ch => (
@@ -210,14 +206,13 @@ export default function AdminCharlieEscalations() {
                 </div>
               )}
 
-              {/* Reply Area */}
               <div>
                 <label className="block text-xs font-bold mb-2 uppercase tracking-widest" style={{ color: '#aaa' }}>Your Response to Consumer</label>
                 <textarea rows={5} value={replyText} onChange={e => setReplyText(e.target.value)}
                   className="w-full rounded-xl px-4 py-3 outline-none resize-none text-sm"
                   style={{ background: '#111', border: '1px solid #333', color: '#fff' }}
-                  placeholder="Type your response here... This can be sent to the consumer and optionally saved to Charlie's knowledge base." />
-                <div className="flex gap-3 mt-3">
+                  placeholder="Type your response here..." />
+                <div className="flex gap-3 mt-3 flex-wrap">
                   <button onClick={handleReply} disabled={saving || !replyText.trim()}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold hover:opacity-80 disabled:opacity-40"
                     style={{ background: GOLD, color: '#000' }}>
@@ -239,11 +234,10 @@ export default function AdminCharlieEscalations() {
                 </div>
               </div>
 
-              {/* Save to KB flywheel */}
               {selected.human_response && !selected.saved_to_kb && (
                 <div className="rounded-xl p-5" style={{ background: '#0d0d1a', border: `1px solid ${GOLD}33` }}>
                   <p className="text-sm font-bold mb-1" style={{ color: GOLD }}>🔄 Train Charlie with this answer</p>
-                  <p className="text-xs mb-3" style={{ color: '#666' }}>Save this Q&A to Charlie's knowledge base so he can answer it automatically next time.</p>
+                  <p className="text-xs mb-3" style={{ color: '#666' }}>Save this Q&A to Charlie's knowledge base so he handles it automatically next time.</p>
                   <div className="flex gap-3 items-center">
                     <select value={kbTopic} onChange={e => setKbTopic(e.target.value)}
                       className="rounded-lg px-3 py-2 text-sm outline-none flex-1"
