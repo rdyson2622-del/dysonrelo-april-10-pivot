@@ -39,8 +39,17 @@ export default function AdminCharlieScripts() {
   const [voices, setVoices] = useState([]);
   const synthRef = useRef(window.speechSynthesis);
 
+  const [isIframe, setIsIframe] = useState(false);
+
   // Load voices — browsers load them async, must wait for voiceschanged
   useEffect(() => {
+    // Detect iframe (preview) — speech synthesis won't work inside sandboxed iframes
+    try {
+      setIsIframe(window.self !== window.top);
+    } catch (e) {
+      setIsIframe(true);
+    }
+
     const loadVoices = () => {
       const v = window.speechSynthesis.getVoices();
       if (v.length > 0) setVoices(v);
@@ -194,6 +203,18 @@ export default function AdminCharlieScripts() {
           </button>
         </div>
       </div>
+
+      {/* Iframe audio warning */}
+      {isIframe && (
+        <div className="mx-6 mt-4 px-4 py-3 rounded-lg flex items-center gap-3 text-sm"
+          style={{ background: '#1a1200', border: '1px solid rgba(212,175,55,0.4)', color: '#D4AF37' }}>
+          <Volume2 size={16} />
+          <span>
+            <strong>Audio preview requires a full tab.</strong> Open this page directly (not in the preview panel) to use "Hear It" — 
+            <a href="/admin/charlie-scripts" target="_blank" rel="noopener noreferrer" className="underline ml-1 font-bold">Open in new tab →</a>
+          </span>
+        </div>
+      )}
 
       {/* Content */}
       <div className="px-6 py-4">
