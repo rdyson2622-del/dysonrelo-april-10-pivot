@@ -42,20 +42,23 @@ export default function AdminCharlieScripts() {
   useEffect(() => () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } }, []);
 
   const speakText = useCallback(async (text, id) => {
-    // Stop if already playing this one
     if (playingId === id || loadingAudioId === id) {
       if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
       setPlayingId(null);
       setLoadingAudioId(null);
       return;
     }
-    // Stop any current audio
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     setPlayingId(null);
     setLoadingAudioId(id);
 
     try {
       const res = await base44.functions.invoke('charlieSpeak', { text });
+      if (!res.data || !res.data.audio) {
+        console.error('No audio returned:', res.data);
+        setLoadingAudioId(null);
+        return;
+      }
       const { audio, mimeType } = res.data;
       const byteChars = atob(audio);
       const byteArr = new Uint8Array(byteChars.length);
@@ -70,9 +73,9 @@ export default function AdminCharlieScripts() {
       setPlayingId(id);
       await el.play();
     } catch (err) {
+      console.error('TTS error:', err.message);
       setLoadingAudioId(null);
       setPlayingId(null);
-      console.error('TTS error:', err);
     }
   }, [playingId, loadingAudioId]);
 
@@ -130,7 +133,7 @@ export default function AdminCharlieScripts() {
 
   const handleToggleActive = async (script) => {
     await base44.entities.CharlieScript.update(script.id, { is_active: !script.is_active });
-    setScripts(prev => prev.map(s => s.id === script.id ? { ...s, is_active: !s.is_active } : s));
+    load();
   };
 
   const handleDelete = async (script) => {
