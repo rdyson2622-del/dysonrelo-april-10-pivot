@@ -109,7 +109,7 @@ export default function AdminCharlieEscalations() {
               <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: '#ef4444', color: '#fff' }}>{openCount} open</span>
             )}
           </h1>
-          <p className="text-xs mt-0.5" style={{ color: '#666' }}>Questions Charlie couldn't answer — needs human response</p>
+          <p className="text-sm font-medium" style={{ color: GOLD }}>Questions Charlie couldn't answer — needs human response</p>
         </div>
         <div className="flex gap-3 items-center flex-wrap">
           <div className="relative">
@@ -141,7 +141,14 @@ export default function AdminCharlieEscalations() {
           {loading ? (
             <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin" style={{ color: GOLD }} /></div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-sm" style={{ color: '#555' }}>No escalations found.</div>
+            <div className="text-center py-8 text-sm space-y-4" style={{ color: '#555' }}>
+              <div>No escalations found.</div>
+              <div className="px-4 text-xs italic" style={{ color: '#666', borderLeft: `2px solid ${GOLD}33` }}>
+                <p className="font-medium mb-1" style={{ color: '#888' }}>Example: Consumer asks "Can you help me sell my home?"</p>
+                <p>→ You respond with the actual answer</p>
+                <p>→ Save to KB so Charlie learns it for next time</p>
+              </div>
+            </div>
           ) : (
             filtered.map(esc => (
               <div key={esc.id}
