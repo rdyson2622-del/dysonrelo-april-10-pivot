@@ -45,13 +45,12 @@ Deno.serve(async (req) => {
     const audioContent = data.audioContent;
     if (!audioContent) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
 
-    // Google returns base64 LINEAR16 PCM at 16kHz
-    // Return raw PCM with metadata so frontend can build WAV
+    // Google TTS returns base64 LINEAR16 PCM at 24kHz
     return Response.json({ 
       audio: audioContent, 
       mimeType: 'audio/wav',
       format: {
-        sampleRate: 16000,
+        sampleRate: 24000,
         channels: 1,
         bitDepth: 16
       }
