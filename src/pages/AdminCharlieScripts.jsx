@@ -139,8 +139,14 @@ export default function AdminCharlieScripts() {
   };
 
   const handleToggleActive = async (script) => {
-    await base44.entities.CharlieScript.update(script.id, { is_active: !script.is_active });
-    load();
+    try {
+      await base44.entities.CharlieScript.update(script.id, { is_active: !script.is_active });
+      // Update local state immediately for instant visual feedback
+      setScripts(prev => prev.map(s => s.id === script.id ? { ...s, is_active: !s.is_active } : s));
+    } catch (err) {
+      console.error('Toggle failed:', err);
+      load(); // Reload on error to sync with DB
+    }
   };
 
   const handleDelete = async (script) => {
