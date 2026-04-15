@@ -85,11 +85,14 @@ export default function FindAgent() {
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
             <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
           </div>
-          <h1 className="display-heading mb-3" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
+          <h1 className="display-heading mb-6" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
             Agent Selection Done Right
           </h1>
-          <p className="text-lg max-w-3xl mx-auto" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            Before you meet a single agent, there's something important you need to understand about how we protect you from one of real estate's most broken processes.
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.9)', fontStyle: 'italic' }}>
+            "Every local or out-of-area move requires someone with real knowledge of the destination market — an agent or broker with genuine 'boots on the ground.'"
+          </p>
+          <p className="text-base max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+            But before we talk about who that person is, we need to talk about how we find them — because the way most people end up with an agent is one of the most broken parts of the entire real estate experience.
           </p>
         </motion.div>
 
