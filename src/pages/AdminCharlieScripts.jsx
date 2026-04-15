@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Edit2, Plus, MessageSquare, Search, X, Save, ToggleLeft, ToggleRight, ChevronDown, ChevronRight, Trash2 } from 'lucide-react';
+import { Edit2, Plus, MessageSquare, Search, X, Save, ToggleLeft, ToggleRight, ChevronDown, ChevronRight, Trash2, Play, Square, Volume2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -35,6 +35,42 @@ export default function AdminCharlieScripts() {
   const [saving, setSaving] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [expandedScript, setExpandedScript] = useState(null);
+  const [playingId, setPlayingId] = useState(null);
+  const synthRef = useRef(window.speechSynthesis);
+
+  const speakScript = useCallback((script, e) => {
+    e.stopPropagation();
+    // If already playing this one, stop it
+    if (playingId === script.id) {
+      synthRef.current.cancel();
+      setPlayingId(null);
+      return;
+    }
+    // Stop any current speech
+    synthRef.current.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(script.script_text);
+    // Pick Charlie's voice — warm male US voice
+    const voices = synthRef.current.getVoices();
+    const preferred =
+      voices.find(v => v.name.includes('Google') && v.lang === 'en-US' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
+      voices.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('zira')) ||
+      voices.find(v => v.lang === 'en-US') ||
+      voices[0];
+    if (preferred) utterance.voice = preferred;
+    utterance.rate = 0.92;
+    utterance.pitch = 0.95;
+    utterance.volume = 1;
+
+    utterance.onend = () => setPlayingId(null);
+    utterance.onerror = () => setPlayingId(null);
+
+    setPlayingId(script.id);
+    synthRef.current.speak(utterance);
+  }, [playingId]);
+
+  // Stop speech on unmount
+  useEffect(() => () => synthRef.current?.cancel(), []);
 
   const load = async () => {
     setLoading(true);
@@ -198,6 +234,21 @@ export default function AdminCharlieScripts() {
                               )}
                             </div>
                             <div className="flex items-center gap-2 shrink-0 ml-2" onClick={e => e.stopPropagation()}>
+                              {/* Hear It button */}
+                              <button
+                                onClick={(e) => speakScript(script, e)}
+                                title={playingId === script.id ? 'Stop' : 'Hear Charlie say this'}
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80"
+                                style={{
+                                  background: playingId === script.id ? '#ef444422' : `${GOLD}22`,
+                                  border: `1px solid ${playingId === script.id ? '#ef4444' : GOLD}66`,
+                                  color: playingId === script.id ? '#ef4444' : GOLD,
+                                }}
+                              >
+                                {playingId === script.id
+                                  ? <><Square size={11} fill="currentColor" /> Stop</>
+                                  : <><Volume2 size={11} /> Hear It</>}
+                              </button>
                               <button onClick={() => handleToggleActive(script)} title={script.is_active ? 'Deactivate' : 'Activate'}>
                                 {script.is_active
                                   ? <ToggleRight size={18} style={{ color: GOLD }} />
@@ -273,18 +324,28 @@ export default function AdminCharlieScripts() {
                 </span>
               </div>
             </div>
-            <div className="flex justify-end gap-3 px-6 py-4" style={{ borderTop: '1px solid #333' }}>
-              <button onClick={() => setEditingScript(null)} className="px-4 py-2 rounded-lg text-sm font-semibold" style={{ background: '#333', color: '#fff' }}>
-                Cancel
-              </button>
+            <div className="flex justify-between items-center px-6 py-4" style={{ borderTop: '1px solid #333' }}>
               <button
-                onClick={handleSave}
-                disabled={saving || !editingScript.page_code || !editingScript.script_text}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80 disabled:opacity-40"
-                style={{ background: GOLD, color: '#000' }}
+                onClick={(e) => editingScript.script_text && speakScript(editingScript, e)}
+                disabled={!editingScript.script_text}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80 disabled:opacity-30"
+                style={{ background: `${GOLD}22`, border: `1px solid ${GOLD}55`, color: GOLD }}
               >
-                <Save size={16} /> {saving ? 'Saving...' : 'Save Script'}
+                <Volume2 size={15} /> Preview Voice
               </button>
+              <div className="flex gap-3">
+                <button onClick={() => setEditingScript(null)} className="px-4 py-2 rounded-lg text-sm font-semibold" style={{ background: '#333', color: '#fff' }}>
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={saving || !editingScript.page_code || !editingScript.script_text}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80 disabled:opacity-40"
+                  style={{ background: GOLD, color: '#000' }}
+                >
+                  <Save size={16} /> {saving ? 'Saving...' : 'Save Script'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
