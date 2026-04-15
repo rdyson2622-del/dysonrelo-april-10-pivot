@@ -125,19 +125,7 @@ export default function FindAgent() {
           </motion.div>
         )}
 
-        {/* No profile yet */}
-        {!client && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
-            <p className="text-lg mb-4" style={{ color: '#fff' }}>You haven't completed your relocation profile yet.</p>
-            <p className="text-sm mb-6" style={{ color: '#888' }}>
-              We need to know you before we can find the right agent for you. Complete your profile first — it takes about 5 minutes.
-            </p>
-            <a href="/relocation-intake" className="inline-block px-8 py-3 rounded-full font-bold" style={{ background: GOLD, color: '#000' }}>
-              Complete Your Profile
-            </a>
-          </motion.div>
-        )}
+
 
         {/* Why Section — always shown */}
         <div className="space-y-6">
