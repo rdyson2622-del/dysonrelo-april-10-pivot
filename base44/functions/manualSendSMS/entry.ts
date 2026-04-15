@@ -68,6 +68,7 @@ Deno.serve(async (req) => {
       );
 
       const twilioData = await twilioRes.json();
+      console.log(`[SMS] ${owner.owner_name} (${owner.phone}):`, twilioData.sid ? 'SUCCESS' : `FAILED - ${twilioData.message} (code ${twilioData.code})`);
 
       if (twilioData.sid) {
         sent++;
@@ -78,7 +79,7 @@ Deno.serve(async (req) => {
         });
       } else {
         failed++;
-        errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'}`);
+        errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'} (${twilioData.code || 'N/A'})`);
       }
     }
 
