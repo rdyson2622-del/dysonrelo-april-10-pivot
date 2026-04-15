@@ -36,41 +36,57 @@ export default function AdminCharlieScripts() {
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [expandedScript, setExpandedScript] = useState(null);
   const [playingId, setPlayingId] = useState(null);
+  const [voices, setVoices] = useState([]);
   const synthRef = useRef(window.speechSynthesis);
 
-  const speakScript = useCallback((script, e) => {
-    e.stopPropagation();
-    // If already playing this one, stop it
-    if (playingId === script.id) {
+  // Load voices — browsers load them async, must wait for voiceschanged
+  useEffect(() => {
+    const loadVoices = () => {
+      const v = window.speechSynthesis.getVoices();
+      if (v.length > 0) setVoices(v);
+    };
+    loadVoices();
+    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+    return () => {
+      window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+      synthRef.current?.cancel();
+    };
+  }, []);
+
+  const pickVoice = useCallback(() => {
+    return (
+      voices.find(v => v.name.includes('Google') && v.lang === 'en-US' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
+      voices.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('zira') && !v.name.toLowerCase().includes('victoria')) ||
+      voices.find(v => v.lang === 'en-US') ||
+      voices[0]
+    );
+  }, [voices]);
+
+  const speakText = useCallback((text, id) => {
+    if (playingId === id) {
       synthRef.current.cancel();
       setPlayingId(null);
       return;
     }
-    // Stop any current speech
     synthRef.current.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(script.script_text);
-    // Pick Charlie's voice — warm male US voice
-    const voices = synthRef.current.getVoices();
-    const preferred =
-      voices.find(v => v.name.includes('Google') && v.lang === 'en-US' && (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('guy'))) ||
-      voices.find(v => v.lang === 'en-US' && !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('zira')) ||
-      voices.find(v => v.lang === 'en-US') ||
-      voices[0];
-    if (preferred) utterance.voice = preferred;
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voice = pickVoice();
+    if (voice) utterance.voice = voice;
     utterance.rate = 0.92;
     utterance.pitch = 0.95;
     utterance.volume = 1;
-
     utterance.onend = () => setPlayingId(null);
     utterance.onerror = () => setPlayingId(null);
 
-    setPlayingId(script.id);
+    setPlayingId(id);
     synthRef.current.speak(utterance);
-  }, [playingId]);
+  }, [playingId, pickVoice]);
 
-  // Stop speech on unmount
-  useEffect(() => () => synthRef.current?.cancel(), []);
+  const speakScript = useCallback((script, e) => {
+    e.stopPropagation();
+    speakText(script.script_text, script.id);
+  }, [speakText]);
 
   const load = async () => {
     setLoading(true);
@@ -326,12 +342,12 @@ export default function AdminCharlieScripts() {
             </div>
             <div className="flex justify-between items-center px-6 py-4" style={{ borderTop: '1px solid #333' }}>
               <button
-                onClick={(e) => editingScript.script_text && speakScript(editingScript, e)}
+                onClick={() => editingScript.script_text && speakText(editingScript.script_text, 'modal-preview')}
                 disabled={!editingScript.script_text}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80 disabled:opacity-30"
-                style={{ background: `${GOLD}22`, border: `1px solid ${GOLD}55`, color: GOLD }}
+                style={{ background: playingId === 'modal-preview' ? '#ef444422' : `${GOLD}22`, border: `1px solid ${playingId === 'modal-preview' ? '#ef4444' : GOLD}55`, color: playingId === 'modal-preview' ? '#ef4444' : GOLD }}
               >
-                <Volume2 size={15} /> Preview Voice
+                {playingId === 'modal-preview' ? <><Square size={15} fill="currentColor" /> Stop</> : <><Volume2 size={15} /> Preview Voice</>}
               </button>
               <div className="flex gap-3">
                 <button onClick={() => setEditingScript(null)} className="px-4 py-2 rounded-lg text-sm font-semibold" style={{ background: '#333', color: '#fff' }}>
