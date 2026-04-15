@@ -253,7 +253,7 @@ export default function AdminCharlieScripts() {
                                   style={{ background: '#111', color: SCRIPT_TYPE_COLORS[script.script_type] || '#aaa', border: `1px solid ${SCRIPT_TYPE_COLORS[script.script_type] || '#333'}44` }}>
                                   {script.script_type}
                                 </span>
-                                {script.context && <span className="text-xs" style={{ color: '#666' }}>📍 {script.context}</span>}
+                                {script.context && <span className="text-sm font-medium" style={{ color: GOLD }}>📍 {script.context}</span>}
                               </div>
                               <p className="text-sm leading-relaxed" style={{ color: expandedScript === script.id ? '#fff' : '#bbb' }}>
                                 {expandedScript === script.id ? script.script_text : (script.script_text?.length > 120 ? script.script_text.slice(0, 120) + '…' : script.script_text)}
