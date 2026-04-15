@@ -92,7 +92,7 @@ const HeroMinimal = () => {
       <div className="mt-20 flex gap-8 text-xs uppercase tracking-widest text-white font-medium">
         <span>100% Free for Buyers</span>
         <span className="text-[#D4AF37]/50">•</span>
-        <span>Human-Managed</span>
+        <span>Human Managed - AI Assisted</span>
         <span className="text-[#D4AF37]/50">•</span>
         <span>International Network</span>
       </div>
