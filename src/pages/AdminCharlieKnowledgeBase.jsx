@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Brain, Plus, Edit2, Trash2, Save, X, Search, Loader2, ChevronDown, ChevronRight, ToggleLeft, ToggleRight, Sparkles } from 'lucide-react';
+import { Brain, Plus, Edit2, Trash2, Save, X, Search, Loader2, ChevronDown, ChevronRight, ToggleLeft, ToggleRight, Sparkles, Volume2, Square } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -31,6 +31,9 @@ export default function AdminCharlieKnowledgeBase() {
   const [saving, setSaving] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [collapsedTopics, setCollapsedTopics] = useState({});
+  const [playingId, setPlayingId] = useState(null);
+  const [loadingAudioId, setLoadingAudioId] = useState(null);
+  const audioRef = useRef(null);
   const [showExtract, setShowExtract] = useState(false);
   const [docText, setDocText] = useState('');
   const [docName, setDocName] = useState('');
@@ -38,6 +41,32 @@ export default function AdminCharlieKnowledgeBase() {
   const [extractedPairs, setExtractedPairs] = useState([]);
   const [selectedPairs, setSelectedPairs] = useState(new Set());
   const [savingPairs, setSavingPairs] = useState(false);
+
+  useEffect(() => () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } }, []);
+
+  const speakText = useCallback(async (text, id) => {
+    if (playingId === id || loadingAudioId === id) {
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      setPlayingId(null); setLoadingAudioId(null); return;
+    }
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    setPlayingId(null); setLoadingAudioId(id);
+    try {
+      const res = await base44.functions.invoke('charlieSpeak', { text });
+      const { audio, mimeType } = res.data;
+      const byteChars = atob(audio);
+      const byteArr = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+      const blob = new Blob([byteArr], { type: mimeType || 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const el = new Audio(url);
+      audioRef.current = el;
+      el.onended = () => { setPlayingId(null); URL.revokeObjectURL(url); };
+      el.onerror = () => { setPlayingId(null); URL.revokeObjectURL(url); };
+      setLoadingAudioId(null); setPlayingId(id);
+      await el.play();
+    } catch (err) { setLoadingAudioId(null); setPlayingId(null); }
+  }, [playingId, loadingAudioId]);
 
   const load = async () => {
     setLoading(true);
@@ -215,6 +244,24 @@ export default function AdminCharlieKnowledgeBase() {
                               )}
                             </div>
                             <div className="flex items-center gap-2 shrink-0 ml-2" onClick={e => e.stopPropagation()}>
+                              <button
+                                onClick={() => speakText(entry.answer, entry.id)}
+                                disabled={loadingAudioId === entry.id}
+                                title={playingId === entry.id ? 'Stop' : 'Hear Charlie say this'}
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all hover:opacity-80 disabled:opacity-60"
+                                style={{
+                                  background: playingId === entry.id ? '#ef444422' : `${GOLD}22`,
+                                  border: `1px solid ${playingId === entry.id ? '#ef4444' : GOLD}66`,
+                                  color: playingId === entry.id ? '#ef4444' : GOLD,
+                                  minWidth: '72px',
+                                }}
+                              >
+                                {loadingAudioId === entry.id
+                                  ? <><span className="inline-block w-2.5 h-2.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> Loading</>
+                                  : playingId === entry.id
+                                  ? <><Square size={11} fill="currentColor" /> Stop</>
+                                  : <><Volume2 size={11} /> Hear It</>}
+                              </button>
                               <button onClick={() => handleToggle(entry)}>
                                 {entry.is_active ? <ToggleRight size={18} style={{ color: GOLD }} /> : <ToggleLeft size={18} style={{ color: '#444' }} />}
                               </button>
