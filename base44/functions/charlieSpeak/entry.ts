@@ -45,8 +45,9 @@ Deno.serve(async (req) => {
     const audioContent = data.audioContent;
     if (!audioContent) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
 
-    // Audio is base64-encoded LINEAR16 PCM — return as-is
-    return Response.json({ audio: audioContent, mimeType: 'audio/wav' });
+    // Google returns base64 LINEAR16 PCM at 16kHz
+    // Return as audio/L16 which browsers can play directly
+    return Response.json({ audio: audioContent, mimeType: 'audio/L16' });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
