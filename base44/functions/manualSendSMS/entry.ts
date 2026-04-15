@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
 
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-    const messagingServiceSid = Deno.env.get('TWILIO_MESSAGING_SERVICE_SID');
+    const fromPhone = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    if (!accountSid || !authToken || !messagingServiceSid) {
+    if (!accountSid || !authToken || !fromPhone) {
       return Response.json({ error: 'Twilio credentials not configured' }, { status: 500 });
     }
 
@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
         .replace(/\{\{destination_city\}\}/g, owner.moving_to || '');
 
       const params = new URLSearchParams({
-        MessagingServiceSid: messagingServiceSid,
+        From: fromPhone,
         To: owner.phone,
         Body: body,
       });
