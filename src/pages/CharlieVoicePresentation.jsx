@@ -1,20 +1,25 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Phone, PhoneCall } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-// Charlie's opening presentation — spoken automatically on load
-const PRESENTATION_SCRIPT = [
-  "Hello. I'm Charlie, your personal relocation guide from Dyson and Dyson. Thank you for taking a moment to connect with me today.",
-  "I'm not a chatbot, and I'm not a sales pitch. I'm an AI concierge built to make one of the biggest transitions of your life — moving to a new city — feel completely manageable.",
-  "Here's what makes us different. Most people moving to a new city are on their own. They search Zillow, they call a random agent, and they hope for the best. We don't do that.",
-  "At Dyson and Dyson, we research over 20 agents in your destination market before you ever meet one. We match you based on your lifestyle, your timeline, and your personality — not just your budget.",
-  "We handle the research, the coordination, the school lookups, the neighborhood comparisons, and the agent vetting — all before you pack a single box.",
-  "And it costs you nothing. Our service is free to buyers. We're compensated through referral agreements with agents, so your interests and ours are perfectly aligned.",
-  "Now — I'd love to learn a little about you. Where are you thinking of moving, and what's driving the decision? Just speak naturally. I'm listening."
-];
+// Build the script dynamically based on owner name from URL params
+const buildScript = (ownerName, address) => {
+  const firstName = ownerName ? ownerName.split(' ')[0] : null;
+  const greeting = firstName
+    ? `Hi ${firstName} — I'm Charlie, from Dyson and Dyson. You got our text about ${address ? address : 'your home'}, and I just wanted to take 60 seconds to explain what we actually do.`
+    : `Hi — I'm Charlie, from Dyson and Dyson. You got our text, and I just wanted to take 60 seconds to explain what we actually do.`;
+
+  return [
+    greeting,
+    "We're a concierge relocation service. When someone sells their home and moves to a new city, we take over everything on the buying side — the agent search, the neighborhood research, the school lookups — all of it.",
+    "Most people landing in a new city are completely on their own. They pick a random agent off Zillow and hope for the best. We research over 20 agents in your destination market and hand you the top three. You choose. No pressure.",
+    "And it costs you nothing. We're compensated through referral agreements with the agent you select — so our interests and yours are perfectly aligned.",
+    "So — if you are thinking about a move, I'd love to hear where you're headed. Just talk naturally. I'm listening."
+  ];
+};
 
 // States
 const STATE = {
@@ -26,6 +31,12 @@ const STATE = {
 };
 
 export default function CharlieVoicePresentation() {
+  // Parse URL params for personalization
+  const urlParams = new URLSearchParams(window.location.search);
+  const ownerName = urlParams.get('owner') || urlParams.get('name') || '';
+  const address = urlParams.get('address') || urlParams.get('addr') || '';
+  const PRESENTATION_SCRIPT = buildScript(ownerName, address);
+
   const [status, setStatus] = useState(STATE.IDLE);
   const [currentText, setCurrentText] = useState('');
   const [transcript, setTranscript] = useState('');
@@ -216,7 +227,9 @@ export default function CharlieVoicePresentation() {
     try {
       const res = await base44.functions.invoke('charlieVoiceChat', {
         message: userText,
-        conversation: updatedConvo.slice(-6), // Last 6 turns for context
+        conversation: updatedConvo.slice(-6),
+        ownerName,
+        address,
       });
 
       const reply = res.data?.reply || "That's a great point. Let me think about that for a moment and get back to you.";
@@ -384,23 +397,51 @@ export default function CharlieVoicePresentation() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 flex items-center justify-center z-50 cursor-pointer"
-          style={{ background: 'rgba(0,0,0,0.92)' }}
+          className="fixed inset-0 flex flex-col items-center justify-center z-50 cursor-pointer px-6"
+          style={{ background: '#050505' }}
           onClick={handleStart}
         >
-          <div className="text-center">
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ background: `${GOLD}22`, border: `2px solid ${GOLD}` }}
-            >
-              <Volume2 className="w-10 h-10" style={{ color: GOLD }} />
-            </motion.div>
-            <h2 className="text-2xl font-bold mb-2" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>Tap to Connect with Charlie</h2>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>He'll introduce himself and guide you through everything</p>
-            <p className="text-xs mt-2" style={{ color: 'rgba(255,255,255,0.3)' }}>No typing required — just listen and speak</p>
-          </div>
+          {/* Logo area */}
+          <p className="text-xs font-bold tracking-[0.3em] mb-8" style={{ color: 'rgba(212,175,55,0.5)' }}>DYSON & DYSON</p>
+
+          {/* Animated orb */}
+          <motion.div
+            animate={{ scale: [1, 1.08, 1], boxShadow: [`0 0 0px ${GOLD}44`, `0 0 40px ${GOLD}33`, `0 0 0px ${GOLD}44`] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-24 h-24 rounded-full flex items-center justify-center mb-6"
+            style={{ background: `${GOLD}15`, border: `2px solid ${GOLD}66` }}
+          >
+            <span style={{ fontSize: '3rem' }}>🎩</span>
+          </motion.div>
+
+          <h2 className="text-3xl font-bold mb-1 tracking-widest" style={{ color: GOLD, fontFamily: 'Georgia, serif' }}>CHARLIE</h2>
+          <p className="text-xs tracking-widest mb-6" style={{ color: 'rgba(255,255,255,0.35)' }}>AI CONCIERGE · DYSON & DYSON</p>
+
+          {ownerName && (
+            <p className="text-sm mb-6 text-center" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              Hello, <span style={{ color: GOLD }}>{ownerName.split(' ')[0]}</span>. Charlie is ready to speak with you.
+            </p>
+          )}
+
+          <motion.button
+            animate={{ scale: [1, 1.03, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base mb-4"
+            style={{ background: GOLD, color: '#000' }}
+          >
+            <Phone className="w-5 h-5" />
+            Tap to Hear from Charlie
+          </motion.button>
+
+          <p className="text-xs text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            No typing needed — just listen and speak naturally
+          </p>
+
+          {address && (
+            <p className="text-xs mt-4 text-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
+              Re: {address}
+            </p>
+          )}
         </motion.div>
       )}
 
