@@ -278,7 +278,7 @@ export default function AdminCharlieScripts() {
                                   ? <><Square size={11} fill="currentColor" /> Stop</>
                                   : <><Volume2 size={11} /> Hear It</>}
                               </button>
-                              <button onClick={(e) => { e.stopPropagation(); handleToggleActive(script); }} title={script.is_active ? 'Deactivate' : 'Activate'}>
+                              <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleToggleActive(script); }} title={script.is_active ? 'Deactivate' : 'Activate'} style={{ pointerEvents: 'auto' }}>
                                 {script.is_active
                                   ? <ToggleRight size={18} style={{ color: GOLD }} />
                                   : <ToggleLeft size={18} style={{ color: '#444' }} />}
