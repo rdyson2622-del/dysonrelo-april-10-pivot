@@ -17,31 +17,33 @@ Deno.serve(async (req) => {
     const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ... ').trim();
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`,
+      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: clean }] }],
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: { prebuiltVoiceConfig: { voiceName: "Charon" } }
-            }
+          input: { text: clean },
+          voice: {
+            languageCode: 'en-US',
+            name: 'en-US-Neural2-A'
+          },
+          audioConfig: {
+            audioEncoding: 'LINEAR16',
+            sampleRateHertz: 16000
           }
         })
       }
     );
 
     const data = await response.json();
-    console.log('Gemini status:', response.status, 'error:', data.error?.message);
+    console.log('TTS status:', response.status, 'error:', data.error?.message);
 
     if (!response.ok) {
       return Response.json({ error: data.error?.message || 'TTS failed' }, { status: 500 });
     }
 
-    const audio = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-    if (!audio) return Response.json({ error: 'No audio returned from Gemini' }, { status: 500 });
+    const audio = data.audioContent;
+    if (!audio) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
 
     return Response.json({ audio, mimeType: 'audio/wav' });
   } catch (error) {
