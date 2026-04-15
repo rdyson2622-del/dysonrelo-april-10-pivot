@@ -60,17 +60,11 @@ export default function AdminCharlieScripts() {
         return;
       }
       const { audio } = res.data;
-      // Backend already returns complete WAV — just decode it
-      const wavBinary = atob(audio);
-      const wavArr = new Uint8Array(wavBinary.length);
-      for (let i = 0; i < wavBinary.length; i++) wavArr[i] = wavBinary.charCodeAt(i);
-
-      const blob = new Blob([wavArr], { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      const el = new Audio(url);
+      // Use direct data URI to bypass blob/object URL issues
+      const el = new Audio(`data:audio/wav;base64,${audio}`);
       audioRef.current = el;
-      el.onended = () => { setPlayingId(null); URL.revokeObjectURL(url); };
-      el.onerror = () => { setPlayingId(null); URL.revokeObjectURL(url); };
+      el.onended = () => { setPlayingId(null); };
+      el.onerror = (e) => { console.error('Audio error:', e); setPlayingId(null); };
       setLoadingAudioId(null);
       setPlayingId(id);
       
