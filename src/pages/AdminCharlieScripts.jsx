@@ -73,6 +73,11 @@ export default function AdminCharlieScripts() {
       el.onerror = () => { setPlayingId(null); URL.revokeObjectURL(url); };
       setLoadingAudioId(null);
       setPlayingId(id);
+      
+      // Resume AudioContext if suspended (browser autoplay policy)
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+      
       await el.play();
     } catch (err) {
       console.error('TTS error:', err.message);
