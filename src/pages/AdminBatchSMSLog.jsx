@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown, ChevronRight, Send, CheckCircle2, AlertCircle, MapPin } from 'lucide-react';
+import { ChevronDown, ChevronRight, Send, CheckCircle2, AlertCircle, MapPin, Trash2 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SMS_TEMPLATE = `Hi {{owner_name}}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed — We offer our FREE Concierge Relocation Services to manage your entire move & find your next home. Learn more from: https://dysonrelo.com and a testimonial at https://youtu.be/In_JbQXZoy0 — Reply YES or call Bob at (858) 353-1200. Reply STOP to opt out.`;
 
-function CityRow({ city, batches }) {
+function CityRow({ city, batches, onDelete }) {
   const [open, setOpen] = useState(false);
 
   const totalBatchSize = batches.reduce((s, b) => s + (b.batch_size || 0), 0);
@@ -72,6 +73,7 @@ function CityRow({ city, batches }) {
           <td className="px-4 py-2 pl-10 text-xs text-slate-500">
             ↳ {new Date(log.sent_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
             <span className="ml-2 text-slate-400">by {log.sent_by?.split('@')[0]}</span>
+            {log.notes && <span className="ml-2 italic text-slate-400">· {log.notes}</span>}
           </td>
           <td className="px-4 py-2 text-center text-xs text-slate-500">{log.batch_size}</td>
           <td className="px-4 py-2 text-center text-xs text-green-700 font-medium">{log.sent_count || 0}</td>
@@ -79,7 +81,15 @@ function CityRow({ city, batches }) {
           <td className="px-4 py-2 text-center text-xs text-slate-400">{log.skipped_count || 0}</td>
           <td className="px-4 py-2 text-center text-xs text-slate-400" />
           <td className="px-4 py-2 text-center text-xs text-slate-400">{log.estimated_duration_minutes ? `${log.estimated_duration_minutes}m` : '—'}</td>
-          <td className="px-4 py-2" />
+          <td className="px-4 py-2 text-center">
+            <button
+              onClick={(e) => { e.stopPropagation(); onDelete(log.id); }}
+              className="p-1 rounded hover:bg-red-50 text-slate-300 hover:text-red-500 transition"
+              title="Delete this batch log"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </td>
         </tr>
       ))}
     </>
@@ -88,6 +98,13 @@ function CityRow({ city, batches }) {
 
 export default function AdminBatchSMSLog() {
   const [templateOpen, setTemplateOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this batch log entry?')) return;
+    await base44.entities.BatchSMSLog.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['batchSMSLogs'] });
+  };
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ['batchSMSLogs'],
@@ -201,7 +218,7 @@ export default function AdminBatchSMSLog() {
               </thead>
               <tbody>
                 {grouped.map(([city, batches]) => (
-                  <CityRow key={city} city={city} batches={batches} />
+                  <CityRow key={city} city={city} batches={batches} onDelete={handleDelete} />
                 ))}
               </tbody>
             </table>
