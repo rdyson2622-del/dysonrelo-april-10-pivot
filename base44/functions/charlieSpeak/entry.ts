@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
+// Charlie's voice: Google Cloud TTS — Chirp3-HD-Charon (deep authoritative male)
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -9,15 +10,13 @@ Deno.serve(async (req) => {
     const { text } = await req.json();
     if (!text) return Response.json({ error: 'No text provided' }, { status: 400 });
 
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    console.log('Key length:', GEMINI_API_KEY?.length, 'starts with:', GEMINI_API_KEY?.slice(0, 4));
-
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     if (!GEMINI_API_KEY) return Response.json({ error: 'GEMINI_API_KEY not set' }, { status: 500 });
 
-    const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ... ').trim();
+    const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim();
 
     const response = await fetch(
-      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${GEMINI_API_KEY}`,
+      `https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,36 +24,44 @@ Deno.serve(async (req) => {
           input: { text: clean },
           voice: {
             languageCode: 'en-US',
-            name: 'en-US-Neural2-A'
+            name: 'en-US-Chirp3-HD-Charon'
           },
           audioConfig: {
-            audioEncoding: 'LINEAR16',
-            sampleRateHertz: 16000
+            audioEncoding: 'MP3'
           }
         })
       }
     );
 
     const data = await response.json();
-    console.log('TTS status:', response.status, 'error:', data.error?.message);
 
     if (!response.ok) {
-      return Response.json({ error: data.error?.message || 'TTS failed' }, { status: 500 });
+      console.error('TTS error:', data.error?.message);
+      // Fallback to a reliable Neural2 male voice if Charon not available
+      const fallback = await fetch(
+        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: { text: clean },
+            voice: {
+              languageCode: 'en-US',
+              name: 'en-US-Neural2-D'  // deep male Neural2 voice
+            },
+            audioConfig: {
+              audioEncoding: 'MP3'
+            }
+          })
+        }
+      );
+      const fallbackData = await fallback.json();
+      if (!fallback.ok) return Response.json({ error: fallbackData.error?.message || 'TTS failed' }, { status: 500 });
+      return Response.json({ audio: fallbackData.audioContent, mimeType: 'audio/mpeg' });
     }
 
-    const audioContent = data.audioContent;
-    if (!audioContent) return Response.json({ error: 'No audio returned from TTS' }, { status: 500 });
+    return Response.json({ audio: data.audioContent, mimeType: 'audio/mpeg' });
 
-    // Google TTS returns base64 LINEAR16 PCM at 24kHz
-    return Response.json({ 
-      audio: audioContent, 
-      mimeType: 'audio/wav',
-      format: {
-        sampleRate: 24000,
-        channels: 1,
-        bitDepth: 16
-      }
-    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

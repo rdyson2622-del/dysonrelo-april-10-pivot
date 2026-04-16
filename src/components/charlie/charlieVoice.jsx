@@ -1,61 +1,63 @@
-// Charlie voice using Web Speech API — male voice, no repeat
-let currentUtterance = null;
-let voicesLoaded = false;
+// Charlie voice — routed exclusively through Google Cloud TTS via charlieSpeak backend function
+// Voice: en-US-Chirp3-HD-Charon (deep, authoritative male)
+// No browser TTS. No Web Speech API. One voice. One source.
 
-function getVoices() {
-  return window.speechSynthesis?.getVoices() || [];
-}
+import { base44 } from '@/api/base44Client';
 
-function pickMaleVoice() {
-  const voices = getVoices();
-  // Prefer known male US English voices
-  const preferred = voices.find(v => v.name === 'Google US English Male') ||
-    voices.find(v => v.name === 'Microsoft David Desktop') ||
-    voices.find(v => v.name === 'Microsoft David - English (United States)') ||
-    voices.find(v => v.name.toLowerCase().includes('david')) ||
-    voices.find(v => v.name.toLowerCase().includes('male') && v.lang.startsWith('en')) ||
-    voices.find(v => v.name === 'Alex') ||  // macOS male
-    voices.find(v => v.name === 'Fred') ||  // macOS male
-    voices.find(v => v.name === 'Daniel') || // UK male but better than female
-    voices.find(v => v.lang === 'en-US' && !['Samantha','Karen','Victoria','Susan','Zira','Hazel','Moira'].some(f => v.name.includes(f)));
-  return preferred || voices.find(v => v.lang.startsWith('en')) || voices[0];
-}
+let currentAudio = null;
 
-export function speakAsCharlie(text, onEnd) {
-  if (!window.speechSynthesis) return;
-
-  // Do NOT speak if already speaking — prevents repeats
-  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-    return;
-  }
-
-  const clean = text
+function cleanText(text) {
+  return text
     .replace(/\*\*/g, '')
     .replace(/\*/g, '')
     .replace(/#+\s/g, '')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/[👉👋🎙️🗺️🤝🎉]/g, '')
+    .replace(/\n+/g, ' ')
     .trim();
+}
 
+export async function speakAsCharlie(text, onEnd) {
+  stopCharlie(); // always cancel previous before starting new
+
+  const clean = cleanText(text);
   if (!clean) return;
 
-  const utterance = new SpeechSynthesisUtterance(clean);
-  const voice = pickMaleVoice();
-  if (voice) utterance.voice = voice;
-  utterance.rate = 0.92;
-  utterance.pitch = 0.85; // lower pitch = more masculine
-  utterance.volume = 1.0;
-  if (onEnd) utterance.onend = onEnd;
+  try {
+    const res = await base44.functions.invoke('charlieSpeak', { text: clean });
+    const { audio, mimeType } = res.data;
+    if (!audio) return;
 
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
+    const binary = atob(audio);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const blob = new Blob([bytes], { type: mimeType || 'audio/wav' });
+    const url = URL.createObjectURL(blob);
+
+    const audioEl = new Audio(url);
+    currentAudio = audioEl;
+    audioEl.onended = () => {
+      URL.revokeObjectURL(url);
+      currentAudio = null;
+      if (onEnd) onEnd();
+    };
+    audioEl.onerror = () => {
+      URL.revokeObjectURL(url);
+      currentAudio = null;
+    };
+    audioEl.play();
+  } catch (e) {
+    console.warn('Charlie TTS failed:', e.message);
+  }
 }
 
 export function stopCharlie() {
-  window.speechSynthesis?.cancel();
-  currentUtterance = null;
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
 }
 
 export function isCharlieSpeaking() {
-  return window.speechSynthesis?.speaking || false;
+  return currentAudio !== null && !currentAudio.paused;
 }
