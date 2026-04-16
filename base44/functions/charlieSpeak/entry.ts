@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
           input: { text: clean },
           voice: {
             languageCode: 'en-US',
-            name: 'en-US-Chirp3-HD-Charon'
+            name: 'en-US-Chirp3-HD-Autonoe'
           },
           audioConfig: {
             audioEncoding: 'MP3'
