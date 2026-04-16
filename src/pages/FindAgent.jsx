@@ -85,8 +85,9 @@ export default function FindAgent() {
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `${GOLD}20`, border: `2px solid ${GOLD}` }}>
             <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
           </div>
-          <h1 className="display-heading mb-6" style={{ fontSize: '2.5rem', color: '#fff', letterSpacing: '0.1em' }}>
-            Agent Selection Done Right
+          <h1 className="display-heading mb-6" style={{ fontSize: '2.5rem', letterSpacing: '0.1em' }}>
+            <span style={{ color: '#fff' }}>Agent Selection</span><br />
+            <span style={{ color: GOLD }}>Done Right</span>
           </h1>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.9)', fontStyle: 'italic' }}>
             "Every local or out-of-area move requires someone with real knowledge of the destination market — an agent or broker with genuine 'boots on the ground.'"
