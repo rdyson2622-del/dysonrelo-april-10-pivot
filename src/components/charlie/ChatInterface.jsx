@@ -160,57 +160,27 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     handleSend(topic);
   };
 
-  // Returns { display: string, spoken: string }
-  // Honest, accurate responses — no misdirected page links
-  const getSpokeResponse = (text) => {
-    const t = text.toLowerCase();
+  const CHARLIE_SYSTEM_PROMPT = `You are Charlie, the warm and knowledgeable AI concierge for Dyson & Dyson Concierge Relocation Services.
 
-    // Cost / fee / price / free
-    if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price') || t.includes('how much') || t.includes('charge')) {
-      return {
-        display: `Great news — our relocation service is **100% free to you as the buyer.** Always.\n\nWe're compensated through a referral arrangement with the agent we place you with at the close of escrow. You never pay us directly, and there are no hidden fees, ever.\n\nThe best next step is a quick intro session with Bob so he can learn about your move and show you exactly how the program works.\n\n👉 **[Schedule a Session with Bob](/GeminiSession)**`,
-        spoken: `Great news — our relocation service is one hundred percent free to you as the buyer, always. We're compensated through a referral arrangement with your agent at close. You never pay us a dime. The best next step is a quick intro session with Bob so he can walk you through the full program.`
-      };
-    }
+Your personality: You genuinely listen. You acknowledge what the person just said or asked before you answer — like a trusted friend who actually heard them. Never launch straight into a monologue. Start with a brief, warm acknowledgment of their specific question, then answer it directly and honestly.
 
-    // What do you do / services / how does it work / process
-    if (t.includes('service') || t.includes('what do you') || t.includes('what does') || t.includes('how does') || t.includes('how do you') || t.includes('what you do') || t.includes('provide') || t.includes('offer') || t.includes('program') || t.includes('process') || t.includes('how it work')) {
-      return {
-        display: `We're a full-service relocation concierge — meaning we manage the entire move experience, not just the home search.\n\nOnce you're enrolled in the program, we handle:\n- **Agent matching** — we vet and place a top local agent in your destination city\n- **Neighborhood research** — lifestyle fit, schools, commute, community\n- **Moving logistics** — movers, timeline, checklists\n- **Utilities & services** — all set up before you arrive\n- **School enrollment, healthcare setup, community connections**\n- **A personalized 30/60/90 day plan** to get you fully settled\n\nAll of that starts after your first session with Bob, where we get to know your situation and map out your relocation.\n\n👉 **[Book Your Intro Session](/GeminiSession)**`,
-        spoken: `We're a full-service relocation concierge. Once you're enrolled, we manage everything — agent matching, neighborhood research, moving logistics, utilities, schools, healthcare setup, and a full 30-60-90 day settling-in plan. Everything is coordinated for you. It all starts with a quick intro session with Bob.`
-      };
-    }
+About the program:
+- Dyson & Dyson is a full-service relocation concierge for people moving to a new city
+- The service is 100% free to the buyer — we earn through a referral fee from the agent at close of escrow
+- We handle: agent matching (we vet and place a top local agent), neighborhood research, moving logistics, utilities setup, school enrollment, healthcare setup, community connections, and a personalized 30/60/90 day plan
+- To get started, the person books a free intro session with Bob Dyson (link: /GeminiSession) or calls (858) 353-1200
+- You do NOT need to "enroll" with any paperwork upfront — the intro session with Bob IS the first step. It's free, no obligation, just a conversation.
+- After that session, if it's a good fit, Bob gets them into the program and the team takes over
 
-    // Moving from / relocating / destination / city mention
-    if (t.includes('moving') || t.includes('relocat') || t.includes('move to') || t.includes('moving to') || t.includes('from') || t.includes('san diego') || t.includes('dallas') || t.includes('phoenix') || t.includes('austin') || t.includes('denver') || t.includes('seattle') || t.includes('miami') || t.includes('charlotte') || t.includes('raleigh') || t.includes('nashville') || t.includes('las vegas') || t.includes('chicago')) {
-      return {
-        display: `That sounds like an exciting move! We'd love to be your relocation team for that transition.\n\nThe real detail work — neighborhoods, schools, agents, timelines — all happens once you're enrolled in the program. The first step is a personal intro session with Bob Dyson, where he'll hear about your situation and walk you through exactly how we'd support your move.\n\nIt's completely free, no obligation.\n\n👉 **[Book Your Intro Session with Bob](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
-        spoken: `That sounds like an exciting move! The real detail work — neighborhoods, schools, agents, timelines — all happens once you're enrolled. The first step is a personal intro session with Bob, where he'll hear about your situation and walk you through how we'd support your move. It's free, no obligation.`
-      };
-    }
+How to respond:
+1. First, briefly acknowledge what they actually asked — show you heard them
+2. Then answer their specific question directly and honestly
+3. Keep it conversational, 2-3 short paragraphs max
+4. End with a gentle next step (usually booking with Bob) but don't be pushy
+5. Use plain language — no corporate speak, no bullet-point walls
+6. If they ask something you genuinely don't know the answer to, say so warmly and point to Bob
 
-    // Agent / realtor
-    if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
-      return {
-        display: `Agent matching is one of the most important things we do. We don't just hand you a list — we vet and personally place a top-performing local agent in your destination city who fits your personality, needs, and timeline.\n\nThat matching process begins after your intro session with Bob, where we get all the details about your move.\n\n👉 **[Start with Bob](/GeminiSession)**`,
-        spoken: `Agent matching is one of the most important things we do. We vet and personally place a top agent in your destination city who fits your needs. That process begins after your intro session with Bob.`
-      };
-    }
-
-    // Start / begin / sign up / get started / join
-    if (t.includes('start') || t.includes('begin') || t.includes('sign up') || t.includes('sign me') || t.includes('get started') || t.includes('join') || t.includes('next step') || t.includes('ready')) {
-      return {
-        display: `The first step is simple — a personal intro session with Bob Dyson. He'll hear about your move, answer all your questions, and if it's a good fit, get you enrolled in the program.\n\nFrom there, our full concierge team takes over — agent matching, city research, logistics, the works.\n\n👉 **[Book Your Intro Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
-        spoken: `The first step is a personal intro session with Bob Dyson. He'll hear about your move, answer your questions, and if it's a good fit, get you enrolled. From there, our full team takes over.`
-      };
-    }
-
-    // Default — acknowledge the question honestly, direct to Bob
-    return {
-      display: `Thanks for sharing that. I want to be upfront — the detailed, personalized answers to your specific situation are something Bob handles directly in your first session. That's where we really dig into your move, your budget, your timeline, and build your plan.\n\nI'm here to orient you to what we do and get you pointed in the right direction. The best next move is booking a free intro session with Bob.\n\n👉 **[Book Your Intro Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
-      spoken: `Thanks for sharing that. The detailed, personalized answers are something Bob handles in your first session — that's where we dig into your move and build your plan. The best next step is booking a free intro session with him.`
-    };
-  };
+Never pretend to know things you don't. Never oversell. Be human.`;
 
   const handleSend = async (text) => {
     const messageText = (text || input).trim();
@@ -219,24 +189,45 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     const userMsg = { role: 'user', content: messageText, type: 'text' };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
-
-    // Small delay to feel natural
     setIsTyping(true);
-    setTimeout(() => {
-      const { display, spoken, navigate } = getSpokeResponse(messageText);
-      const charlieMsg = { role: 'charlie', content: display, type: 'text' };
+
+    try {
+      // Build conversation history for context
+      const conversationHistory = messages
+        .slice(-6) // last 3 exchanges
+        .map(m => `${m.role === 'user' ? 'User' : 'Charlie'}: ${m.content}`)
+        .join('\n');
+
+      const prompt = `${CHARLIE_SYSTEM_PROMPT}
+
+Recent conversation:
+${conversationHistory}
+
+User just said: "${messageText}"
+
+Respond as Charlie. Remember: acknowledge first, then answer directly.`;
+
+      const res = await base44.integrations.Core.InvokeLLM({ prompt });
+      const responseText = typeof res === 'string' ? res : (res?.response || res?.text || String(res));
+
+      const charlieMsg = { role: 'charlie', content: responseText, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
 
       if (!isMuted) {
         stopCharlie();
         setTimeout(() => speakAsCharlie(
-          spoken || display,
+          responseText,
           () => setIsSpeaking(false),
           () => setIsSpeaking(true)
         ), 100);
       }
-    }, 1200);
+    } catch (e) {
+      // Fallback if LLM fails
+      const fallback = `I heard you — let me get you connected with Bob so he can answer that properly. You can book a free session at /GeminiSession or call (858) 353-1200.`;
+      setMessages(prev => [...prev, { role: 'charlie', content: fallback, type: 'text' }]);
+      setIsTyping(false);
+    }
   };
 
   const tabs = [
@@ -259,7 +250,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#f5f5f5' }}>
-            {isTyping ? 'Looking that up...' : 'Site Guide • Full AI Coming Soon'}
+            {isTyping ? 'Thinking...' : 'Dyson & Dyson Concierge'}
           </p>
         </div>
 
