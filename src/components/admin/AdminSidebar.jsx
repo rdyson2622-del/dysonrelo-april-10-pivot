@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon, Calendar } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
@@ -15,6 +15,7 @@ const navItems = [
   { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
   { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
   { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
+  { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: Calendar },
   { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
   { label: 'SMS Sequences', path: '/admin/sms-sequences', icon: MessageCircle },
   { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: Zap },

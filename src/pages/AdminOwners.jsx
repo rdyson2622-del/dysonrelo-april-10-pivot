@@ -3,7 +3,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Upload, Send, Trash2, Pencil, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
+import { Plus, Search, Upload, Send, Trash2, Pencil, MapPin, ChevronDown, ChevronRight, Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import OwnerForm from '@/components/admin/OwnerForm';
 import OwnerImportCSV from '@/components/admin/OwnerImportCSV';
 
@@ -336,12 +337,14 @@ export default function AdminOwners() {
 
   const [sendingBatchCities, setSendingBatchCities] = useState(new Set());
   const [confirmDialog, setConfirmDialog] = useState(null);
+  const [scheduleDialog, setScheduleDialog] = useState(null); // { city, owners, count, estHours }
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleTime, setScheduleTime] = useState('09:00');
 
   const handleSendBatch = async (city, cityOwners) => {
     const unsent = cityOwners.filter(o => o.phone);
     if (!unsent.length) return;
 
-    // Show confirmation dialog
     const estMinutes = unsent.length * 3;
     const estHours = (estMinutes / 60).toFixed(1);
     setConfirmDialog({
@@ -350,6 +353,30 @@ export default function AdminOwners() {
       estHours,
       owners: unsent,
     });
+  };
+
+  const handleScheduleLater = async () => {
+    if (!scheduleDate || !scheduleTime) return;
+    const { city, owners } = scheduleDialog;
+    const scheduledFor = new Date(`${scheduleDate}T${scheduleTime}:00`).toISOString();
+    const me = await base44.auth.me();
+    await base44.entities.ScheduledCampaign.create({
+      city,
+      scheduled_for: scheduledFor,
+      owners: owners.map(o => ({
+        listing_owner_id: o.id,
+        phone: o.phone,
+        owner_name: o.owner_name,
+        property_address: o.property_address,
+      })),
+      owner_count: owners.length,
+      status: 'scheduled',
+      scheduled_by: me?.email || 'unknown',
+    });
+    setScheduleDialog(null);
+    setScheduleDate('');
+    setScheduleTime('09:00');
+    setBatchResult({ city, scheduled: true, count: owners.length, scheduledFor });
   };
 
   const confirmSendBatch = async (city, owners) => {
@@ -480,6 +507,8 @@ export default function AdminOwners() {
         <div className={`mb-4 border rounded-lg px-4 py-3 text-sm font-semibold ${batchResult.error ? 'bg-red-50 border-red-200 text-red-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
           {batchResult.error
             ? `✗ ${batchResult.city}: ${batchResult.error}`
+            : batchResult.scheduled
+            ? `📅 ${batchResult.city}: ${batchResult.count} messages scheduled for ${new Date(batchResult.scheduledFor).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}`
             : `✓ ${batchResult.city}: ${batchResult.sent} messages queued, ${batchResult.failed || 0} failed. All scheduled automatically, spaced 3 min apart.`
           }
           <button onClick={() => setBatchResult(null)} className="ml-3 text-slate-400 hover:text-slate-600">✕</button>
@@ -563,10 +592,68 @@ export default function AdminOwners() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-xs text-blue-800">
               <strong>⚠️ Important:</strong> You can only click once. The button will be disabled for 10 seconds to prevent duplicate sends.
             </div>
-            <div className="flex gap-3 justify-end">
+            <div className="flex gap-3 justify-end flex-wrap">
               <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancel</Button>
+              <Button
+                variant="outline"
+                className="border-amber-400 text-amber-700 hover:bg-amber-50 gap-1.5"
+                onClick={() => {
+                  setScheduleDialog({ city: confirmDialog.city, owners: confirmDialog.owners, count: confirmDialog.count, estHours: confirmDialog.estHours });
+                  setConfirmDialog(null);
+                }}
+              >
+                <Calendar className="w-4 h-4" /> Schedule for Later
+              </Button>
               <Button onClick={() => confirmSendBatch(confirmDialog.city, confirmDialog.owners)} className="bg-blue-600 hover:bg-blue-700">
-                Send All
+                Send Now
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {scheduleDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg max-w-md w-full mx-4">
+            <h2 className="font-semibold text-lg mb-1 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-amber-600" /> Schedule Campaign
+            </h2>
+            <p className="text-slate-600 text-sm mb-4">
+              {scheduleDialog.city} · {scheduleDialog.count} recipients · ~{scheduleDialog.estHours}h to deliver
+            </p>
+            <div className="space-y-3 mb-6">
+              <div>
+                <label className="text-xs font-semibold text-slate-600 block mb-1">Date</label>
+                <input
+                  type="date"
+                  value={scheduleDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={e => setScheduleDate(e.target.value)}
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-600 block mb-1">Time (your local time)</label>
+                <input
+                  type="time"
+                  value={scheduleTime}
+                  onChange={e => setScheduleTime(e.target.value)}
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+                The system checks every 5 minutes and will fire this campaign automatically at the scheduled time.
+                You can pause or cancel it from <Link to="/admin/scheduled-campaigns" className="underline font-semibold">Scheduled Campaigns</Link>.
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end">
+              <Button variant="outline" onClick={() => setScheduleDialog(null)}>Cancel</Button>
+              <Button
+                disabled={!scheduleDate || !scheduleTime}
+                className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
+                onClick={handleScheduleLater}
+              >
+                <Calendar className="w-4 h-4" /> Schedule
               </Button>
             </div>
           </div>
