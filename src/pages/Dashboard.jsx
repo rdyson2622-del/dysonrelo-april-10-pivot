@@ -62,13 +62,10 @@ export default function Dashboard() {
       <HeroMinimal />
 
       <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
-        {!clientId ? (
-          <ReadyToStart onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
-        ) : (
+        {clientId ? (
           <>
             <RelocationProfileCard clientId={clientId} />
             
-            {/* NEW COMMITMENT SECTION */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }} 
               animate={{ opacity: 1, scale: 1 }}
@@ -91,6 +88,8 @@ export default function Dashboard() {
               <PlanVoiceNote clientId={clientId} />
             </motion.div>
           </>
+        ) : (
+          <ReadyToStart compact onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
         )}
 
         {/* Next Steps */}
