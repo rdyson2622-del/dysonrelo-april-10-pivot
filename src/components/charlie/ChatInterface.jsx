@@ -4,7 +4,7 @@ import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList, Mic, 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ChatBubble from './ChatBubble';
-import OnboardingFlow from './OnboardingFlow';
+import VoiceOnboarding from './VoiceOnboarding';
 import MovePlan from './MovePlan';
 import { base44 } from '@/api/base44Client';
 import { speakAsCharlie, stopCharlie, isCharlieSpeaking } from './charlieVoice';
@@ -296,7 +296,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
       {/* ONBOARDING TAB */}
       {tab === 'onboard' && (
-        <OnboardingFlow onComplete={handleOnboardingComplete} />
+        <VoiceOnboarding onComplete={handleOnboardingComplete} />
       )}
 
       {/* MOVE PLAN TAB */}
