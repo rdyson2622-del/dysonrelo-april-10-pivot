@@ -65,7 +65,14 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     }).catch(() => {});
   }, []);
 
-  const WELCOME_MESSAGE = `Hi! I'm Charlie — your Dyson & Dyson site guide. 👋\n\nI'm here to show you around and point you in the right direction. For now, tell me what you're curious about and I'll direct you to the right place.\n\nAnd soon — we'll actually be voice-to-voice. I'm excited to meet you that way and be able to provide answers and save all your information instantly. 🎙️`;
+  const isReturn = localStorage.getItem('charlie_visited') === 'true';
+
+  const WELCOME_MESSAGE = isReturn
+    ? `Welcome back. What can I help you with today?`
+    : `Hi! I'm Charlie — your Dyson & Dyson concierge. 👋\n\nI'm here to answer your questions about our relocation service and point you in the right direction.\n\nYou can type or tap the mic to speak — I'll talk back. What's on your mind?`;
+
+  // Mark as visited for future returns
+  localStorage.setItem('charlie_visited', 'true');
 
   const [messages, setMessages] = useState([
     {
