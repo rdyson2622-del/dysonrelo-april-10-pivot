@@ -261,7 +261,7 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
         <div className="flex-1">
           <h3 className="font-bold text-sm" style={{ color: GOLD }}>Charlie</h3>
           <p className="text-xs" style={{ color: '#f5f5f5' }}>
-            {isTyping ? 'Thinking...' : 'Dyson & Dyson Concierge'}
+            {isTyping ? 'Thinking...' : isListening ? 'Thinking...' : 'Dyson & Dyson Concierge'}
           </p>
         </div>
 
