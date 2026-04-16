@@ -52,7 +52,7 @@ import AdminSMSSequences from './pages/AdminSMSSequences';
 import AdminOwnerKanban from './pages/AdminOwnerKanban';
 import AdminOptIns from './pages/AdminOptIns';
 import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
-import AdminScheduledCampaigns from './pages/AdminScheduledCampaigns';
+import AdminScheduledCampaigns from './pages/AdminScheduledCampaigns.jsx';
 import AdminComposeSMS from './pages/AdminComposeSMS';
 import BobDyson from './pages/BobDyson';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
