@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react'; // useRef kept for messagesEndRef
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList } from 'lucide-react';
+import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ChatBubble from './ChatBubble';
 import OnboardingFlow from './OnboardingFlow';
 import MovePlan from './MovePlan';
 import { base44 } from '@/api/base44Client';
+import { speakAsCharlie, stopCharlie, isCharlieSpeaking } from './charlieVoice';
 
 
 const GOLD = '#D4AF37';
@@ -75,7 +76,52 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
+  const recognitionRef = useRef(null);
+
+  // Auto-speak welcome message on load
+  useEffect(() => {
+    if (!isMuted) {
+      // Small delay so voices are loaded
+      setTimeout(() => speakAsCharlie(WELCOME_MESSAGE), 800);
+    }
+  }, []);
+
+  const toggleMute = () => {
+    if (!isMuted) {
+      stopCharlie();
+    }
+    setIsMuted(v => !v);
+  };
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Voice input is not supported in this browser. Try Chrome.');
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+      setIsListening(false);
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsListening(true);
+  };
+
+  const stopListening = () => {
+    recognitionRef.current?.stop();
+    setIsListening(false);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -151,16 +197,19 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     // Small delay to feel natural
     setIsTyping(true);
     setTimeout(() => {
-      const { display, navigate } = getSpokeResponse(messageText);
+      const { display, spoken, navigate } = getSpokeResponse(messageText);
       const charlieMsg = { role: 'charlie', content: display, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);
       setIsTyping(false);
-      
-      // Navigate if response includes navigation
+
+      if (!isMuted) {
+        speakAsCharlie(spoken || display);
+      }
+
       if (navigate) {
         setTimeout(() => {
           window.location.href = navigate;
-        }, 800);
+        }, 2500);
       }
     }, 1200);
   };
@@ -257,14 +306,39 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
           </div>
 
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
-            <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
+            <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2 items-center">
+              {/* Mute toggle */}
+              <Button
+                type="button"
+                size="icon"
+                onClick={toggleMute}
+                className="shrink-0 rounded-lg h-9 w-9"
+                style={{ background: '#1a1a1a', color: isMuted ? '#666' : GOLD }}
+                title={isMuted ? 'Unmute Charlie' : 'Mute Charlie'}
+              >
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </Button>
+
               <Input
-                placeholder="Tell me what you're looking for..."
+                placeholder={isListening ? '🎙️ Listening...' : 'Type or tap mic to speak...'}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 className="flex-1 text-sm border-0 rounded-lg"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
+
+              {/* Mic button */}
+              <Button
+                type="button"
+                size="icon"
+                onClick={isListening ? stopListening : startListening}
+                className="shrink-0 rounded-lg h-9 w-9"
+                style={{ background: isListening ? '#ef4444' : '#1a1a1a', color: isListening ? '#fff' : GOLD }}
+                title={isListening ? 'Stop listening' : 'Speak to Charlie'}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </Button>
+
               <Button type="submit" size="icon" disabled={!input.trim() || isTyping}
                 className="shrink-0 rounded-lg"
                 style={{ background: GOLD, color: '#000' }}>
