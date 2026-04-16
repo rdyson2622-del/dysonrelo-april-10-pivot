@@ -239,7 +239,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
   return (
     <motion.div
-      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'h-[580px] w-full'}`}
+      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'h-[720px] w-full'}`}
       style={{ background: '#808080', border: `1px solid ${GOLD}` }}
       layout
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
