@@ -111,7 +111,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       alert('Voice input is not supported in this browser. Try Chrome.');
       return;
     }
-    stopCharlie(); // stop Charlie speaking when user wants to talk
+    stopCharlie(); // stop Charlie immediately when user wants to talk
+    setIsSpeaking(false);
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.interimResults = false;

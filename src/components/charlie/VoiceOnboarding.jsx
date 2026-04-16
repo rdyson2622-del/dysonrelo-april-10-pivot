@@ -129,10 +129,25 @@ export default function VoiceOnboarding({ onComplete }) {
     setTranscript('');
     setConfirmedText('');
     setManualInput('');
-    speakAsCharlie(QUESTION_SCRIPTS[step], () => {
-      setPhase('listening');
-      startListening();
-    });
+    speakAsCharlie(
+      QUESTION_SCRIPTS[step],
+      () => {
+        // Charlie finished naturally — start listening
+        setPhase('listening');
+        startListening();
+      },
+      null,
+      (transcript) => {
+        // User interrupted Charlie mid-speech — use their transcript as the answer
+        if (transcript) {
+          setTranscript(transcript);
+          handleVoiceAnswer(transcript);
+        } else {
+          setPhase('listening');
+          startListening();
+        }
+      }
+    );
     return () => stopCharlie();
   }, [step]);
 
