@@ -81,11 +81,14 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
-  // Auto-speak welcome message on load
+  // Auto-speak welcome message once on load
+  const hasSpokenWelcome = useRef(false);
   useEffect(() => {
+    if (hasSpokenWelcome.current) return;
+    hasSpokenWelcome.current = true;
     if (!isMuted) {
-      // Small delay so voices are loaded
-      setTimeout(() => speakAsCharlie(WELCOME_MESSAGE), 800);
+      // Delay to allow browser voices to load
+      setTimeout(() => speakAsCharlie(WELCOME_MESSAGE), 1000);
     }
   }, []);
 
@@ -203,7 +206,8 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       setIsTyping(false);
 
       if (!isMuted) {
-        speakAsCharlie(spoken || display);
+        stopCharlie();
+        setTimeout(() => speakAsCharlie(spoken || display), 100);
       }
 
       if (navigate) {

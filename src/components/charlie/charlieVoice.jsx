@@ -1,39 +1,50 @@
-// Charlie voice using Web Speech API (browser TTS) — reliable, no lag
-// Falls back silently if browser doesn't support it
-
+// Charlie voice using Web Speech API — male voice, no repeat
 let currentUtterance = null;
+let voicesLoaded = false;
+
+function getVoices() {
+  return window.speechSynthesis?.getVoices() || [];
+}
+
+function pickMaleVoice() {
+  const voices = getVoices();
+  // Prefer known male US English voices
+  const preferred = voices.find(v => v.name === 'Google US English Male') ||
+    voices.find(v => v.name === 'Microsoft David Desktop') ||
+    voices.find(v => v.name === 'Microsoft David - English (United States)') ||
+    voices.find(v => v.name.toLowerCase().includes('david')) ||
+    voices.find(v => v.name.toLowerCase().includes('male') && v.lang.startsWith('en')) ||
+    voices.find(v => v.name === 'Alex') ||  // macOS male
+    voices.find(v => v.name === 'Fred') ||  // macOS male
+    voices.find(v => v.name === 'Daniel') || // UK male but better than female
+    voices.find(v => v.lang === 'en-US' && !['Samantha','Karen','Victoria','Susan','Zira','Hazel','Moira'].some(f => v.name.includes(f)));
+  return preferred || voices.find(v => v.lang.startsWith('en')) || voices[0];
+}
 
 export function speakAsCharlie(text, onEnd) {
   if (!window.speechSynthesis) return;
 
-  // Stop anything already playing
-  stopCharlie();
+  // Do NOT speak if already speaking — prevents repeats
+  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+    return;
+  }
 
-  // Strip markdown symbols for cleaner speech
   const clean = text
     .replace(/\*\*/g, '')
     .replace(/\*/g, '')
     .replace(/#+\s/g, '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → just text
-    .replace(/👉|👋|🎙️|🗺️|🤝|🎉/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[👉👋🎙️🗺️🤝🎉]/g, '')
     .trim();
 
+  if (!clean) return;
+
   const utterance = new SpeechSynthesisUtterance(clean);
-
-  // Pick best available voice — prefer a natural US English voice
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find(v =>
-    v.name.includes('Samantha') ||
-    v.name.includes('Karen') ||
-    v.name.includes('Google US English') ||
-    (v.lang === 'en-US' && !v.name.includes('Zira'))
-  ) || voices.find(v => v.lang === 'en-US') || voices[0];
-
-  if (preferred) utterance.voice = preferred;
-  utterance.rate = 0.95;
-  utterance.pitch = 1.0;
+  const voice = pickMaleVoice();
+  if (voice) utterance.voice = voice;
+  utterance.rate = 0.92;
+  utterance.pitch = 0.85; // lower pitch = more masculine
   utterance.volume = 1.0;
-
   if (onEnd) utterance.onend = onEnd;
 
   currentUtterance = utterance;
@@ -41,9 +52,7 @@ export function speakAsCharlie(text, onEnd) {
 }
 
 export function stopCharlie() {
-  if (window.speechSynthesis) {
-    window.speechSynthesis.cancel();
-  }
+  window.speechSynthesis?.cancel();
   currentUtterance = null;
 }
 
