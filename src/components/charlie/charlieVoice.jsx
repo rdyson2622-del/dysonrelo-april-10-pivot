@@ -17,7 +17,7 @@ function cleanText(text) {
     .trim();
 }
 
-export async function speakAsCharlie(text, onEnd) {
+export async function speakAsCharlie(text, onEnd, onStart) {
   stopCharlie(); // always cancel previous before starting new
 
   const clean = cleanText(text);
@@ -36,6 +36,7 @@ export async function speakAsCharlie(text, onEnd) {
 
     const audioEl = new Audio(url);
     currentAudio = audioEl;
+    if (onStart) onStart();
     audioEl.onended = () => {
       URL.revokeObjectURL(url);
       currentAudio = null;
@@ -44,10 +45,12 @@ export async function speakAsCharlie(text, onEnd) {
     audioEl.onerror = () => {
       URL.revokeObjectURL(url);
       currentAudio = null;
+      if (onEnd) onEnd();
     };
     audioEl.play();
   } catch (e) {
     console.warn('Charlie TTS failed:', e.message);
+    if (onEnd) onEnd();
   }
 }
 

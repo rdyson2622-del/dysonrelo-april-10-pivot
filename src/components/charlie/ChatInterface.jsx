@@ -78,6 +78,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [isTyping, setIsTyping] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
@@ -93,9 +94,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   }, []);
 
   const toggleMute = () => {
-    if (!isMuted) {
-      stopCharlie();
-    }
+    stopCharlie(); // always kill audio immediately on toggle
     setIsMuted(v => !v);
   };
 
@@ -105,14 +104,16 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
       alert('Voice input is not supported in this browser. Try Chrome.');
       return;
     }
+    stopCharlie(); // stop Charlie speaking when user wants to talk
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      setInput(transcript);
       setIsListening(false);
+      // Auto-send immediately after voice capture — no need to hit Send
+      handleSend(transcript);
     };
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
@@ -151,41 +152,39 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
     handleSend(topic);
   };
 
-  // Returns { display: string, spoken: string, navigate?: string }
+  // Returns { display: string, spoken: string }
+  // No auto-navigate — links appear in chat, user clicks when ready
   const getSpokeResponse = (text) => {
     const t = text.toLowerCase();
 
     if (t.includes('neighbor') || t.includes('area') || t.includes('where') || t.includes('city') || t.includes('city guide')) {
       return {
-        display: `Great question about neighborhoods — let me navigate you to the City Guide where you can explore neighborhoods, schools, commute, and lifestyle fit for your destination. 🗺️`,
-        spoken: `Let me navigate you to the City Guide where you can explore neighborhoods, schools, commute, and lifestyle fit.`,
-        navigate: '/CityGuide'
+        display: `Great question about neighborhoods! Head over to the City Guide to explore neighborhoods, schools, commute, and lifestyle fit for your destination.\n\n👉 **[Open City Guide](/CityGuide)**`,
+        spoken: `Great question about neighborhoods. Head over to the City Guide to explore neighborhoods, schools, commute, and lifestyle fit for your destination.`
       };
     }
     if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
       return {
-        display: `Agent matching is one of our specialties! Let me navigate you to where you can tell us about your ideal agent personality and needs. 🤝`,
-        spoken: `Let me navigate you to where you can tell us about your ideal agent personality and needs.`,
-        navigate: '/GeminiSession'
+        display: `Agent matching is one of our specialties! Start your Gemini session to tell us about your ideal agent personality and needs — we'll find your perfect match.\n\n👉 **[Start Agent Matching](/GeminiSession)**`,
+        spoken: `Agent matching is one of our specialties. Start your Gemini session to tell us about your ideal agent personality and needs.`
       };
     }
     if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price')) {
       return {
-        display: `Our service is **100% free to you as the buyer.** Always. 🎉\n\nWe're compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**`,
-        spoken: `Our service is one hundred percent free to you as the buyer. Always. Your agent handles our compensation at close.`
+        display: `Our service is **100% free to you as the buyer.** Always.\n\nWe're compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\n👉 **[Start Your Free Session](/GeminiSession)**`,
+        spoken: `Our service is one hundred percent free to you as the buyer. Always. Your agent handles our compensation at close — you never pay us a dime.`
       };
     }
     if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next') || t.includes('move objective') || t.includes('commit') || t.includes('relocation journey') || t.includes('process')) {
       return {
-        display: `Let me navigate you to our Relocation Journey page where you can see exactly how our process works and commit to get started with your personalized relocation plan.`,
-        spoken: `Let me navigate you to our Relocation Journey page where you can see exactly how our process works and commit to get started.`,
-        navigate: '/RelocationRoadmap'
+        display: `Let me show you exactly how our process works. Click below to see the full Relocation Journey and commit to your personalized plan.\n\n👉 **[View Relocation Journey](/RelocationRoadmap)**`,
+        spoken: `Our process is straightforward. Click the link to see the full Relocation Journey and commit to your personalized plan.`
       };
     }
     // Default
     return {
-      display: `Got it — I've received your request. While I'm still learning, I've passed this to both our human relocation specialists and deep-learning AI experts who will get you the answers you're looking for. 🤝\n\nIn the meantime, the fastest path to real answers is your **private Gemini session** with a Dyson Relocation Specialist.\n\n👉 **[Start Your Free Gemini Session](/GeminiSession)**\n\nOr reach Dyson & Dyson directly: **(858) 353-1200**`,
-      spoken: `Got it. I've passed your request to both our human specialists and deep-learning AI experts. Your Gemini session is the fastest path to real answers — it's completely free.`
+      display: `Got it! I've noted your question. While I'm still ramping up my full AI capabilities, the fastest path to real answers is your private Gemini session with a Dyson Relocation Specialist — completely free.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
+      spoken: `Got it. The fastest path to real answers is your Gemini session with a Dyson Relocation Specialist. It's completely free, and Bob is also available at 858-353-1200.`
     };
   };
 
@@ -207,13 +206,11 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
       if (!isMuted) {
         stopCharlie();
-        setTimeout(() => speakAsCharlie(spoken || display), 100);
-      }
-
-      if (navigate) {
-        setTimeout(() => {
-          window.location.href = navigate;
-        }, 2500);
+        setTimeout(() => speakAsCharlie(
+          spoken || display,
+          () => setIsSpeaking(false),
+          () => setIsSpeaking(true)
+        ), 100);
       }
     }, 1200);
   };
@@ -311,16 +308,32 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
 
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2 items-center">
-              {/* Mute toggle */}
+              {/* Stop / Mute button — red & labeled when Charlie is speaking */}
               <Button
                 type="button"
-                size="icon"
-                onClick={toggleMute}
-                className="shrink-0 rounded-lg h-9 w-9"
-                style={{ background: '#1a1a1a', color: isMuted ? '#666' : GOLD }}
-                title={isMuted ? 'Unmute Charlie' : 'Mute Charlie'}
+                className="shrink-0 rounded-lg h-9 px-3 text-xs font-bold gap-1"
+                style={{
+                  background: isSpeaking ? '#ef4444' : '#1a1a1a',
+                  color: isSpeaking ? '#fff' : (isMuted ? '#555' : GOLD),
+                  minWidth: isSpeaking ? '72px' : '36px'
+                }}
+                title={isSpeaking ? 'Stop Charlie' : (isMuted ? 'Unmute Charlie' : 'Mute Charlie')}
+                onClick={() => {
+                  if (isSpeaking) {
+                    stopCharlie();
+                    setIsSpeaking(false);
+                  } else {
+                    toggleMute();
+                  }
+                }}
               >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                {isSpeaking ? (
+                  <><VolumeX className="w-4 h-4" /> STOP</>
+                ) : isMuted ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
               </Button>
 
               <Input
