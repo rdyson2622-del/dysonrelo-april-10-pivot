@@ -153,38 +153,54 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   };
 
   // Returns { display: string, spoken: string }
-  // No auto-navigate — links appear in chat, user clicks when ready
+  // Honest, accurate responses — no misdirected page links
   const getSpokeResponse = (text) => {
     const t = text.toLowerCase();
 
-    if (t.includes('neighbor') || t.includes('area') || t.includes('where') || t.includes('city') || t.includes('city guide')) {
+    // Cost / fee / price / free
+    if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price') || t.includes('how much') || t.includes('charge')) {
       return {
-        display: `Great question about neighborhoods! Head over to the City Guide to explore neighborhoods, schools, commute, and lifestyle fit for your destination.\n\n👉 **[Open City Guide](/CityGuide)**`,
-        spoken: `Great question about neighborhoods. Head over to the City Guide to explore neighborhoods, schools, commute, and lifestyle fit for your destination.`
+        display: `Great news — our relocation service is **100% free to you as the buyer.** Always.\n\nWe're compensated through a referral arrangement with the agent we place you with at the close of escrow. You never pay us directly, and there are no hidden fees, ever.\n\nThe best next step is a quick intro session with Bob so he can learn about your move and show you exactly how the program works.\n\n👉 **[Schedule a Session with Bob](/GeminiSession)**`,
+        spoken: `Great news — our relocation service is one hundred percent free to you as the buyer, always. We're compensated through a referral arrangement with your agent at close. You never pay us a dime. The best next step is a quick intro session with Bob so he can walk you through the full program.`
       };
     }
+
+    // What do you do / services / how does it work / process
+    if (t.includes('service') || t.includes('what do you') || t.includes('what does') || t.includes('how does') || t.includes('how do you') || t.includes('what you do') || t.includes('provide') || t.includes('offer') || t.includes('program') || t.includes('process') || t.includes('how it work')) {
+      return {
+        display: `We're a full-service relocation concierge — meaning we manage the entire move experience, not just the home search.\n\nOnce you're enrolled in the program, we handle:\n- **Agent matching** — we vet and place a top local agent in your destination city\n- **Neighborhood research** — lifestyle fit, schools, commute, community\n- **Moving logistics** — movers, timeline, checklists\n- **Utilities & services** — all set up before you arrive\n- **School enrollment, healthcare setup, community connections**\n- **A personalized 30/60/90 day plan** to get you fully settled\n\nAll of that starts after your first session with Bob, where we get to know your situation and map out your relocation.\n\n👉 **[Book Your Intro Session](/GeminiSession)**`,
+        spoken: `We're a full-service relocation concierge. Once you're enrolled, we manage everything — agent matching, neighborhood research, moving logistics, utilities, schools, healthcare setup, and a full 30-60-90 day settling-in plan. Everything is coordinated for you. It all starts with a quick intro session with Bob.`
+      };
+    }
+
+    // Moving from / relocating / destination / city mention
+    if (t.includes('moving') || t.includes('relocat') || t.includes('move to') || t.includes('moving to') || t.includes('from') || t.includes('san diego') || t.includes('dallas') || t.includes('phoenix') || t.includes('austin') || t.includes('denver') || t.includes('seattle') || t.includes('miami') || t.includes('charlotte') || t.includes('raleigh') || t.includes('nashville') || t.includes('las vegas') || t.includes('chicago')) {
+      return {
+        display: `That sounds like an exciting move! We'd love to be your relocation team for that transition.\n\nThe real detail work — neighborhoods, schools, agents, timelines — all happens once you're enrolled in the program. The first step is a personal intro session with Bob Dyson, where he'll hear about your situation and walk you through exactly how we'd support your move.\n\nIt's completely free, no obligation.\n\n👉 **[Book Your Intro Session with Bob](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
+        spoken: `That sounds like an exciting move! The real detail work — neighborhoods, schools, agents, timelines — all happens once you're enrolled. The first step is a personal intro session with Bob, where he'll hear about your situation and walk you through how we'd support your move. It's free, no obligation.`
+      };
+    }
+
+    // Agent / realtor
     if (t.includes('agent') || t.includes('realtor') || t.includes('broker')) {
       return {
-        display: `Agent matching is one of our specialties! Start your Gemini session to tell us about your ideal agent personality and needs — we'll find your perfect match.\n\n👉 **[Start Agent Matching](/GeminiSession)**`,
-        spoken: `Agent matching is one of our specialties. Start your Gemini session to tell us about your ideal agent personality and needs.`
+        display: `Agent matching is one of the most important things we do. We don't just hand you a list — we vet and personally place a top-performing local agent in your destination city who fits your personality, needs, and timeline.\n\nThat matching process begins after your intro session with Bob, where we get all the details about your move.\n\n👉 **[Start with Bob](/GeminiSession)**`,
+        spoken: `Agent matching is one of the most important things we do. We vet and personally place a top agent in your destination city who fits your needs. That process begins after your intro session with Bob.`
       };
     }
-    if (t.includes('cost') || t.includes('free') || t.includes('fee') || t.includes('price')) {
+
+    // Start / begin / sign up / get started / join
+    if (t.includes('start') || t.includes('begin') || t.includes('sign up') || t.includes('sign me') || t.includes('get started') || t.includes('join') || t.includes('next step') || t.includes('ready')) {
       return {
-        display: `Our service is **100% free to you as the buyer.** Always.\n\nWe're compensated through a referral arrangement with your agent at close — you never pay us directly, and there are no hidden fees.\n\n👉 **[Start Your Free Session](/GeminiSession)**`,
-        spoken: `Our service is one hundred percent free to you as the buyer. Always. Your agent handles our compensation at close — you never pay us a dime.`
+        display: `The first step is simple — a personal intro session with Bob Dyson. He'll hear about your move, answer all your questions, and if it's a good fit, get you enrolled in the program.\n\nFrom there, our full concierge team takes over — agent matching, city research, logistics, the works.\n\n👉 **[Book Your Intro Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
+        spoken: `The first step is a personal intro session with Bob Dyson. He'll hear about your move, answer your questions, and if it's a good fit, get you enrolled. From there, our full team takes over.`
       };
     }
-    if (t.includes('start') || t.includes('begin') || t.includes('how') || t.includes('next') || t.includes('move objective') || t.includes('commit') || t.includes('relocation journey') || t.includes('process')) {
-      return {
-        display: `Let me show you exactly how our process works. Click below to see the full Relocation Journey and commit to your personalized plan.\n\n👉 **[View Relocation Journey](/RelocationRoadmap)**`,
-        spoken: `Our process is straightforward. Click the link to see the full Relocation Journey and commit to your personalized plan.`
-      };
-    }
-    // Default
+
+    // Default — acknowledge the question honestly, direct to Bob
     return {
-      display: `Got it! I've noted your question. While I'm still ramping up my full AI capabilities, the fastest path to real answers is your private Gemini session with a Dyson Relocation Specialist — completely free.\n\n👉 **[Start Your Gemini Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
-      spoken: `Got it. The fastest path to real answers is your Gemini session with a Dyson Relocation Specialist. It's completely free, and Bob is also available at 858-353-1200.`
+      display: `Thanks for sharing that. I want to be upfront — the detailed, personalized answers to your specific situation are something Bob handles directly in your first session. That's where we really dig into your move, your budget, your timeline, and build your plan.\n\nI'm here to orient you to what we do and get you pointed in the right direction. The best next move is booking a free intro session with Bob.\n\n👉 **[Book Your Intro Session](/GeminiSession)**\n\nOr call Bob directly: **(858) 353-1200**`,
+      spoken: `Thanks for sharing that. The detailed, personalized answers are something Bob handles in your first session — that's where we dig into your move and build your plan. The best next step is booking a free intro session with him.`
     };
   };
 
