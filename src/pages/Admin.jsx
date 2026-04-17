@@ -37,7 +37,7 @@ export default function Admin() {
           className="mb-8"
         >
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#fff' }}>Dyson & Dyson Admin</h1>
+          <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Dyson & Dyson Admin</h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Manage your relocation business operations
           </p>
