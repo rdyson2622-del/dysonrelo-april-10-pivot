@@ -35,15 +35,12 @@ export default function ClientSidebar() {
         </p>
       </div>
 
-      {/* Nav */}
+      {/* Nav: My Dashboard + My Roadmap */}
       <nav className="px-3 py-4 space-y-1">
-        {/* My Dashboard */}
-        {(() => {
-          const item = navItems[0];
-          const Icon = item.icon;
-          const active = location.pathname === item.path;
+        {navItems.slice(0, 2).map(({ label, path, icon: Icon }) => {
+          const active = location.pathname === path;
           return (
-            <Link to={item.path}>
+            <Link key={path} to={path}>
               <div
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
                 style={{
@@ -52,15 +49,15 @@ export default function ClientSidebar() {
                 }}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                {item.label}
+                {label}
               </div>
             </Link>
           );
-        })()}
+        })}
       </nav>
 
-      {/* Quick Links */}
-      <div className="px-3 py-4 space-y-2">
+      {/* Quick Links — after My Roadmap */}
+      <div className="px-3 pb-4 space-y-2">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Quick Links
         </div>
@@ -77,9 +74,9 @@ export default function ClientSidebar() {
         </div>
       </div>
 
-      {/* Rest of Nav */}
+      {/* Rest of Nav: City Guide, Gemini Session */}
       <nav className="px-3 space-y-1">
-        {navItems.slice(1).map(({ label, path, icon: Icon }) => {
+        {navItems.slice(2).map(({ label, path, icon: Icon }) => {
           const active = location.pathname === path;
           return (
             <Link key={path} to={path}>
