@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { X, Plus, Star } from 'lucide-react';
+import { X, Plus, Star, Link, Loader2, CheckCircle2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -10,6 +10,38 @@ export default function AddPropertyModal({ clientId, onClose, onAdded }) {
     sqft: '', listing_url: '', photo_url: '', client_notes: '', client_rating: 0,
   });
   const [saving, setSaving] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [parsing, setParsing] = useState(false);
+  const [parsed, setParsed] = useState(false);
+
+  const handleParseUrl = async () => {
+    if (!urlInput.trim()) return;
+    setParsing(true);
+    setParsed(false);
+    try {
+      const res = await base44.functions.invoke('parseListingUrl', { url: urlInput.trim() });
+      const p = res.data?.property;
+      if (p) {
+        setForm(f => ({
+          ...f,
+          address: p.address || f.address,
+          city: p.city || f.city,
+          state: p.state || f.state,
+          price: p.price ? String(p.price) : f.price,
+          bedrooms: p.bedrooms ? String(p.bedrooms) : f.bedrooms,
+          bathrooms: p.bathrooms ? String(p.bathrooms) : f.bathrooms,
+          sqft: p.sqft ? String(p.sqft) : f.sqft,
+          listing_url: p.listing_url || urlInput.trim(),
+          photo_url: p.photo_url || f.photo_url,
+        }));
+        setParsed(true);
+      }
+    } catch (e) {
+      // silently fail — user can fill manually
+    } finally {
+      setParsing(false);
+    }
+  };
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -52,6 +84,37 @@ export default function AddPropertyModal({ clientId, onClose, onAdded }) {
 
         {/* Form */}
         <div className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+
+          {/* URL Auto-fill */}
+          <div className="rounded-xl p-4 space-y-2" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <label className="block text-xs font-bold tracking-wider" style={{ color: GOLD }}>
+              📋 PASTE A ZILLOW / REDFIN / REALTOR LINK
+            </label>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Drop in a listing URL and we'll auto-fill the details below.</p>
+            <div className="flex gap-2 mt-2">
+              <input
+                type="url"
+                value={urlInput}
+                onChange={e => { setUrlInput(e.target.value); setParsed(false); }}
+                onKeyDown={e => e.key === 'Enter' && handleParseUrl()}
+                placeholder="https://www.zillow.com/homedetails/..."
+                className="flex-1 rounded-xl px-4 py-2.5 text-sm"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
+              />
+              <button
+                onClick={handleParseUrl}
+                disabled={!urlInput.trim() || parsing}
+                className="px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 disabled:opacity-40 shrink-0"
+                style={{ background: GOLD, color: '#000' }}>
+                {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : parsed ? <CheckCircle2 className="w-4 h-4" /> : <Link className="w-4 h-4" />}
+                {parsing ? 'Reading...' : parsed ? 'Done!' : 'Auto-Fill'}
+              </button>
+            </div>
+            {parsed && <p className="text-xs font-semibold" style={{ color: '#22c55e' }}>✓ Details filled in below — review and edit as needed.</p>}
+          </div>
+
+          <div className="border-t pt-4" style={{ borderColor: 'rgba(255,255,255,0.08)' }} />
+
           <Field label="Property Address *" value={form.address} onChange={v => set('address', v)} placeholder="123 Oak Street" />
           <div className="grid grid-cols-2 gap-3">
             <Field label="City *" value={form.city} onChange={v => set('city', v)} placeholder="Austin" />
@@ -63,7 +126,7 @@ export default function AddPropertyModal({ clientId, onClose, onAdded }) {
             <Field label="Sq Ft" value={form.sqft} onChange={v => set('sqft', v)} placeholder="2400" type="number" />
           </div>
           <Field label="List Price" value={form.price} onChange={v => set('price', v)} placeholder="750000" type="number" />
-          <Field label="Listing URL (Zillow, Redfin, etc.)" value={form.listing_url} onChange={v => set('listing_url', v)} placeholder="https://..." />
+          <Field label="Listing URL (auto-filled or edit)" value={form.listing_url} onChange={v => set('listing_url', v)} placeholder="https://..." />
           <Field label="Photo URL (optional)" value={form.photo_url} onChange={v => set('photo_url', v)} placeholder="https://..." />
 
           {/* Notes */}
