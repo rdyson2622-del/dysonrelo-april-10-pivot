@@ -261,7 +261,7 @@ export default function AdminSidebar() {
 
       {/* Quick Page Jump */}
       <div className="mx-3 mb-3 relative">
-        <p className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.3)' }}>Quick Page Jump</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#fff' }}>Quick Page Jump</p>
         <form onSubmit={handlePageJump} className="flex gap-2">
           <input
             type="text"
