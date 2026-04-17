@@ -1,0 +1,169 @@
+{
+  "name": "ClosedEscrowFile",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Associated RelocationClient ID"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address for this closing"
+    },
+    "closing_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Actual closing date"
+    },
+    "title_company": {
+      "type": "string",
+      "description": "Title company name"
+    },
+    "settlement_statement_url": {
+      "type": "string",
+      "description": "URL to the settlement statement document"
+    },
+    "cost_breakdown": {
+      "type": "object",
+      "description": "Breakdown of closing costs",
+      "properties": {
+        "purchase_price": {
+          "type": "number"
+        },
+        "down_payment": {
+          "type": "number"
+        },
+        "loan_amount": {
+          "type": "number"
+        },
+        "closing_costs": {
+          "type": "number"
+        },
+        "title_insurance": {
+          "type": "number"
+        },
+        "property_taxes": {
+          "type": "number"
+        },
+        "homeowners_insurance": {
+          "type": "number"
+        },
+        "hoa_fees": {
+          "type": "number"
+        },
+        "other_costs": {
+          "type": "number"
+        }
+      }
+    },
+    "documents": {
+      "type": "array",
+      "description": "Attached documents (settlement, forms, filings, etc.)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_type": {
+            "type": "string",
+            "enum": [
+              "settlement_statement",
+              "closing_disclosure",
+              "promissory_note",
+              "mortgage_deed",
+              "title_insurance",
+              "homeowners_insurance",
+              "final_walkthrough",
+              "courthouse_filing",
+              "deed_recorded",
+              "utility_setup",
+              "other"
+            ]
+          },
+          "document_name": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "uploaded_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "closing_instructions": {
+      "type": "string",
+      "description": "Special instructions or conditions from title company"
+    },
+    "sign_offs": {
+      "type": "array",
+      "description": "Conditional approvals and sign-offs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "party": {
+            "type": "string"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "signed_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "signed",
+              "waived"
+            ]
+          }
+        }
+      }
+    },
+    "courthouse_filing_info": {
+      "type": "object",
+      "description": "Courthouse filing and recording details",
+      "properties": {
+        "recording_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "recording_number": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "recording_url": {
+          "type": "string"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "complete",
+        "archived"
+      ],
+      "default": "in_progress",
+      "description": "File completion status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about the closing"
+    }
+  },
+  "required": [
+    "client_id",
+    "property_address"
+  ]
+}

@@ -7,6 +7,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "@/components/ui/use-toast";
 import EscrowTimeline from "@/components/admin/EscrowTimeline";
+import TransactionStages from "@/components/admin/client-detail/TransactionStages";
 
 const GOLD = '#D4AF37';
 
@@ -139,6 +140,7 @@ export default function AdminClientDetail() {
 
   const TABS = [
     { key: 'overview', label: 'Overview' },
+    { key: 'transaction', label: '🏡 Transaction Journey' },
     { key: 'communicate', label: '💬 Communicate' },
     { key: 'tasks', label: `Tasks (${tasks.length})` },
     { key: 'properties', label: `Properties (${properties.length})` },
@@ -268,6 +270,13 @@ export default function AdminClientDetail() {
                 </div>
               )}
             </motion.div>
+          )}
+
+          {/* ── TRANSACTION JOURNEY ── */}
+          {activeTab === 'transaction' && (
+           <motion.div key="transaction" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+             <TransactionStages />
+           </motion.div>
           )}
 
           {/* ── COMMUNICATE ── */}
