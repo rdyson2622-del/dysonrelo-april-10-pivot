@@ -22,7 +22,7 @@ export default function ClientSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-56 shrink-0 flex flex-col min-h-screen"
+    <aside className="w-56 shrink-0 flex flex-col min-h-screen overflow-y-auto"
       style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
       {/* Logo */}
