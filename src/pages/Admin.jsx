@@ -52,7 +52,7 @@ const adminSections = [
 
 export default function Admin() {
   return (
-    <div className="min-h-screen p-6" style={{ background: '#808080' }}>
+    <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
