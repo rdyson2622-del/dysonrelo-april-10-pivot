@@ -95,15 +95,15 @@ export default function AdminCommsBadge() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-[10px] font-bold truncate" style={{ color: '#fff' }}>{msg.name}</span>
-                  <span className="text-[9px] shrink-0" style={{ color: 'rgba(255,255,255,0.35)' }}>{timeAgo(msg.date)}</span>
+                  <span className="text-[9px] shrink-0" style={{ color: '#fff' }}>{timeAgo(msg.date)}</span>
                 </div>
-                <p className="text-[10px] truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{msg.preview}</p>
+                <p className="text-[10px] truncate mt-0.5" style={{ color: '#fff' }}>{msg.preview}</p>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="px-3 text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>No pending messages</p>
+        <p className="px-3 text-[10px]" style={{ color: '#fff' }}>No pending messages</p>
       )}
 
       {/* View All footer */}

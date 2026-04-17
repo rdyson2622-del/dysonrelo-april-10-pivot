@@ -198,7 +198,7 @@ export default function AdminSidebar() {
                           className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                           style={{
                             background: isActive ? 'rgba(167,139,250,0.15)' : 'transparent',
-                            color: isActive ? '#A78BFA' : 'rgba(255,255,255,0.75)',
+                            color: isActive ? '#A78BFA' : '#fff',
                           }}
                         >
                           <child.icon className="w-3.5 h-3.5" />
@@ -277,17 +277,17 @@ export default function AdminSidebar() {
           </button>
         </form>
         {suggestions.length > 0 && (
-          <div className="mt-1 rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-            {suggestions.map(([num, page]) => (
-              <button key={num} type="button"
-                onClick={() => { navigate(page.path); setPageCode(''); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left hover:bg-white/5 transition-colors"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#fff' }}>
-                <span className="font-black shrink-0" style={{ color: '#D4AF37' }}>#{num}</span>
-                <span className="truncate">{page.name}</span>
-              </button>
-            ))}
-          </div>
+        <div className="mt-1 rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+          {suggestions.map(([num, page]) => (
+            <button key={num} type="button"
+              onClick={() => { navigate(page.path); setPageCode(''); }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left hover:bg-white/5 transition-colors"
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#fff' }}>
+              <span className="font-black shrink-0" style={{ color: '#D4AF37' }}>#{num}</span>
+              <span className="truncate" style={{ color: '#fff' }}>{page.name}</span>
+            </button>
+          ))}
+        </div>
         )}
       </div>
 
