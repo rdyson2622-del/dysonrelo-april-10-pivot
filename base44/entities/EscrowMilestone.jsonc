@@ -1,0 +1,104 @@
+{
+  "name": "EscrowMilestone",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Associated RelocationClient ID"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address for this escrow"
+    },
+    "escrow_company": {
+      "type": "string",
+      "description": "Escrow company name"
+    },
+    "escrow_number": {
+      "type": "string",
+      "description": "Escrow transaction number"
+    },
+    "milestone_type": {
+      "type": "string",
+      "enum": [
+        "initial_deposit",
+        "inspection",
+        "inspection_contingency_release",
+        "appraisal",
+        "loan_approval",
+        "homeowners_insurance",
+        "final_walkthrough",
+        "release_of_contingencies",
+        "clear_to_close",
+        "closing_date",
+        "funding",
+        "moving_date",
+        "utility_activation",
+        "other"
+      ],
+      "description": "Type of escrow milestone"
+    },
+    "milestone_name": {
+      "type": "string",
+      "description": "Custom name for this milestone"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Target date for this milestone"
+    },
+    "due_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Specific date/time if known (e.g., closing time)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Details about this milestone (e.g., loan contingency deadline, inspection deadline)"
+    },
+    "responsible_party": {
+      "type": "string",
+      "enum": [
+        "buyer",
+        "seller",
+        "escrow_company",
+        "lender",
+        "title_company",
+        "inspector",
+        "appraiser",
+        "client_action"
+      ],
+      "description": "Who is responsible for completing this milestone"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "waived",
+        "at_risk",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Current status"
+    },
+    "days_until_due": {
+      "type": "number",
+      "description": "Calculated days remaining (for sorting/alerts)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this milestone"
+    },
+    "extracted_from": {
+      "type": "string",
+      "description": "Filename or document name this was extracted from"
+    }
+  },
+  "required": [
+    "client_id",
+    "milestone_type",
+    "due_date"
+  ]
+}
