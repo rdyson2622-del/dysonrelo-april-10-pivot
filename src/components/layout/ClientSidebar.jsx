@@ -35,65 +35,52 @@ export default function ClientSidebar() {
         </p>
       </div>
 
-      {/* Nav: My Dashboard + My Roadmap */}
+      {/* Nav: My Dashboard only */}
       <nav className="px-3 py-4 space-y-1">
-        {navItems.slice(0, 2).map(({ label, path, icon: Icon }) => {
-          const active = location.pathname === path;
+        {(() => {
+          const item = navItems[0];
+          const Icon = item.icon;
+          const active = location.pathname === item.path;
           return (
-            <Link key={path} to={path}>
+            <Link to={item.path}>
               <div
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
-                style={{
-                  background: active ? GOLD : 'transparent',
-                  color: active ? '#000' : '#fff',
-                }}
+                style={{ background: active ? GOLD : 'transparent', color: active ? '#000' : '#fff' }}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                {label}
+                {item.label}
               </div>
             </Link>
           );
-        })}
+        })()}
       </nav>
 
-      {/* Quick Links — after My Roadmap */}
+      {/* Quick Links */}
       <div className="px-3 pb-4 space-y-2">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Quick Links
         </div>
         <div className="flex flex-col gap-2">
-          <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/FindAgent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/FindAgent' ? '#000' : '#fff' }}>
-            <Users className="w-3.5 h-3.5" /> Vet Agents
-          </Link>
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
           </Link>
           <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/PropertyComparison' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/PropertyComparison' ? '#000' : '#fff' }}>
             <GitCompare className="w-3.5 h-3.5" /> Compare Homes
           </Link>
+          <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
+            <Map className="w-3.5 h-3.5" /> My Roadmap
+          </Link>
+          <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/FindAgent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/FindAgent' ? '#000' : '#fff' }}>
+            <Users className="w-3.5 h-3.5" /> Vet Agents
+          </Link>
+          <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
+            <MapPin className="w-3.5 h-3.5" /> City Guide
+          </Link>
+          <Link to="/GeminiSession" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/GeminiSession' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/GeminiSession' ? '#000' : '#fff' }}>
+            <Zap className="w-3.5 h-3.5" /> Gemini Session
+          </Link>
         </div>
       </div>
-
-      {/* Rest of Nav: City Guide, Gemini Session */}
-      <nav className="px-3 space-y-1">
-        {navItems.slice(2).map(({ label, path, icon: Icon }) => {
-          const active = location.pathname === path;
-          return (
-            <Link key={path} to={path}>
-              <div
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
-                style={{
-                  background: active ? GOLD : 'transparent',
-                  color: active ? '#000' : '#fff',
-                }}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                {label}
-              </div>
-            </Link>
-          );
-        })}
-      </nav>
 
       {/* Heritage & Authority */}
       <div className="pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
