@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Eye, User, MapPin, Calendar, DollarSign, CheckCircle2, Clock, Home, Users, FileText, Star } from "lucide-react";
+import { Plus, Trash2, Eye, MessageSquare, User, MapPin, Calendar, DollarSign, CheckCircle2, Clock, Home, Users, FileText, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -126,9 +126,14 @@ function ClientCard({ client, onDelete, tasks, properties }) {
               style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}40` }}>
               {cfg.label}
             </span>
+            <Link to={`/admin/client-detail?id=${client.id}&tab=communicate`}>
+              <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" title="Message">
+                <MessageSquare className="w-4 h-4" style={{ color: GOLD }} />
+              </button>
+            </Link>
             <Link to={`/admin/client-detail?id=${client.id}`}>
               <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" title="View Full Profile">
-                <Eye className="w-4 h-4" style={{ color: GOLD }} />
+                <Eye className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.5)' }} />
               </button>
             </Link>
             <button onClick={() => onDelete(client.id)}

@@ -37,9 +37,10 @@ function fill(template, client) {
 export default function AdminClientDetail() {
   const [searchParams] = useSearchParams();
   const clientId = searchParams.get('id');
+  const tabParam = searchParams.get('tab');
   const queryClient = useQueryClient();
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(tabParam || 'overview');
   const [smsText, setSmsText] = useState('');
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
