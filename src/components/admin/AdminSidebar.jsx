@@ -113,7 +113,7 @@ export default function AdminSidebar() {
     e.preventDefault();
     if (!pageCode.trim()) return;
 
-    // Parse page code (e.g., "1C" → page 1, or just "14" → page 14)
+    // Try number match first (e.g., "22", "1C")
     const match = pageCode.toUpperCase().match(/^(\d+)([A-Z])?$/);
     if (match) {
       const pageNum = match[1];
@@ -121,9 +121,23 @@ export default function AdminSidebar() {
       if (pageData) {
         navigate(pageData.path);
         setPageCode('');
+        return;
       }
     }
+
+    // Try name search (e.g., "comm" → Communications)
+    const query = pageCode.toLowerCase();
+    const found = Object.values(PAGE_REGISTRY).find(p => p.name.toLowerCase().includes(query));
+    if (found) {
+      navigate(found.path);
+      setPageCode('');
+    }
   };
+
+  // Live name-search suggestions
+  const suggestions = pageCode.trim() && !/^\d/.test(pageCode)
+    ? Object.entries(PAGE_REGISTRY).filter(([, p]) => p.name.toLowerCase().includes(pageCode.toLowerCase())).slice(0, 4)
+    : [];
 
   return (
     <aside className="w-64 flex flex-col min-h-screen shrink-0 frosted-dark" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
@@ -137,13 +151,13 @@ export default function AdminSidebar() {
       </div>
 
       {/* Quick Page Jump */}
-      <div className="px-3 py-3" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <div className="px-3 py-3 relative" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <form onSubmit={handlePageJump} className="flex gap-2">
           <input
             type="text"
             value={pageCode}
-            onChange={(e) => setPageCode(e.target.value.toUpperCase())}
-            placeholder="Go to page (e.g., 1C, 14)"
+            onChange={(e) => setPageCode(e.target.value)}
+            placeholder="Go to page or search by name…"
             className="flex-1 px-3 py-2 rounded-lg text-sm font-medium"
             style={{
               background: 'rgba(255,255,255,0.05)',
@@ -160,7 +174,22 @@ export default function AdminSidebar() {
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
-        <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Type page # or code (1-31, 1A, 14B)</p>
+        {/* Name-search suggestions */}
+        {suggestions.length > 0 && (
+          <div className="mt-1 rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+            {suggestions.map(([num, page]) => (
+              <button key={num} type="button"
+                onClick={() => { navigate(page.path); setPageCode(''); }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left hover:bg-white/5 transition-colors"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#fff' }}>
+                <span className="font-black shrink-0" style={{ color: '#D4AF37' }}>#{num}</span>
+                <span className="truncate">{page.name}</span>
+                <span className="ml-auto text-[10px] shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>{page.section}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Type page # or name (e.g., "22", "comm")</p>
       </div>
 
       {/* Nav */}
