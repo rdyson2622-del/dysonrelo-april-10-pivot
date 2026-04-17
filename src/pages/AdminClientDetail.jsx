@@ -102,7 +102,8 @@ export default function AdminClientDetail() {
       });
       setSmsText('');
       refetchComms();
-      toast({ title: "SMS Sent!", description: `Message delivered to ${client.full_name}` });
+      const toastId = toast({ title: "SMS Sent!", description: `Message delivered to ${client.full_name}` });
+      setTimeout(() => toastId.dismiss(), 3000);
     } catch (e) {
       toast({ title: "SMS Failed", description: e.message, variant: "destructive" });
     }
@@ -132,7 +133,8 @@ export default function AdminClientDetail() {
       setEmailSubject('');
       setEmailBody('');
       refetchComms();
-      toast({ title: "Email Sent!", description: `Email delivered to ${client.email}` });
+      const toastId = toast({ title: "Email Sent!", description: `Email delivered to ${client.email}` });
+      setTimeout(() => toastId.dismiss(), 3000);
     } catch (e) {
       toast({ title: "Email Failed", description: e.message, variant: "destructive" });
     }
