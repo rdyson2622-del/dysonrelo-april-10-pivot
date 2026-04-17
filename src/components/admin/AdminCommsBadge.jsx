@@ -71,7 +71,7 @@ export default function AdminCommsBadge() {
             )}
           </div>
           <span className="text-xs font-bold tracking-wider" style={{ color: urgentCount > 0 ? '#ef4444' : GOLD }}>
-            {urgentCount > 0 ? `${urgentCount} URGENT` : 'COMM HUB'}
+            {urgentCount > 0 ? `${urgentCount} URGENT` : 'COMMUNICATIONS HUB'}
           </span>
         </div>
         <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" style={{ color: urgentCount > 0 ? '#ef4444' : GOLD }} />
@@ -79,7 +79,7 @@ export default function AdminCommsBadge() {
 
       {/* Recent messages preview */}
       {allInbound.length > 0 ? (
-        <div className="px-3 pb-2.5 space-y-1.5">
+        <div className="px-3 space-y-1.5">
           {allInbound.map(msg => (
             <Link key={msg.id} to="/admin/communications"
               className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors block">
@@ -96,8 +96,15 @@ export default function AdminCommsBadge() {
           ))}
         </div>
       ) : (
-        <p className="px-3 pb-2.5 text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>No pending messages</p>
+        <p className="px-3 text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>No pending messages</p>
       )}
+
+      {/* View All footer */}
+      <Link to="/admin/communications"
+        className="flex items-center justify-center gap-1 mx-3 mb-2.5 mt-2 py-1.5 rounded-lg text-[10px] font-bold tracking-wider transition-colors hover:bg-white/5"
+        style={{ border: '1px solid rgba(255,255,255,0.08)', color: urgentCount > 0 ? '#ef4444' : GOLD }}>
+        VIEW ALL COMMUNICATIONS →
+      </Link>
     </div>
   );
 }

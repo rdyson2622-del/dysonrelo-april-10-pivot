@@ -23,7 +23,7 @@ const navItems = [
 
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
   { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
-  { label: 'Communications', path: '/admin/communications', icon: MessageCircle },
+  { label: 'Comm Hub (Full)', path: '/admin/communications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
   { label: "CHARLIE'S BRAIN", isGroup: true, groupKey: 'charlie', children: [
