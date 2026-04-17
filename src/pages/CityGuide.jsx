@@ -220,15 +220,16 @@ export default function CityGuide() {
               {categories.map((cat, i) => (
                 <motion.div key={cat.key}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                  className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                  className="rounded-2xl overflow-hidden"
+                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <div className="p-4">
                     <div className="flex items-start gap-3 mb-2">
                       <div className={`w-9 h-9 rounded-xl ${cat.color} text-white flex items-center justify-center shrink-0`}>
                         <cat.icon className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-sm text-slate-900">{cat.label}</h3>
-                        <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{cat.preview}</p>
+                        <h3 className="font-bold text-sm text-white">{cat.label}</h3>
+                        <p className="text-xs mt-0.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{cat.preview}</p>
                       </div>
                     </div>
 
@@ -236,7 +237,7 @@ export default function CityGuide() {
                     <button
                       onClick={() => setExpandedCard(expandedCard === cat.key ? null : cat.key)}
                       className="flex items-center gap-1 text-xs font-semibold mt-2 transition-colors"
-                      style={{ color: expandedCard === cat.key ? '#8B6914' : '#aaa' }}>
+                      style={{ color: expandedCard === cat.key ? GOLD : 'rgba(255,255,255,0.35)' }}>
                       {expandedCard === cat.key ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                       Why we wait on this
                     </button>
@@ -244,8 +245,8 @@ export default function CityGuide() {
                       {expandedCard === cat.key && (
                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
                           className="overflow-hidden">
-                          <p className="text-xs text-slate-500 mt-2 pl-4 border-l-2 leading-relaxed"
-                            style={{ borderColor: GOLD }}>
+                          <p className="text-xs mt-2 pl-4 border-l-2 leading-relaxed"
+                            style={{ borderColor: GOLD, color: 'rgba(255,255,255,0.5)' }}>
                             {cat.why}
                           </p>
                         </motion.div>
@@ -254,18 +255,18 @@ export default function CityGuide() {
                   </div>
 
                   {/* Coming soon tag */}
-                  <div className="px-4 py-2 flex items-center gap-1.5 border-t border-slate-100"
-                    style={{ background: 'rgba(212,175,55,0.04)' }}>
+                  <div className="px-4 py-2 flex items-center gap-1.5"
+                    style={{ background: 'rgba(212,175,55,0.08)', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
                     <Clock className="w-3 h-3" style={{ color: GOLD }} />
-                    <span className="text-xs font-semibold" style={{ color: '#8B6914' }}>Unlocks after agent selection + Buyer Broker Agreement</span>
+                    <span className="text-xs font-semibold" style={{ color: GOLD }}>Unlocks after agent selection + Buyer Broker Agreement</span>
                   </div>
                 </motion.div>
               ))}
             </div>
 
             {/* How it unlocks */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5">
-              <h3 className="font-bold text-sm text-slate-900 mb-4 flex items-center gap-2">
+            <div className="rounded-2xl p-5" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <h3 className="font-bold text-sm text-white mb-4 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" style={{ color: GOLD }} />
                 How Full Access Unlocks
               </h3>
@@ -273,11 +274,11 @@ export default function CityGuide() {
                 {WHY_STEPS.map((step, i) => (
                   <div key={i} className="text-center">
                     <div className="w-9 h-9 rounded-full border-2 flex items-center justify-center mx-auto mb-2"
-                      style={{ borderColor: 'rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.06)' }}>
+                      style={{ borderColor: 'rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.08)' }}>
                       <step.icon className="w-4 h-4" style={{ color: GOLD }} />
                     </div>
-                    <p className="text-xs font-bold text-slate-800 leading-snug">{step.label}</p>
-                    <p className="text-xs text-slate-400 mt-0.5 leading-snug">{step.desc}</p>
+                    <p className="text-xs font-bold text-white leading-snug">{step.label}</p>
+                    <p className="text-xs mt-0.5 leading-snug" style={{ color: 'rgba(255,255,255,0.45)' }}>{step.desc}</p>
                   </div>
                 ))}
               </div>
