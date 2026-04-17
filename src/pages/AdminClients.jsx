@@ -13,8 +13,12 @@ const STATUS_CONFIG = {
   in_consultation:   { label: 'In Consultation',   color: GOLD,      bg: 'rgba(212,175,55,0.12)',  step: 2 },
   actively_searching:{ label: 'Actively Searching',color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', step: 3 },
   under_contract:    { label: 'Under Contract',    color: '#f97316', bg: 'rgba(249,115,22,0.12)',  step: 4 },
-  moved:             { label: 'Moved',             color: '#22c55e', bg: 'rgba(34,197,94,0.12)',   step: 5 },
-  closed:            { label: 'Closed / Won',      color: '#22c55e', bg: 'rgba(34,197,94,0.15)',   step: 6 },
+  in_escrow:         { label: 'In Escrow',         color: '#ec4899', bg: 'rgba(236,72,153,0.12)',  step: 5 },
+  final_negotiations:{ label: 'Final Negotiations',color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)',  step: 6 },
+  close_of_escrow:   { label: 'Close of Escrow',   color: '#06b6d4', bg: 'rgba(6,182,212,0.12)',   step: 7 },
+  local_services:    { label: 'Local Setup',       color: '#14b8a6', bg: 'rgba(20,184,166,0.12)',  step: 8 },
+  moved:             { label: 'Moved',             color: '#22c55e', bg: 'rgba(34,197,94,0.12)',   step: 9 },
+  closed:            { label: 'Closed / Won',      color: '#22c55e', bg: 'rgba(34,197,94,0.15)',   step: 10 },
   inactive:          { label: 'Inactive',          color: '#6b7280', bg: 'rgba(107,114,128,0.1)',  step: 0 },
 };
 
@@ -23,6 +27,10 @@ const PIPELINE_STEPS = [
   { key: 'in_consultation',    label: 'Consult' },
   { key: 'actively_searching', label: 'Searching' },
   { key: 'under_contract',     label: 'Contract' },
+  { key: 'in_escrow',          label: 'Escrow' },
+  { key: 'final_negotiations', label: 'Negotiations' },
+  { key: 'close_of_escrow',    label: 'Close' },
+  { key: 'local_services',     label: 'Local Setup' },
   { key: 'moved',              label: 'Moved' },
   { key: 'closed',             label: 'Closed' },
 ];
@@ -271,7 +279,7 @@ export default function AdminClients() {
             const n = counts[s.key] || 0;
             return (
               <div key={s.key} className="px-3 py-1.5 rounded-full text-xs font-bold"
-                style={{ background: n > 0 ? cfg.bg : 'rgba(255,255,255,0.04)', color: n > 0 ? cfg.color : 'rgba(255,255,255,0.2)', border: `1px solid ${n > 0 ? cfg.color + '40' : 'rgba(255,255,255,0.06)'}` }}>
+                style={{ background: n > 0 ? cfg.bg : 'rgba(255,255,255,0.04)', color: n > 0 ? cfg.color : 'rgba(255,255,255,0.6)', border: `1px solid ${n > 0 ? cfg.color + '40' : 'rgba(255,255,255,0.15)'}` }}>
                 {cfg.label} {n > 0 ? `(${n})` : ''}
               </div>
             );
