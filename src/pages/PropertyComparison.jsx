@@ -57,15 +57,50 @@ export default function PropertyComparison() {
         </motion.div>
 
         {!clientId && (
-          <div className="text-center py-20">
-            <Home className="w-12 h-12 mx-auto mb-4" style={{ color: 'rgba(255,255,255,0.2)' }} />
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>Complete your relocation intake to access this tool.</p>
-            <Link to="/RelocationIntake">
-              <button className="mt-4 px-6 py-2.5 rounded-full text-sm font-bold" style={{ background: GOLD, color: '#000' }}>
-                Start My Profile
-              </button>
-            </Link>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto">
+            {/* How it works */}
+            <div className="rounded-2xl p-8 mb-6" style={{ background: '#1a1a1a', border: `1px solid rgba(212,175,55,0.25)` }}>
+              <p className="text-xs font-bold tracking-[0.25em] mb-4 text-center" style={{ color: GOLD }}>HOW THIS TOOL WORKS</p>
+              <div className="grid sm:grid-cols-3 gap-6 mb-8">
+                {[
+                  { step: '1', icon: '🏠', title: 'Add Homes You\'ve Toured', desc: 'Save any property you\'re considering — just paste the address or MLS link.' },
+                  { step: '2', icon: '🔬', title: 'We Research Each One', desc: 'Our team runs deep Gemini AI research across 6 key categories for every property.' },
+                  { step: '3', icon: '✅', title: 'Compare & Decide', desc: 'Side-by-side scores for neighborhoods, schools, cost of living, healthcare, recreation & more.' },
+                ].map(({ step, icon, title, desc }) => (
+                  <div key={step} className="text-center">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl"
+                      style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                      {icon}
+                    </div>
+                    <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP {step}</p>
+                    <p className="text-sm font-bold text-white mb-1">{title}</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>{desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* 6 categories */}
+              <div className="rounded-xl p-4 mb-6" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <p className="text-xs font-bold tracking-widest text-center mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>6 RESEARCH CATEGORIES PER PROPERTY</p>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center">
+                  {['📍 Neighborhood', '🏫 Schools', '💰 Cost of Living', '🏥 Healthcare', '🌳 Recreation', '🏘️ Local Character'].map(cat => (
+                    <div key={cat} className="text-xs py-2 px-1 rounded-lg" style={{ background: 'rgba(212,175,55,0.08)', color: 'rgba(255,255,255,0.7)' }}>
+                      {cat}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="text-center">
+                <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>Complete your relocation intake first to unlock this tool.</p>
+                <Link to="/RelocationIntake">
+                  <button className="px-8 py-3 rounded-full text-sm font-bold" style={{ background: GOLD, color: '#000' }}>
+                    Start My Profile to Unlock →
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         )}
 
         {clientId && properties.length === 0 && (
