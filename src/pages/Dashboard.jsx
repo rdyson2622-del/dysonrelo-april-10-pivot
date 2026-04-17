@@ -8,6 +8,7 @@ import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
 import HeroMinimal from '@/components/home/HeroMinimal';
 import ReadyToStart from '@/components/dashboard/ReadyToStart';
+import DashboardServicePreviews from '@/components/dashboard/DashboardServicePreviews';
 import { toast } from "@/components/ui/use-toast";
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -92,31 +93,8 @@ export default function Dashboard() {
           <ReadyToStart compact onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
         )}
 
-        {/* Next Steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="rounded-3xl p-8"
-          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}
-        >
-          <h2 className="text-xs font-bold tracking-[0.2em] mb-6" style={{ color: GOLD }}>CONCIERGE SERVICES</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: '📍', title: 'Research Destination', link: '/search' },
-              { icon: '🏠', title: 'Property Comparison', link: '/property-comparison' },
-              { icon: '👤', title: 'Talk to Bob', link: 'tel:8583531200' },
-            ].map((step, i) => (
-              <Link to={step.link} key={i} className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors">
-                <span className="text-3xl">{step.icon}</span>
-                <div>
-                  <h4 className="font-bold mb-1 text-white">{step.title}</h4>
-                  <p className="text-xs text-gray-500">Tap to explore</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
+        {/* Full service previews — visible to all */}
+        <DashboardServicePreviews clientId={clientId} />
       </main>
     </div>
   );
