@@ -251,7 +251,7 @@ export default function AdminClients() {
         <div className="flex justify-between items-start mb-8">
           <div>
             <p className="text-xs font-bold tracking-[0.25em] mb-1" style={{ color: GOLD }}>ADMIN PANEL</p>
-            <h1 className="display-heading" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Client Pipeline</h1>
+            <h1 className="display-heading" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', color: '#fff' }}>Client Pipeline</h1>
             <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>
               {clients.length} client{clients.length !== 1 ? 's' : ''} total
               {counts.actively_searching ? ` · ${counts.actively_searching} actively searching` : ''}
