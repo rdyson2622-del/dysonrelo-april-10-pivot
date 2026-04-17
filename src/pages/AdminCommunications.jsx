@@ -1,261 +1,387 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useState, useEffect, useRef } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
+import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight, Bell, User, Zap } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
-const STATUS_COLORS = {
-  sent: 'bg-blue-100 text-blue-800',
-  delivered: 'bg-green-100 text-green-800',
-  failed: 'bg-red-100 text-red-800',
-  bounced: 'bg-orange-100 text-orange-800',
-  opened: 'bg-purple-100 text-purple-800',
-};
+const GOLD = '#D4AF37';
 
-function getTimeAgo(date) {
-  const seconds = Math.floor((new Date() - date) / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  if (days > 0) return `${days}d ago`;
-  if (hours > 0) return `${hours}h ago`;
-  if (minutes > 0) return `${minutes}m ago`;
-  return 'just now';
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
 }
 
-// Group communications by recipient name
-function groupByRecipient(communications) {
-  const groups = {};
-  communications.forEach(c => {
-    const key = c.recipient_name;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(c);
+// Merge Communications + ChatMessages into unified threads keyed by contact name/id
+function buildThreads(comms, chatMessages, clients) {
+  const clientMap = {};
+  clients.forEach(c => { clientMap[c.id] = c; });
+
+  const threads = {};
+
+  // Communications (SMS/email from admin → client or inbound)
+  comms.forEach(c => {
+    const key = c.recipient_name || 'Unknown';
+    if (!threads[key]) threads[key] = { name: key, phone: c.recipient_phone, email: c.recipient_email, messages: [], source: 'comm', clientId: c.listing_owner_id };
+    threads[key].messages.push({
+      id: c.id,
+      content: c.message_content,
+      date: c.sent_date,
+      type: c.communication_type,
+      direction: c.role === 'inbound' ? 'inbound' : 'outbound',
+      status: c.status,
+      source: 'comm',
+    });
   });
-  // Sort each thread by sent_date ascending
-  Object.values(groups).forEach(thread =>
-    thread.sort((a, b) => new Date(a.sent_date) - new Date(b.sent_date))
-  );
-  return groups;
+
+  // ChatMessages (client ↔ Charlie)
+  chatMessages.forEach(m => {
+    const client = clientMap[m.client_id];
+    const key = client ? client.full_name : (m.client_id ? `Client ${m.client_id.slice(0, 6)}` : 'Unknown');
+    if (!threads[key]) threads[key] = { name: key, phone: client?.phone, email: client?.email, messages: [], source: 'chat', clientId: m.client_id };
+    threads[key].messages.push({
+      id: m.id,
+      content: m.content,
+      date: m.created_date,
+      type: 'chat',
+      direction: m.role === 'user' ? 'inbound' : 'outbound',
+      status: 'delivered',
+      source: 'chat',
+    });
+  });
+
+  // Sort messages within each thread
+  Object.values(threads).forEach(t => t.messages.sort((a, b) => new Date(a.date) - new Date(b.date)));
+
+  return threads;
 }
 
 export default function AdminCommunications() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [newMessage, setNewMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const bottomRef = useRef(null);
   const queryClient = useQueryClient();
 
-  const { data: communications = [], isLoading } = useQuery({
-    queryKey: ['communications'],
+  const { data: comms = [] } = useQuery({
+    queryKey: ['comms-all'],
     queryFn: () => base44.entities.Communication.list('-sent_date', 500),
-    initialData: [],
   });
 
-  const sendMutation = useMutation({
-    mutationFn: (data) => base44.entities.Communication.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications'] });
-      setNewMessage('');
-      toast.success('Message sent');
-    }
+  const { data: chatMessages = [] } = useQuery({
+    queryKey: ['chat-messages-all'],
+    queryFn: () => base44.entities.ChatMessage.list('-created_date', 500),
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Communication.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communications'] });
-      toast.success('Message deleted');
-    }
+  const { data: clients = [] } = useQuery({
+    queryKey: ['all-clients-comm'],
+    queryFn: () => base44.entities.RelocationClient.list('-created_date', 200),
   });
 
-  const filtered = communications.filter((c) => {
-    const matchSearch =
-      !searchTerm ||
-      c.recipient_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.property_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.listing_agent_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchType = typeFilter === 'all' || c.communication_type === typeFilter;
-    return matchSearch && matchType;
-  });
-
-  const grouped = groupByRecipient(filtered);
-  const recipients = Object.keys(grouped).sort();
-
-  const thread = selectedRecipient ? (grouped[selectedRecipient] || []) : [];
-  const threadContact = thread[0];
-
-  const handleSend = () => {
-    if (!newMessage.trim() || !threadContact) return;
-    sendMutation.mutate({
-      communication_type: threadContact.communication_type,
-      recipient_name: threadContact.recipient_name,
-      recipient_phone: threadContact.recipient_phone,
-      recipient_email: threadContact.recipient_email,
-      property_address: threadContact.property_address,
-      listing_agent_name: threadContact.listing_agent_name,
-      message_content: newMessage.trim(),
-      sent_date: new Date().toISOString(),
-      status: 'sent',
+  // Real-time new message alerts
+  useEffect(() => {
+    const unsub = base44.entities.ChatMessage.subscribe((event) => {
+      if (event.type === 'create' && event.data?.role === 'user') {
+        queryClient.invalidateQueries({ queryKey: ['chat-messages-all'] });
+        toast({ title: '💬 New client message!', description: event.data.content?.slice(0, 80) });
+      }
     });
+    return unsub;
+  }, []);
+
+  useEffect(() => {
+    const unsub = base44.entities.Communication.subscribe((event) => {
+      if (event.type === 'create') {
+        queryClient.invalidateQueries({ queryKey: ['comms-all'] });
+      }
+    });
+    return unsub;
+  }, []);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selected, comms, chatMessages]);
+
+  const threads = buildThreads(comms, chatMessages, clients);
+
+  const filteredKeys = Object.keys(threads).filter(key => {
+    const t = threads[key];
+    const matchSearch = !search || key.toLowerCase().includes(search.toLowerCase());
+    const matchType = typeFilter === 'all'
+      || (typeFilter === 'sms' && t.messages.some(m => m.type === 'sms'))
+      || (typeFilter === 'email' && t.messages.some(m => m.type === 'email'))
+      || (typeFilter === 'chat' && t.messages.some(m => m.type === 'chat'));
+    return matchSearch && matchType;
+  }).sort((a, b) => {
+    const aLast = threads[a].messages[threads[a].messages.length - 1]?.date || '';
+    const bLast = threads[b].messages[threads[b].messages.length - 1]?.date || '';
+    return new Date(bLast) - new Date(aLast);
+  });
+
+  const thread = selected ? threads[selected] : null;
+
+  const handleSend = async () => {
+    if (!newMessage.trim() || !thread) return;
+    setSending(true);
+    try {
+      const isSMS = thread.phone && (thread.source === 'comm' || typeFilter === 'sms');
+
+      if (isSMS && thread.phone) {
+        // Send real SMS via Twilio
+        await base44.functions.invoke('sendOwnerOutreachSMS', {
+          phone: thread.phone,
+          message: newMessage,
+          owner_name: thread.name,
+        });
+      } else if (thread.email) {
+        // Send email
+        await base44.integrations.Core.SendEmail({
+          to: thread.email,
+          subject: `Message from Dyson & Dyson Relocation`,
+          body: newMessage,
+          from_name: 'Bob Dyson — Dyson & Dyson Relocation',
+        });
+      }
+
+      // Log it
+      await base44.entities.Communication.create({
+        communication_type: isSMS && thread.phone ? 'sms' : 'email',
+        recipient_name: thread.name,
+        recipient_phone: thread.phone,
+        recipient_email: thread.email,
+        property_address: 'Relocation Client',
+        listing_owner_id: thread.clientId,
+        message_content: newMessage,
+        sent_date: new Date().toISOString(),
+        status: 'sent',
+      });
+
+      setNewMessage('');
+      queryClient.invalidateQueries({ queryKey: ['comms-all'] });
+      toast({ title: 'Message sent!' });
+    } catch (e) {
+      toast({ title: 'Send failed', description: e.message, variant: 'destructive' });
+    }
+    setSending(false);
   };
 
+  const inboundCount = Object.values(threads).reduce((n, t) => n + t.messages.filter(m => m.direction === 'inbound').length, 0);
+
   return (
-    <div className="flex flex-col h-full" style={{ height: 'calc(100vh - 48px)' }}>
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#0a0a0a' }}>
+
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shrink-0">
+      <div className="px-5 py-4 flex items-center justify-between shrink-0"
+        style={{ background: '#111', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="flex items-center gap-3">
-          <Link to="/Admin">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
+          <Link to="/admin">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+              <ArrowLeft className="w-4 h-4 text-white" />
+            </button>
           </Link>
           <div>
-            <h1 className="font-bold text-slate-900">Communication Log</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Click a contact to open their thread</p>
+            <div className="flex items-center gap-2">
+              <h1 className="font-bold text-white">Communication Hub</h1>
+              {inboundCount > 0 && (
+                <span className="text-xs px-2 py-0.5 rounded-full font-bold animate-pulse"
+                  style={{ background: 'rgba(239,68,68,0.2)', color: '#ef4444' }}>
+                  {inboundCount} inbound
+                </span>
+              )}
+            </div>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              SMS · Email · Charlie Chat — all in one place · Real-time alerts active
+            </p>
           </div>
         </div>
         <div className="flex gap-2">
-          <Input
-            placeholder="Search contacts..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-48 h-8 text-sm"
+          <input
+            placeholder="Search..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-40 h-8 rounded-full px-3 text-xs"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
           />
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-28 h-8 text-sm">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="sms">SMS</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
-            </SelectContent>
-          </Select>
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
+            className="h-8 rounded-full px-3 text-xs"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}>
+            <option value="all">All</option>
+            <option value="sms">SMS</option>
+            <option value="email">Email</option>
+            <option value="chat">Chat</option>
+          </select>
         </div>
       </div>
 
-      {/* Body: Two-column */}
+      {/* Body */}
       <div className="flex flex-1 overflow-hidden">
 
-        {/* Left: Contact List */}
-        <div className="w-72 shrink-0 border-r border-slate-200 bg-white overflow-y-auto">
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="w-5 h-5 border-2 border-slate-200 border-t-slate-600 rounded-full animate-spin" />
+        {/* Left: contact list */}
+        <div className="w-72 shrink-0 overflow-y-auto" style={{ borderRight: '1px solid rgba(255,255,255,0.08)', background: '#0d0d0d' }}>
+          {filteredKeys.length === 0 ? (
+            <div className="p-8 text-center">
+              <MessageCircle className="w-10 h-10 mx-auto mb-3" style={{ color: 'rgba(255,255,255,0.1)' }} />
+              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>No conversations yet</p>
+              <p className="text-xs mt-2" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                Messages from clients will appear here in real-time
+              </p>
             </div>
-          ) : recipients.length === 0 ? (
-            <div className="p-6 text-center text-slate-400 text-sm">
-              <MessageCircle className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-              No communications yet
-            </div>
-          ) : (
-            recipients.map(name => {
-              const msgs = grouped[name];
-              const latest = msgs[msgs.length - 1];
-              const isSelected = selectedRecipient === name;
-              return (
-                <div
-                  key={name}
-                  onClick={() => setSelectedRecipient(name)}
-                  className={`p-4 cursor-pointer border-b border-slate-100 flex items-start gap-3 hover:bg-slate-50 transition-colors ${isSelected ? 'bg-amber-50 border-l-4 border-l-amber-400' : ''}`}
-                >
-                  <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600 shrink-0">
-                    {name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-center">
-                      <p className="font-semibold text-sm text-slate-900 truncate">{name}</p>
-                      <span className="text-xs text-slate-400 shrink-0 ml-1">{getTimeAgo(new Date(latest.sent_date))}</span>
-                    </div>
-                    <p className="text-xs text-slate-500 truncate mt-0.5">{latest.message_content}</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${STATUS_COLORS[latest.status]}`}>{latest.status}</span>
-                      <span className="text-xs text-slate-400">{msgs.length} msg{msgs.length > 1 ? 's' : ''}</span>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0 mt-1" />
+          ) : filteredKeys.map(key => {
+            const t = threads[key];
+            const last = t.messages[t.messages.length - 1];
+            const unread = t.messages.filter(m => m.direction === 'inbound').length;
+            const isSelected = selected === key;
+            return (
+              <div key={key} onClick={() => setSelected(key)}
+                className="p-4 cursor-pointer flex items-start gap-3 transition-colors"
+                style={{
+                  borderBottom: '1px solid rgba(255,255,255,0.05)',
+                  background: isSelected ? 'rgba(212,175,55,0.08)' : 'transparent',
+                  borderLeft: isSelected ? `3px solid ${GOLD}` : '3px solid transparent',
+                }}>
+                <div className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.08)', color: isSelected ? GOLD : 'rgba(255,255,255,0.5)' }}>
+                  {key.charAt(0).toUpperCase()}
                 </div>
-              );
-            })
-          )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-sm truncate" style={{ color: isSelected ? GOLD : '#fff' }}>{key}</p>
+                    <span className="text-[10px] shrink-0 ml-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      {last ? timeAgo(last.date) : ''}
+                    </span>
+                  </div>
+                  <p className="text-xs truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    {last?.content?.slice(0, 50) || 'No messages'}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    {/* Type badges */}
+                    {[...new Set(t.messages.map(m => m.type))].map(typ => (
+                      <span key={typ} className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase"
+                        style={{
+                          background: typ === 'sms' ? 'rgba(34,197,94,0.15)' : typ === 'email' ? 'rgba(96,165,250,0.15)' : 'rgba(167,139,250,0.15)',
+                          color: typ === 'sms' ? '#22c55e' : typ === 'email' ? '#60a5fa' : '#a78bfa',
+                        }}>
+                        {typ}
+                      </span>
+                    ))}
+                    {unread > 0 && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full font-black ml-auto"
+                        style={{ background: '#ef4444', color: '#fff' }}>
+                        {unread}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Right: Thread View */}
-        {selectedRecipient ? (
-          <div className="flex-1 flex flex-col bg-slate-50 overflow-hidden">
-            {/* Thread Header */}
-            <div className="bg-white border-b border-slate-200 px-5 py-3 flex items-center justify-between shrink-0">
+        {/* Right: thread */}
+        {thread ? (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Thread header */}
+            <div className="px-5 py-3 flex items-center justify-between shrink-0"
+              style={{ background: '#111', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
               <div>
-                <p className="font-bold text-slate-900">{selectedRecipient}</p>
-                <p className="text-xs text-slate-500">
-                  {threadContact?.communication_type === 'sms' ? threadContact.recipient_phone : threadContact?.recipient_email}
-                  {threadContact?.property_address ? ` · ${threadContact.property_address}` : ''}
-                </p>
+                <p className="font-bold text-white">{thread.name}</p>
+                <div className="flex items-center gap-3 mt-0.5">
+                  {thread.phone && (
+                    <a href={`tel:${thread.phone}`} className="flex items-center gap-1 text-xs hover:underline" style={{ color: '#22c55e' }}>
+                      <Phone className="w-3 h-3" /> {thread.phone}
+                    </a>
+                  )}
+                  {thread.email && (
+                    <span className="flex items-center gap-1 text-xs" style={{ color: '#60a5fa' }}>
+                      <Mail className="w-3 h-3" /> {thread.email}
+                    </span>
+                  )}
+                  {thread.clientId && (
+                    <Link to={`/admin/client-detail?id=${thread.clientId}`}
+                      className="text-xs font-bold px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
+                      View Full Profile →
+                    </Link>
+                  )}
+                </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setSelectedRecipient(null)}>
-                <X className="w-4 h-4" />
-              </Button>
+              <button onClick={() => setSelected(null)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <X className="w-4 h-4 text-white" />
+              </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
-              {thread.map((msg) => {
-                const isOutbound = msg.role !== 'inbound';
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3" style={{ background: '#0a0a0a' }}>
+              {thread.messages.map(msg => {
+                const isOut = msg.direction === 'outbound';
                 return (
-                  <div key={msg.id} className={`flex ${isOutbound ? 'justify-end' : 'justify-start'} group`}>
-                    <div className={`relative max-w-sm rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
-                      isOutbound ? 'bg-slate-800 text-white rounded-br-sm' : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm'
-                    }`}>
-                      <p className="leading-relaxed whitespace-pre-wrap">{msg.message_content}</p>
-                      <div className={`flex items-center justify-between gap-3 mt-1 ${isOutbound ? 'text-slate-400' : 'text-slate-400'}`}>
-                        <span className="text-xs">{getTimeAgo(new Date(msg.sent_date))}</span>
-                        <span className={`text-xs px-1.5 py-0.5 rounded font-semibold ${STATUS_COLORS[msg.status]}`}>{msg.status}</span>
+                  <div key={msg.id} className={`flex ${isOut ? 'justify-end' : 'justify-start'}`}>
+                    <div className="max-w-sm">
+                      {/* Direction label */}
+                      <div className={`flex items-center gap-1 mb-1 ${isOut ? 'justify-end' : 'justify-start'}`}>
+                        <span className="text-[9px] font-bold uppercase"
+                          style={{ color: msg.type === 'sms' ? '#22c55e' : msg.type === 'email' ? '#60a5fa' : '#a78bfa' }}>
+                          {msg.type}
+                        </span>
+                        <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.25)' }}>· {timeAgo(msg.date)}</span>
                       </div>
-                      {/* Delete button on hover */}
-                      <button
-                        onClick={() => {
-                          if (confirm('Delete this message?')) deleteMutation.mutate(msg.id);
-                        }}
-                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs hidden group-hover:flex items-center justify-center hover:bg-red-600"
-                      >
-                        <Trash2 className="w-2.5 h-2.5" />
-                      </button>
+                      <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+                        style={{
+                          background: isOut ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.07)',
+                          border: isOut ? `1px solid rgba(212,175,55,0.3)` : '1px solid rgba(255,255,255,0.1)',
+                          color: '#fff',
+                          borderBottomRightRadius: isOut ? 4 : undefined,
+                          borderBottomLeftRadius: !isOut ? 4 : undefined,
+                        }}>
+                        {msg.content}
+                      </div>
                     </div>
                   </div>
                 );
               })}
+              <div ref={bottomRef} />
             </div>
 
             {/* Compose */}
-            <div className="bg-white border-t border-slate-200 px-5 py-3 flex gap-2 shrink-0">
-              <Textarea
-                placeholder={`Send ${threadContact?.communication_type === 'sms' ? 'SMS' : 'email'} to ${selectedRecipient}...`}
+            <div className="px-5 py-3 flex gap-3 items-end shrink-0"
+              style={{ background: '#111', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <textarea
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                className="flex-1 min-h-[60px] max-h-32 resize-none text-sm"
+                onChange={e => setNewMessage(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                placeholder={`Reply to ${thread.name} via ${thread.phone ? 'SMS' : 'email'}...`}
+                rows={2}
+                className="flex-1 rounded-xl px-4 py-3 text-sm resize-none"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
               />
-              <Button
-                onClick={handleSend}
-                disabled={!newMessage.trim() || sendMutation.isPending}
-                className="self-end gap-2 bg-slate-900 hover:bg-slate-800"
-              >
+              <button onClick={handleSend} disabled={sending || !newMessage.trim()}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold disabled:opacity-40 shrink-0"
+                style={{ background: GOLD, color: '#000' }}>
                 <Send className="w-4 h-4" />
-                Send
-              </Button>
+                {sending ? 'Sending…' : 'Send'}
+              </button>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-slate-50">
-            <div className="text-center text-slate-400">
-              <MessageCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-              <p className="font-medium">Select a contact to view their thread</p>
-              <p className="text-sm mt-1">Click any name on the left</p>
+          <div className="flex-1 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+            <div className="text-center max-w-sm">
+              <MessageCircle className="w-14 h-14 mx-auto mb-4" style={{ color: 'rgba(255,255,255,0.1)' }} />
+              <p className="font-bold text-white mb-2">Communication Hub</p>
+              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                All SMS, email, and Charlie chat conversations in one place. Select a contact to reply instantly.
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#22c55e' }} />
+                <span className="text-xs" style={{ color: '#22c55e' }}>Real-time alerts active</span>
+              </div>
             </div>
           </div>
         )}
