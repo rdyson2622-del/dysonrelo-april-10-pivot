@@ -9,6 +9,7 @@ import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard'
 import HeroMinimal from '@/components/home/HeroMinimal';
 import ReadyToStart from '@/components/dashboard/ReadyToStart';
 import DashboardServicePreviews from '@/components/dashboard/DashboardServicePreviews';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import { toast } from "@/components/ui/use-toast";
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -88,6 +89,8 @@ export default function Dashboard() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <PlanVoiceNote clientId={clientId} />
             </motion.div>
+
+            <ActivityFeed clientId={clientId} />
           </>
         ) : (
           <ReadyToStart compact onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
