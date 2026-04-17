@@ -1,13 +1,229 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, Search } from "lucide-react";
+import { Plus, Trash2, Eye, User, MapPin, Calendar, DollarSign, CheckCircle2, Clock, Home, Users, FileText, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+const GOLD = '#D4AF37';
+
+const STATUS_CONFIG = {
+  new_lead:          { label: 'New Lead',          color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',  step: 1 },
+  in_consultation:   { label: 'In Consultation',   color: GOLD,      bg: 'rgba(212,175,55,0.12)',  step: 2 },
+  actively_searching:{ label: 'Actively Searching',color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', step: 3 },
+  under_contract:    { label: 'Under Contract',    color: '#f97316', bg: 'rgba(249,115,22,0.12)',  step: 4 },
+  moved:             { label: 'Moved',             color: '#22c55e', bg: 'rgba(34,197,94,0.12)',   step: 5 },
+  closed:            { label: 'Closed / Won',      color: '#22c55e', bg: 'rgba(34,197,94,0.15)',   step: 6 },
+  inactive:          { label: 'Inactive',          color: '#6b7280', bg: 'rgba(107,114,128,0.1)',  step: 0 },
+};
+
+const PIPELINE_STEPS = [
+  { key: 'new_lead',           label: 'Lead' },
+  { key: 'in_consultation',    label: 'Consult' },
+  { key: 'actively_searching', label: 'Searching' },
+  { key: 'under_contract',     label: 'Contract' },
+  { key: 'moved',              label: 'Moved' },
+  { key: 'closed',             label: 'Closed' },
+];
+
+const BUDGET_LABELS = {
+  under_200k:  'Under $200k',
+  '200k_400k': '$200k – $400k',
+  '400k_600k': '$400k – $600k',
+  '600k_800k': '$600k – $800k',
+  '800k_1m':   '$800k – $1M',
+  over_1m:     'Over $1M',
+};
+
+function PipelineBar({ status }) {
+  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.new_lead;
+  const currentStep = cfg.step;
+  return (
+    <div className="flex items-center gap-1 mt-3">
+      {PIPELINE_STEPS.map((s, i) => {
+        const stepNum = i + 1;
+        const done = currentStep >= stepNum;
+        const active = currentStep === stepNum;
+        return (
+          <React.Fragment key={s.key}>
+            <div className="flex flex-col items-center gap-1">
+              <div
+                className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black transition-all"
+                style={{
+                  background: done ? cfg.color : 'rgba(255,255,255,0.1)',
+                  color: done ? '#000' : 'rgba(255,255,255,0.3)',
+                  border: active ? `2px solid ${cfg.color}` : '2px solid transparent',
+                  boxShadow: active ? `0 0 6px ${cfg.color}60` : 'none',
+                }}
+              >
+                {done ? '✓' : stepNum}
+              </div>
+              <span className="text-[8px] font-semibold" style={{ color: done ? cfg.color : 'rgba(255,255,255,0.2)' }}>
+                {s.label}
+              </span>
+            </div>
+            {i < PIPELINE_STEPS.length - 1 && (
+              <div className="flex-1 h-px mb-3" style={{ background: done && currentStep > stepNum ? cfg.color : 'rgba(255,255,255,0.08)' }} />
+            )}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+function ClientCard({ client, onDelete, tasks, properties }) {
+  const cfg = STATUS_CONFIG[client.status] || STATUS_CONFIG.new_lead;
+  const completedTasks = tasks.filter(t => t.status === 'completed').length;
+  const totalTasks = tasks.length;
+  const taskPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  const keyFacts = [
+    client.current_city && { icon: MapPin, label: 'From', value: client.current_city },
+    { icon: MapPin, label: 'To', value: client.destination_city },
+    client.move_date && { icon: Calendar, label: 'Timeline', value: client.move_date },
+    client.budget && { icon: DollarSign, label: 'Budget', value: BUDGET_LABELS[client.budget] || client.budget },
+    client.family_size && { icon: Users, label: 'Family', value: `${client.family_size} people` },
+  ].filter(Boolean);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl overflow-hidden"
+      style={{ background: '#111', border: `1px solid rgba(255,255,255,0.08)` }}
+    >
+      {/* Top accent bar */}
+      <div className="h-1 w-full" style={{ background: cfg.color }} />
+
+      <div className="p-5">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-base shrink-0"
+              style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}40` }}>
+              {client.full_name?.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h3 className="font-bold text-white text-base leading-tight">{client.full_name}</h3>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                {client.email}{client.phone ? ` • ${client.phone}` : ''}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+              style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}40` }}>
+              {cfg.label}
+            </span>
+            <Link to={`/admin/client-detail?id=${client.id}`}>
+              <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" title="View Full Profile">
+                <Eye className="w-4 h-4" style={{ color: GOLD }} />
+              </button>
+            </Link>
+            <button onClick={() => onDelete(client.id)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-500/15 transition-colors" title="Delete">
+              <Trash2 className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.25)' }} />
+            </button>
+          </div>
+        </div>
+
+        {/* Pipeline progress bar */}
+        {client.status !== 'inactive' && <PipelineBar status={client.status} />}
+
+        {/* Key facts */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mt-4">
+          {keyFacts.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="rounded-lg p-2.5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</p>
+              <p className="text-xs font-semibold text-white leading-tight truncate">{value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Stats row */}
+        <div className="flex items-center gap-4 mt-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          {/* Task progress */}
+          <div className="flex items-center gap-2 flex-1">
+            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" style={{ color: totalTasks > 0 ? '#22c55e' : 'rgba(255,255,255,0.2)' }} />
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>Roadmap Tasks</span>
+                <span className="text-[10px] font-bold" style={{ color: totalTasks > 0 ? '#22c55e' : 'rgba(255,255,255,0.3)' }}>
+                  {completedTasks}/{totalTasks}
+                </span>
+              </div>
+              <div className="h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <div className="h-1.5 rounded-full transition-all" style={{ width: `${taskPct}%`, background: '#22c55e' }} />
+              </div>
+            </div>
+          </div>
+
+          {/* Properties saved */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Home className="w-3.5 h-3.5" style={{ color: GOLD }} />
+            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span className="font-bold text-white">{properties.length}</span> propert{properties.length !== 1 ? 'ies' : 'y'} saved
+            </span>
+          </div>
+
+          {/* Agent assigned */}
+          {client.assigned_agent ? (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Star className="w-3.5 h-3.5" style={{ color: GOLD }} />
+              <span className="text-xs font-semibold" style={{ color: GOLD }}>{client.agent_name || 'Agent assigned'}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <User className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.2)' }} />
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>No agent yet</span>
+            </div>
+          )}
+
+          {/* View full profile CTA */}
+          <Link to={`/admin/client-detail?id=${client.id}`} className="shrink-0">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all hover:opacity-90"
+              style={{ background: GOLD, color: '#000' }}>
+              <Eye className="w-3 h-3" /> View Profile
+            </button>
+          </Link>
+        </div>
+
+        {/* Priorities */}
+        {client.priorities?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {client.priorities.slice(0, 5).map(p => (
+              <span key={p} className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                style={{ background: 'rgba(212,175,55,0.08)', color: 'rgba(212,175,55,0.7)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                {p.replace('_', ' ')}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
 
 export default function AdminClients() {
   const queryClient = useQueryClient();
+
+  const { data: clients = [], isLoading: loadingClients } = useQuery({
+    queryKey: ['admin-clients'],
+    queryFn: () => base44.entities.RelocationClient.list('-created_date'),
+  });
+
+  const { data: allTasks = [] } = useQuery({
+    queryKey: ['admin-all-tasks'],
+    queryFn: () => base44.entities.RelocationTask.list('-created_date', 200),
+  });
+
+  const { data: allProperties = [] } = useQuery({
+    queryKey: ['admin-all-properties'],
+    queryFn: () => base44.entities.PropertyCandidate.list('-created_date', 200),
+  });
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this client? This cannot be undone.')) return;
@@ -15,103 +231,71 @@ export default function AdminClients() {
     queryClient.invalidateQueries({ queryKey: ['admin-clients'] });
   };
 
-  const { data: clients, isLoading } = useQuery({
-    queryKey: ['admin-clients'],
-    queryFn: () => base44.entities.RelocationClient.list('-created_date'),
-    initialData: [],
-  });
+  const statusOrder = ['new_lead','in_consultation','actively_searching','under_contract','moved','closed','inactive'];
+  const sorted = [...clients].sort((a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status));
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const counts = {};
+  clients.forEach(c => { counts[c.status] = (counts[c.status] || 0) + 1; });
 
-  const getStatusColor = (status) => {
-    const colors = {
-      new_lead: 'bg-blue-100 text-blue-800',
-      in_consultation: 'bg-yellow-100 text-yellow-800',
-      actively_searching: 'bg-purple-100 text-purple-800',
-      under_contract: 'bg-orange-100 text-orange-800',
-      moved: 'bg-green-100 text-green-800',
-      closed: 'bg-green-200 text-green-900',
-      inactive: 'bg-gray-100 text-gray-800',
-    };
-    return colors[status] || 'bg-gray-100 text-gray-800';
-  };
+  if (loadingClients) return (
+    <div className="flex items-center justify-center min-h-screen" style={{ background: '#0a0a0a' }}>
+      <div className="w-8 h-8 border-4 border-white/10 border-t-yellow-400 rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
+      <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
+        <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Client Pipeline</h1>
-            <p className="text-muted-foreground mt-1">Manage relocation leads and track progress</p>
+            <p className="text-xs font-bold tracking-[0.25em] mb-1" style={{ color: GOLD }}>ADMIN PANEL</p>
+            <h1 className="text-3xl font-bold text-white">Client Pipeline</h1>
+            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              {clients.length} client{clients.length !== 1 ? 's' : ''} total
+              {counts.actively_searching ? ` · ${counts.actively_searching} actively searching` : ''}
+              {counts.under_contract ? ` · ${counts.under_contract} under contract` : ''}
+            </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Client
-          </Button>
+          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold"
+            style={{ background: GOLD, color: '#000' }}>
+            <Plus className="w-4 h-4" /> Add Client
+          </button>
         </div>
 
-        <div className="grid gap-4">
-          {clients.map((client) => (
-            <Card key={client.id}>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{client.full_name}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {client.email} • {client.phone}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Link to={`/admin/owner-detail?id=${client.id}`}>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button variant="outline" size="sm" onClick={() => handleDelete(client.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground">Moving From</p>
-                    <p className="text-sm">{client.current_city || '—'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground">Moving To</p>
-                    <p className="text-sm">{client.destination_city}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground">Timeline</p>
-                    <p className="text-sm">{client.move_date || '—'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-muted-foreground">Budget</p>
-                    <p className="text-sm">{client.budget?.replace('_', ' - ') || '—'}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 mt-4">
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(client.status)}`}>
-                    {client.status?.replace('_', ' ').toUpperCase()}
-                  </span>
-                  {client.assigned_agent && (
-                    <p className="text-xs text-muted-foreground">
-                      Agent: {client.agent_name || client.assigned_agent}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Status summary pills */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {PIPELINE_STEPS.map(s => {
+            const cfg = STATUS_CONFIG[s.key];
+            const n = counts[s.key] || 0;
+            return (
+              <div key={s.key} className="px-3 py-1.5 rounded-full text-xs font-bold"
+                style={{ background: n > 0 ? cfg.bg : 'rgba(255,255,255,0.04)', color: n > 0 ? cfg.color : 'rgba(255,255,255,0.2)', border: `1px solid ${n > 0 ? cfg.color + '40' : 'rgba(255,255,255,0.06)'}` }}>
+                {cfg.label} {n > 0 ? `(${n})` : ''}
+              </div>
+            );
+          })}
         </div>
+
+        {/* Client cards */}
+        {clients.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>No clients yet. Add your first client above.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sorted.map(client => (
+              <ClientCard
+                key={client.id}
+                client={client}
+                onDelete={handleDelete}
+                tasks={allTasks.filter(t => t.client_id === client.id)}
+                properties={allProperties.filter(p => p.client_id === client.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
