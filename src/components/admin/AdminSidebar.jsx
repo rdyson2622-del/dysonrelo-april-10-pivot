@@ -9,34 +9,35 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 
 const navItems = [
   { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
+  
+  { label: 'QUICK SEARCHES', isHeader: true },
   { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
   { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
-  { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
   { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
-  { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
   { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
+  { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
   { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
+
+  { label: 'MARKETING CAMPAIGNS', isHeader: true },
   { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: Calendar },
   { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
   { label: 'SMS Sequences', path: '/admin/sms-sequences', icon: MessageCircle },
-  { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: Zap },
 
+  { label: 'RESULTS', isHeader: true },
+  { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
   { label: 'Clients', path: '/admin/clients', icon: UserCheck },
+
+  { label: 'OPERATIONS', isHeader: true },
   { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
-  { label: 'Comm Hub (Full)', path: '/admin/communications', icon: MessageCircle },
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
+
   { label: "CHARLIE'S BRAIN", isGroup: true, groupKey: 'charlie', children: [
     { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
     { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
     { label: "Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle },
     { label: "Voice Presentation", path: '/charlie-voice', icon: MessageCircle },
   ]},
-  { label: 'Target Audiences', path: '/admin/target-audiences', icon: Target },
-  { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns', icon: Megaphone },
-  { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap', icon: BarChart3 },
-  { label: 'Social Media Launch', path: '/admin/social-launch', icon: Share2 },
-  { label: 'Business Plan', path: '/admin/business-plan', icon: BookOpen },
 ];
 
 export default function AdminSidebar() {
@@ -159,6 +160,16 @@ export default function AdminSidebar() {
       {/* Nav */}
       <nav className="py-2 px-3 space-y-1">
         {navItems.map((item, idx) => {
+          // Header items (gold sections)
+          if (item.isHeader) {
+            return (
+              <div key={idx} className="mt-3 pt-2 first:mt-0 first:pt-0">
+                <p className="text-xs font-bold tracking-[0.25em] px-3 py-1" style={{ color: '#D4AF37' }}>{item.label}</p>
+              </div>
+            );
+          }
+
+          // Group items (Charlie's Brain)
           if (item.isGroup) {
             const isOpen = openGroups[item.groupKey];
             const isChildActive = item.children?.some(c => location.pathname === c.path);
@@ -200,6 +211,8 @@ export default function AdminSidebar() {
               </div>
             );
           }
+
+          // Regular nav items
           const isActive = location.pathname === item.path;
           return (
             <Link
