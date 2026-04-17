@@ -68,11 +68,11 @@ export default function ClientSidebar() {
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
           </Link>
-          <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-            <Users className="w-3.5 h-3.5" /> Find Agent
+          <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/PropertyComparison' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/PropertyComparison' ? '#000' : '#fff' }}>
+            <GitCompare className="w-3.5 h-3.5" /> Compare Homes
           </Link>
-          <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-            <GitCompare className="w-3.5 h-3.5" /> Compare
+          <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/FindAgent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/FindAgent' ? '#000' : '#fff' }}>
+            <Users className="w-3.5 h-3.5" /> Vet Agents
           </Link>
         </div>
       </div>
