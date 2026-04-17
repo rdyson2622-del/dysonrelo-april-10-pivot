@@ -188,45 +188,68 @@ export default function AdminCommunications() {
     <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#0a0a0a' }}>
 
       {/* Header */}
-      <div className="px-5 py-4 flex items-center justify-between shrink-0"
-        style={{ background: '#111', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-3">
-          <Link to="/admin">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
-              <ArrowLeft className="w-4 h-4 text-white" />
-            </button>
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-bold text-white">Communication Hub</h1>
-              {inboundCount > 0 && (
-                <span className="text-xs px-2 py-0.5 rounded-full font-bold animate-pulse"
-                  style={{ background: 'rgba(239,68,68,0.2)', color: '#ef4444' }}>
-                  {inboundCount} inbound
-                </span>
-              )}
+      <div className="px-5 py-4 shrink-0" style={{ background: '#111', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+        {/* Top row */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <Link to="/admin">
+              <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <ArrowLeft className="w-4 h-4 text-white" />
+              </button>
+            </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-bold text-white text-lg tracking-wide">Communications Hub</h1>
+                {inboundCount > 0 && (
+                  <span className="text-xs px-2 py-0.5 rounded-full font-bold animate-pulse"
+                    style={{ background: 'rgba(239,68,68,0.2)', color: '#ef4444' }}>
+                    {inboundCount} inbound
+                  </span>
+                )}
+              </div>
+              <p className="text-xs mt-0.5" style={{ color: '#D4AF37' }}>
+                SMS · Email · Charlie Chat — unified inbox · Twilio SMS alerts active
+              </p>
             </div>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              SMS · Email · Charlie Chat — all in one place · Real-time alerts active
-            </p>
+          </div>
+          <div className="flex gap-2">
+            <input
+              placeholder="Search contacts..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-44 h-8 rounded-full px-3 text-xs"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.25)', color: '#fff', outline: 'none' }}
+            />
+            <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
+              className="h-8 rounded-full px-3 text-xs"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.25)', color: '#fff', outline: 'none' }}>
+              <option value="all">All Channels</option>
+              <option value="sms">SMS</option>
+              <option value="email">Email</option>
+              <option value="chat">Chat</option>
+            </select>
           </div>
         </div>
-        <div className="flex gap-2">
-          <input
-            placeholder="Search..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-40 h-8 rounded-full px-3 text-xs"
-            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}
-          />
-          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-            className="h-8 rounded-full px-3 text-xs"
-            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none' }}>
-            <option value="all">All</option>
-            <option value="sms">SMS</option>
-            <option value="email">Email</option>
-            <option value="chat">Chat</option>
-          </select>
+
+        {/* Explainer banner */}
+        <div className="rounded-xl px-4 py-3 flex flex-wrap gap-4 items-start"
+          style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.18)' }}>
+          <div className="flex-1 min-w-48">
+            <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>FOR YOUR TEAM</p>
+            <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+              Every message your clients send — via Charlie chat, SMS reply, or email — lands here in one thread. Reply directly and it goes back to them on the same channel. New messages trigger an instant SMS to your admin phone.
+            </p>
+          </div>
+          <div className="flex-1 min-w-48">
+            <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>FOR YOUR CLIENTS</p>
+            <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+              Clients message through their dashboard and receive replies in real-time. They always see the latest response — no app downloads, no logins required. Just a conversation they can trust.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 self-center">
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#22c55e' }} />
+            <span className="text-xs font-semibold" style={{ color: '#22c55e' }}>Live & Monitoring</span>
+          </div>
         </div>
       </div>
 
@@ -237,10 +260,10 @@ export default function AdminCommunications() {
         <div className="w-72 shrink-0 overflow-y-auto" style={{ borderRight: '1px solid rgba(255,255,255,0.08)', background: '#0d0d0d' }}>
           {filteredKeys.length === 0 ? (
             <div className="p-8 text-center">
-              <MessageCircle className="w-10 h-10 mx-auto mb-3" style={{ color: 'rgba(255,255,255,0.1)' }} />
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>No conversations yet</p>
-              <p className="text-xs mt-2" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                Messages from clients will appear here in real-time
+              <MessageCircle className="w-10 h-10 mx-auto mb-3" style={{ color: 'rgba(212,175,55,0.25)' }} />
+              <p className="text-sm font-semibold" style={{ color: '#fff' }}>No conversations yet</p>
+              <p className="text-xs mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                When clients send a message via their dashboard or Charlie chat, their thread will appear here instantly.
               </p>
             </div>
           ) : filteredKeys.map(key => {
@@ -252,26 +275,25 @@ export default function AdminCommunications() {
               <div key={key} onClick={() => setSelected(key)}
                 className="p-4 cursor-pointer flex items-start gap-3 transition-colors"
                 style={{
-                  borderBottom: '1px solid rgba(255,255,255,0.05)',
-                  background: isSelected ? 'rgba(212,175,55,0.08)' : 'transparent',
+                  borderBottom: '1px solid rgba(255,255,255,0.07)',
+                  background: isSelected ? 'rgba(212,175,55,0.1)' : 'transparent',
                   borderLeft: isSelected ? `3px solid ${GOLD}` : '3px solid transparent',
                 }}>
                 <div className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shrink-0"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: isSelected ? GOLD : 'rgba(255,255,255,0.5)' }}>
+                  style={{ background: isSelected ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.1)', color: isSelected ? GOLD : '#fff' }}>
                   {key.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold text-sm truncate" style={{ color: isSelected ? GOLD : '#fff' }}>{key}</p>
-                    <span className="text-[10px] shrink-0 ml-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    <span className="text-[10px] shrink-0 ml-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
                       {last ? timeAgo(last.date) : ''}
                     </span>
                   </div>
-                  <p className="text-xs truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <p className="text-xs truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {last?.content?.slice(0, 50) || 'No messages'}
                   </p>
                   <div className="flex items-center gap-1.5 mt-1">
-                    {/* Type badges */}
                     {[...new Set(t.messages.map(m => m.type))].map(typ => (
                       <span key={typ} className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase"
                         style={{
@@ -341,7 +363,7 @@ export default function AdminCommunications() {
                           style={{ color: msg.type === 'sms' ? '#22c55e' : msg.type === 'email' ? '#60a5fa' : '#a78bfa' }}>
                           {msg.type}
                         </span>
-                        <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.25)' }}>· {timeAgo(msg.date)}</span>
+                        <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.55)' }}>· {timeAgo(msg.date)}</span>
                       </div>
                       <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
                         style={{
@@ -382,15 +404,21 @@ export default function AdminCommunications() {
           </div>
         ) : (
           <div className="flex-1 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
-            <div className="text-center max-w-sm">
-              <MessageCircle className="w-14 h-14 mx-auto mb-4" style={{ color: 'rgba(255,255,255,0.1)' }} />
-              <p className="font-bold text-white mb-2">Communication Hub</p>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                All SMS, email, and Charlie chat conversations in one place. Select a contact to reply instantly.
+            <div className="text-center max-w-md px-8">
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                <MessageCircle className="w-8 h-8" style={{ color: GOLD }} />
+              </div>
+              <p className="font-bold text-white text-lg mb-2 tracking-wide">Select a Conversation</p>
+              <p className="text-sm mb-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                Every client message — sent via their dashboard, Charlie chat, or SMS reply — is threaded here so you never miss a beat.
+              </p>
+              <p className="text-xs mb-5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Reply directly and your response is delivered on the same channel. New inbound messages trigger an instant Twilio SMS to your admin phone.
               </p>
               <div className="flex items-center justify-center gap-2">
                 <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#22c55e' }} />
-                <span className="text-xs" style={{ color: '#22c55e' }}>Real-time alerts active</span>
+                <span className="text-xs font-semibold" style={{ color: '#22c55e' }}>Live & monitoring — Twilio alerts active</span>
               </div>
             </div>
           </div>
