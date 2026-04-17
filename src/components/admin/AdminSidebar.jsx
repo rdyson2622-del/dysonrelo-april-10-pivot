@@ -151,48 +151,6 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Quick Page Jump */}
-      <div className="px-3 py-3 relative" style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <form onSubmit={handlePageJump} className="flex gap-2">
-          <input
-            type="text"
-            value={pageCode}
-            onChange={(e) => setPageCode(e.target.value)}
-            placeholder="Go to page or search by name…"
-            className="flex-1 px-3 py-2 rounded-lg text-sm font-medium"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(212,175,55,0.25)',
-              color: '#fff',
-              outline: 'none',
-            }}
-          />
-          <button
-            type="submit"
-            className="px-3 py-2 rounded-lg flex items-center justify-center transition-all"
-            style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
-          >
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
-        {/* Name-search suggestions */}
-        {suggestions.length > 0 && (
-          <div className="mt-1 rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-            {suggestions.map(([num, page]) => (
-              <button key={num} type="button"
-                onClick={() => { navigate(page.path); setPageCode(''); }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left hover:bg-white/5 transition-colors"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#fff' }}>
-                <span className="font-black shrink-0" style={{ color: '#D4AF37' }}>#{num}</span>
-                <span className="truncate">{page.name}</span>
-                <span className="ml-auto text-[10px] shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>{page.section}</span>
-              </button>
-            ))}
-          </div>
-        )}
-        <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Type page # or name (e.g., "22", "comm")</p>
-      </div>
-
       {/* Communication Hub Widget — top priority */}
       <div className="pt-3 pb-1">
         <AdminCommsBadge />
@@ -286,6 +244,38 @@ export default function AdminSidebar() {
             <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No batches sent yet</p>
           )}
         </div>
+      </div>
+
+      {/* Quick Page Jump */}
+      <div className="mx-3 mb-3 relative">
+        <p className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.3)' }}>Quick Page Jump</p>
+        <form onSubmit={handlePageJump} className="flex gap-2">
+          <input
+            type="text"
+            value={pageCode}
+            onChange={(e) => setPageCode(e.target.value)}
+            placeholder="Page # or name…"
+            className="flex-1 px-3 py-2 rounded-lg text-sm font-medium"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.2)', color: '#fff', outline: 'none' }}
+          />
+          <button type="submit" className="px-3 py-2 rounded-lg flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
+        {suggestions.length > 0 && (
+          <div className="mt-1 rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+            {suggestions.map(([num, page]) => (
+              <button key={num} type="button"
+                onClick={() => { navigate(page.path); setPageCode(''); }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left hover:bg-white/5 transition-colors"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#fff' }}>
+                <span className="font-black shrink-0" style={{ color: '#D4AF37' }}>#{num}</span>
+                <span className="truncate">{page.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Preview & Back */}
