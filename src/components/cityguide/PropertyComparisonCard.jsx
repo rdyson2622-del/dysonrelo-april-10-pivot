@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Star, ExternalLink, ChevronDown, ChevronUp, Trash2, CheckCircle2 } from 'lucide-react';
+import { Star, ExternalLink, ChevronDown, ChevronUp, Trash2, CheckCircle2, GripVertical } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -23,8 +23,9 @@ const STATUS_LABELS = {
 
 const RATING_COLORS = { green: '#22c55e', yellow: GOLD, red: '#ef4444' };
 
-export default function PropertyComparisonCard({ property, onRefresh, onDelete }) {
+export default function PropertyComparisonCard({ property, rank, onRefresh, onDelete }) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleStatusChange = async (status) => {
     await base44.entities.PropertyCandidate.update(property.id, { status });
@@ -32,10 +33,9 @@ export default function PropertyComparisonCard({ property, onRefresh, onDelete }
   };
 
   const handleDelete = async () => {
-    if (confirm('Remove this property from your comparison?')) {
-      await base44.entities.PropertyCandidate.delete(property.id);
-      onDelete();
-    }
+    if (!confirmDelete) { setConfirmDelete(true); return; }
+    await base44.entities.PropertyCandidate.delete(property.id);
+    onDelete();
   };
 
   const researchedCount = CATEGORIES.filter(c => property[c.key]?.notes).length;
@@ -55,15 +55,40 @@ export default function PropertyComparisonCard({ property, onRefresh, onDelete }
           </div>
         )}
 
-        {/* Status badge */}
+        {/* Address + rank + delete */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <div>
-            <p className="font-bold text-sm leading-tight" style={{ color: '#fff' }}>{property.address}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{property.city}, {property.state}</p>
+          <div className="flex items-start gap-2 flex-1 min-w-0">
+            {rank && (
+              <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 mt-0.5"
+                style={{ background: property.status === 'top_pick' ? GOLD : 'rgba(255,255,255,0.1)', color: property.status === 'top_pick' ? '#000' : 'rgba(255,255,255,0.5)' }}>
+                {rank}
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="font-bold text-sm leading-tight" style={{ color: '#fff' }}>{property.address}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{property.city}, {property.state}</p>
+            </div>
           </div>
-          <button onClick={handleDelete} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-500/20 shrink-0">
-            <Trash2 className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.3)' }} />
-          </button>
+          {confirmDelete ? (
+            <div className="flex items-center gap-1 shrink-0">
+              <button onClick={handleDelete}
+                className="px-2 py-1 rounded-full text-xs font-bold"
+                style={{ background: '#ef4444', color: '#fff' }}>
+                Confirm
+              </button>
+              <button onClick={() => setConfirmDelete(false)}
+                className="px-2 py-1 rounded-full text-xs"
+                style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button onClick={handleDelete}
+              className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-red-500/20 shrink-0 transition-colors"
+              title="Remove property">
+              <Trash2 className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.3)' }} />
+            </button>
+          )}
         </div>
 
         {/* Price & specs */}

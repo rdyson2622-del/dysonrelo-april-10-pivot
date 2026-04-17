@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Home, ChevronDown } from 'lucide-react';
+import { Plus, Home, ChevronDown, ArrowDown } from 'lucide-react';
 import AddPropertyModal from '@/components/cityguide/AddPropertyModal';
 import PropertyComparisonCard from '@/components/cityguide/PropertyComparisonCard';
 import SamplePropertyCard from '@/components/cityguide/SamplePropertyCard';
@@ -234,10 +234,25 @@ export default function PropertyComparison() {
         {/* ── MY REAL PROPERTIES (enrolled clients only) ── */}
         {clientId && (
           <div ref={myPropertiesRef}>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="h-px flex-1" style={{ background: `rgba(212,175,55,0.3)` }} />
-              <p className="text-xs font-bold tracking-[0.25em]" style={{ color: GOLD }}>MY SAVED PROPERTIES</p>
-              <div className="h-px flex-1" style={{ background: `rgba(212,175,55,0.3)` }} />
+            {/* Section Header */}
+            <div className="rounded-2xl p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+              style={{ background: 'linear-gradient(135deg, #1a1400, #0d0d0d)', border: `2px solid ${GOLD}` }}>
+              <div>
+                <p className="text-xs font-bold tracking-[0.25em] mb-1" style={{ color: GOLD }}>MY COMPARISON BOARD</p>
+                <h2 className="text-xl font-bold text-white">Your Saved Properties</h2>
+                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {properties.length === 0
+                    ? 'No properties added yet — start adding homes you\'ve toured.'
+                    : `${properties.length} propert${properties.length === 1 ? 'y' : 'ies'} saved · ${topPicks.length} top pick${topPicks.length !== 1 ? 's' : ''} · ${considering.length} considering · ${eliminated.length} eliminated`
+                  }
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold shrink-0"
+                style={{ background: GOLD, color: '#000' }}>
+                <Plus className="w-4 h-4" /> Add Property
+              </button>
             </div>
 
             {properties.length === 0 ? (
@@ -266,9 +281,9 @@ export default function PropertyComparison() {
                       <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.3)' }} />
                     </div>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {topPicks.map(p => (
+                      {topPicks.map((p, i) => (
                         <motion.div key={p.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                          <PropertyComparisonCard property={p} onRefresh={refresh} onDelete={refresh} />
+                          <PropertyComparisonCard property={p} rank={i + 1} onRefresh={refresh} onDelete={refresh} />
                         </motion.div>
                       ))}
                     </div>
@@ -284,9 +299,9 @@ export default function PropertyComparison() {
                       <div className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
                     </div>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {considering.map(p => (
+                      {considering.map((p, i) => (
                         <motion.div key={p.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                          <PropertyComparisonCard property={p} onRefresh={refresh} onDelete={refresh} />
+                          <PropertyComparisonCard property={p} rank={topPicks.length + i + 1} onRefresh={refresh} onDelete={refresh} />
                         </motion.div>
                       ))}
                     </div>
