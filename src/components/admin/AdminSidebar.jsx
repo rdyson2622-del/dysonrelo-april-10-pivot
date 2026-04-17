@@ -242,19 +242,19 @@ export default function AdminSidebar() {
             batchLogs.slice(0, 4).map(log => (
               <div key={log.id} className="text-xs">
                 <div className="flex items-center justify-between">
-                  <span style={{ color: '#ccc' }} className="truncate max-w-[120px]">{log.city || 'Unknown'}</span>
+                  <span style={{ color: '#fff' }} className="truncate max-w-[120px]">{log.city || 'Unknown'}</span>
                   <span style={{ color: '#D4AF37' }} className="font-semibold ml-1 flex-shrink-0">
                     ✓ {log.sent_count || 0} sent
                   </span>
                 </div>
-                <div style={{ color: 'rgba(255,255,255,0.4)' }} className="mt-0.5">
+                <div style={{ color: '#fff' }} className="mt-0.5">
                   {log.sent_at ? new Date(log.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
                   {log.failed_count > 0 && <span style={{ color: '#ef4444' }}> · {log.failed_count} failed</span>}
                 </div>
               </div>
             ))
           ) : (
-            <p style={{ color: 'rgba(255,255,255,0.5)' }} className="text-xs">No batches sent yet</p>
+            <p style={{ color: '#fff' }} className="text-xs">No batches sent yet</p>
           )}
         </div>
       </div>
@@ -304,7 +304,7 @@ export default function AdminSidebar() {
         <Link
           to="/dashboard"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{ color: '#aaa' }}
+          style={{ color: '#fff' }}
         >
           <ArrowLeft className="w-4 h-4" />
           Client Dashboard
@@ -312,7 +312,7 @@ export default function AdminSidebar() {
         <Link
           to="/chat"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{ color: '#aaa' }}
+          style={{ color: '#fff' }}
         >
           <MessageCircle className="w-4 h-4" />
           Client Chat
