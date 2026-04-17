@@ -4,10 +4,11 @@ import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, 
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
+import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const navItems = [
-  { label: 'Overview', path: '/admin', icon: LayoutDashboard },
+  { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
   { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
   { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
   { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
@@ -192,8 +193,13 @@ export default function AdminSidebar() {
         <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Type page # or name (e.g., "22", "comm")</p>
       </div>
 
+      {/* Communication Hub Widget — top priority */}
+      <div className="pt-3 pb-1">
+        <AdminCommsBadge />
+      </div>
+
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-2 px-3 space-y-1 overflow-y-auto">
         {navItems.map((item, idx) => {
           if (item.isGroup) {
             const isOpen = openGroups[item.groupKey];

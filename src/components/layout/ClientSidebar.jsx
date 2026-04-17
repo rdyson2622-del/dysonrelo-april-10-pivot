@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search } from 'lucide-react';
+import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, MessageCircle } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -20,6 +21,24 @@ const authorityLinks = [
 
 export default function ClientSidebar() {
   const location = useLocation();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [clientId, setClientId] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (!user?.email) return;
+      base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1).then(clients => {
+        if (clients.length > 0) {
+          const id = clients[0].id;
+          setClientId(id);
+          // Count admin replies not yet seen (simple: count admin messages)
+          base44.entities.ChatMessage.filter({ client_id: id, role: 'admin' }, '-created_date', 10).then(msgs => {
+            setUnreadCount(msgs.length);
+          });
+        }
+      });
+    });
+  }, []);
 
   return (
     <aside className="w-56 shrink-0 flex flex-col min-h-screen overflow-y-auto"
@@ -54,6 +73,35 @@ export default function ClientSidebar() {
           );
         })()}
       </nav>
+
+      {/* Communication Hub — primary action */}
+      <div className="px-3 pb-3">
+        <Link to="/" state={{ scrollToMessages: true }}>
+          <div className="flex items-center gap-3 px-3 py-3 rounded-xl font-bold text-sm transition-all"
+            style={{
+              background: unreadCount > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(212,175,55,0.1)',
+              border: unreadCount > 0 ? '1px solid rgba(239,68,68,0.4)' : '1px solid rgba(212,175,55,0.3)',
+              color: unreadCount > 0 ? '#ef4444' : GOLD,
+            }}>
+            <div className="relative">
+              <MessageCircle className="w-4 h-4 shrink-0" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
+                  style={{ background: '#ef4444', color: '#fff' }}>
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </div>
+            <span className="flex-1">{unreadCount > 0 ? `${unreadCount} New Reply` : 'Message Our Team'}</span>
+            <span className="text-[10px] opacity-60">→</span>
+          </div>
+        </Link>
+        {unreadCount === 0 && (
+          <p className="text-[10px] px-2 mt-1.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            Questions? We reply within 1 hour.
+          </p>
+        )}
+      </div>
 
       {/* Quick Links */}
       <div className="px-3 pb-4 space-y-2">
