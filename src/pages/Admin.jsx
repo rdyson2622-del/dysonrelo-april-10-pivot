@@ -9,21 +9,45 @@ import {
 
 const GOLD = '#D4AF37';
 
-const adminModules = [
-  { name: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search, description: 'Find and manage property search profiles', color: '#3B82F6' },
-  { name: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Search, description: 'Find owner name & contact info by property address via BatchData', color: '#D4AF37' },
-  { name: 'Bulk Skip Trace Builder', path: '/admin/bulk-skip-trace', icon: Download, description: 'Search active listings by city/price → download CSV for BatchData bulk upload', color: '#22C55E' },
-  { name: 'Listing Owners Info', path: '/admin/owners', icon: Home, description: 'View and manage listing owner database', color: '#10B981' },
-  { name: 'Listing Outreach Campaigns', path: '/admin/outreach-campaigns', icon: SendHorizontal, description: 'Manage seller outreach campaigns', color: '#F59E0B' },
-  { name: 'Clients', path: '/admin/clients', icon: UserCheck, description: 'View relocation leads and track progress', color: '#8B5CF6' },
-  { name: 'Presentation Library', path: '/admin/presentation-library', icon: FileText, description: 'Manage presentations and slide decks', color: '#EC4899' },
-  { name: 'Communications', path: '/admin/communications', icon: MessageCircle, description: 'Review outreach and emails', color: '#06B6D4' },
-  { name: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag, description: 'Review flagged conversations', color: '#EF4444' },
-  { name: 'Referral Management', path: '/admin/referrals', icon: LinkIcon, description: 'Track agent referrals and fees', color: '#14B8A6' },
-  { name: "Charlie's Scripts", path: '/admin/charlie-scripts', icon: ScrollText, description: 'Edit what Charlie says on every page', color: '#F97316' },
-  { name: "Charlie's Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain, description: 'Train Charlie with Q&A pairs — auto-extract from docs', color: '#A78BFA' },
-  { name: "Charlie Escalations", path: '/admin/charlie-escalations', icon: AlertTriangle, description: 'Review unanswered questions & save answers to KB', color: '#EF4444' },
-  { name: 'Business Plan', path: '/business-plan', icon: BookOpen, description: 'View business plan and projections', color: '#6366F1' },
+const adminSections = [
+  {
+    heading: 'QUICK SEARCHES',
+    color: GOLD,
+    modules: [
+      { name: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search, description: 'Find and manage property search profiles', color: '#3B82F6' },
+      { name: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Search, description: 'Find owner name & contact info by property address via BatchData', color: '#D4AF37' },
+      { name: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal, description: 'Monitor outreach workflow stages', color: '#F59E0B' },
+      { name: 'Compose SMS', path: '/admin/compose-sms', icon: MessageCircle, description: 'Send SMS campaigns to owners', color: '#06B6D4' },
+      { name: 'Owner Response Board', path: '/admin/owner-kanban', icon: Home, description: 'View owner responses and engagement', color: '#10B981' },
+      { name: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: Download, description: 'View sent batch SMS history', color: '#22C55E' },
+    ]
+  },
+  {
+    heading: 'MARKETING CAMPAIGNS',
+    color: GOLD,
+    modules: [
+      { name: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: ScrollText, description: 'Schedule and manage SMS campaigns', color: '#F97316' },
+      { name: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: Sparkles, description: 'Track campaign performance metrics', color: '#EC4899' },
+      { name: 'SMS Sequences', path: '/admin/sms-sequences', icon: SendHorizontal, description: 'Build multi-step SMS sequences', color: '#06B6D4' },
+    ]
+  },
+  {
+    heading: 'RESULTS',
+    color: GOLD,
+    modules: [
+      { name: 'Listing Owners Info', path: '/admin/owners', icon: Home, description: 'View and manage listing owner database', color: '#10B981' },
+      { name: 'Clients', path: '/admin/clients', icon: UserCheck, description: 'View relocation leads and track progress', color: '#8B5CF6' },
+    ]
+  },
+  {
+    heading: 'OPERATIONS',
+    color: GOLD,
+    modules: [
+      { name: 'Presentation Library', path: '/admin/presentation-library', icon: FileText, description: 'Manage presentations and slide decks', color: '#EC4899' },
+      { name: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag, description: 'Review flagged conversations', color: '#EF4444' },
+      { name: 'Referral Management', path: '/admin/referrals', icon: LinkIcon, description: 'Track agent referrals and fees', color: '#14B8A6' },
+    ]
+  },
 ];
 
 export default function Admin() {
@@ -70,40 +94,52 @@ export default function Admin() {
           ))}
         </motion.div>
 
-        {/* Admin Modules Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-          {adminModules.map((module, i) => {
-            const Icon = module.icon;
-            return (
-              <Link
-                key={module.path}
-                to={module.path}
-                className="group rounded-2xl p-5 transition-all hover:scale-[1.02]"
-                style={{
-                  background: '#000',
-                  border: '1px solid rgba(212,175,55,0.2)',
-                }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ background: `${module.color}22`, border: `1px solid ${module.color}44` }}
+        {/* Admin Sections with Grouped Headers */}
+        {adminSections.map((section, sectionIdx) => (
+          <motion.div
+            key={section.heading}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + sectionIdx * 0.05 }}
+            className="mt-8"
+          >
+            {/* Gold Section Header */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-1 h-6" style={{ background: GOLD }} />
+              <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>{section.heading}</p>
+            </div>
+
+            {/* Modules Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {section.modules.map((module) => {
+                const Icon = module.icon;
+                return (
+                  <Link
+                    key={module.path}
+                    to={module.path}
+                    className="group rounded-2xl p-5 transition-all hover:scale-[1.02]"
+                    style={{
+                      background: '#000',
+                      border: '1px solid rgba(212,175,55,0.2)',
+                    }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: module.color }} />
-                  </div>
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: GOLD }} />
-                </div>
-                <h3 className="font-bold mb-1" style={{ color: '#fff' }}>{module.name}</h3>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{module.description}</p>
-              </Link>
-            );
-          })}
-        </motion.div>
+                    <div className="flex items-start justify-between mb-4">
+                      <div
+                        className="w-12 h-12 rounded-xl flex items-center justify-center"
+                        style={{ background: `${module.color}22`, border: `1px solid ${module.color}44` }}
+                      >
+                        <Icon className="w-6 h-6" style={{ color: module.color }} />
+                      </div>
+                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: GOLD }} />
+                    </div>
+                    <h3 className="font-bold mb-1" style={{ color: '#fff' }}>{module.name}</h3>
+                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{module.description}</p>
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        ))}
 
         {/* Charlie Command Center */}
         <motion.div
