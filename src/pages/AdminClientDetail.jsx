@@ -83,11 +83,11 @@ export default function AdminClientDetail() {
     if (!smsText.trim() || !client.phone) return;
     setSending(true);
     try {
-      await base44.functions.invoke('manualSendSMS', {
-        to: client.phone,
+      await base44.functions.invoke('sendClientSMS', {
+        client_id: clientId,
+        phone: client.phone,
         message: smsText,
-        owner_name: client.full_name,
-        property_address: `Client: ${client.full_name}`,
+        client_name: client.full_name,
       });
       await base44.entities.Communication.create({
         communication_type: 'sms',
