@@ -36,21 +36,6 @@ const SERVICES = [
     ],
   },
   {
-    id: 'agent',
-    icon: '🤝',
-    title: 'Vet Agents',
-    tagline: 'We find the right agent for you — no swarm, no pressure.',
-    description: 'Our network spans every major US city. We vet agents on performance, local knowledge, and client communication. You get introduced to 1–2 pre-screened candidates — we handle the rest.',
-    highlight: '100% FREE to you — agent fees are paid at close',
-    cta: 'See How Agent Vetting Works',
-    link: '/find-agent',
-    preview: [
-      { label: 'Step 1', detail: 'We review your destination & priorities' },
-      { label: 'Step 2', detail: 'We identify 2–3 top-performing local agents' },
-      { label: 'Step 3', detail: 'You meet, select, and we facilitate the intro' },
-    ],
-  },
-  {
     id: 'roadmap',
     icon: '🗺️',
     title: 'My Relocation Roadmap',
@@ -63,6 +48,21 @@ const SERVICES = [
       { label: 'Phase 1', detail: 'Commitment & Profile Setup' },
       { label: 'Phase 2', detail: 'City Research & Neighborhood Shortlist' },
       { label: 'Phase 3', detail: 'Agent Match & Home Search' },
+    ],
+  },
+  {
+    id: 'agent',
+    icon: '🤝',
+    title: 'Vet Agents',
+    tagline: 'We find the right agent for you — no swarm, no pressure.',
+    description: 'Our network spans every major US city. We vet agents on performance, local knowledge, and client communication. You get introduced to 1–2 pre-screened candidates — we handle the rest.',
+    highlight: '100% FREE to you — agent fees are paid at close',
+    cta: 'See How Agent Vetting Works',
+    link: '/find-agent',
+    preview: [
+      { label: 'Step 1', detail: 'We review your destination & priorities' },
+      { label: 'Step 2', detail: 'We identify 2–3 top-performing local agents' },
+      { label: 'Step 3', detail: 'You meet, select, and we facilitate the intro' },
     ],
   },
   {
