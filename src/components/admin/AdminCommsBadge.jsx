@@ -70,11 +70,18 @@ export default function AdminCommsBadge() {
               </span>
             )}
           </div>
-          <span className="text-xs font-bold tracking-wider" style={{ color: urgentCount > 0 ? '#ef4444' : GOLD }}>
-            {urgentCount > 0 ? `${urgentCount} URGENT` : 'COMMUNICATIONS HUB'}
-          </span>
+          <div>
+            <span className="text-xs font-bold tracking-wider block" style={{ color: GOLD }}>
+              COMMUNICATIONS HUB
+            </span>
+            {urgentCount > 0 && (
+              <span className="text-[9px] font-semibold" style={{ color: '#ef4444' }}>
+                {urgentCount} unread client message{urgentCount > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
         </div>
-        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" style={{ color: urgentCount > 0 ? '#ef4444' : GOLD }} />
+        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" style={{ color: GOLD }} />
       </Link>
 
       {/* Recent messages preview */}
