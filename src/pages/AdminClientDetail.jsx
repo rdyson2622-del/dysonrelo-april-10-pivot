@@ -6,6 +6,7 @@ import { ArrowLeft, Phone, Mail, MapPin, MessageSquare, Send, CheckCircle2, Cloc
 import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "@/components/ui/use-toast";
+import EscrowTimeline from "@/components/admin/EscrowTimeline";
 
 const GOLD = '#D4AF37';
 
@@ -257,6 +258,13 @@ export default function AdminClientDetail() {
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Escrow Timeline — shown if client is Under Contract or later */}
+              {client.status === 'under_contract' && (
+                <div className="mt-4">
+                  <EscrowTimeline clientId={clientId} />
                 </div>
               )}
             </motion.div>
