@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard, Send } from 'lucide-react';
+import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard, Send, MessageCircle } from 'lucide-react';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
 import HeroMinimal from '@/components/home/HeroMinimal';
 import ReadyToStart from '@/components/dashboard/ReadyToStart';
 import DashboardServicePreviews from '@/components/dashboard/DashboardServicePreviews';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import ClientMessages from '@/components/dashboard/ClientMessages';
 import { toast } from "@/components/ui/use-toast";
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -91,6 +92,15 @@ export default function Dashboard() {
             </motion.div>
 
             <ActivityFeed clientId={clientId} />
+
+            {/* Direct Messaging */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <div className="flex items-center gap-2 mb-3">
+                <MessageCircle className="w-4 h-4" style={{ color: GOLD }} />
+                <p className="text-xs font-bold tracking-[0.2em]" style={{ color: GOLD }}>DIRECT MESSAGE YOUR CONCIERGE TEAM</p>
+              </div>
+              <ClientMessages clientId={clientId} />
+            </motion.div>
           </>
         ) : (
           <ReadyToStart compact onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />

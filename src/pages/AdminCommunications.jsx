@@ -150,6 +150,16 @@ export default function AdminCommunications() {
         });
       }
 
+      // If this is a chat thread, also post reply as admin role so client sees it
+      if (thread.source === 'chat' && thread.clientId) {
+        await base44.entities.ChatMessage.create({
+          client_id: thread.clientId,
+          role: 'admin',
+          content: newMessage,
+          message_type: 'text',
+        });
+      }
+
       // Log it
       await base44.entities.Communication.create({
         communication_type: isSMS && thread.phone ? 'sms' : 'email',
