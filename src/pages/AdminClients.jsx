@@ -18,7 +18,7 @@ const STATUS_CONFIG = {
   close_of_escrow:   { label: 'Close of Escrow',   color: '#06b6d4', bg: 'rgba(6,182,212,0.12)',   step: 7 },
   local_services:    { label: 'Local Setup',       color: '#14b8a6', bg: 'rgba(20,184,166,0.12)',  step: 8 },
   moved:             { label: 'Moved',             color: '#22c55e', bg: 'rgba(34,197,94,0.12)',   step: 9 },
-  closed:            { label: 'Closed / Won',      color: '#22c55e', bg: 'rgba(34,197,94,0.15)',   step: 10 },
+  closed:            { label: 'Closed Escrow File', color: '#22c55e', bg: 'rgba(34,197,94,0.15)',   step: 10 },
   inactive:          { label: 'Inactive',          color: '#6b7280', bg: 'rgba(107,114,128,0.1)',  step: 0 },
 };
 
