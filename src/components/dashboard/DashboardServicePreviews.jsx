@@ -83,9 +83,9 @@ const SERVICES = [
   {
     id: 'gemini',
     icon: '🎙️',
-    title: 'Gemini Session with Bob',
-    tagline: 'A live AI-assisted conversation with Bob Dyson.',
-    description: 'Book a free, no-obligation session where Bob walks you through our full concierge program — live, with Gemini AI assisting in real time. Ask anything. Get real answers.',
+    title: 'Gemini AI Strategy Sessions Along with Dyson & Dyson',
+    tagline: 'Live AI-assisted conversation with Bob Dyson. 24/7 Support with Charlie, your personal AI assistant.',
+    description: 'Book a free, no-obligation session where Bob Dyson himself walks you through our full concierge program — live, with Gemini AI assisting in real time. Ask anything. Get real answers.',
     highlight: 'Free · No commitment · 30 minutes',
     cta: 'Book My Gemini Session',
     link: '/gemini',
@@ -126,7 +126,7 @@ export default function DashboardServicePreviews({ clientId }) {
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-3xl">{svc.icon}</span>
                   <div>
-                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>{svc.title.toUpperCase()}</p>
+                    <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>{svc.id === 'gemini' ? 'YOUR COMMUNICATION HUB' : svc.title.toUpperCase()}</p>
                     <p className="text-sm font-semibold text-white leading-tight">{svc.tagline}</p>
                   </div>
                 </div>
