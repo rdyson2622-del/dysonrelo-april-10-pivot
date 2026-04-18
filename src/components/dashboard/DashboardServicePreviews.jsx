@@ -84,7 +84,11 @@ const SERVICES = [
     id: 'gemini',
     icon: '🎙️',
     title: 'Gemini AI Strategy Sessions Along with Dyson & Dyson',
-    tagline: 'Live AI-assisted conversations with Bob Dyson. 24/7 Support with Charlie, your personal AI assistant.',
+    tagline: 'Gemini AI Strategy Sessions Along with Dyson & Dyson',
+    taglineList: [
+      'Live AI-assisted conversations with Bob Dyson.',
+      '24/7 Support with Charlie, your personal AI assistant.',
+    ],
     description: 'Book a free, no-obligation session where Bob Dyson himself walks you through our full concierge program — live, with Gemini AI assisting in real time. Ask anything. Get real answers.',
     highlight: 'Free · No commitment · 30 minutes',
     cta: 'Book My Gemini Session',
@@ -127,7 +131,15 @@ export default function DashboardServicePreviews({ clientId }) {
                   <span className="text-3xl">{svc.icon}</span>
                   <div>
                     <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>{svc.id === 'gemini' ? 'YOUR COMMUNICATION HUB' : svc.title.toUpperCase()}</p>
-                    <p className="text-sm font-semibold text-white leading-tight">{svc.tagline}</p>
+                    {svc.taglineList ? (
+                      <ul className="mt-1 space-y-0.5">
+                        {svc.taglineList.map((line, i) => (
+                          <li key={i} className="text-sm font-semibold text-white leading-tight">{line}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm font-semibold text-white leading-tight">{svc.tagline}</p>
+                    )}
                   </div>
                 </div>
                 <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
