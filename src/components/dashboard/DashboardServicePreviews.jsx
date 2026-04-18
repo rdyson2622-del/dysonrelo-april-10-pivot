@@ -83,8 +83,8 @@ const SERVICES = [
   {
     id: 'gemini',
     icon: '🎙️',
-    title: 'Gemini AI Strategy Sessions Along with Dyson & Dyson',
-    tagline: 'Live AI-assisted conversation with Bob Dyson. 24/7 Support with Charlie, your personal AI assistant.',
+    title: 'Gemini AI Strategy Sessions Along with D&D',
+    tagline: 'Live AI-assisted conversation with Bob Dyson.  24/7 Support with Charlie, your personal AI assistant.',
     description: 'Book a free, no-obligation session where Bob Dyson himself walks you through our full concierge program — live, with Gemini AI assisting in real time. Ask anything. Get real answers.',
     highlight: 'Free · No commitment · 30 minutes',
     cta: 'Book My Gemini Session',
