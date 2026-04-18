@@ -132,11 +132,14 @@ export default function DashboardServicePreviews({ clientId }) {
                   <div>
                     <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>{svc.id === 'gemini' ? 'YOUR COMMUNICATION HUB' : svc.title.toUpperCase()}</p>
                     {svc.taglineList ? (
-                      <ul className="mt-1 space-y-0.5">
-                        {svc.taglineList.map((line, i) => (
-                          <li key={i} className="text-sm font-semibold text-white leading-tight">{line}</li>
-                        ))}
-                      </ul>
+                      <div>
+                        <p className="text-sm font-semibold text-white leading-tight">{svc.tagline}</p>
+                        <ul className="mt-1 space-y-0.5">
+                          {svc.taglineList.map((line, i) => (
+                            <li key={i} className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>{line}</li>
+                          ))}
+                        </ul>
+                      </div>
                     ) : (
                       <p className="text-sm font-semibold text-white leading-tight">{svc.tagline}</p>
                     )}
