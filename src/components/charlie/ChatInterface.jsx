@@ -311,6 +311,22 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
       {/* CHAT TAB */}
       {tab === 'chat' && (
         <>
+          {/* How-to tip — shown once, dismissible */}
+          {!isReturn && (
+            <div className="shrink-0 mx-3 mt-2 mb-1 rounded-xl px-3 py-2.5 flex items-start gap-2"
+              style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+              <span className="text-base shrink-0">💡</span>
+              <div className="text-xs leading-relaxed" style={{ color: '#e5e5e5' }}>
+                <span className="font-bold" style={{ color: '#D4AF37' }}>Two ways to talk to Charlie:</span>
+                <br />
+                <span>🎙️ <b>Voice</b> — tap the mic button and speak naturally.</span>
+                <br />
+                <span>⌨️ <b>Type</b> — just click the text box and type your question.</span>
+                <br />
+                <span style={{ color: '#aaa' }}>Charlie will read and speak responses either way.</span>
+              </div>
+            </div>
+          )}
           <div className="flex-1 overflow-y-auto p-4" style={{ minHeight: 0 }}>
             <div className="space-y-4">
               {messages.map((msg, i) => (
@@ -334,6 +350,9 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
           </div>
 
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
+            <p className="text-[10px] text-center mb-2" style={{ color: '#555' }}>
+              🎙️ Tap mic to speak &nbsp;·&nbsp; ⌨️ Type below &nbsp;·&nbsp; 🔊 Charlie speaks back
+            </p>
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2 items-center">
               {/* Stop / Mute button — red & labeled when Charlie is speaking */}
               <Button
