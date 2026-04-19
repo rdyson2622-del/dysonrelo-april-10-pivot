@@ -350,7 +350,7 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
           </div>
 
           <div className="p-3 shrink-0" style={{ borderTop: '1px solid #222', background: '#0d0d0d' }}>
-            <p className="text-[10px] text-center mb-2" style={{ color: '#555' }}>
+            <p className="text-[10px] text-center mb-2" style={{ color: '#ccc' }}>
               🎙️ Tap mic to speak &nbsp;·&nbsp; ⌨️ Type below &nbsp;·&nbsp; 🔊 Charlie speaks back
             </p>
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2 items-center">
@@ -386,7 +386,7 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
                 placeholder={isListening ? '🎙️ Listening...' : 'Type or tap mic to speak...'}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 text-sm border-0 rounded-lg"
+                className="flex-1 text-sm border-0 rounded-lg placeholder-white"
                 style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
 
