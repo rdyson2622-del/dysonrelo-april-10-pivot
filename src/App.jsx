@@ -53,6 +53,7 @@ import AdminOwnerKanban from './pages/AdminOwnerKanban';
 import AdminOptIns from './pages/AdminOptIns';
 import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 import AdminScheduledCampaigns from './pages/AdminScheduledCampaigns.jsx';
+import AdminVideoSMSCampaign from './pages/AdminVideoSMSCampaign.jsx';
 import AdminComposeSMS from './pages/AdminComposeSMS';
 import BobDyson from './pages/BobDyson';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
@@ -129,6 +130,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/compose-sms" element={<AdminComposeSMS />} />
         <Route path="/admin/active-campaigns" element={<AdminActiveCampaigns />} />
         <Route path="/admin/scheduled-campaigns" element={<AdminScheduledCampaigns />} />
+        <Route path="/admin/video-sms-campaign" element={<AdminVideoSMSCampaign />} />
         <Route path="/admin/opt-ins" element={<AdminOptIns />} />
         <Route path="/admin/presentation-library" element={<AdminPresentationLibrary />} />
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />
