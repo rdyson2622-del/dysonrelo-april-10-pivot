@@ -18,6 +18,7 @@ export default function FloatingCharlie() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)]"
+            style={{ maxHeight: 'calc(100vh - 7rem)', overflowY: 'auto' }}
           >
             <ChatInterface
               onClose={() => setIsOpen(false)}

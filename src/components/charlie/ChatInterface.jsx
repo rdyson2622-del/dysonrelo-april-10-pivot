@@ -249,7 +249,8 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
 
   return (
     <motion.div
-      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'h-[720px] w-full'}`}
+      className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'w-full'}`}
+      style={!expanded ? { height: 'min(720px, calc(100vh - 8rem))' } : undefined}
       style={{ background: '#808080', border: `1px solid ${GOLD}` }}
       layout
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
