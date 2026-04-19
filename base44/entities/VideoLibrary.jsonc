@@ -1,0 +1,68 @@
+{
+  "name": "VideoLibrary",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Video title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this video is about"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "intro",
+        "process",
+        "testimonial",
+        "market_update",
+        "how_to",
+        "other"
+      ],
+      "default": "intro",
+      "description": "Video category"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "link",
+        "upload"
+      ],
+      "default": "link",
+      "description": "Link (Loom/YouTube/Vimeo) or uploaded file"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL for linked videos (Loom, YouTube, Vimeo)"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL for uploaded video files"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Optional thumbnail image URL"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Searchable tags"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this video is available for campaigns"
+    },
+    "added_by": {
+      "type": "string",
+      "description": "Admin email who added this video"
+    }
+  },
+  "required": [
+    "title",
+    "source_type"
+  ]
+}

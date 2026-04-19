@@ -21,6 +21,7 @@ const navItems = [
   { label: 'MARKETING CAMPAIGNS', isHeader: true },
   { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: Calendar },
   { label: 'Video SMS Campaign', path: '/admin/video-sms-campaign', icon: Video },
+  { label: 'Video Library', path: '/admin/video-library', icon: Video },
   { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
   { label: 'SMS Sequences', path: '/admin/sms-sequences', icon: MessageCircle },
 
