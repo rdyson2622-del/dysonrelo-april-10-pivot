@@ -102,9 +102,7 @@ export default function Dashboard() {
               <ClientMessages clientId={clientId} />
             </motion.div>
           </>
-        ) : (
-          <ReadyToStart compact onScrollToRoadmap={() => navigate('/RelocationRoadmap')} />
-        )}
+        ) : null}
 
         {/* Full service previews — visible to all */}
         <DashboardServicePreviews clientId={clientId} />
