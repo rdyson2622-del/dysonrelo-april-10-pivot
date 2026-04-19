@@ -123,32 +123,12 @@ export default function VoiceOnboarding({ onComplete }) {
   const stepId = STEPS[step];
   const isLast = step === STEPS.length - 1;
 
-  // Speak the question when step changes
+  // Show options immediately — no voice delay
   useEffect(() => {
-    setPhase('speaking');
+    setPhase('manual');
     setTranscript('');
     setConfirmedText('');
     setManualInput('');
-    speakAsCharlie(
-      QUESTION_SCRIPTS[step],
-      () => {
-        // Charlie finished naturally — start listening
-        setPhase('listening');
-        startListening();
-      },
-      null,
-      (transcript) => {
-        // User interrupted Charlie mid-speech — use their transcript as the answer
-        if (transcript) {
-          setTranscript(transcript);
-          handleVoiceAnswer(transcript);
-        } else {
-          setPhase('listening');
-          startListening();
-        }
-      }
-    );
-    return () => stopCharlie();
   }, [step]);
 
   const startListening = () => {
@@ -210,16 +190,12 @@ export default function VoiceOnboarding({ onComplete }) {
     }
 
     setProfile(newProfile);
-    setConfirmedText(confirmMsg);
-    setPhase('confirming');
 
-    speakAsCharlie(confirmMsg, () => {
-      if (isLast) {
-        onComplete(newProfile);
-      } else {
-        setStep(s => s + 1);
-      }
-    });
+    if (isLast) {
+      onComplete(newProfile);
+    } else {
+      setStep(s => s + 1);
+    }
   };
 
   const handleManualSubmit = () => {
