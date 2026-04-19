@@ -386,10 +386,8 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
                 placeholder={isListening ? '🎙️ Listening...' : 'Type or tap mic to speak...'}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 text-sm border-0 rounded-lg"
-                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD, '--placeholder-color': '#fff' }}
-                onFocus={e => e.target.style.setProperty('--tw-ring-color', 'transparent')}
-                ref={el => { if (el) { const style = document.createElement('style'); style.textContent = `input::placeholder { color: #fff !important; opacity: 1 !important; }`; if (!document.head.querySelector('[data-charlie-ph]')) { style.setAttribute('data-charlie-ph', '1'); document.head.appendChild(style); } } }}
+                className="flex-1 text-sm border-0 rounded-lg charlie-input"
+                style={{ background: '#1a1a1a', color: '#fff', caretColor: GOLD }}
               />
 
               {/* Mic button */}
