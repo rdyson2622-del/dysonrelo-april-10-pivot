@@ -57,7 +57,7 @@ export default function ClientSidebar() {
       {/* Nav */}
       <nav className="px-3 py-3 space-y-1">
         {/* Communications Hub — first nav item, most prominent */}
-        <Link to="/" state={{ scrollToMessages: true }}>
+        <Link to="/chat">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
             style={{
               background: unreadCount > 0 ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.12)',
