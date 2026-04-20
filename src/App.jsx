@@ -135,6 +135,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/video-library" element={<AdminVideoLibrary />} />
         <Route path="/admin/opt-ins" element={<AdminOptIns />} />
         <Route path="/admin/presentation-library" element={<AdminPresentationLibrary />} />
+        <Route path="/admin/communications" element={<AdminCommunications />} />
         <Route path="/admin/flagged-conversations" element={<AdminFlaggedConversations />} />
         <Route path="/admin/referrals" element={<AdminReferrals />} />
         <Route path="/admin/charlie-scripts" element={<AdminCharlieScripts />} />
