@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight, Bell, User, Zap } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight, Bell, User, Zap, Pencil, Check, ExternalLink } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 const GOLD = '#D4AF37';
@@ -67,8 +67,12 @@ export default function AdminCommunications() {
   const [selected, setSelected] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [editingMsgId, setEditingMsgId] = useState(null);
+  const [editingContent, setEditingContent] = useState('');
+  const [hoveredMsgId, setHoveredMsgId] = useState(null);
   const bottomRef = useRef(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: comms = [] } = useQuery({
     queryKey: ['comms-all'],
@@ -182,6 +186,38 @@ export default function AdminCommunications() {
     setSending(false);
   };
 
+  const handleDeleteMessage = async (msg) => {
+    if (!confirm('Delete this message?')) return;
+    try {
+      if (msg.source === 'chat') {
+        await base44.entities.ChatMessage.delete(msg.id);
+        queryClient.invalidateQueries({ queryKey: ['chat-messages-all'] });
+      } else {
+        await base44.entities.Communication.delete(msg.id);
+        queryClient.invalidateQueries({ queryKey: ['comms-all'] });
+      }
+      toast({ title: 'Message deleted' });
+    } catch (e) {
+      toast({ title: 'Delete failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
+  const handleEditSave = async (msg) => {
+    try {
+      if (msg.source === 'chat') {
+        await base44.entities.ChatMessage.update(msg.id, { content: editingContent });
+        queryClient.invalidateQueries({ queryKey: ['chat-messages-all'] });
+      } else {
+        await base44.entities.Communication.update(msg.id, { message_content: editingContent });
+        queryClient.invalidateQueries({ queryKey: ['comms-all'] });
+      }
+      setEditingMsgId(null);
+      toast({ title: 'Message updated' });
+    } catch (e) {
+      toast({ title: 'Update failed', description: e.message, variant: 'destructive' });
+    }
+  };
+
   const inboundCount = Object.values(threads).reduce((n, t) => n + t.messages.filter(m => m.direction === 'inbound').length, 0);
 
   return (
@@ -272,13 +308,14 @@ export default function AdminCommunications() {
             const unread = t.messages.filter(m => m.direction === 'inbound').length;
             const isSelected = selected === key;
             return (
-              <div key={key} onClick={() => setSelected(key)}
-                className="p-4 cursor-pointer flex items-start gap-3 transition-colors"
+              <div key={key}
+                className="p-4 cursor-pointer flex items-start gap-3 transition-colors group"
                 style={{
                   borderBottom: '1px solid rgba(255,255,255,0.07)',
                   background: isSelected ? 'rgba(212,175,55,0.1)' : 'transparent',
                   borderLeft: isSelected ? `3px solid ${GOLD}` : '3px solid transparent',
-                }}>
+                }}
+                onClick={() => setSelected(key)}>
                 <div className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm shrink-0"
                   style={{ background: isSelected ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.1)', color: isSelected ? GOLD : '#fff' }}>
                   {key.charAt(0).toUpperCase()}
@@ -286,9 +323,19 @@ export default function AdminCommunications() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold text-sm truncate" style={{ color: isSelected ? GOLD : '#fff' }}>{key}</p>
-                    <span className="text-[10px] shrink-0 ml-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                      {last ? timeAgo(last.date) : ''}
-                    </span>
+                    <div className="flex items-center gap-1 shrink-0 ml-1">
+                      {t.clientId && (
+                        <button
+                          onClick={e => { e.stopPropagation(); navigate(`/admin/client-detail?id=${t.clientId}`); }}
+                          className="opacity-0 group-hover:opacity-100 w-5 h-5 flex items-center justify-center rounded hover:bg-white/10 transition-opacity"
+                          title="View client profile">
+                          <ExternalLink className="w-3 h-3" style={{ color: GOLD }} />
+                        </button>
+                      )}
+                      <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                        {last ? timeAgo(last.date) : ''}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-xs truncate mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {last?.content?.slice(0, 50) || 'No messages'}
@@ -354,27 +401,80 @@ export default function AdminCommunications() {
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3" style={{ background: '#0a0a0a' }}>
               {thread.messages.map(msg => {
                 const isOut = msg.direction === 'outbound';
+                const isEditing = editingMsgId === msg.id;
+                const isHovered = hoveredMsgId === msg.id;
                 return (
-                  <div key={msg.id} className={`flex ${isOut ? 'justify-end' : 'justify-start'}`}>
-                    <div className="max-w-sm">
-                      {/* Direction label */}
+                  <div key={msg.id}
+                    className={`flex ${isOut ? 'justify-end' : 'justify-start'} group`}
+                    onMouseEnter={() => setHoveredMsgId(msg.id)}
+                    onMouseLeave={() => setHoveredMsgId(null)}>
+                    <div className="max-w-sm w-full">
+                      {/* Direction label + action buttons */}
                       <div className={`flex items-center gap-1 mb-1 ${isOut ? 'justify-end' : 'justify-start'}`}>
+                        {isOut && isHovered && !isEditing && (
+                          <div className="flex items-center gap-1 mr-1">
+                            <button
+                              onClick={() => { setEditingMsgId(msg.id); setEditingContent(msg.content); }}
+                              className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
+                              title="Edit message">
+                              <Pencil className="w-3 h-3" style={{ color: '#a78bfa' }} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteMessage(msg)}
+                              className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/10"
+                              title="Delete message">
+                              <Trash2 className="w-3 h-3" style={{ color: '#ef4444' }} />
+                            </button>
+                          </div>
+                        )}
                         <span className="text-[9px] font-bold uppercase"
                           style={{ color: msg.type === 'sms' ? '#22c55e' : msg.type === 'email' ? '#60a5fa' : '#a78bfa' }}>
                           {msg.type}
                         </span>
                         <span className="text-[9px]" style={{ color: 'rgba(255,255,255,0.55)' }}>· {timeAgo(msg.date)}</span>
+                        {!isOut && isHovered && !isEditing && (
+                          <button
+                            onClick={() => handleDeleteMessage(msg)}
+                            className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/10 ml-1"
+                            title="Delete message">
+                            <Trash2 className="w-3 h-3" style={{ color: '#ef4444' }} />
+                          </button>
+                        )}
                       </div>
-                      <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
-                        style={{
-                          background: isOut ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.07)',
-                          border: isOut ? `1px solid rgba(212,175,55,0.3)` : '1px solid rgba(255,255,255,0.1)',
-                          color: '#fff',
-                          borderBottomRightRadius: isOut ? 4 : undefined,
-                          borderBottomLeftRadius: !isOut ? 4 : undefined,
-                        }}>
-                        {msg.content}
-                      </div>
+
+                      {isEditing ? (
+                        <div className="flex flex-col gap-2">
+                          <textarea
+                            value={editingContent}
+                            onChange={e => setEditingContent(e.target.value)}
+                            rows={3}
+                            className="w-full rounded-xl px-4 py-2.5 text-sm resize-none"
+                            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.4)', color: '#fff', outline: 'none' }}
+                          />
+                          <div className="flex gap-2 justify-end">
+                            <button onClick={() => setEditingMsgId(null)}
+                              className="px-3 py-1 rounded-lg text-xs" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff' }}>
+                              Cancel
+                            </button>
+                            <button onClick={() => handleEditSave(msg)}
+                              className="px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1"
+                              style={{ background: GOLD, color: '#000' }}>
+                              <Check className="w-3 h-3" /> Save
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+                          style={{
+                            background: isOut ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.07)',
+                            border: isOut ? `1px solid rgba(212,175,55,0.3)` : '1px solid rgba(255,255,255,0.1)',
+                            color: '#fff',
+                            borderBottomRightRadius: isOut ? 4 : undefined,
+                            borderBottomLeftRadius: !isOut ? 4 : undefined,
+                          }}>
+                          {msg.content}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
