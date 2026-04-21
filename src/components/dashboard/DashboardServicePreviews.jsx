@@ -6,6 +6,21 @@ const GOLD = '#D4AF37';
 
 const SERVICES = [
   {
+    id: 'comms',
+    icon: '💬',
+    title: 'Communications Hub',
+    tagline: 'Message your concierge team — we reply within 1 hour.',
+    description: 'Send a message anytime and your Dyson & Dyson team will respond directly. Every conversation is threaded, organized, and tracked so nothing falls through the cracks.',
+    highlight: 'Text-first · 1-hour response · Mon–Sat 9am–7pm PT',
+    cta: 'Open Communications Hub',
+    link: '/chat',
+    preview: [
+      { label: '💬 Direct Messaging', detail: 'Chat with your concierge team in real time' },
+      { label: '📞 Call Bob Direct', detail: '(858) 353-1200 — Dyson Relo Line' },
+      { label: '🎙️ Voice (Chrome Desktop)', detail: 'Speak to Charlie — works best in Chrome' },
+    ],
+  },
+  {
     id: 'search',
     icon: '🔍',
     title: 'Search Homes',
@@ -110,7 +125,7 @@ export default function DashboardServicePreviews({ clientId }) {
         <p className="text-xs font-bold tracking-[0.25em] mb-2" style={{ color: GOLD }}>EVERYTHING INCLUDED IN YOUR CONCIERGE PROGRAM</p>
         <h2 className="display-heading" style={{ fontSize: '2rem', color: '#fff' }}>Your Full-Service Dashboard</h2>
         <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          Six integrated tools — all working together, all managed by our team.
+          Seven integrated tools — all working together, all managed by our team.
         </p>
       </div>
 
