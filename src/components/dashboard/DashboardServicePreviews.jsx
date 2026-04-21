@@ -16,7 +16,7 @@ const SERVICES = [
     link: '/chat',
     preview: [
       { label: '💬 Direct Messaging', detail: 'Chat with your concierge team in real time' },
-      { label: '📞 Call Bob Direct', detail: '(858) 353-1200 — Dyson Relo Line' },
+      { label: '📞 Call Our Dyson Relo Specialists Direct', detail: '(858) 353-1200 — Dyson Relo Line' },
       { label: '🎙️ Voice (Chrome Desktop)', detail: 'Speak to Charlie — works best in Chrome' },
     ],
   },
