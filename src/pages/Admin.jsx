@@ -125,7 +125,7 @@ export default function Admin() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
-          <h1 className="display-heading mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1.5rem, 3.4vw, 2.55rem)', color: '#fff' }}>Dyson & Dyson Admin</h1>
+          <h1 className="display-heading mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', color: '#fff' }}>Dyson & Dyson Admin Dashboard</h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
