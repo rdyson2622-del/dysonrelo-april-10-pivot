@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import {
   LayoutDashboard, Users, Home, UserCheck, Search, SendHorizontal, Flag,
   BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
-  Brain, AlertTriangle, Sparkles, Zap
+  Brain, AlertTriangle, Sparkles, Zap, ChevronRight
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -50,51 +52,137 @@ const adminSections = [
   },
 ];
 
+function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
+  const navigate = useNavigate();
+  const { data = [], isLoading } = useQuery({
+    queryKey: ['admin-stat', label],
+    queryFn: query,
+    refetchInterval: 30000,
+  });
+
+  const items = filter ? data.filter(filter) : data;
+  const count = items.length;
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      onClick={() => navigate(path)}
+      className="rounded-2xl p-4 cursor-pointer transition-all group"
+      style={{ background: '#000', border: `1px solid ${accentColor || 'rgba(212,175,55,0.2)'}33` }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <Icon className="w-4 h-4" style={{ color: accentColor || GOLD }} />
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{label}</span>
+      </div>
+      <div className="flex items-end justify-between">
+        {isLoading ? (
+          <div className="w-8 h-7 rounded animate-pulse" style={{ background: 'rgba(255,255,255,0.08)' }} />
+        ) : (
+          <p className="text-2xl font-bold" style={{ color: accentColor || '#fff' }}>{count}</p>
+        )}
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="text-[10px] font-bold" style={{ color: accentColor || GOLD }}>View →</span>
+        </div>
+      </div>
+
+      {/* Preview of items */}
+      {!isLoading && items.length > 0 && (
+        <div className="mt-3 space-y-1">
+          {items.slice(0, 3).map((item, i) => (
+            <div key={i} className="flex items-center gap-2 text-[10px] rounded-lg px-2 py-1"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="w-1 h-1 rounded-full shrink-0" style={{ background: accentColor || GOLD }} />
+              <span className="truncate" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                {item._preview}
+              </span>
+              {item._badge && (
+                <span className="ml-auto shrink-0 px-1.5 py-0.5 rounded-full text-[9px] font-bold"
+                  style={{ background: `${accentColor}22`, color: accentColor }}>
+                  {item._badge}
+                </span>
+              )}
+            </div>
+          ))}
+          {items.length > 3 && (
+            <p className="text-[10px] px-2 pt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              +{items.length - 3} more — click to view all
+            </p>
+          )}
+        </div>
+      )}
+
+      {!isLoading && items.length === 0 && (
+        <p className="text-[10px] mt-2" style={{ color: 'rgba(255,255,255,0.3)' }}>Nothing pending</p>
+      )}
+    </motion.div>
+  );
+}
+
 export default function Admin() {
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
           <h1 className="display-heading mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1.5rem, 3.4vw, 2.55rem)', color: '#fff' }}>Dyson & Dyson Admin</h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Manage your relocation business operations
+            Live stats below — click any card to jump directly to those records.
           </p>
         </motion.div>
 
-        {/* Stats Overview */}
+        {/* Live Interactive Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
         >
-          {[
-            { label: 'Active Clients', value: '12', icon: UserCheck },
-            { label: 'Listing Owners', value: '48', icon: Home },
-            { label: 'Active Campaigns', value: '3', icon: SendHorizontal },
-            { label: 'Pending Referrals', value: '5', icon: LinkIcon },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="rounded-2xl p-4"
-              style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <stat.icon className="w-4 h-4" style={{ color: GOLD }} />
-                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{stat.label}</span>
-              </div>
-              <p className="text-2xl font-bold" style={{ color: '#fff' }}>{stat.value}</p>
-            </div>
-          ))}
+          <LiveStatCard
+            label="Active Clients"
+            icon={UserCheck}
+            path="/admin/clients"
+            accentColor="#8B5CF6"
+            query={() => base44.entities.RelocationClient.list('-created_date', 200)}
+            filter={c => !['closed', 'inactive', 'moved'].includes(c.status)}
+          />
+          <LiveStatCard
+            label="Listing Owners"
+            icon={Home}
+            path="/admin/owners"
+            accentColor="#10B981"
+            query={async () => {
+              const owners = await base44.entities.ListingOwner.list('-created_date', 200);
+              return owners.map(o => ({ ...o, _preview: o.owner_name || o.property_address, _badge: o.contact_status?.replace('_', ' ') }));
+            }}
+          />
+          <LiveStatCard
+            label="Active Campaigns"
+            icon={SendHorizontal}
+            path="/admin/scheduled-campaigns"
+            accentColor="#F97316"
+            query={async () => {
+              const campaigns = await base44.entities.ScheduledCampaign.list('-scheduled_for', 100);
+              return campaigns
+                .filter(c => c.status === 'scheduled' || c.status === 'sending')
+                .map(c => ({ ...c, _preview: c.city, _badge: c.status }));
+            }}
+          />
+          <LiveStatCard
+            label="Pending Referrals"
+            icon={LinkIcon}
+            path="/admin/referrals"
+            accentColor="#EF4444"
+            query={async () => {
+              const refs = await base44.entities.AgentReferral.list('-created_date', 100);
+              return refs
+                .filter(r => r.referral_status === 'proposal_sent' || r.referral_status === 'agreed' || r.referral_status === 'in_process')
+                .map(r => ({ ...r, _preview: r.list_agent_name, _badge: r.referral_status?.replace('_', ' ') }));
+            }}
+          />
         </motion.div>
 
-        {/* Admin Sections with Grouped Headers */}
+        {/* Admin Sections */}
         {adminSections.map((section, sectionIdx) => (
           <motion.div
             key={section.heading}
@@ -103,13 +191,10 @@ export default function Admin() {
             transition={{ delay: 0.2 + sectionIdx * 0.05 }}
             className="mt-8"
           >
-            {/* Gold Section Header */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-1 h-6" style={{ background: GOLD }} />
               <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>{section.heading}</p>
             </div>
-
-            {/* Modules Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {section.modules.map((module) => {
                 const Icon = module.icon;
@@ -118,16 +203,11 @@ export default function Admin() {
                     key={module.path}
                     to={module.path}
                     className="group rounded-2xl p-5 transition-all hover:scale-[1.02]"
-                    style={{
-                      background: '#000',
-                      border: '1px solid rgba(212,175,55,0.2)',
-                    }}
+                    style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}
                   >
                     <div className="flex items-start justify-between mb-4">
-                      <div
-                        className="w-12 h-12 rounded-xl flex items-center justify-center"
-                        style={{ background: `${module.color}22`, border: `1px solid ${module.color}44` }}
-                      >
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                        style={{ background: `${module.color}22`, border: `1px solid ${module.color}44` }}>
                         <Icon className="w-6 h-6" style={{ color: module.color }} />
                       </div>
                       <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: GOLD }} />
@@ -188,25 +268,13 @@ export default function Admin() {
         >
           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>QUICK ACTIONS</p>
           <div className="flex flex-wrap gap-3">
-            <Link
-              to="/admin/outreach-campaigns"
-              className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={{ background: GOLD, color: '#000' }}
-            >
+            <Link to="/admin/outreach-campaigns" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: GOLD, color: '#000' }}>
               + New Campaign
             </Link>
-            <Link
-              to="/admin/clients"
-              className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
-            >
+            <Link to="/admin/clients" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
               View All Clients
             </Link>
-            <Link
-              to="/admin/charlie-scripts"
-              className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
-            >
+            <Link to="/admin/charlie-scripts" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
               Edit Charlie Scripts
             </Link>
           </div>
