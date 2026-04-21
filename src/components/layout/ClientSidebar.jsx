@@ -111,6 +111,15 @@ export default function ClientSidebar() {
             </p>
           )}
 
+          {/* Voice pioneer notice */}
+          <div className="rounded-lg px-2 py-2 mb-1"
+            style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}>
+            <p className="text-[10px] font-bold mb-0.5" style={{ color: '#818cf8' }}>🎙️ Voice Coming Soon</p>
+            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              Text is the most reliable channel now. Voice (Chrome Desktop) available to test!
+            </p>
+          </div>
+
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
           </Link>
