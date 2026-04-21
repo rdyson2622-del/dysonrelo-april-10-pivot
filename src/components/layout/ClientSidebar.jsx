@@ -56,35 +56,6 @@ export default function ClientSidebar() {
 
       {/* Nav */}
       <nav className="px-3 py-3 space-y-1">
-        {/* Communications Hub — first nav item, most prominent */}
-        <Link to="/chat">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-            style={{
-              background: unreadCount > 0 ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.12)',
-              border: unreadCount > 0 ? '1px solid rgba(239,68,68,0.45)' : '1px solid rgba(212,175,55,0.35)',
-              color: unreadCount > 0 ? '#ef4444' : GOLD,
-            }}>
-            <div className="relative shrink-0">
-              <MessageCircle className="w-4 h-4" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
-                  style={{ background: '#ef4444', color: '#fff' }}>
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </div>
-            <span className="flex-1">
-              {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
-            </span>
-            <span className="text-[10px] opacity-50">→</span>
-          </div>
-        </Link>
-        {unreadCount === 0 && (
-          <p className="text-[10px] px-2 pb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Questions? We reply within 1 hour.
-          </p>
-        )}
-
         {/* My Dashboard */}
         {(() => {
           const item = navItems[0];
@@ -110,6 +81,36 @@ export default function ClientSidebar() {
           Quick Links
         </div>
         <div className="flex flex-col gap-2">
+
+          {/* Communications Hub — prominent pill, first in quick links */}
+          <Link to="/chat">
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+              style={{
+                background: unreadCount > 0 ? 'rgba(239,68,68,0.15)' : 'rgba(212,175,55,0.12)',
+                border: unreadCount > 0 ? '1px solid rgba(239,68,68,0.45)' : '1px solid rgba(212,175,55,0.35)',
+                color: unreadCount > 0 ? '#ef4444' : GOLD,
+              }}>
+              <div className="relative shrink-0">
+                <MessageCircle className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
+                    style={{ background: '#ef4444', color: '#fff' }}>
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </div>
+              <span className="flex-1">
+                {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
+              </span>
+              <span className="text-[10px] opacity-50">→</span>
+            </div>
+          </Link>
+          {unreadCount === 0 && (
+            <p className="text-[10px] px-2 -mt-1 mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              Questions? We reply within 1 hour.
+            </p>
+          )}
+
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
           </Link>
