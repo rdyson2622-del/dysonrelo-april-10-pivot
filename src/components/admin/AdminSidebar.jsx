@@ -9,7 +9,10 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 
 const navItems = [
   { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
-  
+
+  { label: 'QUICK LINKS', isHeader: true },
+  { label: '__COMMS_HUB__', isCommsBadge: true },
+
   { label: 'QUICK SEARCHES', isHeader: true },
   { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
   { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
@@ -154,11 +157,6 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Communication Hub Widget — top priority */}
-      <div className="pt-3 pb-1">
-        <AdminCommsBadge />
-      </div>
-
       {/* Nav */}
       <nav className="py-2 px-3 space-y-1">
         {navItems.map((item, idx) => {
@@ -167,6 +165,29 @@ export default function AdminSidebar() {
             return (
               <div key={idx} className="mt-3 pt-2 first:mt-0 first:pt-0">
                 <p className="text-xs font-bold tracking-[0.25em] px-3 py-1" style={{ color: '#D4AF37' }}>{item.label}</p>
+              </div>
+            );
+          }
+
+          // Communications Hub prominent pill
+          if (item.isCommsBadge) {
+            return (
+              <div key={idx}>
+                <Link to="/admin/communications">
+                  <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+                    style={{
+                      background: 'rgba(212,175,55,0.12)',
+                      border: '1px solid rgba(212,175,55,0.35)',
+                      color: '#D4AF37',
+                    }}>
+                    <MessageCircle className="w-4 h-4 shrink-0" />
+                    <span className="flex-1">Communications Hub</span>
+                    <span className="text-[10px] opacity-50">→</span>
+                  </div>
+                </Link>
+                <p className="text-[10px] px-2 mt-0.5 mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  SMS · Email · Charlie Chat — unified inbox
+                </p>
               </div>
             );
           }
