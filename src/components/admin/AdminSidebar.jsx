@@ -169,25 +169,11 @@ export default function AdminSidebar() {
             );
           }
 
-          // Communications Hub prominent pill
+          // Communications Hub — full badge with pending count
           if (item.isCommsBadge) {
             return (
-              <div key={idx}>
-                <Link to="/admin/communications">
-                  <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-                    style={{
-                      background: 'rgba(212,175,55,0.12)',
-                      border: '1px solid rgba(212,175,55,0.35)',
-                      color: '#D4AF37',
-                    }}>
-                    <MessageCircle className="w-4 h-4 shrink-0" />
-                    <span className="flex-1">Communications Hub</span>
-                    <span className="text-[10px] opacity-50">→</span>
-                  </div>
-                </Link>
-                <p className="text-[10px] px-2 mt-0.5 mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  SMS · Email · Charlie Chat — unified inbox
-                </p>
+              <div key={idx} className="mb-1">
+                <AdminCommsBadge />
               </div>
             );
           }
