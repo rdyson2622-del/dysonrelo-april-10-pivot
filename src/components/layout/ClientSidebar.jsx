@@ -115,7 +115,7 @@ export default function ClientSidebar() {
           <div className="rounded-lg px-2 py-2 mb-1"
             style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}>
             <p className="text-[10px] font-bold mb-0.5" style={{ color: '#818cf8' }}>🎙️ Voice Coming Soon</p>
-            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-[10px] leading-relaxed" style={{ color: '#ffffff' }}>
               Text is the most reliable channel now. Voice (Chrome Desktop) available to test!
             </p>
           </div>
