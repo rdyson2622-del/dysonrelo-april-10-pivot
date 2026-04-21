@@ -115,7 +115,13 @@ export async function speakAsCharlie(text, onEnd, onStart, onInterrupted) {
       if (onEnd) onEnd();
     };
 
-    audioEl.play();
+    audioEl.play().catch((e) => {
+      // Autoplay blocked (no user gesture yet, or permissions denied) — fail silently
+      stopInterruptListener();
+      URL.revokeObjectURL(url);
+      currentAudio = null;
+      if (onEnd) onEnd();
+    });
   } catch (e) {
     console.warn('Charlie TTS failed:', e.message);
     stopInterruptListener();
