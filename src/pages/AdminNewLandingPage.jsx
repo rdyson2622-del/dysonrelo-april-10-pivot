@@ -77,7 +77,7 @@ export default function AdminNewLandingPage() {
               className="flex items-center gap-2 px-6 py-3 rounded-full border-2 transition-all"
               style={{
                 borderColor: searchFocused ? GOLD : 'rgba(212,175,55,0.25)',
-                background: searchFocused ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.03)',
+                background: searchFocused ? 'rgba(212,175,55,0.08)' : '#808080',
               }}
             >
               <Search className="w-4 h-4" style={{ color: GOLD }} />
