@@ -78,7 +78,7 @@ function SingleLookup() {
               <ExternalLink className="w-4 h-4" />
               Open PropStream — Run Skip Trace
             </a>
-            <p className="text-center text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-center text-xs" style={{ color: '#fff' }}>
               Copy the address above, then paste it into PropStream's Skip Trace tool.
             </p>
           </>
@@ -344,7 +344,7 @@ function BulkBuilder() {
       {/* Step 1 */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
         <p className="text-xs font-bold tracking-widest mb-2" style={{ color: GOLD }}>STEP 1 — RUN SKIP TRACE IN PROPSTREAM</p>
-        <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <p className="text-xs mb-4" style={{ color: '#fff' }}>
           In PropStream, open your saved list → select all records → click <strong style={{ color: '#fff' }}>Skip Trace</strong> → then <strong style={{ color: '#fff' }}>Export CSV</strong>. The export will include owner names + cell numbers.
         </p>
         <a href="https://www.propstream.com" target="_blank" rel="noopener noreferrer"
@@ -358,7 +358,7 @@ function BulkBuilder() {
       {/* Step 2 */}
       <div className="rounded-2xl p-5 mb-4" style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}>
         <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>STEP 2 — UPLOAD YOUR SKIP-TRACED CSV EXPORTS</p>
-        <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <p className="text-xs mb-4" style={{ color: '#fff' }}>
           Upload your PropStream skip trace export. Owner names + phone numbers are read automatically.
         </p>
 
@@ -369,13 +369,13 @@ function BulkBuilder() {
             <>
               <div className="w-10 h-10 border-2 rounded-full animate-spin mb-3" style={{ borderColor: 'rgba(212,175,55,0.3)', borderTopColor: GOLD }} />
               <p className="font-bold mb-1" style={{ color: '#fff' }}>Reading file…</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Detecting columns and parsing rows</p>
+              <p className="text-xs" style={{ color: '#fff' }}>Detecting columns and parsing rows</p>
             </>
           ) : (
             <>
               <Upload className="w-10 h-10 mb-3" style={{ color: GOLD }} />
               <p className="font-bold mb-1" style={{ color: '#fff' }}>Drop your PropStream CSV here</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>or click to browse · .csv, .xlsx, .xls</p>
+              <p className="text-xs" style={{ color: '#fff' }}>or click to browse · .csv, .xlsx, .xls</p>
             </>
           )}
           <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={e => handleFiles(e.target.files)} />
@@ -395,6 +395,7 @@ function BulkBuilder() {
                 <span className="text-xs font-bold" style={{ color: GOLD }}>{rows.length} records</span>
                 <span className="text-xs ml-2" style={{ color: phoneCount > 0 ? '#22C55E' : 'rgba(255,255,255,0.35)' }}>
                   · {phoneCount} with cell numbers
+
                 </span>
                 {phoneCount === 0 && (
                   <span className="block text-xs mt-1" style={{ color: '#EF4444' }}>
@@ -402,7 +403,7 @@ function BulkBuilder() {
                   </span>
                 )}
               </div>
-              <button onClick={reset} className="text-xs hover:opacity-70 flex items-center gap-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <button onClick={reset} className="text-xs hover:opacity-70 flex items-center gap-1" style={{ color: '#fff' }}>
                 <X className="w-3 h-3" /> Clear
               </button>
             </div>
@@ -413,7 +414,7 @@ function BulkBuilder() {
                   PREVIEW (first 3 rows)
                 </div>
                 {rows.slice(0, 3).map((r, i) => (
-                  <div key={i} className="px-3 py-2 flex gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)' }}>
+                  <div key={i} className="px-3 py-2 flex gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', color: '#fff' }}>
                     <span className="truncate w-36">{r.owner_name || <em style={{color:'#EF4444'}}>no name</em>}</span>
                     <span className="truncate w-32" style={{ color: r.phone ? '#22C55E' : '#EF4444' }}>{r.phone || 'no phone'}</span>
                     <span className="truncate flex-1">{r.street}</span>
@@ -440,7 +441,7 @@ function BulkBuilder() {
           {/* Import as New — PRIMARY action */}
           <div className="rounded-xl p-4 mb-3" style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.35)' }}>
             <p className="text-xs font-bold mb-1" style={{ color: GOLD }}>✦ New addresses? Import them as fresh records.</p>
-            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-xs mb-3" style={{ color: '#fff' }}>
               Adds all {rows.length} owners as new Listing Owner records, ready for SMS outreach.
             </p>
             <button onClick={importToListingOwners} disabled={importing || patching}
@@ -455,10 +456,10 @@ function BulkBuilder() {
 
           {/* Patch existing — secondary */}
           <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-bold mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Already imported these addresses? Fill in missing names + phones instead.</p>
+            <p className="text-xs font-bold mb-1" style={{ color: '#fff' }}>Already imported these addresses? Fill in missing names + phones instead.</p>
             <button onClick={patchExistingOwners} disabled={importing || patching}
               className="w-full py-2.5 rounded-xl text-sm font-bold tracking-widest flex items-center justify-center gap-2 disabled:opacity-40 mt-2"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.6)' }}>
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff' }}>
               {patching
                 ? <><div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> Patching...</>
                 : <>✦ Patch Existing Records ({rows.length} from CSV)</>
@@ -479,7 +480,7 @@ function BulkBuilder() {
             {importResult.patched !== undefined && (
               <p className="font-bold text-sm mb-1" style={{ color: '#22C55E' }}>✓ {importResult.patched} existing records patched with names + phones!</p>
             )}
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <p className="text-xs" style={{ color: '#fff' }}>
               Go to <strong>Admin → Listing Owners</strong> to review and start outreach.
             </p>
             <button onClick={reset} className="mt-3 text-xs font-semibold hover:opacity-80 px-3 py-1.5 rounded-lg"
@@ -521,7 +522,7 @@ export default function AdminSkipTrace() {
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>ADMIN TOOL</p>
           <h1 className="text-3xl font-bold mb-1" style={{ color: '#fff' }}>Skip Trace — PropStream</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="text-sm" style={{ color: '#fff' }}>
             Run skip trace in PropStream to get owner cell numbers, then import directly into your outreach database.
           </p>
         </motion.div>
@@ -534,7 +535,7 @@ export default function AdminSkipTrace() {
               className="px-5 py-2 rounded-lg text-sm font-bold tracking-wide transition-all"
               style={{
                 background: mode === opt.id ? 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)' : 'transparent',
-                color: mode === opt.id ? '#000' : 'rgba(255,255,255,0.5)',
+                color: mode === opt.id ? '#000' : '#fff',
               }}>
               {opt.label}
             </button>
@@ -557,7 +558,7 @@ export default function AdminSkipTrace() {
                 style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>
                 {i + 1}
               </div>
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>{step}</p>
+              <p className="text-sm" style={{ color: '#fff' }}>{step}</p>
             </div>
           ))}
         </motion.div>

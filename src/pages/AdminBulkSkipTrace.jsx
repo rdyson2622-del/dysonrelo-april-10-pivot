@@ -91,7 +91,7 @@ export default function AdminBulkSkipTrace() {
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>ADMIN TOOL</p>
           <h1 className="text-3xl font-bold mb-1" style={{ color: '#fff' }}>Bulk Skip Trace Builder</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="text-sm" style={{ color: '#fff' }}>
             Search active listings by criteria → download a CSV → upload to BatchData's bulk skip trace tool.
           </p>
         </motion.div>
@@ -107,7 +107,7 @@ export default function AdminBulkSkipTrace() {
           <p className="text-xs font-bold tracking-widest mb-4" style={{ color: GOLD }}>SEARCH CRITERIA</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             <div className="col-span-2 md:col-span-1">
-              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>CITY *</label>
+              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: '#fff' }}>CITY *</label>
               <input
                 value={city}
                 onChange={e => setCity(e.target.value)}
@@ -117,7 +117,7 @@ export default function AdminBulkSkipTrace() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>STATE</label>
+              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: '#fff' }}>STATE</label>
               <select
                 value={state}
                 onChange={e => setState(e.target.value)}
@@ -128,7 +128,7 @@ export default function AdminBulkSkipTrace() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MIN PRICE</label>
+              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: '#fff' }}>MIN PRICE</label>
               <input
                 value={minPrice}
                 onChange={e => setMinPrice(e.target.value)}
@@ -138,7 +138,7 @@ export default function AdminBulkSkipTrace() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>DAYS LISTED ≤</label>
+              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: '#fff' }}>DAYS LISTED ≤</label>
               <input
                 value={daysListed}
                 onChange={e => setDaysListed(e.target.value)}
@@ -150,7 +150,7 @@ export default function AdminBulkSkipTrace() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>MAX RESULTS</label>
+              <label className="block text-xs font-bold tracking-widest mb-1.5" style={{ color: '#fff' }}>MAX RESULTS</label>
               <input
                 value={maxResults}
                 onChange={e => setMaxResults(e.target.value)}
@@ -199,7 +199,7 @@ export default function AdminBulkSkipTrace() {
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5" style={{ color: '#22C55E' }} />
                 <span className="font-bold" style={{ color: '#fff' }}>{results.count} Listings Found</span>
-                <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <span className="text-sm" style={{ color: '#fff' }}>
                   — {city}, {state} · Listed ≤{daysListed} day{daysListed !== '1' ? 's' : ''} · Min {formatPrice(minPrice)}
                 </span>
               </div>
@@ -229,8 +229,8 @@ export default function AdminBulkSkipTrace() {
                       <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
                         className="hover:bg-white/5 transition-colors">
                         <td className="px-4 py-3 font-medium" style={{ color: '#fff' }}>{p.street || '—'}</td>
-                        <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.7)' }}>{p.city}</td>
-                        <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.7)' }}>{p.state}</td>
+                        <td className="px-4 py-3" style={{ color: '#fff' }}>{p.city}</td>
+                        <td className="px-4 py-3" style={{ color: '#fff' }}>{p.state}</td>
                         <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.7)' }}>{p.zip || '—'}</td>
                         <td className="px-4 py-3 font-semibold" style={{ color: GOLD }}>{formatPrice(p.list_price)}</td>
                         <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.7)' }}>{p.list_date || '—'}</td>
