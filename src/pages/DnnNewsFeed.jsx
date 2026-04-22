@@ -2,38 +2,53 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Sparkles, RefreshCw, Send, Trash2, Eye, EyeOff, Share2, CheckCircle, Clock, Globe } from 'lucide-react';
+import { Sparkles, RefreshCw, Send, Trash2, Eye, EyeOff, CheckCircle, Clock, Globe, Users } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
-const STYLE_GUIDE = `You are a writer for the Dyson News Network (DNN), a premium real estate intelligence service for people relocating across America. Write in the "1927 Parallel" style: authoritative, sophisticated, slightly cinematic — think a trusted financial journalist who also appreciates the drama of the American migration story. No fluff. No clickbait. Lead with the data, end with the implication for readers who are considering a move. Each brief should be 3-4 short paragraphs, under 300 words.`;
+const DYSON_VOICE = `You are the DNN Intelligence Bureau — the editorial arm of Dyson & Dyson Real Estate Concierge. Write in the "1927 Parallel" style: authoritative, sophisticated, slightly cinematic. Think a trusted financial journalist who appreciates the drama of the American migration story. No fluff. No clickbait. Lead with the data, end with the implication for a homeowner considering a move. Each brief: 3-4 short paragraphs, under 300 words. Author: "DNN Intelligence Bureau" — no external source links or bylines visible.`;
 
 export default function DnnNewsFeed() {
   const [generating, setGenerating] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
+  const [blastModal, setBlastModal] = useState(null); // article to blast
+  const [blasting, setBlasting] = useState(false);
+  const [blastResult, setBlastResult] = useState(null);
+  const [blastTier, setBlastTier] = useState('all');
   const queryClient = useQueryClient();
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticles'],
     queryFn: () => base44.entities.DnnArticle.list('-created_date', 100),
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  });
+
+  const { data: subCount } = useQuery({
+    queryKey: ['dnnSubCount'],
+    queryFn: async () => {
+      const subs = await base44.entities.DnnSubscriber.list('-created_date', 1);
+      return subs.length; // rough count
+    },
   });
 
   const handleGenerate = async () => {
     setGenerating(true);
     const res = await base44.integrations.Core.InvokeLLM({
-      prompt: `${STYLE_GUIDE}
+      prompt: `${DYSON_VOICE}
 
 Today is ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
 
-Search the web for 5 "relocation-triggering" news items from the past 48 hours related to: California tax policy, Bay Area housing/job market, Arizona housing boom, Florida migration, New York cost of living, interest rate moves, remote work policy changes, or major employer relocations.
+Search the web for 5 "relocation-triggering" news stories from the past 48 hours covering: California tax policy, Bay Area housing/jobs, Arizona housing boom, Florida migration surge, New York cost of living, mortgage rate moves, remote work mandates, or major employer relocations.
 
-For each item, write a DNN brief. Return a JSON object with this schema:
+For each story, write a DNN brief in the 1927 Parallel style. Return JSON:
 {
   "briefs": [
     {
-      "headline": "string (punchy, under 12 words)",
-      "dateline": "string (e.g. SAN FRANCISCO — )",
-      "body": "string (3-4 paragraphs, under 300 words, 1927 Parallel style)",
-      "tags": ["array", "of", "tags"],
-      "trigger_type": "one of: tax_policy | housing_market | job_market | interest_rates | migration_data | employer_news"
+      "headline": "string — punchy, under 12 words, present tense",
+      "dateline": "CITY NAME — ",
+      "body": "3-4 paragraphs under 300 words. Authoritative, cinematic. End with implication for a homeowner considering relocating.",
+      "tags": ["relevant", "tags"],
+      "trigger_type": "tax_policy | housing_market | job_market | interest_rates | migration_data | employer_news"
     }
   ]
 }`,
@@ -74,9 +89,28 @@ For each item, write a DNN brief. Return a JSON object with this schema:
     setGenerating(false);
   };
 
+  const handleBlast = async () => {
+    if (!blastModal) return;
+    setBlasting(true);
+    setBlastResult(null);
+    const res = await base44.functions.invoke('dnnBlastArticle', {
+      article_id: blastModal.id,
+      tier_filter: blastTier,
+    });
+    setBlastResult(res.data);
+    setBlasting(false);
+    if (res.data?.success) queryClient.invalidateQueries({ queryKey: ['dnnArticles'] });
+  };
+
   const updateStatus = async (id, status) => {
     await base44.entities.DnnArticle.update(id, { status });
     queryClient.invalidateQueries({ queryKey: ['dnnArticles'] });
+  };
+
+  const openBlastModal = (article) => {
+    setBlastModal(article);
+    setBlastResult(null);
+    setBlastTier('all');
   };
 
   const deleteArticle = async (id) => {
@@ -158,6 +192,7 @@ For each item, write a DNN brief. Return a JSON object with this schema:
                   onToggle={() => setExpandedId(expandedId === article.id ? null : article.id)}
                   onStatusChange={updateStatus}
                   onDelete={deleteArticle}
+                  onBlast={openBlastModal}
                   triggerColors={TRIGGER_COLORS}
                   statusColors={STATUS_COLORS}
                 />
@@ -182,6 +217,7 @@ For each item, write a DNN brief. Return a JSON object with this schema:
                   onToggle={() => setExpandedId(expandedId === article.id ? null : article.id)}
                   onStatusChange={updateStatus}
                   onDelete={deleteArticle}
+                  onBlast={openBlastModal}
                   triggerColors={TRIGGER_COLORS}
                   statusColors={STATUS_COLORS}
                 />
@@ -198,11 +234,61 @@ For each item, write a DNN brief. Return a JSON object with this schema:
           </div>
         )}
       </div>
+
+      {/* Blast Modal */}
+      {blastModal && (
+        <Dialog open onOpenChange={v => { if (!v) { setBlastModal(null); setBlastResult(null); } }}>
+          <DialogContent className="sm:max-w-md" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
+            <DialogHeader>
+              <DialogTitle className="text-white flex items-center gap-2">
+                <Send className="w-4 h-4 text-blue-400" /> Blast to Subscribers
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="rounded-lg p-3" style={{ background: '#1a1a1a' }}>
+                <p className="text-xs text-slate-400 mb-1">Article</p>
+                <p className="text-sm font-semibold text-white">{blastModal.headline}</p>
+              </div>
+              <div>
+                <label className="text-xs text-slate-400 mb-1.5 block">Send to which tier?</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[['all','All Subscribers'],['tier1','Tier 1 — Free'],['tier2','Tier 2 — Paid'],['tier3','Tier 3 — VIP']].map(([v, l]) => (
+                    <button key={v} onClick={() => setBlastTier(v)}
+                      className="py-2 px-3 rounded-lg text-xs font-semibold transition border"
+                      style={{
+                        background: blastTier === v ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.04)',
+                        borderColor: blastTier === v ? '#D4AF37' : 'rgba(255,255,255,0.1)',
+                        color: blastTier === v ? '#D4AF37' : '#94a3b8',
+                      }}>{l}</button>
+                  ))}
+                </div>
+              </div>
+              {blastResult && (
+                <div className={`rounded-lg px-4 py-3 text-sm ${blastResult.success ? 'bg-green-900/30 border border-green-700 text-green-300' : 'bg-red-900/30 border border-red-700 text-red-300'}`}>
+                  {blastResult.success
+                    ? `✓ Sent to ${blastResult.sent} subscribers. ${blastResult.failed > 0 ? `${blastResult.failed} failed.` : 'All delivered.'}`
+                    : `✗ Error: ${blastResult.error}`}
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <button onClick={() => { setBlastModal(null); setBlastResult(null); }}
+                className="px-4 py-2 rounded-lg text-sm border text-slate-400 hover:text-white transition"
+                style={{ borderColor: 'rgba(255,255,255,0.1)' }}>Cancel</button>
+              <button onClick={handleBlast} disabled={blasting || blastResult?.success}
+                className="px-4 py-2 rounded-lg text-sm font-bold text-black flex items-center gap-2 disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37, #b8920a)' }}>
+                {blasting ? <><RefreshCw className="w-3.5 h-3.5 animate-spin" />Sending...</> : <><Send className="w-3.5 h-3.5" />Send Blast</>}
+              </button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
 
-function ArticleCard({ article, expanded, onToggle, onStatusChange, onDelete, triggerColors, statusColors }) {
+function ArticleCard({ article, expanded, onToggle, onStatusChange, onDelete, onBlast, triggerColors, statusColors }) {
   const triggerLabel = article.trigger_type?.replace(/_/g, ' ') || 'general';
   const tagColor = triggerColors[article.trigger_type] || 'bg-slate-800 text-slate-400 border-slate-700';
 
@@ -245,7 +331,7 @@ function ArticleCard({ article, expanded, onToggle, onStatusChange, onDelete, tr
                 style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }}>
                 <CheckCircle className="w-3 h-3" /> Publish to Site
               </button>
-              <button onClick={() => onStatusChange(article.id, 'blasted')}
+              <button onClick={() => onBlast(article)}
                 className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
                 style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
                 <Send className="w-3 h-3" /> Blast to Subscribers

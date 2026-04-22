@@ -9,6 +9,7 @@ import CharlieTopHat from '../components/brand/CharlieTopHat';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 import CityGuideTeaser from '../components/home/CityGuideTeaser';
 import HeroMinimal from '../components/home/HeroMinimal';
+import LocalPulsePopup from '../components/dnn/LocalPulsePopup';
 
 const GOLD = '#D4AF37';
 
@@ -26,6 +27,9 @@ const services = [
 export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: '#808080', color: '#fff' }}>
+
+      {/* DNN Local Pulse Popup */}
+      <LocalPulsePopup />
 
       {/* Hero */}
       <section id="hero">
