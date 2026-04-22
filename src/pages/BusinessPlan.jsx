@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Share2 } from 'lucide-react';
+import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Share2, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GOLD = '#D4AF37';
@@ -464,6 +464,88 @@ PHASE 7 — TRACK EVERYTHING
 • Admin → Active Campaigns`
   },
   {
+    id: 'dnn-broadcast-network',
+    title: '📡 DNN Broadcast Intelligence Network',
+    icon: Globe,
+    content: `THE THIRD PILLAR STRATEGY — FROM CONCIERGE TO MEDIA ENTITY
+
+Dyson & Dyson does not just manage relocations. We have repositioned as a broadcast intelligence network that serves the consumer daily — not just during a transaction. DNN (Digital News Network) is that daily touchpoint.
+
+────────────────────────────────
+WHY A NEWS NETWORK?
+────────────────────────────────
+Most real estate companies only have permission to contact a consumer when they're in a transaction. We want daily permission. DNN gives us that. When we deliver market-moving news daily, we build a subscriber audience that trusts us BEFORE they decide to move. That trust converts to leads, and those leads convert to referral fees.
+
+────────────────────────────────
+THE THREE PILLARS
+────────────────────────────────
+
+PILLAR 1: RELOCATION INTELLIGENCE (Consumer-Facing)
+• DNN delivers AI-generated relocation market briefs daily
+• Topics: interest rates, migration data, housing markets, tax policy, employer moves
+• Subscribers receive these via email (Communications Hub blast) and in-app (DNN News Feed)
+• Charlie is the bridge — every article ends with "Ask Charlie About This"
+• Strategy: Educate the consumer into understanding that they need to relocate — then be the obvious solution
+
+PILLAR 2: AGENT BUREAU (B2B Revenue)
+• Partner agents ("Bureau Chiefs") pay to receive co-branded DNN intelligence for their farm
+• Each Bureau Chief gets exclusive territory rights in their market
+• DNN wraps our articles with "Intelligence brought to you by DNN in partnership with [Agent Name]"
+• Bureau Chiefs get a subscriber silo — their clients get DNN content, but the agent gets the co-brand
+• Revenue: monthly subscription per Bureau slot + 25% referral fee at close
+• This turns our content into a B2B lead engine
+
+PILLAR 3: FINANCIAL SERVICES NETWORK (Coming Q3 2026)
+• Vetted lender network in each destination market
+• DRE-compliant introductions — we never steer or recommend without disclosure
+• Lenders pay a monthly subscription to be DNN-approved
+• White-labeled rate intelligence: lender delivers our market briefs co-branded with their credentials
+• Revenue: lender subscription + potential referral arrangement (structured for DRE compliance)
+
+────────────────────────────────
+THE SUBSCRIBER FLYWHEEL
+────────────────────────────────
+Homeowner lists (PropStream + SkipTrace)
+  → SMS outreach → interested owners opt in
+    → Owners become DNN Subscribers (Tier 1)
+      → Daily intelligence builds trust
+        → When they're ready to list, they call us first
+          → Listing agent introduces Dyson concierge to their buyer
+            → Buyer becomes a relocation client
+              → Referral fee at close
+                → Agent becomes a Bureau Chief
+
+ONE HOMEOWNER → SUBSCRIBER → CLIENT → REVENUE → AGENT → MORE SUBSCRIBERS
+
+────────────────────────────────
+CHARLIE'S ROLE IN THE DNN NETWORK
+────────────────────────────────
+Charlie is the editorial voice of DNN from the consumer side. Every subscriber who reads a market brief and has a question gets routed to Charlie. Charlie's job in this context:
+• Explain the news in plain language ("What does this rate hike mean for my Austin move?")
+• Anchor the consumer to their specific relocation scenario
+• Escalate to human staff when a consumer shows high intent
+• Feed escalations into the CharlieKnowledgeBase for future training
+
+This creates a closed loop: DNN creates content → Charlie absorbs it → consumers ask questions → Charlie learns from escalations → better responses next cycle.
+
+────────────────────────────────
+SUBSCRIBER TIERS
+────────────────────────────────
+Tier 1 (Free): DNN Intelligence Briefs via email + in-app. No agent assignment.
+Tier 2 (Paid, future): Premium market data, early access to agent matching.
+Tier 3 (VIP / Agent): Bureau Chief agents and their tagged client networks. Full co-brand.
+
+────────────────────────────────
+COMMUNICATIONS HUB WORKFLOW
+────────────────────────────────
+1. Admin generates DNN article (AI-assisted, reviewed by staff)
+2. Article staged → reviewed → published to in-app feed
+3. Admin uses Communications Hub to blast the article to subscriber list by tier
+4. Blast record saved: blast_count, blasted_at, target_tier
+5. Subscriber engagement tracked: opens, clicks, escalations to Charlie
+6. High-engagement subscribers flagged as hot leads → routed to relocation intake`
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -635,7 +717,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v3.1 • Last Updated: April 4, 2026 • Added: SMS Campaign Process (Phase 1–7), PropStream → SkipTrace → Base44 → Twilio workflow, Gmail auto-reply tracking</p>
+          <p>Business Plan v4.0 • Last Updated: April 22, 2026 • Added: DNN Broadcast Intelligence Network — Three-Pillar Strategy (Relocation Intelligence, Agent Bureau, Financial Services Network), Subscriber Flywheel, Charlie editorial loop, Tier architecture, Communications Hub workflow</p>
         </motion.div>
       </main>
     </div>
