@@ -75,7 +75,7 @@ const NAV_SECTIONS = [
   },
   {
     key: 'dnn',
-    label: 'DNN INTELLIGENCE BUREAU',
+    label: 'DNN NEWS & INTELLIGENCE',
     icon: Globe,
     color: '#D4AF37',
     children: [
