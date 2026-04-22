@@ -136,11 +136,11 @@ export default function AdminNewLandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PILLARS.map((pillar) => {
               const Icon = pillar.icon;
+              const isNewsCard = pillar.title === 'Real Estate News';
               return (
-                <Link
+                <div
                    key={pillar.title}
-                   to={pillar.href}
-                   className="group relative rounded-2xl p-6 transition-all hover:shadow-lg"
+                   className="group rounded-2xl p-6 transition-all hover:shadow-lg"
                    style={{
                      background: '#808080',
                      border: `1px solid rgba(212,175,55,0.15)`,
@@ -163,73 +163,51 @@ export default function AdminNewLandingPage() {
                        {pillar.subtitle}
                      </p>
                      <p className="text-sm text-white flex-1 mb-4">{pillar.description}</p>
-                    <div className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
+
+                     {isNewsCard && (
+                       <div className="mb-4 space-y-2">
+                         <label className="text-xs font-bold" style={{ color: pillar.color }}>Test Video:</label>
+                         <div className="flex gap-2">
+                           <input
+                             type="text"
+                             placeholder="Paste URL..."
+                             value={videoInput}
+                             onChange={(e) => setVideoInput(e.target.value)}
+                             className="flex-1 px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
+                           />
+                           <button
+                             onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
+                             className="px-3 py-1.5 rounded text-xs font-bold text-black"
+                             style={{ background: pillar.color }}
+                           >
+                             Load
+                           </button>
+                         </div>
+                         {videoUrl && (
+                           <div
+                             onClick={() => setVideoModalOpen(true)}
+                             className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:opacity-90 transition-opacity"
+                           >
+                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black text-xs text-white">
+                               Click to expand video
+                             </div>
+                           </div>
+                         )}
+                       </div>
+                     )}
+
+                    <Link to={pillar.href} className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
                       Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    </div>
+                    </Link>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
         </div>
       </div>
 
-      {/* Video Media Hub */}
-      <div className="px-6 mb-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-4">
-            <label className="block text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Video Hub (Test)</label>
-            <div className="flex gap-2 mt-2">
-              <input
-                type="text"
-                placeholder="Paste YouTube, Vimeo, Loom, or MP4 URL..."
-                value={videoInput}
-                onChange={(e) => setVideoInput(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-lg text-sm text-white bg-white/10 border border-white/20 focus:outline-none"
-              />
-              <button
-                onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
-                className="px-4 py-2 rounded-lg text-sm font-bold text-black transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
-              >
-                Load
-              </button>
-            </div>
-          </div>
-          
-          {videoUrl && (
-            <div
-              onClick={() => setVideoModalOpen(true)}
-              className="w-full aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 hover:opacity-90 transition-opacity"
-              style={{
-                borderColor: GOLD,
-                background: '#000',
-              }}
-            >
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black relative">
-                {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
-                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get('v') || videoUrl.split('/').pop()}`} frameBorder="0" />
-                ) : videoUrl.includes('vimeo.com') ? (
-                  <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
-                ) : videoUrl.includes('loom.com') ? (
-                  <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
-                ) : (
-                  <video width="100%" height="100%" controls>
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                )}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="bg-black/40 px-6 py-3 rounded-full backdrop-blur">
-                    <p className="text-white font-bold text-sm">Click to expand</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
-      <VideoModal isOpen={videoModalOpen} onClose={() => setVideoModalOpen(false)} videoUrl={videoUrl} />
 
       {/* Charlie CTA */}
       <div
