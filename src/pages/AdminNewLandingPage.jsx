@@ -61,7 +61,7 @@ export default function AdminNewLandingPage() {
         <p className="text-sm tracking-[0.15em] font-bold uppercase mb-1" style={{ color: GOLD }}>
           Real Estate News and Management
         </p>
-        <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed italic">
+        <p className="text-sm text-white max-w-2xl mx-auto leading-relaxed italic">
           At Dyson & Dyson Companies: We don't sell real estate. We manage your entire move.
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function AdminNewLandingPage() {
       {/* Search Hero */}
       <div className="px-6 py-12 text-center">
         <div className="max-w-2xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.15em] font-bold text-slate-500 mb-4">
+          <p className="text-sm uppercase tracking-[0.15em] font-bold text-white mb-4">
             Where does your lifestyle take you next?
           </p>
           <form onSubmit={handleSearch}>
@@ -134,7 +134,7 @@ export default function AdminNewLandingPage() {
                     <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: pillar.color }}>
                       {pillar.subtitle}
                     </p>
-                    <p className="text-sm text-slate-400 flex-1 mb-4">{pillar.description}</p>
+                    <p className="text-sm text-white flex-1 mb-4">{pillar.description}</p>
                     <div className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
                       Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -157,7 +157,7 @@ export default function AdminNewLandingPage() {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <p className="text-white font-bold mb-1">Questions about relocation?</p>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-white">
               Chat with Charlie, our AI concierge—available 24/7 to guide your entire move.
             </p>
           </div>
@@ -177,7 +177,7 @@ export default function AdminNewLandingPage() {
         className="text-center py-6 border-t"
         style={{ borderColor: 'rgba(212,175,55,0.1)' }}
       >
-        <p className="text-xs text-slate-600">
+        <p className="text-xs text-slate-400">
           Dyson & Dyson Real Estate Concierge · CA DRE #02303118
         </p>
       </div>
