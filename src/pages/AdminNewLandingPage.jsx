@@ -32,9 +32,37 @@ const PILLARS = [
   },
 ];
 
+function VideoModal({ isOpen, onClose, videoUrl }) {
+  if (!isOpen || !videoUrl) return null;
+  
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-4xl mx-4" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute -top-10 right-0 text-white text-2xl font-bold hover:opacity-70">✕</button>
+        <div className="w-full aspect-video rounded-2xl overflow-hidden border-2" style={{ borderColor: GOLD }}>
+          {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
+            <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get('v') || videoUrl.split('/').pop()}`} frameBorder="0" allowFullScreen />
+          ) : videoUrl.includes('vimeo.com') ? (
+            <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
+          ) : videoUrl.includes('loom.com') ? (
+            <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
+          ) : (
+            <video width="100%" height="100%" controls autoPlay>
+              <source src={videoUrl} type="video/mp4" />
+            </video>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminNewLandingPage() {
   const [destination, setDestination] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoInput, setVideoInput] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -145,6 +173,63 @@ export default function AdminNewLandingPage() {
           </div>
         </div>
       </div>
+
+      {/* Video Media Hub */}
+      <div className="px-6 mb-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-4">
+            <label className="block text-xs font-bold uppercase tracking-widest" style={{ color: GOLD }}>Video Hub (Test)</label>
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                placeholder="Paste YouTube, Vimeo, Loom, or MP4 URL..."
+                value={videoInput}
+                onChange={(e) => setVideoInput(e.target.value)}
+                className="flex-1 px-4 py-2 rounded-lg text-sm text-white bg-white/10 border border-white/20 focus:outline-none"
+              />
+              <button
+                onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
+                className="px-4 py-2 rounded-lg text-sm font-bold text-black transition-all hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+              >
+                Load
+              </button>
+            </div>
+          </div>
+          
+          {videoUrl && (
+            <div
+              onClick={() => setVideoModalOpen(true)}
+              className="w-full aspect-video rounded-2xl overflow-hidden cursor-pointer border-2 hover:opacity-90 transition-opacity"
+              style={{
+                borderColor: GOLD,
+                background: '#000',
+              }}
+            >
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black relative">
+                {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
+                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get('v') || videoUrl.split('/').pop()}`} frameBorder="0" />
+                ) : videoUrl.includes('vimeo.com') ? (
+                  <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
+                ) : videoUrl.includes('loom.com') ? (
+                  <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
+                ) : (
+                  <video width="100%" height="100%" controls>
+                    <source src={videoUrl} type="video/mp4" />
+                  </video>
+                )}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-black/40 px-6 py-3 rounded-full backdrop-blur">
+                    <p className="text-white font-bold text-sm">Click to expand</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <VideoModal isOpen={videoModalOpen} onClose={() => setVideoModalOpen(false)} videoUrl={videoUrl} />
 
       {/* Charlie CTA */}
       <div
