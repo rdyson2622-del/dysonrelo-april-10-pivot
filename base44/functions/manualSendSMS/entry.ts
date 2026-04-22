@@ -38,49 +38,57 @@ Deno.serve(async (req) => {
     let failed = 0;
     const errors = [];
 
-    for (const ownerId of owner_ids) {
-      const owner = ownerMap[ownerId];
-      if (!owner?.phone) { failed++; continue; }
+    // Send in concurrent chunks of 10 to avoid timeout
+    const CHUNK_SIZE = 10;
+    const chunks = [];
+    for (let i = 0; i < owner_ids.length; i += CHUNK_SIZE) {
+      chunks.push(owner_ids.slice(i, i + CHUNK_SIZE));
+    }
 
-      // Fill placeholders
-      const body = template.content
-        .replace(/\{\{owner_name\}\}/g, owner.owner_name || 'there')
-        .replace(/\{\{property_address\}\}/g, owner.property_address || '')
-        .replace(/\{\{listing_price\}\}/g, owner.listing_price ? `$${Number(owner.listing_price).toLocaleString()}` : '')
-        .replace(/\{\{destination_city\}\}/g, owner.moving_to || '');
+    for (const chunk of chunks) {
+      await Promise.all(chunk.map(async (ownerId) => {
+        const owner = ownerMap[ownerId];
+        if (!owner?.phone) { failed++; return; }
 
-      const params = new URLSearchParams({
-        From: fromPhone,
-        To: owner.phone,
-        Body: body,
-      });
+        // Fill placeholders
+        const body = template.content
+          .replace(/\{\{owner_name\}\}/g, owner.owner_name || 'there')
+          .replace(/\{\{property_address\}\}/g, owner.property_address || '')
+          .replace(/\{\{listing_price\}\}/g, owner.listing_price ? `$${Number(owner.listing_price).toLocaleString()}` : '')
+          .replace(/\{\{destination_city\}\}/g, owner.moving_to || '');
 
-      const twilioRes = await fetch(
-        `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${twilioAuth}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: params.toString(),
-        }
-      );
-
-      const twilioData = await twilioRes.json();
-      console.log(`[SMS] ${owner.owner_name} (${owner.phone}):`, twilioData.sid ? 'SUCCESS' : `FAILED - ${twilioData.message} (code ${twilioData.code})`);
-
-      if (twilioData.sid) {
-        sent++;
-        // Update owner contact status
-        await base44.asServiceRole.entities.ListingOwner.update(ownerId, {
-          contact_status: 'contacted',
-          last_contacted: new Date().toISOString().split('T')[0],
+        const params = new URLSearchParams({
+          From: fromPhone,
+          To: owner.phone,
+          Body: body,
         });
-      } else {
-        failed++;
-        errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'} (${twilioData.code || 'N/A'})`);
-      }
+
+        const twilioRes = await fetch(
+          `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Basic ${twilioAuth}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString(),
+          }
+        );
+
+        const twilioData = await twilioRes.json();
+        console.log(`[SMS] ${owner.owner_name} (${owner.phone}):`, twilioData.sid ? 'SUCCESS' : `FAILED - ${twilioData.message} (code ${twilioData.code})`);
+
+        if (twilioData.sid) {
+          sent++;
+          await base44.asServiceRole.entities.ListingOwner.update(ownerId, {
+            contact_status: 'contacted',
+            last_contacted: new Date().toISOString().split('T')[0],
+          });
+        } else {
+          failed++;
+          errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'} (${twilioData.code || 'N/A'})`);
+        }
+      }));
     }
 
     // Log the batch

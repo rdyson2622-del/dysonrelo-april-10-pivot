@@ -50,11 +50,12 @@ export default function AdminComposeSMS() {
 
   const filteredOwners = useMemo(() => {
     return owners.filter(o => {
-      const matchCity = cityFilter === 'all' || o.property_city?.trim() === cityFilter;
+      const matchCity = cityFilter === 'all' || o.property_city?.trim().toLowerCase() === cityFilter.toLowerCase();
       const matchSearch = !search ||
         o.owner_name?.toLowerCase().includes(search.toLowerCase()) ||
         o.property_address?.toLowerCase().includes(search.toLowerCase()) ||
-        o.phone?.includes(search);
+        o.phone?.includes(search) ||
+        o.property_city?.toLowerCase().includes(search.toLowerCase());
       return matchCity && matchSearch && o.phone;
     });
   }, [owners, cityFilter, search]);
@@ -176,7 +177,7 @@ export default function AdminComposeSMS() {
                 <div className="relative flex-1 min-w-[160px]">
                   <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-slate-400" />
                   <Input
-                    placeholder="Search name, address, phone..."
+                    placeholder="Search name, address, phone, city..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="pl-8 h-8 text-xs"
@@ -230,7 +231,7 @@ export default function AdminComposeSMS() {
                         </td>
                         <td className="px-3 py-2.5 font-medium text-slate-900 max-w-[160px] truncate">{owner.owner_name}</td>
                         <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">{owner.phone}</td>
-                        <td className="px-3 py-2.5 text-slate-500 max-w-[120px] truncate">{owner.property_city || '—'}</td>
+                        <td className="px-3 py-2.5 text-slate-500 max-w-[150px] truncate" title={owner.property_city || ''}>{owner.property_city || '—'}</td>
                         <td className="px-3 py-2.5">
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                             owner.contact_status === 'not_contacted' ? 'bg-slate-100 text-slate-600' :
