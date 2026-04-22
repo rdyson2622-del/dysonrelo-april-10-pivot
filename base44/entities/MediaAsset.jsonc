@@ -1,0 +1,57 @@
+{
+  "name": "MediaAsset",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Asset title"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "press_release",
+        "headshot",
+        "logo",
+        "narrative",
+        "bio",
+        "fact_sheet",
+        "media_kit",
+        "video",
+        "other"
+      ],
+      "description": "Type of press kit asset"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL to the uploaded file"
+    },
+    "external_url": {
+      "type": "string",
+      "description": "External link if not uploaded"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Visible on public media room page"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for filtering"
+    },
+    "added_by": {
+      "type": "string",
+      "description": "Admin email who added"
+    }
+  },
+  "required": [
+    "title",
+    "asset_type"
+  ]
+}

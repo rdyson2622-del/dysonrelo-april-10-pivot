@@ -1,0 +1,88 @@
+{
+  "name": "MediaContact",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Journalist / contact full name"
+    },
+    "outlet": {
+      "type": "string",
+      "description": "Media outlet name (e.g. TechCrunch, Inman)"
+    },
+    "outlet_type": {
+      "type": "string",
+      "enum": [
+        "local_news",
+        "national_tech",
+        "real_estate_trade",
+        "podcast",
+        "newsletter",
+        "tv_radio",
+        "other"
+      ],
+      "description": "Category of outlet"
+    },
+    "beat": {
+      "type": "string",
+      "description": "Topics / beats the journalist covers"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone"
+    },
+    "twitter": {
+      "type": "string",
+      "description": "Twitter/X handle"
+    },
+    "linkedin_url": {
+      "type": "string",
+      "description": "LinkedIn profile URL"
+    },
+    "profile_url": {
+      "type": "string",
+      "description": "Recent article or bio URL"
+    },
+    "sentiment_score": {
+      "type": "number",
+      "description": "1-5 friendliness rating"
+    },
+    "pitch_status": {
+      "type": "string",
+      "enum": [
+        "not_contacted",
+        "pitched",
+        "replied",
+        "hot",
+        "passed",
+        "published"
+      ],
+      "default": "not_contacted",
+      "description": "Current pitch status"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time contact was made"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Custom tags"
+    }
+  },
+  "required": [
+    "name",
+    "outlet"
+  ]
+}

@@ -55,6 +55,11 @@ import AdminActiveCampaigns from './pages/AdminActiveCampaigns';
 import AdminScheduledCampaigns from './pages/AdminScheduledCampaigns.jsx';
 import AdminVideoSMSCampaign from './pages/AdminVideoSMSCampaign.jsx';
 import AdminVideoLibrary from './pages/AdminVideoLibrary.jsx';
+import AdminMediaCRM from './pages/AdminMediaCRM';
+import AdminPitchTracker from './pages/AdminPitchTracker';
+import AdminPressKit from './pages/AdminPressKit';
+import AdminMassPitchPersonalizer from './pages/AdminMassPitchPersonalizer';
+import MediaRoom from './pages/MediaRoom';
 import AdminComposeSMS from './pages/AdminComposeSMS';
 import BobDyson from './pages/BobDyson';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
@@ -111,6 +116,7 @@ const AuthenticatedApp = () => {
         <Route path="/FindAgent" element={<FindAgent />} />
         <Route path="/find-agent" element={<FindAgent />} />
         <Route path="/charlie-voice" element={<CharlieVoicePresentation />} />
+        <Route path="/media" element={<MediaRoom />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -133,6 +139,10 @@ const AuthenticatedApp = () => {
         <Route path="/admin/scheduled-campaigns" element={<AdminScheduledCampaigns />} />
         <Route path="/admin/video-sms-campaign" element={<AdminVideoSMSCampaign />} />
         <Route path="/admin/video-library" element={<AdminVideoLibrary />} />
+        <Route path="/admin/media-crm" element={<AdminMediaCRM />} />
+        <Route path="/admin/pitch-tracker" element={<AdminPitchTracker />} />
+        <Route path="/admin/press-kit" element={<AdminPressKit />} />
+        <Route path="/admin/mass-pitch" element={<AdminMassPitchPersonalizer />} />
         <Route path="/admin/opt-ins" element={<AdminOptIns />} />
         <Route path="/admin/presentation-library" element={<AdminPresentationLibrary />} />
         <Route path="/admin/communications" element={<AdminCommunications />} />

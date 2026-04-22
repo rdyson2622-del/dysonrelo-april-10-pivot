@@ -1,0 +1,75 @@
+{
+  "name": "MediaPitch",
+  "type": "object",
+  "properties": {
+    "contact_id": {
+      "type": "string",
+      "description": "Reference to MediaContact ID"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Denormalized contact name"
+    },
+    "outlet": {
+      "type": "string",
+      "description": "Denormalized outlet name"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Pitch subject line"
+    },
+    "message": {
+      "type": "string",
+      "description": "Full pitch message sent"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "linkedin",
+        "twitter",
+        "phone",
+        "in_person"
+      ],
+      "default": "email"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "drafted",
+        "sent",
+        "replied",
+        "hot",
+        "passed",
+        "published"
+      ],
+      "default": "drafted",
+      "description": "Pitch outcome status"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reply_received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reply_notes": {
+      "type": "string",
+      "description": "Notes on their reply"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned follow-up date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contact_id",
+    "subject"
+  ]
+}
