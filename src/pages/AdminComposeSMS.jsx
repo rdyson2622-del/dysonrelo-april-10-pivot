@@ -61,22 +61,22 @@ export default function AdminComposeSMS() {
     });
   }, [owners, cityFilter, search]);
 
-  // Group filtered owners by city
-  const ownersByCity = useMemo(() => {
+  // Group filtered owners by import_batch (spreadsheet name), fallback to city
+  const ownersByBatch = useMemo(() => {
     const map = {};
     for (const o of filteredOwners) {
-      const city = o.property_city?.trim() || 'Unknown City';
-      if (!map[city]) map[city] = [];
-      map[city].push(o);
+      const key = o.import_batch?.trim() || `${o.property_city?.trim() || 'Unknown City'} (no batch label)`;
+      if (!map[key]) map[key] = [];
+      map[key].push(o);
     }
     return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   }, [filteredOwners]);
 
-  const toggleCity = (cityOwners) => {
-    const allSelected = cityOwners.every(o => selectedOwners.has(o.id));
+  const toggleBatch = (batchOwners) => {
+    const allSelected = batchOwners.every(o => selectedOwners.has(o.id));
     setSelectedOwners(prev => {
       const next = new Set(prev);
-      cityOwners.forEach(o => allSelected ? next.delete(o.id) : next.add(o.id));
+      batchOwners.forEach(o => allSelected ? next.delete(o.id) : next.add(o.id));
       return next;
     });
   };
@@ -201,9 +201,9 @@ export default function AdminComposeSMS() {
                 </select>
               </div>
 
-              <p className="text-xs text-slate-400 mb-2">{filteredOwners.length} contacts with phone numbers across {ownersByCity.length} cities</p>
+              <p className="text-xs text-slate-400 mb-2">{filteredOwners.length} contacts with phone numbers across {ownersByBatch.length} batch{ownersByBatch.length !== 1 ? 'es' : ''}</p>
 
-              {/* Grouped by City */}
+              {/* Grouped by Import Batch (spreadsheet name) */}
               <div className="max-h-[480px] overflow-y-auto border border-slate-100 rounded-lg">
                 <table className="w-full text-sm">
                   <thead className="sticky top-0 bg-slate-50 border-b border-slate-200 z-10">
@@ -216,38 +216,38 @@ export default function AdminComposeSMS() {
                     </tr>
                   </thead>
                   <tbody>
-                    {ownersByCity.length === 0 && (
+                    {ownersByBatch.length === 0 && (
                       <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-400 text-sm">No contacts with phone numbers found</td></tr>
                     )}
-                    {ownersByCity.map(([city, cityOwners]) => {
-                      const allCitySelected = cityOwners.every(o => selectedOwners.has(o.id));
-                      const someCitySelected = cityOwners.some(o => selectedOwners.has(o.id));
-                      const selectedInCity = cityOwners.filter(o => selectedOwners.has(o.id)).length;
+                    {ownersByBatch.map(([batchLabel, batchOwners]) => {
+                      const allBatchSelected = batchOwners.every(o => selectedOwners.has(o.id));
+                      const someBatchSelected = batchOwners.some(o => selectedOwners.has(o.id));
+                      const selectedInBatch = batchOwners.filter(o => selectedOwners.has(o.id)).length;
                       return (
-                        <React.Fragment key={city}>
-                          {/* City group header */}
+                        <React.Fragment key={batchLabel}>
+                          {/* Batch group header */}
                           <tr className="bg-slate-800 sticky top-[33px] z-[5]">
                             <td className="px-3 py-2">
-                              <button onClick={() => toggleCity(cityOwners)}>
-                                {allCitySelected
+                              <button onClick={() => toggleBatch(batchOwners)}>
+                                {allBatchSelected
                                   ? <CheckSquare className="w-4 h-4 text-white" />
-                                  : someCitySelected
+                                  : someBatchSelected
                                     ? <CheckSquare className="w-4 h-4 text-slate-400" />
                                     : <Square className="w-4 h-4 text-slate-400" />}
                               </button>
                             </td>
                             <td colSpan={4} className="px-3 py-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-white uppercase tracking-widest">{city}</span>
-                                <span className="text-xs text-slate-400">{cityOwners.length} contacts</span>
-                                {someCitySelected && (
-                                  <span className="text-xs font-semibold text-blue-300">{selectedInCity} selected</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-xs font-bold text-yellow-300">📂 {batchLabel}</span>
+                                <span className="text-xs text-slate-400">{batchOwners.length} contacts</span>
+                                {someBatchSelected && (
+                                  <span className="text-xs font-semibold text-blue-300">{selectedInBatch} selected</span>
                                 )}
                               </div>
                             </td>
                           </tr>
-                          {/* City contacts */}
-                          {cityOwners.map((owner, i) => (
+                          {/* Batch contacts */}
+                          {batchOwners.map((owner, i) => (
                             <tr
                               key={owner.id}
                               className={`border-b border-slate-100 transition cursor-pointer ${
@@ -289,6 +289,7 @@ export default function AdminComposeSMS() {
                   </tbody>
                 </table>
               </div>
+
             </div>
 
             {/* Step 3: Send */}

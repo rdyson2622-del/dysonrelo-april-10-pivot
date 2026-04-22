@@ -215,15 +215,21 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [dragging, setDragging] = useState(false);
+  const [batchName, setBatchName] = useState('');
+  const [fileName, setFileName] = useState('');
   const fileRef = useRef();
 
   const reset = () => {
-    setError(null); setResult(null); setPreview(null);
+    setError(null); setResult(null); setPreview(null); setBatchName(''); setFileName('');
     if (fileRef.current) fileRef.current.value = '';
   };
 
   const processFile = async (file) => {
     if (!file) return;
+    // Pre-fill batch name from filename (strip extension)
+    const nameWithoutExt = file.name.replace(/\.[^/.]+$/, '');
+    setFileName(file.name);
+    setBatchName(nameWithoutExt);
     setLoading(true);
     setError(null);
     setResult(null);
@@ -253,6 +259,7 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
     setImporting(true);
 
     try {
+      const batch = batchName.trim() || fileName || 'Unnamed Import';
       const toInsert = preview.rows.map(r => ({
         owner_name:       r.owner_name || 'Unknown',
         phone:            r.phone || '',
@@ -262,6 +269,7 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
         property_state:   r.state || '',
         listing_price:    r.listing_price ? parseFloat(String(r.listing_price).replace(/[^0-9.]/g, '')) || undefined : undefined,
         contact_status:   'not_contacted',
+        import_batch:     batch,
       }));
 
       const CHUNK = 25;
@@ -350,6 +358,20 @@ export default function OwnerImportCSV({ open, onClose, onImportComplete }) {
           {/* Step 2: Preview */}
           {preview && !result && (
             <>
+              {/* Batch Name */}
+              <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-3 space-y-1.5">
+                <label className="block text-xs font-bold text-yellow-800 uppercase tracking-wide">
+                  📂 Batch / Spreadsheet Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  value={batchName}
+                  onChange={e => setBatchName(e.target.value)}
+                  placeholder="e.g. San Francisco - April 22 SkipTrace"
+                  className="w-full rounded-lg border border-yellow-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+                <p className="text-xs text-yellow-700">This name tags every contact in this import so you can target them separately and avoid duplicate sends.</p>
+              </div>
+
               {/* Stats */}
               <div className="grid grid-cols-4 gap-2">
                 {[

@@ -1,0 +1,72 @@
+{
+  "name": "ListingOwner",
+  "type": "object",
+  "properties": {
+    "owner_name": {
+      "type": "string",
+      "description": "Property owner name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Owner email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Owner phone"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Listing property address"
+    },
+    "property_city": {
+      "type": "string",
+      "description": "City of the listing"
+    },
+    "property_state": {
+      "type": "string",
+      "description": "State of the listing"
+    },
+    "listing_price": {
+      "type": "number",
+      "description": "Listed price"
+    },
+    "moving_to": {
+      "type": "string",
+      "description": "Where the owner is relocating to"
+    },
+    "contact_status": {
+      "type": "string",
+      "enum": [
+        "not_contacted",
+        "contacted",
+        "in_conversation",
+        "interested",
+        "not_interested",
+        "converted"
+      ],
+      "default": "not_contacted",
+      "description": "Outreach status"
+    },
+    "last_contacted": {
+      "type": "string",
+      "format": "date",
+      "description": "Last contact date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Contact notes"
+    },
+    "listing_url": {
+      "type": "string",
+      "description": "URL to the listing"
+    },
+    "import_batch": {
+      "type": "string",
+      "description": "Name of the spreadsheet/batch this owner was imported from (e.g. 'San Francisco - April 22')"
+    }
+  },
+  "required": [
+    "owner_name",
+    "property_address"
+  ]
+}
