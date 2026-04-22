@@ -61,28 +61,32 @@ export default function AdminComposeSMS() {
     });
   }, [owners, cityFilter, search]);
 
+  // Group filtered owners by city
+  const ownersByCity = useMemo(() => {
+    const map = {};
+    for (const o of filteredOwners) {
+      const city = o.property_city?.trim() || 'Unknown City';
+      if (!map[city]) map[city] = [];
+      map[city].push(o);
+    }
+    return Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
+  }, [filteredOwners]);
+
+  const toggleCity = (cityOwners) => {
+    const allSelected = cityOwners.every(o => selectedOwners.has(o.id));
+    setSelectedOwners(prev => {
+      const next = new Set(prev);
+      cityOwners.forEach(o => allSelected ? next.delete(o.id) : next.add(o.id));
+      return next;
+    });
+  };
+
   const toggleOwner = (id) => {
     setSelectedOwners(prev => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  };
-
-  const toggleAll = () => {
-    if (filteredOwners.every(o => selectedOwners.has(o.id))) {
-      setSelectedOwners(prev => {
-        const next = new Set(prev);
-        filteredOwners.forEach(o => next.delete(o.id));
-        return next;
-      });
-    } else {
-      setSelectedOwners(prev => {
-        const next = new Set(prev);
-        filteredOwners.forEach(o => next.add(o.id));
-        return next;
-      });
-    }
   };
 
   const selectedList = owners.filter(o => selectedOwners.has(o.id));
@@ -113,8 +117,6 @@ export default function AdminComposeSMS() {
       setSending(false);
     }
   };
-
-  const allFilteredSelected = filteredOwners.length > 0 && filteredOwners.every(o => selectedOwners.has(o.id));
 
   return (
     <div className="p-6 min-h-screen bg-slate-50">
@@ -199,68 +201,91 @@ export default function AdminComposeSMS() {
                 </select>
               </div>
 
-              <p className="text-xs text-slate-400 mb-2">{filteredOwners.length} contacts with phone numbers</p>
+              <p className="text-xs text-slate-400 mb-2">{filteredOwners.length} contacts with phone numbers across {ownersByCity.length} cities</p>
 
-              {/* Table */}
-              <div className="max-h-[400px] overflow-y-auto border border-slate-100 rounded-lg">
+              {/* Grouped by City */}
+              <div className="max-h-[480px] overflow-y-auto border border-slate-100 rounded-lg">
                 <table className="w-full text-sm">
-                  <thead className="sticky top-0 bg-slate-50 border-b border-slate-200">
+                  <thead className="sticky top-0 bg-slate-50 border-b border-slate-200 z-10">
                     <tr className="text-xs text-slate-500 uppercase tracking-wide">
-                      <th className="px-3 py-2 w-8">
-                        <button onClick={toggleAll}>
-                          {allFilteredSelected
-                            ? <CheckSquare className="w-4 h-4 text-slate-900" />
-                            : <Square className="w-4 h-4 text-slate-400" />}
-                        </button>
-                      </th>
+                      <th className="px-3 py-2 w-8"></th>
                       <th className="text-left px-3 py-2">Name</th>
                       <th className="text-left px-3 py-2">Phone</th>
-                      <th className="text-left px-3 py-2">City</th>
                       <th className="text-left px-3 py-2">Status</th>
                       <th className="px-3 py-2">Preview</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredOwners.map((owner, i) => (
-                      <tr
-                        key={owner.id}
-                        className={`border-b border-slate-100 transition cursor-pointer ${
-                          selectedOwners.has(owner.id) ? 'bg-blue-50' : i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'
-                        } hover:bg-blue-50/60`}
-                        onClick={() => toggleOwner(owner.id)}
-                      >
-                        <td className="px-3 py-2.5 w-8">
-                          {selectedOwners.has(owner.id)
-                            ? <CheckSquare className="w-4 h-4 text-blue-600" />
-                            : <Square className="w-4 h-4 text-slate-300" />}
-                        </td>
-                        <td className="px-3 py-2.5 font-medium text-slate-900 max-w-[160px] truncate">{owner.owner_name}</td>
-                        <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">{owner.phone}</td>
-                        <td className="px-3 py-2.5 text-slate-500 max-w-[150px] truncate" title={owner.property_city || ''}>{owner.property_city || '—'}</td>
-                        <td className="px-3 py-2.5">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            owner.contact_status === 'not_contacted' ? 'bg-slate-100 text-slate-600' :
-                            owner.contact_status === 'contacted' ? 'bg-blue-100 text-blue-700' :
-                            owner.contact_status === 'interested' ? 'bg-green-100 text-green-700' :
-                            'bg-yellow-100 text-yellow-700'
-                          }`}>{owner.contact_status?.replace(/_/g, ' ')}</span>
-                        </td>
-                        <td className="px-3 py-2.5 text-center" onClick={e => e.stopPropagation()}>
-                          {selectedTemplate && (
-                            <button
-                              onClick={() => setPreviewOwner(previewOwner?.id === owner.id ? null : owner)}
-                              className={`p-1 rounded transition ${previewOwner?.id === owner.id ? 'text-yellow-600 bg-yellow-50' : 'text-slate-400 hover:text-slate-700'}`}
-                              title="Preview filled message"
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                    {filteredOwners.length === 0 && (
-                      <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-400 text-sm">No contacts with phone numbers found</td></tr>
+                    {ownersByCity.length === 0 && (
+                      <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-400 text-sm">No contacts with phone numbers found</td></tr>
                     )}
+                    {ownersByCity.map(([city, cityOwners]) => {
+                      const allCitySelected = cityOwners.every(o => selectedOwners.has(o.id));
+                      const someCitySelected = cityOwners.some(o => selectedOwners.has(o.id));
+                      const selectedInCity = cityOwners.filter(o => selectedOwners.has(o.id)).length;
+                      return (
+                        <React.Fragment key={city}>
+                          {/* City group header */}
+                          <tr className="bg-slate-800 sticky top-[33px] z-[5]">
+                            <td className="px-3 py-2">
+                              <button onClick={() => toggleCity(cityOwners)}>
+                                {allCitySelected
+                                  ? <CheckSquare className="w-4 h-4 text-white" />
+                                  : someCitySelected
+                                    ? <CheckSquare className="w-4 h-4 text-slate-400" />
+                                    : <Square className="w-4 h-4 text-slate-400" />}
+                              </button>
+                            </td>
+                            <td colSpan={4} className="px-3 py-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-white uppercase tracking-widest">{city}</span>
+                                <span className="text-xs text-slate-400">{cityOwners.length} contacts</span>
+                                {someCitySelected && (
+                                  <span className="text-xs font-semibold text-blue-300">{selectedInCity} selected</span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                          {/* City contacts */}
+                          {cityOwners.map((owner, i) => (
+                            <tr
+                              key={owner.id}
+                              className={`border-b border-slate-100 transition cursor-pointer ${
+                                selectedOwners.has(owner.id) ? 'bg-blue-50' : i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'
+                              } hover:bg-blue-50/60`}
+                              onClick={() => toggleOwner(owner.id)}
+                            >
+                              <td className="px-3 py-2.5 w-8">
+                                {selectedOwners.has(owner.id)
+                                  ? <CheckSquare className="w-4 h-4 text-blue-600" />
+                                  : <Square className="w-4 h-4 text-slate-300" />}
+                              </td>
+                              <td className="px-3 py-2.5 font-medium text-slate-900 max-w-[180px] truncate">{owner.owner_name}</td>
+                              <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">{owner.phone}</td>
+                              <td className="px-3 py-2.5">
+                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                  owner.contact_status === 'not_contacted' ? 'bg-slate-100 text-slate-600' :
+                                  owner.contact_status === 'contacted' ? 'bg-blue-100 text-blue-700' :
+                                  owner.contact_status === 'interested' ? 'bg-green-100 text-green-700' :
+                                  'bg-yellow-100 text-yellow-700'
+                                }`}>{owner.contact_status?.replace(/_/g, ' ')}</span>
+                              </td>
+                              <td className="px-3 py-2.5 text-center" onClick={e => e.stopPropagation()}>
+                                {selectedTemplate && (
+                                  <button
+                                    onClick={() => setPreviewOwner(previewOwner?.id === owner.id ? null : owner)}
+                                    className={`p-1 rounded transition ${previewOwner?.id === owner.id ? 'text-yellow-600 bg-yellow-50' : 'text-slate-400 hover:text-slate-700'}`}
+                                    title="Preview filled message"
+                                  >
+                                    <Eye className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
