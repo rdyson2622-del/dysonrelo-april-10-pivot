@@ -95,12 +95,10 @@ function RenameBatchModal({ open, onClose, currentLabel, owners, onRenamed }) {
         ? !o.import_batch?.trim()
         : o.import_batch?.trim() === currentLabel
     );
-    // Update in chunks of 20 in parallel
-    const CHUNK = 20;
-    for (let i = 0; i < batchOwners.length; i += CHUNK) {
-      await Promise.all(batchOwners.slice(i, i + CHUNK).map(o =>
-        base44.entities.ListingOwner.update(o.id, { import_batch: newName.trim() })
-      ));
+    // Update sequentially with a small delay to avoid rate limits
+    for (const o of batchOwners) {
+      await base44.entities.ListingOwner.update(o.id, { import_batch: newName.trim() });
+      await new Promise(r => setTimeout(r, 50));
     }
     setSaving(false);
     onRenamed();
@@ -610,9 +608,9 @@ function ManageBatchesTab({ owners, onOwnersChanged }) {
     );
     if (!confirm(`Delete ALL ${batchOwners.length} contacts in batch "${batchLabel}"? This cannot be undone.`)) return;
     setDeletingBatch(batchLabel);
-    const CHUNK = 20;
-    for (let i = 0; i < batchOwners.length; i += CHUNK) {
-      await Promise.all(batchOwners.slice(i, i + CHUNK).map(o => base44.entities.ListingOwner.delete(o.id)));
+    for (const o of batchOwners) {
+      await base44.entities.ListingOwner.delete(o.id);
+      await new Promise(r => setTimeout(r, 50));
     }
     onOwnersChanged();
     setDeletingBatch(null);
