@@ -25,7 +25,7 @@ const NAV_SECTIONS = [
   },
   {
     key: 'marketing_prep',
-    label: 'MARKETING PREPARATION',
+    label: 'MARKETING & PREP',
     children: [
       { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
       { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
@@ -42,7 +42,7 @@ const NAV_SECTIONS = [
   },
   {
     key: 'pr',
-    label: 'PR, MEDIA & OUTREACH',
+    label: 'PR & MEDIA',
     children: [
       { label: 'Media CRM', path: '/admin/media-crm', icon: Newspaper },
       { label: 'Pitch Tracker', path: '/admin/pitch-tracker', icon: Star },
@@ -69,7 +69,7 @@ const NAV_SECTIONS = [
   },
   {
     key: 'dnn',
-    label: 'DNN NEWS & INTELLIGENCE',
+    label: 'DNN INTELLIGENCE',
     icon: Globe,
     color: '#D4AF37',
     children: [
