@@ -41,7 +41,7 @@ export default function MediaRoom() {
           <h1 className="text-5xl font-black text-white mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Media Room
           </h1>
-          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="text-lg text-white">
             Everything you need to tell the Dyson & Dyson story. Download assets, read our narrative, and get in touch.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
@@ -71,7 +71,7 @@ export default function MediaRoom() {
               <div key={f.stat} className="rounded-2xl p-5 text-center"
                 style={{ background: '#111', border: '1px solid rgba(212,175,55,0.15)' }}>
                 <p className="text-3xl font-black" style={{ color: GOLD }}>{f.stat}</p>
-                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{f.label}</p>
+                <p className="text-xs mt-1 text-white">{f.label}</p>
               </div>
             ))}
           </div>
@@ -106,7 +106,7 @@ export default function MediaRoom() {
                     <div>
                       <p className="font-bold text-white mb-1">{asset.title}</p>
                       {asset.description && (
-                        <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>{asset.description}</p>
+                        <p className="text-xs mb-3 text-white">{asset.description}</p>
                       )}
                     </div>
                     {(asset.file_url || asset.external_url) && (
@@ -131,7 +131,7 @@ export default function MediaRoom() {
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-xs font-bold tracking-[0.4em] mb-2" style={{ color: GOLD }}>THE STORY</p>
           <h2 className="text-3xl font-bold text-white mb-6">The 1927 Parallel</h2>
-          <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <p className="text-base leading-relaxed text-white">
             In 1927, a few visionaries saw the airplane not as a novelty, but as the future of travel. Bob Dyson sees AI-powered concierge relocation in the same light — not a gimmick, but the beginning of how families will move for the next 100 years. Completely free to the buyer. End-to-end service. Human + AI working together. This is the 1927 moment for real estate relocation.
           </p>
         </div>
@@ -140,8 +140,8 @@ export default function MediaRoom() {
       {/* Footer */}
       <footer className="py-10 px-6 text-center" style={{ borderTop: '1px solid rgba(212,175,55,0.1)' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto mx-auto mb-3 opacity-60" />
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>© {new Date().getFullYear()} Dyson & Dyson Concierge Relocation Services. All rights reserved.</p>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.2)' }}>For media inquiries: press@dysondyson.com · (858) 353-1200</p>
+        <p className="text-xs text-white">© {new Date().getFullYear()} Dyson & Dyson Concierge Relocation Services. All rights reserved.</p>
+        <p className="text-xs mt-1 text-white">For media inquiries: press@dysondyson.com · (858) 353-1200</p>
       </footer>
     </div>
   );

@@ -42,7 +42,7 @@ export default function AdminMassPitchPersonalizer() {
         <div className="mb-6">
           <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>PR & MEDIA</p>
           <h1 className="text-3xl font-bold text-white">Mass Pitch Personalizer</h1>
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-sm mt-1 text-white">
             Write one template — the system swaps <span style={{ color: GOLD }}>[Name]</span> and <span style={{ color: GOLD }}>[Outlet]</span> automatically for each journalist.
           </p>
         </div>
@@ -83,7 +83,7 @@ export default function AdminMassPitchPersonalizer() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-bold text-white">{c.name}</p>
-                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.outlet} · {c.beat}</p>
+                      <p className="text-xs text-white">{c.outlet} · {c.beat}</p>
                     </div>
                     <div className="flex gap-2">
                       <button

@@ -71,7 +71,7 @@ export default function AdminMediaCRM() {
           <div>
             <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>PR & MEDIA</p>
             <h1 className="text-3xl font-bold text-white">Media CRM</h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Track journalists, outlets, beats & pitch status</p>
+            <p className="text-sm mt-1 text-white">Track journalists, outlets, beats & pitch status</p>
           </div>
           <Button onClick={openAdd} className="gap-2" style={{ background: GOLD, color: '#000' }}>
             <Plus className="w-4 h-4" /> Add Contact
@@ -103,7 +103,7 @@ export default function AdminMediaCRM() {
             return (
               <div key={s} className="rounded-xl p-3 text-center" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <p className="text-xl font-bold text-white">{count}</p>
-                <p className="text-[10px] mt-0.5 capitalize" style={{ color: 'rgba(255,255,255,0.4)' }}>{s.replace('_',' ')}</p>
+                <p className="text-[10px] mt-0.5 capitalize text-white">{s.replace('_',' ')}</p>
               </div>
             );
           })}
@@ -124,13 +124,13 @@ export default function AdminMediaCRM() {
                 <tr key={c.id} style={{ background: i % 2 === 0 ? '#0d0d0d' : '#0a0a0a', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-white">{c.name}</p>
-                    {c.email && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{c.email}</p>}
+                    {c.email && <p className="text-xs text-white">{c.email}</p>}
                   </td>
                   <td className="px-4 py-3">
                     <p className="text-white">{c.outlet}</p>
-                    <p className="text-xs capitalize" style={{ color: 'rgba(255,255,255,0.4)' }}>{c.outlet_type?.replace('_',' ')}</p>
+                    <p className="text-xs capitalize text-white">{c.outlet_type?.replace('_',' ')}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>{c.beat || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-white">{c.beat || '—'}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold capitalize ${STATUS_COLORS[c.pitch_status] || ''}`}>
                       {c.pitch_status?.replace('_',' ')}

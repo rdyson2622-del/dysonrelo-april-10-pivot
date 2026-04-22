@@ -76,7 +76,7 @@ export default function AdminPitchTracker() {
           <div>
             <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>PR & MEDIA</p>
             <h1 className="text-3xl font-bold text-white">Pitch Tracker</h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{pitches.length} total pitches across {contacts.length} contacts</p>
+            <p className="text-sm mt-1 text-white">{pitches.length} total pitches across {contacts.length} contacts</p>
           </div>
           <div className="flex gap-3">
             <div className="flex rounded-lg overflow-hidden border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
@@ -110,8 +110,8 @@ export default function AdminPitchTracker() {
                       <div key={p.id} className="rounded-xl p-3 cursor-pointer group" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}
                         onClick={() => openEdit(p)}>
                         <p className="text-xs font-bold text-white truncate">{p.contact_name}</p>
-                        <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.outlet}</p>
-                        <p className="text-[10px] mt-1 truncate" style={{ color: 'rgba(255,255,255,0.4)' }}>{p.subject}</p>
+                        <p className="text-[10px] text-white">{p.outlet}</p>
+                        <p className="text-[10px] mt-1 truncate text-white">{p.subject}</p>
                         <div className="flex gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button onClick={e => { e.stopPropagation(); remove(p.id); }} className="text-red-500 text-[10px]">Delete</button>
                         </div>
@@ -139,9 +139,9 @@ export default function AdminPitchTracker() {
                 {pitches.map((p, i) => (
                   <tr key={p.id} style={{ background: i % 2 === 0 ? '#0d0d0d' : '#0a0a0a', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <td className="px-4 py-3 font-semibold text-white">{p.contact_name}</td>
-                    <td className="px-4 py-3" style={{ color: 'rgba(255,255,255,0.6)' }}>{p.outlet}</td>
-                    <td className="px-4 py-3 max-w-[200px] truncate" style={{ color: 'rgba(255,255,255,0.7)' }}>{p.subject}</td>
-                    <td className="px-4 py-3 capitalize" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.channel}</td>
+                    <td className="px-4 py-3 text-white">{p.outlet}</td>
+                    <td className="px-4 py-3 max-w-[200px] truncate text-white">{p.subject}</td>
+                    <td className="px-4 py-3 capitalize text-white">{p.channel}</td>
                     <td className="px-4 py-3">
                       <select value={p.status} onChange={e => updateStatus(p.id, e.target.value)}
                         className="text-xs rounded-full px-2 py-1 font-bold capitalize border-0"
@@ -149,7 +149,7 @@ export default function AdminPitchTracker() {
                         {COLUMNS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                       </select>
                     </td>
-                    <td className="px-4 py-3 text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.follow_up_date || '—'}</td>
+                    <td className="px-4 py-3 text-xs text-white">{p.follow_up_date || '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
                         <button onClick={() => openEdit(p)}><Edit2 className="w-4 h-4" style={{ color: GOLD }} /></button>

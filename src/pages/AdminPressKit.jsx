@@ -68,7 +68,7 @@ export default function AdminPressKit() {
           <div>
             <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>PR & MEDIA</p>
             <h1 className="text-3xl font-bold text-white">Press Kit Assets</h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Headshots, logos, narratives & press releases — all in one place</p>
+            <p className="text-sm mt-1 text-white">Headshots, logos, narratives & press releases — all in one place</p>
           </div>
           <div className="flex gap-3">
             <Link to="/media">
@@ -106,7 +106,7 @@ export default function AdminPressKit() {
               </div>
               <p className="font-bold text-white mb-1">{asset.title}</p>
               <p className="text-xs capitalize mb-2" style={{ color: GOLD }}>{asset.asset_type?.replace('_',' ')}</p>
-              {asset.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{asset.description}</p>}
+              {asset.description && <p className="text-xs mb-3 line-clamp-2 text-white">{asset.description}</p>}
               <div className="flex items-center gap-2 mt-3">
                 {asset.is_public && (
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>PUBLIC</span>
