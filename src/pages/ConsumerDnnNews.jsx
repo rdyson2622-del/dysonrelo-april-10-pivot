@@ -200,7 +200,7 @@ function ArticleCard({ article }) {
         )}
 
         {!isExpanded && (
-          <p className="text-sm text-slate-500 mt-2 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-white mt-2 line-clamp-2 leading-relaxed">
             {article.body?.split('\n')[0]}
           </p>
         )}
@@ -208,7 +208,7 @@ function ArticleCard({ article }) {
         {isExpanded && (
           <div className="mt-4 border-t pt-4 space-y-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
             {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
-              <p key={i} className="text-sm text-slate-300 leading-relaxed">{para}</p>
+              <p key={i} className="text-sm text-white leading-relaxed">{para}</p>
             ))}
             {article.tags?.length > 0 && (
               <div className="flex flex-wrap gap-1.5 pt-2">
@@ -231,7 +231,7 @@ function ArticleCard({ article }) {
       </div>
 
       <div className="px-5 pb-3 flex items-center justify-between">
-        <span className="text-[11px] text-slate-600 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+        <span className="text-[11px] text-slate-400 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? 'Tap to collapse' : 'Tap to read full brief'}
         </span>
         <div className="flex items-center gap-3">
