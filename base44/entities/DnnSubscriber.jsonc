@@ -1,0 +1,64 @@
+{
+  "name": "DnnSubscriber",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Subscriber full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number (optional)"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "tier1",
+        "tier2",
+        "tier3"
+      ],
+      "default": "tier1",
+      "description": "Tier 1=Free, Tier 2=Paid, Tier 3=VIP/Agent"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where this subscriber came from (e.g. LinkedIn, Instagram, Manual)"
+    },
+    "is_hot_lead": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flagged as high-intent hot lead"
+    },
+    "last_engaged": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last engagement date"
+    },
+    "content_interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Topics they engage with"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "subscribed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "unsubscribed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "email"
+  ]
+}

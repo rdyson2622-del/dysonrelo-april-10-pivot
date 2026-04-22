@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package, Edit } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package, Edit, Globe } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
@@ -43,6 +43,12 @@ const navItems = [
   { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
   { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
 
+  { label: 'DNN INTELLIGENCE BUREAU', isGroup: true, groupKey: 'dnn', icon: 'Globe', children: [
+    { label: 'News Feed (Staging)', path: '/admin/dnn/news-feed', icon: Newspaper },
+    { label: 'Market Data Hub', path: '/admin/dnn/market-data', icon: BarChart3 },
+    { label: 'Subscriber CRM', path: '/admin/dnn/subscribers', icon: Users },
+  ]},
+
   { label: "CHARLIE'S BRAIN", isGroup: true, groupKey: 'charlie', children: [
     { label: "Scripts", path: '/admin/charlie-scripts', icon: ScrollText },
     { label: "Knowledge Base", path: '/admin/charlie-knowledge-base', icon: Brain },
@@ -57,7 +63,7 @@ export default function AdminSidebar() {
   const [pageCode, setPageCode] = useState('');
   const [openGroups, setOpenGroups] = useState(() => {
     // Auto-open Charlie group if on a charlie page
-    return { charlie: true };
+    return { charlie: true, dnn: true };
   });
 
   const toggleGroup = (key) => setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
@@ -188,22 +194,28 @@ export default function AdminSidebar() {
           if (item.isGroup) {
             const isOpen = openGroups[item.groupKey];
             const isChildActive = item.children?.some(c => location.pathname === c.path);
+            const isDnn = item.groupKey === 'dnn';
+            const GroupIcon = isDnn ? Globe : Brain;
+            const groupColor = isDnn ? '#D4AF37' : '#A78BFA';
+            const groupActiveBg = isDnn ? 'rgba(212,175,55,0.1)' : 'rgba(167,139,250,0.1)';
+            const childActiveBg = isDnn ? 'rgba(212,175,55,0.15)' : 'rgba(167,139,250,0.15)';
+            const borderColor = isDnn ? 'rgba(212,175,55,0.25)' : 'rgba(167,139,250,0.25)';
             return (
               <div key={idx}>
                 <button
                   onClick={() => toggleGroup(item.groupKey)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
                   style={{
-                    background: isChildActive ? 'rgba(167,139,250,0.1)' : 'transparent',
-                    color: '#A78BFA',
+                    background: isChildActive ? groupActiveBg : 'transparent',
+                    color: groupColor,
                   }}
                 >
-                  <Brain className="w-4 h-4" />
+                  <GroupIcon className="w-4 h-4" />
                   <span className="flex-1 text-left tracking-wide">{item.label}</span>
                   {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
                 </button>
                 {isOpen && (
-                  <div className="ml-4 mt-0.5 space-y-0.5 border-l pl-3" style={{ borderColor: 'rgba(167,139,250,0.25)' }}>
+                  <div className="ml-4 mt-0.5 space-y-0.5 border-l pl-3" style={{ borderColor }}>
                     {item.children.map(child => {
                       const isActive = location.pathname === child.path;
                       return (
@@ -212,8 +224,8 @@ export default function AdminSidebar() {
                           to={child.path}
                           className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                           style={{
-                            background: isActive ? 'rgba(167,139,250,0.15)' : 'transparent',
-                            color: isActive ? '#A78BFA' : '#fff',
+                            background: isActive ? childActiveBg : 'transparent',
+                            color: isActive ? groupColor : '#fff',
                           }}
                         >
                           <child.icon className="w-3.5 h-3.5" />

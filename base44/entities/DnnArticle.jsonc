@@ -1,0 +1,71 @@
+{
+  "name": "DnnArticle",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "description": "Article headline"
+    },
+    "dateline": {
+      "type": "string",
+      "description": "Dateline e.g. SAN FRANCISCO \u2014"
+    },
+    "body": {
+      "type": "string",
+      "description": "Full article body text"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Topic tags"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "tax_policy",
+        "housing_market",
+        "job_market",
+        "interest_rates",
+        "migration_data",
+        "employer_news",
+        "general"
+      ],
+      "description": "Category of relocation trigger"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "staged",
+        "published",
+        "blasted",
+        "archived"
+      ],
+      "default": "staged",
+      "description": "Workflow status"
+    },
+    "generated_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AI generated this"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "social_copy_linkedin": {
+      "type": "string",
+      "description": "Formatted LinkedIn post"
+    },
+    "social_copy_facebook": {
+      "type": "string",
+      "description": "Formatted Facebook post"
+    }
+  },
+  "required": [
+    "headline",
+    "body",
+    "status"
+  ]
+}

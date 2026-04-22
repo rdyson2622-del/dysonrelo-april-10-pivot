@@ -61,6 +61,9 @@ import AdminPressKit from './pages/AdminPressKit';
 import AdminMassPitchPersonalizer from './pages/AdminMassPitchPersonalizer';
 import MediaRoom from './pages/MediaRoom';
 import AdminComposeSMS from './pages/AdminComposeSMS';
+import DnnNewsFeed from './pages/DnnNewsFeed';
+import DnnMarketData from './pages/DnnMarketData';
+import DnnSubscriberCRM from './pages/DnnSubscriberCRM';
 import BobDyson from './pages/BobDyson';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import AIAssistants from './pages/AIAssistants';
@@ -135,6 +138,9 @@ const AuthenticatedApp = () => {
         <Route path="/admin/sms-sequences" element={<AdminSMSSequences />} />
         <Route path="/admin/owner-kanban" element={<AdminOwnerKanban />} />
         <Route path="/admin/compose-sms" element={<AdminComposeSMS />} />
+        <Route path="/admin/dnn/news-feed" element={<DnnNewsFeed />} />
+        <Route path="/admin/dnn/market-data" element={<DnnMarketData />} />
+        <Route path="/admin/dnn/subscribers" element={<DnnSubscriberCRM />} />
         <Route path="/admin/active-campaigns" element={<AdminActiveCampaigns />} />
         <Route path="/admin/scheduled-campaigns" element={<AdminScheduledCampaigns />} />
         <Route path="/admin/video-sms-campaign" element={<AdminVideoSMSCampaign />} />
