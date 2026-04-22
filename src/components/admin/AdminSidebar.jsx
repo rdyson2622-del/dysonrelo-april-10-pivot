@@ -24,8 +24,8 @@ const NAV_SECTIONS = [
     ],
   },
   {
-    key: 'quick_searches',
-    label: 'QUICK SEARCHES',
+    key: 'marketing_prep',
+    label: 'MARKETING PREPARATION',
     children: [
       { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
       { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
@@ -33,12 +33,6 @@ const NAV_SECTIONS = [
       { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
       { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
       { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
-    ],
-  },
-  {
-    key: 'marketing',
-    label: 'MARKETING CAMPAIGNS',
-    children: [
       { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: Calendar },
       { label: 'Video SMS Campaign', path: '/admin/video-sms-campaign', icon: Video },
       { label: 'Video Library', path: '/admin/video-library', icon: Video },
