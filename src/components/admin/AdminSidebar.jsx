@@ -87,6 +87,13 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    key: 'creative_lab',
+    label: 'CREATIVE LAB',
+    children: [
+      { label: 'Landing Page Lab', path: '/admin/landing-lab', icon: Globe },
+    ],
+  },
+  {
     key: 'charlie',
     label: "CHARLIE'S BRAIN",
     icon: Brain,

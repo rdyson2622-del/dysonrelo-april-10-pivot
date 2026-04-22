@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, MessageCircle } from 'lucide-react';
+import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, MessageCircle, Newspaper, DollarSign, Shield } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -137,6 +137,30 @@ export default function ClientSidebar() {
           </Link>
           <Link to="/GeminiSession" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/GeminiSession' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/GeminiSession' ? '#000' : '#fff' }}>
             <Zap className="w-3.5 h-3.5" /> Gemini Session
+          </Link>
+        </div>
+      </div>
+
+      {/* DNN + Services */}
+      <div className="px-3 pb-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          DNN & Services
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Link to="/dnn-news" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+            style={{ background: location.pathname === '/dnn-news' ? GOLD : 'rgba(212,175,55,0.08)', color: location.pathname === '/dnn-news' ? '#000' : GOLD, border: '1px solid rgba(212,175,55,0.2)' }}>
+            <Newspaper className="w-3.5 h-3.5" />
+            <span className="flex-1">DNN News</span>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
+          </Link>
+          <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+            style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
+            <Shield className="w-3.5 h-3.5" /> My Agent
+          </Link>
+          <Link to="/financial-services" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+            style={{ background: location.pathname === '/financial-services' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/financial-services' ? '#000' : '#fff' }}>
+            <DollarSign className="w-3.5 h-3.5" /> Financial Services
+            <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.1)', color: '#94a3b8' }}>Soon</span>
           </Link>
         </div>
       </div>

@@ -70,6 +70,10 @@ import BobDyson from './pages/BobDyson';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import AIAssistants from './pages/AIAssistants';
 import ReadyToStart from './components/dashboard/ReadyToStart';
+import ConsumerDnnNews from './pages/ConsumerDnnNews';
+import MyAgent from './pages/MyAgent';
+import FinancialServices from './pages/FinancialServices';
+import LandingLab from './pages/LandingLab';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -122,6 +126,9 @@ const AuthenticatedApp = () => {
         <Route path="/find-agent" element={<FindAgent />} />
         <Route path="/charlie-voice" element={<CharlieVoicePresentation />} />
         <Route path="/media" element={<MediaRoom />} />
+        <Route path="/dnn-news" element={<ConsumerDnnNews />} />
+        <Route path="/my-agent" element={<MyAgent />} />
+        <Route path="/financial-services" element={<FinancialServices />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -169,6 +176,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/social-launch" element={<AdminSocialLaunch />} />
         <Route path="/admin/business-plan" element={<BusinessPlan />} />
         <Route path="/business-plan" element={<Navigate to="/admin/business-plan" replace />} />
+        <Route path="/admin/landing-lab" element={<LandingLab />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
