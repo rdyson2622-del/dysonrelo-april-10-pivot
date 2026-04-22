@@ -38,57 +38,53 @@ Deno.serve(async (req) => {
     let failed = 0;
     const errors = [];
 
-    // Send in concurrent chunks of 10 to avoid timeout
-    const CHUNK_SIZE = 10;
-    const chunks = [];
-    for (let i = 0; i < owner_ids.length; i += CHUNK_SIZE) {
-      chunks.push(owner_ids.slice(i, i + CHUNK_SIZE));
-    }
+    const successfulOwnerIds = [];
 
-    for (const chunk of chunks) {
+    // Send Twilio messages concurrently in chunks of 10
+    const CHUNK_SIZE = 10;
+    for (let i = 0; i < owner_ids.length; i += CHUNK_SIZE) {
+      const chunk = owner_ids.slice(i, i + CHUNK_SIZE);
       await Promise.all(chunk.map(async (ownerId) => {
         const owner = ownerMap[ownerId];
         if (!owner?.phone) { failed++; return; }
 
-        // Fill placeholders
         const body = template.content
           .replace(/\{\{owner_name\}\}/g, owner.owner_name || 'there')
           .replace(/\{\{property_address\}\}/g, owner.property_address || '')
           .replace(/\{\{listing_price\}\}/g, owner.listing_price ? `$${Number(owner.listing_price).toLocaleString()}` : '')
           .replace(/\{\{destination_city\}\}/g, owner.moving_to || '');
 
-        const params = new URLSearchParams({
-          From: fromPhone,
-          To: owner.phone,
-          Body: body,
-        });
+        const params = new URLSearchParams({ From: fromPhone, To: owner.phone, Body: body });
 
         const twilioRes = await fetch(
           `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
           {
             method: 'POST',
-            headers: {
-              Authorization: `Basic ${twilioAuth}`,
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: { Authorization: `Basic ${twilioAuth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params.toString(),
           }
         );
 
         const twilioData = await twilioRes.json();
-        console.log(`[SMS] ${owner.owner_name} (${owner.phone}):`, twilioData.sid ? 'SUCCESS' : `FAILED - ${twilioData.message} (code ${twilioData.code})`);
+        console.log(`[SMS] ${owner.owner_name} (${owner.phone}):`, twilioData.sid ? 'SUCCESS' : `FAILED - ${twilioData.message}`);
 
         if (twilioData.sid) {
           sent++;
-          await base44.asServiceRole.entities.ListingOwner.update(ownerId, {
-            contact_status: 'contacted',
-            last_contacted: new Date().toISOString().split('T')[0],
-          });
+          successfulOwnerIds.push(ownerId);
         } else {
           failed++;
-          errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'} (${twilioData.code || 'N/A'})`);
+          errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'}`);
         }
       }));
+    }
+
+    // Update contact statuses sequentially after all sends complete
+    const today = new Date().toISOString().split('T')[0];
+    for (const ownerId of successfulOwnerIds) {
+      await base44.asServiceRole.entities.ListingOwner.update(ownerId, {
+        contact_status: 'contacted',
+        last_contacted: today,
+      });
     }
 
     // Log the batch
