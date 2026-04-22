@@ -114,7 +114,7 @@ export default function AdminNewLandingPage() {
                    to={pillar.href}
                    className="group relative rounded-2xl p-6 transition-all hover:shadow-lg"
                    style={{
-                     background: '#4a4a4a',
+                     background: '#808080',
                      border: `1px solid rgba(212,175,55,0.15)`,
                    }}
                  >
@@ -134,7 +134,7 @@ export default function AdminNewLandingPage() {
                      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: pillar.color }}>
                        {pillar.subtitle}
                      </p>
-                     <p className="text-sm text-slate-300 flex-1 mb-4">{pillar.description}</p>
+                     <p className="text-sm text-white flex-1 mb-4">{pillar.description}</p>
                     <div className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
                       Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>
