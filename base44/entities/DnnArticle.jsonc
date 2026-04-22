@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Full article body text"
     },
+    "video_url": {
+      "type": "string",
+      "description": "Optional video URL (YouTube, Vimeo, Loom, etc.)"
+    },
     "tags": {
       "type": "array",
       "items": {

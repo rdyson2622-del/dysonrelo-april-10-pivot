@@ -200,13 +200,45 @@ function ArticleCard({ article }) {
         )}
 
         {!isExpanded && (
-          <p className="text-sm text-white mt-2 line-clamp-2 leading-relaxed">
-            {article.body?.split('\n')[0]}
-          </p>
+          <>
+            {article.video_url && (
+              <div className="mt-3 w-full aspect-video rounded-lg overflow-hidden border border-slate-700">
+                {article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be') ? (
+                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(article.video_url).searchParams.get('v') || article.video_url.split('/').pop()}`} frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : article.video_url.includes('vimeo.com') ? (
+                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : article.video_url.includes('loom.com') ? (
+                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : (
+                  <video width="100%" height="100%" controls className="w-full h-full">
+                    <source src={article.video_url} type="video/mp4" />
+                  </video>
+                )}
+              </div>
+            )}
+            <p className="text-sm text-white mt-2 line-clamp-2 leading-relaxed">
+              {article.body?.split('\n')[0]}
+            </p>
+          </>
         )}
 
         {isExpanded && (
           <div className="mt-4 border-t pt-4 space-y-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            {article.video_url && (
+              <div className="w-full aspect-video rounded-lg overflow-hidden border border-slate-700">
+                {article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be') ? (
+                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(article.video_url).searchParams.get('v') || article.video_url.split('/').pop()}`} frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : article.video_url.includes('vimeo.com') ? (
+                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : article.video_url.includes('loom.com') ? (
+                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
+                ) : (
+                  <video width="100%" height="100%" controls className="w-full h-full">
+                    <source src={article.video_url} type="video/mp4" />
+                  </video>
+                )}
+              </div>
+            )}
             {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
               <p key={i} className="text-sm text-white leading-relaxed">{para}</p>
             ))}
