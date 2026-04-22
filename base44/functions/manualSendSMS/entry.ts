@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    const { template_id, owner_ids } = await req.json();
+    const { template_id, owner_ids, dry_run } = await req.json();
     if (!template_id || !owner_ids?.length) {
       return Response.json({ error: 'template_id and owner_ids are required' }, { status: 400 });
     }
@@ -56,6 +56,12 @@ Deno.serve(async (req) => {
 
         const params = new URLSearchParams({ From: fromPhone, To: owner.phone, Body: body });
 
+        if (dry_run) {
+          console.log(`[DRY RUN] Would send to ${owner.owner_name} (${owner.phone}): ${body.substring(0, 80)}...`);
+          sent++;
+          return;
+        }
+
         const twilioRes = await fetch(
           `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
           {
@@ -76,6 +82,11 @@ Deno.serve(async (req) => {
           errors.push(`${owner.owner_name}: ${twilioData.message || 'Unknown error'}`);
         }
       }));
+    }
+
+    // Skip DB updates and logging in dry run mode
+    if (dry_run) {
+      return Response.json({ success: true, dry_run: true, sent, failed, errors, message: `DRY RUN: Would have sent ${sent} messages. No Twilio charges incurred.` });
     }
 
     // Update contact statuses sequentially after all sends complete

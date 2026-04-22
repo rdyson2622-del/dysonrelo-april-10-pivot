@@ -21,6 +21,7 @@ export default function AdminComposeSMS() {
   const [previewOwner, setPreviewOwner] = useState(null);
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
+  const [dryRun, setDryRun] = useState(true);
 
   const { data: templates = [] } = useQuery({
     queryKey: ['messageTemplates'],
@@ -88,7 +89,10 @@ export default function AdminComposeSMS() {
 
   const handleSend = async () => {
     if (!selectedTemplate || selectedOwners.size === 0) return;
-    if (!confirm(`Send "${selectedTemplate.name}" to ${selectedOwners.size} contact(s) NOW? This will send immediately via Twilio.`)) return;
+    const confirmMsg = dryRun
+      ? `DRY RUN: Simulate sending "${selectedTemplate.name}" to ${selectedOwners.size} contact(s)? No messages will actually be sent.`
+      : `LIVE SEND: Send "${selectedTemplate.name}" to ${selectedOwners.size} contact(s) NOW via Twilio? You will be charged per message.`;
+    if (!confirm(confirmMsg)) return;
 
     setSending(true);
     setResult(null);
@@ -97,6 +101,7 @@ export default function AdminComposeSMS() {
       const res = await base44.functions.invoke('manualSendSMS', {
         template_id: selectedTemplate.id,
         owner_ids: Array.from(selectedOwners),
+        dry_run: dryRun,
       });
       setResult(res.data);
       if (res.data.success) {
@@ -301,14 +306,34 @@ export default function AdminComposeSMS() {
                     )}
                   </div>
 
+                  {/* Dry Run Toggle */}
+                  <div className={`flex items-center justify-between px-4 py-3 rounded-lg border-2 ${dryRun ? 'bg-yellow-50 border-yellow-400' : 'bg-red-50 border-red-400'}`}>
+                    <div>
+                      <p className={`text-sm font-bold ${dryRun ? 'text-yellow-800' : 'text-red-800'}`}>
+                        {dryRun ? '🧪 DRY RUN MODE — No messages will be sent' : '🔴 LIVE MODE — Real Twilio messages will be sent'}
+                      </p>
+                      <p className={`text-xs mt-0.5 ${dryRun ? 'text-yellow-600' : 'text-red-600'}`}>
+                        {dryRun ? 'Toggle off to send real SMS (you will be charged)' : 'Toggle on to test safely without charges'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setDryRun(v => !v)}
+                      className={`relative w-12 h-6 rounded-full transition-colors ${dryRun ? 'bg-yellow-400' : 'bg-red-500'}`}
+                    >
+                      <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${dryRun ? 'left-1' : 'left-7'}`} />
+                    </button>
+                  </div>
+
                   <Button
                     onClick={handleSend}
                     disabled={sending}
-                    className="w-full bg-slate-900 hover:bg-slate-700 text-white h-11 text-base font-semibold gap-2"
+                    className={`w-full h-11 text-base font-semibold gap-2 ${dryRun ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : 'bg-red-600 hover:bg-red-700 text-white'}`}
                   >
                     {sending
-                      ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</>
-                      : <><Send className="w-4 h-4" /> Send Now to {selectedOwners.size} Contact{selectedOwners.size !== 1 ? 's' : ''}</>
+                      ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {dryRun ? 'Simulating...' : 'Sending...'}</>
+                      : dryRun
+                        ? <><Send className="w-4 h-4" /> Dry Run — {selectedOwners.size} Contact{selectedOwners.size !== 1 ? 's' : ''}</>
+                        : <><Send className="w-4 h-4" /> LIVE SEND to {selectedOwners.size} Contact{selectedOwners.size !== 1 ? 's' : ''}</>
                     }
                   </Button>
                 </div>
@@ -316,9 +341,11 @@ export default function AdminComposeSMS() {
 
               {/* Result */}
               {result && (
-                <div className={`mt-3 rounded-lg px-4 py-3 text-sm font-medium ${result.success ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+                <div className={`mt-3 rounded-lg px-4 py-3 text-sm font-medium ${result.success ? (result.dry_run ? 'bg-yellow-50 border border-yellow-300 text-yellow-800' : 'bg-green-50 border border-green-200 text-green-800') : 'bg-red-50 border border-red-200 text-red-800'}`}>
                   {result.success
-                    ? `✓ Sent ${result.sent} message${result.sent !== 1 ? 's' : ''} successfully. ${result.failed > 0 ? `${result.failed} failed.` : ''}`
+                    ? result.dry_run
+                      ? `🧪 Dry Run Complete: Would have sent ${result.sent} message${result.sent !== 1 ? 's' : ''}. No charges incurred.`
+                      : `✓ Sent ${result.sent} message${result.sent !== 1 ? 's' : ''} successfully. ${result.failed > 0 ? `${result.failed} failed.` : ''}`
                     : `✗ Error: ${result.error}`}
                 </div>
               )}
