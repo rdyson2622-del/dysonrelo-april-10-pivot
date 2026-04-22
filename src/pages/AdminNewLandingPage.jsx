@@ -83,12 +83,12 @@ export default function AdminNewLandingPage() {
               <Search className="w-4 h-4" style={{ color: GOLD }} />
               <input
                 type="text"
-                placeholder="Enter your destination & include City, State or Zip Code"
+                placeholder="Where are you moving? Schools, jobs, budget, timeline..."
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
-                className="flex-1 bg-transparent text-white placeholder-slate-500 focus:outline-none text-sm"
+                className="flex-1 bg-transparent text-white placeholder-white focus:outline-none text-sm"
               />
               <button
                 type="submit"
