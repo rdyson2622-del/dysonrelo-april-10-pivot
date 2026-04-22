@@ -114,7 +114,7 @@ export default function AdminNewLandingPage() {
                    to={pillar.href}
                    className="group relative rounded-2xl p-6 transition-all hover:shadow-lg"
                    style={{
-                     background: '#3a3a3a',
+                     background: '#4a4a4a',
                      border: `1px solid rgba(212,175,55,0.15)`,
                    }}
                  >
