@@ -28,6 +28,14 @@
       "type": "string",
       "description": "Where this subscriber came from (e.g. LinkedIn, Instagram, Manual)"
     },
+    "partner_agent_id": {
+      "type": "string",
+      "description": "Hard-tagged PartnerAgent ID \u2014 this subscriber belongs exclusively to this agent's silo"
+    },
+    "partner_agent_name": {
+      "type": "string",
+      "description": "Denormalized agent name for display/co-branding"
+    },
     "is_hot_lead": {
       "type": "boolean",
       "default": false,

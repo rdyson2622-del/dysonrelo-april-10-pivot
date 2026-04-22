@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package, Edit, Globe, Send } from 'lucide-react';
+import { LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search, SendHorizontal, Flag, BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Fingerprint, Target, Megaphone, Share2, List, Zap, Brain, AlertTriangle, ChevronDown, ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package, Edit, Globe, Send, Shield } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
@@ -48,6 +48,7 @@ const navItems = [
     { label: 'Market Data Hub', path: '/admin/dnn/market-data', icon: BarChart3 },
     { label: 'Subscriber CRM', path: '/admin/dnn/subscribers', icon: Users },
     { label: 'Communications Hub', path: '/admin/dnn/communications', icon: Send },
+    { label: 'Agent Bureau (B2B)', path: '/admin/dnn/agent-bureau', icon: Shield },
   ]},
 
   { label: "CHARLIE'S BRAIN", isGroup: true, groupKey: 'charlie', children: [

@@ -1,0 +1,78 @@
+{
+  "name": "PartnerAgent",
+  "type": "object",
+  "properties": {
+    "agent_name": {
+      "type": "string",
+      "description": "Agent's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Agent's email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Agent's phone"
+    },
+    "brokerage": {
+      "type": "string",
+      "description": "Brokerage name"
+    },
+    "dre_number": {
+      "type": "string",
+      "description": "DRE license number"
+    },
+    "state": {
+      "type": "string",
+      "description": "State of licensure"
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Markets/cities this agent serves"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "prospect",
+        "active",
+        "paused",
+        "churned"
+      ],
+      "default": "prospect",
+      "description": "Partnership status"
+    },
+    "bureau_slot": {
+      "type": "string",
+      "description": "Assigned Bureau Chief slot identifier"
+    },
+    "access_token": {
+      "type": "string",
+      "description": "Unique silent-login token for this agent's client links"
+    },
+    "co_brand_label": {
+      "type": "string",
+      "description": "Display name for co-branding: 'Brought to you by DNN in partnership with [this]'"
+    },
+    "subscriber_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of subscribers tagged to this agent"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "onboarded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When they joined the bureau"
+    }
+  },
+  "required": [
+    "agent_name",
+    "email"
+  ]
+}
