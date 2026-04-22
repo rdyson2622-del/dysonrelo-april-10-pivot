@@ -1,0 +1,69 @@
+{
+  "name": "DnnCommunication",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Internal name for this communication"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject line"
+    },
+    "body": {
+      "type": "string",
+      "description": "Full message body (HTML or plain text)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "ready",
+        "blasted",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Workflow status"
+    },
+    "target_tier": {
+      "type": "string",
+      "enum": [
+        "all",
+        "tier1",
+        "tier2",
+        "tier3"
+      ],
+      "default": "all",
+      "description": "Which subscriber tier to send to"
+    },
+    "blast_count": {
+      "type": "number",
+      "description": "Number of subscribers this was sent to"
+    },
+    "blasted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this communication was sent"
+    },
+    "blasted_by": {
+      "type": "string",
+      "description": "Admin email who triggered the blast"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for organizing (e.g. founding, announcement, weekly)"
+    }
+  },
+  "required": [
+    "title",
+    "subject",
+    "body"
+  ]
+}
