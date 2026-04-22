@@ -110,14 +110,14 @@ export default function AdminNewLandingPage() {
               const Icon = pillar.icon;
               return (
                 <Link
-                  key={pillar.title}
-                  to={pillar.href}
-                  className="group relative rounded-2xl p-6 transition-all hover:shadow-lg"
-                  style={{
-                    background: '#2a2a2a',
-                    border: `1px solid rgba(212,175,55,0.15)`,
-                  }}
-                >
+                   key={pillar.title}
+                   to={pillar.href}
+                   className="group relative rounded-2xl p-6 transition-all hover:shadow-lg"
+                   style={{
+                     background: '#3a3a3a',
+                     border: `1px solid rgba(212,175,55,0.15)`,
+                   }}
+                 >
                   <div className="flex flex-col h-full">
                     <div
                       className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all"
@@ -129,12 +129,12 @@ export default function AdminNewLandingPage() {
                       <Icon className="w-5 h-5" style={{ color: pillar.color }} />
                     </div>
                     <h3 className="serif-heading text-lg font-bold text-white mb-1">
-                      {pillar.title}
-                    </h3>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: pillar.color }}>
-                      {pillar.subtitle}
-                    </p>
-                    <p className="text-sm text-white flex-1 mb-4">{pillar.description}</p>
+                       {pillar.title}
+                     </h3>
+                     <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: pillar.color }}>
+                       {pillar.subtitle}
+                     </p>
+                     <p className="text-sm text-slate-300 flex-1 mb-4">{pillar.description}</p>
                     <div className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
                       Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>
