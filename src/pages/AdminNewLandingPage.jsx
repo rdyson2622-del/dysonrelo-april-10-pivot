@@ -40,9 +40,12 @@ function VideoModal({ isOpen, onClose, videoUrl }) {
       <div className="relative w-full max-w-4xl mx-4" onClick={e => e.stopPropagation()}>
         <button onClick={onClose} className="absolute -top-10 right-0 text-white text-2xl font-bold hover:opacity-70">✕</button>
         <div className="w-full aspect-video rounded-2xl overflow-hidden border-2" style={{ borderColor: GOLD }}>
-          {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
-            <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(videoUrl).searchParams.get('v') || videoUrl.split('/').pop()}`} frameBorder="0" allowFullScreen />
-          ) : videoUrl.includes('vimeo.com') ? (
+          {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (() => {
+            const ytId = videoUrl.includes('youtu.be')
+              ? videoUrl.split('/').pop().split('?')[0]
+              : new URLSearchParams(videoUrl.split('?')[1]).get('v');
+            return <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${ytId}?autoplay=1`} frameBorder="0" allow="autoplay; fullscreen" allowFullScreen />;
+          })() : videoUrl.includes('vimeo.com') ? (
             <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
           ) : videoUrl.includes('loom.com') ? (
             <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
@@ -60,7 +63,7 @@ function VideoModal({ isOpen, onClose, videoUrl }) {
 export default function AdminNewLandingPage() {
   const [destination, setDestination] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=ysz5S6PUM-U');
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoInput, setVideoInput] = useState('');
 
