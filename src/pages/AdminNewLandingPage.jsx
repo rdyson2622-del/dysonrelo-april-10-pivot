@@ -167,29 +167,27 @@ export default function AdminNewLandingPage() {
                      {isNewsCard && (
                        <div className="mb-4 space-y-2">
                          <label className="text-xs font-bold" style={{ color: pillar.color }}>Test Video:</label>
-                         <div className="flex gap-2">
-                           <input
-                             type="text"
-                             placeholder="Paste URL..."
-                             value={videoInput}
-                             onChange={(e) => setVideoInput(e.target.value)}
-                             className="flex-1 px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
-                           />
-                           <button
-                             onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
-                             className="px-3 py-1.5 rounded text-xs font-bold text-black"
-                             style={{ background: pillar.color }}
-                           >
-                             Load
-                           </button>
-                         </div>
+                         <input
+                           type="text"
+                           placeholder="Paste YouTube / Loom / Vimeo URL..."
+                           value={videoInput}
+                           onChange={(e) => setVideoInput(e.target.value)}
+                           className="w-full px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
+                         />
+                         <button
+                           onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
+                           className="w-full py-1.5 rounded text-xs font-bold text-black"
+                           style={{ background: pillar.color }}
+                         >
+                           Load Video
+                         </button>
                          {videoUrl && (
                            <div
                              onClick={() => setVideoModalOpen(true)}
                              className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:opacity-90 transition-opacity"
                            >
                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black text-xs text-white">
-                               Click to expand video
+                               ▶ Click to expand video
                              </div>
                            </div>
                          )}
