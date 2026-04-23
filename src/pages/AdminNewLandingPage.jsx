@@ -168,11 +168,11 @@ export default function AdminNewLandingPage() {
                   </video>
                 )
               ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' }}>
-                  <Radio className="w-10 h-10 mb-3 opacity-30 text-gray-400" />
-                  <p className="text-xs font-black tracking-widest uppercase text-gray-400">Broadcast Standby</p>
-                </div>
+               <div className="absolute inset-0 flex flex-col items-center justify-center"
+                 style={{ background: '#000' }}>
+                 <Radio className="w-10 h-10 mb-3 opacity-30 text-gray-600" />
+                 <p className="text-xs font-black tracking-widest uppercase text-gray-600">Broadcast Standby</p>
+               </div>
               )}
               {article?.video_url && (
                 <button onClick={() => setFullscreen(true)}
