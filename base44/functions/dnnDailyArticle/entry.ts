@@ -19,6 +19,7 @@ const MARKETS = [
   { city: 'Seattle', state: 'WA', dateline: 'SEATTLE —' },
   { city: 'Miami', state: 'FL', dateline: 'MIAMI —' },
   { city: 'Atlanta', state: 'GA', dateline: 'ATLANTA —' },
+  { city: 'San Diego', state: 'CA', dateline: 'SAN DIEGO —' },
 ];
 
 const TRIGGER_TYPES = [

@@ -74,6 +74,7 @@ export default function AdminNewLandingPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#080808' }}>
+      <VideoModal isOpen={videoModalOpen} onClose={() => setVideoModalOpen(false)} videoUrl={videoUrl} />
       {/* Header */}
       <div
         className="px-6 py-8 text-center border-b"
@@ -146,7 +147,7 @@ export default function AdminNewLandingPage() {
                      border: `1px solid rgba(212,175,55,0.15)`,
                    }}
                  >
-                  <div className="flex flex-col h-full">
+                  <div className="flex flex-col h-full overflow-visible">
                     <div
                       className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all"
                       style={{
