@@ -90,7 +90,7 @@ export default function AdminNewLandingPage() {
         <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
           {/* ── LEFT: THREE COMPANY CARDS stacked ── */}
-          <div className="flex flex-col gap-4 lg:w-64 shrink-0">
+          <div className="flex flex-col gap-4 lg:w-64 shrink-0 p-4 rounded-2xl" style={{ background: '#f5f3ee', border: '1px solid rgba(212,175,55,0.25)' }}>
             <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-1">Our Companies</p>
 
             {/* DNN */}
