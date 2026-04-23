@@ -90,7 +90,7 @@ export default function AdminNewLandingPage() {
         <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
           {/* ── LEFT: THREE COMPANY CARDS stacked ── */}
-          <div className="flex flex-col gap-4 lg:w-64 shrink-0 p-4 rounded-2xl" style={{ background: '#c8b99a', border: '1px solid #a8956e' }}>
+          <div className="flex flex-col gap-3 lg:w-48 shrink-0 p-3 rounded-2xl" style={{ background: '#c8b99a', border: '1px solid #a8956e' }}>
             <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-1">Our Companies</p>
 
             {/* DNN */}
@@ -152,7 +152,8 @@ export default function AdminNewLandingPage() {
           </div>
 
           {/* ── RIGHT: FULL VIDEO ── */}
-          <div className="flex-1 flex flex-col rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
+          <div className="flex-1 flex flex-col rounded-2xl overflow-hidden p-3" style={{ background: '#111111', border: '3px solid #333333', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+            <div className="flex-1 flex flex-col rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
             {/* DNN label bar */}
             <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: '#f9f9f9', borderBottom: '1px solid #eee' }}>
               <span className="w-2 h-2 rounded-full animate-pulse shrink-0" style={{ background: GOLD }} />
@@ -206,11 +207,12 @@ export default function AdminNewLandingPage() {
               )}
             </div>
           </div>
+          </div>
 
-        </div>
-      </div>
+          </div>
+          </div>
 
-      {/* ── AGENT / LENDER CTA ── */}
+          {/* ── AGENT / LENDER CTA ── */}
       <div className="px-6 pb-12 max-w-4xl mx-auto">
         <div className="rounded-xl px-6 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
           style={{ background: '#fdf9ee', border: '1px solid rgba(212,175,55,0.3)' }}>
