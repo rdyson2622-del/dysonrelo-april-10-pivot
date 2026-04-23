@@ -32,39 +32,17 @@ const PILLARS = [
   },
 ];
 
-function VideoModal({ isOpen, onClose, videoUrl }) {
-  if (!isOpen || !videoUrl) return null;
-  
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={onClose}>
-      <div className="relative w-full max-w-4xl mx-4" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute -top-10 right-0 text-white text-2xl font-bold hover:opacity-70">✕</button>
-        <div className="w-full aspect-video rounded-2xl overflow-hidden border-2" style={{ borderColor: GOLD }}>
-          {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (() => {
-            const ytId = videoUrl.includes('youtu.be')
-              ? videoUrl.split('/').pop().split('?')[0]
-              : new URLSearchParams(videoUrl.split('?')[1]).get('v');
-            return <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${ytId}?autoplay=1`} frameBorder="0" allow="autoplay; fullscreen" allowFullScreen />;
-          })() : videoUrl.includes('vimeo.com') ? (
-            <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
-          ) : videoUrl.includes('loom.com') ? (
-            <iframe src={videoUrl} width="100%" height="100%" frameBorder="0" allowFullScreen />
-          ) : (
-            <video width="100%" height="100%" controls autoPlay>
-              <source src={videoUrl} type="video/mp4" />
-            </video>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+function getYouTubeId(url) {
+  if (url.includes('youtu.be')) return url.split('/').pop().split('?')[0];
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match ? match[1] : null;
 }
 
 export default function AdminNewLandingPage() {
   const [destination, setDestination] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=ysz5S6PUM-U');
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoModalOpen, setVideoModalOpen] = useState(false); // kept for compat, not used
   const [videoInput, setVideoInput] = useState('');
 
   const handleSearch = (e) => {
@@ -77,7 +55,6 @@ export default function AdminNewLandingPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#080808' }}>
-      <VideoModal isOpen={videoModalOpen} onClose={() => setVideoModalOpen(false)} videoUrl={videoUrl} />
       {/* Header */}
       <div
         className="px-6 py-8 text-center border-b"
@@ -187,34 +164,29 @@ export default function AdminNewLandingPage() {
                              Load
                            </button>
                          </div>
-                         {videoUrl && (
-                           <div
-                             onClick={() => setVideoModalOpen(true)}
-                             className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:opacity-90 transition-opacity relative"
-                           >
-                             {(videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) ? (() => {
-                               const ytId = videoUrl.includes('youtu.be')
-                                 ? videoUrl.split('/').pop().split('?')[0]
-                                 : new URLSearchParams(videoUrl.split('?')[1]).get('v');
-                               return ytId ? (
-                                 <>
-                                   <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="video thumbnail" className="w-full h-full object-cover" />
-                                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                     <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
-                                       <span className="text-black text-sm ml-0.5">▶</span>
-                                     </div>
-                                   </div>
-                                 </>
-                               ) : null;
-                             })() : (
-                               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black">
+                         {videoUrl && (() => {
+                           const isYT = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
+                           const ytId = isYT ? getYouTubeId(videoUrl) : null;
+                           return (
+                             <a
+                               href={videoUrl}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="w-full aspect-video rounded-lg overflow-hidden border border-white/20 hover:opacity-90 transition-opacity relative block"
+                             >
+                               {ytId ? (
+                                 <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="video thumbnail" className="w-full h-full object-cover" />
+                               ) : (
+                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black min-h-[80px]" />
+                               )}
+                               <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
                                    <span className="text-black text-sm ml-0.5">▶</span>
                                  </div>
                                </div>
-                             )}
-                           </div>
-                         )}
+                             </a>
+                           );
+                         })()}
                        </div>
                      )}
 
