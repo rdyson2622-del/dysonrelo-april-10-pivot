@@ -79,7 +79,7 @@ export default function AdminNewLandingPage() {
         <h1 className="display-heading text-3xl font-black tracking-[0.25em] uppercase text-white mb-3">
           Real Estate News
         </h1>
-        <p className="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+        <p className="text-base font-normal text-white max-w-2xl mx-auto leading-relaxed">
           Real estate intelligence, relocation management, and financial services —
           broadcast to consumers, agents, and lenders nationwide.
         </p>
