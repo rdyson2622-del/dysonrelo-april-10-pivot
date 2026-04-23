@@ -173,8 +173,8 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Admin Dashboard — always visible */}
-      <div className="px-3 pt-2">
+      {/* Admin Dashboard + New Landing Page — always visible */}
+      <div className="px-3 pt-2 space-y-0.5">
         <Link
           to="/admin"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
@@ -185,6 +185,18 @@ export default function AdminSidebar() {
         >
           <LayoutDashboard className="w-4 h-4" />
           Admin Dashboard
+        </Link>
+        <Link
+          to="/admin/new-landing-page"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+          style={{
+            background: location.pathname === '/admin/new-landing-page' ? 'rgba(212,175,55,0.12)' : 'rgba(212,175,55,0.05)',
+            color: location.pathname === '/admin/new-landing-page' ? '#D4AF37' : '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.2)',
+          }}
+        >
+          <Globe className="w-4 h-4" />
+          New Landing Page
         </Link>
       </div>
 
