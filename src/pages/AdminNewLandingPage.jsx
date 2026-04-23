@@ -152,8 +152,8 @@ export default function AdminNewLandingPage() {
           </div>
 
           {/* ── RIGHT: FULL VIDEO ── */}
-          <div className="flex-1 flex flex-col rounded-2xl overflow-hidden p-3" style={{ background: '#111111', border: '3px solid #333333', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
-            <div className="flex-1 flex flex-col rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
+          <div className="flex-1 flex flex-col rounded-3xl" style={{ background: '#1a1a1a', padding: '20px', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.3)' }}>
+            <div className="flex-1 flex flex-col rounded-xl overflow-hidden" style={{ background: '#000', border: '8px solid #2a2a2a', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.9)' }}>
             {/* DNN label bar */}
             <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: '#f9f9f9', borderBottom: '1px solid #eee' }}>
               <span className="w-2 h-2 rounded-full animate-pulse shrink-0" style={{ background: GOLD }} />
