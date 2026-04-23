@@ -85,129 +85,127 @@ export default function AdminNewLandingPage() {
         </p>
       </div>
 
-      {/* ── HERO VIDEO (DNN) ── */}
-      <div className="px-6 pt-10 pb-6 max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
-          <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DNN · Live Broadcast</p>
-          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.12)' }} />
-        </div>
+      {/* ── MAIN TWO-COLUMN LAYOUT ── */}
+      <div className="px-6 pt-8 pb-6 max-w-6xl mx-auto">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
-        <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
-          {/* Video */}
-          <div className="relative w-full aspect-video bg-gray-100 group">
-            {article?.video_url ? (
-              ytId ? (
-                <iframe width="100%" height="100%"
-                  src={`https://www.youtube.com/embed/${ytId}`}
-                  frameBorder="0" allowFullScreen className="w-full h-full" />
-              ) : (
-                <video controls className="w-full h-full bg-black">
-                  <source src={article.video_url} type="video/mp4" />
-                </video>
-              )
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' }}>
-                <Radio className="w-10 h-10 mb-3 opacity-30 text-gray-400" />
-                <p className="text-xs font-black tracking-widest uppercase text-gray-400">Broadcast Standby</p>
-              </div>
-            )}
-            {article?.video_url && (
-              <button onClick={() => setFullscreen(true)}
-                className="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                <Maximize2 className="w-3.5 h-3.5 text-white" />
-              </button>
-            )}
-          </div>
+          {/* ── LEFT: THREE COMPANY CARDS stacked ── */}
+          <div className="flex flex-col gap-4 lg:w-64 shrink-0">
+            <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-1">Our Companies</p>
 
-          {/* Article bar */}
-          <div className="px-5 py-4" style={{ background: '#f9f9f9', borderTop: '1px solid #eee' }}>
-            {article ? (
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-gray-900 font-bold text-base leading-snug mb-1">{article.headline}</p>
-                  {teaser && <p className="text-sm text-slate-500 leading-relaxed">{teaser}</p>}
+            {/* DNN */}
+            <Link to="/dnn-news" className="group block rounded-xl p-4 transition-all hover:shadow-md"
+              style={{ background: '#f0f6ff', border: '1px solid rgba(96,165,250,0.3)' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.25)' }}>
+                  <Radio className="w-3.5 h-3.5" style={{ color: '#60a5fa' }} />
                 </div>
-                <Link to="/dnn-news"
-                  className="flex items-center gap-1.5 text-xs font-bold shrink-0 mt-0.5"
-                  style={{ color: GOLD }}>
-                  Full Feed <ExternalLink className="w-3 h-3" />
-                </Link>
+                <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#60a5fa' }}>DNN</span>
               </div>
-            ) : (
-              <p className="text-slate-600 text-sm">Today's brief is being prepared by the DNN Intelligence Bureau.</p>
-            )}
+              <p className="text-gray-900 font-bold text-sm mb-1">Real Estate News</p>
+              <p className="text-xs text-slate-500 leading-relaxed mb-2">
+                Daily market intelligence broadcast to consumers, agents & lenders nationwide.
+              </p>
+              <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#60a5fa' }}>
+                Watch Now <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+
+            {/* Dyson Relo */}
+            <Link to="/dashboard" className="group block rounded-xl p-4 transition-all hover:shadow-md"
+              style={{ background: '#fdf9ee', border: '1px solid rgba(212,175,55,0.35)' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.25)` }}>
+                  <Home className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Dyson Relo</span>
+              </div>
+              <p className="text-gray-900 font-bold text-sm mb-1">Relocation Management</p>
+              <p className="text-xs text-slate-500 leading-relaxed mb-2">
+                Human-managed, AI-assisted concierge service for your entire move — start to finish.
+              </p>
+              <span className="flex items-center gap-1 text-xs font-bold" style={{ color: GOLD }}>
+                Get Started <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+
+            {/* Torrey Pines Escrow */}
+            <Link to="/financial-services" className="group block rounded-xl p-4 transition-all hover:shadow-md"
+              style={{ background: '#f0fdf4', border: '1px solid rgba(74,222,128,0.35)' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)' }}>
+                  <Landmark className="w-3.5 h-3.5" style={{ color: '#4ade80' }} />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#4ade80' }}>Torrey Pines Escrow</span>
+              </div>
+              <p className="text-gray-900 font-bold text-sm mb-1">Financial Services</p>
+              <p className="text-xs text-slate-500 leading-relaxed mb-2">
+                Vetted lender network and escrow services — DRE-compliant, white-labeled for your market.
+              </p>
+              <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#4ade80' }}>
+                Learn More <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
           </div>
-        </div>
-      </div>
 
-      {/* ── THREE CHANNELS ── */}
-      <div className="px-6 pb-10 max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-5">
-          <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Our Companies</p>
-          <div className="h-px flex-1" style={{ background: '#e5e7eb' }} />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-          {/* DNN */}
-          <Link to="/dnn-news" className="group block rounded-xl p-5 transition-all hover:shadow-md"
-            style={{ background: '#f0f6ff', border: '1px solid rgba(96,165,250,0.3)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.25)' }}>
-                <Radio className="w-4 h-4" style={{ color: '#60a5fa' }} />
-              </div>
-              <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#60a5fa' }}>DNN</span>
+          {/* ── RIGHT: FULL VIDEO ── */}
+          <div className="flex-1 flex flex-col rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
+            {/* DNN label bar */}
+            <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: '#f9f9f9', borderBottom: '1px solid #eee' }}>
+              <span className="w-2 h-2 rounded-full animate-pulse shrink-0" style={{ background: GOLD }} />
+              <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DNN · Live Broadcast</p>
             </div>
-            <p className="text-gray-900 font-bold mb-1">Real Estate News</p>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Daily market intelligence broadcast to consumers, agents & lenders nationwide.
-            </p>
-            <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#60a5fa' }}>
-              Watch Now <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
 
-          {/* Dyson Relo */}
-          <Link to="/dashboard" className="group block rounded-xl p-5 transition-all hover:shadow-md"
-            style={{ background: '#fdf9ee', border: '1px solid rgba(212,175,55,0.35)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.25)` }}>
-                <Home className="w-4 h-4" style={{ color: GOLD }} />
-              </div>
-              <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Dyson Relo</span>
+            {/* Video — full height */}
+            <div className="relative flex-1 bg-gray-100 group" style={{ minHeight: '320px' }}>
+              {article?.video_url ? (
+                ytId ? (
+                  <iframe width="100%" height="100%"
+                    src={`https://www.youtube.com/embed/${ytId}`}
+                    frameBorder="0" allowFullScreen className="absolute inset-0 w-full h-full" />
+                ) : (
+                  <video controls className="absolute inset-0 w-full h-full bg-black object-cover">
+                    <source src={article.video_url} type="video/mp4" />
+                  </video>
+                )
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' }}>
+                  <Radio className="w-10 h-10 mb-3 opacity-30 text-gray-400" />
+                  <p className="text-xs font-black tracking-widest uppercase text-gray-400">Broadcast Standby</p>
+                </div>
+              )}
+              {article?.video_url && (
+                <button onClick={() => setFullscreen(true)}
+                  className="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                  <Maximize2 className="w-3.5 h-3.5 text-white" />
+                </button>
+              )}
             </div>
-            <p className="text-gray-900 font-bold mb-1">Relocation Management</p>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Human-managed, AI-assisted concierge service for your entire move — start to finish.
-            </p>
-            <span className="flex items-center gap-1 text-xs font-bold" style={{ color: GOLD }}>
-              Get Started <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
 
-          {/* Torrey Pines Escrow */}
-          <Link to="/financial-services" className="group block rounded-xl p-5 transition-all hover:shadow-md"
-            style={{ background: '#f0fdf4', border: '1px solid rgba(74,222,128,0.35)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)' }}>
-                <Landmark className="w-4 h-4" style={{ color: '#4ade80' }} />
-              </div>
-              <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#4ade80' }}>Torrey Pines Escrow</span>
+            {/* Article bar */}
+            <div className="px-5 py-4" style={{ background: '#f9f9f9', borderTop: '1px solid #eee' }}>
+              {article ? (
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gray-900 font-bold text-base leading-snug mb-1">{article.headline}</p>
+                    {teaser && <p className="text-sm text-slate-500 leading-relaxed">{teaser}</p>}
+                  </div>
+                  <Link to="/dnn-news"
+                    className="flex items-center gap-1.5 text-xs font-bold shrink-0 mt-0.5"
+                    style={{ color: GOLD }}>
+                    Full Feed <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+              ) : (
+                <p className="text-slate-600 text-sm">Today's brief is being prepared by the DNN Intelligence Bureau.</p>
+              )}
             </div>
-            <p className="text-gray-900 font-bold mb-1">Financial Services</p>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Vetted lender network and escrow services — DRE-compliant, white-labeled for your market.
-            </p>
-            <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#4ade80' }}>
-              Learn More <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
+          </div>
 
         </div>
       </div>
