@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight } from 'lucide-react';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -163,20 +163,92 @@ function CharlieEducationStrip() {
   );
 }
 
+// --- Share Panel ---
+function SharePanel({ article, onClose }) {
+  const [copied, setCopied] = useState(false);
+
+  const shareText = `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${article.body?.split('\n')[0]}\n\n— Read more at dysonanddyson.com/dnn-news\n\nFree relocation intelligence delivered daily. Subscribe: dysonanddyson.com`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(shareText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleEmail = () => {
+    const subject = encodeURIComponent(`DNN Intelligence: ${article.headline}`);
+    const body = encodeURIComponent(shareText);
+    window.open(`mailto:?subject=${subject}&body=${body}`);
+  };
+
+  const handleSMS = () => {
+    const body = encodeURIComponent(`📡 DNN Intelligence: ${article.headline}\n\n${article.body?.split('\n')[0]}\n\nFull brief: dysonanddyson.com/dnn-news`);
+    window.open(`sms:?body=${body}`);
+  };
+
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `DNN Intelligence: ${article.headline}`,
+        text: shareText,
+        url: `${window.location.origin}/dnn-news`,
+      });
+    }
+  };
+
+  return (
+    <div className="mt-3 rounded-xl p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }} onClick={e => e.stopPropagation()}>
+      <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Share This Brief</p>
+
+      {/* Preview of share text */}
+      <div className="rounded-lg p-3 text-xs text-slate-400 leading-relaxed" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <p className="text-yellow-400 font-bold mb-1">📡 DNN Intelligence Bureau</p>
+        <p className="text-white font-semibold mb-1">{article.headline}</p>
+        <p className="text-slate-500 truncate">{article.body?.split('\n')[0]}</p>
+        <p className="text-slate-600 mt-1 text-[10px]">— dysonanddyson.com/dnn-news</p>
+      </div>
+
+      {/* Share buttons */}
+      <div className="grid grid-cols-2 gap-2">
+        <button onClick={handleCopy} className="flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all"
+          style={{ background: copied ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: copied ? '#4ade80' : '#fff' }}>
+          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          {copied ? 'Copied!' : 'Copy Text'}
+        </button>
+        <button onClick={handleEmail} className="flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all"
+          style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.2)', color: '#60a5fa' }}>
+          <Mail className="w-3.5 h-3.5" /> Email
+        </button>
+        <button onClick={handleSMS} className="flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all"
+          style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.2)', color: '#4ade80' }}>
+          <MessageSquare className="w-3.5 h-3.5" /> Text
+        </button>
+        {navigator.share && (
+          <button onClick={handleNativeShare} className="flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all"
+            style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.2)', color: '#D4AF37' }}>
+            <Share2 className="w-3.5 h-3.5" /> More
+          </button>
+        )}
+      </div>
+
+      <button onClick={onClose} className="w-full text-center text-xs text-slate-600 hover:text-slate-400 transition-colors py-1">
+        Close
+      </button>
+    </div>
+  );
+}
+
 // --- Article Card ---
 function ArticleCard({ article }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
 
   const handleShare = (e) => {
     e.stopPropagation();
-    if (navigator.share) {
-      navigator.share({ title: article.headline, text: article.body?.substring(0, 120) + '...', url: window.location.href });
-    } else {
-      navigator.clipboard.writeText(`${article.headline} — via DNN Intelligence Bureau`);
-    }
+    setShowShare(v => !v);
   };
 
   return (
@@ -262,13 +334,21 @@ function ArticleCard({ article }) {
         )}
       </div>
 
+      {showShare && (
+        <div className="px-5 pb-2">
+          <SharePanel article={article} onClose={() => setShowShare(false)} />
+        </div>
+      )}
+
       <div className="px-5 pb-3 flex items-center justify-between">
         <span className="text-[11px] text-slate-400 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? 'Tap to collapse' : 'Tap to read full brief'}
         </span>
         <div className="flex items-center gap-3">
-          <button onClick={handleShare} className="text-slate-700 hover:text-slate-400 transition-colors p-1">
-            <Share2 className="w-3.5 h-3.5" />
+          <button onClick={handleShare}
+            className="flex items-center gap-1 text-[11px] font-semibold transition-colors px-2 py-1 rounded-full"
+            style={{ color: showShare ? '#D4AF37' : '#64748b', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent' }}>
+            <Share2 className="w-3.5 h-3.5" /> Share
           </button>
           {isExpanded
             ? <ChevronUp className="w-4 h-4 text-slate-600 cursor-pointer" onClick={() => setIsExpanded(false)} />
