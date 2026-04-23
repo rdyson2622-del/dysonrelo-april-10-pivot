@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ArrowRight, Newspaper, Home, DollarSign, MessageCircle } from 'lucide-react';
+import { Search, ArrowRight, Newspaper, Home, DollarSign, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -36,6 +38,102 @@ function getYouTubeId(url) {
   if (url.includes('youtu.be')) return url.split('/').pop().split('?')[0];
   const match = url.match(/[?&]v=([^&]+)/);
   return match ? match[1] : null;
+}
+
+function DnnLiveFeed() {
+  const [expanded, setExpanded] = useState(false);
+
+  const { data: published = [] } = useQuery({
+    queryKey: ['landingDnnPublished'],
+    queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 1),
+  });
+  const { data: blasted = [] } = useQuery({
+    queryKey: ['landingDnnBlasted'],
+    queryFn: () => base44.entities.DnnArticle.filter({ status: 'blasted' }, '-generated_date', 1),
+  });
+
+  const candidates = [...published, ...blasted].sort(
+    (a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
+  );
+  const article = candidates[0];
+
+  if (!article) return null;
+
+  const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
+  const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
+
+  const isYT = article.video_url && (article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be'));
+  const ytId = isYT ? getYouTubeId(article.video_url) : null;
+
+  return (
+    <div className="px-6 pb-10 max-w-5xl mx-auto">
+      {/* Section header */}
+      <div className="flex items-center gap-3 mb-4">
+        <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
+        <p className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#D4AF37' }}>
+          Today's DNN Brief
+        </p>
+        <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+      </div>
+
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
+      >
+        {/* Video embed */}
+        {article.video_url && (
+          <div className="w-full aspect-video">
+            {ytId ? (
+              <iframe
+                width="100%" height="100%"
+                src={`https://www.youtube.com/embed/${ytId}`}
+                frameBorder="0" allowFullScreen
+                className="w-full h-full"
+              />
+            ) : (
+              <video controls className="w-full h-full bg-black">
+                <source src={article.video_url} type="video/mp4" />
+              </video>
+            )}
+          </div>
+        )}
+
+        {/* Article content */}
+        <div className="p-5">
+          <h2 className="text-white font-bold text-lg leading-snug mb-2">{article.headline}</h2>
+          {article.dateline && (
+            <p className="text-xs text-slate-600 font-mono mb-2">{article.dateline}</p>
+          )}
+
+          {!expanded && <p className="text-sm text-slate-400 leading-relaxed mb-3">{teaser}</p>}
+
+          {expanded && (
+            <div className="space-y-3 mb-3">
+              {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
+                <p key={i} className="text-sm text-slate-400 leading-relaxed">{para}</p>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <Link
+              to="/dnn-news"
+              className="text-xs font-bold flex items-center gap-1"
+              style={{ color: '#D4AF37' }}
+            >
+              Full News Feed <ArrowRight className="w-3 h-3" />
+            </Link>
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              {expanded ? <><ChevronUp className="w-3 h-3" /> Less</> : <><ChevronDown className="w-3 h-3" /> Read More</>}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function AdminNewLandingPage() {
@@ -202,6 +300,9 @@ export default function AdminNewLandingPage() {
       </div>
 
 
+
+      {/* DNN Live Feed */}
+      <DnnLiveFeed />
 
       {/* Charlie CTA */}
       <div
