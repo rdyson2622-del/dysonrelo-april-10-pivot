@@ -151,17 +151,12 @@ export default function AdminNewLandingPage() {
             </Link>
           </div>
 
-          {/* ── RIGHT: FULL VIDEO ── */}
-          <div className="flex-1 flex flex-col rounded-3xl" style={{ background: '#1a1a1a', padding: '20px', boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.3)' }}>
-            <div className="flex-1 flex flex-col rounded-xl overflow-hidden" style={{ background: '#000', border: '8px solid #2a2a2a', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.9)' }}>
-            {/* DNN label bar */}
-            <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: '#f9f9f9', borderBottom: '1px solid #eee' }}>
-              <span className="w-2 h-2 rounded-full animate-pulse shrink-0" style={{ background: GOLD }} />
-              <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DNN · Live Broadcast</p>
-            </div>
-
-            {/* Video — full height */}
-            <div className="relative flex-1 bg-gray-100 group" style={{ minHeight: '320px' }}>
+          {/* ── RIGHT: VIDEO + ARTICLE STACKED ── */}
+          <div className="flex-1 flex flex-col gap-4">
+            
+            {/* Video Box */}
+            <div className="rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.18)' }}>
+              <div className="relative bg-gray-100 group" style={{ minHeight: '380px' }}>
               {article?.video_url ? (
                 ytId ? (
                   <iframe width="100%" height="100%"
@@ -187,9 +182,10 @@ export default function AdminNewLandingPage() {
                 </button>
               )}
             </div>
+            </div>
 
-            {/* Article bar */}
-            <div className="px-5 py-4" style={{ background: '#f9f9f9', borderTop: '1px solid #eee' }}>
+            {/* Article Box */}
+            <div className="rounded-2xl px-5 py-4" style={{ background: '#f9f9f9', border: '1px solid rgba(212,175,55,0.18)' }}>
               {article ? (
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -206,7 +202,7 @@ export default function AdminNewLandingPage() {
                 <p className="text-slate-600 text-sm">Today's brief is being prepared by the DNN Intelligence Bureau.</p>
               )}
             </div>
-          </div>
+
           </div>
 
           </div>
