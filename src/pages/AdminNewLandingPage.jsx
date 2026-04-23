@@ -1,89 +1,75 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ArrowRight, Newspaper, Home, DollarSign, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, ArrowRight, Home, DollarSign, MessageCircle, Maximize2, X, ExternalLink } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
-const PILLARS = [
-  {
-    icon: Newspaper,
-    title: 'Real Estate News',
-    subtitle: '100% Free for Buyers',
-    description: 'Market intelligence curated daily',
-    href: '/dnn-news',
-    color: '#60a5fa',
-  },
-  {
-    icon: Home,
-    title: 'Relocation Management',
-    subtitle: 'Human-Managed · AI-Assisted',
-    description: 'Your personal concierge',
-    href: '/dashboard',
-    color: GOLD,
-  },
-  {
-    icon: DollarSign,
-    title: 'Financial Services',
-    subtitle: 'International · Local Expert',
-    description: 'Vetted lender network',
-    href: '/financial-services',
-    color: '#4ade80',
-  },
-];
-
 function getYouTubeId(url) {
+  if (!url) return null;
   if (url.includes('youtu.be')) return url.split('/').pop().split('?')[0];
   const match = url.match(/[?&]v=([^&]+)/);
   return match ? match[1] : null;
 }
 
-function DnnLiveFeed() {
-  const [expanded, setExpanded] = useState(false);
-
-  const { data: published = [] } = useQuery({
-    queryKey: ['landingDnnPublished'],
-    queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 1),
-  });
-  const { data: blasted = [] } = useQuery({
-    queryKey: ['landingDnnBlasted'],
-    queryFn: () => base44.entities.DnnArticle.filter({ status: 'blasted' }, '-generated_date', 1),
-  });
-
-  const candidates = [...published, ...blasted].sort(
-    (a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
+// --- Fullscreen Video Modal ---
+function FullscreenModal({ videoUrl, onClose }) {
+  const ytId = getYouTubeId(videoUrl);
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.95)' }}
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center z-10"
+        style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}
+      >
+        <X className="w-5 h-5 text-white" />
+      </button>
+      <div className="w-full max-w-5xl px-4" onClick={e => e.stopPropagation()}>
+        <div className="w-full aspect-video rounded-xl overflow-hidden">
+          {ytId ? (
+            <iframe
+              width="100%" height="100%"
+              src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
+              frameBorder="0" allowFullScreen allow="autoplay"
+              className="w-full h-full"
+            />
+          ) : (
+            <video controls autoPlay className="w-full h-full bg-black">
+              <source src={videoUrl} type="video/mp4" />
+            </video>
+          )}
+        </div>
+      </div>
+    </div>
   );
-  const article = candidates[0];
+}
 
-  if (!article) return null;
-
-  const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
-  const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
-
-  const isYT = article.video_url && (article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be'));
-  const ytId = isYT ? getYouTubeId(article.video_url) : null;
+// --- News TV Card (live video face) ---
+function NewsTVCard({ article }) {
+  const [fullscreen, setFullscreen] = useState(false);
+  const ytId = article?.video_url ? getYouTubeId(article.video_url) : null;
+  const color = '#60a5fa';
 
   return (
-    <div className="px-6 pb-10 max-w-5xl mx-auto">
-      {/* Section header */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
-        <p className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#D4AF37' }}>
-          Today's DNN Brief
-        </p>
-        <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-      </div>
+    <>
+      {fullscreen && article?.video_url && (
+        <FullscreenModal videoUrl={article.video_url} onClose={() => setFullscreen(false)} />
+      )}
 
       <div
-        className="rounded-2xl overflow-hidden"
-        style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
+        className="rounded-2xl overflow-hidden flex flex-col"
+        style={{ background: '#0d0d0d', border: `1px solid ${color}25` }}
       >
-        {/* Video embed */}
-        {article.video_url && (
-          <div className="w-full aspect-video">
-            {ytId ? (
+        {/* 16:9 video face */}
+        <div className="relative w-full aspect-video bg-black group">
+          {article?.video_url ? (
+            ytId ? (
               <iframe
                 width="100%" height="100%"
                 src={`https://www.youtube.com/embed/${ytId}`}
@@ -94,77 +80,129 @@ function DnnLiveFeed() {
               <video controls className="w-full h-full bg-black">
                 <source src={article.video_url} type="video/mp4" />
               </video>
-            )}
-          </div>
-        )}
-
-        {/* Article content */}
-        <div className="p-5">
-          <h2 className="text-white font-bold text-lg leading-snug mb-2">{article.headline}</h2>
-          {article.dateline && (
-            <p className="text-xs text-slate-600 font-mono mb-2">{article.dateline}</p>
-          )}
-
-          {!expanded && <p className="text-sm text-slate-400 leading-relaxed mb-3">{teaser}</p>}
-
-          {expanded && (
-            <div className="space-y-3 mb-3">
-              {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
-                <p key={i} className="text-sm text-slate-400 leading-relaxed">{para}</p>
-              ))}
+            )
+          ) : (
+            /* No video — show branded placeholder */
+            <div className="w-full h-full flex flex-col items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #0a0a0a, #111)' }}>
+              <span className="text-4xl mb-2">📡</span>
+              <p className="text-xs font-black tracking-widest uppercase" style={{ color }}>Live Feed Loading</p>
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <Link
-              to="/dnn-news"
-              className="text-xs font-bold flex items-center gap-1"
-              style={{ color: '#D4AF37' }}
-            >
-              Full News Feed <ArrowRight className="w-3 h-3" />
-            </Link>
+          {/* Fullscreen button overlay */}
+          {article?.video_url && (
             <button
-              onClick={() => setExpanded(v => !v)}
-              className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+              onClick={() => setFullscreen(true)}
+              className="absolute top-2 right-2 w-8 h-8 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.2)' }}
             >
-              {expanded ? <><ChevronUp className="w-3 h-3" /> Less</> : <><ChevronDown className="w-3 h-3" /> Read More</>}
+              <Maximize2 className="w-3.5 h-3.5 text-white" />
             </button>
+          )}
+
+          {/* LIVE badge */}
+          <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full"
+            style={{ background: 'rgba(0,0,0,0.75)', border: '1px solid rgba(96,165,250,0.3)' }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: color }} />
+            <span className="text-[10px] font-black tracking-widest uppercase" style={{ color }}>DNN Live</span>
+          </div>
+        </div>
+
+        {/* Card info bar */}
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="min-w-0 flex-1 mr-3">
+            <p className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color }}>Real Estate News</p>
+            <p className="text-white text-sm font-semibold leading-snug truncate">
+              {article?.headline || 'Daily Intelligence Brief'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {article?.video_url && (
+              <button onClick={() => setFullscreen(true)}
+                className="px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1"
+                style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
+                <Maximize2 className="w-3 h-3" /> Expand
+              </button>
+            )}
+            <Link to="/dnn-news"
+              className="px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1"
+              style={{ background: 'rgba(255,255,255,0.06)', color: '#ccc', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <ExternalLink className="w-3 h-3" /> Full Feed
+            </Link>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
+// --- Static TV Card (Relo / Finance) ---
+function StaticTVCard({ icon: Icon, title, subtitle, description, href, color, bg }) {
+  return (
+    <Link to={href} className="block group">
+      <div
+        className="rounded-2xl overflow-hidden flex flex-col transition-all group-hover:scale-[1.01]"
+        style={{ background: '#0d0d0d', border: `1px solid ${color}25` }}
+      >
+        {/* 16:9 face — branded graphic */}
+        <div className="relative w-full aspect-video flex flex-col items-center justify-center"
+          style={{ background: bg || 'linear-gradient(135deg, #0a0a0a, #111)' }}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-3"
+            style={{ background: `${color}18`, border: `1px solid ${color}35` }}>
+            <Icon className="w-8 h-8" style={{ color }} />
+          </div>
+          <p className="text-white font-black text-lg tracking-wide text-center px-4">{title}</p>
+          <p className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color }}>{subtitle}</p>
+
+          {/* Subtle corner glow */}
+          <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full opacity-10 blur-3xl"
+            style={{ background: color, transform: 'translate(-40%, 40%)' }} />
+          <div className="absolute top-0 right-0 w-24 h-24 rounded-full opacity-10 blur-3xl"
+            style={{ background: color, transform: 'translate(40%, -40%)' }} />
+        </div>
+
+        {/* Info bar */}
+        <div className="px-4 py-3 flex items-center justify-between">
+          <p className="text-slate-400 text-sm">{description}</p>
+          <span className="flex items-center gap-1 text-xs font-bold" style={{ color }}>
+            Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// --- Main Page ---
 export default function AdminNewLandingPage() {
   const [destination, setDestination] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=ysz5S6PUM-U');
-  const [videoModalOpen, setVideoModalOpen] = useState(false); // kept for compat, not used
-  const [videoInput, setVideoInput] = useState('');
+
+  const { data: published = [] } = useQuery({
+    queryKey: ['landingDnnPublished'],
+    queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 1),
+  });
+  const { data: blasted = [] } = useQuery({
+    queryKey: ['landingDnnBlasted'],
+    queryFn: () => base44.entities.DnnArticle.filter({ status: 'blasted' }, '-generated_date', 1),
+  });
+
+  const article = [...published, ...blasted].sort(
+    (a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
+  )[0] || null;
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (destination.trim()) {
-      // TODO: Route to search results or relocation intake
-      console.log('Search for:', destination);
-    }
   };
 
   return (
     <div className="min-h-screen" style={{ background: '#080808' }}>
       {/* Header */}
-      <div
-        className="px-6 py-8 text-center border-b"
-        style={{
-          borderColor: 'rgba(212,175,55,0.15)',
-          background: 'linear-gradient(180deg, #0d0d0d, #080808)',
-        }}
-      >
+      <div className="px-6 py-8 text-center border-b"
+        style={{ borderColor: 'rgba(212,175,55,0.15)', background: 'linear-gradient(180deg, #0d0d0d, #080808)' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto mx-auto mb-4" />
-        <h1 className="display-heading text-4xl font-black tracking-[0.3em] uppercase text-white mb-2">
-          Concierge
-        </h1>
+        <h1 className="display-heading text-4xl font-black tracking-[0.3em] uppercase text-white mb-2">Concierge</h1>
         <p className="text-sm tracking-[0.15em] font-bold uppercase mb-1" style={{ color: GOLD }}>
           Real Estate News and Management
         </p>
@@ -173,35 +211,31 @@ export default function AdminNewLandingPage() {
         </p>
       </div>
 
-      {/* Search Hero */}
-      <div className="px-6 py-12 text-center">
+      {/* Search */}
+      <div className="px-6 py-10 text-center">
         <div className="max-w-2xl mx-auto">
           <p className="text-sm uppercase tracking-[0.15em] font-bold text-white mb-4">
             Where does your lifestyle take you next?
           </p>
           <form onSubmit={handleSearch}>
-            <div
-              className="flex items-center gap-2 px-6 py-3 rounded-full border-2 transition-all"
+            <div className="flex items-center gap-2 px-6 py-3 rounded-full border-2 transition-all"
               style={{
                 borderColor: searchFocused ? GOLD : 'rgba(212,175,55,0.25)',
-                background: searchFocused ? 'rgba(212,175,55,0.08)' : '#808080',
-              }}
-            >
+                background: searchFocused ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.04)',
+              }}>
               <Search className="w-4 h-4" style={{ color: GOLD }} />
               <input
                 type="text"
                 placeholder="Where are you moving? Schools, jobs, budget, timeline..."
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
+                onChange={e => setDestination(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
-                className="flex-1 bg-transparent text-white placeholder-white focus:outline-none text-sm"
+                className="flex-1 bg-transparent text-white placeholder-slate-500 focus:outline-none text-sm"
               />
-              <button
-                type="submit"
-                className="px-4 py-1.5 rounded-full text-xs font-bold text-black transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
-              >
+              <button type="submit"
+                className="px-4 py-1.5 rounded-full text-xs font-bold text-black"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
                 Search
               </button>
             </div>
@@ -209,135 +243,55 @@ export default function AdminNewLandingPage() {
         </div>
       </div>
 
-      {/* Pillars */}
-      <div className="px-6 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PILLARS.map((pillar) => {
-              const Icon = pillar.icon;
-              const isNewsCard = pillar.title === 'Real Estate News';
-              return (
-                <div
-                   key={pillar.title}
-                   className="group rounded-2xl p-6 transition-all hover:shadow-lg"
-                   style={{
-                     background: '#808080',
-                     border: `1px solid rgba(212,175,55,0.15)`,
-                   }}
-                 >
-                  <div className="flex flex-col h-full overflow-visible">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-all"
-                      style={{
-                        background: `${pillar.color}18`,
-                        border: `1px solid ${pillar.color}30`,
-                      }}
-                    >
-                      <Icon className="w-5 h-5" style={{ color: pillar.color }} />
-                    </div>
-                    <h3 className="serif-heading text-lg font-bold text-white mb-1">
-                       {pillar.title}
-                     </h3>
-                     <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: pillar.color }}>
-                       {pillar.subtitle}
-                     </p>
-                     <p className="text-sm text-white flex-1 mb-4">{pillar.description}</p>
+      {/* Three TV Cards */}
+      <div className="px-6 pb-12">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* News — live video face */}
+          <NewsTVCard article={article} />
 
-                     {isNewsCard && (
-                       <div className="mb-4 space-y-2">
-                         <label className="text-xs font-bold" style={{ color: pillar.color }}>Test Video URL:</label>
-                         <div className="flex gap-1">
-                           <input
-                             type="text"
-                             placeholder="Paste YouTube / Loom / Vimeo URL..."
-                             value={videoInput}
-                             onChange={(e) => setVideoInput(e.target.value)}
-                             className="flex-1 px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
-                           />
-                           <button
-                             onClick={() => { if (videoInput.trim()) { setVideoUrl(videoInput.trim()); setVideoInput(''); } }}
-                             className="px-3 py-1.5 rounded text-xs font-bold text-black shrink-0"
-                             style={{ background: pillar.color }}
-                           >
-                             Load
-                           </button>
-                         </div>
-                         {videoUrl && (() => {
-                           const isYT = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
-                           const ytId = isYT ? getYouTubeId(videoUrl) : null;
-                           return (
-                             <a
-                               href={videoUrl}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="w-full aspect-video rounded-lg overflow-hidden border border-white/20 hover:opacity-90 transition-opacity relative block"
-                             >
-                               {ytId ? (
-                                 <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="video thumbnail" className="w-full h-full object-cover" />
-                               ) : (
-                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black min-h-[80px]" />
-                               )}
-                               <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                 <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
-                                   <span className="text-black text-sm ml-0.5">▶</span>
-                                 </div>
-                               </div>
-                             </a>
-                           );
-                         })()}
-                       </div>
-                     )}
+          {/* Relocation Management */}
+          <StaticTVCard
+            icon={Home}
+            title="Relocation Management"
+            subtitle="Human-Managed · AI-Assisted"
+            description="Your personal concierge"
+            href="/dashboard"
+            color={GOLD}
+            bg="linear-gradient(135deg, #0d0b00, #1a1400)"
+          />
 
-                    <Link to={pillar.href} className="flex items-center gap-1 text-xs font-bold" style={{ color: pillar.color }}>
-                      Explore <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {/* Financial Services */}
+          <StaticTVCard
+            icon={DollarSign}
+            title="Financial Services"
+            subtitle="International · Local Expert"
+            description="Vetted lender network"
+            href="/financial-services"
+            color="#4ade80"
+            bg="linear-gradient(135deg, #000d04, #001a08)"
+          />
         </div>
       </div>
 
-
-
-      {/* DNN Live Feed */}
-      <DnnLiveFeed />
-
       {/* Charlie CTA */}
-      <div
-        className="mx-6 mb-12 rounded-2xl p-6 border"
-        style={{
-          background: 'rgba(99,102,241,0.08)',
-          borderColor: 'rgba(99,102,241,0.2)',
-        }}
-      >
+      <div className="mx-6 mb-12 rounded-2xl p-6 border"
+        style={{ background: 'rgba(99,102,241,0.08)', borderColor: 'rgba(99,102,241,0.2)' }}>
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <p className="text-white font-bold mb-1">Questions about relocation?</p>
-            <p className="text-sm text-white">
-              Chat with Charlie, our AI concierge—available 24/7 to guide your entire move.
-            </p>
+            <p className="text-sm text-slate-400">Chat with Charlie, our AI concierge — available 24/7 to guide your entire move.</p>
           </div>
-          <Link
-            to="/chat"
-            className="ml-4 px-4 py-2 rounded-lg text-sm font-bold text-white transition-all hover:opacity-90 flex items-center gap-2 whitespace-nowrap"
-            style={{ background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.3)' }}
-          >
-            <MessageCircle className="w-4 h-4" />
-            Chat Now
+          <Link to="/chat"
+            className="ml-4 px-4 py-2 rounded-lg text-sm font-bold text-white flex items-center gap-2 whitespace-nowrap"
+            style={{ background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.3)' }}>
+            <MessageCircle className="w-4 h-4" /> Chat Now
           </Link>
         </div>
       </div>
 
       {/* Footer */}
-      <div
-        className="text-center py-6 border-t"
-        style={{ borderColor: 'rgba(212,175,55,0.1)' }}
-      >
-        <p className="text-xs text-slate-400">
-          Dyson & Dyson Real Estate Concierge · CA DRE #02303118
-        </p>
+      <div className="text-center py-6 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+        <p className="text-xs text-slate-600">Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
       </div>
     </div>
   );
