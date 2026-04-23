@@ -63,7 +63,7 @@ export default function AdminNewLandingPage() {
   const teaser = firstPara.length > 160 ? firstPara.slice(0, 160) + '...' : firstPara;
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen" style={{ background: '#ffffff' }}>
 
       {fullscreen && article?.video_url && (
         <FullscreenModal videoUrl={article.video_url} onClose={() => setFullscreen(false)} />
@@ -71,15 +71,15 @@ export default function AdminNewLandingPage() {
 
       {/* ── HEADER ── */}
       <div className="px-6 pt-10 pb-8 text-center border-b"
-        style={{ borderColor: 'rgba(212,175,55,0.12)', background: 'linear-gradient(180deg, #111 0%, #0a0a0a 100%)' }}>
+        style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'linear-gradient(180deg, #f9f6f0 0%, #ffffff 100%)' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto mx-auto mb-4" />
         <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-1" style={{ color: GOLD }}>
           The Dyson & Dyson Companies, Inc.
         </p>
-        <h1 className="display-heading text-5xl font-black tracking-[0.25em] uppercase text-white mb-3">
+        <h1 className="display-heading text-5xl font-black tracking-[0.25em] uppercase text-gray-900 mb-3">
           D&D Network
         </h1>
-        <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
           Real estate intelligence, relocation management, and financial services —
           broadcast to consumers, agents, and lenders nationwide.
         </p>
@@ -95,7 +95,7 @@ export default function AdminNewLandingPage() {
 
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.18)' }}>
           {/* Video */}
-          <div className="relative w-full aspect-video bg-black group">
+          <div className="relative w-full aspect-video bg-gray-100 group">
             {article?.video_url ? (
               ytId ? (
                 <iframe width="100%" height="100%"
@@ -108,9 +108,9 @@ export default function AdminNewLandingPage() {
               )
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #111, #0d0d0d)' }}>
-                <Radio className="w-10 h-10 mb-3 opacity-20 text-white" />
-                <p className="text-xs font-black tracking-widest uppercase text-slate-600">Broadcast Standby</p>
+                style={{ background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' }}>
+                <Radio className="w-10 h-10 mb-3 opacity-30 text-gray-400" />
+                <p className="text-xs font-black tracking-widest uppercase text-gray-400">Broadcast Standby</p>
               </div>
             )}
             {article?.video_url && (
@@ -123,11 +123,11 @@ export default function AdminNewLandingPage() {
           </div>
 
           {/* Article bar */}
-          <div className="px-5 py-4" style={{ background: '#111' }}>
+          <div className="px-5 py-4" style={{ background: '#f9f9f9', borderTop: '1px solid #eee' }}>
             {article ? (
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-bold text-base leading-snug mb-1">{article.headline}</p>
+                  <p className="text-gray-900 font-bold text-base leading-snug mb-1">{article.headline}</p>
                   {teaser && <p className="text-sm text-slate-500 leading-relaxed">{teaser}</p>}
                 </div>
                 <Link to="/dnn-news"
@@ -146,15 +146,15 @@ export default function AdminNewLandingPage() {
       {/* ── THREE CHANNELS ── */}
       <div className="px-6 pb-10 max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-5">
-          <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-600">Our Companies</p>
-          <div className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
+          <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Our Companies</p>
+          <div className="h-px flex-1" style={{ background: '#e5e7eb' }} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
           {/* DNN */}
-          <Link to="/dnn-news" className="group block rounded-xl p-5 transition-all hover:border-opacity-60"
-            style={{ background: '#111', border: '1px solid rgba(96,165,250,0.2)' }}>
+          <Link to="/dnn-news" className="group block rounded-xl p-5 transition-all hover:shadow-md"
+            style={{ background: '#f0f6ff', border: '1px solid rgba(96,165,250,0.3)' }}>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.25)' }}>
@@ -162,7 +162,7 @@ export default function AdminNewLandingPage() {
               </div>
               <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#60a5fa' }}>DNN</span>
             </div>
-            <p className="text-white font-bold mb-1">Real Estate News</p>
+            <p className="text-gray-900 font-bold mb-1">Real Estate News</p>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">
               Daily market intelligence broadcast to consumers, agents & lenders nationwide.
             </p>
@@ -172,8 +172,8 @@ export default function AdminNewLandingPage() {
           </Link>
 
           {/* Dyson Relo */}
-          <Link to="/dashboard" className="group block rounded-xl p-5 transition-all hover:border-opacity-60"
-            style={{ background: '#111', border: `1px solid rgba(212,175,55,0.2)` }}>
+          <Link to="/dashboard" className="group block rounded-xl p-5 transition-all hover:shadow-md"
+            style={{ background: '#fdf9ee', border: '1px solid rgba(212,175,55,0.35)' }}>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.25)` }}>
@@ -181,7 +181,7 @@ export default function AdminNewLandingPage() {
               </div>
               <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Dyson Relo</span>
             </div>
-            <p className="text-white font-bold mb-1">Relocation Management</p>
+            <p className="text-gray-900 font-bold mb-1">Relocation Management</p>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">
               Human-managed, AI-assisted concierge service for your entire move — start to finish.
             </p>
@@ -191,8 +191,8 @@ export default function AdminNewLandingPage() {
           </Link>
 
           {/* Torrey Pines Escrow */}
-          <Link to="/financial-services" className="group block rounded-xl p-5 transition-all hover:border-opacity-60"
-            style={{ background: '#111', border: '1px solid rgba(74,222,128,0.2)' }}>
+          <Link to="/financial-services" className="group block rounded-xl p-5 transition-all hover:shadow-md"
+            style={{ background: '#f0fdf4', border: '1px solid rgba(74,222,128,0.35)' }}>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)' }}>
@@ -200,7 +200,7 @@ export default function AdminNewLandingPage() {
               </div>
               <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#4ade80' }}>Torrey Pines Escrow</span>
             </div>
-            <p className="text-white font-bold mb-1">Financial Services</p>
+            <p className="text-gray-900 font-bold mb-1">Financial Services</p>
             <p className="text-xs text-slate-500 leading-relaxed mb-3">
               Vetted lender network and escrow services — DRE-compliant, white-labeled for your market.
             </p>
@@ -215,12 +215,12 @@ export default function AdminNewLandingPage() {
       {/* ── AGENT / LENDER CTA ── */}
       <div className="px-6 pb-12 max-w-4xl mx-auto">
         <div className="rounded-xl px-6 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-          style={{ background: '#111', border: '1px solid rgba(212,175,55,0.15)' }}>
+          style={{ background: '#fdf9ee', border: '1px solid rgba(212,175,55,0.3)' }}>
           <div>
             <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1" style={{ color: GOLD }}>
               Agents & Lenders
             </p>
-            <p className="text-white font-bold mb-0.5">Partner with the D&D Media Network</p>
+            <p className="text-gray-900 font-bold mb-0.5">Partner with the D&D Media Network</p>
             <p className="text-xs text-slate-500">
               Media placement, co-branded content & client list management — outside SD North County.
             </p>
@@ -234,11 +234,11 @@ export default function AdminNewLandingPage() {
       </div>
 
       {/* ── FOOTER ── */}
-      <div className="text-center py-6 border-t" style={{ borderColor: 'rgba(212,175,55,0.08)' }}>
-        <p className="text-[11px] text-slate-700">
+      <div className="text-center py-6 border-t" style={{ borderColor: '#e5e7eb' }}>
+        <p className="text-[11px] text-slate-400">
           The Dyson & Dyson Companies, Inc. · DNN · Dyson Relo · Torrey Pines Escrow · Wisdom Properties
         </p>
-        <p className="text-[10px] text-slate-800 mt-1">CA DRE #02303118</p>
+        <p className="text-[10px] text-slate-400 mt-1">CA DRE #02303118</p>
       </div>
 
     </div>
