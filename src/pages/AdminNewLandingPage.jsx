@@ -156,7 +156,7 @@ export default function AdminNewLandingPage() {
             
             {/* Video Box */}
             <div className="rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.18)' }}>
-              <div className="relative bg-gray-100 group" style={{ minHeight: '380px' }}>
+              <div className="relative bg-black group" style={{ minHeight: '380px' }}>
               {article?.video_url ? (
                 ytId ? (
                   <iframe width="100%" height="100%"
