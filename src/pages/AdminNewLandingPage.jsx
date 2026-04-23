@@ -71,15 +71,15 @@ export default function AdminNewLandingPage() {
 
       {/* ── HEADER ── */}
       <div className="px-6 pt-10 pb-8 text-center border-b"
-        style={{ borderColor: 'rgba(212,175,55,0.2)', background: 'linear-gradient(180deg, #f9f6f0 0%, #ffffff 100%)' }}>
+        style={{ borderColor: 'rgba(212,175,55,0.2)', background: '#000' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto mx-auto mb-4" />
         <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-1" style={{ color: GOLD }}>
           The Dyson & Dyson Companies, Inc.
         </p>
-        <h1 className="display-heading text-5xl font-black tracking-[0.25em] uppercase text-gray-900 mb-3">
+        <h1 className="display-heading text-5xl font-black tracking-[0.25em] uppercase text-white mb-3">
           Real Estate News
         </h1>
-        <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
           Real estate intelligence, relocation management, and financial services —
           broadcast to consumers, agents, and lenders nationwide.
         </p>
