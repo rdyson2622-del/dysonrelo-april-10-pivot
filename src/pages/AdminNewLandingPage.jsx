@@ -64,7 +64,7 @@ function NewsTVCard({ article }) {
 
       <div
         className="rounded-2xl overflow-hidden flex flex-col"
-        style={{ background: '#0d0d0d', border: `1px solid ${color}25` }}
+        style={{ background: '#1e1e1e', border: `1px solid ${color}25` }}
       >
         {/* 16:9 video face */}
         <div className="relative w-full aspect-video bg-black group">
@@ -143,7 +143,7 @@ function StaticTVCard({ icon: Icon, title, subtitle, description, href, color, b
     <Link to={href} className="block group">
       <div
         className="rounded-2xl overflow-hidden flex flex-col transition-all group-hover:scale-[1.01]"
-        style={{ background: '#0d0d0d', border: `1px solid ${color}25` }}
+        style={{ background: '#1e1e1e', border: `1px solid ${color}25` }}
       >
         {/* 16:9 face — branded graphic */}
         <div className="relative w-full aspect-video flex flex-col items-center justify-center"
