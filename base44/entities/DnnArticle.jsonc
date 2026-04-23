@@ -18,6 +18,10 @@
       "type": "string",
       "description": "Optional video URL (YouTube, Vimeo, Loom, etc.)"
     },
+    "audio_url": {
+      "type": "string",
+      "description": "URL to Gemini TTS-generated audio file for this article"
+    },
     "tags": {
       "type": "array",
       "items": {

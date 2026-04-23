@@ -238,6 +238,19 @@ function SharePanel({ article, onClose }) {
   );
 }
 
+// --- Audio Player ---
+function AudioPlayer({ url }) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl px-4 py-3 mt-3"
+      style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+      <span className="text-xs font-black tracking-widest uppercase shrink-0" style={{ color: '#D4AF37' }}>🎙 Listen</span>
+      <audio controls className="flex-1 h-8" style={{ accentColor: '#D4AF37' }}>
+        <source src={url} type="audio/wav" />
+      </audio>
+    </div>
+  );
+}
+
 // --- Article Card ---
 function ArticleCard({ article }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -270,6 +283,8 @@ function ArticleCard({ article }) {
         {article.dateline && (
           <p className="text-[11px] text-slate-600 font-mono">{article.dateline}</p>
         )}
+
+        {article.audio_url && <AudioPlayer url={article.audio_url} />}
 
         {!isExpanded && (
           <>
