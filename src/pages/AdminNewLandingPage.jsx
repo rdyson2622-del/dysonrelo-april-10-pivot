@@ -77,7 +77,7 @@ export default function AdminNewLandingPage() {
           The Dyson & Dyson Companies, Inc.
         </p>
         <h1 className="display-heading text-5xl font-black tracking-[0.25em] uppercase text-gray-900 mb-3">
-          D&D Network
+          Real Estate News
         </h1>
         <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
           Real estate intelligence, relocation management, and financial services —
