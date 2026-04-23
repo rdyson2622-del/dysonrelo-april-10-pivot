@@ -166,29 +166,49 @@ export default function AdminNewLandingPage() {
 
                      {isNewsCard && (
                        <div className="mb-4 space-y-2">
-                         <label className="text-xs font-bold" style={{ color: pillar.color }}>Test Video:</label>
-                         <input
-                           type="text"
-                           placeholder="Paste YouTube / Loom / Vimeo URL..."
-                           value={videoInput}
-                           onChange={(e) => setVideoInput(e.target.value)}
-                           className="w-full px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
-                         />
-                         <button
-                           onClick={() => { if (videoInput) { setVideoUrl(videoInput); setVideoInput(''); } }}
-                           className="w-full py-1.5 rounded text-xs font-bold text-black"
-                           style={{ background: pillar.color }}
-                         >
-                           Load Video
-                         </button>
+                         <label className="text-xs font-bold" style={{ color: pillar.color }}>Test Video URL:</label>
+                         <div className="flex gap-1">
+                           <input
+                             type="text"
+                             placeholder="Paste YouTube / Loom / Vimeo URL..."
+                             value={videoInput}
+                             onChange={(e) => setVideoInput(e.target.value)}
+                             className="flex-1 px-2 py-1.5 rounded text-xs text-white bg-white/10 border border-white/20 focus:outline-none"
+                           />
+                           <button
+                             onClick={() => { if (videoInput.trim()) { setVideoUrl(videoInput.trim()); setVideoInput(''); } }}
+                             className="px-3 py-1.5 rounded text-xs font-bold text-black shrink-0"
+                             style={{ background: pillar.color }}
+                           >
+                             Load
+                           </button>
+                         </div>
                          {videoUrl && (
                            <div
                              onClick={() => setVideoModalOpen(true)}
-                             className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:opacity-90 transition-opacity"
+                             className="w-full aspect-video rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:opacity-90 transition-opacity relative"
                            >
-                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black text-xs text-white">
-                               ▶ Click to expand video
-                             </div>
+                             {(videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) ? (() => {
+                               const ytId = videoUrl.includes('youtu.be')
+                                 ? videoUrl.split('/').pop().split('?')[0]
+                                 : new URLSearchParams(videoUrl.split('?')[1]).get('v');
+                               return ytId ? (
+                                 <>
+                                   <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="video thumbnail" className="w-full h-full object-cover" />
+                                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                     <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
+                                       <span className="text-black text-sm ml-0.5">▶</span>
+                                     </div>
+                                   </div>
+                                 </>
+                               ) : null;
+                             })() : (
+                               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-black">
+                                 <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.9)' }}>
+                                   <span className="text-black text-sm ml-0.5">▶</span>
+                                 </div>
+                               </div>
+                             )}
                            </div>
                          )}
                        </div>
