@@ -128,7 +128,7 @@ export default function AdminNewLandingPage() {
       </div>
 
       {/* ── SECTION 1: THE PILL (Above the Fold) ── */}
-      <div className="px-6 py-16 text-center max-w-4xl mx-auto">
+      <div className="px-6 py-6 text-center max-w-4xl mx-auto">
         {/* H.O.M.E. Badge */}
 
         <div className="mb-4" style={{ color: GOLD, fontSize: '3rem', fontFamily: 'Cormorant Garamond, serif', fontWeight: 600, letterSpacing: '0.15em' }}>
