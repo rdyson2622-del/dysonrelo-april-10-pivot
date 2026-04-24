@@ -42,11 +42,6 @@ export default function AdminNewLandingPage() {
           {/* Logo */}
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto mb-6" />
 
-          {/* Wordmark */}
-          <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-2" style={{ color: GOLD }}>
-            The Dyson & Dyson Companies, Inc.
-          </p>
-
           {/* H.O.M.E. Title */}
           <div className="mb-1" style={{
             color: GOLD,
