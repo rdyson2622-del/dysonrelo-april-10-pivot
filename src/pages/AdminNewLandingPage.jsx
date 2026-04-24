@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, X, Play, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import ClientSidebar from '@/components/layout/ClientSidebar';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -111,7 +112,12 @@ export default function AdminNewLandingPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen flex" style={{ background: '#0a0a0a' }}>
+      {/* Left sidebar mock */}
+      <div className="hidden md:flex shrink-0">
+        <ClientSidebar />
+      </div>
+      <div className="flex-1 overflow-auto">
 
       {fullscreen && latestArticle?.video_url && (
         <FullscreenModal videoUrl={latestArticle.video_url} onClose={() => setFullscreen(false)} />
@@ -297,6 +303,7 @@ export default function AdminNewLandingPage() {
         <p className="text-[10px] text-slate-700 mt-1">CA DRE #02303118</p>
       </div>
 
+      </div>{/* end flex-1 */}
     </div>
   );
 }
