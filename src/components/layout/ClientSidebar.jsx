@@ -81,27 +81,27 @@ export default function ClientSidebar() {
       {/* Quick Links */}
       <div className="px-3 pb-4 space-y-2">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          Communications
+        </div>
+        <Link to="/chat" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+          style={{ background: location.pathname === '/chat' ? GOLD : unreadCount > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.05)', color: location.pathname === '/chat' ? '#000' : unreadCount > 0 ? '#ef4444' : '#fff' }}>
+          <div className="relative shrink-0">
+            <MessageCircle className="w-3.5 h-3.5" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
+                style={{ background: '#ef4444', color: '#fff' }}>
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </div>
+          {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
+        </Link>
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mt-2" style={{ color: GOLD }}>
           Quick Links
         </div>
         <div className="flex flex-col gap-2">
 
-          {/* Communications Hub */}
-          <Link to="/chat" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{
-              background: location.pathname === '/chat' ? GOLD : unreadCount > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.05)',
-              color: location.pathname === '/chat' ? '#000' : unreadCount > 0 ? '#ef4444' : '#fff',
-            }}>
-            <div className="relative shrink-0">
-              <MessageCircle className="w-3.5 h-3.5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
-                  style={{ background: '#ef4444', color: '#fff' }}>
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </div>
-            {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
-          </Link>
+
 
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
