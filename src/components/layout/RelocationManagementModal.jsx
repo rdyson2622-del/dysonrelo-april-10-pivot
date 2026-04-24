@@ -166,9 +166,9 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.8)' }}>
-      <div className="relative w-full max-w-3xl max-h-[90vh] rounded-2xl overflow-hidden flex flex-col"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+      style={{ background: 'rgba(0,0,0,0.3)' }}>
+      <div className="relative w-full max-w-2xl h-[80vh] rounded-2xl overflow-hidden flex flex-col pointer-events-auto"
         style={{ background: '#000' }}>
 
         {/* Close button */}
