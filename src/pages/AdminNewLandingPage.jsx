@@ -54,7 +54,7 @@ export default function AdminNewLandingPage() {
             HOME
           </div>
           <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-12">
-            Home Ownership Management Enterprise
+            Home Ownership Management Ecosystem
           </p>
 
           {/* ── THE PILL ── */}
