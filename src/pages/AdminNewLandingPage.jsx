@@ -33,7 +33,7 @@ export default function AdminNewLandingPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ background: '#0a0a0a' }}>
       {/* Main Content */}
-      <div className="flex-1 flex flex-col relative overflow-hidden">
+      <div className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'transparent' }}>
 
         {/* ── DARK TOP SECTION: Logo + Title ── */}
         <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
@@ -79,7 +79,6 @@ export default function AdminNewLandingPage() {
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
                 placeholder="What is your real estate situation?"
-                style={{ caretColor: GOLD, color: 'white' }}
                 className="flex-1 bg-transparent text-white text-base outline-none placeholder-white"
                 style={{ caretColor: GOLD }}
                 />
