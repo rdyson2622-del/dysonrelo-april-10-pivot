@@ -131,10 +131,8 @@ export default function ClientSidebar() {
         </div>
         <div className="flex flex-col gap-1.5">
           <Link to="/dnn-news" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/dnn-news' ? GOLD : 'rgba(212,175,55,0.08)', color: location.pathname === '/dnn-news' ? '#000' : GOLD, border: '1px solid rgba(212,175,55,0.2)' }}>
-            <Newspaper className="w-3.5 h-3.5" />
-            <span className="flex-1">DNN News</span>
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
+            style={{ background: location.pathname === '/dnn-news' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/dnn-news' ? '#000' : '#fff' }}>
+            <Newspaper className="w-3.5 h-3.5" /> DNN News
           </Link>
           <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
             style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
