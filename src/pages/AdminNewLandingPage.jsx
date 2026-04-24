@@ -121,17 +121,17 @@ export default function AdminNewLandingPage() {
               </div>
             ) : (
               <div className="rounded-2xl overflow-hidden"
-                style={{ background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.1)' }}>
+                style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <textarea
                   value={story}
                   onChange={e => setStory(e.target.value)}
                   rows={5}
                   placeholder="Enter your story here... we'll get back to you with a resolution."
-                  className="w-full px-5 py-4 bg-transparent text-gray-900 text-sm outline-none resize-none placeholder-gray-400 leading-relaxed"
-                  style={{ fontFamily: 'Georgia, serif' }}
+                  className="w-full px-5 py-4 bg-transparent text-white text-sm outline-none resize-none leading-relaxed"
+                  style={{ fontFamily: 'Georgia, serif', color: '#fff', caretColor: '#D4AF37' }}
                 />
-                <div className="flex items-center justify-between px-4 py-3 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-                  <span className="text-xs text-gray-500">No sales pitch. Just a resolution.</span>
+                <div className="flex items-center justify-between px-4 py-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+                  <span className="text-xs text-white opacity-50">No sales pitch. Just a resolution.</span>
                   <button
                     onClick={() => { if (story.trim()) setStorySubmitted(true); }}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-black transition-all hover:opacity-90"
