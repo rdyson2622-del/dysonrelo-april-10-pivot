@@ -79,10 +79,11 @@ export default function AdminNewLandingPage() {
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
                 placeholder="What is your real estate situation?"
-                className="flex-1 bg-transparent text-white text-base outline-none placeholder-gray-400"
+                style={{ caretColor: GOLD, color: 'white' }}
+                className="flex-1 bg-transparent text-white text-base outline-none placeholder-white"
                 style={{ caretColor: GOLD }}
-              />
-              <button
+                />
+                <button
                 className="px-5 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:opacity-90"
                 style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})` }}
               >
