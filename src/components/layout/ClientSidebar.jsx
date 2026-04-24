@@ -57,17 +57,8 @@ export default function ClientSidebar() {
       {/* Scrollable area below logo */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-      {/* Relocation Dashboard */}
-      <div className="px-3 py-3 space-y-1">
-        <Link to="/" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:opacity-80 transition-all"
-          style={{ color: GOLD }}>
-          <LayoutDashboard className="w-4 h-4 shrink-0" />
-          Relocation Dashboard
-        </Link>
-      </div>
-
-      {/* Quick Links */}
-      <div className="px-3 pb-4">
+      {/* Quick Links Header */}
+      <div className="px-3 py-3">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Quick Links
         </div>
