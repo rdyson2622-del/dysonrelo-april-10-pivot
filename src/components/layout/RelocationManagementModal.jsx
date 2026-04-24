@@ -166,69 +166,67 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-none" style={{ background: 'transparent' }}>
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 w-96 h-[85vh] rounded-2xl overflow-hidden flex flex-col pointer-events-auto"
-        style={{ background: '#000' }}>
+    <div className="fixed bottom-6 right-6 z-50 w-96 h-[75vh] rounded-2xl overflow-hidden flex flex-col relative"
+      style={{ background: '#000' }}>
 
-        {/* Close button */}
-        <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
-          <X className="w-5 h-5" style={{ color: '#fff' }} />
-        </button>
+      {/* Close button */}
+      <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
+        <X className="w-5 h-5" style={{ color: '#fff' }} />
+      </button>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto scroll-smooth">
-          {slides.map((slide, idx) => (
-            <div key={idx} className="min-h-screen flex flex-col items-center justify-center px-8 py-12 text-center"
-              style={{ background: slide.bgStyle }}>
-              
-              {slide.subtitle ? (
-                <>
-                  <h1 style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 'clamp(2rem, 5vw, 3rem)',
-                    fontWeight: 600,
-                    color: '#fff',
-                    lineHeight: 1.2,
-                    marginBottom: '0.5rem'
-                  }}>
-                    {slide.title}
-                  </h1>
-                  <h2 style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-                    fontWeight: 600,
-                    color: GOLD,
-                    lineHeight: 1.2,
-                    marginBottom: '2rem'
-                  }}>
-                    {slide.subtitle}
-                  </h2>
-                </>
-              ) : (
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto scroll-smooth">
+        {slides.map((slide, idx) => (
+          <div key={idx} className="min-h-screen flex flex-col items-center justify-center px-8 py-12 text-center"
+            style={{ background: slide.bgStyle }}>
+            
+            {slide.subtitle ? (
+              <>
                 <h1 style={{
                   fontFamily: 'Cormorant Garamond, serif',
                   fontSize: 'clamp(2rem, 5vw, 3rem)',
                   fontWeight: 600,
                   color: '#fff',
                   lineHeight: 1.2,
-                  marginBottom: '2rem'
+                  marginBottom: '0.5rem'
                 }}>
                   {slide.title}
                 </h1>
-              )}
-              
-              <div className="w-full max-w-2xl">
-                {slide.content}
-              </div>
+                <h2 style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                  fontWeight: 600,
+                  color: GOLD,
+                  lineHeight: 1.2,
+                  marginBottom: '2rem'
+                }}>
+                  {slide.subtitle}
+                </h2>
+              </>
+            ) : (
+              <h1 style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(2rem, 5vw, 3rem)',
+                fontWeight: 600,
+                color: '#fff',
+                lineHeight: 1.2,
+                marginBottom: '2rem'
+              }}>
+                {slide.title}
+              </h1>
+            )}
+            
+            <div className="w-full max-w-2xl">
+              {slide.content}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Footer hint */}
-        <div className="shrink-0 px-6 py-4 text-center text-xs border-t"
-          style={{ borderColor: 'rgba(255,255,255,0.1)', background: '#000', color: 'rgba(255,255,255,0.4)' }}>
-          Scroll to explore all slides
-        </div>
+      {/* Footer hint */}
+      <div className="shrink-0 px-6 py-4 text-center text-xs border-t"
+        style={{ borderColor: 'rgba(255,255,255,0.1)', background: '#000', color: 'rgba(255,255,255,0.4)' }}>
+        Scroll to explore all slides
       </div>
     </div>
   );
