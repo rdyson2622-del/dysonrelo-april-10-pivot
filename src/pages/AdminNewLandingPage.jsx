@@ -124,13 +124,7 @@ export default function AdminNewLandingPage() {
         <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-1" style={{ color: GOLD }}>
           The Dyson & Dyson Companies, Inc.
         </p>
-        <h1 className="display-heading text-3xl font-black tracking-[0.25em] uppercase text-white mb-3">
-          Real Estate News
-        </h1>
-        <p className="text-base font-normal text-white max-w-2xl mx-auto leading-relaxed">
-          Real estate intelligence, relocation management, and financial services —
-          broadcast to consumers, agents, and lenders nationwide.
-        </p>
+
       </div>
 
       {/* ── SECTION 1: THE PILL (Above the Fold) ── */}
