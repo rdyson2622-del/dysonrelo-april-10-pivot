@@ -66,8 +66,8 @@ export default function AdminNewLandingPage() {
             <div
               className="flex items-center rounded-2xl px-5 py-4 gap-3 transition-all duration-300"
               style={{
-                background: '#f5f5f5',
-                border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.4)'}`,
+                background: '#2a2a2a',
+                border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.3)'}`,
                 boxShadow: pillFocused ? `0 0 40px rgba(212,175,55,0.15)` : 'none',
               }}
             >
@@ -79,7 +79,7 @@ export default function AdminNewLandingPage() {
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
                 placeholder="What is your real estate situation?"
-                className="flex-1 bg-transparent text-gray-900 text-base outline-none placeholder-gray-400"
+                className="flex-1 bg-transparent text-white text-base outline-none placeholder-gray-400"
                 style={{ caretColor: GOLD }}
               />
               <button
