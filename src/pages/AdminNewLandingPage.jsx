@@ -130,16 +130,16 @@ export default function AdminNewLandingPage() {
       {/* ── SECTION 1: THE PILL (Above the Fold) ── */}
       <div className="px-6 py-16 text-center max-w-4xl mx-auto">
         {/* H.O.M.E. Badge */}
-        <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full font-black tracking-[0.3em] uppercase"
-          style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD, fontSize: '3rem' }}>
-          H.O.M.E.
+        <div className="inline-flex items-center gap-2 mb-4 px-6 py-2 rounded-full"
+          style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD, fontSize: '3rem', fontFamily: 'Cormorant Garamond, serif', fontWeight: 600, letterSpacing: '0.15em' }}>
+          HOME
         </div>
 
         <h2 className="display-heading text-xl md:text-2xl font-black text-white mb-4 leading-tight tracking-wide">
           Home Ownership Management Enterprise
         </h2>
 
-        <p className="text-lg text-slate-400 mb-10 max-w-xl mx-auto leading-relaxed">
+        <p className="text-lg text-white mb-10 max-w-xl mx-auto leading-relaxed">
           <span className="text-white font-semibold">Real Estate Story-Solvers.</span>{' '}
           Because every move has a conflict. We provide the resolution.
         </p>
