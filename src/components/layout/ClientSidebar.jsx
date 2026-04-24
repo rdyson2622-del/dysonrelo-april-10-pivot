@@ -59,9 +59,9 @@ export default function ClientSidebar() {
 
       {/* Quick Links Header */}
       <div className="px-3 py-3">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          Quick Links
-        </div>
+        <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
+          QUICK LINKS
+        </p>
       </div>
 
       {/* Communications */}
