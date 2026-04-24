@@ -112,7 +112,7 @@ export default function AdminNewLandingPage() {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen flex" style={{ background: '#0a0a0a', transform: 'scale(1.2)', transformOrigin: 'top left', width: '83.33%' }}>
       {/* Left sidebar mock */}
       <div className="hidden md:flex shrink-0">
         <ClientSidebar />
