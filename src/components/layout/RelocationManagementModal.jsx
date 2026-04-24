@@ -178,46 +178,46 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto scroll-smooth">
         {slides.map((slide, idx) => (
-          <div key={idx} className="min-h-screen flex flex-col items-center justify-center px-8 py-12 text-center"
+          <div key={idx} className="min-h-[85vh] flex flex-col items-center justify-center px-6 py-8 text-center"
             style={{ background: slide.bgStyle }}>
             
             {slide.subtitle ? (
-              <>
+              <div className="mb-6">
                 <h1 style={{
                   fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(2rem, 5vw, 3rem)',
+                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
                   fontWeight: 600,
                   color: '#fff',
-                  lineHeight: 1.2,
-                  marginBottom: '0.5rem'
+                  lineHeight: 1.1,
+                  marginBottom: '0.8rem'
                 }}>
                   {slide.title}
                 </h1>
                 <h2 style={{
                   fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                  fontSize: 'clamp(1.4rem, 2.8vw, 2rem)',
                   fontWeight: 600,
                   color: GOLD,
-                  lineHeight: 1.2,
-                  marginBottom: '2rem'
+                  lineHeight: 1.1
                 }}>
                   {slide.subtitle}
                 </h2>
-              </>
+              </div>
             ) : (
-              <h1 style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 600,
-                color: '#fff',
-                lineHeight: 1.2,
-                marginBottom: '2rem'
-              }}>
-                {slide.title}
-              </h1>
+              <div className="mb-6">
+                <h1 style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+                  fontWeight: 600,
+                  color: '#fff',
+                  lineHeight: 1.1
+                }}>
+                  {slide.title}
+                </h1>
+              </div>
             )}
             
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-sm text-sm">
               {slide.content}
             </div>
           </div>
