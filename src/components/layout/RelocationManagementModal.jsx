@@ -166,8 +166,9 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-96 h-[75vh] rounded-2xl overflow-hidden flex flex-col relative"
-      style={{ background: '#000' }}>
+    <>
+      <div className="fixed bottom-6 right-6 z-50 w-96 h-[75vh] rounded-2xl overflow-hidden flex flex-col relative"
+        style={{ background: '#000' }}>
 
       {/* Close button */}
       <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
@@ -228,6 +229,7 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
         style={{ borderColor: 'rgba(255,255,255,0.1)', background: '#000', color: 'rgba(255,255,255,0.4)' }}>
         Scroll to explore all slides
       </div>
-    </div>
+      </div>
+    </>
   );
 }
