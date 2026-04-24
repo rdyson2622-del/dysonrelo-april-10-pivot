@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard, Send, MessageCircle } from 'lucide-react';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
-import HeroMinimal from '@/components/home/HeroMinimal';
 import ReadyToStart from '@/components/dashboard/ReadyToStart';
 import DashboardServicePreviews from '@/components/dashboard/DashboardServicePreviews';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
@@ -62,9 +61,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: '#808080' }}>
-      <HeroMinimal />
-
-      <main className="max-w-5xl mx-auto px-6 pb-16 space-y-8">
+      <main className="max-w-5xl mx-auto px-6 pt-8 pb-16 space-y-8">
         {clientId ? (
           <>
             <RelocationProfileCard clientId={clientId} />
