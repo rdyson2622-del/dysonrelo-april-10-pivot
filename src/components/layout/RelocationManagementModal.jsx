@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, ChevronRight } from 'lucide-react';
-import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, CheckCircle2, Sparkles } from 'lucide-react';
+import { X } from 'lucide-react';
+import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const GOLD = '#D4AF37';
@@ -163,107 +163,72 @@ const slides = [
 ];
 
 export default function RelocationManagementModal({ isOpen, onClose }) {
-  const [slideIndex, setSlideIndex] = useState(0);
-  const slide = slides[slideIndex];
-
   if (!isOpen) return null;
-
-  const nextSlide = () => {
-    if (slideIndex < slides.length - 1) setSlideIndex(slideIndex + 1);
-  };
-
-  const prevSlide = () => {
-    if (slideIndex > 0) setSlideIndex(slideIndex - 1);
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.8)' }}>
       <div className="relative w-full max-w-3xl max-h-[90vh] rounded-2xl overflow-hidden flex flex-col"
-        style={{ background: slide.bgStyle }}>
+        style={{ background: '#000' }}>
 
         {/* Close button */}
         <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
           <X className="w-5 h-5" style={{ color: '#fff' }} />
         </button>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-8 py-12 text-center">
-          {slide.subtitle ? (
-            <>
-              <h1 style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                fontWeight: 600,
-                color: '#fff',
-                lineHeight: 1.2,
-                marginBottom: '0.5rem'
-              }}>
-                {slide.title}
-              </h1>
-              <h2 style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-                fontWeight: 600,
-                color: GOLD,
-                lineHeight: 1.2,
-                marginBottom: '2rem'
-              }}>
-                {slide.subtitle}
-              </h2>
-            </>
-          ) : (
-            <h1 style={{
-              fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
-              fontWeight: 600,
-              color: '#fff',
-              lineHeight: 1.2,
-              marginBottom: '2rem'
-            }}>
-              {slide.title}
-            </h1>
-          )}
-          
-          <div className="w-full">
-            {slide.content}
-          </div>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto scroll-smooth">
+          {slides.map((slide, idx) => (
+            <div key={idx} className="min-h-screen flex flex-col items-center justify-center px-8 py-12 text-center"
+              style={{ background: slide.bgStyle }}>
+              
+              {slide.subtitle ? (
+                <>
+                  <h1 style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 'clamp(2rem, 5vw, 3rem)',
+                    fontWeight: 600,
+                    color: '#fff',
+                    lineHeight: 1.2,
+                    marginBottom: '0.5rem'
+                  }}>
+                    {slide.title}
+                  </h1>
+                  <h2 style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                    fontWeight: 600,
+                    color: GOLD,
+                    lineHeight: 1.2,
+                    marginBottom: '2rem'
+                  }}>
+                    {slide.subtitle}
+                  </h2>
+                </>
+              ) : (
+                <h1 style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  fontSize: 'clamp(2rem, 5vw, 3rem)',
+                  fontWeight: 600,
+                  color: '#fff',
+                  lineHeight: 1.2,
+                  marginBottom: '2rem'
+                }}>
+                  {slide.title}
+                </h1>
+              )}
+              
+              <div className="w-full max-w-2xl">
+                {slide.content}
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Navigation Footer */}
-        <div className="shrink-0 px-6 py-6 flex items-center justify-between border-t"
-          style={{ borderColor: 'rgba(255,255,255,0.1)', background: slide.bgStyle }}>
-          <button
-            onClick={prevSlide}
-            disabled={slideIndex === 0}
-            className="px-4 py-2 rounded-lg text-sm font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-            style={{ background: GOLD, color: '#000' }}>
-            ← Back
-          </button>
-          
-          <div className="flex gap-1.5">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setSlideIndex(i)}
-                className="w-2.5 h-2.5 rounded-full transition-all"
-                style={{ background: slideIndex === i ? GOLD : 'rgba(255,255,255,0.25)' }}
-              />
-            ))}
-          </div>
-          
-          <button
-            onClick={nextSlide}
-            disabled={slideIndex === slides.length - 1}
-            className="px-4 py-2 rounded-lg text-sm font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
-            style={{ background: GOLD, color: '#000' }}>
-            Next <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Slide Counter */}
-        <div className="px-6 py-3 text-center text-xs" style={{ background: slide.bgStyle, color: 'rgba(255,255,255,0.5)' }}>
-          Slide {slideIndex + 1} of {slides.length}
+        {/* Footer hint */}
+        <div className="shrink-0 px-6 py-4 text-center text-xs border-t"
+          style={{ borderColor: 'rgba(255,255,255,0.1)', background: '#000', color: 'rgba(255,255,255,0.4)' }}>
+          Scroll to explore all slides
         </div>
       </div>
     </div>
