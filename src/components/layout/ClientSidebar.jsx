@@ -99,6 +99,9 @@ export default function ClientSidebar() {
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mt-2" style={{ color: GOLD }}>
           Quick Links
         </div>
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mt-3" style={{ color: GOLD }}>
+          Relocation Management
+        </div>
         <div className="flex flex-col gap-2">
 
 
