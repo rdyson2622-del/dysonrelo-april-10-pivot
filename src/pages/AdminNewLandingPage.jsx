@@ -59,7 +59,7 @@ export default function AdminNewLandingPage() {
         </div>
 
         {/* ── WHITE BOTTOM SECTION: Pill + Story ── */}
-        <div className="flex flex-col items-center px-8 py-14 text-center" style={{ background: '#fdf8f0' }}>
+        <div className="flex flex-col items-center px-8 py-14 text-center" style={{ background: '#e8d5b0' }}>
 
           {/* ── THE PILL ── */}
           <div className="w-full max-w-2xl">
