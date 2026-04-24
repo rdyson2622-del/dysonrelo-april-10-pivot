@@ -163,72 +163,114 @@ const slides = [
 ];
 
 export default function RelocationManagementModal({ isOpen, onClose }) {
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
   if (!isOpen) return null;
+
+  const scrollToSlide = (idx) => {
+    setCurrentSlide(idx);
+  };
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-50 w-96 h-[75vh] rounded-2xl overflow-hidden flex flex-col relative"
-        style={{ background: '#000' }}>
+      <div className="fixed bottom-6 right-6 z-50 flex h-[75vh] rounded-2xl overflow-hidden"
+        style={{ background: '#000', width: '900px' }}>
 
-      {/* Close button */}
-      <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
-        <X className="w-5 h-5" style={{ color: '#fff' }} />
-      </button>
+        {/* Left Sidebar */}
+        <div className="w-48 shrink-0 border-r overflow-y-auto flex flex-col"
+          style={{ borderColor: 'rgba(212,175,55,0.15)', background: '#0d0d0d' }}>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto scroll-smooth">
-        {slides.map((slide, idx) => (
-          <div key={idx} className="min-h-[85vh] flex flex-col items-center justify-center px-6 py-8 text-center"
-            style={{ background: slide.bgStyle }}>
-            
-            {slide.subtitle ? (
-              <div className="mb-6">
-                <h1 style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-                  fontWeight: 600,
-                  color: '#fff',
-                  lineHeight: 1.1,
-                  marginBottom: '0.8rem'
-                }}>
-                  {slide.title}
-                </h1>
-                <h2 style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.4rem, 2.8vw, 2rem)',
-                  fontWeight: 600,
-                  color: GOLD,
-                  lineHeight: 1.1
-                }}>
-                  {slide.subtitle}
-                </h2>
-              </div>
-            ) : (
-              <div className="mb-6">
-                <h1 style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-                  fontWeight: 600,
-                  color: '#fff',
-                  lineHeight: 1.1
-                }}>
-                  {slide.title}
-                </h1>
-              </div>
-            )}
-            
-            <div className="w-full max-w-sm text-sm">
-              {slide.content}
-            </div>
+          {/* Header */}
+          <div className="shrink-0 px-4 py-4 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+            <p className="text-xs font-bold tracking-widest" style={{ color: GOLD }}>
+              RELOCATION<br />MANAGEMENT
+            </p>
           </div>
-        ))}
-      </div>
 
-      {/* Footer hint */}
-      <div className="shrink-0 px-6 py-4 text-center text-xs border-t"
-        style={{ borderColor: 'rgba(255,255,255,0.1)', background: '#000', color: 'rgba(255,255,255,0.4)' }}>
-        Scroll to explore all slides
-      </div>
+          {/* Slide Navigation */}
+          <div className="flex-1 px-3 py-3 space-y-2">
+            {slides.map((slide, idx) => (
+              <button
+                key={idx}
+                onClick={() => scrollToSlide(idx)}
+                className="w-full text-left px-3 py-2.5 rounded-lg text-xs transition-all"
+                style={{
+                  background: currentSlide === idx ? GOLD : 'rgba(255,255,255,0.05)',
+                  color: currentSlide === idx ? '#000' : '#fff',
+                  border: currentSlide === idx ? 'none' : `1px solid rgba(212,175,55,0.2)`
+                }}>
+                <p className="font-bold leading-snug">{slide.title}</p>
+                {slide.subtitle && (
+                  <p className="text-[10px] opacity-75 mt-0.5">{slide.subtitle}</p>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Footer */}
+          <div className="shrink-0 px-3 py-3 border-t text-center text-[10px]"
+            style={{ borderColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}>
+            {currentSlide + 1} of {slides.length}
+          </div>
+        </div>
+
+        {/* Right Content Area */}
+        <div className="flex-1 flex flex-col relative overflow-hidden">
+
+          {/* Close button */}
+          <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 hover:bg-white/10 rounded-lg transition-all">
+            <X className="w-5 h-5" style={{ color: '#fff' }} />
+          </button>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto scroll-smooth">
+            {slides.map((slide, idx) => (
+              <div key={idx} className={`min-h-full flex flex-col items-center justify-center px-8 py-12 text-center ${currentSlide === idx ? 'block' : 'hidden'}`}
+                style={{ background: slide.bgStyle }}>
+                
+                {slide.subtitle ? (
+                  <div className="mb-6">
+                    <h1 style={{
+                      fontFamily: 'Cormorant Garamond, serif',
+                      fontSize: '2rem',
+                      fontWeight: 600,
+                      color: '#fff',
+                      lineHeight: 1.2,
+                      marginBottom: '0.8rem'
+                    }}>
+                      {slide.title}
+                    </h1>
+                    <h2 style={{
+                      fontFamily: 'Cormorant Garamond, serif',
+                      fontSize: '1.75rem',
+                      fontWeight: 600,
+                      color: GOLD,
+                      lineHeight: 1.2
+                    }}>
+                      {slide.subtitle}
+                    </h2>
+                  </div>
+                ) : (
+                  <div className="mb-6">
+                    <h1 style={{
+                      fontFamily: 'Cormorant Garamond, serif',
+                      fontSize: '2rem',
+                      fontWeight: 600,
+                      color: '#fff',
+                      lineHeight: 1.2
+                    }}>
+                      {slide.title}
+                    </h1>
+                  </div>
+                )}
+                
+                <div className="w-full max-w-md text-sm">
+                  {slide.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
