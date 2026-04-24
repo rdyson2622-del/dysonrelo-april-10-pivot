@@ -198,15 +198,15 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
               <button
                 key={idx}
                 onClick={() => scrollToSlide(idx)}
-                className="w-full text-left px-3 py-2.5 rounded-lg text-xs transition-all"
+                className="w-full text-left px-3 py-2.5 rounded-lg text-[11px] transition-all"
                 style={{
                   background: currentSlide === idx ? GOLD : 'rgba(255,255,255,0.05)',
                   color: currentSlide === idx ? '#000' : '#fff',
                   border: currentSlide === idx ? 'none' : `1px solid rgba(212,175,55,0.2)`
                 }}>
-                <p className="font-bold leading-snug">{slide.title}</p>
+                <p className="font-bold leading-tight" style={{ fontSize: '11px' }}>{slide.title}</p>
                 {slide.subtitle && (
-                  <p className="text-[10px] opacity-75 mt-0.5">{slide.subtitle}</p>
+                  <p className="opacity-70 mt-1" style={{ fontSize: '9px' }}>{slide.subtitle}</p>
                 )}
               </button>
             ))}
@@ -237,20 +237,20 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
                   <div className="mb-6">
                     <h1 style={{
                       fontFamily: 'Cormorant Garamond, serif',
-                      fontSize: '2rem',
+                      fontSize: '1.75rem',
                       fontWeight: 600,
                       color: '#fff',
-                      lineHeight: 1.2,
-                      marginBottom: '0.8rem'
+                      lineHeight: 1.15,
+                      marginBottom: '0.6rem'
                     }}>
                       {slide.title}
                     </h1>
                     <h2 style={{
                       fontFamily: 'Cormorant Garamond, serif',
-                      fontSize: '1.75rem',
+                      fontSize: '1.5rem',
                       fontWeight: 600,
                       color: GOLD,
-                      lineHeight: 1.2
+                      lineHeight: 1.15
                     }}>
                       {slide.subtitle}
                     </h2>
@@ -259,17 +259,17 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
                   <div className="mb-6">
                     <h1 style={{
                       fontFamily: 'Cormorant Garamond, serif',
-                      fontSize: '2rem',
+                      fontSize: '1.75rem',
                       fontWeight: 600,
                       color: '#fff',
-                      lineHeight: 1.2
+                      lineHeight: 1.15
                     }}>
                       {slide.title}
                     </h1>
                   </div>
                 )}
                 
-                <div className="w-full max-w-md text-sm">
+                <div className="w-full max-w-sm" style={{ fontSize: '13px', lineHeight: 1.6 }}>
                   {slide.content}
                 </div>
               </div>
