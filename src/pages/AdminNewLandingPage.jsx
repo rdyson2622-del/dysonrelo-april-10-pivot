@@ -134,7 +134,7 @@ export default function AdminNewLandingPage() {
       </div>
 
       {/* ── SECTION 1: THE PILL (Above the Fold) ── */}
-      <div className="px-6 py-6 text-center max-w-4xl mx-auto">
+      <div className="px-6 py-6 text-center w-full">
         {/* H.O.M.E. Badge */}
 
         <div className="mb-4" style={{ color: GOLD, fontSize: '3rem', fontFamily: 'Cormorant Garamond, serif', fontWeight: 600, letterSpacing: '0.15em' }}>
@@ -178,7 +178,7 @@ export default function AdminNewLandingPage() {
       </div>
 
       {/* ── SECTION 2: FRONT LINE REPORTS ── */}
-      <div className="px-6 pb-16 max-w-5xl mx-auto">
+      <div className="px-6 pb-16 w-full">
         {/* Section Header */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
@@ -235,7 +235,7 @@ export default function AdminNewLandingPage() {
       </div>
 
       {/* ── SECTION 3: THE SITUATION ROOM ── */}
-      <div className="px-6 pb-20 max-w-2xl mx-auto">
+      <div className="px-6 pb-20 w-full">
         <div className="rounded-3xl p-8 md:p-12"
           style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
 
