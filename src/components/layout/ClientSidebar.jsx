@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, MessageCircle, Newspaper, DollarSign, Shield } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import RelocationManagementModal from './RelocationManagementModal';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -23,6 +24,7 @@ export default function ClientSidebar() {
   const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
   const [clientId, setClientId] = useState(null);
+  const [showRelocationModal, setShowRelocationModal] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -86,9 +88,9 @@ export default function ClientSidebar() {
 
       {/* Relocation Management */}
       <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+        <button onClick={() => setShowRelocationModal(true)} className="w-full text-left text-[10px] uppercase tracking-[2px] px-2 font-bold hover:opacity-80 transition-opacity" style={{ color: GOLD }}>
           Relocation Management
-        </div>
+        </button>
         <div className="flex flex-col gap-2">
           <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
             <Map className="w-3.5 h-3.5" /> My Roadmap
@@ -171,6 +173,8 @@ export default function ClientSidebar() {
       </div>
 
       </div>{/* end scrollable area */}
+      
+      <RelocationManagementModal isOpen={showRelocationModal} onClose={() => setShowRelocationModal(false)} />
     </aside>
   );
 }
