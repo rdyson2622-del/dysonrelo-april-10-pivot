@@ -130,10 +130,6 @@ export default function AdminNewLandingPage() {
       {/* ── SECTION 1: THE PILL (Above the Fold) ── */}
       <div className="px-6 py-16 text-center max-w-4xl mx-auto">
         {/* H.O.M.E. Badge */}
-        <div className="inline-flex items-center gap-2 mb-4 px-6 py-2 rounded-full"
-          style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD, fontSize: '3rem', fontFamily: 'Cormorant Garamond, serif', fontWeight: 600, letterSpacing: '0.15em' }}>
-          HOME
-        </div>
 
         <h2 className="display-heading text-xl md:text-2xl font-black text-white mb-4 leading-tight tracking-wide">
           Home Ownership Management Enterprise
