@@ -173,8 +173,13 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-50 flex h-[75vh] rounded-2xl overflow-hidden"
-        style={{ background: '#000', width: '900px' }}>
+      {/* Full-screen backdrop */}
+      <div className="fixed inset-0 z-40 bg-black/80" onClick={onClose} />
+
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+        <div className="flex h-[75vh] rounded-2xl overflow-hidden pointer-events-auto"
+          style={{ background: '#000', width: '900px' }}>
 
         {/* Left Sidebar */}
         <div className="w-48 shrink-0 border-r overflow-y-auto flex flex-col"
@@ -270,6 +275,7 @@ export default function RelocationManagementModal({ isOpen, onClose }) {
               </div>
             ))}
           </div>
+        </div>
         </div>
       </div>
     </>
