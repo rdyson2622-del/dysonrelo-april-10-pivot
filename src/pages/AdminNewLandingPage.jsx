@@ -131,6 +131,10 @@ export default function AdminNewLandingPage() {
       <div className="px-6 py-16 text-center max-w-4xl mx-auto">
         {/* H.O.M.E. Badge */}
 
+        <div className="mb-4" style={{ color: GOLD, fontSize: '3rem', fontFamily: 'Cormorant Garamond, serif', fontWeight: 600, letterSpacing: '0.15em' }}>
+          HOME
+        </div>
+
         <h2 className="display-heading text-xl md:text-2xl font-black text-white mb-4 leading-tight tracking-wide">
           Home Ownership Management Enterprise
         </h2>
