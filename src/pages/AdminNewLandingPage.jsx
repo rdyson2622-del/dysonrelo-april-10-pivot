@@ -31,13 +31,13 @@ export default function AdminNewLandingPage() {
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#0a0a0a' }}>
+    <div className="flex min-h-screen flex-col" style={{ background: '#0a0a0a' }}>
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative overflow-hidden">
 
-        {/* ── ABOVE THE FOLD: Clean Room ── */}
-        <div className="flex flex-col items-center justify-center flex-1 px-8 py-12 text-center"
-          style={{ minHeight: '100vh' }}>
+        {/* ── DARK TOP SECTION: Logo + Title ── */}
+        <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
+          style={{ background: '#0a0a0a' }}>
 
           {/* Logo */}
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto mb-6" />
@@ -53,21 +53,25 @@ export default function AdminNewLandingPage() {
           }}>
             HOME
           </div>
-          <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-12">
+          <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-0">
             Home Ownership Management Ecosystem
           </p>
+        </div>
+
+        {/* ── WHITE BOTTOM SECTION: Pill + Story ── */}
+        <div className="flex flex-col items-center px-8 py-14 text-center" style={{ background: '#ffffff' }}>
 
           {/* ── THE PILL ── */}
           <div className="w-full max-w-2xl">
             <div
               className="flex items-center rounded-2xl px-5 py-4 gap-3 transition-all duration-300"
               style={{
-                background: '#111',
-                border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.3)'}`,
-                boxShadow: pillFocused ? `0 0 60px rgba(212,175,55,0.12)` : 'none',
+                background: '#f5f5f5',
+                border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.4)'}`,
+                boxShadow: pillFocused ? `0 0 40px rgba(212,175,55,0.15)` : 'none',
               }}
             >
-              <Search className="w-5 h-5 shrink-0 opacity-60" style={{ color: GOLD }} />
+              <Search className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
               <input
                 type="text"
                 value={situation}
@@ -75,7 +79,7 @@ export default function AdminNewLandingPage() {
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
                 placeholder="What is your real estate situation?"
-                className="flex-1 bg-transparent text-white text-base outline-none"
+                className="flex-1 bg-transparent text-gray-900 text-base outline-none placeholder-gray-400"
                 style={{ caretColor: GOLD }}
               />
               <button
@@ -91,9 +95,9 @@ export default function AdminNewLandingPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {QUICK_STARTS.map((qs, i) => (
                   <Link key={i} to={qs.link}
-                    className="flex flex-col items-start px-4 py-3 rounded-xl text-left transition-all hover:border-yellow-400/40 group"
-                    style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <span className="text-white text-sm font-semibold group-hover:text-yellow-300 transition-colors leading-snug">{qs.label}</span>
+                    className="flex flex-col items-start px-4 py-3 rounded-xl text-left transition-all hover:border-yellow-400/60 group"
+                    style={{ background: '#f0f0f0', border: '1px solid rgba(0,0,0,0.08)' }}>
+                    <span className="text-gray-900 text-sm font-semibold group-hover:text-yellow-600 transition-colors leading-snug">{qs.label}</span>
                     <span className="text-[10px] mt-1 font-bold tracking-widest uppercase" style={{ color: GOLD }}>{qs.desc}</span>
                   </Link>
                 ))}
@@ -102,32 +106,32 @@ export default function AdminNewLandingPage() {
           </div>
 
           {/* ── STORY BOX ── */}
-          <div className="w-full max-w-2xl mt-16">
-            <p className="text-white text-base font-semibold mb-3">
+          <div className="w-full max-w-2xl mt-12">
+            <p className="text-gray-900 text-base font-semibold mb-3">
               We've seen it all in 55 years. What's happening with your home?
             </p>
 
             {storySubmitted ? (
               <div className="rounded-2xl px-6 py-8 text-center"
-                style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
-                <p className="text-white font-bold mb-1">Story received.</p>
-                <p className="text-sm text-white">
+                style={{ background: '#f5f5f5', border: `1px solid rgba(212,175,55,0.3)` }}>
+                <p className="text-gray-900 font-bold mb-1">Story received.</p>
+                <p className="text-sm text-gray-600">
                   Our team will reach out with a resolution within 24 hours.
                 </p>
               </div>
             ) : (
               <div className="rounded-2xl overflow-hidden"
-                style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
+                style={{ background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.1)' }}>
                 <textarea
                   value={story}
                   onChange={e => setStory(e.target.value)}
                   rows={5}
                   placeholder="Enter your story here... we'll get back to you with a resolution."
-                  className="w-full px-5 py-4 bg-transparent text-white text-sm outline-none resize-none placeholder-white/70 leading-relaxed"
+                  className="w-full px-5 py-4 bg-transparent text-gray-900 text-sm outline-none resize-none placeholder-gray-400 leading-relaxed"
                   style={{ fontFamily: 'Georgia, serif' }}
                 />
-                <div className="flex items-center justify-between px-4 py-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <span className="text-xs text-white">No sales pitch. Just a resolution.</span>
+                <div className="flex items-center justify-between px-4 py-3 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <span className="text-xs text-gray-500">No sales pitch. Just a resolution.</span>
                   <button
                     onClick={() => { if (story.trim()) setStorySubmitted(true); }}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-black transition-all hover:opacity-90"
