@@ -32,11 +32,6 @@ export default function AdminNewLandingPage() {
 
   return (
     <div className="flex min-h-screen" style={{ background: '#0a0a0a' }}>
-      {/* Sidebar */}
-      <div className="hidden md:flex shrink-0">
-        <ClientSidebar />
-      </div>
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative overflow-hidden">
 
