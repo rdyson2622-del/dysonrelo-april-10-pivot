@@ -63,7 +63,7 @@ export default function AdminNewLandingPage() {
           }}>
             HOME
           </div>
-          <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-12 opacity-60">
+          <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-12">
             Home Ownership Management Enterprise
           </p>
 
@@ -113,7 +113,7 @@ export default function AdminNewLandingPage() {
 
           {/* ── STORY BOX ── */}
           <div className="w-full max-w-2xl mt-16">
-            <p className="text-white text-base font-semibold mb-3 opacity-80">
+            <p className="text-white text-base font-semibold mb-3">
               We've seen it all in 55 years. What's happening with your home?
             </p>
 
@@ -121,7 +121,7 @@ export default function AdminNewLandingPage() {
               <div className="rounded-2xl px-6 py-8 text-center"
                 style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
                 <p className="text-white font-bold mb-1">Story received.</p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-sm text-white">
                   Our team will reach out with a resolution within 24 hours.
                 </p>
               </div>
@@ -133,11 +133,11 @@ export default function AdminNewLandingPage() {
                   onChange={e => setStory(e.target.value)}
                   rows={5}
                   placeholder="Enter your story here... we'll get back to you with a resolution."
-                  className="w-full px-5 py-4 bg-transparent text-white text-sm outline-none resize-none placeholder-white/30 leading-relaxed"
+                  className="w-full px-5 py-4 bg-transparent text-white text-sm outline-none resize-none placeholder-white/70 leading-relaxed"
                   style={{ fontFamily: 'Georgia, serif' }}
                 />
                 <div className="flex items-center justify-between px-4 py-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>No sales pitch. Just a resolution.</span>
+                  <span className="text-xs text-white">No sales pitch. Just a resolution.</span>
                   <button
                     onClick={() => { if (story.trim()) setStorySubmitted(true); }}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-black transition-all hover:opacity-90"
