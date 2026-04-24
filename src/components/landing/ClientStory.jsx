@@ -42,6 +42,21 @@ export default function ClientStory({ label, headline, children }) {
           {children}
         </div>
       )}
+
+      {/* Shadow overlay with CTA when collapsed */}
+      {!open && (
+        <div className="relative -mt-12 h-12 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(237,224,204,0.3) 50%, rgba(237,224,204,0.9) 100%)'
+          }}>
+          <button
+            onClick={() => setOpen(true)}
+            className="absolute inset-0 pointer-events-auto flex items-center justify-center text-sm font-bold transition-opacity hover:opacity-80"
+            style={{ color: GOLD }}>
+            Click here to read the story
+          </button>
+        </div>
+      )}
     </div>
   );
 }
