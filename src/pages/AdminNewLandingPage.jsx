@@ -152,7 +152,7 @@ export default function AdminNewLandingPage() {
             <input
               type="text"
               placeholder="Describe your situation... (e.g., 'Relocating to Austin,' 'Equity is stuck,' 'Need a bridge loan')"
-              className="flex-1 bg-transparent text-white text-sm outline-none placeholder-slate-600"
+              className="flex-1 bg-transparent text-white text-sm outline-none placeholder-white"
             />
             <button type="submit"
               className="px-5 py-2 rounded-xl text-sm font-bold text-black shrink-0 transition-all hover:opacity-90"
