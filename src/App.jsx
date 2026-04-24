@@ -75,6 +75,7 @@ import MyAgent from './pages/MyAgent';
 import FinancialServices from './pages/FinancialServices';
 import LandingLab from './pages/LandingLab';
 import AdminNewLandingPage from './pages/AdminNewLandingPage';
+import SolveMyStory from './pages/SolveMyStory';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -179,6 +180,7 @@ const AuthenticatedApp = () => {
         <Route path="/business-plan" element={<Navigate to="/admin/business-plan" replace />} />
         <Route path="/admin/landing-lab" element={<LandingLab />} />
         <Route path="/admin/new-landing-page" element={<AdminNewLandingPage />} />
+        <Route path="/solve-my-story" element={<SolveMyStory />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />

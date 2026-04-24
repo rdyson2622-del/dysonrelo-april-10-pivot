@@ -179,7 +179,7 @@ export default function AdminNewLandingPage() {
                 Every home has a story, and every move has a conflict. Are you planning a complex relocation, or is your current real estate transaction stuck in the mud?
               </p>
               <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                onClick={() => window.location.href = '/solve-my-story'}
                 className="px-10 py-4 rounded-full font-bold text-base tracking-wider transition-all hover:opacity-90"
                 style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
               >
