@@ -546,6 +546,71 @@ COMMUNICATIONS HUB WORKFLOW
 6. High-engagement subscribers flagged as hot leads → routed to relocation intake`
   },
   {
+    id: 'landing-page-transition',
+    title: '🏠 Landing Page Transition Plan',
+    icon: Globe,
+    content: `LANDING PAGE ECOSYSTEM — SEAMLESS TRANSITION STRATEGY
+(Updated: April 2026)
+
+THE GOAL:
+Replace the current client landing page with the new AdminNewLandingPage design seamlessly — only after every link, sidebar entry, supporting content, and Charlie response is fully coordinated and tested.
+
+────────────────────────────────
+WHAT THE NEW LANDING PAGE DOES
+────────────────────────────────
+The new landing page (H.O.M.E. — Home Ownership Management Ecosystem) serves as the primary consumer entry point with:
+• Gold pill search bar: "What is your real estate situation?" with Quick Start shortcuts
+• Windean Stratton case study: A long-form proof-of-concept demonstrating our 4-state relocation management capability
+• "Your Story Is Next" CTA block: Links to the Solve My Story intake page
+• DNN Morning Brief corner card: Live latest article from published DNN feed
+• Dark header (Dyson logo + H.O.M.E. title) / Warm tan content area (#ede0cc)
+
+────────────────────────────────
+SOLVE MY STORY — INTAKE FLOW
+────────────────────────────────
+The "Solve My Story" button links to /solve-my-story — a standalone intake page where a prospective client can:
+1. Provide full name, email, and phone
+2. Select their situation type from a curated list
+3. Write their story in detail
+4. Submit — which saves them as a hot DnnSubscriber lead AND emails the Dyson team immediately
+
+This is the bridge between marketing content and the CRM.
+
+────────────────────────────────
+WHAT MUST BE READY BEFORE WE FLIP THE SWITCH
+────────────────────────────────
+CLIENT EXPERIENCE (Priority 1):
+□ Sidebar links all verified and working
+□ Charlie KB trained on all primary client questions
+□ DNN news articles published and displaying on landing page card
+□ Solve My Story form tested end-to-end (submission → email → CRM entry)
+□ Chat/Communications Hub accessible and tested
+□ Relocation intake flow (commitment gate → Gemini session → debrief) fully operational
+
+AGENT & LENDER PORTALS (Phase 2 — not blocking launch):
+□ Agent Bureau enrollment page
+□ Lender network portal (Financial Services — Q3 2026)
+
+────────────────────────────────
+QUICK STARTS ON THE LANDING PAGE
+────────────────────────────────
+• "I'm moving and need a plan." → /relocation-intake (Relo Prong)
+• "I'm stuck in a deal." → /chat (Story-Solving / Escrow)
+• "I'm an Agent or Lender." → /find-agent (Enterprise Portal)
+
+────────────────────────────────
+CHARLIE'S ROLE ON THE NEW LANDING PAGE
+────────────────────────────────
+Charlie (via FloatingCharlie) is present on the landing page and trained to:
+• Answer questions about DNN news and direct to /dnn-news
+• Explain the H.O.M.E. ecosystem and Dyson services
+• Route clients to the correct Quick Start
+• Capture escalations when questions exceed KB coverage
+• Funnel hot leads into relocation intake
+
+All new Q&A pairs developed during landing page testing are saved to CharlieKnowledgeBase for permanent training.`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -717,7 +782,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v4.0 • Last Updated: April 22, 2026 • Added: DNN Broadcast Intelligence Network — Three-Pillar Strategy (Relocation Intelligence, Agent Bureau, Financial Services Network), Subscriber Flywheel, Charlie editorial loop, Tier architecture, Communications Hub workflow</p>
+          <p>Business Plan v5.0 • Last Updated: April 24, 2026 • Added: Landing Page Transition Plan — H.O.M.E. ecosystem, Solve My Story intake flow, pre-launch checklist, Charlie coordination strategy. Previously: DNN Broadcast Intelligence Network — Three-Pillar Strategy (Relocation Intelligence, Agent Bureau, Financial Services Network), Subscriber Flywheel, Charlie editorial loop, Tier architecture, Communications Hub workflow</p>
         </motion.div>
       </main>
     </div>
