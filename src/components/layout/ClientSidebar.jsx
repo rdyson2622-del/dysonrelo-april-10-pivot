@@ -59,23 +59,12 @@ export default function ClientSidebar() {
 
       {/* Nav */}
       <nav className="px-3 py-3 space-y-1">
-        {/* My Dashboard */}
-        {(() => {
-          const item = navItems[0];
-          const Icon = item.icon;
-          const active = location.pathname === item.path;
-          return (
-            <Link to={item.path}>
-              <div
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active ? 'text-black' : 'hover:bg-white/5'}`}
-                style={{ background: active ? GOLD : 'transparent', color: active ? '#000' : '#fff' }}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                {item.label}
-              </div>
-            </Link>
-          );
-        })()}
+        {/* Relocation Dashboard */}
+        <Link to="/" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:opacity-80 transition-all"
+          style={{ color: GOLD }}>
+          <LayoutDashboard className="w-4 h-4 shrink-0" />
+          Relocation Dashboard
+        </Link>
       </nav>
 
       {/* Quick Links */}
