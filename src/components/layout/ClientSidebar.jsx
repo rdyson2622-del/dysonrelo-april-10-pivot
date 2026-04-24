@@ -67,7 +67,7 @@ export default function ClientSidebar() {
         </Link>
       </nav>
 
-      {/* Quick Links */}
+      {/* Communications */}
       <div className="px-3 pb-4 space-y-2">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Communications
@@ -85,22 +85,29 @@ export default function ClientSidebar() {
           </div>
           {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
         </Link>
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mt-2" style={{ color: GOLD }}>
+      </div>
+
+      {/* Quick Links */}
+      <div className="px-3 pb-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Quick Links
         </div>
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mt-3" style={{ color: GOLD }}>
-          Relocation Management
-        </div>
         <div className="flex flex-col gap-2">
-
-
-
           <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
             <Search className="w-3.5 h-3.5" /> Search Homes
           </Link>
           <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/PropertyComparison' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/PropertyComparison' ? '#000' : '#fff' }}>
             <GitCompare className="w-3.5 h-3.5" /> Compare Homes
           </Link>
+        </div>
+      </div>
+
+      {/* Relocation Management */}
+      <div className="px-3 pb-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          Relocation Management
+        </div>
+        <div className="flex flex-col gap-2">
           <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
             <Map className="w-3.5 h-3.5" /> My Roadmap
           </Link>
@@ -116,10 +123,10 @@ export default function ClientSidebar() {
         </div>
       </div>
 
-      {/* DNN + Services */}
+      {/* Dyson News Network */}
       <div className="px-3 pb-4 space-y-2">
         <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          DNN & Services
+          Dyson News Network (DNN)
         </div>
         <div className="flex flex-col gap-1.5">
           <Link to="/dnn-news" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
