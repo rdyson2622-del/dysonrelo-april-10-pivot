@@ -57,15 +57,29 @@ export default function ClientSidebar() {
       {/* Scrollable area below logo */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-      {/* Nav */}
-      <nav className="px-3 py-3 space-y-1">
-        {/* Relocation Dashboard */}
+      {/* Relocation Dashboard */}
+      <div className="px-3 py-3 space-y-1">
         <Link to="/" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium hover:opacity-80 transition-all"
           style={{ color: GOLD }}>
           <LayoutDashboard className="w-4 h-4 shrink-0" />
           Relocation Dashboard
         </Link>
-      </nav>
+      </div>
+
+      {/* Quick Links */}
+      <div className="px-3 pb-4 space-y-2">
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
+          Quick Links
+        </div>
+        <div className="flex flex-col gap-2">
+          <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
+            <Search className="w-3.5 h-3.5" /> Search Homes
+          </Link>
+          <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/PropertyComparison' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/PropertyComparison' ? '#000' : '#fff' }}>
+            <GitCompare className="w-3.5 h-3.5" /> Compare Homes
+          </Link>
+        </div>
+      </div>
 
       {/* Communications */}
       <div className="px-3 pb-4 space-y-2">
@@ -85,21 +99,6 @@ export default function ClientSidebar() {
           </div>
           {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
         </Link>
-      </div>
-
-      {/* Quick Links */}
-      <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          Quick Links
-        </div>
-        <div className="flex flex-col gap-2">
-          <Link to="/search" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/search' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/search' ? '#000' : '#fff' }}>
-            <Search className="w-3.5 h-3.5" /> Search Homes
-          </Link>
-          <Link to="/PropertyComparison" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/PropertyComparison' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/PropertyComparison' ? '#000' : '#fff' }}>
-            <GitCompare className="w-3.5 h-3.5" /> Compare Homes
-          </Link>
-        </div>
       </div>
 
       {/* Relocation Management */}
