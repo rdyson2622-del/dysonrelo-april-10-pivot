@@ -8,7 +8,7 @@ export default function ClientCommunicationsExplainer() {
   return (
     <div className="flex flex-col h-screen" style={{ background: '#080808' }}>
       {/* Header */}
-      <div className="flex-shrink-0 px-6 py-4 flex items-center gap-3 border-b" style={{ background: 'rgba(8,8,8,0.95)', borderColor: 'rgba(212,175,55,0.15)' }}>
+      <div className="flex-shrink-0 px-6 py-4 flex items-center justify-center gap-3 border-b" style={{ background: 'rgba(8,8,8,0.95)', borderColor: 'rgba(212,175,55,0.15)' }}>
         <Link to="/chat" className="p-2 hover:bg-white/10 rounded-lg transition-colors">
           <ArrowLeft className="w-5 h-5 text-white" />
         </Link>
