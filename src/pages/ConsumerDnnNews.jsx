@@ -609,13 +609,24 @@ export default function ConsumerDnnNews() {
                   ))
                 ) : (
                   <>
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <div key={i} className="relative w-full aspect-[16/18] rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                    {Array.from({ length: 20 }).map((_, i) => {
+                      const placeholderImages = [
+                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/06f08bb63_generated_image.png',
+                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/635af6ea7_generated_image.png',
+                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/7399e9b3c_generated_image.png',
+                      ];
+                      const img = placeholderImages[i % placeholderImages.length];
+                      return (
+                        <div key={i} className="relative w-full aspect-[16/18] rounded-xl overflow-hidden bg-black border border-gray-800">
+                          <img src={img} alt={`Real estate thumbnail ${i + 1}`} className="w-full h-full object-cover opacity-60" />
+                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                            <div className="text-center">
+                              <div className="text-gray-300 text-sm font-semibold">Video Coming Soon</div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </>
                 )}
               </div>
