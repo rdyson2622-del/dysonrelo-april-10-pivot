@@ -25,6 +25,7 @@ export default function ClientSidebar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [clientId, setClientId] = useState(null);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
+  const [showRelocationPill, setShowRelocationPill] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -41,6 +42,10 @@ export default function ClientSidebar() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    setShowRelocationPill(false);
+  }, [location.pathname]);
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
@@ -88,21 +93,31 @@ export default function ClientSidebar() {
 
       {/* Relocation Management */}
       <div className="px-3 pb-4 space-y-2">
-        <Link to="/relo-management" className="w-full text-left text-[10px] uppercase tracking-[2px] px-2 font-bold hover:opacity-80 transition-opacity block" style={{ color: GOLD }}>
+        <button 
+          onClick={() => setShowRelocationPill(!showRelocationPill)}
+          className="w-full text-left text-[10px] uppercase tracking-[2px] px-2 font-bold hover:opacity-80 transition-all"
+          style={{ 
+            color: showRelocationPill ? '#000' : GOLD,
+            background: showRelocationPill ? GOLD : 'transparent',
+            padding: showRelocationPill ? '0.5rem 1rem' : '0',
+            borderRadius: showRelocationPill ? '9999px' : '0'
+          }}>
           Relocation Management
-        </Link>
-        <div className="flex flex-col gap-2">
-          <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
-            <Map className="w-3.5 h-3.5" /> My Roadmap
-          </Link>
+        </button>
+        {showRelocationPill && (
+          <div className="flex flex-col gap-2">
+            <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
+              <Map className="w-3.5 h-3.5" /> My Roadmap
+            </Link>
 
-          <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
-            <MapPin className="w-3.5 h-3.5" /> City Guide
-          </Link>
-          <Link to="/GeminiSession" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/GeminiSession' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/GeminiSession' ? '#000' : '#fff' }}>
-            <Zap className="w-3.5 h-3.5" /> Gemini Session
-          </Link>
-        </div>
+            <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
+              <MapPin className="w-3.5 h-3.5" /> City Guide
+            </Link>
+            <Link to="/GeminiSession" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/GeminiSession' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/GeminiSession' ? '#000' : '#fff' }}>
+              <Zap className="w-3.5 h-3.5" /> Gemini Session
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Dyson News Network */}
