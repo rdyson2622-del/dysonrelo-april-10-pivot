@@ -64,6 +64,13 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    key: 'relo_management',
+    label: 'RELO MANAGEMENT',
+    children: [
+      { label: 'Relo Management Explainer', path: '/admin/relo-management', icon: Home },
+    ],
+  },
+  {
     key: 'operations',
     label: 'OPERATIONS',
     children: [
