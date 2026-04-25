@@ -111,8 +111,8 @@ function VettingProcess() {
                   <Icon className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white mb-0.5">Step {i + 1}: {s.title}</p>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{s.detail}</p>
+                  <p className="font-bold text-white mb-0.5" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem', letterSpacing: '0.03em' }}>Step {i + 1}: {s.title}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'Inter, sans-serif' }}>{s.detail}</p>
                 </div>
               </div>
             );
@@ -250,8 +250,8 @@ function PendingCard() {
         <Star className="w-7 h-7" style={{ color: GOLD }} />
       </div>
       <div>
-        <h2 className="text-white font-bold text-lg mb-2">Your Personal Agent Match Is Pending</h2>
-        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <h2 className="serif-heading text-white mb-2" style={{ fontSize: '1.3rem' }}>Your Personal Agent Match Is Pending</h2>
+        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem' }}>
           Your Dyson & Dyson concierge is identifying your ideal vetted agent based on your destination market, priorities, and personality fit. You'll be notified the moment your match is confirmed.
         </p>
       </div>
@@ -277,7 +277,7 @@ function AssignedAgentBanner({ agent }) {
         <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto opacity-80" />
         <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>Your Assigned DNN Bureau Agent</span>
       </div>
-      <p className="text-xl font-black text-white">{agent.co_brand_label || agent.agent_name}</p>
+      <p className="serif-heading text-white" style={{ fontSize: '1.4rem' }}>{agent.co_brand_label || agent.agent_name}</p>
       {agent.brokerage && <p className="text-sm font-semibold mt-0.5" style={{ color: GOLD }}>{agent.brokerage}</p>}
       {agent.markets?.length > 0 && <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{agent.markets.join(', ')}</p>}
     </div>
@@ -293,8 +293,8 @@ function CharlieTeaser() {
           <Globe className="w-4 h-4" style={{ color: '#818cf8' }} />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-bold text-white mb-1">Questions about your agent match?</p>
-          <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          <p className="serif-heading text-white mb-1" style={{ fontSize: '1rem' }}>Questions about your agent match?</p>
+          <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '0.9rem' }}>
             Charlie can explain the vetting process, help you prepare questions for your first agent call, and walk you through what to expect in your relocation timeline.
           </p>
           <Link to="/chat"
@@ -345,8 +345,8 @@ export default function MyAgent() {
             <Shield className="w-4 h-4" style={{ color: GOLD }} />
             <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN Agent Bureau</p>
           </div>
-          <h1 className="text-2xl font-black text-white">Vetted Real Estate Agents</h1>
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', letterSpacing: '0.12em' }}>VETTED REAL ESTATE AGENTS</h1>
+          <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
             Every agent below has passed Bob Dyson's personal 5-step vetting process. Zero shortcuts. Your referral is always free.
           </p>
         </div>
@@ -366,7 +366,7 @@ export default function MyAgent() {
           <div className="mt-6">
             <div className="flex items-center gap-4 mb-4">
               <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-              <p className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>The DNN Bureau</p>
+              <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD, fontFamily: 'Inter, sans-serif' }}>The DNN Bureau</p>
               <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
             </div>
             <div className="space-y-3">
