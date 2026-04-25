@@ -594,18 +594,43 @@ export default function ConsumerDnnNews() {
             </div>
 
             {/* RIGHT: Video thumbnails */}
-            <div className="lg:col-span-2 space-y-3">
+             <div className="lg:col-span-2 space-y-3">
               <p className="text-xs font-black tracking-[0.2em] uppercase px-3 py-2" style={{ color: 'rgba(212,175,55,0.6)' }}>Featured Videos</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {videoArticles.map((article) => (
-                  <VideoThumbnail
-                    key={article.id}
-                    article={article}
-                    isFullscreen={fullscreenVideo?.id === article.id}
-                    onExpand={() => setFullscreenVideo(article)}
-                    onClose={() => setFullscreenVideo(null)}
-                  />
-                ))}
+                {videoArticles.length > 0 ? (
+                  videoArticles.map((article) => (
+                    <VideoThumbnail
+                      key={article.id}
+                      article={article}
+                      isFullscreen={fullscreenVideo?.id === article.id}
+                      onExpand={() => setFullscreenVideo(article)}
+                      onClose={() => setFullscreenVideo(null)}
+                    />
+                  ))
+                ) : (
+                  <>
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                      </div>
+                    </div>
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                      </div>
+                    </div>
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                      </div>
+                    </div>
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
