@@ -141,14 +141,14 @@ const LENDER_VETTING_STEPS = [
   { icon: Shield, title: 'Fiduciary Agreement', detail: 'Every bureau lender signs an agreement that protects our client\'s equity position and prohibits upselling harmful loan products.' },
 ];
 
-function VettingProcess({ steps, label, color = GOLD }) {
+function VettingProcess({ steps, label, color = GOLD, fontSize = "text-xs" }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#0d0d0d', border: `1px solid ${color}30` }}>
       <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between px-5 py-4 text-left">
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4" style={{ color }} />
-          <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color }}>{label}</p>
+          <p className={`${fontSize} font-black tracking-[0.2em] uppercase`} style={{ color }}>{label}</p>
         </div>
         {open ? <ChevronUp className="w-4 h-4" style={{ color }} /> : <ChevronDown className="w-4 h-4" style={{ color }} />}
       </button>
@@ -462,7 +462,7 @@ export default function MyAgent() {
 
          {/* ── AGENTS SECTION ── */}
          <div>
-            <VettingProcess steps={AGENT_VETTING_STEPS} label="5-Step Agent Vetting Process" color={GOLD} />
+            <VettingProcess steps={AGENT_VETTING_STEPS} label="THE DYSON & DYSON 5-Step Agent Vetting Process" color={GOLD} fontSize="text-base" />
 
             {myAgent && (
               <>
