@@ -162,23 +162,15 @@ export default function ReloManagement() {
           </p>
           <button 
            type="button"
-           id="relo-nav-btn"
            className="px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
            style={{ 
              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, 
              color: '#000',
              boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
              cursor: 'pointer',
-             border: 'none',
-             zIndex: 9999,
-             position: 'relative',
-             pointerEvents: 'auto'
+             border: 'none'
            }}
-           onClick={(e) => {
-             e.preventDefault();
-             e.stopPropagation();
-             window.location.href = '/relocation-intake';
-           }}
+           onClick={() => window.location.href = '/relocation-intake'}
            onMouseEnter={e => e.target.style.boxShadow = '0 8px 28px rgba(212, 175, 55, 0.6)'}
            onMouseLeave={e => e.target.style.boxShadow = '0 4px 14px rgba(212, 175, 55, 0.3)'}
           >
