@@ -56,7 +56,7 @@ function SubscribeBanner() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl p-6 text-center mb-8" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)' }}>
+      <div className="rounded-2xl p-6 text-center mb-8" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
         <p className="text-yellow-400 font-bold text-sm mb-1">✓ You're on the list</p>
         <p className="text-slate-500 text-xs">DNN Intelligence Briefs will be delivered directly to you. Welcome to the network.</p>
       </div>
@@ -64,7 +64,7 @@ function SubscribeBanner() {
   }
 
   return (
-    <div className="rounded-2xl p-5 mb-8" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}>
+    <div className="rounded-2xl p-5 mb-8" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
       <div className="flex items-center gap-2 mb-2">
         <Bell className="w-4 h-4" style={{ color: '#D4AF37' }} />
         <p className="text-sm font-bold text-white">Get DNN Intelligence in Your Inbox</p>
