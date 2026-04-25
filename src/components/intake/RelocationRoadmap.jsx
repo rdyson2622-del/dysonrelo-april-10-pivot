@@ -499,6 +499,39 @@ function ReloManagementSlides() {
         </div>
       ),
     },
+    {
+      id: 5,
+      title: "Ready for Your",
+      subtitle: "Fresh Start?",
+      bgStyle: '#1a1a1a',
+      content: (
+        <div className="space-y-4 text-center">
+          <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
+            Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
+          </p>
+          <Link to="/RelocationIntake">
+            <button className="px-8 py-4 rounded-full font-black text-base transition-all hover:opacity-90 inline-block" style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+              Let's Plan My Relocation Move
+            </button>
+          </Link>
+        </div>
+      ),
+    },
+    {
+      id: 6,
+      title: "The Dyson & Dyson Promise",
+      subtitle: "Licensed Relocation Services",
+      bgStyle: '#111',
+      content: (
+        <div className="space-y-3 text-center">
+          <p className="text-sm" style={{ color: '#fff' }}>The Dyson & Dyson Companies, Inc.</p>
+          <p className="text-sm font-bold" style={{ color: GOLD }}>California Department of Real Estate #02303118</p>
+          <p className="text-base" style={{ color: '#fff' }}>Concierge Relocation Program • Free to Buyers</p>
+          <p className="text-base font-bold" style={{ color: GOLD }}>(858) 353-1200</p>
+          <p className="text-xs mt-4" style={{ color: 'rgba(255,255,255,0.6)' }}>55 years of relocation management expertise.</p>
+        </div>
+      ),
+    },
   ];
 
   const slide = slides[currentSlide];
