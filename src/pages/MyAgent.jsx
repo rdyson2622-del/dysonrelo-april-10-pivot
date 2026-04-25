@@ -35,7 +35,7 @@ function VettedVsUnvetted() {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden mb-5" style={{ background: 'linear-gradient(135deg, #0d0d0d, #111)', border: '1px solid rgba(212,175,55,0.25)' }}>
+    <div className="rounded-2xl overflow-hidden mb-5" style={{ background: '#ede0cc', border: '1px solid rgba(212,175,55,0.15)' }}>
       <button onClick={() => setOpen(v => !v)} className="w-full px-5 py-4 flex items-center justify-between text-left">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4" style={{ color: GOLD }} />
