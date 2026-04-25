@@ -481,9 +481,8 @@ export default function MyAgent() {
             <Shield className="w-4 h-4" style={{ color: GOLD }} />
             <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN Agent Bureau</p>
           </div>
-          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
-            BENEFITS OF CHOOSING A<br />
-            <span style={{ color: GOLD }}>DYSON & AI VETTED</span> AGENT
+          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.6rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
+            BENEFITS OF CHOOSING A <span style={{ color: GOLD }}>DYSON & AI VETTED</span> AGENT
           </h1>
           <p className="text-sm mt-3 leading-relaxed" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
             Every agent below has passed the Dyson & Dyson leadership team's personal 5-step vetting process. Zero shortcuts. Your referral is always free — and our deep AI vetting process increases your odds of a great agent relationship.
