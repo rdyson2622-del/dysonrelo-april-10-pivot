@@ -39,12 +39,8 @@ export default function AIAssistants() {
         </Link>
 
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-8">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-24 w-auto mx-auto mb-4" />
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.52rem, 3.325vw, 2.49rem)', letterSpacing: '0.22em', color: '#000' }}>
-            THE DYSON & DYSON COMPANIES
-          </h1>
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#D4AF37' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#000' }}>
             Each Assistant Specializes in One Domain
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
