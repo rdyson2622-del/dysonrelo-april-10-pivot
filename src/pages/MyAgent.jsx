@@ -153,13 +153,14 @@ function VettingProcess({ steps, label, color = GOLD }) {
         {open ? <ChevronUp className="w-4 h-4" style={{ color }} /> : <ChevronDown className="w-4 h-4" style={{ color }} />}
       </button>
       {!open && (
-        <div className="px-5 pb-4 flex flex-wrap gap-2">
+        <div className="px-5 pb-4 grid grid-cols-5 gap-2">
           {steps.map((s, i) => {
             const Icon = s.icon;
             return (
-              <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
-                style={{ background: `${color}10`, border: `1px solid ${color}20`, color: 'rgba(255,255,255,0.7)' }}>
-                <Icon className="w-3 h-3" style={{ color }} /> {s.title}
+              <div key={i} className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl text-center"
+                style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
+                <Icon className="w-3.5 h-3.5" style={{ color }} />
+                <p className="text-[10px] font-bold leading-tight" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.title}</p>
               </div>
             );
           })}
