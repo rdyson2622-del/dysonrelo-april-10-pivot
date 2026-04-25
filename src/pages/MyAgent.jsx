@@ -181,9 +181,9 @@ export default function MyAgent() {
       <div className="max-w-xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)', color: GOLD }}>
-            <Shield className="w-3 h-3" /> My Agent
+          <div className="flex items-center gap-2 mb-3">
+            <Shield className="w-4 h-4" style={{ color: GOLD }} />
+            <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>My Agent</p>
           </div>
           <h1 className="text-2xl font-black text-white">Your Relocation Agent</h1>
           <p className="text-sm text-slate-500 mt-1">Your personally vetted, DNN-verified real estate partner.</p>
