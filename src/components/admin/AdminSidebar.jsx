@@ -54,11 +54,11 @@ const NAV_SECTIONS = [
     key: 'results',
     label: 'CLIENT MARKETING RESULTS',
     children: [
-      { label: 'Listing Clients', path: '/admin/owners', icon: Home },
+      { label: 'Listing Clients', path: '/admin/clients', icon: Home },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Agents', path: '/admin/referrals', icon: UserCheck },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
-      { label: 'Lenders', path: '/admin/clients', icon: Users },
+      { label: 'Lenders', path: '/admin/owners', icon: Users },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
     ],
   },
