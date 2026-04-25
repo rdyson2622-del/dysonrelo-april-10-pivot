@@ -106,6 +106,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Consumer Routes with Sidebar Layout */}
+      {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
