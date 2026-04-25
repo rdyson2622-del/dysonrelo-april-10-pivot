@@ -17,7 +17,7 @@ export default function ReloManagement() {
           WE DON'T SEND YOU A MAP.
         </h1>
         <h2 className="display-heading mb-10"
-          style={{ fontSize: 'clamp(1.6rem, 4.5vw, 3rem)', lineHeight: 1.1, letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.36rem, 3.825vw, 2.55rem)', lineHeight: 1.1, letterSpacing: '0.12em', color: GOLD }}>
           WE MAKE THE JOURNEY WITH YOU.
         </h2>
         <div className="max-w-2xl space-y-5">
@@ -71,7 +71,7 @@ export default function ReloManagement() {
           THE SCOPE IS REAL.
         </h1>
         <h2 className="display-heading mb-12"
-          style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.4rem)', letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.19rem, 2.975vw, 2.04rem)', letterSpacing: '0.12em', color: GOLD }}>
           THAT'S WHY WE EXIST.
         </h2>
         <div className="max-w-2xl space-y-5 text-left">
@@ -99,7 +99,7 @@ export default function ReloManagement() {
           EXPERIENCED EXPERTS,
         </h1>
         <h2 className="display-heading mb-12"
-          style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.4rem)', letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.19rem, 2.975vw, 2.04rem)', letterSpacing: '0.12em', color: GOLD }}>
           POWERED BY AI.
         </h2>
         <div className="max-w-2xl space-y-6">
@@ -121,7 +121,7 @@ export default function ReloManagement() {
           YOUR AGENT. YOUR CHOICE.
         </h1>
         <h2 className="display-heading mb-12"
-          style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.4rem)', letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.19rem, 2.975vw, 2.04rem)', letterSpacing: '0.12em', color: GOLD }}>
           ZERO GUESSWORK.
         </h2>
         <div className="max-w-xl w-full space-y-3 text-left">
@@ -153,7 +153,7 @@ export default function ReloManagement() {
           READY FOR YOUR
         </h1>
         <h2 className="display-heading mb-12"
-          style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.4rem)', letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.19rem, 2.975vw, 2.04rem)', letterSpacing: '0.12em', color: GOLD }}>
           FRESH START?
         </h2>
         <div className="max-w-xl space-y-8">
@@ -178,7 +178,7 @@ export default function ReloManagement() {
           THE DYSON &amp; DYSON PROMISE
         </h1>
         <h2 className="display-heading mb-12"
-          style={{ fontSize: 'clamp(1.2rem, 3vw, 2rem)', letterSpacing: '0.12em', color: GOLD }}>
+          style={{ fontSize: 'clamp(1.02rem, 2.55vw, 1.7rem)', letterSpacing: '0.12em', color: GOLD }}>
           LICENSED RELOCATION SERVICES
         </h2>
         <div className="space-y-4 max-w-md">
