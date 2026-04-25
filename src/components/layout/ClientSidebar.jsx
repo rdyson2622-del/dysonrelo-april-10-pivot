@@ -51,6 +51,25 @@ export default function ClientSidebar() {
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
       style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
+      {/* EMERGENCY RELO LINK TEST BUTTON */}
+      <button 
+        onClick={() => window.location.href = '/test-relo'}
+        style={{
+          backgroundColor: '#D4AF37',
+          color: 'black',
+          padding: '20px',
+          fontWeight: 'bold',
+          width: '100%',
+          zIndex: 10000,
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '14px',
+          textAlign: 'center'
+        }}
+      >
+        EMERGENCY RELO LINK - CLICK ME
+      </button>
+
       {/* Logo — pinned, never scrolls away */}
       <div className="shrink-0 px-5 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
         <Link to="/Home">
