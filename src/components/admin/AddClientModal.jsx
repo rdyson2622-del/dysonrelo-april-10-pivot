@@ -13,11 +13,46 @@ const BUDGET_OPTIONS = [
   { value: 'over_1m',   label: 'Over $1M' },
 ];
 
-const PRIORITY_OPTIONS = [
-  'schools', 'commute', 'nightlife', 'walkability', 'safety',
-  'nature', 'healthcare', 'religious_community', 'shopping', 'dining',
-  'arts_culture', 'sports_recreation'
+// Buyer / Relocation priorities
+const BUYER_PRIORITIES = [
+  { value: 'schools', label: 'Schools' },
+  { value: 'commute', label: 'Commute' },
+  { value: 'nightlife', label: 'Nightlife' },
+  { value: 'walkability', label: 'Walkability' },
+  { value: 'safety', label: 'Safety' },
+  { value: 'nature', label: 'Nature' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'religious_community', label: 'Religious Community' },
+  { value: 'shopping', label: 'Shopping' },
+  { value: 'dining', label: 'Dining' },
+  { value: 'arts_culture', label: 'Arts & Culture' },
+  { value: 'sports_recreation', label: 'Sports & Recreation' },
 ];
+
+// Seller-specific priorities
+const SELLER_PRIORITIES = [
+  { value: 'top_dollar', label: 'Top Dollar / Max Price' },
+  { value: 'fast_close', label: 'Fast Close' },
+  { value: 'as_is_sale', label: 'As-Is Sale' },
+  { value: 'minimal_showings', label: 'Minimal Showings' },
+  { value: 'flexible_possession', label: 'Flexible Possession Date' },
+  { value: 'cash_offer', label: 'Cash Offer Preferred' },
+  { value: 'no_contingencies', label: 'No Contingencies' },
+  { value: 'leaseback', label: 'Leaseback Option' },
+  { value: 'staging_help', label: 'Staging Assistance' },
+  { value: 'pre_market_exposure', label: 'Pre-Market Exposure' },
+  { value: 'strong_marketing', label: 'Strong Marketing Package' },
+  { value: 'bridge_financing', label: 'Bridge Financing' },
+];
+
+// Combined for relocation / both_local
+const RELOCATION_PRIORITIES = [...BUYER_PRIORITIES, ...SELLER_PRIORITIES];
+
+const getPrioritiesByType = (clientType) => {
+  if (clientType === 'seller_only') return SELLER_PRIORITIES;
+  if (clientType === 'buyer_only') return BUYER_PRIORITIES;
+  return RELOCATION_PRIORITIES; // relocation + both_local get all
+};
 
 const ENGAGEMENT_OPTIONS = [
   { value: 'hands_on', label: 'Hands-On (daily digests)' },
@@ -257,22 +292,65 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
               </div>
             </div>
 
-            {/* Priorities */}
+            {/* Priorities — context-aware by client type */}
             <div>
-              <p className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>Client Priorities</p>
-              <div className="flex flex-wrap gap-2">
-                {PRIORITY_OPTIONS.map(p => (
-                  <button key={p} type="button" onClick={() => togglePriority(p)}
-                    className="px-3 py-1 rounded-full text-xs font-semibold transition-all capitalize"
-                    style={{
-                      background: form.priorities.includes(p) ? GOLD : 'rgba(255,255,255,0.06)',
-                      color: form.priorities.includes(p) ? '#000' : 'rgba(255,255,255,0.6)',
-                      border: form.priorities.includes(p) ? 'none' : '1px solid rgba(255,255,255,0.12)',
-                    }}>
-                    {p.replace('_', ' ')}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[10px] font-bold tracking-[0.25em] uppercase" style={{ color: GOLD }}>
+                  {form.client_type === 'seller_only' ? 'Seller Priorities' :
+                   form.client_type === 'buyer_only' ? 'Buyer Priorities' :
+                   'Client Priorities'}
+                </p>
+                {form.priorities.length > 0 && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                    style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
+                    {form.priorities.length} selected
+                  </span>
+                )}
               </div>
+
+              {/* Seller priorities group */}
+              {(form.client_type === 'seller_only' || form.client_type === 'relocation' || form.client_type === 'both_local') && (
+                <div className="mb-3">
+                  {(form.client_type === 'relocation' || form.client_type === 'both_local') && (
+                    <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>Seller Goals</p>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {SELLER_PRIORITIES.map(p => (
+                      <button key={p.value} type="button" onClick={() => togglePriority(p.value)}
+                        className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
+                        style={{
+                          background: form.priorities.includes(p.value) ? GOLD : 'rgba(255,100,50,0.07)',
+                          color: form.priorities.includes(p.value) ? '#000' : 'rgba(255,255,255,0.6)',
+                          border: form.priorities.includes(p.value) ? 'none' : '1px solid rgba(255,100,50,0.2)',
+                        }}>
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Buyer priorities group */}
+              {(form.client_type === 'buyer_only' || form.client_type === 'relocation' || form.client_type === 'both_local') && (
+                <div>
+                  {(form.client_type === 'relocation' || form.client_type === 'both_local') && (
+                    <p className="text-[9px] font-bold uppercase tracking-widest mb-2 mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Buyer / Lifestyle Goals</p>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {BUYER_PRIORITIES.map(p => (
+                      <button key={p.value} type="button" onClick={() => togglePriority(p.value)}
+                        className="px-3 py-1 rounded-full text-xs font-semibold transition-all"
+                        style={{
+                          background: form.priorities.includes(p.value) ? GOLD : 'rgba(255,255,255,0.06)',
+                          color: form.priorities.includes(p.value) ? '#000' : 'rgba(255,255,255,0.6)',
+                          border: form.priorities.includes(p.value) ? 'none' : '1px solid rgba(255,255,255,0.12)',
+                        }}>
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Notes */}
