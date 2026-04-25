@@ -123,10 +123,10 @@ export default function DashboardServicePreviews({ clientId }) {
       <div className="text-center mb-8">
         <div className="h-px w-24 mx-auto mb-6" style={{ background: `rgba(212,175,55,0.4)` }} />
         <p className="text-xs font-bold tracking-[0.25em] mb-2" style={{ color: GOLD }}>EVERYTHING INCLUDED IN YOUR CONCIERGE PROGRAM</p>
-        <h2 className="display-heading" style={{ fontSize: '2rem', color: '#fff' }}>Your Full-Service Dashboard</h2>
-        <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          Seven integrated tools — all working together, all managed by our team.
-        </p>
+         <h2 className="display-heading" style={{ fontSize: '2rem', color: '#000' }}>Your Full-Service Dashboard</h2>
+         <p className="text-sm mt-2" style={{ color: '#1a1a1a' }}>
+           Seven integrated tools — all working together, all managed by our team.
+         </p>
       </div>
 
       {SERVICES.map((svc, i) => (
