@@ -41,7 +41,7 @@ export default function AIAssistants() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
           <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-16 w-auto mx-auto mb-6" />
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#000' }}>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.154rem, 2.565vw, 1.924rem)', letterSpacing: '0.18em', color: '#000' }}>
             Each Assistant Specializes in One Domain
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
