@@ -22,7 +22,7 @@ export default function ClientCommunicationsExplainer() {
         <div className="flex-1 px-12 py-12" style={{ background: '#ede0cc' }}>
           <div className="max-w-3xl">
             <h2 className="text-4xl font-bold mb-6" style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em', color: '#1a1a1a' }}>
-              Stay Connected with Your Dyson Team
+              Stay Connected with Your Dyson & Dyson Team
             </h2>
             <p className="text-lg leading-relaxed mb-12" style={{ color: '#4a4a4a', fontFamily: 'Georgia, serif' }}>
               Every message you send — whether through Charlie chat, SMS reply, or email — reaches your dedicated team in one unified thread. No jumping between apps. No missed messages. Just a conversation you can trust.
