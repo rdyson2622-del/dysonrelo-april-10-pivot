@@ -5,7 +5,8 @@ import { base44 } from '@/api/base44Client';
 import {
   CheckCircle2, ArrowRight, ChevronDown, ChevronUp,
   UserCheck, MapPin, Home, Search, ClipboardCheck,
-  FileText, Key, Truck, Sparkles, ArrowLeft
+  FileText, Key, Truck, Sparkles, ArrowLeft,
+  MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
 import ReadyToStart from '../dashboard/ReadyToStart';
 
@@ -298,10 +299,13 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
               {clientId ? 'Go to My Dashboard' : 'Start Your Relocation'} <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
-          </div>
-          </div>
-          </div>
-          );
+        </div>
+      </div>
+
+      {/* Relocation Management Explainer Slides */}
+      <ReloManagementSlides />
+    </div>
+  );
           }
 
 // Phase content when user has completed intake
@@ -378,5 +382,177 @@ function LockedPhaseContent({ phase, isActive, GOLD }) {
         </Link>
       </div>
     </motion.div>
+  );
+}
+
+// Relocation Management Explainer Slides
+function ReloManagementSlides() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slides = [
+    {
+      id: 0,
+      title: "We Don't Send You a Map.",
+      subtitle: "We Make the Journey With You.",
+      bgStyle: '#1a1a1a',
+      content: (
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
+            We are <strong style={{ color: GOLD }}>Relocation Managers</strong>. Not Agents. Not a listing service. We help families and professionals sell their current home and find their next one, anywhere in the country. Every step is something Charlie and your Dyson team actively execute on your behalf, all the way through close of escrow and beyond.
+          </p>
+          <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            We intentionally work with a limited number of families at any given time. This isn't exclusivity — it's commitment. Real relocation management requires deep local focus, market expertise, timeline coordination, and relentless attention to detail. We're not scaling a service. We're delivering one.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 1,
+      title: "Our Services",
+      subtitle: null,
+      bgStyle: '#2a2a2a',
+      content: (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { icon: MessageCircle, title: 'AI Concierge Chat', desc: 'Charlie is available 24/7' },
+            { icon: MapPin, title: 'Neighborhood Research', desc: 'Deep-dive community analysis' },
+            { icon: UserCheck, title: 'Agent Selection', desc: 'Hand-vetted candidates' },
+            { icon: Building2, title: 'Home Search Strategy', desc: 'AI-powered property matching' },
+            { icon: Truck, title: 'Moving Coordination', desc: 'Complete logistics' },
+            { icon: Zap, title: 'Utilities & Services', desc: 'Pre-arrival setup' },
+            { icon: GraduationCap, title: 'School Enrollment', desc: 'District research & tours' },
+            { icon: HeartPulse, title: 'Healthcare Setup', desc: 'Top-rated providers' },
+          ].map((service, i) => (
+            <div key={i} className="p-3 rounded-xl text-center text-xs"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div className="flex justify-center mb-2">
+                <service.icon className="w-5 h-5" style={{ color: GOLD }} />
+              </div>
+              <p className="font-bold mb-1" style={{ color: '#fff' }}>{service.title}</p>
+              <p style={{ color: 'rgba(255,255,255,0.6)' }}>{service.desc}</p>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 2,
+      title: "The Scope Is Real.",
+      subtitle: "That's Why We Exist.",
+      bgStyle: '#333',
+      content: (
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
+            Seeing the full scope of what's ahead can feel overwhelming.
+          </p>
+          <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.3)' }}>
+            <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
+            <p className="text-sm leading-relaxed mb-3" style={{ color: '#fff' }}>
+              Once you've confirmed your contact information, we set up a private three-way live session — you, Google Gemini, and Senior Staff.
+            </p>
+            <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
+              This session is <strong>by invitation only</strong> — we're selective about who we work with. No cost to you, ever.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 3,
+      title: "Experienced Experts,",
+      subtitle: "Powered by AI.",
+      bgStyle: '#000',
+      content: (
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
+            AI handles data aggregation, comp analysis, document generation, and 24/7 availability. Real estate experts position you to make wise judgment calls, approve major decisions, and guide you through your entire relocation.
+          </p>
+          <p className="text-base font-bold" style={{ color: GOLD }}>
+            And it costs you absolutely nothing since we are funded by the selected Brokers and Agents.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: 4,
+      title: "Your Agent. Your Choice.",
+      subtitle: "Zero Guesswork.",
+      bgStyle: '#000',
+      content: (
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
+            Most people find an agent through Zillow, a yard sign, or a friend. We eliminate that entirely.
+          </p>
+          <div className="space-y-2">
+            {[
+              'We profile your ideal agent before any names are shared',
+              'Top 20 destination agents evaluated',
+              '3–5 personally vetted candidates presented',
+              'Your selection triggers immediate agent briefing',
+              'Zero cost to you — always'
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+                <span style={{ color: '#fff' }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  const slide = slides[currentSlide];
+
+  return (
+    <div className="p-6" style={{ background: '#0a0a0a' }}>
+      <div className="flex gap-6 rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)', minHeight: '500px' }}>
+        {/* Slide Nav Sidebar */}
+        <div className="w-52 shrink-0 flex flex-col border-r" style={{ borderColor: 'rgba(212,175,55,0.15)', background: '#0d0d0d' }}>
+          <div className="px-4 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+            <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-0.5" style={{ color: GOLD }}>RELOCATION</p>
+            <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>MANAGEMENT</p>
+            <p className="text-[9px] mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Explainer & Overview</p>
+          </div>
+          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+            {slides.map((s, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className="w-full text-left px-3 py-2.5 rounded-lg transition-all"
+                style={{
+                  background: currentSlide === idx ? GOLD : 'rgba(255,255,255,0.04)',
+                  color: currentSlide === idx ? '#000' : '#fff',
+                  border: currentSlide === idx ? 'none' : '1px solid rgba(212,175,55,0.2)',
+                }}>
+                <p className="font-bold leading-tight text-[11px]">{s.title}</p>
+                {s.subtitle && (
+                  <p className="opacity-70 mt-0.5 text-[9px]">{s.subtitle}</p>
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="px-3 py-3 border-t text-center text-[10px]" style={{ borderColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.35)' }}>
+            {currentSlide + 1} of {slides.length}
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-10 py-12 text-center" style={{ background: slide.bgStyle, transition: 'background 0.3s ease' }}>
+          <div className="mb-8">
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', fontWeight: 600, color: '#fff', lineHeight: 1.15, marginBottom: '0.5rem' }}>
+              {slide.title}
+            </h1>
+            {slide.subtitle && (
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', fontWeight: 600, color: GOLD, lineHeight: 1.15 }}>
+                {slide.subtitle}
+              </h2>
+            )}
+          </div>
+          <div className="w-full max-w-2xl text-left" style={{ fontSize: '13px', lineHeight: 1.7 }}>
+            {slide.content}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
