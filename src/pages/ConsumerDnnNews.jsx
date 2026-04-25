@@ -587,7 +587,7 @@ export default function ConsumerDnnNews() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* LEFT: Text articles in compact cards */}
             <div className="lg:col-span-1 space-y-3">
-              <p className="text-xs font-black tracking-[0.2em] uppercase px-3 py-2" style={{ color: 'rgba(212,175,55,0.6)' }}>News Briefs</p>
+             <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>News Briefs</p>
               {textArticles.map((article) => (
                 <CompactArticleCard key={article.id} article={article} />
               ))}
@@ -595,7 +595,7 @@ export default function ConsumerDnnNews() {
 
             {/* RIGHT: Video thumbnails */}
              <div className="lg:col-span-2 space-y-3">
-              <p className="text-xs font-black tracking-[0.2em] uppercase px-3 py-2" style={{ color: 'rgba(212,175,55,0.6)' }}>Featured Videos</p>
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>Featured Videos</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map((article) => (
