@@ -54,7 +54,7 @@ export default function Home() {
             HOME
           </div>
           <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-0">
-            Home Ownership Management Ecosystem
+            Your Home Ownership Management Ecosystem
           </p>
         </div>
 
