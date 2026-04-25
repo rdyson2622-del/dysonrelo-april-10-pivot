@@ -223,7 +223,7 @@ export default function AdminSidebar() {
               >
                 <div className="flex items-center gap-2">
                   {SectionIcon && <SectionIcon className="w-3.5 h-3.5" style={{ color: sectionColor }} />}
-                  <span className="text-xs font-bold tracking-[0.2em]" style={{ color: sectionColor }}>
+                  <span className="text-xs font-bold tracking-[0.2em] truncate" style={{ color: sectionColor }}>
                     {section.label}
                   </span>
                   {hasActive && !isOpen && (
