@@ -60,7 +60,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
       <main className="max-w-5xl mx-auto px-6 pt-8 pb-16 space-y-8">
         {clientId ? (
           <>
