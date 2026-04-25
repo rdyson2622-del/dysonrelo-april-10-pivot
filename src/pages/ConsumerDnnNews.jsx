@@ -313,13 +313,22 @@ function ArticleCard({ article }) {
         <div className="px-5"><AudioPlayer url={article.audio_url} /></div>
       )}
 
-      {/* Text-only preview for articles without video */}
-      {!hasVideo && (
-        <div className="px-5 py-3">
-          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            {article.body?.split('\n')[0]}
-          </p>
-        </div>
+      {/* VIDEO THUMBNAIL WITH PLAY BUTTON */}
+      {hasVideo && !showText && (
+        <button
+          onClick={() => setShowText(true)}
+          className="relative w-full aspect-video block overflow-hidden group"
+          style={{ background: '#000' }}>
+          <div className="absolute inset-0 flex items-center justify-center"
+            style={{ background: 'rgba(0,0,0,0.4)' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: 'rgba(212,175,55,0.85)' }}>
+              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+              </svg>
+            </div>
+          </div>
+        </button>
       )}
 
       {/* "Read Instead" toggle — only for video articles */}
@@ -353,7 +362,7 @@ function ArticleCard({ article }) {
 
       {/* Text articles — expand full read */}
       {!hasVideo && (
-        <div className="px-5 pb-2">
+        <div className="px-5 py-3">
           <button onClick={() => setShowText(v => !v)}
             className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase"
             style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
