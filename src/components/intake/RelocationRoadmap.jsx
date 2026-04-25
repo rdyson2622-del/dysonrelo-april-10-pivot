@@ -163,9 +163,9 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
       {/* Header with Back Button and Commit CTA */}
-      <nav ref={roadmapRef} className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <nav ref={roadmapRef} className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
             <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
@@ -186,10 +186,10 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             <Sparkles className="w-8 h-8" style={{ color: GOLD }} />
           </div>
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>THE COMPLETE RELOCATION PROCESS</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#fff' }}>
+          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
             {city ? `Your ${city} Roadmap` : 'Your Relocation Roadmap'}
           </h1>
-          <p className="text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          <p className="text-base max-w-xl mx-auto" style={{ color: '#1a1a1a' }}>
             Here's every step of your journey — and exactly what Dyson & Dyson handles for you at each stage.
           </p>
           <p className="text-sm mt-3 font-semibold" style={{ color: GOLD }}>
@@ -207,16 +207,16 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
           return (
             <motion.div
-              key={phase.number}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.4 }}
-              className="rounded-2xl overflow-hidden relative"
-              style={{
-                border: isActive ? `2px solid ${GOLD}` : '1px solid rgba(255,255,255,0.1)',
-                background: isActive ? 'rgba(212,175,55,0.07)' : '#000',
-                opacity: clientId ? 1 : 0.6,
-              }}
+             key={phase.number}
+             initial={{ opacity: 0, y: 16 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: i * 0.07, duration: 0.4 }}
+             className="rounded-2xl overflow-hidden relative"
+             style={{
+               border: isActive ? `2px solid ${GOLD}` : '1px solid rgba(0,0,0,0.1)',
+               background: '#1a1a1a',
+               opacity: clientId ? 1 : 0.6,
+             }}
             >
               {/* Phase Header */}
               <button
@@ -287,10 +287,10 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
 
       {/* Bottom CTA */}
       <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
-        <div className="rounded-2xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}` }}>
+        <div className="rounded-2xl p-8" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}` }}>
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
-          <h3 className="text-xl font-bold mb-2" style={{ color: '#fff' }}>Ready to Start?</h3>
-          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <h3 className="text-xl font-bold mb-2 text-white">Ready to Start?</h3>
+          <p className="text-sm mb-6 text-white">
             {clientId ? 'Your relocation profile is live. Bob\'s team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.' : 'Submit your information to unlock your complete roadmap and personalized relocation plan.'}
           </p>
           <Link to={clientId ? '/Dashboard' : '/RelocationIntake'}>
