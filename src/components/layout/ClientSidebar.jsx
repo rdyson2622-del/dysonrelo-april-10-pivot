@@ -93,17 +93,9 @@ export default function ClientSidebar() {
 
       {/* Relocation Management */}
       <div className="px-3 pb-4 space-y-2">
-        <button 
-          onClick={() => setShowRelocationPill(!showRelocationPill)}
-          className="w-full text-left text-[10px] uppercase tracking-[2px] px-2 font-bold hover:opacity-80 transition-all"
-          style={{ 
-            color: showRelocationPill ? '#000' : GOLD,
-            background: showRelocationPill ? GOLD : 'transparent',
-            padding: showRelocationPill ? '0.5rem 1rem' : '0',
-            borderRadius: showRelocationPill ? '9999px' : '0'
-          }}>
+        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
           Relocation Management
-        </button>
+        </div>
         <div className="flex flex-col gap-2">
           <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: '#000', background: '#fff', padding: '0.25rem 0.5rem', borderRadius: '4px', display: 'inline-block', width: 'fit-content' }}>
             Test this idiot
