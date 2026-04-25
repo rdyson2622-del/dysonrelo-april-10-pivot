@@ -95,8 +95,8 @@ export default function ClientSidebar() {
           <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
             <Map className="w-3.5 h-3.5" /> My Roadmap
           </Link>
-          <Link to="/FindAgent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/FindAgent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/FindAgent' ? '#000' : '#fff' }}>
-            <Users className="w-3.5 h-3.5" /> Vet Agents
+          <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
+            <Shield className="w-3.5 h-3.5" /> Vet My Agent
           </Link>
           <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
             <MapPin className="w-3.5 h-3.5" /> City Guide
@@ -117,10 +117,7 @@ export default function ClientSidebar() {
             style={{ background: location.pathname === '/dnn-news' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/dnn-news' ? '#000' : '#fff' }}>
             <Newspaper className="w-3.5 h-3.5" /> DNN News
           </Link>
-          <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
-            <Shield className="w-3.5 h-3.5" /> My Agent
-          </Link>
+
           <Link to="/financial-services" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
             style={{ background: location.pathname === '/financial-services' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/financial-services' ? '#000' : '#fff' }}>
             <DollarSign className="w-3.5 h-3.5" /> Financial Services
