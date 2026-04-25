@@ -34,39 +34,39 @@ export default function ClientCommunicationsExplainer() {
             
             <div className="space-y-4">
               {/* Card 1 */}
-              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.2)' }}>
                   <MessageCircle className="w-6 h-6" style={{ color: GOLD }} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold mb-2" style={{ color: '#1a1a1a' }}>Message Your Way</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#4a4a4a' }}>
+                  <h4 className="text-lg font-bold mb-2 text-white">Message Your Way</h4>
+                  <p className="text-sm leading-relaxed text-white">
                     Send messages through Charlie, reply to SMS, or use email — whichever feels most natural. All conversations flow into one unified inbox where your Dyson team is always watching.
                   </p>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.2)' }}>
                   <MessageSquare className="w-6 h-6" style={{ color: GOLD }} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold mb-2" style={{ color: '#1a1a1a' }}>Real-Time Responses</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#4a4a4a' }}>
+                  <h4 className="text-lg font-bold mb-2 text-white">Real-Time Responses</h4>
+                  <p className="text-sm leading-relaxed text-white">
                     Your team sees every message instantly. No delays. No waiting for office hours. Replies come back on the same channel you used, so the conversation never breaks rhythm.
                   </p>
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.2)' }}>
                   <CheckCircle className="w-6 h-6" style={{ color: GOLD }} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-bold mb-2" style={{ color: '#1a1a1a' }}>Nothing to Download</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#4a4a4a' }}>
+                  <h4 className="text-lg font-bold mb-2 text-white">Nothing to Download</h4>
+                  <p className="text-sm leading-relaxed text-white">
                     Everything lives here in your client dashboard. No separate apps. No notification overload. Just one place where you and your Dyson team connect.
                   </p>
                 </div>
