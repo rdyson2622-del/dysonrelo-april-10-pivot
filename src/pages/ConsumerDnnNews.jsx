@@ -609,26 +609,13 @@ export default function ConsumerDnnNews() {
                   ))
                 ) : (
                   <>
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                    {Array.from({ length: 20 }).map((_, i) => (
+                      <div key={i} className="relative w-full aspect-[16/18] rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-gray-600 text-sm">Video Coming Soon</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
-                      </div>
-                    </div>
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
-                      </div>
-                    </div>
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-gray-800 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-gray-600 text-sm">Video Coming Soon</div>
-                      </div>
-                    </div>
+                    ))}
                   </>
                 )}
               </div>
