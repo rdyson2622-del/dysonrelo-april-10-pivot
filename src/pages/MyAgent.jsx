@@ -116,7 +116,7 @@ function VettedVsUnvetted() {
           </div>
 
           <p className="italic text-center" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
-            "I've seen what happens when buyers get matched with the wrong agent. That's exactly why I built this bureau." — Bob Dyson, 54 years industry experience
+            "I've seen what happens when buyers get matched with the wrong agent. That's exactly why I built this bureau." — Bob Dyson, 55 years industry experience
           </p>
         </div>
       )}
