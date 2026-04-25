@@ -480,9 +480,13 @@ export default function MyAgent() {
             <Shield className="w-4 h-4" style={{ color: GOLD }} />
             <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN Agent Bureau</p>
           </div>
-          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.4rem)', letterSpacing: '0.12em' }}>YOUR VETTED PROFESSIONALS</h1>
-          <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
-            Every agent and lender below has passed Bob Dyson's personal vetting process. Zero shortcuts. Always free to you.
+          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.2rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
+            THE BENEFITS OF CHOOSING A<br />
+            <span style={{ color: GOLD }}>DYSON & AI VETTED</span> AGENT<br />
+            FOR YOUR REAL ESTATE TRANSACTION
+          </h1>
+          <p className="text-sm mt-3 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
+            Every agent and lender below has passed Bob Dyson's personal 5-step vetting process — verified by AI research. Zero shortcuts. Always free to you.
           </p>
         </div>
 
