@@ -160,22 +160,23 @@ export default function ReloManagement() {
           <p className="text-lg leading-relaxed" style={{ color: '#1a1a1a' }}>
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
-          <button 
-           type="button"
-           className="px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
+          <a 
+           href="/relocation-intake"
+           className="inline-block px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
            style={{ 
              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, 
              color: '#000',
              boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
              cursor: 'pointer',
-             border: 'none'
+             border: 'none',
+             textDecoration: 'none',
+             display: 'inline-block'
            }}
-           onClick={() => window.location.href = '/relocation-intake'}
            onMouseEnter={e => e.target.style.boxShadow = '0 8px 28px rgba(212, 175, 55, 0.6)'}
            onMouseLeave={e => e.target.style.boxShadow = '0 4px 14px rgba(212, 175, 55, 0.3)'}
           >
            Let's Plan My Relocation Move
-          </button>
+          </a>
         </div>
       </section>
 
