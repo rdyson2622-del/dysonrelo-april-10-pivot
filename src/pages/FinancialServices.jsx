@@ -7,6 +7,7 @@ import {
   Mic, Volume2, Send, BarChart3
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -135,7 +136,7 @@ function LenderCard({ name, company, nmls, email, phone, badges = [], bio, accen
 }
 
 // ─── Lender Enrollment Form ────────────────────────────────────────────────
-function LenderEnrollmentForm() {
+function LenderEnrollmentForm({ onRequestVetting }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     lender_name: '',
@@ -168,15 +169,27 @@ function LenderEnrollmentForm() {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all hover:opacity-80"
-        style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
-        <div className="flex items-center gap-2">
-          <Star className="w-4 h-4" style={{ color: '#60a5fa' }} />
-          <p className="text-sm font-bold text-white">Lender Enrollment — Advertising & Vetting</p>
-        </div>
-        <p className="text-xs" style={{ color: '#60a5fa' }}>Apply Now →</p>
-      </button>
+      <div className="space-y-3">
+        <button onClick={() => setOpen(true)}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all hover:opacity-80"
+          style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4" style={{ color: '#60a5fa' }} />
+            <p className="text-sm font-bold text-white">Lender Enrollment — Advertising & Vetting</p>
+          </div>
+          <p className="text-xs" style={{ color: '#60a5fa' }}>Apply Now →</p>
+        </button>
+
+        <button onClick={onRequestVetting}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all hover:opacity-80"
+          style={{ background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4" style={{ color: '#D4AF37' }} />
+            <p className="text-sm font-bold text-white">Request Lender Vetting for My Market</p>
+          </div>
+          <p className="text-xs" style={{ color: '#D4AF37' }}>Get Matched →</p>
+        </button>
+      </div>
     );
   }
 
@@ -266,6 +279,8 @@ function PendingLenderCard() {
 
 // ─── Main Page ────────────────────────────────────────────────────────────
 export default function FinancialServices() {
+  const [requestingVetting, setRequestingVetting] = useState(false);
+
   const { data: lenders = [] } = useQuery({
     queryKey: ['vettedLendersActive'],
     queryFn: () => base44.entities.VettedLender.filter({ status: 'active' }, '-created_date', 50),
@@ -312,10 +327,34 @@ export default function FinancialServices() {
         </div>
 
         {/* ── LENDERS SECTION ── */}
-        <div>
-          <VettingProcess steps={LENDER_VETTING_STEPS} label="THE DYSON & DYSON 5-Step Lender Vetting Process" color={GOLD} fontSize="text-base" />
+         <div>
+           <VettingProcess steps={LENDER_VETTING_STEPS} label="THE DYSON & DYSON 5-Step Lender Vetting Process" color={GOLD} fontSize="text-base" />
 
-          {lenders.length > 0 && (
+           {/* Pending Match Card — shown after user requests vetting */}
+           {requestingVetting && (
+             <div className="mb-6">
+               <div className="rounded-2xl p-8 text-center space-y-4" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
+                 <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto"
+                   style={{ background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.25)' }}>
+                   <DollarSign className="w-6 h-6" style={{ color: '#60a5fa' }} />
+                 </div>
+                 <div>
+                   <h2 className="serif-heading text-white mb-1.5" style={{ fontSize: '1.2rem' }}>
+                     Your Lender Match Is Being Identified
+                   </h2>
+                   <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontSize: '0.95rem' }}>
+                     We're identifying the best DNN-vetted lender for your destination market, loan needs, and timeline. You'll be notified when your match is confirmed.
+                   </p>
+                 </div>
+                 <div className="flex items-center justify-center gap-2 text-xs" style={{ color: '#60a5fa' }}>
+                   <Clock className="w-3.5 h-3.5" />
+                   <span>Typically matched within 24 hours of intake</span>
+                 </div>
+               </div>
+             </div>
+           )}
+
+           {lenders.length > 0 && (
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
@@ -343,8 +382,8 @@ export default function FinancialServices() {
           )}
 
           <div className="mt-6">
-            <LenderEnrollmentForm />
-          </div>
+             <LenderEnrollmentForm onRequestVetting={() => setRequestingVetting(true)} />
+           </div>
         </div>
       </div>
     </div>
