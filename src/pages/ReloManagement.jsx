@@ -161,7 +161,7 @@ export default function ReloManagement() {
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
           <Link 
-           to="/relocation-intake" 
+           to="/RelocationIntake" 
            className="z-[999] relative no-underline inline-block"
           >
            <button 
