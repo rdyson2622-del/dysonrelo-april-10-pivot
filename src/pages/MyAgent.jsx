@@ -153,14 +153,14 @@ function VettingProcess({ steps, label, color = GOLD }) {
         {open ? <ChevronUp className="w-4 h-4" style={{ color }} /> : <ChevronDown className="w-4 h-4" style={{ color }} />}
       </button>
       {!open && (
-        <div className="px-5 pb-4 grid grid-cols-5 gap-2">
+        <div className="px-5 pb-4 flex flex-wrap gap-2">
           {steps.map((s, i) => {
             const Icon = s.icon;
             return (
-              <div key={i} className="flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl text-center"
+              <div key={i} className="flex items-center gap-2 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
                 style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
-                <Icon className="w-3.5 h-3.5" style={{ color }} />
-                <p className="text-[10px] font-bold leading-tight" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.title}</p>
+                <Icon className="w-3 h-3" style={{ color }} />
+                <span style={{ color: 'rgba(255,255,255,0.7)' }}>{s.title}</span>
               </div>
             );
           })}
@@ -395,31 +395,7 @@ function StorySubmitForm({ submitterType }) {
   );
 }
 
-// ─── Tab toggle ───────────────────────────────────────────────────────────────
-function TabBar({ active, onChange }) {
-  return (
-    <div className="flex rounded-xl p-1 mb-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-      {[
-        { key: 'agents', label: 'Vetted Agents', icon: Shield, color: GOLD },
-        { key: 'lenders', label: 'Vetted Lenders', icon: DollarSign, color: '#60a5fa' },
-      ].map(t => {
-        const Icon = t.icon;
-        const isActive = active === t.key;
-        return (
-          <button key={t.key} onClick={() => onChange(t.key)}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-black transition-all"
-            style={{
-              background: isActive ? (t.key === 'agents' ? 'rgba(212,175,55,0.15)' : 'rgba(96,165,250,0.15)') : 'transparent',
-              color: isActive ? t.color : 'rgba(255,255,255,0.4)',
-              border: isActive ? `1px solid ${t.color}30` : '1px solid transparent',
-            }}>
-            <Icon className="w-4 h-4" /> {t.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+
 
 // ─── Charlie teaser ───────────────────────────────────────────────────────────
 function CharlieTeaser() {
@@ -447,8 +423,6 @@ function CharlieTeaser() {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function MyAgent() {
-  const [tab, setTab] = useState('agents');
-
   const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
 
   const { data: clients = [] } = useQuery({
@@ -461,11 +435,6 @@ export default function MyAgent() {
   const { data: agents = [] } = useQuery({
     queryKey: ['partnerAgentsActive'],
     queryFn: () => base44.entities.PartnerAgent.filter({ status: 'active' }, '-created_date', 50),
-  });
-
-  const { data: lenders = [] } = useQuery({
-    queryKey: ['vettedLendersActive'],
-    queryFn: () => base44.entities.VettedLender.filter({ status: 'active' }, '-created_date', 50),
   });
 
   const myAgent = agents.find(a => a.agent_name === client?.agent_name || a.email === client?.assigned_agent);
@@ -486,14 +455,10 @@ export default function MyAgent() {
         </div>
 
         {/* Vetted vs Unvetted — the pitch */}
-        <VettedVsUnvetted />
+         <VettedVsUnvetted />
 
-        {/* Tab toggle */}
-        <TabBar active={tab} onChange={setTab} />
-
-        {/* ── AGENTS TAB ── */}
-        {tab === 'agents' && (
-          <div>
+         {/* ── AGENTS SECTION ── */}
+         <div>
             <VettingProcess steps={AGENT_VETTING_STEPS} label="5-Step Agent Vetting Process" color={GOLD} />
 
             {myAgent && (
@@ -535,45 +500,9 @@ export default function MyAgent() {
             )}
 
             <div className="mt-6">
-              <StorySubmitForm submitterType="agent" />
+               <StorySubmitForm submitterType="agent" />
+             </div>
             </div>
-          </div>
-        )}
-
-        {/* ── LENDERS TAB ── */}
-        {tab === 'lenders' && (
-          <div>
-            <VettingProcess steps={LENDER_VETTING_STEPS} label="5-Step Lender Vetting Process" color="#60a5fa" />
-
-            {lenders.length === 0 && <PendingCard type="lender" />}
-
-            {lenders.length > 0 && (
-              <div className="space-y-3">
-                {lenders.map(l => (
-                  <ProfileCard key={l.id}
-                    name={l.lender_name} subtitle={l.company} markets={l.markets}
-                    phone={l.phone} email={l.email} bio={l.bio} photo={l.photo_url}
-                    accentColor="#60a5fa" badgeLabel="NMLS VERIFIED"
-                    dre={l.nmls_number ? `NMLS #${l.nmls_number} · ${l.state}` : null}
-                    badges={['NMLS Verified', 'Production Audited', 'Rate Benchmarked', 'Fiduciary Agreement Signed']}
-                    sealText="This lender has been NMLS-verified, production-audited, and rate-benchmarked by the DNN Bureau. They have signed our fiduciary agreement protecting your equity position."
-                  />
-                ))}
-              </div>
-            )}
-
-            <div className="mt-6 rounded-xl p-4" style={{ background: 'rgba(96,165,250,0.06)', border: '1px solid rgba(96,165,250,0.15)' }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: '#60a5fa' }}>Why a Vetted Lender Matters</p>
-              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'Cormorant Garamond, serif', fontSize: '0.9rem', fontStyle: 'italic' }}>
-                A misaligned lender can cost you $800–$2,400 more per year in avoidable rate premium, delay your closing by 2–4 weeks, or push you toward a loan product that doesn't serve your long-term equity goals. Every DNN Bureau lender is screened specifically for relocation buyers — speed, cross-state licensing, and fiduciary alignment.
-              </p>
-            </div>
-
-            <div className="mt-4">
-              <StorySubmitForm submitterType="lender" />
-            </div>
-          </div>
-        )}
 
         <CharlieTeaser />
 
