@@ -161,11 +161,10 @@ export default function ReloManagement() {
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
           <Link 
-           to="/RelocationIntake" 
-           className="z-[999] relative no-underline inline-block"
+           to="/relocation-intake"
+           className="z-[9999] relative no-underline inline-block"
           >
            <button 
-             type="button"
              className="px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
              style={{ 
                background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, 
