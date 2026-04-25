@@ -79,12 +79,12 @@ export default function ClientCommunicationsExplainer() {
         <div className="flex-1 px-12 py-12 flex flex-col items-center justify-center" style={{ background: '#ede0cc' }}>
           <div className="max-w-2xl w-full">
             {/* Gemini Banner */}
-            <div className="rounded-xl p-6 mb-8 flex items-center justify-between" style={{ background: 'rgba(212,175,55,0.2)', border: '2px solid rgba(212,175,55,0.4)' }}>
+            <div className="rounded-xl p-6 mb-8 flex items-center justify-between" style={{ background: '#1a1a1a', border: '2px solid rgba(212,175,55,0.4)' }}>
               <div className="flex items-start gap-3">
                 <span style={{ fontSize: '1.5rem' }}>⚡</span>
                 <div>
-                  <p className="font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
-                  <p className="text-sm" style={{ color: '#4a4a4a' }}>Start your live Gemini session — builds your full relocation profile</p>
+                  <p className="font-bold text-white">Ready for your deep-dive interview?</p>
+                  <p className="text-sm text-white">Start your live Gemini session — builds your full relocation profile</p>
                 </div>
               </div>
               <Link to="/GeminiSession"
@@ -95,14 +95,14 @@ export default function ClientCommunicationsExplainer() {
             </div>
 
             {/* Your Team Section */}
-            <div className="rounded-2xl p-8" style={{ background: 'rgba(0,0,0,0.06)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <h3 className="text-2xl font-bold mb-6" style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em', color: '#1a1a1a' }}>
+            <div className="rounded-2xl p-8" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <h3 className="text-2xl font-bold mb-6 text-white" style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em' }}>
                 Your Dedicated Team
               </h3>
-              <p className="text-base leading-relaxed mb-4" style={{ color: '#4a4a4a', fontFamily: 'Georgia, serif' }}>
+              <p className="text-base leading-relaxed mb-4 text-white" style={{ fontFamily: 'Georgia, serif' }}>
                 Every message you send — via Charlie chat, SMS reply, or email — reaches your Dyson team in one unified thread. They see your complete conversation history across all channels. They reply directly on the same channel you used, and your response is delivered instantly.
               </p>
-              <p className="text-base leading-relaxed" style={{ color: '#4a4a4a', fontFamily: 'Georgia, serif' }}>
+              <p className="text-base leading-relaxed text-white" style={{ fontFamily: 'Georgia, serif' }}>
                 <strong>Bottom line:</strong> You're never talking to different people. You're always talking to the same team who knows your move, your timeline, and your goals.
               </p>
             </div>
