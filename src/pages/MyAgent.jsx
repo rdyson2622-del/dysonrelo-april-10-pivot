@@ -476,7 +476,6 @@ export default function MyAgent() {
                 />
               </>
             )}
-            {!myAgent && <PendingCard type="agent" />}
 
             {bureauAgents.length > 0 && (
               <div className="mt-6">
