@@ -22,7 +22,7 @@ async function speakText(text) {
 
 // ─── Vetted vs Unvetted Comparison ──────────────────────────────────────────
 function VettedVsUnvetted() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [speaking, setSpeaking] = useState(false);
 
   const pitch = `Here's what most people don't realize. When you search for an agent on Zillow or Google, you're looking at a paid directory. Anyone who pays $300 a month gets listed. There is zero vetting. No license check. No production review. No personality screening. The DNN Agent Bureau is fundamentally different. Every single agent has been personally reviewed by Bob Dyson — 54 years in the business. DRE verified. Production screened. Personally interviewed. The data is clear: buyers working with a truly vetted, buyer-aligned agent close successfully at a far higher rate, with fewer surprises, fewer failed escrows, and more money in their pocket.`;
