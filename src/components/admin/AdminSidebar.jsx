@@ -52,10 +52,14 @@ const NAV_SECTIONS = [
   },
   {
     key: 'results',
-    label: 'RESULTS',
+    label: 'CLIENT MARKETING RESULTS',
     children: [
-      { label: 'Listing Owners Info', path: '/admin/owners', icon: Home },
-      { label: 'Clients', path: '/admin/clients', icon: UserCheck },
+      { label: 'Listing Clients', path: '/admin/owners', icon: Home },
+      { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
+      { label: 'Agents', path: '/admin/referrals', icon: UserCheck },
+      { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
+      { label: 'Lenders', path: '/admin/clients', icon: Users },
+      { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
     ],
   },
   {
@@ -243,15 +247,19 @@ export default function AdminSidebar() {
                     const childColor = section.color || '#D4AF37';
                     return (
                       <Link
-                        key={child.path}
+                        key={`${child.path}-${ci}`}
                         to={child.path}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                         style={{
                           background: isActive ? `${childColor}22` : 'transparent',
-                          color: isActive ? childColor : '#ccc',
+                          color: child.indent ? 'rgba(255,255,255,0.4)' : (isActive ? childColor : '#ccc'),
+                          marginLeft: child.indent ? '8px' : '0',
+                          fontSize: child.indent ? '11px' : '14px',
+                          paddingTop: child.indent ? '4px' : undefined,
+                          paddingBottom: child.indent ? '4px' : undefined,
                         }}
                       >
-                        <child.icon className="w-3.5 h-3.5 shrink-0" />
+                        <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />
                         <span className="truncate">{child.label}</span>
                       </Link>
                     );
