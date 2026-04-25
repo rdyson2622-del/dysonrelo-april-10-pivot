@@ -68,13 +68,12 @@ import DnnSubscriberCRM from './pages/DnnSubscriberCRM';
 import DnnCommunicationsHub from './pages/DnnCommunicationsHub';
 import DnnAgentBureau from './pages/DnnAgentBureau';
 import BobDyson from './pages/BobDyson';
-import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import AIAssistants from './pages/AIAssistants';
 import ReadyToStart from './components/dashboard/ReadyToStart';
+import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import ConsumerDnnNews from './pages/ConsumerDnnNews';
 import MyAgent from './pages/MyAgent';
 import FinancialServices from './pages/FinancialServices';
-import LandingLab from './pages/LandingLab';
 import AdminNewLandingPage from './pages/AdminNewLandingPage';
 import AdminReloManagement from './pages/AdminReloManagement';
 import AdminDnnRevenue from './pages/AdminDnnRevenue';
@@ -108,7 +107,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Consumer Routes with Sidebar Layout */}
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -187,7 +186,6 @@ const AuthenticatedApp = () => {
         <Route path="/admin/social-launch" element={<AdminSocialLaunch />} />
         <Route path="/admin/business-plan" element={<BusinessPlan />} />
         <Route path="/business-plan" element={<Navigate to="/admin/business-plan" replace />} />
-        <Route path="/admin/landing-lab" element={<LandingLab />} />
         <Route path="/admin/new-landing-page" element={<AdminNewLandingPage />} />
         <Route path="/admin/relo-management" element={<AdminReloManagement />} />
         <Route path="/admin/dnn/revenue" element={<AdminDnnRevenue />} />
