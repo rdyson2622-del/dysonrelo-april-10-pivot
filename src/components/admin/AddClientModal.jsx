@@ -25,6 +25,13 @@ const ENGAGEMENT_OPTIONS = [
   { value: 'delegate', label: 'Delegate (expert-led)' },
 ];
 
+const CLIENT_TYPES = [
+  { value: 'relocation', label: '🔄 Full Relocation', desc: 'Buying & Selling across markets' },
+  { value: 'buyer_only', label: '🏠 Buyer Only', desc: 'Purchasing without selling' },
+  { value: 'seller_only', label: '📋 Seller / Listing', desc: 'Selling their current home' },
+  { value: 'both_local', label: '🔁 Buy & Sell Local', desc: 'Both transactions in same market' },
+];
+
 export default function AddClientModal({ isOpen, onClose, onCreated }) {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -40,6 +47,10 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
     engagement_preference: 'hands_on',
     notes: '',
     status: 'new_lead',
+    client_type: 'relocation',
+    listing_address: '',
+    listing_price: '',
+    listing_agent_name: '',
   });
 
   if (!isOpen) return null;
@@ -61,9 +72,10 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
     const payload = {
       ...form,
       family_size: form.family_size ? parseInt(form.family_size) : undefined,
+      listing_price: form.listing_price ? form.listing_price : undefined,
     };
     // Remove empty strings
-    Object.keys(payload).forEach(k => { if (payload[k] === '') delete payload[k]; });
+    Object.keys(payload).forEach(k => { if (payload[k] === '' || payload[k] === undefined) delete payload[k]; });
     const created = await base44.entities.RelocationClient.create(payload);
     setSaving(false);
     onCreated(created);
@@ -123,41 +135,101 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
               </div>
             </div>
 
-            {/* Relocation Details */}
+            {/* Client Type */}
             <div>
-              <p className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>Relocation Details</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold mb-1 text-white">Moving From</label>
-                  <input value={form.current_city} onChange={e => set('current_city', e.target.value)}
-                    placeholder="City, State"
-                    className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold mb-1 text-white">Moving To *</label>
-                  <input required value={form.destination_city} onChange={e => set('destination_city', e.target.value)}
-                    placeholder="City, State"
-                    className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold mb-1 text-white">Target Move Date</label>
-                  <input type="date" value={form.move_date} onChange={e => set('move_date', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold mb-1 text-white">Budget Range</label>
-                  <select value={form.budget} onChange={e => set('budget', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
-                    style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)' }}>
-                    <option value="">Select budget</option>
-                    {BUDGET_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
-                </div>
+              <p className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>Client Type</p>
+              <div className="grid grid-cols-2 gap-2">
+                {CLIENT_TYPES.map(ct => (
+                  <button key={ct.value} type="button" onClick={() => set('client_type', ct.value)}
+                    className="flex flex-col items-start px-3 py-2.5 rounded-xl text-left transition-all"
+                    style={{
+                      background: form.client_type === ct.value ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.04)',
+                      border: form.client_type === ct.value ? `1.5px solid ${GOLD}` : '1.5px solid rgba(255,255,255,0.1)',
+                    }}>
+                    <span className="text-sm font-bold text-white">{ct.label}</span>
+                    <span className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{ct.desc}</span>
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* Listing / Seller Details */}
+            {(form.client_type === 'seller_only' || form.client_type === 'both_local' || form.client_type === 'relocation') && (
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>
+                  {form.client_type === 'seller_only' ? 'Listing Details' : 'Property Being Sold'}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold mb-1 text-white">Property Address</label>
+                    <input value={form.listing_address} onChange={e => set('listing_address', e.target.value)}
+                      placeholder="123 Main St, City, State"
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-white">Listing Price</label>
+                    <input value={form.listing_price} onChange={e => set('listing_price', e.target.value)}
+                      placeholder="e.g. 850000"
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-white">Listing Agent Name</label>
+                    <input value={form.listing_agent_name} onChange={e => set('listing_agent_name', e.target.value)}
+                      placeholder="Agent name (if assigned)"
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Relocation / Buying Details */}
+            {(form.client_type === 'relocation' || form.client_type === 'buyer_only' || form.client_type === 'both_local') && (
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>
+                  {form.client_type === 'buyer_only' ? 'Purchase Details' : form.client_type === 'both_local' ? 'Purchase Details' : 'Relocation Details'}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {form.client_type !== 'buyer_only' && (
+                    <div>
+                      <label className="block text-xs font-semibold mb-1 text-white">Moving From</label>
+                      <input value={form.current_city} onChange={e => set('current_city', e.target.value)}
+                        placeholder="City, State"
+                        className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-white">
+                      {form.client_type === 'both_local' ? 'Target Area / Neighborhood' : 'Moving To'}{form.client_type === 'relocation' ? ' *' : ''}
+                    </label>
+                    <input
+                      required={form.client_type === 'relocation'}
+                      value={form.destination_city} onChange={e => set('destination_city', e.target.value)}
+                      placeholder="City, State"
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-white">Target Date</label>
+                    <input type="date" value={form.move_date} onChange={e => set('move_date', e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-white">Budget Range</label>
+                    <select value={form.budget} onChange={e => set('budget', e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                      style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.12)' }}>
+                      <option value="">Select budget</option>
+                      {BUDGET_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Status & Engagement */}
             <div>

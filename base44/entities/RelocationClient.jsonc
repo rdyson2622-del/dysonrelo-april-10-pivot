@@ -1,0 +1,156 @@
+{
+  "name": "RelocationClient",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Client's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Client's email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Client's phone number"
+    },
+    "client_type": {
+      "type": "string",
+      "enum": [
+        "relocation",
+        "buyer_only",
+        "seller_only",
+        "both_local"
+      ],
+      "default": "relocation",
+      "description": "Type of client engagement: full relocation, buyer only, seller/listing only, or buy+sell in same market"
+    },
+    "listing_address": {
+      "type": "string",
+      "description": "Address of property being sold (for seller/listing clients)"
+    },
+    "listing_price": {
+      "type": "string",
+      "description": "Asking or estimated listing price"
+    },
+    "listing_agent_name": {
+      "type": "string",
+      "description": "Name of listing agent if assigned"
+    },
+    "current_city": {
+      "type": "string",
+      "description": "Where they currently live"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "Where they are relocating to"
+    },
+    "move_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned move date"
+    },
+    "budget": {
+      "type": "string",
+      "enum": [
+        "under_200k",
+        "200k_400k",
+        "400k_600k",
+        "600k_800k",
+        "800k_1m",
+        "over_1m"
+      ],
+      "description": "Budget range for new home"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new_lead",
+        "in_consultation",
+        "actively_searching",
+        "under_contract",
+        "moved",
+        "closed",
+        "inactive"
+      ],
+      "default": "new_lead",
+      "description": "Current relocation status"
+    },
+    "family_size": {
+      "type": "number",
+      "description": "Number of family members"
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "schools",
+          "commute",
+          "nightlife",
+          "walkability",
+          "safety",
+          "nature",
+          "healthcare",
+          "religious_community",
+          "shopping",
+          "dining",
+          "arts_culture",
+          "sports_recreation"
+        ]
+      },
+      "description": "Relocation priorities"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "assigned_agent": {
+      "type": "string",
+      "description": "Assigned real estate agent email"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Assigned agent full name"
+    },
+    "agent_selected_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date agent was selected and agreed to work with client"
+    },
+    "buyer_broker_signed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has the client signed a buyer broker agreement with our recommended agent?"
+    },
+    "buyer_broker_signed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date buyer broker agreement was signed"
+    },
+    "target_close_of_escrow": {
+      "type": "string",
+      "format": "date",
+      "description": "Target/expected escrow close date"
+    },
+    "escrow_complete_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual escrow completion date and time"
+    },
+    "engagement_preference": {
+      "type": "string",
+      "enum": [
+        "hands_on",
+        "full_access",
+        "delegate"
+      ],
+      "default": "hands_on",
+      "description": "How client prefers to receive updates: hands_on (daily digests), full_access (real-time), delegate (expert-led)"
+    }
+  },
+  "required": [
+    "full_name",
+    "email"
+  ]
+}
