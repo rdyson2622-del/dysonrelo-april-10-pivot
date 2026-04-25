@@ -5,7 +5,7 @@ import {
   SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText,
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
-  Edit, Globe, Send, Shield
+  Edit, Globe, Send, Shield, TrendingUp
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -90,6 +90,7 @@ const NAV_SECTIONS = [
       { label: 'Subscriber CRM', path: '/admin/dnn/subscribers', icon: Users },
       { label: 'Communications Hub', path: '/admin/dnn/communications', icon: Send },
       { label: 'Agent Bureau (B2B)', path: '/admin/dnn/agent-bureau', icon: Shield },
+      { label: 'Featured Agent Revenue', path: '/admin/dnn/revenue', icon: TrendingUp },
     ],
   },
   {

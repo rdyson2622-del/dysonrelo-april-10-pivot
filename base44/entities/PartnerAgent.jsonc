@@ -44,6 +44,16 @@
       "default": "prospect",
       "description": "Partnership status"
     },
+    "featured_tier": {
+      "type": "string",
+      "enum": [
+        "bronze",
+        "silver",
+        "gold"
+      ],
+      "default": "bronze",
+      "description": "DNN Featured Agent tier \u2014 determines monthly placement fee"
+    },
     "bureau_slot": {
       "type": "string",
       "description": "Assigned Bureau Chief slot identifier"

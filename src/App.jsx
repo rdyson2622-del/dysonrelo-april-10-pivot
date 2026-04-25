@@ -76,6 +76,7 @@ import FinancialServices from './pages/FinancialServices';
 import LandingLab from './pages/LandingLab';
 import AdminNewLandingPage from './pages/AdminNewLandingPage';
 import AdminReloManagement from './pages/AdminReloManagement';
+import AdminDnnRevenue from './pages/AdminDnnRevenue';
 import ReloManagement from './pages/ReloManagement';
 import SolveMyStory from './pages/SolveMyStory';
 
@@ -184,6 +185,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/landing-lab" element={<LandingLab />} />
         <Route path="/admin/new-landing-page" element={<AdminNewLandingPage />} />
         <Route path="/admin/relo-management" element={<AdminReloManagement />} />
+        <Route path="/admin/dnn/revenue" element={<AdminDnnRevenue />} />
         <Route path="/solve-my-story" element={<SolveMyStory />} />
       </Route>
       
