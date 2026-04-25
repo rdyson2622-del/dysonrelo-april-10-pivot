@@ -104,11 +104,11 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.full_name.trim()) { alert('Full Name is required.'); return; }
-    if (!form.email.trim()) { alert('Email is required.'); return; }
     setSaving(true);
     try {
       const payload = {
         ...form,
+        email: form.email.trim() || `noemail_${Date.now()}@placeholder.com`,
         family_size: form.family_size ? parseInt(form.family_size) : undefined,
         listing_price: form.listing_price ? form.listing_price : undefined,
       };
@@ -155,10 +155,8 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
                     style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold mb-1 text-white">Email *</label>
-                  <input required type="email" value={form.email} onChange={e => set('email', e.target.value)}
-                    onInvalid={e => e.target.setCustomValidity('Email is required')}
-                    onInput={e => e.target.setCustomValidity('')}
+                  <label className="block text-xs font-semibold mb-1 text-white">Email</label>
+                  <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
                     className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
                     style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
                 </div>

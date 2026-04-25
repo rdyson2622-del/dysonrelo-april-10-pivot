@@ -150,7 +150,6 @@
     }
   },
   "required": [
-    "full_name",
-    "email"
+    "full_name"
   ]
 }
