@@ -192,7 +192,7 @@ export default function CityGuide() {
   const cityReady = !!submittedCity;
 
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
     <div className="max-w-5xl mx-auto px-4 py-8">
 
         {/* Loading */}
@@ -209,8 +209,8 @@ export default function CityGuide() {
             {/* Hero */}
             <div className="text-center">
               <p className="text-sm font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>CITY GUIDE</p>
-              <h1 className="display-heading mb-3 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#fff' }}>Here's What's Coming For You</h1>
-              <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              <h1 className="display-heading mb-3 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#1a1a1a' }}>Here's What's Coming For You</h1>
+              <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
                 Our City Guide delivers <strong>hyper-personalized</strong> research across 6 categories — but we hold it until the right moment so every insight is actually useful to your family.
               </p>
             </div>
@@ -327,7 +327,7 @@ export default function CityGuide() {
               </Link>
               <Link to="/Chat">
                 <button className="w-full py-3 rounded-full font-semibold text-sm border-2"
-                  style={{ borderColor: '#333', color: '#333', background: 'transparent' }}>
+                  style={{ borderColor: '#1a1a1a', color: '#1a1a1a', background: 'transparent' }}>
                   Chat with Charlie First
                 </button>
               </Link>
