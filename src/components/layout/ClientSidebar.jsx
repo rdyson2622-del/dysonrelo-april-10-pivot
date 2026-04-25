@@ -91,13 +91,6 @@ export default function ClientSidebar() {
         </Link>
       </div>
 
-      {/* Test Category */}
-      <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: '#000', background: '#fff', padding: '0.25rem 0.5rem', borderRadius: '4px', display: 'inline-block', width: 'fit-content' }}>
-          Test this idiot
-        </div>
-      </div>
-
       {/* Relocation Management */}
       <div className="px-3 pb-4 space-y-2">
         <button 
@@ -112,6 +105,9 @@ export default function ClientSidebar() {
           Relocation Management
         </button>
         <div className="flex flex-col gap-2">
+          <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: '#000', background: '#fff', padding: '0.25rem 0.5rem', borderRadius: '4px', display: 'inline-block', width: 'fit-content' }}>
+            Test this idiot
+          </div>
           <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
             <Map className="w-3.5 h-3.5" /> My Roadmap
           </Link>
