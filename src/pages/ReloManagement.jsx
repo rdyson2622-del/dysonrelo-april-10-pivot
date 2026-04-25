@@ -13,7 +13,7 @@ export default function ReloManagement() {
         style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>THE DYSON PROMISE</p>
         <h1 className="display-heading mb-4"
-          style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', lineHeight: 1.05, letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.65rem, 4.5vw, 3rem)', lineHeight: 1.05, letterSpacing: '0.12em', color: '#fff' }}>
           WE DON'T SEND YOU A MAP.
         </h1>
         <h2 className="display-heading mb-10"
@@ -35,7 +35,7 @@ export default function ReloManagement() {
         style={{ background: '#111', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6 text-center" style={{ color: GOLD }}>WHAT WE HANDLE</p>
         <h1 className="display-heading text-center mb-12"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           OUR SERVICES
         </h1>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
@@ -67,7 +67,7 @@ export default function ReloManagement() {
         style={{ background: '#181818', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>THE COMMITMENT</p>
         <h1 className="display-heading mb-3"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           THE SCOPE IS REAL.
         </h1>
         <h2 className="display-heading mb-12"
@@ -95,7 +95,7 @@ export default function ReloManagement() {
         style={{ background: '#0a0a0a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>HUMAN + AI</p>
         <h1 className="display-heading mb-3"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           EXPERIENCED EXPERTS,
         </h1>
         <h2 className="display-heading mb-12"
@@ -117,7 +117,7 @@ export default function ReloManagement() {
         style={{ background: '#111', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>AGENT SELECTION</p>
         <h1 className="display-heading mb-3"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           YOUR AGENT. YOUR CHOICE.
         </h1>
         <h2 className="display-heading mb-12"
@@ -149,7 +149,7 @@ export default function ReloManagement() {
         style={{ background: '#181818', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>BEGIN YOUR JOURNEY</p>
         <h1 className="display-heading mb-3"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           READY FOR YOUR
         </h1>
         <h2 className="display-heading mb-12"
@@ -174,7 +174,7 @@ export default function ReloManagement() {
         style={{ background: '#000' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>OUR COMMITMENT</p>
         <h1 className="display-heading mb-3"
-          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#fff' }}>
+          style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#fff' }}>
           THE DYSON &amp; DYSON PROMISE
         </h1>
         <h2 className="display-heading mb-12"
