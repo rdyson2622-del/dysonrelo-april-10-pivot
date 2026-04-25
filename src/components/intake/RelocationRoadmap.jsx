@@ -393,7 +393,6 @@ function ReloManagementSlides() {
       id: 0,
       title: "We Don't Send You a Map.",
       subtitle: "We Make the Journey With You.",
-      bgStyle: '#1a1a1a',
       content: (
         <div className="space-y-4">
           <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
@@ -404,23 +403,23 @@ function ReloManagementSlides() {
           </p>
         </div>
       ),
+      bgStyle: '#1a1a1a'
     },
     {
       id: 1,
       title: "Our Services",
       subtitle: null,
-      bgStyle: '#2a2a2a',
       content: (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { icon: MessageCircle, title: 'AI Concierge Chat', desc: 'Charlie is available 24/7' },
-            { icon: MapPin, title: 'Neighborhood Research', desc: 'Deep-dive community analysis' },
-            { icon: UserCheck, title: 'Agent Selection', desc: 'Hand-vetted candidates' },
-            { icon: Building2, title: 'Home Search Strategy', desc: 'AI-powered property matching' },
-            { icon: Truck, title: 'Moving Coordination', desc: 'Complete logistics' },
-            { icon: Zap, title: 'Utilities & Services', desc: 'Pre-arrival setup' },
-            { icon: GraduationCap, title: 'School Enrollment', desc: 'District research & tours' },
-            { icon: HeartPulse, title: 'Healthcare Setup', desc: 'Top-rated providers' },
+            { icon: MessageCircle, title: 'AI Concierge Chat', desc: 'Charlie is available 24/7 to answer every question' },
+            { icon: MapPin, title: 'Neighborhood Research', desc: 'Deep-dive analysis of neighborhoods matching your lifestyle' },
+            { icon: UserCheck, title: 'Agent Selection', desc: 'Hand-vetted candidates reviewed and personally screened' },
+            { icon: Building2, title: 'Home Search Strategy', desc: 'AI-powered property matching based on your criteria' },
+            { icon: Truck, title: 'Moving Coordination', desc: 'From packing to delivery — complete logistics' },
+            { icon: Zap, title: 'Utilities & Services', desc: 'Internet, electric, gas, water all set up before arrival' },
+            { icon: GraduationCap, title: 'School Enrollment', desc: 'District research, tours, and enrollment handled' },
+            { icon: HeartPulse, title: 'Healthcare Setup', desc: 'Find top-rated doctors, dentists, specialists' },
           ].map((service, i) => (
             <div key={i} className="p-3 rounded-xl text-center text-xs"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.3)' }}>
@@ -433,12 +432,12 @@ function ReloManagementSlides() {
           ))}
         </div>
       ),
+      bgStyle: '#2a2a2a'
     },
     {
       id: 2,
       title: "The Scope Is Real.",
       subtitle: "That's Why We Exist.",
-      bgStyle: '#333',
       content: (
         <div className="space-y-4">
           <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
@@ -447,7 +446,7 @@ function ReloManagementSlides() {
           <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.3)' }}>
             <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>AFTER YOU COMMIT — THE GEMINI SESSION</p>
             <p className="text-sm leading-relaxed mb-3" style={{ color: '#fff' }}>
-              Once you've confirmed your contact information, we set up a private three-way live session — you, Google Gemini, and Senior Staff.
+              Once you've confirmed your contact information, we set up a private three-way live session — you, Google Gemini, and Senior Staff. This is a real conversation where we build your complete relocation profile together, in real time.
             </p>
             <p className="text-sm leading-relaxed" style={{ color: '#fff' }}>
               This session is <strong>by invitation only</strong> — we're selective about who we work with. No cost to you, ever.
@@ -455,12 +454,12 @@ function ReloManagementSlides() {
           </div>
         </div>
       ),
+      bgStyle: '#333'
     },
     {
       id: 3,
       title: "Experienced Experts,",
       subtitle: "Powered by AI.",
-      bgStyle: '#000',
       content: (
         <div className="space-y-4">
           <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
@@ -471,24 +470,24 @@ function ReloManagementSlides() {
           </p>
         </div>
       ),
+      bgStyle: '#000'
     },
     {
       id: 4,
       title: "Your Agent. Your Choice.",
       subtitle: "Zero Guesswork.",
-      bgStyle: '#000',
       content: (
         <div className="space-y-4">
           <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
-            Most people find an agent through Zillow, a yard sign, or a friend. We eliminate that entirely.
+            Most people find an agent through Zillow, a yard sign, or a friend — with no idea if they're any good. We eliminate that entirely.
           </p>
           <div className="space-y-2">
             {[
               'We profile your ideal agent before any names are shared',
-              'Top 20 destination agents evaluated',
-              '3–5 personally vetted candidates presented',
-              'Your selection triggers immediate agent briefing',
-              'Zero cost to you — always'
+              'Top 20 destination agents evaluated — production, DRE, personality',
+              '3–5 personally vetted candidates presented for your review',
+              'Your selection triggers immediate agent briefing & onboarding',
+              'Zero cost to you as the buyer — always'
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
                 <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
@@ -498,30 +497,31 @@ function ReloManagementSlides() {
           </div>
         </div>
       ),
+      bgStyle: '#000'
     },
     {
       id: 5,
       title: "Ready for Your",
       subtitle: "Fresh Start?",
-      bgStyle: '#1a1a1a',
       content: (
         <div className="space-y-4 text-center">
           <p className="text-base leading-relaxed" style={{ color: '#fff' }}>
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
           <Link to="/RelocationIntake">
-            <button className="px-8 py-4 rounded-full font-black text-base transition-all hover:opacity-90 inline-block" style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            <button className="px-8 py-4 rounded-full font-black text-base transition-all hover:opacity-90 inline-block"
+              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
               Let's Plan My Relocation Move
             </button>
           </Link>
         </div>
       ),
+      bgStyle: '#1a1a1a'
     },
     {
       id: 6,
       title: "The Dyson & Dyson Promise",
       subtitle: "Licensed Relocation Services",
-      bgStyle: '#111',
       content: (
         <div className="space-y-3 text-center">
           <p className="text-sm" style={{ color: '#fff' }}>The Dyson & Dyson Companies, Inc.</p>
@@ -531,7 +531,8 @@ function ReloManagementSlides() {
           <p className="text-xs mt-4" style={{ color: 'rgba(255,255,255,0.6)' }}>55 years of relocation management expertise.</p>
         </div>
       ),
-    },
+      bgStyle: '#111'
+    }
   ];
 
   const slide = slides[currentSlide];
