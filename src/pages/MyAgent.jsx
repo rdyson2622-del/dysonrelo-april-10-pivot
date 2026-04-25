@@ -486,7 +486,7 @@ export default function MyAgent() {
             FOR YOUR REAL ESTATE TRANSACTION
           </h1>
           <p className="text-sm mt-3 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
-            Every agent and lender below has passed Bob Dyson's personal 5-step vetting process — verified by AI research. Zero shortcuts. Always free to you.
+            Every agent below has passed the Dyson & Dyson leadership team's personal 5-step vetting process. Zero shortcuts. Your referral is always free — and our deep AI vetting process increases your odds of a great agent relationship.
           </p>
         </div>
 
