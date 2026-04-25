@@ -110,12 +110,12 @@ function VettedVsUnvetted() {
           {/* The math */}
           <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
             <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: GOLD }}>The Real Cost of a Bad Agent Match</p>
-            <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)', fontFamily: 'Cormorant Garamond, serif', fontSize: '0.9rem', fontStyle: 'italic' }}>
+            <p className="leading-relaxed" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', fontStyle: 'italic' }}>
               A failed escrow on a $600,000 home costs an average of $4,200 in lost inspection fees, appraisal costs, and moving expenses — plus 45–90 days of your life. A misaligned lender can cost you $800–$2,400 more per year in unnecessary rate premium. The DNN Bureau exists to eliminate both risks, at zero cost to you.
             </p>
           </div>
 
-          <p className="text-xs italic text-center" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: 'Cormorant Garamond, serif' }}>
+          <p className="italic text-center" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
             "I've seen what happens when buyers get matched with the wrong agent. That's exactly why I built this bureau." — Bob Dyson, 54 years industry experience
           </p>
         </div>
