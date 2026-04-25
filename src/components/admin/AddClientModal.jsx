@@ -103,18 +103,23 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.full_name.trim()) { alert('Full Name is required.'); return; }
+    if (!form.email.trim()) { alert('Email is required.'); return; }
     setSaving(true);
-    const payload = {
-      ...form,
-      family_size: form.family_size ? parseInt(form.family_size) : undefined,
-      listing_price: form.listing_price ? form.listing_price : undefined,
-    };
-    // Remove empty strings
-    Object.keys(payload).forEach(k => { if (payload[k] === '' || payload[k] === undefined) delete payload[k]; });
-    const created = await base44.entities.RelocationClient.create(payload);
-    setSaving(false);
-    onCreated(created);
-    onClose();
+    try {
+      const payload = {
+        ...form,
+        family_size: form.family_size ? parseInt(form.family_size) : undefined,
+        listing_price: form.listing_price ? form.listing_price : undefined,
+      };
+      // Remove empty strings
+      Object.keys(payload).forEach(k => { if (payload[k] === '' || payload[k] === undefined) delete payload[k]; });
+      const created = await base44.entities.RelocationClient.create(payload);
+      onCreated(created);
+      onClose();
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
