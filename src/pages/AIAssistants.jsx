@@ -40,7 +40,7 @@ export default function AIAssistants() {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-8">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-12 w-auto mx-auto mb-4" />
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-24 w-auto mx-auto mb-4" />
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.625rem)', letterSpacing: '0.22em', color: '#fff' }}>
             THE DYSON & DYSON COMPANIES
           </h1>
