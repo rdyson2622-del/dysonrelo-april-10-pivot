@@ -68,7 +68,7 @@ export default function ReloManagement() {
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-6" style={{ color: GOLD }}>THE COMMITMENT</p>
         <h1 className="display-heading mb-3"
           style={{ fontSize: 'clamp(1.5rem, 3.75vw, 2.625rem)', letterSpacing: '0.12em', color: '#1a1a1a' }}>
-          THE SCOPE IS REAL.
+          THE SCOPE IS EXTENSIVE
         </h1>
         <h2 className="display-heading mb-12"
           style={{ fontSize: 'clamp(1.19rem, 2.975vw, 2.04rem)', letterSpacing: '0.12em', color: GOLD }}>
