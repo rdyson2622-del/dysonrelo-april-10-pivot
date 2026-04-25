@@ -271,7 +271,7 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.`;
             {expanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
           {onClose && (
-            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/10" style={{ color: '#f5f5f5' }} onClick={onClose}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-red-500/20 rounded-full" style={{ color: '#fff', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }} onClick={onClose}>
               <X className="w-4 h-4" />
             </Button>
           )}
