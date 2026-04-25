@@ -35,8 +35,14 @@ export default function BobDyson() {
           className="rounded-2xl p-8 mb-8"
           style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}
         >
+          <p className="text-base leading-relaxed mb-4" style={{ color: '#ffffff' }}>
+            Bob Dyson began his career as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America, establishing a legacy of managing 1,600+ offices nationwide.
+          </p>
+          <p className="text-base leading-relaxed mb-4" style={{ color: '#ffffff' }}>
+            That foundation of expertise — refined over 55+ years — is what Dyson & Dyson brings to every client today. After selling the company, Bob founded Dyson & Dyson Concierge Relocation Services and established Dyson News Network (DNN), which delivers real estate intelligence to millions.
+          </p>
           <p className="text-base leading-relaxed mb-6" style={{ color: '#ffffff' }}>
-            Bob Dyson began as a corporate jet pilot and Chief Pilot for the Governor of Oklahoma — at age 20. He strategically acquired over 1,000 properties across multiple states while building Red Carpet Corporation of America. Built on a legacy of managing over 1,600 offices nationwide, our relocation standards are second to none — that foundation of expertise is what Dyson & Dyson brings to every client today. After selling the company, he founded Dyson & Dyson and established Dyson News Network (DNN), delivering real estate news to millions via Yahoo Mail and Yahoo Finance. Today, he leads Dyson & Dyson Concierge Relocation Services — combining 55+ years of hands-on real estate expertise along with cutting-edge AI to serve families nationwide.
+            Today, he leads a team combining hands-on real estate expertise with cutting-edge AI to serve families nationwide.
           </p>
           <blockquote className="text-sm italic leading-relaxed" style={{ color: GOLD, borderLeft: `3px solid ${GOLD}`, paddingLeft: '1rem' }}>
             "{CORPORATE_PROFILE.bobsDedication}"
