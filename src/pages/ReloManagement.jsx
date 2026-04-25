@@ -161,8 +161,18 @@ export default function ReloManagement() {
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
           <Link to="/RelocationIntake">
-            <button className="px-10 py-5 rounded-full font-black text-lg transition-all hover:opacity-90"
-              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            <button 
+              className="px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
+              style={{ 
+                background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, 
+                color: '#000',
+                boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
+                cursor: 'pointer',
+                border: 'none'
+              }}
+              onMouseEnter={e => e.target.style.boxShadow = '0 8px 28px rgba(212, 175, 55, 0.6)'}
+              onMouseLeave={e => e.target.style.boxShadow = '0 4px 14px rgba(212, 175, 55, 0.3)'}
+            >
               Let's Plan My Relocation Move
             </button>
           </Link>
