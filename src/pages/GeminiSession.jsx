@@ -45,10 +45,10 @@ export default function GeminiSession() {
   const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#808080' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#ede0cc' }}>
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
-        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#1a1a1a' }}>
         <Link to="/Chat">
           <Button variant="ghost" size="icon" className="h-8 w-8" style={{ color: GOLD }}>
             <ArrowLeft className="w-4 h-4" />
@@ -71,7 +71,7 @@ export default function GeminiSession() {
            {/* CONTEXT EXPLAINER - shown before signing */}
            {!signTiming && (
              <motion.div key="explainer" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4 pt-4">
-               <div className="rounded-2xl p-6 mb-6" style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+               <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33` }}>
                  <div className="space-y-4">
                    <div>
                        <h2 className="serif-heading text-2xl md:text-3xl mb-3" style={{ color: '#fff' }}>What's This Session About?</h2>
@@ -127,7 +127,7 @@ export default function GeminiSession() {
                    animate={{ opacity: 1, y: 0 }}
                    onClick={() => setSignTiming('now')}
                    className="rounded-2xl p-6 border-2 transition-all text-left"
-                   style={{ background: '#3a3a3a', borderColor: GOLD }}>
+                   style={{ background: '#1a1a1a', borderColor: GOLD }}>
                    <div className="flex items-center gap-3 mb-3">
                      <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
                      <span className="font-bold" style={{ color: GOLD }}>Sign Now</span>
@@ -143,7 +143,7 @@ export default function GeminiSession() {
                    transition={{ delay: 0.1 }}
                    onClick={() => setSignTiming('after')}
                    className="rounded-2xl p-6 border-2 transition-all text-left hover:border-slate-500"
-                   style={{ background: '#3a3a3a', borderColor: 'rgba(255,255,255,0.2)' }}>
+                   style={{ background: '#1a1a1a', borderColor: 'rgba(255,255,255,0.2)' }}>
                    <div className="flex items-center gap-3 mb-3">
                      <Clock className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.5)' }} />
                      <span className="font-bold" style={{ color: '#fff' }}>Sign After Our Call</span>
@@ -160,7 +160,7 @@ export default function GeminiSession() {
            {stage === 'gate' && signTiming && (
             <motion.div key="gate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33` }}>
               {/* Gate header */}
               <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2 mb-1">
@@ -179,7 +179,7 @@ export default function GeminiSession() {
           {stage === 'intake' && (
             <motion.div key="intake" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33` }}>
               <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2 mb-1">
                    <span className="text-2xl">📋</span>
@@ -204,7 +204,7 @@ export default function GeminiSession() {
           {stage === 'path' && (
             <motion.div key="path" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33` }}>
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33` }}>
               <div className="px-5 pt-5 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-2xl">🛤️</span>
@@ -222,7 +222,7 @@ export default function GeminiSession() {
           {stage === 'session' && (
             <motion.div key="session" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col rounded-2xl m-4 overflow-hidden"
-              style={{ background: '#3a3a3a', border: `1px solid ${GOLD}33`, minHeight: '600px' }}>
+              style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33`, minHeight: '600px' }}>
               {/* Session header */}
               <div className="px-5 pt-4 pb-3 shrink-0" style={{ borderBottom: '1px solid #555' }}>
                 <div className="flex items-center gap-2">
