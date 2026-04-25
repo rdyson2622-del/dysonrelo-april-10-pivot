@@ -71,7 +71,7 @@ export default function Explainers() {
               </div>
               <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Then: 1927 "Talkies"</h3>
             </div>
-            <p className="leading-relaxed mb-6" style={{ color: '#1a1a1a' }}>
+            <p className="leading-relaxed mb-6" style={{ color: '#ffffff' }}>
               When the movie "The Jazz Singer" premiered, it revolutionized entertainment by adding synchronized sound to motion pictures. One of the first entertainers in those times, Charlie Chaplin was a significant figure. Audiences were amazed to hear actors speak.
             </p>
             <p className="font-semibold" style={{ color: GOLD }}>
@@ -87,10 +87,10 @@ export default function Explainers() {
               </div>
               <h3 className="serif-heading text-2xl" style={{ color: GOLD }}>Now: AI "Talkies"</h3>
             </div>
-            <p className="leading-relaxed mb-6" style={{ color: '#1a1a1a' }}>
+            <p className="leading-relaxed mb-6" style={{ color: '#ffffff' }}>
               We're experimenting with voice-to-voice technology that lets you talk naturally with Charlie — he understands your needs, explains complex processes, and guides you through every step.
             </p>
-            <p className="text-sm leading-relaxed" style={{ color: 'rgba(26,26,26,0.6)' }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
               While Charlie is still learning the full range of our services, every conversation is backed up by the text chat box in the upper-right corner of each page — so you're always connected.
             </p>
           </div>
