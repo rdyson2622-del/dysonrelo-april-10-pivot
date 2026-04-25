@@ -96,7 +96,7 @@ export default function ClientSidebar() {
             <Map className="w-3.5 h-3.5" /> My Roadmap
           </Link>
           <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
-            <Shield className="w-3.5 h-3.5" /> Vet My Agent
+            <Shield className="w-3.5 h-3.5" /> Looking for a Vetted Agent?
           </Link>
           <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
             <MapPin className="w-3.5 h-3.5" /> City Guide
