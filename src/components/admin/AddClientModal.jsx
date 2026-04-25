@@ -152,6 +152,8 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
                 <div>
                   <label className="block text-xs font-semibold mb-1 text-white">Email *</label>
                   <input required type="email" value={form.email} onChange={e => set('email', e.target.value)}
+                    onInvalid={e => e.target.setCustomValidity('Email is required')}
+                    onInput={e => e.target.setCustomValidity('')}
                     className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
                     style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
                 </div>
@@ -372,7 +374,7 @@ export default function AddClientModal({ isOpen, onClose, onCreated }) {
               className="px-5 py-2.5 rounded-full text-sm font-semibold text-white transition-colors hover:bg-white/10">
               Cancel
             </button>
-            <button onClick={handleSubmit} disabled={saving}
+            <button type="submit" onClick={handleSubmit} disabled={saving}
               className="px-6 py-2.5 rounded-full text-sm font-bold transition-all hover:opacity-90 disabled:opacity-50"
               style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
               {saving ? 'Creating...' : 'Create Client'}
