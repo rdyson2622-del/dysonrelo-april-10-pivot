@@ -158,8 +158,8 @@ export default function RelocationIntake() {
 
   if (showAgreement && !signTiming) {
     return (
-      <div className="min-h-screen" style={{ background: '#808080' }}>
-        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
           <Link to="/Home">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
           </Link>
@@ -181,11 +181,11 @@ export default function RelocationIntake() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              onClick={() => setSignTiming('now')}
-              className="rounded-2xl p-6 border-2 transition-all text-left"
-              style={{ background: '#000', borderColor: GOLD }}>
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             onClick={() => setSignTiming('now')}
+             className="rounded-2xl p-6 border-2 transition-all text-left"
+             style={{ background: '#1a1a1a', borderColor: GOLD }}>
               <div className="flex items-center gap-3 mb-3">
                 <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
                 <span className="font-bold" style={{ color: GOLD }}>Sign Now</span>
@@ -196,12 +196,12 @@ export default function RelocationIntake() {
             </motion.button>
 
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              onClick={() => setSignTiming('after')}
-              className="rounded-2xl p-6 border-2 transition-all text-left hover:border-slate-500"
-              style={{ background: '#000', borderColor: 'rgba(255,255,255,0.2)' }}>
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.1 }}
+             onClick={() => setSignTiming('after')}
+             className="rounded-2xl p-6 border-2 transition-all text-left hover:border-slate-500"
+             style={{ background: '#1a1a1a', borderColor: 'rgba(0,0,0,0.2)' }}>
               <div className="flex items-center gap-3 mb-3">
                 <Clock className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.5)' }} />
                 <span className="font-bold" style={{ color: '#fff' }}>Sign After Our Call</span>
@@ -218,14 +218,14 @@ export default function RelocationIntake() {
 
   if (showAgreement && signTiming === 'after') {
     return (
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="min-h-screen flex items-center justify-center px-6 py-12" style={{ background: '#808080' }}>
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="min-h-screen flex items-center justify-center px-6 py-12" style={{ background: '#ede0cc' }}>
         <div className="max-w-md text-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
             style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
             <CheckCircle2 className="w-8 h-8" style={{ color: GOLD }} />
           </div>
-          <h2 className="text-2xl font-bold mb-3" style={{ color: '#fff' }}>You're All Set!</h2>
-          <p className="mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          <h2 className="text-2xl font-bold mb-3" style={{ color: '#1a1a1a' }}>You're All Set!</h2>
+          <p className="mb-4" style={{ color: '#1a1a1a' }}>
             We'll send you the service agreement and a thank you message after your call. For now, head to your roadmap to get started.
           </p>
           <button
@@ -270,8 +270,8 @@ export default function RelocationIntake() {
 
   if (showAgreement && signTiming === 'now') {
     return (
-      <div className="min-h-screen" style={{ background: '#808080' }}>
-        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
           <Link to="/Home">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
           </Link>
@@ -286,7 +286,7 @@ export default function RelocationIntake() {
               <Zap className="w-4 h-4" />
               <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
             </div>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="text-sm" style={{ color: '#1a1a1a' }}>
               Sign now and you're locked in. We'll have everything ready for your call.
             </p>
           </motion.div>
@@ -296,13 +296,13 @@ export default function RelocationIntake() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="rounded-2xl p-8"
-            style={{ background: '#000', border: '1px solid rgba(212,175,55,0.25)' }}
+            style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}
           >
             <div className="flex items-center gap-3 mb-2">
               <Shield className="w-6 h-6" style={{ color: GOLD }} />
-              <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Service Agreement</h2>
+              <h2 className="text-2xl font-bold text-white">Service Agreement</h2>
             </div>
-            <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>Please check each item to confirm you understand</p>
+            <p className="text-sm mb-6 text-white">Please check each item to confirm you understand</p>
 
             <div className="space-y-3 mb-8">
               {SERVICE_AGREEMENTS.map((item, i) => {
@@ -358,8 +358,8 @@ export default function RelocationIntake() {
 
   if (showScheduler && !showAgreement) {
     return (
-      <div className="min-h-screen" style={{ background: '#808080' }}>
-        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+        <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
           <Link to="/Home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" /></Link>
           <button onClick={() => setShowScheduler(false)} className="flex items-center gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <ArrowLeft className="w-4 h-4" /> Back
@@ -368,10 +368,10 @@ export default function RelocationIntake() {
         <div className="max-w-2xl mx-auto px-6 py-12">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
             <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ALMOST THERE</p>
-            <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', letterSpacing: '0.18em', color: '#fff' }}>
+            <h1 className="display-heading mb-2" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
               Meet Us Before You Commit
             </h1>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="text-sm" style={{ color: '#1a1a1a' }}>
               Schedule a quick 15-minute intro call so you can put a real voice to the name.
             </p>
           </motion.div>
@@ -404,9 +404,9 @@ export default function RelocationIntake() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#808080' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+      <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
         </Link>
@@ -418,37 +418,37 @@ export default function RelocationIntake() {
       <div className="max-w-2xl mx-auto px-6 py-12">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>DYSON & DYSON CONCIERGE</p>
-          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: '#fff' }}>
-            Let's Plan Your Move
-          </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem' }}>
-            In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
-          </p>
+         <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>DYSON & DYSON CONCIERGE</p>
+         <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
+           Let's Plan Your Move
+         </h1>
+         <p className="text-sm" style={{ color: '#1a1a1a', fontSize: '1.12rem' }}>
+           In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
+         </p>
           <p className="text-sm mt-4" style={{ color: '#D4AF37', fontSize: '1.05rem', fontStyle: 'italic' }}>
             Our Best Practices seems like we are actually moving with you and ahead of you every step of the way, all the way through close of escrow and beyond.
           </p>
           </motion.div>
 
         {/* Insulation Factor — shown before form */}
-        <div className="rounded-2xl p-6 mb-10" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.35)' }}>
+        <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.35)' }}>
           <p className="text-base font-bold mb-3" style={{ color: '#D4AF37' }}>Why We Hand-Select Your Local Team</p>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>
+          <p className="text-sm leading-relaxed mb-4 text-white">
             We know that not every real estate experience has been a great one. Too often, buyers find themselves working with an agent who is more focused on closing a deal than truly understanding their needs. At Dyson & Dyson, we do things differently because we know that you need highly educated "boots on the ground" in your intended market.
           </p>
           <p className="text-xs font-bold tracking-widest mb-3" style={{ color: '#D4AF37' }}>TO ENSURE YOU HAVE THE ELITE REPRESENTATION YOU DESERVE:</p>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>Personal Evaluation:</span>
-              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>Our Relocation specialists and AI Assistants collect & evaluate every agent in our network — reviewing their DRE license history, production records, and professional reputation.</span>
+              <span className="text-sm leading-relaxed text-white">Our Relocation specialists and AI Assistants collect & evaluate every agent in our network — reviewing their DRE license history, production records, and professional reputation.</span>
             </div>
             <div className="flex items-start gap-3">
               <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>Strategic Intelligence:</span>
-              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>We select candidates based on their deep-rooted local knowledge and their ability to act as your eyes and ears before you even arrive.</span>
-            </div>
-            <div className="flex items-start gap-3">
+              <span className="text-sm leading-relaxed text-white">We select candidates based on their deep-rooted local knowledge and their ability to act as your eyes and ears before you even arrive.</span>
+              </div>
+              <div className="flex items-start gap-3">
               <span className="text-sm font-bold shrink-0" style={{ color: '#D4AF37' }}>A Protective Shield:</span>
-              <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>You will never be handed off to an unvetted stranger. Every agent we recommend has been screened and approved to insulate you from the "typical" industry experience.</span>
+              <span className="text-sm leading-relaxed text-white">You will never be handed off to an unvetted stranger. Every agent we recommend has been screened and approved to insulate you from the "typical" industry experience.</span>
             </div>
           </div>
         </div>
@@ -476,12 +476,12 @@ export default function RelocationIntake() {
 
         {/* Form Card */}
         <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.25 }}
-          className="rounded-2xl p-8"
-          style={{ background: '#000', border: `1px solid rgba(212,175,55,0.25)` }}
+         key={step}
+         initial={{ opacity: 0, x: 20 }}
+         animate={{ opacity: 1, x: 0 }}
+         transition={{ duration: 0.25 }}
+         className="rounded-2xl p-8"
+         style={{ background: '#1a1a1a', border: `1px solid rgba(212,175,55,0.25)` }}
         >
           {/* STEP 0 — Your Info */}
           {step === 0 && (
