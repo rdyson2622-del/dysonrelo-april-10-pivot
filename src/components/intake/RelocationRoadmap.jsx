@@ -538,54 +538,45 @@ function ReloManagementSlides() {
   const slide = slides[currentSlide];
 
   return (
-    <div className="p-6" style={{ background: '#0a0a0a' }}>
-      <div className="flex gap-6 rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)', minHeight: '500px' }}>
-        {/* Slide Nav Sidebar */}
-        <div className="w-52 shrink-0 flex flex-col border-r" style={{ borderColor: 'rgba(212,175,55,0.15)', background: '#0d0d0d' }}>
-          <div className="px-4 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-            <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-0.5" style={{ color: GOLD }}>RELOCATION</p>
-            <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>MANAGEMENT</p>
-            <p className="text-[9px] mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Explainer & Overview</p>
-          </div>
-          <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
-            {slides.map((s, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className="w-full text-left px-3 py-2.5 rounded-lg transition-all"
-                style={{
-                  background: currentSlide === idx ? GOLD : 'rgba(255,255,255,0.04)',
-                  color: currentSlide === idx ? '#000' : '#fff',
-                  border: currentSlide === idx ? 'none' : '1px solid rgba(212,175,55,0.2)',
-                }}>
-                <p className="font-bold leading-tight text-[11px]">{s.title}</p>
-                {s.subtitle && (
-                  <p className="opacity-70 mt-0.5 text-[9px]">{s.subtitle}</p>
-                )}
-              </button>
-            ))}
-          </div>
-          <div className="px-3 py-3 border-t text-center text-[10px]" style={{ borderColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.35)' }}>
-            {currentSlide + 1} of {slides.length}
-          </div>
-        </div>
+    <div className="min-h-screen" style={{ background: slide.bgStyle, transition: 'background 0.3s ease' }}>
+      {/* Navigation dots */}
+      <div className="flex items-center justify-center gap-2 pt-8 pb-6">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentSlide(idx)}
+            className="rounded-full transition-all"
+            style={{
+              width: currentSlide === idx ? '32px' : '8px',
+              height: '8px',
+              background: currentSlide === idx ? GOLD : 'rgba(212,175,55,0.3)',
+            }}
+          />
+        ))}
+      </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center px-10 py-12 text-center" style={{ background: slide.bgStyle, transition: 'background 0.3s ease' }}>
-          <div className="mb-8">
-            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', fontWeight: 600, color: '#fff', lineHeight: 1.15, marginBottom: '0.5rem' }}>
-              {slide.title}
-            </h1>
-            {slide.subtitle && (
-              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', fontWeight: 600, color: GOLD, lineHeight: 1.15 }}>
-                {slide.subtitle}
-              </h2>
-            )}
-          </div>
-          <div className="w-full max-w-2xl text-left" style={{ fontSize: '13px', lineHeight: 1.7 }}>
-            {slide.content}
-          </div>
+      {/* Content */}
+      <div className="flex flex-col items-center justify-center px-8 py-12 text-center min-h-[calc(100vh-120px)]">
+        <div className="mb-8">
+          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.5rem, 5vw, 2.8rem)', fontWeight: 600, color: '#fff', lineHeight: 1.15, marginBottom: '0.5rem', letterSpacing: '0.08em' }}>
+            {slide.title}
+          </h1>
+          {slide.subtitle && (
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.2rem, 4vw, 2.2rem)', fontWeight: 600, color: GOLD, lineHeight: 1.15, letterSpacing: '0.08em' }}>
+              {slide.subtitle}
+            </h2>
+          )}
         </div>
+        <div className="w-full max-w-2xl text-left" style={{ fontSize: '14px', lineHeight: 1.8 }}>
+          {slide.content}
+        </div>
+      </div>
+
+      {/* Slide indicator */}
+      <div className="flex items-center justify-center gap-2 pb-8 text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <span>{currentSlide + 1}</span>
+        <span>/</span>
+        <span>{slides.length}</span>
       </div>
     </div>
   );
