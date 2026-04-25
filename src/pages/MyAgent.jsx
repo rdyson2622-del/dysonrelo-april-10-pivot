@@ -476,11 +476,7 @@ export default function MyAgent() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Shield className="w-4 h-4" style={{ color: GOLD }} />
-            <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN Agent Bureau</p>
-          </div>
+         <div className="mb-6">
           <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.6rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
             BENEFITS OF CHOOSING A <span style={{ color: GOLD }}>DYSON & AI VETTED</span> AGENT
           </h1>
