@@ -416,8 +416,8 @@ export default function ConsumerDnnNews() {
           <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
         </div>
         <h1 className="display-heading mb-4"
-          style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.15em', color: '#fff', lineHeight: 1.05 }}>
-          REAL ESTATE INTELLIGENCE
+          style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#fff', lineHeight: 1.05 }}>
+          REAL ESTATE NEWS
         </h1>
         <p className="text-base leading-relaxed mx-auto" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
