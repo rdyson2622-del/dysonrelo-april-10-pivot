@@ -403,8 +403,111 @@ function ArticleCard({ article }) {
   );
 }
 
+// --- Compact Article Card ---
+function CompactArticleCard({ article }) {
+  const [showText, setShowText] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+
+  return (
+    <div className="rounded-xl p-4 transition-all hover:border-opacity-100"
+      style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div>
+          <span className="text-[10px] font-black tracking-widest uppercase px-2 py-1 rounded-full"
+            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37' }}>
+            {article.trigger_type}
+          </span>
+          <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{article.dateline}</p>
+        </div>
+        <button onClick={(e) => { e.stopPropagation(); setShowShare(v => !v); }}
+          className="shrink-0 text-xs font-semibold px-2 py-1 rounded-full transition-all"
+          style={{ color: showShare ? '#D4AF37' : 'rgba(255,255,255,0.3)', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent' }}>
+          <Share2 className="w-3 h-3" />
+        </button>
+      </div>
+
+      {/* Headline */}
+      <h3 className="font-bold text-sm leading-snug mb-2" style={{ color: '#fff' }}>
+        {article.headline}
+      </h3>
+
+      {/* Toggle + Expanded Text */}
+      <button
+        onClick={() => setShowText(v => !v)}
+        className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase mb-2"
+        style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
+        {showText ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+        {showText ? 'Hide' : 'Read'}
+      </button>
+
+      {showText && (
+        <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
+            <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{para}</p>
+          ))}
+        </div>
+      )}
+
+      {showShare && (
+        <div className="mt-2 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <SharePanel article={article} onClose={() => setShowShare(false)} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Video Thumbnail ---
+function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 text-white hover:opacity-70 transition-opacity z-10"
+          style={{ fontSize: '2rem' }}>
+          ✕
+        </button>
+        <div className="w-full max-w-4xl aspect-video">
+          <iframe
+            src={article.video_url}
+            title={article.headline}
+            className="w-full h-full rounded-xl"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={onExpand}
+      className="relative w-full aspect-video rounded-xl overflow-hidden group"
+      style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}>
+      <div className="absolute inset-0 flex items-center justify-center"
+        style={{ background: 'rgba(0,0,0,0.4)' }}>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+          style={{ background: 'rgba(212,175,55,0.85)' }}>
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
+            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+          </svg>
+        </div>
+      </div>
+      {/* Overlay info */}
+      <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+        <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
+      </div>
+    </button>
+  );
+}
+
 // --- Main Page ---
 export default function ConsumerDnnNews() {
+  const [fullscreenVideo, setFullscreenVideo] = useState(null);
+
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
     queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 50),
@@ -418,6 +521,10 @@ export default function ConsumerDnnNews() {
   const allArticles = [...articles, ...blasted].sort((a, b) =>
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
+
+  // Separate articles and videos
+  const textArticles = allArticles.filter(a => !a.video_url);
+  const videoArticles = allArticles.filter(a => a.video_url);
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
@@ -453,8 +560,8 @@ export default function ConsumerDnnNews() {
         </p>
       </div>
 
-      {/* Articles feed — full width, clean */}
-      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-5xl mx-auto">
+      {/* Articles feed — two-column layout */}
+      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
         {/* Divider */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
@@ -476,11 +583,33 @@ export default function ConsumerDnnNews() {
           </div>
         )}
 
-        <div className="space-y-5">
-          {allArticles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
+        {!isLoading && allArticles.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* LEFT: Text articles in compact cards */}
+            <div className="lg:col-span-1 space-y-3">
+              <p className="text-xs font-black tracking-[0.2em] uppercase px-3 py-2" style={{ color: 'rgba(212,175,55,0.6)' }}>News Briefs</p>
+              {textArticles.map((article) => (
+                <CompactArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+
+            {/* RIGHT: Video thumbnails */}
+            <div className="lg:col-span-2 space-y-3">
+              <p className="text-xs font-black tracking-[0.2em] uppercase px-3 py-2" style={{ color: 'rgba(212,175,55,0.6)' }}>Featured Videos</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {videoArticles.map((article) => (
+                  <VideoThumbnail
+                    key={article.id}
+                    article={article}
+                    isFullscreen={fullscreenVideo?.id === article.id}
+                    onExpand={() => setFullscreenVideo(article)}
+                    onClose={() => setFullscreenVideo(null)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Below the fold — subscribe + network */}
