@@ -224,9 +224,6 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Admin Charlie Card */}
-      <AdminCharlieCard />
-
       {/* Collapsible Sections */}
       <nav className="py-2 px-3 space-y-0.5 flex-1">
         {NAV_SECTIONS.map(section => {
@@ -293,6 +290,9 @@ export default function AdminSidebar() {
           );
         })}
       </nav>
+
+      {/* Admin Charlie Card */}
+      <AdminCharlieCard />
 
       {/* Recent Batch SMS Widget */}
       <div className="mx-3 mb-3 p-3 rounded-lg shrink-0" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
