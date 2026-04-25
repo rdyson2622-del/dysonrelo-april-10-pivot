@@ -126,6 +126,7 @@ const AuthenticatedApp = () => {
         <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/gemini" element={<GeminiSession />} />
         <Route path="/GeminiSession" element={<GeminiSession />} />
+        {/* PERMANENT FIX: /communications-explainer is CRITICAL — do not remove */}
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/city-guide" element={<CityGuide />} />
         <Route path="/search" element={<Search />} />
