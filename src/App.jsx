@@ -133,6 +133,7 @@ const AuthenticatedApp = () => {
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
+        <Route path="/relo-management" element={<ReloManagement />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -183,7 +184,6 @@ const AuthenticatedApp = () => {
         <Route path="/admin/landing-lab" element={<LandingLab />} />
         <Route path="/admin/new-landing-page" element={<AdminNewLandingPage />} />
         <Route path="/admin/relo-management" element={<AdminReloManagement />} />
-        <Route path="/relo-management" element={<ReloManagement />} />
         <Route path="/solve-my-story" element={<SolveMyStory />} />
       </Route>
       
