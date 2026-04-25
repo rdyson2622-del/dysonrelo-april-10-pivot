@@ -424,49 +424,50 @@ export default function ConsumerDnnNews() {
         </p>
       </div>
 
-      {/* Main content — full width with two-column layout on wide screens */}
-      <div className="w-full px-6 md:px-10 lg:px-16 py-10">
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+      {/* Articles feed — full width, clean */}
+      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-5xl mx-auto">
+        {/* Divider */}
+        <div className="flex items-center gap-4 mb-8">
+          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+          <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Today's Briefs</span>
+          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+        </div>
 
-          {/* Left column: Subscribe + Network */}
-          <div className="w-full lg:w-80 xl:w-96 shrink-0">
-            <SubscribeBanner />
-            <CharlieEducationStrip />
+        {isLoading && (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-4 border-slate-800 border-t-yellow-500 rounded-full animate-spin" />
           </div>
+        )}
 
-          {/* Right column: Articles feed */}
-          <div className="flex-1 min-w-0">
-            {/* Divider */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-              <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Today's Briefs</span>
-              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-            </div>
-
-            {isLoading && (
-              <div className="flex justify-center py-20">
-                <div className="w-8 h-8 border-4 border-slate-800 border-t-yellow-500 rounded-full animate-spin" />
-              </div>
-            )}
-
-            {!isLoading && allArticles.length === 0 && (
-              <div className="text-center py-24 space-y-4">
-                <Globe className="w-12 h-12 mx-auto" style={{ color: 'rgba(212,175,55,0.3)' }} />
-                <p className="display-heading text-lg" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Our AI Bureau publishes daily — check back shortly.</p>
-              </div>
-            )}
-
-            <div className="space-y-5">
-              {allArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
+        {!isLoading && allArticles.length === 0 && (
+          <div className="text-center py-24 space-y-4">
+            <Globe className="w-12 h-12 mx-auto" style={{ color: 'rgba(212,175,55,0.3)' }} />
+            <p className="display-heading text-lg" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Our AI Bureau publishes daily — check back shortly.</p>
           </div>
+        )}
+
+        <div className="space-y-5">
+          {allArticles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
+      </div>
+
+      {/* Below the fold — subscribe + network */}
+      <div className="w-full px-6 md:px-12 lg:px-20 pb-16 max-w-5xl mx-auto">
+        <div className="flex items-center gap-4 mb-8" style={{ borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: '3rem' }}>
+          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+          <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Stay Connected</span>
+          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <SubscribeBanner />
+          <CharlieEducationStrip />
         </div>
 
         {/* Footer brand */}
-        <div className="mt-16 text-center pb-8" style={{ borderTop: '1px solid rgba(212,175,55,0.1)', paddingTop: '2rem' }}>
+        <div className="mt-12 text-center pb-4" style={{ borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '2rem' }}>
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
             <img src={DNN_LOGO} alt="DNN" className="h-7 w-auto opacity-40" />
