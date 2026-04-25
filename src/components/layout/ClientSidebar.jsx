@@ -120,12 +120,17 @@ export default function ClientSidebar() {
             <Shield className="w-3.5 h-3.5" /> Looking to Vette an Agent?
           </Link>
 
-          <Link to="/financial-services" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/financial-services' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/financial-services' ? '#000' : '#fff' }}>
-            <DollarSign className="w-3.5 h-3.5" /> Financial Services
-            <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.1)', color: '#94a3b8' }}>Soon</span>
-          </Link>
         </div>
+      </div>
+
+      {/* Vetting & Selection Section */}
+      <div className="px-3 pb-4 space-y-2">
+        <Link to="/my-agent" className="block text-left text-[10px] uppercase tracking-[2px] font-bold hover:opacity-80 transition-opacity" style={{ color: GOLD }}>
+          Looking to Vette an Agent?
+        </Link>
+        <Link to="/financial-services" className="block text-left text-[10px] uppercase tracking-[2px] font-bold hover:opacity-80 transition-opacity text-white">
+          Looking to Select a Lender?
+        </Link>
       </div>
 
       {/* Heritage & Authority */}
