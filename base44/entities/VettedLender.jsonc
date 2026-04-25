@@ -1,0 +1,94 @@
+{
+  "name": "VettedLender",
+  "type": "object",
+  "properties": {
+    "lender_name": {
+      "type": "string",
+      "description": "Lender's full name"
+    },
+    "company": {
+      "type": "string",
+      "description": "Mortgage company / bank name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone"
+    },
+    "nmls_number": {
+      "type": "string",
+      "description": "NMLS license number"
+    },
+    "state": {
+      "type": "string",
+      "description": "State of licensure"
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Markets/states this lender is licensed in"
+    },
+    "loan_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Loan types offered: conventional, FHA, VA, jumbo, bridge, DSCR, etc."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "prospect",
+        "active",
+        "paused",
+        "churned"
+      ],
+      "default": "prospect",
+      "description": "Bureau partnership status"
+    },
+    "featured_tier": {
+      "type": "string",
+      "enum": [
+        "bronze",
+        "silver",
+        "gold"
+      ],
+      "default": "bronze",
+      "description": "DNN Featured Lender tier \u2014 determines monthly placement fee"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Client-facing bio paragraph"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "co_brand_label": {
+      "type": "string",
+      "description": "Display co-brand name"
+    },
+    "avg_close_days": {
+      "type": "number",
+      "description": "Average days to close a loan"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "onboarded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When they joined the bureau"
+    }
+  },
+  "required": [
+    "lender_name",
+    "email"
+  ]
+}

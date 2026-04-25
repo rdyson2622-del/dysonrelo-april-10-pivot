@@ -5,7 +5,7 @@ import {
   SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText,
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
-  Edit, Globe, Send, Shield, TrendingUp, FileCheck
+  Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -92,6 +92,8 @@ const NAV_SECTIONS = [
       { label: 'Agent Bureau (B2B)', path: '/admin/dnn/agent-bureau', icon: Shield },
       { label: 'Featured Agent Revenue', path: '/admin/dnn/revenue', icon: TrendingUp },
       { label: 'Agent Vetting Process', path: '/admin/dnn/agent-vetting', icon: FileCheck },
+      { label: 'Lender Vetting Process', path: '/admin/dnn/lender-vetting', icon: DollarSign },
+      { label: 'Bureau Story Hub', path: '/admin/dnn/bureau-stories', icon: BookOpen },
     ],
   },
   {

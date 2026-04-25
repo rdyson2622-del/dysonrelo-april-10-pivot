@@ -1,0 +1,84 @@
+{
+  "name": "BureauStory",
+  "type": "object",
+  "properties": {
+    "submitter_name": {
+      "type": "string",
+      "description": "Name of the agent or lender submitting"
+    },
+    "submitter_type": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "lender"
+      ],
+      "description": "Who submitted this story"
+    },
+    "submitter_id": {
+      "type": "string",
+      "description": "ID of the PartnerAgent or VettedLender record"
+    },
+    "story_title": {
+      "type": "string",
+      "description": "Short title for the story"
+    },
+    "story_body": {
+      "type": "string",
+      "description": "Full story text \u2014 client journey, challenge, outcome"
+    },
+    "client_first_name": {
+      "type": "string",
+      "description": "Client first name (anonymized for privacy)"
+    },
+    "origin_city": {
+      "type": "string",
+      "description": "Where the client moved from"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "Where the client moved to"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Key result: closed in X days, saved $X, etc."
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL to uploaded story video (Loom, etc.)"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Optional hero image for the story"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "in_review",
+        "white_labeled",
+        "published",
+        "rejected"
+      ],
+      "default": "submitted",
+      "description": "Editorial workflow status"
+    },
+    "white_labeled_body": {
+      "type": "string",
+      "description": "Admin-edited white-labeled version of the story for DNN publishing"
+    },
+    "published_as": {
+      "type": "string",
+      "description": "Title used when published on DNN"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal editorial notes"
+    }
+  },
+  "required": [
+    "submitter_name",
+    "submitter_type",
+    "story_title",
+    "story_body"
+  ]
+}
