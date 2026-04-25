@@ -136,6 +136,7 @@ const AuthenticatedApp = () => {
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
+        <Route path="/relo-management" element={<ReloManagement />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
