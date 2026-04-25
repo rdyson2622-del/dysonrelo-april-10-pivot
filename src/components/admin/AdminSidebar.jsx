@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search,
@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
+import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -203,6 +204,9 @@ export default function AdminSidebar() {
           New Landing Page
         </Link>
       </div>
+
+      {/* Admin Charlie Card */}
+      <AdminCharlieCard />
 
       {/* Collapsible Sections */}
       <nav className="py-2 px-3 space-y-0.5 flex-1">

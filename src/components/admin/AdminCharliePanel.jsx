@@ -78,6 +78,7 @@ export default function AdminCharliePanel() {
     <>
       {/* Floating Toggle Button */}
       <button
+        data-charlie-toggle
         onClick={() => setOpen(o => !o)}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105"
         style={{
