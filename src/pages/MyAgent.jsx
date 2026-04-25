@@ -473,7 +473,7 @@ export default function MyAgent() {
 
   return (
     <div className="min-h-screen p-6" style={{ background: '#080808' }}>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="mb-6">
