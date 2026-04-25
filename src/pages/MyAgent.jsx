@@ -477,7 +477,7 @@ export default function MyAgent() {
 
         {/* Header */}
          <div className="mb-6">
-          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1rem, 3vw, 2.2rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
+          <h1 className="display-heading text-white" style={{ fontSize: 'clamp(1rem, 2.75vw, 1.85rem)', letterSpacing: '0.12em', lineHeight: 1.1 }}>
             BENEFITS OF CHOOSING A <span style={{ color: GOLD }}>DYSON & AI VETTED</span> AGENT
           </h1>
           <p className="text-sm mt-3 leading-relaxed" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
