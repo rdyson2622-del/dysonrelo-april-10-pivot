@@ -118,27 +118,15 @@ const AuthenticatedApp = () => {
         <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/gemini" element={<GeminiSession />} />
         <Route path="/GeminiSession" element={<GeminiSession />} />
-        <Route path="/explainers" element={<Explainers />} />
-        <Route path="/Explainers" element={<Explainers />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/Chat" element={<Chat />} />
-        <Route path="/communications-explainer" element={<ClientCommunicationsExplainer />} />
-        <Route path="/CityGuide" element={<CityGuide />} />
-        <Route path="/city-guide" element={<CityGuide />} />
-        <Route path="/bob-dyson" element={<BobDyson />} />
-        <Route path="/ai-assistants" element={<AIAssistants />} />
-        <Route path="/ready-to-start" element={<ReadyToStart />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/PropertyComparison" element={<PropertyComparison />} />
-        <Route path="/property-comparison" element={<PropertyComparison />} />
         <Route path="/FindAgent" element={<FindAgent />} />
         <Route path="/find-agent" element={<FindAgent />} />
-        <Route path="/charlie-voice" element={<CharlieVoicePresentation />} />
         <Route path="/media" element={<MediaRoom />} />
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
-        <Route path="/relo-management" element={<ReloManagement />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
