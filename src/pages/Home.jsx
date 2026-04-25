@@ -83,8 +83,14 @@ export default function Home() {
                 style={{ caretColor: GOLD }}
               />
               <button
-                className="px-5 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:opacity-90"
-                style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})` }}
+                className="px-5 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:scale-105"
+                style={{ 
+                  background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
+                  boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={e => e.target.style.boxShadow = '0 8px 28px rgba(212, 175, 55, 0.6)'}
+                onMouseLeave={e => e.target.style.boxShadow = '0 4px 14px rgba(212, 175, 55, 0.3)'}
               >
                 Solve My Story
               </button>
