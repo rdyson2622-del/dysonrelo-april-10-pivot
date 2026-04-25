@@ -251,125 +251,145 @@ function AudioPlayer({ url }) {
   );
 }
 
+// --- Video Embed Helper ---
+function VideoEmbed({ url }) {
+  if (!url) return null;
+  let src = url;
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const id = url.includes('youtu.be')
+      ? url.split('/').pop().split('?')[0]
+      : new URL(url).searchParams.get('v');
+    src = `https://www.youtube.com/embed/${id}`;
+    return <iframe width="100%" height="100%" src={src} frameBorder="0" allowFullScreen className="w-full h-full" />;
+  }
+  if (url.includes('vimeo.com') || url.includes('loom.com')) {
+    return <iframe src={url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />;
+  }
+  return <video controls className="w-full h-full"><source src={url} type="video/mp4" /></video>;
+}
+
 // --- Article Card ---
 function ArticleCard({ article }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const hasVideo = !!article.video_url;
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
 
-  const handleShare = (e) => {
-    e.stopPropagation();
-    setShowShare(v => !v);
-  };
-
   return (
-    <div className="rounded-2xl overflow-hidden transition-all" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}>
-      <div className="p-5 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase"
-            style={{ background: bgColor, color: textColor }}>
-            {label}
-          </span>
-          <span className="text-[10px] text-slate-600">
-            {article.generated_date
-              ? new Date(article.generated_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : ''}
-          </span>
-        </div>
+    <div className="rounded-2xl overflow-hidden" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}>
 
-        <h2 className="display-heading mb-1" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', letterSpacing: '0.1em', color: '#fff', lineHeight: 1.15 }}>{article.headline}</h2>
+      {/* Meta row */}
+      <div className="px-5 pt-5 flex items-center gap-2 mb-3">
+        <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase"
+          style={{ background: bgColor, color: textColor }}>{label}</span>
+        <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          {article.generated_date
+            ? new Date(article.generated_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : ''}
+        </span>
+      </div>
+
+      {/* Headline + dateline */}
+      <div className="px-5 mb-4">
+        <h2 className="display-heading" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', letterSpacing: '0.1em', color: '#fff', lineHeight: 1.15 }}>
+          {article.headline}
+        </h2>
         {article.dateline && (
           <p className="text-xs tracking-widest uppercase mt-1" style={{ color: 'rgba(212,175,55,0.6)' }}>{article.dateline}</p>
         )}
-
-        {article.audio_url && <AudioPlayer url={article.audio_url} />}
-
-        {!isExpanded && (
-          <>
-            {article.video_url && (
-              <div className="mt-3 w-full aspect-video rounded-lg overflow-hidden border border-slate-700">
-                {article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be') ? (
-                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(article.video_url).searchParams.get('v') || article.video_url.split('/').pop()}`} frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : article.video_url.includes('vimeo.com') ? (
-                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : article.video_url.includes('loom.com') ? (
-                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : (
-                  <video width="100%" height="100%" controls className="w-full h-full">
-                    <source src={article.video_url} type="video/mp4" />
-                  </video>
-                )}
-              </div>
-            )}
-            <p className="text-sm text-white mt-2 line-clamp-2 leading-relaxed">
-              {article.body?.split('\n')[0]}
-            </p>
-          </>
-        )}
-
-        {isExpanded && (
-          <div className="mt-4 border-t pt-4 space-y-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-            {article.video_url && (
-              <div className="w-full aspect-video rounded-lg overflow-hidden border border-slate-700">
-                {article.video_url.includes('youtube.com') || article.video_url.includes('youtu.be') ? (
-                  <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${new URL(article.video_url).searchParams.get('v') || article.video_url.split('/').pop()}`} frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : article.video_url.includes('vimeo.com') ? (
-                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : article.video_url.includes('loom.com') ? (
-                  <iframe src={article.video_url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />
-                ) : (
-                  <video width="100%" height="100%" controls className="w-full h-full">
-                    <source src={article.video_url} type="video/mp4" />
-                  </video>
-                )}
-              </div>
-            )}
-            {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
-              <p key={i} className="text-sm text-white leading-relaxed">{para}</p>
-            ))}
-            {article.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {article.tags.map(t => (
-                  <span key={t} className="text-[10px] bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full">#{t}</span>
-                ))}
-              </div>
-            )}
-            <p className="text-[10px] text-slate-700 pt-1 italic">Published by DNN Intelligence Bureau · Dyson & Dyson Real Estate Concierge</p>
-
-            {/* Charlie CTA inline */}
-            <Link to="/chat"
-              className="flex items-center gap-2 mt-3 px-4 py-2.5 rounded-xl text-sm font-bold text-black w-fit transition-all hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
-              onClick={e => e.stopPropagation()}>
-              Ask Charlie About This <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        )}
       </div>
 
-      {showShare && (
-        <div className="px-5 pb-2">
-          <SharePanel article={article} onClose={() => setShowShare(false)} />
+      {/* VIDEO — lead with this if available */}
+      {hasVideo && (
+        <div className="w-full aspect-video" style={{ background: '#000' }}>
+          <VideoEmbed url={article.video_url} />
         </div>
       )}
 
-      <div className="px-5 pb-3 flex items-center justify-between">
-        <span className="text-[11px] text-slate-400 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? 'Tap to collapse' : 'Tap to read full brief'}
-        </span>
-        <div className="flex items-center gap-3">
-          <button onClick={handleShare}
-            className="flex items-center gap-1 text-[11px] font-semibold transition-colors px-2 py-1 rounded-full"
-            style={{ color: showShare ? '#D4AF37' : '#64748b', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent' }}>
-            <Share2 className="w-3.5 h-3.5" /> Share
-          </button>
-          {isExpanded
-            ? <ChevronUp className="w-4 h-4 text-slate-600 cursor-pointer" onClick={() => setIsExpanded(false)} />
-            : <ChevronDown className="w-4 h-4 text-slate-600 cursor-pointer" onClick={() => setIsExpanded(true)} />}
+      {/* Audio player if no video */}
+      {!hasVideo && article.audio_url && (
+        <div className="px-5"><AudioPlayer url={article.audio_url} /></div>
+      )}
+
+      {/* Text-only preview for articles without video */}
+      {!hasVideo && (
+        <div className="px-5 py-3">
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+            {article.body?.split('\n')[0]}
+          </p>
         </div>
+      )}
+
+      {/* "Read Instead" toggle — only for video articles */}
+      {hasVideo && (
+        <div className="px-5 pt-3">
+          <button
+            onClick={() => setShowText(v => !v)}
+            className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-all"
+            style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.4)' }}>
+            {showText ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            {showText ? 'Hide Text' : 'Read Instead'}
+          </button>
+        </div>
+      )}
+
+      {/* Collapsible full text */}
+      {showText && (
+        <div className="px-5 pt-3 pb-2 space-y-3 border-t mt-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
+            <p key={i} className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>{para}</p>
+          ))}
+          {article.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {article.tags.map(t => (
+                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }}>#{t}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Text articles — expand full read */}
+      {!hasVideo && (
+        <div className="px-5 pb-2">
+          <button onClick={() => setShowText(v => !v)}
+            className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase"
+            style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
+            {showText ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            {showText ? 'Collapse' : 'Read Full Brief'}
+          </button>
+          {showText && (
+            <div className="mt-3 space-y-3 border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+              {article.body?.split('\n').filter(p => p.trim()).slice(1).map((para, i) => (
+                <p key={i} className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>{para}</p>
+              ))}
+              <Link to="/chat"
+                className="flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl text-sm font-bold text-black w-fit transition-all hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+                onClick={e => e.stopPropagation()}>
+                Ask Charlie About This <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bottom bar — Share */}
+      <div className="px-5 py-3 flex items-center justify-end" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <button onClick={(e) => { e.stopPropagation(); setShowShare(v => !v); }}
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
+          style={{ color: showShare ? '#D4AF37' : 'rgba(255,255,255,0.4)', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <Share2 className="w-3.5 h-3.5" /> Share
+        </button>
       </div>
+
+      {showShare && (
+        <div className="px-5 pb-4">
+          <SharePanel article={article} onClose={() => setShowShare(false)} />
+        </div>
+      )}
     </div>
   );
 }
