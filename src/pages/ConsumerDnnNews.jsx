@@ -279,9 +279,9 @@ function ArticleCard({ article }) {
           </span>
         </div>
 
-        <h2 className="text-white font-bold text-base leading-snug mb-1">{article.headline}</h2>
+        <h2 className="display-heading mb-1" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', letterSpacing: '0.1em', color: '#fff', lineHeight: 1.15 }}>{article.headline}</h2>
         {article.dateline && (
-          <p className="text-[11px] text-slate-600 font-mono">{article.dateline}</p>
+          <p className="text-xs tracking-widest uppercase mt-1" style={{ color: 'rgba(212,175,55,0.6)' }}>{article.dateline}</p>
         )}
 
         {article.audio_url && <AudioPlayer url={article.audio_url} />}
@@ -393,77 +393,87 @@ export default function ConsumerDnnNews() {
   return (
     <div className="min-h-screen" style={{ background: '#080808' }}>
       {/* Header */}
-      <div className="sticky top-0 z-20 px-6 py-4 flex items-center justify-between"
+      <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between"
         style={{ background: 'rgba(8,8,8,0.95)', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
-        <div className="flex items-center gap-3">
-          <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
+        <div className="flex items-center gap-4">
+          <img src={DNN_LOGO} alt="DNN" className="h-10 w-auto" />
           <div>
-            <p className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>DNN</p>
-            <p className="text-[10px] tracking-widest text-slate-500 uppercase">Real Estate Intelligence</p>
+            <p className="text-sm font-black tracking-[0.35em] uppercase" style={{ color: '#D4AF37' }}>DNN</p>
+            <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>Real Estate Intelligence</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs" style={{ color: '#D4AF37' }}>
+        <div className="flex items-center gap-2 text-sm font-semibold tracking-widest" style={{ color: '#D4AF37' }}>
           <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
           LIVE FEED
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Intro */}
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center gap-2 mb-3 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
-            <Globe className="w-3 h-3" /> Intelligence Bureau
-          </div>
-          <h1 className="text-3xl font-black text-white mb-2">Real Estate Intelligence</h1>
-          <p className="text-sm text-slate-400 leading-relaxed max-w-md mx-auto">
-            Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
-          </p>
+      {/* Hero Section — full width */}
+      <div className="w-full px-8 md:px-16 py-14 text-center"
+        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: 'linear-gradient(180deg, #0f0f0f 0%, #080808 100%)' }}>
+        <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
+          style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
+          <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
         </div>
+        <h1 className="display-heading mb-4"
+          style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '0.15em', color: '#fff', lineHeight: 1.05 }}>
+          REAL ESTATE INTELLIGENCE
+        </h1>
+        <p className="text-base leading-relaxed mx-auto" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '560px' }}>
+          Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
+        </p>
+      </div>
 
-        {/* Subscribe */}
-        <SubscribeBanner />
+      {/* Main content — full width with two-column layout on wide screens */}
+      <div className="w-full px-6 md:px-10 lg:px-16 py-10">
+        <div className="flex flex-col lg:flex-row gap-10 items-start">
 
-        {/* DNN Network Pillars */}
-        <CharlieEducationStrip />
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-          <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: '#D4AF37' }}>Today's Briefs</span>
-          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-        </div>
-
-        {/* Articles */}
-        {isLoading && (
-          <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-4 border-slate-800 border-t-yellow-500 rounded-full animate-spin" />
+          {/* Left column: Subscribe + Network */}
+          <div className="w-full lg:w-80 xl:w-96 shrink-0">
+            <SubscribeBanner />
+            <CharlieEducationStrip />
           </div>
-        )}
 
-        {!isLoading && allArticles.length === 0 && (
-          <div className="text-center py-24 space-y-3">
-            <Globe className="w-10 h-10 mx-auto text-slate-700" />
-            <p className="text-slate-500 font-medium">Today's intelligence brief is being prepared.</p>
-            <p className="text-slate-600 text-sm">Check back shortly — our AI Bureau publishes daily.</p>
+          {/* Right column: Articles feed */}
+          <div className="flex-1 min-w-0">
+            {/* Divider */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+              <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Today's Briefs</span>
+              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+            </div>
+
+            {isLoading && (
+              <div className="flex justify-center py-20">
+                <div className="w-8 h-8 border-4 border-slate-800 border-t-yellow-500 rounded-full animate-spin" />
+              </div>
+            )}
+
+            {!isLoading && allArticles.length === 0 && (
+              <div className="text-center py-24 space-y-4">
+                <Globe className="w-12 h-12 mx-auto" style={{ color: 'rgba(212,175,55,0.3)' }} />
+                <p className="display-heading text-lg" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Our AI Bureau publishes daily — check back shortly.</p>
+              </div>
+            )}
+
+            <div className="space-y-5">
+              {allArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
           </div>
-        )}
-
-        <div className="space-y-4">
-          {allArticles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
         </div>
 
         {/* Footer brand */}
-        <div className="mt-12 text-center pb-8">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="h-px flex-1 max-w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
-            <img src={DNN_LOGO} alt="DNN" className="h-6 w-auto opacity-40" />
-            <div className="h-px flex-1 max-w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
+        <div className="mt-16 text-center pb-8" style={{ borderTop: '1px solid rgba(212,175,55,0.1)', paddingTop: '2rem' }}>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
+            <img src={DNN_LOGO} alt="DNN" className="h-7 w-auto opacity-40" />
+            <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
           </div>
-          <p className="text-[11px] text-slate-700">DNN Intelligence Bureau · AI-generated content · For informational purposes only</p>
-          <p className="text-[10px] text-slate-800 mt-1">Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
+          <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.2)' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
+          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.15)' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
     </div>
