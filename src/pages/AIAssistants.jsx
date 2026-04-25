@@ -43,7 +43,7 @@ export default function AIAssistants() {
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#000' }}>
             Each Assistant Specializes in One Domain
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
             They communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
           </p>
         </motion.div>
