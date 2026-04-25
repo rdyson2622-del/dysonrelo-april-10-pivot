@@ -63,7 +63,7 @@ export default function SolveMyStory() {
   if (submitted) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 py-20 text-center"
-        style={{ background: '#0a0a0a' }}>
+        style={{ background: '#ede0cc' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto mb-8" />
         <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
           style={{ border: `2px solid ${GOLD}` }}>
@@ -89,11 +89,11 @@ export default function SolveMyStory() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
+     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
-      {/* Header */}
-      <div className="flex flex-col items-center pt-14 pb-10 text-center px-6"
-        style={{ background: '#0a0a0a' }}>
+       {/* Header */}
+       <div className="flex flex-col items-center pt-14 pb-10 text-center px-6"
+         style={{ background: '#ede0cc' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto mb-6" />
         <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
           DYSON &amp; DYSON · RELOCATION MANAGEMENT
