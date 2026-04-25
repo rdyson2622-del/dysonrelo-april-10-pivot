@@ -5,6 +5,7 @@ import LayoutToggleButton from './LayoutToggleButton';
 import PageNumberBadge from '../PageNumberBadge';
 import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft } from 'lucide-react';
+import AdminCharliePanel from '../admin/AdminCharliePanel';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -38,6 +39,7 @@ export default function AdminLayout() {
           <Outlet />
         </div>
         <PageNumberBadge />
+        <AdminCharliePanel />
       </main>
     </div>
   );
