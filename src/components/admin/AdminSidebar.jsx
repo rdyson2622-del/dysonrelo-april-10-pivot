@@ -115,6 +115,14 @@ const NAV_SECTIONS = [
       { label: 'Voice Presentation', path: '/charlie-voice', icon: MessageCircle },
     ],
   },
+  {
+    key: 'agent_lender_vetting',
+    label: 'AGENT VETTING & LENDER',
+    children: [
+      { label: 'Looking to Vette an Agent?', path: '/admin/dnn/agent-vetting', icon: Shield },
+      { label: 'Looking to Select a Lender?', path: '/admin/dnn/lender-vetting', icon: DollarSign },
+    ],
+  },
 ];
 
 // All child paths for auto-expand detection
