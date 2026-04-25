@@ -102,13 +102,13 @@ export default function SolveMyStory() {
           fontFamily: 'Cormorant Garamond, serif',
           fontSize: 'clamp(2rem, 5vw, 3rem)',
           fontWeight: 600,
-          color: '#fff',
+          color: '#000',
           lineHeight: 1.2,
           maxWidth: '640px'
         }}>
           Tell Us Your Story. We'll Solve It.
         </h1>
-        <p className="mt-4 text-base" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '520px' }}>
+        <p className="mt-4 text-base" style={{ color: '#1a1a1a', maxWidth: '520px' }}>
           In 55 years, we've seen every real estate situation imaginable. Give us the details and our team will respond with a clear, actionable resolution — no sales pitch.
         </p>
       </div>
