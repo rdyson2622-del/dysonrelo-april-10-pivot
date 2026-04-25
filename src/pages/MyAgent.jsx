@@ -449,7 +449,7 @@ export default function MyAgent() {
           {/* Header */}
           <div className="mb-6">
             <h1 className="display-heading" style={{ fontSize: 'clamp(1rem, 2.75vw, 1.85rem)', letterSpacing: '0.12em', lineHeight: 1.1, color: '#1a1a1a' }}>
-              BENEFITS OF CHOOSING A <span style={{ color: '#a67c52' }}>DYSON & AI VETTED</span> AGENT
+              BENEFITS OF CHOOSING A <span style={{ color: '#D4AF37' }}>DYSON & AI VETTED</span> AGENT
             </h1>
             <p className="text-sm mt-3 leading-relaxed" style={{ color: '#4a4a4a', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1rem' }}>
               Every agent below has passed the Dyson & Dyson leadership team's personal 5-step vetting process. Zero shortcuts. Your referral is always free — and our deep AI vetting process increases your odds of a great agent relationship.
