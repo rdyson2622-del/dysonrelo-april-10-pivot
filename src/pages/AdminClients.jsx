@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Eye, MessageSquare, User, MapPin, Calendar, DollarSign, CheckCircle2, Clock, Home, Users, FileText, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import AddClientModal from "@/components/admin/AddClientModal";
 
 const GOLD = '#D4AF37';
 
@@ -222,6 +223,7 @@ function ClientCard({ client, onDelete, tasks, properties }) {
 
 export default function AdminClients() {
   const queryClient = useQueryClient();
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const { data: clients = [], isLoading: loadingClients } = useQuery({
     queryKey: ['admin-clients'],
@@ -271,7 +273,8 @@ export default function AdminClients() {
               {counts.under_contract ? ` · ${counts.under_contract} under contract` : ''}
             </p>
           </div>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold"
+          <button onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold"
             style={{ background: GOLD, color: '#000' }}>
             <Plus className="w-4 h-4" /> Add Client
           </button>
@@ -310,6 +313,12 @@ export default function AdminClients() {
           </div>
         )}
       </div>
+
+      <AddClientModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onCreated={() => queryClient.invalidateQueries({ queryKey: ['admin-clients'] })}
+      />
     </div>
   );
 }
