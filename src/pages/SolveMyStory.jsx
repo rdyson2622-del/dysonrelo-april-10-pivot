@@ -28,21 +28,21 @@ export default function SolveMyStory() {
     e.preventDefault();
     if (!form.full_name || !form.email || !form.story) return;
     setLoading(true);
-    try {
-      // Save as a DnnSubscriber lead + send admin notification
-      await base44.entities.DnnSubscriber.create({
-        full_name: form.full_name,
-        email: form.email,
-        phone: form.phone,
-        source: 'Solve My Story - Landing Page',
-        tier: 'tier1',
-        notes: `SITUATION: ${form.situation_type}\n\nSTORY: ${form.story}`,
-        is_hot_lead: true,
-      });
-      await base44.integrations.Core.SendEmail({
-        to: 'bob@dysondyson.com',
-        subject: `🔴 New "Solve My Story" Request — ${form.full_name}`,
-        body: `
+    setSubmitted(true);
+    // Send data in background without waiting
+    base44.entities.DnnSubscriber.create({
+      full_name: form.full_name,
+      email: form.email,
+      phone: form.phone,
+      source: 'Solve My Story - Landing Page',
+      tier: 'tier1',
+      notes: `SITUATION: ${form.situation_type}\n\nSTORY: ${form.story}`,
+      is_hot_lead: true,
+    }).catch(err => console.error('DnnSubscriber create error:', err));
+    base44.integrations.Core.SendEmail({
+      to: 'bob@dysondyson.com',
+      subject: `🔴 New "Solve My Story" Request — ${form.full_name}`,
+      body: `
 <h2>New Story Submission</h2>
 <p><strong>Name:</strong> ${form.full_name}</p>
 <p><strong>Email:</strong> ${form.email}</p>
@@ -51,12 +51,8 @@ export default function SolveMyStory() {
 <hr/>
 <p><strong>Their Story:</strong></p>
 <p>${form.story}</p>
-        `,
-      });
-      setSubmitted(true);
-    } catch (err) {
-      console.error(err);
-    }
+      `,
+    }).catch(err => console.error('SendEmail error:', err));
     setLoading(false);
   };
 
