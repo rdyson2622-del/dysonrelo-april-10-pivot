@@ -40,13 +40,13 @@ export default function AIAssistants() {
 
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
-          <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.625rem)', letterSpacing: '0.22em', color: '#1a1a1a' }}>
+          <h1 className="display-heading mb-6" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.625rem)', letterSpacing: '0.22em', color: '#fff' }}>
             THE DYSON & DYSON COMPANIES
           </h1>
           <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.215rem, 2.7vw, 2.025rem)', letterSpacing: '0.18em', color: '#D4AF37' }}>
             Each Assistant Specializes in One Domain
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(26,26,26,0.7)' }}>
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
             They communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
           </p>
         </motion.div>
@@ -66,8 +66,8 @@ export default function AIAssistants() {
                 style={{ background: `${agent.color}22`, border: `1px solid ${agent.color}44` }}>
                 {agent.icon}
               </div>
-              <p className="text-xs font-bold text-center" style={{ color: '#1a1a1a' }}>{agent.name}</p>
-              <p className="text-xs text-center mt-1" style={{ color: 'rgba(26,26,26,0.6)' }}>{agent.role}</p>
+              <p className="text-xs font-bold text-center" style={{ color: '#fff' }}>{agent.name}</p>
+              <p className="text-xs text-center mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{agent.role}</p>
             </motion.div>
           ))}
         </div>
