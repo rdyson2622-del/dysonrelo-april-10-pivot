@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Zap, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { X, Send, Zap, ChevronDown, CheckCircle2, Mic, MicOff } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -12,8 +12,33 @@ export default function AdminCharliePanel() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [lastResults, setLastResults] = useState([]);
+  const [listening, setListening] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const recognitionRef = useRef(null);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      setInput(transcript);
+    };
+    recognition.onend = () => setListening(false);
+    recognition.onerror = () => setListening(false);
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
+  const stopListening = () => {
+    recognitionRef.current?.stop();
+    setListening(false);
+  };
 
   useEffect(() => {
     if (open) {
@@ -167,15 +192,32 @@ export default function AdminCharliePanel() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Ask Charlie or give a command..."
+              placeholder={listening ? 'Listening...' : 'Ask Charlie or give a command...'}
               rows={2}
               className="flex-1 resize-none rounded-xl px-3 py-2 text-sm text-white focus:outline-none"
               style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: `1px solid rgba(212,175,55,0.3)`,
-                lineHeight: 1.5
+                background: listening ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.06)',
+                border: `1px solid ${listening ? GOLD : 'rgba(212,175,55,0.3)'}`,
+                lineHeight: 1.5,
+                transition: 'all 0.2s'
               }}
             />
+            {/* Mic button */}
+            <button
+              type="button"
+              onClick={listening ? stopListening : startListening}
+              title={listening ? 'Stop listening' : 'Speak to Charlie'}
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all"
+              style={{
+                background: listening ? '#ef4444' : 'rgba(255,255,255,0.08)',
+                border: listening ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                boxShadow: listening ? '0 0 12px rgba(239,68,68,0.5)' : 'none'
+              }}>
+              {listening
+                ? <MicOff className="w-4 h-4 text-white" />
+                : <Mic className="w-4 h-4" style={{ color: GOLD }} />
+              }
+            </button>
             <button
               onClick={send}
               disabled={loading || !input.trim()}
