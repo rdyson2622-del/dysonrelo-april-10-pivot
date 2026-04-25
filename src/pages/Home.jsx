@@ -78,7 +78,7 @@ export default function Home() {
                 onChange={e => setSituation(e.target.value)}
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
-                placeholder="What is your Real Estate issue or opportunity?"
+                placeholder="What is your Real Estate Issue or Opportunity?"
                 className="flex-1 bg-transparent text-white text-base outline-none placeholder-white"
                 style={{ caretColor: GOLD }}
               />
