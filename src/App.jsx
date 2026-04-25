@@ -36,6 +36,7 @@ import AdminCharlieEscalations from './pages/AdminCharlieEscalations.jsx';
 import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
+import ClientCommunicationsExplainer from './pages/ClientCommunicationsExplainer';
 import Search from './pages/Search';
 import CityGuide from './pages/CityGuide';
 import PropertyComparison from './pages/PropertyComparison';
@@ -122,6 +123,7 @@ const AuthenticatedApp = () => {
         <Route path="/Explainers" element={<Explainers />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/Chat" element={<Chat />} />
+        <Route path="/communications-explainer" element={<ClientCommunicationsExplainer />} />
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/city-guide" element={<CityGuide />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
