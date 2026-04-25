@@ -143,7 +143,7 @@ function CharlieEducationStrip() {
           return (
             <Link key={p.title} to={p.href}
               className="flex items-start gap-4 p-4 rounded-xl transition-all hover:opacity-80"
-              style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}>
+              style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                 style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}>
                 <Icon className="w-4 h-4" style={{ color: p.color }} />
@@ -278,7 +278,7 @@ function ArticleCard({ article }) {
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}>
+    <div className="rounded-2xl overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}>
 
       {/* Meta row */}
       <div className="px-5 pt-5 flex items-center gap-2 mb-3">
@@ -411,10 +411,10 @@ export default function ConsumerDnnNews() {
   );
 
   return (
-    <div className="min-h-screen" style={{ background: '#080808' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
       {/* Header */}
       <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between"
-        style={{ background: 'rgba(8,8,8,0.95)', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
+        style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
         <div className="flex items-center gap-4">
           <img src={DNN_LOGO} alt="DNN" className="h-10 w-auto" />
           <div>
@@ -430,16 +430,16 @@ export default function ConsumerDnnNews() {
 
       {/* Hero Section — full width */}
       <div className="w-full px-8 md:px-16 py-14 text-center"
-        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: 'linear-gradient(180deg, #0f0f0f 0%, #080808 100%)' }}>
+        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#ede0cc' }}>
         <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
           style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
           <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
         </div>
         <h1 className="display-heading mb-4"
-          style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#fff', lineHeight: 1.05 }}>
+          style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#1a1a1a', lineHeight: 1.05 }}>
           REAL ESTATE NEWS
         </h1>
-        <p className="text-base leading-relaxed mx-auto" style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '560px' }}>
+        <p className="text-base leading-relaxed mx-auto" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
       </div>
