@@ -6,8 +6,9 @@ import { base44 } from '@/api/base44Client';
 import {
   LayoutDashboard, Users, Home, UserCheck, Search, SendHorizontal, Flag,
   BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
-  Brain, AlertTriangle, Sparkles, Zap, ChevronRight
+  Brain, AlertTriangle, Sparkles, Zap, ChevronRight, TrendingUp
 } from 'lucide-react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const GOLD = '#D4AF37';
 
@@ -131,13 +132,67 @@ export default function Admin() {
           </p>
         </motion.div>
 
-        {/* Live Interactive Stats */}
+        {/* Summary Dashboard Charts */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
         >
+          {/* Active Listings Chart */}
+          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <Home className="w-5 h-5" style={{ color: '#10B981' }} />
+              <h3 className="font-bold text-white">Active Listings by Status</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={[
+                { status: 'Not Contacted', count: 142 },
+                { status: 'In Progress', count: 87 },
+                { status: 'Interested', count: 54 },
+                { status: 'Converted', count: 23 }
+              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="status" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }} />
+                <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Incoming Referrals Chart */}
+          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-5 h-5" style={{ color: '#EF4444' }} />
+              <h3 className="font-bold text-white">Incoming Referrals Trend</h3>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={[
+                { week: 'W1', referrals: 12 },
+                { week: 'W2', referrals: 18 },
+                { week: 'W3', referrals: 15 },
+                { week: 'W4', referrals: 28 },
+                { week: 'W5', referrals: 32 },
+                { week: 'W6', referrals: 27 }
+              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="week" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px' }} />
+                <Line type="monotone" dataKey="referrals" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+
+        {/* Live Interactive Stats */}
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.2 }}
+           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+         >
           <LiveStatCard
             label="Active Clients"
             icon={UserCheck}
@@ -188,7 +243,7 @@ export default function Admin() {
             key={section.heading}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + sectionIdx * 0.05 }}
+            transition={{ delay: 0.3 + sectionIdx * 0.05 }}
             className="mt-8"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -225,7 +280,7 @@ export default function Admin() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
+          transition={{ delay: 0.35 }}
           className="mt-8 rounded-2xl p-6"
           style={{ background: '#000', border: `1px solid #A78BFA44` }}
         >
@@ -262,7 +317,7 @@ export default function Admin() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
           className="mt-8 rounded-2xl p-6"
           style={{ background: '#000', border: `1px solid ${GOLD}` }}
         >
