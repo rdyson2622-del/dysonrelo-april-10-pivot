@@ -110,7 +110,7 @@ export default function AdminCharliePanel() {
               <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
               <div>
                 <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Charlie · Admin Mode</p>
-                <p className="text-[9px]" style={{ color: 'rgba(255,255,255,0.35)' }}>Live data access · Can create & update records</p>
+                <p className="text-[18px]" style={{ color: '#fff' }}>Live data access · Can create & update records</p>
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
