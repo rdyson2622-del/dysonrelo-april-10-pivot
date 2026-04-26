@@ -175,6 +175,15 @@ export function AdminArticleModal({ article, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
       <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-3 px-1">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 text-sm font-bold transition-all hover:opacity-70"
+            style={{ color: '#D4AF37' }}
+          >
+            <X className="w-4 h-4" /> Back
+          </button>
+        </div>
         <ArticleForm initial={article} onSave={handleSave} onCancel={onClose} saving={saving} />
       </div>
     </div>
