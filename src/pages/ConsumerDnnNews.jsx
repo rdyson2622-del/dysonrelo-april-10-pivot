@@ -584,7 +584,7 @@ export default function ConsumerDnnNews() {
           </div>
         )}
 
-        {!isLoading && allArticles.length === 0 && (
+        {!isLoading && allArticles.length === 0 && !isAdmin && (
           <div className="text-center py-24 space-y-4">
             <Globe className="w-12 h-12 mx-auto" style={{ color: 'rgba(212,175,55,0.3)' }} />
             <p className="display-heading text-lg" style={{ color: 'rgba(26,26,26,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
@@ -592,7 +592,7 @@ export default function ConsumerDnnNews() {
           </div>
         )}
 
-        {!isLoading && allArticles.length > 0 && (
+        {!isLoading && (allArticles.length > 0 || isAdmin) && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* LEFT: Text briefs */}
