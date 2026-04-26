@@ -627,21 +627,21 @@ export default function ConsumerDnnNews() {
         )}
 
         {!isLoading && allArticles.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className={`grid grid-cols-1 ${videoArticles.length > 0 ? 'lg:grid-cols-3' : ''} gap-6`}>
             {/* LEFT: Text articles in compact cards */}
-            <div className="lg:col-span-1 space-y-3">
-             <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>News Briefs</p>
+            <div className={`${videoArticles.length > 0 ? 'lg:col-span-1' : 'w-full max-w-2xl mx-auto'} space-y-3`}>
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>News Briefs</p>
               {textArticles.map((article) => (
                 <CompactArticleCard key={article.id} article={article} />
               ))}
             </div>
 
-            {/* RIGHT: Video thumbnails */}
-             <div className="lg:col-span-2 space-y-3">
-              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>Featured Videos</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {videoArticles.length > 0 ? (
-                  videoArticles.map((article) => (
+            {/* RIGHT: Video thumbnails — only shown when videos exist */}
+            {videoArticles.length > 0 && (
+              <div className="lg:col-span-2 space-y-3">
+                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>Featured Videos</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {videoArticles.map((article) => (
                     <VideoThumbnail
                       key={article.id}
                       article={article}
@@ -649,14 +649,10 @@ export default function ConsumerDnnNews() {
                       onExpand={() => setFullscreenVideo(article)}
                       onClose={() => setFullscreenVideo(null)}
                     />
-                  ))
-                ) : (
-                  <div className="col-span-full py-12 text-center">
-                    <p className="text-sm font-semibold" style={{ color: 'rgba(0,0,0,0.4)' }}>Videos coming soon.</p>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
