@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Sparkles, RefreshCw, Send, Trash2, Eye, EyeOff, CheckCircle, Clock, Globe, Users } from 'lucide-react';
+import { Sparkles, RefreshCw, Send, Trash2, Eye, EyeOff, CheckCircle, Clock, Globe, Pencil, Save, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 const DYSON_VOICE = `You are the DNN Intelligence Bureau — the editorial arm of Dyson & Dyson Real Estate Concierge. Write in the "1927 Parallel" style: authoritative, sophisticated, slightly cinematic. Think a trusted financial journalist who appreciates the drama of the American migration story. No fluff. No clickbait. Lead with the data, end with the implication for a homeowner considering a move. Each brief: 3-4 short paragraphs, under 300 words. Author: "DNN Intelligence Bureau" — no external source links or bylines visible.`;
@@ -289,73 +289,148 @@ For each story, write a DNN brief in the 1927 Parallel style. Return JSON:
 }
 
 function ArticleCard({ article, expanded, onToggle, onStatusChange, onDelete, onBlast, triggerColors, statusColors }) {
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    headline: article.headline || '',
+    dateline: article.dateline || '',
+    body: article.body || '',
+    video_url: article.video_url || '',
+    tags: (article.tags || []).join(', '),
+  });
+  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleSave = async () => {
+    setSaving(true);
+    await base44.entities.DnnArticle.update(article.id, {
+      headline: editForm.headline,
+      dateline: editForm.dateline,
+      body: editForm.body,
+      video_url: editForm.video_url || undefined,
+      tags: editForm.tags ? editForm.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+    });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticles'] });
+    setSaving(false);
+    setEditing(false);
+  };
+
   const triggerLabel = article.trigger_type?.replace(/_/g, ' ') || 'general';
   const tagColor = triggerColors[article.trigger_type] || 'bg-slate-800 text-slate-400 border-slate-700';
 
   return (
     <div className="rounded-xl overflow-hidden border" style={{ background: '#111', borderColor: 'rgba(255,255,255,0.08)' }}>
       <div className="px-5 py-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${tagColor}`}>{triggerLabel}</span>
-              <span className={`text-[10px] font-bold uppercase tracking-wider ${statusColors[article.status] || 'text-slate-400'}`}>● {article.status}</span>
-              <span className="text-[10px] text-slate-600">{article.generated_date ? new Date(article.generated_date).toLocaleDateString() : ''}</span>
+        {editing ? (
+          <div className="space-y-3">
+            <p className="text-xs font-black tracking-widest uppercase mb-2" style={{ color: '#D4AF37' }}>Editing Article</p>
+            {[
+              ['Headline', 'headline', 'input'],
+              ['Dateline', 'dateline', 'input'],
+              ['Video URL (YouTube/Loom/Vimeo)', 'video_url', 'input'],
+              ['Body', 'body', 'textarea'],
+              ['Tags (comma separated)', 'tags', 'input'],
+            ].map(([label, key, type]) => (
+              <div key={key}>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{label}</label>
+                {type === 'textarea' ? (
+                  <textarea rows={6} value={editForm[key]}
+                    onChange={e => setEditForm(f => ({ ...f, [key]: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg text-sm text-white resize-none focus:outline-none"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                ) : (
+                  <input type="text" value={editForm[key]}
+                    onChange={e => setEditForm(f => ({ ...f, [key]: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+                )}
+              </div>
+            ))}
+            <div className="flex gap-2 pt-1">
+              <button onClick={handleSave} disabled={saving}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-black disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                <Save className="w-3 h-3" /> {saving ? 'Saving...' : 'Save'}
+              </button>
+              <button onClick={() => setEditing(false)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold"
+                style={{ background: 'rgba(255,255,255,0.07)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <X className="w-3 h-3" /> Cancel
+              </button>
             </div>
-            <h3 className="text-white font-bold text-base leading-snug">{article.headline}</h3>
-            {article.dateline && <p className="text-xs text-slate-500 mt-0.5 font-mono">{article.dateline}</p>}
           </div>
-          <button onClick={onToggle} className="text-slate-500 hover:text-white transition flex-shrink-0 mt-1">
-            {expanded ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        </div>
+        ) : (
+          <>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${tagColor}`}>{triggerLabel}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${statusColors[article.status] || 'text-slate-400'}`}>● {article.status}</span>
+                  {article.video_url && <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">● VIDEO</span>}
+                  <span className="text-[10px] text-slate-600">{article.generated_date ? new Date(article.generated_date).toLocaleDateString() : ''}</span>
+                </div>
+                <h3 className="text-white font-bold text-base leading-snug">{article.headline}</h3>
+                {article.dateline && <p className="text-xs text-slate-500 mt-0.5 font-mono">{article.dateline}</p>}
+                {article.video_url && <p className="text-[10px] text-purple-400 mt-0.5 truncate">{article.video_url}</p>}
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+                <button onClick={() => setEditing(true)}
+                  className="text-yellow-400 hover:opacity-70 transition">
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button onClick={onToggle} className="text-slate-500 hover:text-white transition">
+                  {expanded ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
 
-        {expanded && (
-          <div className="mt-4 border-t pt-4" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">{article.body}</p>
-            {article.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                {article.tags.map(t => (
-                  <span key={t} className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded">#{t}</span>
-                ))}
+            {expanded && (
+              <div className="mt-4 border-t pt-4" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+                <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">{article.body}</p>
+                {article.tags?.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {article.tags.map(t => (
+                      <span key={t} className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded">#{t}</span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        <div className="flex items-center gap-2 mt-3 flex-wrap">
-          {article.status === 'staged' && (
-            <>
-              <button onClick={() => onStatusChange(article.id, 'published')}
-                className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
-                style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }}>
-                <CheckCircle className="w-3 h-3" /> Publish to Site
+            <div className="flex items-center gap-2 mt-3 flex-wrap">
+              {article.status === 'staged' && (
+                <>
+                  <button onClick={() => onStatusChange(article.id, 'published')}
+                    className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
+                    style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }}>
+                    <CheckCircle className="w-3 h-3" /> Publish to Site
+                  </button>
+                  <button onClick={() => onBlast(article)}
+                    className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
+                    style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
+                    <Send className="w-3 h-3" /> Blast to Subscribers
+                  </button>
+                  <button onClick={() => onStatusChange(article.id, 'archived')}
+                    className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
+                    style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    Archive
+                  </button>
+                </>
+              )}
+              {article.status !== 'staged' && (
+                <button onClick={() => onStatusChange(article.id, 'staged')}
+                  className="text-xs px-3 py-1.5 rounded-lg font-semibold transition"
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  Move to Staging
+                </button>
+              )}
+              <button onClick={() => onDelete(article.id)}
+                className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ml-auto"
+                style={{ color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}>
+                <Trash2 className="w-3 h-3" /> Delete
               </button>
-              <button onClick={() => onBlast(article)}
-                className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
-                style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
-                <Send className="w-3 h-3" /> Blast to Subscribers
-              </button>
-              <button onClick={() => onStatusChange(article.id, 'archived')}
-                className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition"
-                style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
-                Archive
-              </button>
-            </>
-          )}
-          {article.status !== 'staged' && (
-            <button onClick={() => onStatusChange(article.id, 'staged')}
-              className="text-xs px-3 py-1.5 rounded-lg font-semibold transition"
-              style={{ background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
-              Move to Staging
-            </button>
-          )}
-          <button onClick={() => onDelete(article.id)}
-            className="text-xs px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ml-auto"
-            style={{ color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}>
-            <Trash2 className="w-3 h-3" /> Delete
-          </button>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

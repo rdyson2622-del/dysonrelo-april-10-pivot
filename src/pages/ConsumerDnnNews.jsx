@@ -367,8 +367,8 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
   }
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
-      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
+    <div className="relative w-full rounded-xl overflow-hidden group cursor-pointer"
+      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', aspectRatio: '1 / 1' }}
       onClick={onExpand}>
       {thumbnail && (
         <img src={thumbnail} alt={article.headline} className="absolute inset-0 w-full h-full object-cover" />
@@ -485,7 +485,7 @@ export default function ConsumerDnnNews() {
             {/* RIGHT: Video thumbnails */}
             <div className="lg:col-span-2 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map(article => (
                     <VideoThumbnail
