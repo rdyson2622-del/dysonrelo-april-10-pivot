@@ -40,7 +40,7 @@ export default function Home() {
           style={{ background: '#0a0a0a' }}>
 
           {/* Logo */}
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto mb-6" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
 
           {/* H.O.M.E. Title */}
           <div className="mb-1" style={{
