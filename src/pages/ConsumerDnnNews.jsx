@@ -346,7 +346,7 @@ function getEmbedSrc(url) {
 }
 
 // --- Video Thumbnail Card ---
-function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
+function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
   const thumbnail = getYouTubeThumbnail(article.video_url);
 
   if (isFullscreen) {
@@ -373,6 +373,14 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
       className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
       onClick={onExpand}
+      onMouseEnter={(e) => {
+        const overlay = e.currentTarget.querySelector('[data-admin-overlay]');
+        if (overlay) overlay.style.opacity = '1';
+      }}
+      onMouseLeave={(e) => {
+        const overlay = e.currentTarget.querySelector('[data-admin-overlay]');
+        if (overlay) overlay.style.opacity = '0';
+      }}
     >
       {thumbnail ? (
         <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
@@ -389,9 +397,32 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
             </svg>
           </div>
         ) : (
-          <div />
+          <p className="text-xs text-slate-500 font-semibold">Coming Soon</p>
         )}
       </div>
+      {isAdmin && (
+        <div
+          data-admin-overlay
+          className="absolute inset-0 flex items-center justify-center gap-2 transition-opacity duration-200"
+          style={{ background: 'rgba(0,0,0,0.8)', opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold text-black transition-all hover:scale-105"
+            style={{ background: '#D4AF37' }}
+          >
+            Edit
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:scale-105"
+            style={{ background: '#ef4444' }}
+          >
+            Delete
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -514,6 +545,9 @@ export default function ConsumerDnnNews() {
                     isFullscreen={fullscreenVideo?.id === article.id}
                     onExpand={() => setFullscreenVideo(article)}
                     onClose={() => setFullscreenVideo(null)}
+                    isAdmin={isAdmin}
+                    onEdit={() => {}} // Placeholder — connect to modal if needed
+                    onDelete={() => {}} // Placeholder — connect to delete logic if needed
                   />
                 ))}
               </div>
