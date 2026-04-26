@@ -348,44 +348,44 @@ function StorySubmitForm({ submitterType }) {
   return (
     <div className="rounded-xl p-5" style={{ background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.2)' }}>
       <div className="flex items-center gap-2 mb-4">
-        <Video className="w-4 h-4" style={{ color: '#818cf8' }} />
-        <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#818cf8' }}>Share a Client Success Story</p>
-      </div>
-      <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-        We white-label your stories and publish them as DNN Bureau case studies — protecting client privacy while amplifying your expertise. Stories may also be selected for our video campaign series.
-      </p>
+         <Video className="w-4 h-4" style={{ color: '#fff' }} />
+         <p className="text-sm font-black tracking-widest uppercase" style={{ color: '#fff' }}>Share a Client Success Story</p>
+       </div>
+       <p className="text-sm leading-relaxed mb-4" style={{ color: '#fff' }}>
+         We white-label your stories and publish them as DNN Bureau case studies — protecting client privacy while amplifying your expertise. Stories may also be selected for our video campaign series.
+       </p>
       <form onSubmit={handleSubmit} className="space-y-3">
         <input required value={form.story_title} onChange={e => set('story_title', e.target.value)} placeholder="Story headline (e.g. 'From Austin to San Diego in 22 Days')"
-          className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+          className="w-full px-3 py-2 rounded-lg text-base text-white focus:outline-none"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <textarea required value={form.story_body} onChange={e => set('story_body', e.target.value)} rows={4}
           placeholder="Tell the full story — the challenge, how you helped, the timeline, and the outcome..."
-          className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none resize-none"
+          className="w-full px-3 py-2 rounded-lg text-base text-white focus:outline-none resize-none"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <div className="grid grid-cols-2 gap-3">
           <input value={form.client_first_name} onChange={e => set('client_first_name', e.target.value)} placeholder="Client first name (optional)"
-            className="px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            className="px-3 py-2 rounded-lg text-base text-white focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
           <input value={form.outcome} onChange={e => set('outcome', e.target.value)} placeholder="Key outcome (e.g. closed in 18 days)"
-            className="px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            className="px-3 py-2 rounded-lg text-base text-white focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
           <input value={form.origin_city} onChange={e => set('origin_city', e.target.value)} placeholder="Moved from..."
-            className="px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            className="px-3 py-2 rounded-lg text-base text-white focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
           <input value={form.destination_city} onChange={e => set('destination_city', e.target.value)} placeholder="Moved to..."
-            className="px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            className="px-3 py-2 rounded-lg text-base text-white focus:outline-none"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         </div>
         <input value={form.video_url} onChange={e => set('video_url', e.target.value)} placeholder="Video link (Loom, YouTube) — optional"
-          className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+          className="w-full px-3 py-2 rounded-lg text-base text-white focus:outline-none"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <p className="text-xs leading-relaxed" style={{ color: '#fff' }}>
           Your story will be reviewed and white-labeled by our editorial team. Client names are protected. You're credited as a DNN Bureau partner. Video submissions may be selected for the DNN Solve My Story campaign.
         </p>
         <div className="flex gap-2">
-          <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 rounded-lg text-xs text-white hover:bg-white/5 transition-colors">Cancel</button>
+          <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 rounded-lg text-sm text-white hover:bg-white/5 transition-colors">Cancel</button>
           <button type="submit" disabled={submitting}
-            className="flex-1 py-2 rounded-lg text-xs font-black transition-all"
+            className="flex-1 py-2 rounded-lg text-sm font-black transition-all"
             style={{ background: 'linear-gradient(135deg,#818cf8,#6366f1)', color: '#fff' }}>
             {submitting ? 'Submitting...' : 'Submit Story for DNN Campaign'}
           </button>
