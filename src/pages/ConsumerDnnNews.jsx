@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, Pencil, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AdminAddButton, AdminArticleOverlay, AdminArticleModal } from '@/components/dnn/AdminArticleControls';
 
@@ -460,7 +460,7 @@ function CompactArticleCard({ article }) {
 }
 
 // --- Video Thumbnail ---
-function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
+function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
@@ -484,24 +484,43 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
   }
 
   return (
-    <button
-      onClick={onExpand}
-      className="relative w-full aspect-video rounded-xl overflow-hidden group"
+    <div className="relative w-full aspect-video rounded-xl overflow-hidden group"
       style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}>
-      <div className="absolute inset-0 flex items-center justify-center"
-        style={{ background: 'rgba(0,0,0,0.4)' }}>
-        <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-          style={{ background: 'rgba(212,175,55,0.85)' }}>
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
-            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-          </svg>
+      {/* Clickable play area */}
+      <button onClick={onExpand} className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.4)' }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+            style={{ background: 'rgba(212,175,55,0.85)' }}>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+          </div>
         </div>
-      </div>
-      {/* Overlay info */}
-      <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
-        <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
-      </div>
-    </button>
+        {/* Overlay info */}
+        <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+          <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
+        </div>
+      </button>
+
+      {/* Admin controls — top-right, above play button click */}
+      {isAdmin && (
+        <div className="absolute top-2 right-2 z-10 flex gap-1.5">
+          <button
+            onClick={(e) => { e.stopPropagation(); onEdit(article); }}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold"
+            style={{ background: '#D4AF37', color: '#000' }}>
+            <Pencil className="w-3 h-3" /> Edit
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(article.id); }}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold"
+            style={{ background: '#ef4444', color: '#fff' }}>
+            <Trash2 className="w-3 h-3" /> Delete
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -620,15 +639,16 @@ export default function ConsumerDnnNews() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map((article) => (
-                    <div key={article.id} className="relative">
-                      {isAdmin && <AdminArticleOverlay article={article} onEdit={setEditingArticle} onDelete={handleDelete} />}
-                      <VideoThumbnail
-                        article={article}
-                        isFullscreen={fullscreenVideo?.id === article.id}
-                        onExpand={() => setFullscreenVideo(article)}
-                        onClose={() => setFullscreenVideo(null)}
-                      />
-                    </div>
+                    <VideoThumbnail
+                      key={article.id}
+                      article={article}
+                      isFullscreen={fullscreenVideo?.id === article.id}
+                      onExpand={() => setFullscreenVideo(article)}
+                      onClose={() => setFullscreenVideo(null)}
+                      isAdmin={isAdmin}
+                      onEdit={setEditingArticle}
+                      onDelete={handleDelete}
+                    />
                   ))
                 ) : (
                   <>
