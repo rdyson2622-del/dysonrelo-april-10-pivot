@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DnnAdminBar from '@/components/dnn/DnnAdminBar';
 
@@ -249,7 +249,7 @@ function AudioPlayer({ url }) {
 }
 
 // --- Compact Article Card (text briefs) ---
-function CompactArticleCard({ article }) {
+function CompactArticleCard({ article, isAdmin, onEdit, onDelete }) {
   const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
@@ -257,7 +257,7 @@ function CompactArticleCard({ article }) {
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
 
   return (
-    <div className="rounded-xl p-4 transition-all"
+    <div className="rounded-xl p-4 transition-all relative group"
       style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
@@ -267,11 +267,27 @@ function CompactArticleCard({ article }) {
           </span>
           <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{article.dateline}</p>
         </div>
-        <button onClick={(e) => { e.stopPropagation(); setShowShare(v => !v); }}
-          className="shrink-0 text-xs font-semibold px-2 py-1 rounded-full transition-all"
-          style={{ color: showShare ? '#D4AF37' : 'rgba(255,255,255,0.3)', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent' }}>
-          <Share2 className="w-3 h-3" />
-        </button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {isAdmin && (
+            <>
+              <button onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
+                className="text-xs font-bold px-2 py-1 rounded-lg pointer-events-auto z-[100] transition-all hover:scale-105"
+                style={{ background: '#1a1a1a', border: '1px solid #00ccff', color: '#00ccff' }}>
+                ✎
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
+                className="text-xs font-bold px-2 py-1 rounded-lg pointer-events-auto z-[100] transition-all hover:scale-105"
+                style={{ background: '#1a1a1a', border: '1px solid #ff3333', color: '#ff3333' }}>
+                🗑
+              </button>
+            </>
+          )}
+          <button onClick={(e) => { e.stopPropagation(); setShowShare(v => !v); }}
+            className="shrink-0 text-xs font-semibold px-2 py-1 rounded-full transition-all"
+            style={{ color: showShare ? '#D4AF37' : 'rgba(255,255,255,0.3)', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent' }}>
+            <Share2 className="w-3 h-3" />
+          </button>
+        </div>
       </div>
 
       <h3 className="font-bold text-sm leading-snug mb-2" style={{ color: '#fff' }}>
@@ -401,27 +417,20 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
         )}
       </div>
       {isAdmin && (
-        <div
-          data-admin-overlay
-          className="absolute inset-0 flex items-center justify-center gap-2 transition-opacity duration-200 z-[50]"
-          style={{ background: 'rgba(0,0,0,0.9)', opacity: window.location.pathname.includes('/admin') ? 1 : 0 }}
-          onClick={(e) => e.stopPropagation()}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-          onMouseLeave={(e) => { if (!window.location.pathname.includes('/admin')) e.currentTarget.style.opacity = '0'; }}
-        >
+        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100]">
           <button
             onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
-            style={{ background: '#1a1a1a', border: '2px solid #00ccff', boxShadow: '0 0 10px #00ccff' }}
+            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
+            style={{ background: '#1a1a1a', border: '1px solid #00ccff', boxShadow: '0 0 8px #00ccff' }}
           >
-            ✎ Edit
+            ✎
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
-            style={{ background: '#1a1a1a', border: '2px solid #ff3333', boxShadow: '0 0 10px #ff3333' }}
+            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
+            style={{ background: '#1a1a1a', border: '1px solid #ff3333', boxShadow: '0 0 8px #ff3333' }}
           >
-            🗑 Delete
+            🗑
           </button>
         </div>
       )}
@@ -435,12 +444,53 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 export default function ConsumerDnnNews() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
+  const [editingArticle, setEditingArticle] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [savingEdit, setSavingEdit] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.role === 'admin') setIsAdmin(true);
     }).catch(() => {});
   }, []);
+
+  const queryClient = useQueryClient();
+
+  const handleEditArticle = (article) => {
+    setEditingArticle(article);
+    setEditForm({
+      headline: article.headline || '',
+      dateline: article.dateline || '',
+      body: article.body || '',
+      video_url: article.video_url || '',
+      trigger_type: article.trigger_type || 'general',
+      tags: (article.tags || []).join(', '),
+    });
+  };
+
+  const handleSaveArticle = async () => {
+    if (!editingArticle) return;
+    setSavingEdit(true);
+    await base44.entities.DnnArticle.update(editingArticle.id, {
+      headline: editForm.headline,
+      dateline: editForm.dateline,
+      body: editForm.body,
+      video_url: editForm.video_url || undefined,
+      trigger_type: editForm.trigger_type,
+      tags: editForm.tags ? editForm.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+    });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
+    setSavingEdit(false);
+    setEditingArticle(null);
+  };
+
+  const handleDeleteArticle = async (id) => {
+    if (!confirm('Delete this article?')) return;
+    await base44.entities.DnnArticle.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
+  };
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
@@ -528,7 +578,13 @@ export default function ConsumerDnnNews() {
               {textArticles.length > 0 ? (
                 <div className={videoArticles.length === 0 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3' : 'space-y-3'}>
                   {textArticles.map(article => (
-                    <CompactArticleCard key={article.id} article={article} />
+                    <CompactArticleCard
+                      key={article.id}
+                      article={article}
+                      isAdmin={isAdmin}
+                      onEdit={handleEditArticle}
+                      onDelete={handleDeleteArticle}
+                    />
                   ))}
                 </div>
               ) : (
@@ -548,8 +604,8 @@ export default function ConsumerDnnNews() {
                     onExpand={() => setFullscreenVideo(article)}
                     onClose={() => setFullscreenVideo(null)}
                     isAdmin={isAdmin}
-                    onEdit={() => {}} // Placeholder — connect to modal if needed
-                    onDelete={() => {}} // Placeholder — connect to delete logic if needed
+                    onEdit={handleEditArticle}
+                    onDelete={handleDeleteArticle}
                   />
                 ))}
               </div>
@@ -582,6 +638,105 @@ export default function ConsumerDnnNews() {
           <p className="text-xs mt-1" style={{ color: 'rgba(26,26,26,0.3)' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {editingArticle && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
+          <div className="rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-white">Edit Article</h2>
+              <button onClick={() => setEditingArticle(null)} className="text-slate-500 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Headline</label>
+                <input
+                  type="text"
+                  value={editForm.headline}
+                  onChange={e => setEditForm({ ...editForm, headline: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Dateline</label>
+                <input
+                  type="text"
+                  value={editForm.dateline}
+                  onChange={e => setEditForm({ ...editForm, dateline: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Video URL</label>
+                <input
+                  type="text"
+                  value={editForm.video_url}
+                  onChange={e => setEditForm({ ...editForm, video_url: e.target.value })}
+                  placeholder="https://youtube.com/watch?v=..."
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Trigger Type</label>
+                <select
+                  value={editForm.trigger_type}
+                  onChange={e => setEditForm({ ...editForm, trigger_type: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                >
+                  {['tax_policy', 'housing_market', 'job_market', 'interest_rates', 'migration_data', 'employer_news', 'general'].map(t => (
+                    <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Body Text</label>
+                <textarea
+                  value={editForm.body}
+                  onChange={e => setEditForm({ ...editForm, body: e.target.value })}
+                  rows={6}
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white resize-none focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-400 block mb-1 uppercase">Tags (comma separated)</label>
+                <input
+                  type="text"
+                  value={editForm.tags}
+                  onChange={e => setEditForm({ ...editForm, tags: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.2)' }}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-6">
+              <button onClick={handleSaveArticle} disabled={savingEdit}
+                className="flex-1 px-4 py-2.5 rounded-lg text-sm font-bold text-black disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                {savingEdit ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button onClick={() => setEditingArticle(null)}
+                className="flex-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-400 border"
+                style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
