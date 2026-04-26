@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
@@ -199,16 +199,12 @@ function SharePanel({ article, onClose }) {
   return (
     <div className="mt-3 rounded-xl p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }} onClick={e => e.stopPropagation()}>
       <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Share This Brief</p>
-
-      {/* Preview of share text */}
       <div className="rounded-lg p-3 text-xs text-slate-400 leading-relaxed" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
         <p className="text-yellow-400 font-bold mb-1">📡 DNN Intelligence Bureau</p>
         <p className="text-white font-semibold mb-1">{article.headline}</p>
         <p className="text-slate-500 truncate">{article.body?.split('\n')[0]}</p>
         <p className="text-slate-600 mt-1 text-[10px]">— dysonanddyson.com/dnn-news</p>
       </div>
-
-      {/* Share buttons */}
       <div className="grid grid-cols-2 gap-2">
         <button onClick={handleCopy} className="flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all"
           style={{ background: copied ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: copied ? '#4ade80' : '#fff' }}>
@@ -230,7 +226,6 @@ function SharePanel({ article, onClose }) {
           </button>
         )}
       </div>
-
       <button onClick={onClose} className="w-full text-center text-xs text-slate-600 hover:text-slate-400 transition-colors py-1">
         Close
       </button>
@@ -251,172 +246,22 @@ function AudioPlayer({ url }) {
   );
 }
 
-// --- Video Embed Helper ---
-function VideoEmbed({ url }) {
-  if (!url) return null;
-  let src = url;
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    const id = url.includes('youtu.be')
-      ? url.split('/').pop().split('?')[0]
-      : new URL(url).searchParams.get('v');
-    src = `https://www.youtube.com/embed/${id}`;
-    return <iframe width="100%" height="100%" src={src} frameBorder="0" allowFullScreen className="w-full h-full" />;
-  }
-  if (url.includes('vimeo.com') || url.includes('loom.com')) {
-    return <iframe src={url} width="100%" height="100%" frameBorder="0" allowFullScreen className="w-full h-full" />;
-  }
-  return <video controls className="w-full h-full"><source src={url} type="video/mp4" /></video>;
-}
-
-// --- Article Card ---
-function ArticleCard({ article }) {
+// --- Compact Article Card (text briefs) ---
+function CompactArticleCard({ article }) {
   const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
-  const hasVideo = !!article.video_url;
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}>
-
-      {/* Meta row */}
-      <div className="px-5 pt-5 flex items-center gap-2 mb-3">
-        <span className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase"
-          style={{ background: bgColor, color: textColor }}>{label}</span>
-        <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          {article.generated_date
-            ? new Date(article.generated_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : ''}
-        </span>
-      </div>
-
-      {/* Headline + dateline */}
-      <div className="px-5 mb-4">
-        <h2 className="display-heading" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', letterSpacing: '0.1em', color: '#fff', lineHeight: 1.15 }}>
-          {article.headline}
-        </h2>
-        {article.dateline && (
-          <p className="text-xs tracking-widest uppercase mt-1" style={{ color: 'rgba(212,175,55,0.6)' }}>{article.dateline}</p>
-        )}
-      </div>
-
-      {/* VIDEO — lead with this if available */}
-      {hasVideo && (
-        <div className="w-full aspect-video" style={{ background: '#000' }}>
-          <VideoEmbed url={article.video_url} />
-        </div>
-      )}
-
-      {/* Audio player if no video */}
-      {!hasVideo && article.audio_url && (
-        <div className="px-5"><AudioPlayer url={article.audio_url} /></div>
-      )}
-
-      {/* VIDEO THUMBNAIL WITH PLAY BUTTON */}
-      {hasVideo && !showText && (
-        <button
-          onClick={() => setShowText(true)}
-          className="relative w-full aspect-video block overflow-hidden group"
-          style={{ background: '#000' }}>
-          <div className="absolute inset-0 flex items-center justify-center"
-            style={{ background: 'rgba(0,0,0,0.4)' }}>
-            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: 'rgba(212,175,55,0.85)' }}>
-              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
-                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-              </svg>
-            </div>
-          </div>
-        </button>
-      )}
-
-      {/* "Read Instead" toggle — only for video articles */}
-      {hasVideo && (
-        <div className="px-5 pt-3">
-          <button
-            onClick={() => setShowText(v => !v)}
-            className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-all"
-            style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.4)' }}>
-            {showText ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            {showText ? 'Hide Text' : 'Read Instead'}
-          </button>
-        </div>
-      )}
-
-      {/* Collapsible full text */}
-      {showText && (
-        <div className="px-5 pt-3 pb-2 space-y-3 border-t mt-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
-            <p key={i} className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>{para}</p>
-          ))}
-          {article.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {article.tags.map(t => (
-                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }}>#{t}</span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Text articles — expand full read */}
-      {!hasVideo && (
-        <div className="px-5 py-3">
-          <button onClick={() => setShowText(v => !v)}
-            className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase"
-            style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
-            {showText ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            {showText ? 'Collapse' : 'Read Full Brief'}
-          </button>
-          {showText && (
-            <div className="mt-3 space-y-3 border-t pt-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-              {article.body?.split('\n').filter(p => p.trim()).slice(1).map((para, i) => (
-                <p key={i} className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>{para}</p>
-              ))}
-              <Link to="/chat"
-                className="flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl text-sm font-bold text-black w-fit transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
-                onClick={e => e.stopPropagation()}>
-                Ask Charlie About This <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Bottom bar — Share */}
-      <div className="px-5 py-3 flex items-center justify-end" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <button onClick={(e) => { e.stopPropagation(); setShowShare(v => !v); }}
-          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all"
-          style={{ color: showShare ? '#D4AF37' : 'rgba(255,255,255,0.4)', background: showShare ? 'rgba(212,175,55,0.1)' : 'transparent', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <Share2 className="w-3.5 h-3.5" /> Share
-        </button>
-      </div>
-
-      {showShare && (
-        <div className="px-5 pb-4">
-          <SharePanel article={article} onClose={() => setShowShare(false)} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-// --- Compact Article Card ---
-function CompactArticleCard({ article }) {
-  const [showText, setShowText] = useState(false);
-  const [showShare, setShowShare] = useState(false);
-
-  return (
-    <div className="rounded-xl p-4 transition-all hover:border-opacity-100"
+    <div className="rounded-xl p-4 transition-all"
       style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-      {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <span className="text-[10px] font-black tracking-widest uppercase px-2 py-1 rounded-full"
-            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37' }}>
-            {article.trigger_type}
+          <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full"
+            style={{ background: bgColor, color: textColor }}>
+            {label}
           </span>
           <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{article.dateline}</p>
         </div>
@@ -427,15 +272,15 @@ function CompactArticleCard({ article }) {
         </button>
       </div>
 
-      {/* Headline */}
       <h3 className="font-bold text-sm leading-snug mb-2" style={{ color: '#fff' }}>
         {article.headline}
       </h3>
 
-      {/* Toggle + Expanded Text */}
+      {article.audio_url && <AudioPlayer url={article.audio_url} />}
+
       <button
         onClick={() => setShowText(v => !v)}
-        className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase mb-2"
+        className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase mb-2 mt-2"
         style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
         {showText ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         {showText ? 'Hide' : 'Read'}
@@ -446,6 +291,18 @@ function CompactArticleCard({ article }) {
           {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
             <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{para}</p>
           ))}
+          {article.tags?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {article.tags.map(t => (
+                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }}>#{t}</span>
+              ))}
+            </div>
+          )}
+          <Link to="/chat"
+            className="flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl text-xs font-bold text-black w-fit transition-all hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+            Ask Charlie About This <ChevronRight className="w-3 h-3" />
+          </Link>
         </div>
       )}
 
@@ -458,7 +315,7 @@ function CompactArticleCard({ article }) {
   );
 }
 
-// --- Extract YouTube ID ---
+// --- Get YouTube thumbnail ---
 function getYouTubeThumbnail(url) {
   if (!url) return null;
   let id = null;
@@ -470,35 +327,32 @@ function getYouTubeThumbnail(url) {
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
 }
 
-// --- Video Thumbnail ---
-function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
-  const thumbnail = getYouTubeThumbnail(article.video_url) || article.thumbnail_url || null;
-
-  // Build embeddable src
-  const getEmbedSrc = (url) => {
-    if (!url) return url;
-    if (url.includes('youtu.be/')) {
-      const id = url.split('youtu.be/')[1]?.split('?')[0];
+// --- Get embeddable video src ---
+function getEmbedSrc(url) {
+  if (!url) return url;
+  if (url.includes('youtu.be/')) {
+    const id = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${id}?autoplay=1`;
+  }
+  if (url.includes('youtube.com/watch')) {
+    try {
+      const id = new URL(url).searchParams.get('v');
       return `https://www.youtube.com/embed/${id}?autoplay=1`;
-    }
-    if (url.includes('youtube.com/watch')) {
-      try {
-        const id = new URL(url).searchParams.get('v');
-        return `https://www.youtube.com/embed/${id}?autoplay=1`;
-      } catch (_) {}
-    }
-    return url;
-  };
+    } catch (_) {}
+  }
+  return url;
+}
+
+// --- Video Thumbnail Card ---
+function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
+  const thumbnail = getYouTubeThumbnail(article.video_url);
 
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-        <button
-          onClick={onClose}
+        <button onClick={onClose}
           className="absolute top-6 right-6 text-white hover:opacity-70 transition-opacity z-10"
-          style={{ fontSize: '2rem' }}>
-          ✕
-        </button>
+          style={{ fontSize: '2rem' }}>✕</button>
         <div className="w-full max-w-4xl aspect-video">
           <iframe
             src={getEmbedSrc(article.video_url)}
@@ -516,20 +370,10 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
     <div className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
       onClick={onExpand}>
-
-      {/* Thumbnail image */}
       {thumbnail && (
-        <img
-          src={thumbnail}
-          alt={article.headline}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        <img src={thumbnail} alt={article.headline} className="absolute inset-0 w-full h-full object-cover" />
       )}
-
-      {/* Dark overlay */}
       <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.6)' }} />
-
-      {/* Play button */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg"
           style={{ background: 'rgba(212,175,55,0.9)' }}>
@@ -538,8 +382,6 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
           </svg>
         </div>
       </div>
-
-      {/* Headline overlay at bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}>
         <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
       </div>
@@ -565,12 +407,12 @@ export default function ConsumerDnnNews() {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
-  // Separate articles and videos
   const textArticles = allArticles.filter(a => !a.video_url);
-  const videoArticles = allArticles.filter(a => a.video_url);
+  const videoArticles = allArticles.filter(a => !!a.video_url);
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+
       {/* Header */}
       <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between"
         style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
@@ -587,7 +429,7 @@ export default function ConsumerDnnNews() {
         </div>
       </div>
 
-      {/* Hero Section — full width */}
+      {/* Hero */}
       <div className="w-full px-8 md:px-16 py-14 text-center"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#ede0cc' }}>
         <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
@@ -603,10 +445,9 @@ export default function ConsumerDnnNews() {
         </p>
       </div>
 
-      {/* Articles feed — two-column layout */}
+      {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
-        {/* Divider */}
-         <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
@@ -621,27 +462,32 @@ export default function ConsumerDnnNews() {
         {!isLoading && allArticles.length === 0 && (
           <div className="text-center py-24 space-y-4">
             <Globe className="w-12 h-12 mx-auto" style={{ color: 'rgba(212,175,55,0.3)' }} />
-            <p className="display-heading text-lg" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Our AI Bureau publishes daily — check back shortly.</p>
+            <p className="display-heading text-lg" style={{ color: 'rgba(26,26,26,0.4)', letterSpacing: '0.15em' }}>BRIEF IN PREPARATION</p>
+            <p className="text-sm" style={{ color: 'rgba(26,26,26,0.3)' }}>Our AI Bureau publishes daily — check back shortly.</p>
           </div>
         )}
 
         {!isLoading && allArticles.length > 0 && (
-          <div className={`grid grid-cols-1 ${videoArticles.length > 0 ? 'lg:grid-cols-3' : ''} gap-6`}>
-            {/* LEFT: Text articles in compact cards */}
-            <div className={`${videoArticles.length > 0 ? 'lg:col-span-1' : 'w-full max-w-2xl mx-auto'} space-y-3`}>
-              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>News Briefs</p>
-              {textArticles.map((article) => (
-                <CompactArticleCard key={article.id} article={article} />
-              ))}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* LEFT: Text briefs */}
+            <div className="lg:col-span-1 space-y-3">
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
+              {textArticles.length > 0 ? (
+                textArticles.map(article => (
+                  <CompactArticleCard key={article.id} article={article} />
+                ))
+              ) : (
+                <p className="text-sm text-center py-8" style={{ color: 'rgba(26,26,26,0.4)' }}>No text briefs today.</p>
+              )}
             </div>
 
-            {/* RIGHT: Video thumbnails — only shown when videos exist */}
-            {videoArticles.length > 0 && (
-              <div className="lg:col-span-2 space-y-3">
-                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>Featured Videos</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {videoArticles.map((article) => (
+            {/* RIGHT: Video thumbnails */}
+            <div className="lg:col-span-2 space-y-3">
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {videoArticles.length > 0 ? (
+                  videoArticles.map(article => (
                     <VideoThumbnail
                       key={article.id}
                       article={article}
@@ -649,10 +495,23 @@ export default function ConsumerDnnNews() {
                       onExpand={() => setFullscreenVideo(article)}
                       onClose={() => setFullscreenVideo(null)}
                     />
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <div className="col-span-full rounded-xl py-16 flex flex-col items-center gap-3"
+                    style={{ background: '#1a1a1a', border: '1px dashed rgba(212,175,55,0.2)' }}>
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: 'rgba(212,175,55,0.5)', marginLeft: '2px' }}>
+                        <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                      </svg>
+                    </div>
+                    <p className="text-sm font-semibold" style={{ color: 'rgba(212,175,55,0.5)' }}>Featured videos coming soon</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>DNN video briefs are published weekly</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+
           </div>
         )}
       </div>
@@ -669,17 +528,18 @@ export default function ConsumerDnnNews() {
           <CharlieEducationStrip />
         </div>
 
-        {/* Footer brand */}
+        {/* Footer */}
         <div className="mt-12 text-center pb-4" style={{ borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '2rem' }}>
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
             <img src={DNN_LOGO} alt="DNN" className="h-7 w-auto opacity-40" />
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
           </div>
-          <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.2)' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.15)' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
+          <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(26,26,26,0.4)' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
+          <p className="text-xs mt-1" style={{ color: 'rgba(26,26,26,0.3)' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
+
     </div>
   );
 }
