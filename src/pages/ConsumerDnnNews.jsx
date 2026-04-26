@@ -458,8 +458,38 @@ function CompactArticleCard({ article }) {
   );
 }
 
+// --- Extract YouTube ID ---
+function getYouTubeThumbnail(url) {
+  if (!url) return null;
+  let id = null;
+  if (url.includes('youtu.be/')) {
+    id = url.split('youtu.be/')[1]?.split('?')[0];
+  } else if (url.includes('youtube.com')) {
+    try { id = new URL(url).searchParams.get('v'); } catch (_) {}
+  }
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+}
+
 // --- Video Thumbnail ---
 function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
+  const thumbnail = getYouTubeThumbnail(article.video_url) || article.thumbnail_url || null;
+
+  // Build embeddable src
+  const getEmbedSrc = (url) => {
+    if (!url) return url;
+    if (url.includes('youtu.be/')) {
+      const id = url.split('youtu.be/')[1]?.split('?')[0];
+      return `https://www.youtube.com/embed/${id}?autoplay=1`;
+    }
+    if (url.includes('youtube.com/watch')) {
+      try {
+        const id = new URL(url).searchParams.get('v');
+        return `https://www.youtube.com/embed/${id}?autoplay=1`;
+      } catch (_) {}
+    }
+    return url;
+  };
+
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
@@ -471,7 +501,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
         </button>
         <div className="w-full max-w-4xl aspect-video">
           <iframe
-            src={article.video_url}
+            src={getEmbedSrc(article.video_url)}
             title={article.headline}
             className="w-full h-full rounded-xl"
             allow="autoplay; fullscreen"
@@ -483,24 +513,35 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
   }
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden group"
-      style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}>
+    <div className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
+      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
+      onClick={onExpand}>
 
-      {/* Clickable play area */}
-      <div onClick={onExpand} className="absolute inset-0 w-full h-full cursor-pointer">
-        <div className="absolute inset-0 flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-            style={{ background: 'rgba(212,175,55,0.85)' }}>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-            </svg>
-          </div>
+      {/* Thumbnail image */}
+      {thumbnail && (
+        <img
+          src={thumbnail}
+          alt={article.headline}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.6)' }} />
+
+      {/* Play button */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg"
+          style={{ background: 'rgba(212,175,55,0.9)' }}>
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+          </svg>
         </div>
-        {/* Overlay info */}
-        <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
-          <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
-        </div>
+      </div>
+
+      {/* Headline overlay at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}>
+        <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
       </div>
     </div>
   );
