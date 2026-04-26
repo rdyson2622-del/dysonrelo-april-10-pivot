@@ -93,9 +93,9 @@ export default function ClientSidebar() {
 
       {/* Relocation Management */}
       <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
+        <Link to="/relo-management" className="block text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2 hover:underline cursor-pointer" style={{ color: GOLD }}>
           Relocation Management
-        </div>
+        </Link>
         <div>
           <div className="flex flex-col gap-2 mt-2">
             <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
