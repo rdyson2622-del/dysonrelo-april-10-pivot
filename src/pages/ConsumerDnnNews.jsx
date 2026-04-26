@@ -600,16 +600,16 @@ export default function ConsumerDnnNews() {
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
               {textArticles.length > 0 ? (
                 textArticles.map(article => (
-                  <div key={article.id}>
+                  <div key={article.id} className="relative group">
                     {isAdmin && (
-                      <div className="flex gap-2 mb-1 px-1">
+                      <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => setEditingArticle(article)}
-                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold shadow-lg"
                           style={{ background: '#D4AF37', color: '#000' }}>
                           <Pencil className="w-3 h-3" /> Edit
                         </button>
                         <button onClick={() => handleDelete(article.id)}
-                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold shadow-lg"
                           style={{ background: '#ef4444', color: '#fff' }}>
                           <Trash2 className="w-3 h-3" /> Delete
                         </button>
@@ -626,29 +626,20 @@ export default function ConsumerDnnNews() {
             {/* RIGHT: Video thumbnails */}
             <div className="lg:col-span-2 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              {/* Admin: always-visible Add Video button */}
-              {isAdmin && (
-                <div className="flex items-center gap-2 mb-2 px-1">
-                  <button onClick={() => setEditingArticle({})}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-black text-black"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                    <Plus className="w-3 h-3" /> Add Video Article
-                  </button>
-                </div>
-              )}
+
               <div className="grid grid-cols-1 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map(article => (
-                    <div key={article.id}>
+                    <div key={article.id} className="relative group">
                       {isAdmin && (
-                        <div className="flex gap-2 mb-1 px-1">
+                        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button onClick={() => setEditingArticle(article)}
-                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold shadow-lg"
                             style={{ background: '#D4AF37', color: '#000' }}>
                             <Pencil className="w-3 h-3" /> Edit
                           </button>
                           <button onClick={() => handleDelete(article.id)}
-                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold shadow-lg"
                             style={{ background: '#ef4444', color: '#fff' }}>
                             <Trash2 className="w-3 h-3" /> Delete
                           </button>
