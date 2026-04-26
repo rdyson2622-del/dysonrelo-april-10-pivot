@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, Pencil, Trash2, Plus, Save, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -389,9 +389,125 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
   );
 }
 
+const TRIGGER_TYPES = ['tax_policy','housing_market','job_market','interest_rates','migration_data','employer_news','general'];
+
+function AdminArticleModal({ article, onClose, onSaved }) {
+  const [form, setForm] = useState({
+    headline: article?.headline || '',
+    dateline: article?.dateline || '',
+    body: article?.body || '',
+    video_url: article?.video_url || '',
+    trigger_type: article?.trigger_type || 'general',
+    status: article?.status || 'published',
+    tags: (article?.tags || []).join(', '),
+  });
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const data = {
+      headline: form.headline,
+      dateline: form.dateline,
+      body: form.body,
+      video_url: form.video_url || undefined,
+      trigger_type: form.trigger_type,
+      status: form.status,
+      tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      generated_date: article?.generated_date || new Date().toISOString(),
+    };
+    if (article?.id) {
+      await base44.entities.DnnArticle.update(article.id, data);
+    } else {
+      await base44.entities.DnnArticle.create(data);
+    }
+    setSaving(false);
+    onSaved();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-6 space-y-4"
+        style={{ background: '#111', border: '1px solid #D4AF37' }}>
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>
+            {article?.id ? 'Edit Article' : 'Add New Article'}
+          </p>
+          <button onClick={onClose}><X className="w-4 h-4 text-slate-400" /></button>
+        </div>
+        {[['Headline','headline','input'],['Dateline','dateline','input'],['Video URL (YouTube/Loom)','video_url','input'],['Body','body','textarea'],['Tags (comma separated)','tags','input']].map(([label, key, type]) => (
+          <div key={key}>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{label}</label>
+            {type === 'textarea' ? (
+              <textarea rows={5} value={form[key]} onChange={e => setForm(f => ({...f, [key]: e.target.value}))}
+                className="w-full px-3 py-2 rounded-lg text-sm text-white resize-none focus:outline-none"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+            ) : (
+              <input type="text" value={form[key]} onChange={e => setForm(f => ({...f, [key]: e.target.value}))}
+                className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }} />
+            )}
+          </div>
+        ))}
+        <div>
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-1">Trigger Type</label>
+          <select value={form.trigger_type} onChange={e => setForm(f => ({...f, trigger_type: e.target.value}))}
+            className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
+            {TRIGGER_TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g,' ')}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-1">Status</label>
+          <select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}
+            className="w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none"
+            style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <option value="published">Published (visible)</option>
+            <option value="staged">Staged (hidden)</option>
+            <option value="blasted">Blasted</option>
+          </select>
+        </div>
+        <div className="flex gap-2 pt-2">
+          <button onClick={handleSave} disabled={saving || !form.headline}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black text-black disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+            <Save className="w-4 h-4" /> {saving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={onClose}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+            style={{ background: 'rgba(255,255,255,0.07)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --- Main Page ---
 export default function ConsumerDnnNews() {
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingArticle, setEditingArticle] = useState(null); // null = closed, {} = new, article = edit
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user?.role === 'admin') setIsAdmin(true);
+    }).catch(() => {});
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this article?')) return;
+    await base44.entities.DnnArticle.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
+  };
+
+  const handleSaved = () => {
+    setEditingArticle(null);
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
+  };
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
@@ -423,9 +539,18 @@ export default function ConsumerDnnNews() {
             <p className="text-xs tracking-widest uppercase" style={{ color: '#ffffff' }}>Real Estate Intelligence</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-sm font-semibold tracking-widest" style={{ color: '#D4AF37' }}>
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
-          LIVE FEED
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <button onClick={() => setEditingArticle({})}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black text-black"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+              <Plus className="w-3.5 h-3.5" /> Add Article
+            </button>
+          )}
+          <div className="flex items-center gap-2 text-sm font-semibold tracking-widest" style={{ color: '#D4AF37' }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
+            LIVE FEED
+          </div>
         </div>
       </div>
 
@@ -475,7 +600,23 @@ export default function ConsumerDnnNews() {
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
               {textArticles.length > 0 ? (
                 textArticles.map(article => (
-                  <CompactArticleCard key={article.id} article={article} />
+                  <div key={article.id}>
+                    {isAdmin && (
+                      <div className="flex gap-2 mb-1 px-1">
+                        <button onClick={() => setEditingArticle(article)}
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                          style={{ background: '#D4AF37', color: '#000' }}>
+                          <Pencil className="w-3 h-3" /> Edit
+                        </button>
+                        <button onClick={() => handleDelete(article.id)}
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                          style={{ background: '#ef4444', color: '#fff' }}>
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </button>
+                      </div>
+                    )}
+                    <CompactArticleCard article={article} />
+                  </div>
                 ))
               ) : (
                 <p className="text-sm text-center py-8" style={{ color: 'rgba(26,26,26,0.4)' }}>No text briefs today.</p>
@@ -488,13 +629,28 @@ export default function ConsumerDnnNews() {
               <div className="grid grid-cols-1 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map(article => (
-                    <VideoThumbnail
-                      key={article.id}
-                      article={article}
-                      isFullscreen={fullscreenVideo?.id === article.id}
-                      onExpand={() => setFullscreenVideo(article)}
-                      onClose={() => setFullscreenVideo(null)}
-                    />
+                    <div key={article.id}>
+                      {isAdmin && (
+                        <div className="flex gap-2 mb-1 px-1">
+                          <button onClick={() => setEditingArticle(article)}
+                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                            style={{ background: '#D4AF37', color: '#000' }}>
+                            <Pencil className="w-3 h-3" /> Edit
+                          </button>
+                          <button onClick={() => handleDelete(article.id)}
+                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold"
+                            style={{ background: '#ef4444', color: '#fff' }}>
+                            <Trash2 className="w-3 h-3" /> Delete
+                          </button>
+                        </div>
+                      )}
+                      <VideoThumbnail
+                        article={article}
+                        isFullscreen={fullscreenVideo?.id === article.id}
+                        onExpand={() => setFullscreenVideo(article)}
+                        onClose={() => setFullscreenVideo(null)}
+                      />
+                    </div>
                   ))
                 ) : (
                   <div className="col-span-full rounded-xl py-16 flex flex-col items-center gap-3"
@@ -540,6 +696,13 @@ export default function ConsumerDnnNews() {
         </div>
       </div>
 
+      {editingArticle !== null && (
+        <AdminArticleModal
+          article={Object.keys(editingArticle).length === 0 ? null : editingArticle}
+          onClose={() => setEditingArticle(null)}
+          onSaved={handleSaved}
+        />
+      )}
     </div>
   );
 }
