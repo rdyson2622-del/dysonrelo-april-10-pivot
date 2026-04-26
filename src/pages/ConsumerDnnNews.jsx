@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import DnnAdminBar from '@/components/dnn/DnnAdminBar';
+
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -399,14 +399,6 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
 // --- Main Page ---
 export default function ConsumerDnnNews() {
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    base44.auth.me().then(user => {
-      if (user?.role === 'admin') setIsAdmin(true);
-    }).catch(() => {});
-  }, []);
-
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
     queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 50),
@@ -463,7 +455,6 @@ export default function ConsumerDnnNews() {
 
       {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
-        <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
