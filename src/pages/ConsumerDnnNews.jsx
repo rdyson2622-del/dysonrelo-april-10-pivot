@@ -389,13 +389,8 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
             </svg>
           </div>
         ) : (
-          <div className="text-center">
-            <p className="text-xs text-slate-500 font-semibold">Coming Soon</p>
-          </div>
+          <div />
         )}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 p-4" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)' }}>
-        <h3 className="text-sm font-bold text-white line-clamp-2 leading-snug">{article.headline}</h3>
       </div>
     </div>
   );
