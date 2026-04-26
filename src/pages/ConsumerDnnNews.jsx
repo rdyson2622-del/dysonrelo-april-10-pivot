@@ -548,7 +548,7 @@ export default function ConsumerDnnNews() {
       <div className="w-full px-8 md:px-16 py-14 text-center"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#ede0cc' }}>
         <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
-          style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
+          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
           <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
         </div>
         <h1 className="display-heading mb-4"
