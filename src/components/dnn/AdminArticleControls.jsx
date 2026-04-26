@@ -132,20 +132,22 @@ export function AdminAddButton({ onAdd }) {
   );
 }
 
+// Renders as a sticky bar ABOVE the card (not overlaid on top, to avoid z-index issues)
 export function AdminArticleOverlay({ article, onEdit, onDelete }) {
   return (
-    <div className="flex items-center gap-2 absolute top-3 right-3 z-10">
+    <div className="flex items-center gap-2 mb-1 px-1">
+      <span className="text-[9px] font-black tracking-widest uppercase mr-1" style={{ color: 'rgba(212,175,55,0.6)' }}>ADMIN</span>
       <button
         onClick={() => onEdit(article)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
-        style={{ background: 'rgba(212,175,55,0.9)', color: '#000' }}
+        className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all hover:opacity-80"
+        style={{ background: '#D4AF37', color: '#000' }}
       >
         <Pencil className="w-3 h-3" /> Edit
       </button>
       <button
-        onClick={() => onDelete(article.id)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
-        style={{ background: 'rgba(239,68,68,0.85)', color: '#fff' }}
+        onClick={(e) => { e.stopPropagation(); onDelete(article.id); }}
+        className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all hover:opacity-80"
+        style={{ background: '#ef4444', color: '#fff' }}
       >
         <Trash2 className="w-3 h-3" /> Delete
       </button>
