@@ -140,7 +140,7 @@ For each story, write a DNN brief in the 1927 Parallel style. Return JSON:
   const archived = articles.filter(a => a.status === 'archived');
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#ede0cc' }}>
+    <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex items-start justify-between">

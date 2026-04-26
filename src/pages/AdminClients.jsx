@@ -253,13 +253,13 @@ export default function AdminClients() {
   clients.forEach(c => { counts[c.status] = (counts[c.status] || 0) + 1; });
 
   if (loadingClients) return (
-    <div className="flex items-center justify-center min-h-screen" style={{ background: '#ede0cc' }}>
+    <div className="flex items-center justify-center min-h-screen" style={{ background: '#0a0a0a' }}>
       <div className="w-8 h-8 border-4 border-white/10 border-t-yellow-400 rounded-full animate-spin" />
     </div>
   );
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#ede0cc' }}>
+    <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
