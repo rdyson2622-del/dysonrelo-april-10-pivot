@@ -420,7 +420,7 @@ export default function ConsumerDnnNews() {
           <img src={DNN_LOGO} alt="DNN" className="h-10 w-auto" />
           <div>
             <p className="text-sm font-black tracking-[0.35em] uppercase" style={{ color: '#D4AF37' }}>DNN</p>
-            <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>Real Estate Intelligence</p>
+            <p className="text-xs tracking-widest uppercase" style={{ color: '#ffffff' }}>Real Estate Intelligence</p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-sm font-semibold tracking-widest" style={{ color: '#D4AF37' }}>
