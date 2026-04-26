@@ -565,7 +565,7 @@ export default function ConsumerDnnNews() {
         {/* Divider */}
          <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Today's Briefs</span>
+          <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
         </div>
 
