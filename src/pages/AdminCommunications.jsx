@@ -221,7 +221,7 @@ export default function AdminCommunications() {
   const inboundCount = Object.values(threads).reduce((n, t) => n + t.messages.filter(m => m.direction === 'inbound').length, 0);
 
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#0a0a0a' }}>
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#ede0cc' }}>
 
       {/* Header */}
       <div className="px-5 py-4 shrink-0" style={{ background: '#111', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
@@ -293,7 +293,7 @@ export default function AdminCommunications() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Left: contact list */}
-        <div className="w-72 shrink-0 overflow-y-auto" style={{ borderRight: '1px solid rgba(255,255,255,0.08)', background: '#0d0d0d' }}>
+         <div className="w-72 shrink-0 overflow-y-auto" style={{ borderRight: '1px solid rgba(255,255,255,0.08)', background: '#ede0cc' }}>
           {filteredKeys.length === 0 ? (
             <div className="p-8 text-center">
               <MessageCircle className="w-10 h-10 mx-auto mb-3" style={{ color: 'rgba(212,175,55,0.25)' }} />
@@ -398,7 +398,7 @@ export default function AdminCommunications() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3" style={{ background: '#0a0a0a' }}>
+             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3" style={{ background: '#ede0cc' }}>
               {thread.messages.map(msg => {
                 const isOut = msg.direction === 'outbound';
                 const isEditing = editingMsgId === msg.id;
@@ -503,7 +503,7 @@ export default function AdminCommunications() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+          <div className="flex-1 flex items-center justify-center" style={{ background: '#ede0cc' }}>
             <div className="text-center max-w-md px-8">
               <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
