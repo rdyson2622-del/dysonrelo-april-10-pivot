@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AdminAddButton, AdminArticleOverlay, AdminArticleModal } from '@/components/dnn/AdminArticleControls';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
@@ -507,6 +508,22 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
 // --- Main Page ---
 export default function ConsumerDnnNews() {
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingArticle, setEditingArticle] = useState(null); // null = closed, {} = new, article = edit
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user?.role === 'admin') setIsAdmin(true);
+    }).catch(() => {});
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this article?')) return;
+    await base44.entities.DnnArticle.delete(id);
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
+    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
+  };
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
@@ -567,6 +584,7 @@ export default function ConsumerDnnNews() {
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+          {isAdmin && <AdminAddButton onAdd={() => setEditingArticle({})} />}
         </div>
 
         {isLoading && (
@@ -589,7 +607,10 @@ export default function ConsumerDnnNews() {
             <div className="lg:col-span-1 space-y-3">
              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 w-full text-center" style={{ color: '#000' }}>News Briefs</p>
               {textArticles.map((article) => (
-                <CompactArticleCard key={article.id} article={article} />
+                <div key={article.id} className="relative">
+                  {isAdmin && <AdminArticleOverlay article={article} onEdit={setEditingArticle} onDelete={handleDelete} />}
+                  <CompactArticleCard article={article} />
+                </div>
               ))}
             </div>
 
@@ -599,13 +620,15 @@ export default function ConsumerDnnNews() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map((article) => (
-                    <VideoThumbnail
-                      key={article.id}
-                      article={article}
-                      isFullscreen={fullscreenVideo?.id === article.id}
-                      onExpand={() => setFullscreenVideo(article)}
-                      onClose={() => setFullscreenVideo(null)}
-                    />
+                    <div key={article.id} className="relative">
+                      {isAdmin && <AdminArticleOverlay article={article} onEdit={setEditingArticle} onDelete={handleDelete} />}
+                      <VideoThumbnail
+                        article={article}
+                        isFullscreen={fullscreenVideo?.id === article.id}
+                        onExpand={() => setFullscreenVideo(article)}
+                        onClose={() => setFullscreenVideo(null)}
+                      />
+                    </div>
                   ))
                 ) : (
                   <>
@@ -634,6 +657,11 @@ export default function ConsumerDnnNews() {
           </div>
         )}
       </div>
+
+      {/* Admin Edit/Add Modal */}
+      {editingArticle !== null && (
+        <AdminArticleModal article={editingArticle} onClose={() => setEditingArticle(null)} />
+      )}
 
       {/* Below the fold — subscribe + network */}
       <div className="w-full px-6 md:px-12 lg:px-20 pb-16 max-w-5xl mx-auto">
