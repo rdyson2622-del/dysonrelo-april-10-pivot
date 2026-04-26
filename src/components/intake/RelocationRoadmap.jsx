@@ -302,11 +302,9 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         </div>
       </div>
 
-      {/* Relocation Management Explainer - Full Slides */}
-      <ReloManagementContent />
-    </div>
-  );
-          }
+      </div>
+      );
+      }
 
 // Phase content when user has completed intake
 function ExpandedPhaseContent({ phase, isActive, GOLD }) {
@@ -385,8 +383,8 @@ function LockedPhaseContent({ phase, isActive, GOLD }) {
   );
 }
 
-// Relocation Management Content - Directly from pages/ReloManagement
-function ReloManagementContent() {
+// REMOVED - content moved to /relo-management page
+function ReloManagementContent_UNUSED() {
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
       {/* ── SLIDE 1: We Don't Send You a Map ── */}
