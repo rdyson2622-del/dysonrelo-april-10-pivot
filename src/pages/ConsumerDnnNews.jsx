@@ -511,7 +511,7 @@ export default function ConsumerDnnNews() {
             {/* Video thumbnails — fixed 350px right sidebar, 10-stack vertical design */}
             <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
+              <div className="space-y-3">
                 {allArticles.slice(0, 10).map(article => (
                   <VideoThumbnail
                     key={article.id}
