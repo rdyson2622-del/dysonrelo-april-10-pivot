@@ -502,12 +502,12 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video thumbnails — fixed 350px right sidebar, only shown when videos exist */}
-            {videoArticles.length > 0 && (
-              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-                <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
-                  {videoArticles.map(article => (
+            {/* Video thumbnails — fixed 350px right sidebar, ALWAYS renders */}
+            <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+              <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
+                {videoArticles.length > 0 ? (
+                  videoArticles.map(article => (
                     <VideoThumbnail
                       key={article.id}
                       article={article}
@@ -515,10 +515,14 @@ export default function ConsumerDnnNews() {
                       onExpand={() => setFullscreenVideo(article)}
                       onClose={() => setFullscreenVideo(null)}
                     />
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <div className="aspect-video rounded-xl flex items-center justify-center" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <p className="text-xs text-slate-500 text-center px-4">Coming Soon</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
 
           </div>
         )}
