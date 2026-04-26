@@ -403,23 +403,25 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
       {isAdmin && (
         <div
           data-admin-overlay
-          className="absolute inset-0 flex items-center justify-center gap-2 transition-opacity duration-200"
-          style={{ background: 'rgba(0,0,0,0.8)', opacity: 0 }}
+          className="absolute inset-0 flex items-center justify-center gap-2 transition-opacity duration-200 z-[50]"
+          style={{ background: 'rgba(0,0,0,0.9)', opacity: window.location.pathname.includes('/admin') ? 1 : 0 }}
           onClick={(e) => e.stopPropagation()}
+          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+          onMouseLeave={(e) => { if (!window.location.pathname.includes('/admin')) e.currentTarget.style.opacity = '0'; }}
         >
           <button
             onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold text-black transition-all hover:scale-105"
-            style={{ background: '#D4AF37' }}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
+            style={{ background: '#1a1a1a', border: '2px solid #00ccff', boxShadow: '0 0 10px #00ccff' }}
           >
-            Edit
+            ✎ Edit
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:scale-105"
-            style={{ background: '#ef4444' }}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
+            style={{ background: '#1a1a1a', border: '2px solid #ff3333', boxShadow: '0 0 10px #ff3333' }}
           >
-            Delete
+            🗑 Delete
           </button>
         </div>
       )}
