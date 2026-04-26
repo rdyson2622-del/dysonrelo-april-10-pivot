@@ -626,6 +626,16 @@ export default function ConsumerDnnNews() {
             {/* RIGHT: Video thumbnails */}
             <div className="lg:col-span-2 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+              {/* Admin: always-visible Add Video button */}
+              {isAdmin && (
+                <div className="flex items-center gap-2 mb-2 px-1">
+                  <button onClick={() => setEditingArticle({})}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-black text-black"
+                    style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                    <Plus className="w-3 h-3" /> Add Video Article
+                  </button>
+                </div>
+              )}
               <div className="grid grid-cols-1 gap-3">
                 {videoArticles.length > 0 ? (
                   videoArticles.map(article => (
