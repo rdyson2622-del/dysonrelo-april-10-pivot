@@ -367,23 +367,27 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
   }
 
   return (
-    <div className="relative w-full rounded-xl overflow-hidden group cursor-pointer"
-      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', paddingBottom: '100%', height: 0 }}
-      onClick={onExpand}>
-      {thumbnail && (
-        <img src={thumbnail} alt={article.headline} className="absolute inset-0 w-full h-full object-cover" />
+    <div
+      className="relative w-full rounded-xl overflow-hidden group cursor-pointer"
+      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', aspectRatio: '16/9' }}
+      onClick={onExpand}
+    >
+      {thumbnail ? (
+        <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
+      ) : (
+        <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #111 100%)' }} />
       )}
-      <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.6)' }} />
+      <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.55)' }} />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg"
-          style={{ background: 'rgba(212,175,55,0.9)' }}>
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+        <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl"
+          style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
+          <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
             <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
           </svg>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}>
-        <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
+      <div className="absolute bottom-0 left-0 right-0 p-4" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)' }}>
+        <h3 className="text-sm font-bold text-white line-clamp-2 leading-snug">{article.headline}</h3>
       </div>
     </div>
   );
