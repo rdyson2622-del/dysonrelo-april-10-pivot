@@ -368,7 +368,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden group cursor-pointer"
-      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', aspectRatio: '1 / 1' }}
+      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', paddingBottom: '100%', height: 0 }}
       onClick={onExpand}>
       {thumbnail && (
         <img src={thumbnail} alt={article.headline} className="absolute inset-0 w-full h-full object-cover" />
