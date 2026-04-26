@@ -447,14 +447,13 @@ export default function ConsumerDnnNews() {
   const [editingArticle, setEditingArticle] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user?.role === 'admin') setIsAdmin(true);
     }).catch(() => {});
   }, []);
-
-  const queryClient = useQueryClient();
 
   const handleEditArticle = (article) => {
     setEditingArticle(article);
