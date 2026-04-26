@@ -486,10 +486,10 @@ export default function ConsumerDnnNews() {
         )}
 
         {!isLoading && allArticles.length > 0 && (
-          <div className={`grid grid-cols-1 gap-6 ${videoArticles.length > 0 ? 'lg:grid-cols-3' : ''}`}>
+          <div className="flex gap-6">
 
-            {/* Text briefs — full width when no videos */}
-            <div className={`space-y-3 ${videoArticles.length > 0 ? 'lg:col-span-1' : ''}`}>
+            {/* Text briefs — flex-1 to fill available space */}
+            <div className="flex-1 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
               {textArticles.length > 0 ? (
                 <div className={videoArticles.length === 0 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3' : 'space-y-3'}>
@@ -502,11 +502,11 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video thumbnails — only shown when videos exist */}
+            {/* Video thumbnails — fixed 350px right sidebar, only shown when videos exist */}
             {videoArticles.length > 0 && (
-              <div className="lg:col-span-2 space-y-3">
+              <div className="hidden lg:block shrink-0 space-y-3" style={{ width: '350px' }}>
                 <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
                   {videoArticles.map(article => (
                     <VideoThumbnail
                       key={article.id}
