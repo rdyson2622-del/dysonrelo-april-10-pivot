@@ -370,8 +370,8 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
 
   return (
     <div
-      className="relative w-full rounded-xl overflow-hidden group cursor-pointer"
-      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)', aspectRatio: '16/9' }}
+      className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
+      style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
       onClick={onExpand}
     >
       {thumbnail ? (
@@ -464,7 +464,7 @@ export default function ConsumerDnnNews() {
 
       {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
-        <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />
+        {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
@@ -504,7 +504,7 @@ export default function ConsumerDnnNews() {
 
             {/* Video thumbnails — fixed 350px right sidebar, only shown when videos exist */}
             {videoArticles.length > 0 && (
-              <div className="hidden lg:block shrink-0 space-y-3" style={{ width: '350px' }}>
+              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
                 <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
                 <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
                   {videoArticles.map(article => (
