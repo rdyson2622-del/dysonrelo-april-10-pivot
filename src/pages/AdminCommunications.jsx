@@ -221,7 +221,7 @@ export default function AdminCommunications() {
   const inboundCount = Object.values(threads).reduce((n, t) => n + t.messages.filter(m => m.direction === 'inbound').length, 0);
 
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#0a0a0a' }}>
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 48px)', background: '#ede0cc' }}>
 
       {/* Header */}
       <div className="px-5 py-4 shrink-0" style={{ background: '#111', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
