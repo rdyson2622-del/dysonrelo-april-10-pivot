@@ -381,12 +381,18 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose }) {
       )}
       <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.55)' }} />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl"
-          style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
-          <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
-            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-          </svg>
-        </div>
+        {article.video_url ? (
+          <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl"
+            style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
+            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+          </div>
+        ) : (
+          <div className="text-center">
+            <p className="text-xs text-slate-500 font-semibold">Coming Soon</p>
+          </div>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)' }}>
         <h3 className="text-sm font-bold text-white line-clamp-2 leading-snug">{article.headline}</h3>
@@ -502,25 +508,19 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video thumbnails — fixed 350px right sidebar, ALWAYS renders */}
+            {/* Video thumbnails — fixed 350px right sidebar, 10-stack vertical design */}
             <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
               <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-300px)]">
-                {videoArticles.length > 0 ? (
-                  videoArticles.map(article => (
-                    <VideoThumbnail
-                      key={article.id}
-                      article={article}
-                      isFullscreen={fullscreenVideo?.id === article.id}
-                      onExpand={() => setFullscreenVideo(article)}
-                      onClose={() => setFullscreenVideo(null)}
-                    />
-                  ))
-                ) : (
-                  <div className="aspect-video rounded-xl flex items-center justify-center" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-                    <p className="text-xs text-slate-500 text-center px-4">Coming Soon</p>
-                  </div>
-                )}
+                {allArticles.slice(0, 10).map(article => (
+                  <VideoThumbnail
+                    key={article.id}
+                    article={article}
+                    isFullscreen={fullscreenVideo?.id === article.id}
+                    onExpand={() => setFullscreenVideo(article)}
+                    onClose={() => setFullscreenVideo(null)}
+                  />
+                ))}
               </div>
             </div>
 
