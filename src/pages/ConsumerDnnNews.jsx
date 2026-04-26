@@ -486,26 +486,10 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
   return (
     <div className="relative w-full aspect-video rounded-xl overflow-hidden group"
       style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}>
-      {/* Clickable play area */}
-      <button onClick={onExpand} className="absolute inset-0 w-full h-full">
-        <div className="absolute inset-0 flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-            style={{ background: 'rgba(212,175,55,0.85)' }}>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-            </svg>
-          </div>
-        </div>
-        {/* Overlay info */}
-        <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
-          <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
-        </div>
-      </button>
 
-      {/* Admin controls — top-right, above play button click */}
+      {/* Admin controls — rendered FIRST so they sit on top */}
       {isAdmin && (
-        <div className="absolute top-2 right-2 z-10 flex gap-1.5">
+        <div className="absolute top-2 right-2 flex gap-1.5" style={{ zIndex: 20 }}>
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(article); }}
             className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold"
@@ -520,6 +504,23 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           </button>
         </div>
       )}
+
+      {/* Clickable play area */}
+      <div onClick={onExpand} className="absolute inset-0 w-full h-full cursor-pointer">
+        <div className="absolute inset-0 flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.4)' }}>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+            style={{ background: 'rgba(212,175,55,0.85)' }}>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '2px' }}>
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+          </div>
+        </div>
+        {/* Overlay info */}
+        <div className="absolute bottom-0 left-0 right-0 p-3" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+          <h3 className="text-xs font-bold text-white line-clamp-2">{article.headline}</h3>
+        </div>
+      </div>
     </div>
   );
 }
@@ -651,26 +652,18 @@ export default function ConsumerDnnNews() {
                     />
                   ))
                 ) : (
-                  <>
-                    {Array.from({ length: 20 }).map((_, i) => {
-                      const placeholderImages = [
-                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/06f08bb63_generated_image.png',
-                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/635af6ea7_generated_image.png',
-                        'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/7399e9b3c_generated_image.png',
-                      ];
-                      const img = placeholderImages[i % placeholderImages.length];
-                      return (
-                        <div key={i} className="relative w-full aspect-[16/18] rounded-xl overflow-hidden bg-black border border-gray-800">
-                          <img src={img} alt={`Real estate thumbnail ${i + 1}`} className="w-full h-full object-cover opacity-60" />
-                          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
-                            <div className="text-center">
-                              <div className="text-gray-300 text-sm font-semibold">Video Coming Soon</div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </>
+                  <div className="col-span-full flex flex-col items-center justify-center py-12 gap-4">
+                    <p className="text-sm font-semibold" style={{ color: 'rgba(0,0,0,0.4)' }}>No videos published yet.</p>
+                    {isAdmin && (
+                      <button
+                        onClick={() => setEditingArticle({})}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-black"
+                        style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+                      >
+                        + Add First Video
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
