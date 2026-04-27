@@ -105,12 +105,14 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      {/* Home — standalone, no sidebar */}
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/Home" element={<Home />} />
+
       {/* Consumer Routes with Sidebar Layout */}
       {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/relocation-intake" element={<RelocationIntake />} />
