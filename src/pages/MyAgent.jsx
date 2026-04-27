@@ -144,30 +144,30 @@ const LENDER_VETTING_STEPS = [
 function VettingProcess({ steps, label, color = GOLD, fontSize = "text-xs" }) {
   return (
     <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#0d0d0d', border: `1px solid ${color}30` }}>
-      <div className="w-full flex items-center px-5 py-4">
+      <div className="w-full flex items-center px-5 py-5">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4" style={{ color }} />
-          <p className={`${fontSize} font-black tracking-[0.2em] uppercase`} style={{ color }}>{label}</p>
+          <BookOpen className="w-6 h-6" style={{ color }} />
+          <p className={`${fontSize} font-black tracking-[0.2em] uppercase`} style={{ color, fontSize: '1.1rem' }}>{label}</p>
         </div>
       </div>
-      <div className="px-5 pb-5 space-y-3 border-t" style={{ borderColor: `${color}15` }}>
+      <div className="px-5 pb-6 space-y-4 border-t" style={{ borderColor: `${color}15` }}>
         {steps.map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} className="flex items-start gap-3 pt-3">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+            <div key={i} className="flex items-start gap-4 pt-4">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
                 style={{ background: `${color}12`, border: `1px solid ${color}25` }}>
-                <Icon className="w-4 h-4" style={{ color }} />
+                <Icon className="w-6 h-6" style={{ color }} />
               </div>
               <div>
-                <p className="font-bold text-white mb-0.5" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem', letterSpacing: '0.03em' }}>Step {i + 1}: {s.title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{s.detail}</p>
+                <p className="font-bold text-white mb-1" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', letterSpacing: '0.03em' }}>Step {i + 1}: {s.title}</p>
+                <p className="leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)', fontSize: '1.05rem' }}>{s.detail}</p>
               </div>
             </div>
           );
         })}
-        <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          <p className="text-xs italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
+          <p className="italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.05rem' }}>
             "This is not a directory — it's a guarantee." — Bob Dyson
           </p>
         </div>
@@ -388,14 +388,14 @@ function CharlieTeaser() {
           <Globe className="w-4 h-4" style={{ color: '#818cf8' }} />
         </div>
         <div className="flex-1">
-          <p className="serif-heading text-white mb-1" style={{ fontSize: '1rem' }}>Have questions about your matches?</p>
-          <p className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic' }}>
+          <p className="serif-heading text-white mb-1" style={{ fontSize: '1.5rem' }}>Have questions about your matches?</p>
+          <p className="leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.1rem' }}>
             Charlie can explain the vetting process, help you prepare questions for your first agent or lender call, and walk you through what to expect in your relocation timeline.
           </p>
           <Link to="/chat"
-            className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg"
-            style={{ background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)' }}>
-            Chat with Charlie <ChevronRight className="w-3 h-3" />
+            className="inline-flex items-center gap-1.5 font-bold px-4 py-2 rounded-lg"
+            style={{ background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)', fontSize: '1.05rem' }}>
+            Chat with Charlie <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
