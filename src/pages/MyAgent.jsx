@@ -483,9 +483,6 @@ export default function MyAgent() {
               </div>
             )}
 
-            <div className="mt-6">
-               <StorySubmitForm submitterType="agent" />
-             </div>
             </div>
 
         <CharlieTeaser />
