@@ -17,11 +17,11 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <div style={{ height: '44px', background: '#0a0a0a', borderBottom: `1px solid ${GOLD}40`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingLeft: '16px', paddingRight: '16px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}>
-        <button onClick={toggleMenu} style={{ background: 'none', border: 'none', color: GOLD, cursor: 'pointer', padding: '8px' }}>
+      <div className="z-[9999]" style={{ height: '44px', background: '#0a0a0a', borderBottom: `1px solid ${GOLD}40`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingLeft: '16px', paddingRight: '16px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, pointerEvents: 'auto' }}>
+        <button className="pointer-events-auto" onClick={toggleMenu} style={{ background: 'none', border: 'none', color: GOLD, cursor: 'pointer', padding: '8px', pointerEvents: 'auto' }}>
           <Menu size={24} />
         </button>
-        <button onClick={handleDashboard} style={{ background: 'none', border: 'none', color: GOLD, cursor: 'pointer', padding: '8px', marginLeft: 'auto' }}>
+        <button className="pointer-events-auto" onClick={handleDashboard} style={{ background: 'none', border: 'none', color: GOLD, cursor: 'pointer', padding: '8px', marginLeft: 'auto', pointerEvents: 'auto' }}>
           Dashboard
         </button>
       </div>
