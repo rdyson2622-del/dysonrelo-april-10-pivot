@@ -79,12 +79,12 @@ export default function Home() {
                 onFocus={() => setPillFocused(true)}
                 onBlur={() => setTimeout(() => setPillFocused(false), 200)}
                 placeholder="What is your Real Estate Issue or Opportunity?"
-                className="flex-1 bg-transparent text-white text-base outline-none placeholder-white"
+                className="flex-1 min-w-0 bg-transparent text-white text-base outline-none placeholder-white"
                 style={{ caretColor: GOLD }}
               />
               <Link to="/solve-my-story">
                 <button
-                  className="px-5 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95"
+                  className="px-3 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{ 
                     background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
                     boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
