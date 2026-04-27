@@ -328,7 +328,7 @@ function StorySubmitForm({ submitterType }) {
         style={{ background: 'rgba(99,102,241,0.07)', border: '1px solid rgba(99,102,241,0.2)' }}>
         <div className="flex items-center gap-2">
           <Video className="w-4 h-4" style={{ color: '#818cf8' }} />
-          <p className="text-sm font-bold text-white">Share a Client Success Story</p>
+          <p className="text-base font-bold text-white" style={{ fontSize: '1.75rem' }}>Share a Client Success Story</p>
         </div>
         <p className="text-xs" style={{ color: '#818cf8' }}>Submit for DNN Campaign →</p>
       </button>
