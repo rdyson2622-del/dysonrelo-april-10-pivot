@@ -143,7 +143,7 @@ const LENDER_VETTING_STEPS = [
 
 function VettingProcess({ steps, label, color = GOLD, fontSize = "text-xs" }) {
   return (
-    <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#0d0d0d', border: `1px solid ${color}30` }}>
+    <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#ede0cc', border: `1px solid ${color}30` }}>
       <div className="w-full flex items-center px-5 py-5">
         <div className="flex items-center gap-2">
           <BookOpen className="w-6 h-6" style={{ color }} />
