@@ -31,8 +31,8 @@ export default function PageNumberBadge() {
   for (const [num, page] of sortedEntries) {
     if (!page?.path) continue;
     
-    const pathname = location.pathname;
-    const pagePath = page.path;
+    const pathname = location.pathname.toLowerCase();
+    const pagePath = page.path.toLowerCase();
     
     if (pathname === pagePath) {
       pageNumber = num;
