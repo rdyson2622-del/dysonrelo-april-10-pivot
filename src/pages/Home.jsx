@@ -195,7 +195,7 @@ export default function Home() {
         {/* ── DNN MORNING BRIEF CORNER CARD ── */}
         {brief && (
           <Link to="/dnn-news"
-            className="fixed bottom-6 right-6 max-w-xs rounded-2xl px-4 py-3 transition-all hover:scale-105 z-40"
+            className="hidden md:block fixed bottom-6 right-6 max-w-xs rounded-2xl px-4 py-3 transition-all hover:scale-105 z-40"
             style={{
               background: '#111',
               border: `1px solid rgba(212,175,55,0.3)`,
