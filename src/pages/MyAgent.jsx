@@ -142,54 +142,36 @@ const LENDER_VETTING_STEPS = [
 ];
 
 function VettingProcess({ steps, label, color = GOLD, fontSize = "text-xs" }) {
-  const [open, setOpen] = useState(false);
   return (
     <div className="rounded-2xl overflow-hidden mb-4" style={{ background: '#0d0d0d', border: `1px solid ${color}30` }}>
-      <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between px-5 py-4 text-left">
+      <div className="w-full flex items-center px-5 py-4">
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4" style={{ color }} />
           <p className={`${fontSize} font-black tracking-[0.2em] uppercase`} style={{ color }}>{label}</p>
         </div>
-        {open ? <ChevronUp className="w-4 h-4" style={{ color }} /> : <ChevronDown className="w-4 h-4" style={{ color }} />}
-      </button>
-      {!open && (
-        <div className="px-5 pb-4 flex flex-wrap gap-2">
-          {steps.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div key={i} className="flex items-center gap-2 text-[10px] font-bold px-2.5 py-1.5 rounded-lg"
-                style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
-                <Icon className="w-3 h-3" style={{ color }} />
-                <span style={{ color: 'rgba(255,255,255,0.7)' }}>{s.title}</span>
+      </div>
+      <div className="px-5 pb-5 space-y-3 border-t" style={{ borderColor: `${color}15` }}>
+        {steps.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} className="flex items-start gap-3 pt-3">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `${color}12`, border: `1px solid ${color}25` }}>
+                <Icon className="w-4 h-4" style={{ color }} />
               </div>
-            );
-          })}
-        </div>
-      )}
-      {open && (
-        <div className="px-5 pb-5 space-y-3 border-t" style={{ borderColor: `${color}15` }}>
-          {steps.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div key={i} className="flex items-start gap-3 pt-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: `${color}12`, border: `1px solid ${color}25` }}>
-                  <Icon className="w-4 h-4" style={{ color }} />
-                </div>
-                <div>
-                  <p className="font-bold text-white mb-0.5" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem', letterSpacing: '0.03em' }}>Step {i + 1}: {s.title}</p>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{s.detail}</p>
-                </div>
+              <div>
+                <p className="font-bold text-white mb-0.5" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1rem', letterSpacing: '0.03em' }}>Step {i + 1}: {s.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{s.detail}</p>
               </div>
-            );
-          })}
-          <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-            <p className="text-xs italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              "This is not a directory — it's a guarantee." — Bob Dyson
-            </p>
-          </div>
+            </div>
+          );
+        })}
+        <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
+          <p className="text-xs italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            "This is not a directory — it's a guarantee." — Bob Dyson
+          </p>
         </div>
-      )}
+      </div>
     </div>
   );
 }
