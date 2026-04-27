@@ -29,14 +29,14 @@ export default function MobileTopBar() {
       {menuOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 40 }}>
           <div onClick={closeMenu} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)' }} />
-          <div style={{ position: 'relative', width: '250px', height: '100vh', background: '#0d0d0d', borderRight: `1px solid ${GOLD}40`, zIndex: 50 }}>
-            <div style={{ padding: '16px', borderBottom: `1px solid ${GOLD}20`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: GOLD, fontSize: '12px', fontWeight: 'bold', letterSpacing: '0.1em' }}>MENU</span>
-              <button onClick={closeMenu} style={{ background: 'none', border: 'none', color: '#999', cursor: 'pointer', padding: '4px' }}>
-                <X size={20} />
+          <div style={{ position: 'relative', width: '180px', height: '100vh', background: '#0d0d0d', borderRight: `1px solid ${GOLD}40`, zIndex: 50 }}>
+            <div style={{ padding: '12px', borderBottom: `1px solid ${GOLD}20`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ color: GOLD, fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.1em' }}>MENU</span>
+              <button onClick={closeMenu} style={{ background: 'none', border: 'none', color: '#999', cursor: 'pointer', padding: '2px' }}>
+                <X size={18} />
               </button>
             </div>
-            <nav style={{ padding: '16px' }}>
+            <nav style={{ padding: '8px' }}>
               {[
                 { label: 'Home', handler: () => { handleHome(); closeMenu(); } },
                 { label: 'Dashboard', handler: () => { handleDashboard(); closeMenu(); } },
@@ -45,7 +45,7 @@ export default function MobileTopBar() {
               ].map(item => (
                 <button key={item.label}
                   onClick={item.handler}
-                  style={{ display: 'block', width: '100%', padding: '12px', marginBottom: '8px', background: 'transparent', border: 'none', color: '#fff', textAlign: 'left', cursor: 'pointer', borderRadius: '8px', fontSize: '14px', fontWeight: '500' }}>
+                  style={{ display: 'block', width: '100%', padding: '10px 8px', marginBottom: '4px', background: 'transparent', border: 'none', color: '#fff', textAlign: 'left', cursor: 'pointer', borderRadius: '6px', fontSize: '13px', fontWeight: '500' }}>
                   {item.label}
                 </button>
               ))}
