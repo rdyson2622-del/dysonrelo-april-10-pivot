@@ -64,35 +64,35 @@ export default function Home() {
           {/* ── THE PILL ── */}
           <div className="w-full max-w-2xl">
             <div
-              className="flex items-center rounded-2xl px-5 py-4 gap-3 transition-all duration-300"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl px-5 py-4 gap-3 transition-all duration-300"
               style={{
                 background: '#2a2a2a',
                 border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.3)'}`,
                 boxShadow: pillFocused ? `0 0 40px rgba(212,175,55,0.15)` : 'none',
               }}
             >
-              <Search className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
-              <input
-                type="text"
-                value={situation}
-                onChange={e => setSituation(e.target.value)}
-                onFocus={() => setPillFocused(true)}
-                onBlur={() => setTimeout(() => setPillFocused(false), 200)}
-                placeholder="What is your Real Estate Issue or Opportunity?"
-                className="flex-1 min-w-0 bg-transparent text-white text-base outline-none placeholder-white"
-                style={{ caretColor: GOLD }}
-              />
-              <Link to="/solve-my-story">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <Search className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
+                <input
+                  type="text"
+                  value={situation}
+                  onChange={e => setSituation(e.target.value)}
+                  onFocus={() => setPillFocused(true)}
+                  onBlur={() => setTimeout(() => setPillFocused(false), 200)}
+                  placeholder="What is your Real Estate Issue or Opportunity?"
+                  className="flex-1 min-w-0 bg-transparent text-white text-base outline-none placeholder-white"
+                  style={{ caretColor: GOLD }}
+                />
+              </div>
+              <Link to="/solve-my-story" className="w-full sm:w-auto">
                 <button
-                  className="px-3 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{ 
                     background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
                     boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
                     cursor: 'pointer',
                     border: 'none'
                   }}
-                  onMouseEnter={e => e.target.style.boxShadow = '0 8px 28px rgba(212, 175, 55, 0.6)'}
-                  onMouseLeave={e => e.target.style.boxShadow = '0 4px 14px rgba(212, 175, 55, 0.3)'}
                 >
                   Solve My Story
                 </button>
