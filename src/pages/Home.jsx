@@ -117,12 +117,14 @@ export default function Home() {
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-4xl mt-12 text-left">
 
-            <p className="text-sm font-black tracking-[0.3em] uppercase mb-2" style={{ color: '#000', fontSize: '1.5rem' }}>
-              Follow Our Client Stories and Solutions
-            </p>
-            <p className="mb-6" style={{ color: GOLD, fontFamily: 'Georgia, serif', fontSize: '1.75rem' }}>
-              Tap any story to read the full case study.
-            </p>
+            <div className="mb-8">
+              <p className="display-heading mb-2" style={{ fontSize: 'clamp(1rem, 3vw, 1.4rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
+                CLIENT STORIES &amp; SOLUTIONS
+              </p>
+              <p className="text-sm" style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.1rem' }}>
+                Tap any story to read the full case study.
+              </p>
+            </div>
 
             {/* Story 1 — Windean Stratton */}
             <ClientStory
