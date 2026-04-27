@@ -53,7 +53,7 @@ export default function Home() {
           }}>
             HOMES
           </div>
-          <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-0">
+          <p className="font-black tracking-[0.25em] uppercase text-white mb-0" style={{ fontSize: '1.125rem' }}>
             Your Home Ownership Management Ecosystem
           </p>
         </div>
