@@ -167,7 +167,7 @@ function VettingProcess({ steps, label, color = GOLD, fontSize = "text-xs" }) {
           );
         })}
         <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          <p className="italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.05rem' }}>
+          <p className="italic leading-relaxed" style={{ color: '#ffffff', fontSize: '1.575rem' }}>
             "This is not a directory — it's a guarantee." — Bob Dyson
           </p>
         </div>
@@ -388,8 +388,8 @@ function CharlieTeaser() {
           <Globe className="w-4 h-4" style={{ color: '#818cf8' }} />
         </div>
         <div className="flex-1">
-          <p className="serif-heading text-white mb-1" style={{ fontSize: '1.5rem' }}>Have questions about your matches?</p>
-          <p className="leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.1rem' }}>
+          <p className="serif-heading text-white mb-1" style={{ fontSize: '2.25rem' }}>Have questions about your matches?</p>
+          <p className="leading-relaxed mb-3" style={{ color: '#ffffff', fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.65rem' }}>
             Charlie can explain the vetting process, help you prepare questions for your first agent or lender call, and walk you through what to expect in your relocation timeline.
           </p>
           <Link to="/chat"
