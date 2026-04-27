@@ -6,6 +6,7 @@ import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
 import { ArrowLeft } from 'lucide-react';
+import MobileBottomNav from './MobileBottomNav';
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -59,10 +60,11 @@ export default function AppLayout() {
           <ClientSidebar />
         </div>
         {/* Main content */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto pb-16 md:pb-0">
           <Outlet />
         </div>
       </div>
+      <MobileBottomNav />
       <PageNumberBadge />
       {!hideFloatingCharlie && <FloatingCharlie />}
       <PWAInstallPrompt />
