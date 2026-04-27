@@ -128,7 +128,7 @@ export default function Home() {
                 {QUICK_STARTS.map((qs, i) => (
                   <Link key={i} to={qs.link}
                     className="flex flex-col items-start px-4 py-3 rounded-xl text-left transition-all hover:border-yellow-400/60 group"
-                    style={{ background: '#f0f0f0', border: '1px solid rgba(0,0,0,0.08)' }}>
+                    style={{ background: '#f0f0f0', border: '1px solid #000' }}>
                     <span className="text-gray-900 text-sm font-semibold group-hover:text-yellow-600 transition-colors leading-snug">{qs.label}</span>
                     <span className="text-[10px] mt-1 font-bold tracking-widest uppercase" style={{ color: GOLD }}>{qs.desc}</span>
                   </Link>
