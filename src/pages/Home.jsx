@@ -71,18 +71,28 @@ export default function Home() {
                 boxShadow: pillFocused ? `0 0 40px rgba(212,175,55,0.15)` : 'none',
               }}
             >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="flex items-center gap-3 flex-1 min-w-0 overflow-hidden">
                 <Search className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
-                <input
-                  type="text"
-                  value={situation}
-                  onChange={e => setSituation(e.target.value)}
-                  onFocus={() => setPillFocused(true)}
-                  onBlur={() => setTimeout(() => setPillFocused(false), 200)}
-                  placeholder="What is your real estate issue or opportunity?"
-                  className="flex-1 min-w-0 bg-transparent text-white text-sm outline-none placeholder-white overflow-hidden"
-                  style={{ caretColor: GOLD }}
-                />
+                <div className="relative flex-1 min-w-0 overflow-hidden">
+                  {/* Scrolling placeholder shown when empty and not focused */}
+                  {!situation && !pillFocused && (
+                    <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden">
+                      <div className="whitespace-nowrap text-sm text-white opacity-60 animate-marquee">
+                        What is your real estate issue or opportunity? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; What is your real estate issue or opportunity? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+                    </div>
+                  )}
+                  <input
+                    type="text"
+                    value={situation}
+                    onChange={e => setSituation(e.target.value)}
+                    onFocus={() => setPillFocused(true)}
+                    onBlur={() => setTimeout(() => setPillFocused(false), 200)}
+                    placeholder=""
+                    className="w-full bg-transparent text-white text-sm outline-none"
+                    style={{ caretColor: GOLD }}
+                  />
+                </div>
               </div>
               <Link to="/solve-my-story" className="shrink-0">
                 <button
