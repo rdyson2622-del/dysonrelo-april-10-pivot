@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Menu, X, LayoutDashboard, MessageCircle, Newspaper, Map, UserCircle, Home, DollarSign, Users } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/', Icon: Home },
@@ -26,23 +25,20 @@ export default function MobileTopBar() {
         style={{ background: '#0a0a0a', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
         
         {/* Hamburger */}
-        <button onClick={() => setOpen(true)} className="flex items-center justify-center w-9 h-9 rounded-lg"
+        <button onClick={() => setOpen(true)} className="flex items-center justify-center w-9 h-9 rounded-lg transition-colors hover:bg-white/5"
           style={{ color: GOLD }}>
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Logo centered */}
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-6 w-auto" />
-
         {/* Portal link */}
         <Link to="/dashboard"
-          className="text-xs font-bold px-3 py-1.5 rounded-full"
+          className="text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
           style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
           Portal
         </Link>
       </div>
 
-      {/* Overlay */}
+      {/* Overlay + Drawer */}
       {open && (
         <div className="fixed inset-0 z-50 flex">
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setOpen(false)} />
@@ -55,7 +51,8 @@ export default function MobileTopBar() {
             <div className="flex items-center justify-between px-5 py-4"
               style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
               <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Menu</p>
-              <button onClick={() => setOpen(false)} style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <button onClick={() => setOpen(false)} className="transition-colors hover:bg-white/5 p-1 rounded"
+                style={{ color: 'rgba(255,255,255,0.5)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -72,7 +69,7 @@ export default function MobileTopBar() {
                   key={label}
                   to={path}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-3 rounded-xl transition-all hover:bg-white/5"
+                  className="flex items-center gap-3 px-3 py-3 rounded-xl transition-all hover:bg-white/5 active:bg-white/10"
                   style={{ color: 'rgba(255,255,255,0.8)' }}
                 >
                   <Icon className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
