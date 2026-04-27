@@ -117,8 +117,8 @@ export default function Home() {
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-2xl mt-12 text-left">
 
-            <p className="text-sm font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD, fontSize: '1.5rem' }}>
-              Follow Our Client Home Ownership Stories and Solutions
+            <p className="text-sm font-black tracking-[0.3em] uppercase mb-2" style={{ color: '#000', fontSize: '1.5rem' }}>
+              Follow Our Clients Stories and Solutions
             </p>
             <p className="text-sm mb-6" style={{ color: 'rgba(26,26,26,0.5)', fontFamily: 'Georgia, serif' }}>
               Tap any story to read the full case study.
