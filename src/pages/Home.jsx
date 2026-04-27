@@ -91,7 +91,7 @@ export default function Home() {
                 {!situation && !pillFocused && (
                   <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden">
                     <div className="whitespace-nowrap text-xs text-white opacity-100 animate-marquee">
-                      Tell us your real estate issue and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; We are pretty good at reducing stress! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tell us your real estate issue and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; We are pretty good at reducing stress! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      Tell us your real estate issue or opportunity and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; We are pretty good at reducing stress! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tell us your real estate issue or opportunity and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; We are pretty good at reducing stress! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
                   </div>
                 )}
