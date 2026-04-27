@@ -127,7 +127,7 @@ export default function SolveMyStory() {
                 required
                 value={form.full_name}
                 onChange={e => setForm({ ...form, full_name: e.target.value })}
-                placeholder="John & Windean Stratton"
+                placeholder="Full Name"
                 className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
                 style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
               />
