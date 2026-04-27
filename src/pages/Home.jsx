@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ClientStory from '@/components/landing/ClientStory';
+import MobileTopBar from '@/components/home/MobileTopBar';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -32,8 +33,13 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ background: '#0a0a0a' }}>
+      {/* Mobile Top Bar */}
+      <div className="md:hidden">
+        <MobileTopBar />
+      </div>
+
       {/* Main Content */}
-      <div className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'transparent' }}>
+      <div className="flex-1 flex flex-col relative overflow-hidden md:pt-0 pt-11" style={{ background: 'transparent' }}>
 
         {/* ── DARK TOP SECTION: Logo + Title ── */}
         <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
