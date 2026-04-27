@@ -117,7 +117,7 @@ export default function SolveMyStory() {
           <div className="rounded-2xl px-6 py-7 space-y-4"
             style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
             <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>
-              YOUR CONTACT INFO
+              We will need your contact info so we can get solutions back to you ASAP
             </p>
 
             <div>
