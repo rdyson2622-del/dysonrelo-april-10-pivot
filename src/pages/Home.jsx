@@ -117,7 +117,7 @@ export default function Home() {
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-2xl mt-12 text-left">
 
-            <p className="text-xs font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
+            <p className="text-sm font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD, fontSize: '1.5rem' }}>
               FOLLOW OUR REAL LIFE CLIENT HOME OWNERSHIP STORIES AND SOLUTIONS
             </p>
             <p className="text-sm mb-6" style={{ color: 'rgba(26,26,26,0.5)', fontFamily: 'Georgia, serif' }}>
