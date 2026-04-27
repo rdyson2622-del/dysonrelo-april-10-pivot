@@ -51,7 +51,7 @@ export default function Home() {
             letterSpacing: '0.15em',
             lineHeight: 1
           }}>
-            HOME
+            HOMES
           </div>
           <p className="text-xs font-black tracking-[0.25em] uppercase text-white mb-0">
             Your Home Ownership Management Ecosystem
