@@ -115,7 +115,7 @@ export default function Home() {
           </div>
 
           {/* ── CLIENT STORIES ── */}
-          <div className="w-full max-w-2xl mt-12 text-left">
+          <div className="w-full max-w-4xl mt-12 text-left">
 
             <p className="text-sm font-black tracking-[0.3em] uppercase mb-2" style={{ color: '#000', fontSize: '1.5rem' }}>
               Follow Our Clients Stories and Solutions
