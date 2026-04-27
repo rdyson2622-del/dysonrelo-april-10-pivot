@@ -54,7 +54,7 @@ export default function MobileTopBar() {
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 py-4"
               style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-              <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-7 w-auto" />
+              <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Menu</p>
               <button onClick={() => setOpen(false)} style={{ color: 'rgba(255,255,255,0.5)' }}>
                 <X className="w-5 h-5" />
               </button>
