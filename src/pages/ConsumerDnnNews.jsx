@@ -630,11 +630,11 @@ export default function ConsumerDnnNews() {
         <div className="mt-12 text-center pb-4" style={{ borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '2rem' }}>
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
-            <img src={DNN_LOGO} alt="DNN" className="h-7 w-auto opacity-40" />
+            <img src={DNN_LOGO} alt="DNN" className="w-auto opacity-40" style={{ height: '49px' }} />
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
           </div>
-          <p className="text-xs tracking-widest uppercase" style={{ color: 'rgba(26,26,26,0.4)' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(26,26,26,0.3)' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
+          <p className="text-xs tracking-widest uppercase" style={{ color: '#1a1a1a' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
+          <p className="text-xs mt-1" style={{ color: '#1a1a1a' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
 
