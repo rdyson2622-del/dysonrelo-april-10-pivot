@@ -31,7 +31,7 @@ export default function AdminLayout() {
 
       <main className="flex-1 overflow-auto relative" style={{ background: '#808080' }}>
         {/* Top Controls */}
-        <div className="fixed top-3 left-3 right-3 z-50 flex items-center gap-2">
+        <div className="fixed top-3 left-3 z-50">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
@@ -39,6 +39,8 @@ export default function AdminLayout() {
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
+        </div>
+        <div className="fixed top-3 right-3 z-50 flex items-center gap-2">
           <Link
             to="/dashboard"
             className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
@@ -46,9 +48,7 @@ export default function AdminLayout() {
           >
             Client View
           </Link>
-          <div className="ml-auto">
-            <LayoutToggleButton />
-          </div>
+          <LayoutToggleButton />
         </div>
         <div className={`mx-auto ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`}>
           {/* Back button */}
