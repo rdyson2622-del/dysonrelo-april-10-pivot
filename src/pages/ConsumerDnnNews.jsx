@@ -630,7 +630,7 @@ export default function ConsumerDnnNews() {
         <div className="mt-12 text-center pb-4" style={{ borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '2rem' }}>
           <div className="flex items-center justify-center gap-3 mb-3">
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
-            <img src={DNN_LOGO} alt="DNN" className="w-auto opacity-40" style={{ height: '49px' }} />
+            <img src={DNN_LOGO} alt="DNN" className="w-auto" style={{ height: '49px' }} />
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
           </div>
           <p className="text-xs tracking-widest uppercase" style={{ color: '#1a1a1a' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
