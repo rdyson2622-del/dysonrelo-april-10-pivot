@@ -77,7 +77,7 @@ export default function Home() {
           {/* ── THE PILL ── */}
           <div className="w-full max-w-4xl">
             <div
-              className="flex flex-row items-center rounded-xl px-4 py-3 gap-2 transition-all duration-300"
+              className="flex flex-row items-center rounded-lg px-3 py-2 gap-2 transition-all duration-300"
               style={{
                 background: '#2a2a2a',
                 border: `2px solid ${pillFocused ? GOLD : 'rgba(212,175,55,0.3)'}`,
@@ -87,29 +87,29 @@ export default function Home() {
               <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
                 <Search className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
                 <div className="relative flex-1 min-w-0 overflow-hidden">
-                  {/* Scrolling placeholder shown when empty and not focused */}
-                  {!situation && !pillFocused && (
-                    <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden">
-                      <div className="whitespace-nowrap text-sm text-white opacity-100 animate-marquee">
-                        Tell us your real estate issue or opportunity and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tell us your real estate issue or opportunity and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </div>
+                {/* Scrolling placeholder shown when empty and not focused */}
+                {!situation && !pillFocused && (
+                  <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden">
+                    <div className="whitespace-nowrap text-xs text-white opacity-100 animate-marquee">
+                      Tell us your real estate issue and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tell us your real estate issue and we'll help you ASAP! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
-                  )}
-                  <input
-                    type="text"
-                    value={situation}
-                    onChange={e => setSituation(e.target.value)}
-                    onFocus={() => setPillFocused(true)}
-                    onBlur={() => setTimeout(() => setPillFocused(false), 200)}
-                    placeholder=""
-                    className="w-full bg-transparent text-white text-sm outline-none"
-                    style={{ caretColor: GOLD }}
-                  />
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={situation}
+                  onChange={e => setSituation(e.target.value)}
+                  onFocus={() => setPillFocused(true)}
+                  onBlur={() => setTimeout(() => setPillFocused(false), 200)}
+                  placeholder=""
+                  className="w-full bg-transparent text-white text-xs outline-none"
+                  style={{ caretColor: GOLD }}
+                />
                 </div>
               </div>
               <Link to="/solve-my-story" className="shrink-0">
                 <button
-                  className="px-4 py-2 rounded-lg text-xs font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                  className="px-3 py-1.5 rounded-md text-[11px] font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{ 
                     background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
                     boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)',
