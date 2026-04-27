@@ -118,10 +118,10 @@ export default function Home() {
           <div className="w-full max-w-4xl mt-12 text-left">
 
             <div className="mb-8">
-              <p className="display-heading mb-2" style={{ fontSize: 'clamp(1rem, 3vw, 1.4rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
+              <p className="display-heading mb-2" style={{ fontSize: 'clamp(1.3rem, 3.9vw, 1.82rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
                 CLIENT STORIES &amp; SOLUTIONS
               </p>
-              <p className="text-sm" style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.1rem' }}>
+              <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.43rem' }}>
                 Tap any story to read the full case study.
               </p>
             </div>
