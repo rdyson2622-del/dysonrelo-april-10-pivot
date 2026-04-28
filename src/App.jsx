@@ -82,6 +82,7 @@ import AdminLenderVetting from './pages/AdminLenderVetting';
 import AdminBureauStories from './pages/AdminBureauStories';
 import ReloManagement from './pages/ReloManagement';
 import SolveMyStory from './pages/SolveMyStory';
+import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -197,6 +198,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/lender-vetting" element={<AdminLenderVetting />} />
         <Route path="/admin/dnn/bureau-stories" element={<AdminBureauStories />} />
         <Route path="/solve-my-story" element={<SolveMyStory />} />
+        <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />

@@ -1,0 +1,324 @@
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+
+const GOLD = '#D4AF37';
+const TAN = '#ede0cc';
+
+const INITIAL_SECTIONS = [
+  {
+    id: 'overview',
+    title: 'PRN OVERVIEW — WHAT IS THE PRIVATE REFERRAL NETWORK?',
+    content: `The Private Referral Network (PRN) is Dyson & Dyson's exclusive, invitation-only ecosystem connecting vetted real estate agents and mortgage lenders with high-intent relocation clients. Unlike public directories or Zillow-style marketplaces, the PRN is a closed, curated network where every professional is personally vetted by Bob Dyson before being granted access.
+
+The PRN is not a lead-generation platform. It is a referral management and co-marketing infrastructure designed to:
+• Generate consistent, pre-qualified referral volume for partner agents and lenders
+• Position Dyson & Dyson as the intelligence layer and relocation concierge for every transaction
+• Build a recurring revenue model through subscription tiers and referral fee structures`
+  },
+  {
+    id: 'agent_value',
+    title: 'AGENT VALUE PROPOSITION',
+    content: `What agents get when they join the PRN:
+
+1. PRE-QUALIFIED REFERRALS — Every client handed off has already completed the Dyson intake process (Gemini Session), is commitment-gated, and has articulated their destination, timeline, and budget.
+
+2. DNN CO-BRANDING — Partner agents are featured in the Dyson News Network (DNN) as "Bureau-Certified" professionals. Their name, photo, and bio appear alongside DNN intelligence briefs sent to thousands of subscribers.
+
+3. RELOCATION CONCIERGE BACKUP — Dyson & Dyson remains actively embedded in the transaction as the relocation manager. Agents close deals; we handle the logistics, communications, and client anxiety.
+
+4. ESCROW MONITORING — Our team monitors escrow milestones and surfaces issues early, reducing fall-through risk and improving close rates.
+
+5. EXCLUSIVE MARKET ACCESS — PRN agents are the only professionals recommended to Dyson clients in their designated market. No competition within the same territory.`
+  },
+  {
+    id: 'subscription_tiers',
+    title: 'AGENT SUBSCRIPTION TIERS',
+    content: `The PRN operates on a tiered subscription model:
+
+── BRONZE TIER ($X/month) ──
+• Listed in the DNN Agent Bureau directory
+• Basic co-branding on DNN articles (city-level)
+• Up to 2 referrals per quarter
+• Access to Dyson relocation materials and scripts
+
+── SILVER TIER ($X/month) ──
+• Everything in Bronze
+• Featured placement in DNN Morning Brief (monthly rotation)
+• Up to 5 referrals per quarter
+• Dedicated co-brand label: "Brought to you by DNN in partnership with [Agent Name]"
+• Priority escrow monitoring
+
+── GOLD TIER ($X/month) ──
+• Everything in Silver
+• Exclusive territory lock — no competing PRN agent in your market
+• Unlimited referral volume
+• Bob Dyson personal introduction for high-value clients
+• Featured video segment in DNN News Feed
+• Quarterly performance review call with Dyson team
+
+NOTE: Pricing placeholders above ($X) to be finalized. Replace with agreed monthly rates.`
+  },
+  {
+    id: 'referral_fee',
+    title: 'REFERRAL FEE STRUCTURE',
+    content: `In addition to the subscription fee, PRN agents pay a referral fee on closed transactions originated through the Dyson network:
+
+• Standard Referral Fee: 25% of gross commission on buyer-side transactions
+• Seller-Side (Listing Referral): 20% of gross commission
+• Dual-Side (Buy + Sell through Dyson client): 30% of total gross commission
+
+All referral fee agreements are documented via the Dyson Referral Agreement (generated automatically through the platform) and signed digitally before client introduction.
+
+IMPORTANT: Referral fees are earned by the Dyson Referral Group (CalDRE #XXXXXXX) and are only payable broker-to-broker per California DRE regulations.`
+  },
+  {
+    id: 'onboarding',
+    title: 'AGENT ONBOARDING PROCESS',
+    content: `How an agent enters the PRN:
+
+STEP 1 — REFERRAL OR APPLICATION
+Agent is referred by an existing PRN member or applies through the DNN Agent Bureau page. Cold applicants go through a longer vetting period.
+
+STEP 2 — BOB DYSON VETTING CALL (30 min)
+Personal conversation covering: transaction volume, market specialties, communication style, client service philosophy, and personality fit. This is a relationship business — culture matters.
+
+STEP 3 — LICENSE & BACKGROUND VERIFICATION
+DRE license check, NMLS (for lenders), recent transaction history, online reputation audit (Zillow/Google reviews), and reference call with a past client.
+
+STEP 4 — SUBSCRIPTION AGREEMENT SIGNED
+Agent selects tier, signs the PRN Subscription Agreement, and provides billing info. Monthly subscription begins.
+
+STEP 5 — ONBOARDING BRIEF
+Agent receives Dyson Relocation Protocol guide, co-brand assets, introduction to Charlie (AI concierge), and escrow monitoring enrollment.
+
+STEP 6 — FIRST REFERRAL INTRODUCTION
+Dyson team makes the warm introduction. Agent receives full client intake summary, Gemini Session notes, and escrow setup checklist.`
+  },
+  {
+    id: 'agent_obligations',
+    title: 'AGENT OBLIGATIONS & STANDARDS',
+    content: `PRN agents agree to the following standards of conduct:
+
+• RESPONSE TIME: All Dyson client introductions must be acknowledged within 2 hours. First client contact must occur within 24 hours.
+
+• COMMUNICATION TRANSPARENCY: Agents agree to copy the Dyson team (or designated inbox) on all major milestone communications with the client during the transaction.
+
+• REPORTING: Agents submit a brief status update (via the platform or text) at each escrow milestone: offer accepted, inspection complete, contingencies released, clear to close, funding.
+
+• CLIENT EXPERIENCE STANDARD: Clients are the priority. Any agent who receives more than 2 documented complaints from Dyson clients is placed on probation and may be removed from the PRN.
+
+• EXCLUSIVITY RESPECT: Gold-tier agents may not refer Dyson clients to competing agents or lenders outside the PRN without written consent.`
+  },
+  {
+    id: 'revenue_model',
+    title: 'DYSON PRN REVENUE MODEL',
+    content: `Revenue streams generated by the PRN for Dyson & Dyson:
+
+1. SUBSCRIPTION REVENUE
+Monthly recurring revenue from Bronze/Silver/Gold agent subscriptions. Target: 20 active PRN agents at average $X/month = $XX,XXX/month ARR.
+
+2. REFERRAL FEE INCOME
+25% referral fee on each closed transaction. At average commission of $15,000/side, each closed Dyson referral generates $3,750 in referral income.
+
+3. DNN FEATURED PLACEMENT FEES
+Agents and lenders pay a premium to be featured in DNN newsletters, social posts, and article co-branding campaigns. Separate from subscription.
+
+4. LENDER PARTNER FEES
+Vetted lenders pay a parallel structure — subscription + per-referral fee — mirroring the agent model.
+
+5. WHITE-LABEL CONTENT LICENSING
+Agents may license DNN-produced market intelligence content (articles, morning briefs) under their own brand for use in their client communications.
+
+PROJECTED ANNUAL PRN REVENUE TARGET: $XXX,XXX (to be modeled based on finalized pricing)`
+  },
+  {
+    id: 'competitive_moat',
+    title: 'COMPETITIVE MOAT — WHY AGENTS STAY',
+    content: `The PRN is defensible because it is not a commodity lead service. Agents who join receive:
+
+• RELATIONSHIP CAPITAL — A personal endorsement from Bob Dyson carries significant weight in the relocation and referral community. Agents become associated with a 55-year legacy brand.
+
+• PRE-SOLD CLIENTS — Dyson clients arrive having already been educated by Charlie, guided through the Gemini Session, and committed to the relocation process. The agent doesn't sell the client on moving — they execute the plan.
+
+• RECURRING VOLUME — Unlike one-off referral networks, PRN agents receive a predictable pipeline as Dyson scales DNN subscriber acquisition and outreach campaigns.
+
+• CO-MARKETING INFRASTRUCTURE — Agents gain access to a content marketing machine (DNN) they could not build themselves. Their faces and markets get broadcast to thousands of subscribers organically.
+
+• LOYALTY THROUGH RESULTS — Agents who perform well become the permanent go-to for their market. The Dyson team actively protects their territory and promotes their success stories in the Bureau Story Hub.`
+  },
+  {
+    id: 'notes',
+    title: 'INTERNAL NOTES & OPEN ITEMS',
+    content: `Items to finalize before PRN launch:
+
+[ ] Finalize Bronze / Silver / Gold monthly subscription pricing
+[ ] Confirm referral fee percentages with legal/compliance review (CA DRE broker-to-broker)
+[ ] Set CalDRE license number in all referral agreement templates
+[ ] Build out the agent-facing PRN enrollment page (public-facing)
+[ ] Define "territory" parameters — zip code level? City? County?
+[ ] Create automated referral agreement generation flow in platform
+[ ] Set up PRN agent portal view (separate from admin)
+[ ] Launch first cohort: target 5 Gold agents in top Dyson destination markets
+[ ] Draft PRN pitch deck for agent recruitment outreach
+[ ] Schedule Bob Dyson intro video for PRN landing page`
+  },
+];
+
+export default function AdminPRNAgentPlan() {
+  const [sections, setSections] = useState(INITIAL_SECTIONS);
+  const [editing, setEditing] = useState(null); // id of section being edited
+  const [editContent, setEditContent] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [newSectionTitle, setNewSectionTitle] = useState('');
+  const [showAddSection, setShowAddSection] = useState(false);
+
+  const startEdit = (section) => {
+    setEditing(section.id);
+    setEditTitle(section.title);
+    setEditContent(section.content);
+  };
+
+  const saveEdit = () => {
+    setSections(prev => prev.map(s => s.id === editing ? { ...s, title: editTitle, content: editContent } : s));
+    setEditing(null);
+  };
+
+  const deleteSection = (id) => {
+    if (window.confirm('Remove this section?')) {
+      setSections(prev => prev.filter(s => s.id !== id));
+    }
+  };
+
+  const addSection = () => {
+    if (!newSectionTitle.trim()) return;
+    const id = `section_${Date.now()}`;
+    setSections(prev => [...prev, { id, title: newSectionTitle.toUpperCase(), content: 'Add your content here...' }]);
+    setNewSectionTitle('');
+    setShowAddSection(false);
+    setTimeout(() => startEdit({ id, title: newSectionTitle.toUpperCase(), content: 'Add your content here...' }), 100);
+  };
+
+  return (
+    <div className="min-h-screen px-6 py-8" style={{ background: TAN }}>
+      <div className="max-w-4xl mx-auto">
+
+        {/* Header */}
+        <div className="mb-10">
+          <p className="text-xs font-black tracking-[0.3em] mb-1" style={{ color: GOLD }}>PRIVATE REFERRAL NETWORK</p>
+          <h1 className="font-black text-3xl tracking-tight mb-1" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
+            PRN Agent Business Plan
+          </h1>
+          <p className="text-sm" style={{ color: '#6b5c45' }}>
+            Internal strategy document — agent involvement, subscription model, and revenue architecture.
+            <br />Click any section to edit. Add or remove sections as needed.
+          </p>
+        </div>
+
+        {/* Sections */}
+        <div className="space-y-6">
+          {sections.map((section) => (
+            <div key={section.id} className="rounded-2xl overflow-hidden shadow-sm"
+              style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
+
+              {editing === section.id ? (
+                /* ── EDIT MODE ── */
+                <div className="p-6">
+                  <input
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                    className="w-full font-black text-sm tracking-[0.15em] uppercase mb-4 px-3 py-2 rounded-lg outline-none"
+                    style={{ background: '#ede0cc', border: `1px solid ${GOLD}`, color: '#1a1a1a' }}
+                  />
+                  <textarea
+                    value={editContent}
+                    onChange={e => setEditContent(e.target.value)}
+                    rows={16}
+                    className="w-full text-sm leading-relaxed px-3 py-3 rounded-lg outline-none resize-y"
+                    style={{ background: '#ede0cc', border: `1px solid ${GOLD}`, color: '#2a1f0e', fontFamily: 'Georgia, serif' }}
+                  />
+                  <div className="flex gap-3 mt-4">
+                    <button onClick={saveEdit}
+                      className="px-5 py-2 rounded-full text-sm font-bold"
+                      style={{ background: GOLD, color: '#000' }}>
+                      Save
+                    </button>
+                    <button onClick={() => setEditing(null)}
+                      className="px-5 py-2 rounded-full text-sm font-bold"
+                      style={{ background: 'rgba(0,0,0,0.08)', color: '#444' }}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* ── VIEW MODE ── */
+                <div>
+                  <div className="flex items-center justify-between px-6 py-4"
+                    style={{ borderBottom: '1px solid rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.07)' }}>
+                    <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+                      {section.title}
+                    </p>
+                    <div className="flex gap-2">
+                      <button onClick={() => startEdit(section)}
+                        className="text-xs px-3 py-1 rounded-full font-semibold transition-all hover:opacity-80"
+                        style={{ background: GOLD, color: '#000' }}>
+                        Edit
+                      </button>
+                      <button onClick={() => deleteSection(section.id)}
+                        className="text-xs px-3 py-1 rounded-full font-semibold transition-all hover:opacity-80"
+                        style={{ background: 'rgba(239,68,68,0.12)', color: '#dc2626', border: '1px solid rgba(239,68,68,0.2)' }}>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <div className="px-6 py-5">
+                    <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#2a1f0e', fontFamily: 'Georgia, serif' }}>
+                      {section.content}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Add Section */}
+        <div className="mt-8">
+          {showAddSection ? (
+            <div className="rounded-2xl p-6" style={{ background: '#fff8ee', border: `2px dashed ${GOLD}` }}>
+              <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>NEW SECTION TITLE</p>
+              <input
+                value={newSectionTitle}
+                onChange={e => setNewSectionTitle(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addSection()}
+                placeholder="e.g. LENDER CROSS-SELL STRATEGY"
+                className="w-full px-4 py-3 rounded-xl text-sm font-semibold outline-none mb-4"
+                style={{ background: '#ede0cc', border: `1px solid ${GOLD}`, color: '#1a1a1a' }}
+                autoFocus
+              />
+              <div className="flex gap-3">
+                <button onClick={addSection}
+                  className="px-5 py-2 rounded-full text-sm font-bold"
+                  style={{ background: GOLD, color: '#000' }}>
+                  Add Section
+                </button>
+                <button onClick={() => setShowAddSection(false)}
+                  className="px-5 py-2 rounded-full text-sm font-bold"
+                  style={{ background: 'rgba(0,0,0,0.08)', color: '#444' }}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowAddSection(true)}
+              className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest transition-all hover:opacity-80"
+              style={{ background: 'transparent', border: `2px dashed rgba(212,175,55,0.4)`, color: GOLD }}>
+              + ADD NEW SECTION
+            </button>
+          )}
+        </div>
+
+        <div className="h-16" />
+      </div>
+    </div>
+  );
+}

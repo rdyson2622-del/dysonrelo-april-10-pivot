@@ -59,6 +59,7 @@ const NAV_SECTIONS = [
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Private Referral Network (PRN)', isHeader: true },
       { label: 'Agents', path: '/admin/referrals', icon: UserCheck },
+      { label: '↳ PRN Agent Business Plan', path: '/admin/prn-agent-plan', icon: FileText, indent: true },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Lenders', path: '/admin/owners', icon: Users },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
