@@ -65,12 +65,12 @@ export default function ClientSidebar() {
       {/* Scrollable area below logo */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-      {/* ── PRN AGENT TOOLS (agents only) ── */}
-      {userRole === 'agent' && (
+      {/* ── PRN AGENT TOOLS (agents + admins) ── */}
+      {(userRole === 'agent' || userRole === 'admin') && (
         <div className="px-3 pt-4 pb-3">
           <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
             <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>PRN Agent Tools</p>
+              <p className="text-[11px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD, textShadow: '0 0 8px rgba(212,175,55,0.5)' }}>⭐ PRN Agent Tools</p>
             </div>
             <div className="flex flex-col gap-1 p-2">
               <Link to="/admin/skip-trace"
@@ -96,8 +96,8 @@ export default function ClientSidebar() {
         </div>
       )}
 
-      {/* ── VENDOR UTILITY (vendors only) ── */}
-      {userRole === 'vendor' && (
+      {/* ── VENDOR UTILITY (vendors + admins) ── */}
+      {(userRole === 'vendor' || userRole === 'admin') && (
         <div className="px-3 pt-4 pb-3">
           <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
             <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
