@@ -7,7 +7,7 @@ export default function ClientStory({ label, headline, children }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="w-full border-b" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
+    <div className="w-full border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
       {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
@@ -21,7 +21,7 @@ export default function ClientStory({ label, headline, children }) {
             fontFamily: 'Cormorant Garamond, serif',
             fontSize: 'clamp(1.3rem, 3.5vw, 2rem)',
             fontWeight: 600,
-            color: '#1a1a1a',
+            color: '#fff',
             lineHeight: 1.25,
           }}>
             {headline}
@@ -47,7 +47,7 @@ export default function ClientStory({ label, headline, children }) {
       {!open && (
         <div className="relative -mt-12 h-12 pointer-events-none"
           style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(237,224,204,0.3) 50%, rgba(237,224,204,0.9) 100%)'
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(17,17,17,0.3) 50%, rgba(17,17,17,0.9) 100%)'
           }}>
           <button
             onClick={() => setOpen(true)}
