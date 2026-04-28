@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -21,6 +21,11 @@ export default function Home() {
   const [situation, setSituation] = useState('');
   const [story, setStory] = useState('');
   const [storySubmitted, setStorySubmitted] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+  }, []);
 
   // Fetch latest DNN article for bottom corner card
   const { data: articles = [] } = useQuery({
@@ -44,6 +49,19 @@ export default function Home() {
         <div className="md:hidden">
           <MobileTopBar />
         </div>
+
+        {/* Admin Toggle — fixed top right, always visible for admins */}
+        {isAdmin && (
+          <div className="fixed top-3 right-3 z-[9999] flex items-center gap-2">
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
+            >
+              Admin Panel
+            </Link>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col relative overflow-hidden md:pt-0 pt-11" style={{ background: 'transparent' }}>
