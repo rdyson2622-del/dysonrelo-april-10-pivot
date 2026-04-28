@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -22,6 +22,17 @@ export default function Home() {
   const [story, setStory] = useState('');
   const [storySubmitted, setStorySubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [headingVisible, setHeadingVisible] = useState(false);
+  const headingRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeadingVisible(true); },
+      { threshold: 0.3 }
+    );
+    if (headingRef.current) observer.observe(headingRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
@@ -156,7 +167,15 @@ export default function Home() {
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-4xl mt-12 text-left">
 
-            <div className="mb-8">
+            <div
+              ref={headingRef}
+              className="mb-8"
+              style={{
+                opacity: headingVisible ? 1 : 0,
+                transform: headingVisible ? 'translateY(0)' : 'translateY(24px)',
+                transition: 'opacity 0.9s ease, transform 0.9s ease',
+              }}
+            >
               <p className="display-heading mb-2" style={{ fontSize: 'clamp(1.3rem, 3.9vw, 1.82rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
                 REVIEW CLIENT STORIES &amp; SOLUTIONS
               </p>
