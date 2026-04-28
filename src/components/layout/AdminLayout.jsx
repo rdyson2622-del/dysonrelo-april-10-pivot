@@ -13,7 +13,7 @@ export default function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: '#0a0a0a' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: '#808080' }}>
       {/* Desktop Sidebar */}
       <div className="hidden md:flex">
         <AdminSidebar />
@@ -29,7 +29,7 @@ export default function AdminLayout() {
         </div>
       )}
 
-      <main className="flex-1 overflow-auto relative" style={{ background: '#0a0a0a' }}>
+      <main className="flex-1 overflow-auto relative" style={{ background: '#808080' }}>
         {/* Top Controls */}
         <div className="fixed top-3 left-3 z-50">
           <button
