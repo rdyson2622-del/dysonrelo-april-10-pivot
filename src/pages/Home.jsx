@@ -180,7 +180,7 @@ export default function Home() {
                 REVIEW CLIENT STORIES &amp; SOLUTIONS
               </p>
               <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '2.29rem', animation: 'gentlePulse 3s ease-in-out infinite' }}>
-                Tap any story to read the full case study.
+                Tap any story to read or watch the full case study.
               </p>
             </div>
 
