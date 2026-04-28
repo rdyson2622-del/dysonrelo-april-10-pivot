@@ -160,7 +160,7 @@ export default function Home() {
               <p className="display-heading mb-2" style={{ fontSize: 'clamp(1.3rem, 3.9vw, 1.82rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
                 REVIEW CLIENT STORIES &amp; SOLUTIONS
               </p>
-              <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.43rem' }}>
+              <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.43rem', animation: 'gentlePulse 3s ease-in-out infinite' }}>
                 Tap any story to read the full case study.
               </p>
             </div>

@@ -99,6 +99,11 @@
   animation: marquee 12s linear infinite;
 }
 
+@keyframes gentlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* Charlie chat input placeholder */
 .charlie-input::placeholder {
   color: #fff !important;
