@@ -52,15 +52,13 @@ export default function Home() {
 
         {/* Admin Toggle — fixed top right, always visible for admins */}
         {isAdmin && (
-          <div className="fixed top-3 right-3 z-[9999] flex items-center gap-2">
-            <Link
-              to="/admin"
-              className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
-            >
-              Admin Panel
-            </Link>
-          </div>
+          <Link
+            to="/admin"
+            className="fixed top-3 right-3 z-[10000] flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
+          >
+            Admin Panel
+          </Link>
         )}
 
         {/* Main Content */}
