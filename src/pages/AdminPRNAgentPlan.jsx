@@ -175,6 +175,36 @@ Utility: Vendors get skip-trace access at a $1.50 "Partner Rate" to verify prope
     content: `Logic: All partnerships are structured as broker-to-broker referrals or co-marketing MSAs to ensure full legal compliance while scaling to 100 cities.`
   },
   {
+    id: 'skip_trace_interface',
+    dividerAbove: true,
+    title: 'SECTION 14: THE SKIP-TRACE RESULT INTERFACE',
+    content: `The "Reveal" Logic: When a trace is successful, the data must be presented in a "Dyson Gold" branded pill — clean, credentialed, and immediately actionable.
+
+DATA POINTS INCLUDED IN EVERY RESULT PILL:
+
+1. Owner Identity
+   Full Name + Current Mailing Address (verified against county records).
+
+2. Contact Intel
+   Up to 3 verified phone numbers (each flagged for DNC status) and 2 verified email addresses.
+
+3. Property Story
+   Instant link to the property's last sale date and estimated current equity position — giving the agent context before the first call.
+
+4. The Lender Solve
+   A "One-Click" button to send this full data package directly to the agent's paired Lender partner for a "Rate-Solve" financing scenario — completing the loop from lead identification to financing intelligence in a single workflow.
+
+WHY THIS COMPLETES THE BLUEPRINT:
+
+This interface is the product. Everything else in this plan — the subscriptions, the tiers, the vendor network, the lender loop — exists to deliver this one moment: an agent opens a skip-trace result and has every tool they need to convert a cold homeowner into a client conversation.
+
+Revenue defined (Stripe tiers).
+Users defined (Vendors, Agents, Lenders).
+Product defined (This Interface).
+
+The 14-Section PRN Master Plan is complete.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
