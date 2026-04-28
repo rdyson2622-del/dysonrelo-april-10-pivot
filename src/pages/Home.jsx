@@ -94,7 +94,7 @@ export default function Home() {
             HOMES
           </div>
           <p className="font-black tracking-[0.25em] uppercase text-white mb-0" style={{ fontSize: '1.125rem' }}>
-            Your Home Owner Management Ecosystem
+            Home Owner Management Ecosystem
           </p>
         </div>
 
