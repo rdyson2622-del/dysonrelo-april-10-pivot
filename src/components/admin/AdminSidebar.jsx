@@ -57,6 +57,7 @@ const NAV_SECTIONS = [
     children: [
       { label: 'Listing Clients', path: '/admin/clients', icon: Home },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
+      { label: 'Private Referral Network (PRN)', isHeader: true },
       { label: 'Agents', path: '/admin/referrals', icon: UserCheck },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Lenders', path: '/admin/owners', icon: Users },
@@ -251,6 +252,13 @@ export default function AdminSidebar() {
                   {section.children.map((child, ci) => {
                     if (child.isCommsBadge) {
                       return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
+                    }
+                    if (child.isHeader) {
+                      return (
+                        <div key={ci} className="px-3 pt-3 pb-1">
+                          <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>{child.label}</span>
+                        </div>
+                      );
                     }
                     const isActive = location.pathname === child.path;
                     const childColor = section.color || '#D4AF37';
