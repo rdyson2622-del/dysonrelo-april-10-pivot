@@ -40,13 +40,13 @@ export default function AdminLayout() {
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
-        <div className="fixed top-3 right-3 z-50 flex items-center gap-2">
+        <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
           <Link
             to="/dashboard"
             className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
+            style={{ background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }}
           >
-            Client View
+            ← Client View
           </Link>
           <LayoutToggleButton />
         </div>
