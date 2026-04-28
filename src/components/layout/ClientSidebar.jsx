@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, GitCompare, Users, Search, MessageCircle, Newspaper, DollarSign, Shield } from 'lucide-react';
+import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, Users, Search, MessageCircle, Newspaper, DollarSign, Shield, Fingerprint, RefreshCw, CreditCard, Building2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
 
@@ -26,15 +26,16 @@ export default function ClientSidebar() {
   const [clientId, setClientId] = useState(null);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
   const [showRelocationPill, setShowRelocationPill] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (!user?.email) return;
+      setUserRole(user.role);
       base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1).then(clients => {
         if (clients.length > 0) {
           const id = clients[0].id;
           setClientId(id);
-          // Count admin replies not yet seen (simple: count admin messages)
           base44.entities.ChatMessage.filter({ client_id: id, role: 'admin' }, '-created_date', 10).then(msgs => {
             setUnreadCount(msgs.length);
           });
@@ -63,6 +64,62 @@ export default function ClientSidebar() {
 
       {/* Scrollable area below logo */}
       <div className="flex-1 overflow-y-auto flex flex-col">
+
+      {/* ── PRN AGENT TOOLS (agents only) ── */}
+      {userRole === 'agent' && (
+        <div className="px-3 pt-4 pb-3">
+          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
+            <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>PRN Agent Tools</p>
+            </div>
+            <div className="flex flex-col gap-1 p-2">
+              <Link to="/admin/skip-trace"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+                style={{ color: '#fff' }}>
+                <Fingerprint className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                Run Skip Trace <span className="ml-auto text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>
+              </Link>
+              <Link to="/admin/outreach-pipeline"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+                style={{ color: '#fff' }}>
+                <RefreshCw className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                My Lead Loop
+              </Link>
+              <Link to="/financial-services"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+                style={{ color: '#fff' }}>
+                <CreditCard className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                Refill Fuel (Stripe)
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── VENDOR UTILITY (vendors only) ── */}
+      {userRole === 'vendor' && (
+        <div className="px-3 pt-4 pb-3">
+          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
+            <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Vendor Utility</p>
+            </div>
+            <div className="flex flex-col gap-1 p-2">
+              <Link to="/search"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+                style={{ color: '#fff' }}>
+                <Search className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                Property Search
+              </Link>
+              <Link to="/admin/skip-trace"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+                style={{ color: '#fff' }}>
+                <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+                Verified Owner Data
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Links Header */}
       <div className="px-3 py-3">
