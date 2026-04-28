@@ -7,11 +7,11 @@ export default function ClientStory({ label, headline, children }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="w-full border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+    <div className="w-full rounded-2xl mb-4 overflow-hidden" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.25)' }}>
       {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left py-6 flex items-start justify-between gap-4 group"
+        className="w-full text-left px-6 py-6 flex items-start justify-between gap-4 group"
       >
         <div className="flex-1">
           <p className="text-xs font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
@@ -21,7 +21,7 @@ export default function ClientStory({ label, headline, children }) {
             fontFamily: 'Cormorant Garamond, serif',
             fontSize: 'clamp(1.3rem, 3.5vw, 2rem)',
             fontWeight: 600,
-            color: '#fff',
+            color: '#ffffff',
             lineHeight: 1.25,
           }}>
             {headline}
@@ -38,7 +38,7 @@ export default function ClientStory({ label, headline, children }) {
 
       {/* Expandable body */}
       {open && (
-        <div className="pb-8">
+        <div className="px-6 pb-8">
           {children}
         </div>
       )}

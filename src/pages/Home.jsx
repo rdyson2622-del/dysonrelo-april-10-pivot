@@ -154,11 +154,10 @@ export default function Home() {
           </div>
 
           {/* ── CLIENT STORIES ── */}
-          <div className="w-full max-w-4xl mt-12 text-left rounded-3xl overflow-hidden"
-            style={{ background: '#111', border: `1px solid rgba(212,175,55,0.25)` }}>
+          <div className="w-full max-w-4xl mt-12 text-left">
 
-            <div className="px-8 pt-8 pb-4">
-              <p className="display-heading mb-2" style={{ fontSize: 'clamp(1.3rem, 3.9vw, 1.82rem)', letterSpacing: '0.2em', color: '#fff' }}>
+            <div className="mb-8">
+              <p className="display-heading mb-2" style={{ fontSize: 'clamp(1.3rem, 3.9vw, 1.82rem)', letterSpacing: '0.2em', color: '#1a1a1a' }}>
                 CLIENT STORIES &amp; SOLUTIONS
               </p>
               <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.43rem' }}>
@@ -166,7 +165,6 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="px-8">
             {/* Story 1 — Windean Stratton */}
             <ClientStory
               label="4-State Relocation · Arizona → Arkansas"
@@ -214,11 +212,10 @@ export default function Home() {
             </ClientStory>
 
             {/* ── Add more <ClientStory> blocks here as you collect them ── */}
-            </div>
 
             {/* CTA */}
-            <div className="px-8 py-8 text-center mt-2"
-              style={{ borderTop: `1px solid rgba(212,175,55,0.2)` }}>
+            <div className="rounded-2xl px-7 py-8 text-center mt-10"
+              style={{ background: '#111', border: `2px solid ${GOLD}` }}>
               <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>YOUR STORY IS NEXT</p>
               <p className="text-white leading-relaxed mb-6" style={{ fontFamily: 'Georgia, serif', fontSize: '1rem' }}>
                 Every home has a story, and every move has a conflict. Are you planning a complex relocation, or is your current real estate transaction stuck in the mud?
