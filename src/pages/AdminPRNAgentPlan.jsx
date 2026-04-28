@@ -148,6 +148,7 @@ PROJECTED ANNUAL PRN REVENUE TARGET: $XXX,XXX (to be modeled based on finalized 
   },
   {
     id: 'flat50_stripe',
+    dividerAbove: true,
     title: 'SECTION 10: THE "FLAT $50" STRIPE UTILITY (THE "S" SERVICE)',
     content: `Logic: Pre-paid fuel model. No skip-trace or data request can be executed unless the user has a positive credit balance. This prevents delivery glitches and manual refunds.
 
@@ -155,6 +156,7 @@ Interface: When the balance hits zero, a Stripe-hosted modal appears for a Flat 
   },
   {
     id: 'vendor_affiliate',
+    dividerAbove: true,
     title: 'SECTION 11: VENDOR & AFFILIATE DATA ACCESS',
     content: `Target: Contractors, Appraisers, and Inspectors.
 
@@ -162,11 +164,13 @@ Utility: Vendors get skip-trace access at a $1.50 "Partner Rate" to verify prope
   },
   {
     id: 'lender_agent_loop',
+    dividerAbove: true,
     title: 'SECTION 12: AUTOMATED LENDER-TO-AGENT LOOP',
     content: `Logic: Every agent skip-trace result automatically attaches a "Rate-Solve" financing scenario from their paired lender partner.`
   },
   {
     id: 'respa_msa',
+    dividerAbove: true,
     title: 'SECTION 13: RESPA-COMPLIANT MSA FRAMING',
     content: `Logic: All partnerships are structured as broker-to-broker referrals or co-marketing MSAs to ensure full legal compliance while scaling to 100 cities.`
   },
@@ -241,7 +245,11 @@ export default function AdminPRNAgentPlan() {
         {/* Sections */}
         <div className="space-y-6">
           {sections.map((section) => (
-            <div key={section.id} className="rounded-2xl overflow-hidden shadow-sm"
+            <div key={section.id}>
+            {section.dividerAbove && (
+              <hr style={{ border: 'none', borderTop: '2px solid rgba(212,175,55,0.5)', margin: '8px 0 24px 0' }} />
+            )}
+            <div className="rounded-2xl overflow-hidden shadow-sm"
               style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
 
               {editing === section.id ? (
@@ -278,7 +286,7 @@ export default function AdminPRNAgentPlan() {
                 <div>
                   <div className="flex items-center justify-between px-6 py-4"
                     style={{ borderBottom: '1px solid rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.07)' }}>
-                    <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+                    <p className="text-xs tracking-[0.2em] uppercase" style={{ color: GOLD, fontWeight: section.dividerAbove ? 900 : 800, fontSize: section.dividerAbove ? '0.8rem' : undefined }}>
                       {section.title}
                     </p>
                     <div className="flex gap-2">
@@ -301,6 +309,7 @@ export default function AdminPRNAgentPlan() {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           ))}
         </div>
