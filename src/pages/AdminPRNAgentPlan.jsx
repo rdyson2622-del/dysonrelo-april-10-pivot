@@ -147,6 +147,30 @@ PROJECTED ANNUAL PRN REVENUE TARGET: $XXX,XXX (to be modeled based on finalized 
 • LOYALTY THROUGH RESULTS — Agents who perform well become the permanent go-to for their market. The Dyson team actively protects their territory and promotes their success stories in the Bureau Story Hub.`
   },
   {
+    id: 'flat50_stripe',
+    title: 'SECTION 10: THE "FLAT $50" STRIPE UTILITY (THE "S" SERVICE)',
+    content: `Logic: Pre-paid fuel model. No skip-trace or data request can be executed unless the user has a positive credit balance. This prevents delivery glitches and manual refunds.
+
+Interface: When the balance hits zero, a Stripe-hosted modal appears for a Flat $50 Refill.`
+  },
+  {
+    id: 'vendor_affiliate',
+    title: 'SECTION 11: VENDOR & AFFILIATE DATA ACCESS',
+    content: `Target: Contractors, Appraisers, and Inspectors.
+
+Utility: Vendors get skip-trace access at a $1.50 "Partner Rate" to verify property ownership and "stories" before rolling a truck.`
+  },
+  {
+    id: 'lender_agent_loop',
+    title: 'SECTION 12: AUTOMATED LENDER-TO-AGENT LOOP',
+    content: `Logic: Every agent skip-trace result automatically attaches a "Rate-Solve" financing scenario from their paired lender partner.`
+  },
+  {
+    id: 'respa_msa',
+    title: 'SECTION 13: RESPA-COMPLIANT MSA FRAMING',
+    content: `Logic: All partnerships are structured as broker-to-broker referrals or co-marketing MSAs to ensure full legal compliance while scaling to 100 cities.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
