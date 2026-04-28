@@ -161,7 +161,7 @@ export default function Home() {
                 CLIENT STORIES &amp; SOLUTIONS
               </p>
               <p style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: '1.43rem' }}>
-                Tap any story to read the full case study.
+                Review Client Stories &amp; Solutions. Tap any story to read the full case study.
               </p>
             </div>
 
