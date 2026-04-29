@@ -71,6 +71,14 @@ export default function ClientSidebar() {
         }
       });
     });
+
+    // Listen for admin role-switch events from the top nav pills
+    const onRoleChange = () => {
+      const updated = sessionStorage.getItem('dyson_role');
+      setPortalRole(updated || 'client');
+    };
+    window.addEventListener('dyson_role_change', onRoleChange);
+    return () => window.removeEventListener('dyson_role_change', onRoleChange);
   }, []);
 
   const isAgent = userRole === 'admin' || userRole === 'agent' || portalRole === 'agent';
