@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Star, Clock, Shield, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Search, MapPin, Star, Clock, Shield, ChevronDown, ChevronUp, X, ArrowRight } from 'lucide-react';
+import SendingAgentModal from '@/components/directory/SendingAgentModal';
 
 const GOLD = '#D4AF37';
 
@@ -235,9 +236,33 @@ function CityGroup({ entry }) {
   );
 }
 
+const EXODUS_CITIES = ['Los Angeles', 'San Francisco', 'Seattle', 'Chicago', 'New York', 'San Diego', 'Oakland', 'Portland'];
+
+// ── Exodus City Pitch Banner ───────────────────────────────────────
+function ExodusPitchBanner({ city }) {
+  const [show, setShow] = useState(false);
+  if (!EXODUS_CITIES.some(c => c.toLowerCase() === city.toLowerCase())) return null;
+  return (
+    <div className="mt-4 rounded-2xl px-5 py-4"
+      style={{ background: '#0d0d0d', border: `1px solid rgba(212,175,55,0.4)` }}>
+      <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1" style={{ color: GOLD }}>TOP {city.toUpperCase()} AGENT?</p>
+      <p className="text-sm text-white leading-snug mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+        Don't send your clients to a random referral. Let Dyson manage the destination logistics so your fee is secured.
+      </p>
+      <button onClick={() => setShow(true)}
+        className="inline-flex items-center gap-1.5 text-xs font-black px-4 py-2 rounded-full transition-all hover:scale-105"
+        style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+        I Am a Sending Agent <ArrowRight className="w-3.5 h-3.5" />
+      </button>
+      {show && <SendingAgentModal onClose={() => setShow(false)} />}
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────
 export default function NationalVettedDirectory() {
   const [search, setSearch] = useState('');
+  const [showSendingModal, setShowSendingModal] = useState(false);
 
   const filtered = CITIES.map(stateGroup => ({
     ...stateGroup,
@@ -274,6 +299,16 @@ export default function NationalVettedDirectory() {
           />
         </div>
 
+        {/* Sending Agent CTA */}
+        <div className="mt-6">
+          <button onClick={() => setShowSendingModal(true)}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black text-sm transition-all hover:scale-105"
+            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            I Am a Sending Agent — Request Destination Vetting <ArrowRight className="w-4 h-4" />
+          </button>
+          <p className="text-xs mt-2" style={{ color: 'rgba(255,255,255,0.45)' }}>Protect your 25% referral fee. We vet the boots-on-the-ground for you.</p>
+        </div>
+
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 mt-6">
           <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -296,11 +331,16 @@ export default function NationalVettedDirectory() {
             </p>
             <div className="space-y-3">
               {stateGroup.cities.map((entry, i) => (
-                <CityGroup key={i} entry={entry} />
+                <div key={i}>
+                  <CityGroup entry={entry} />
+                  <ExodusPitchBanner city={entry.city} />
+                </div>
               ))}
             </div>
           </div>
         ))}
+
+        {showSendingModal && <SendingAgentModal onClose={() => setShowSendingModal(false)} />}
 
         {filtered.length === 0 && (
           <div className="text-center py-16 rounded-2xl" style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.2)' }}>

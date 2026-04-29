@@ -58,6 +58,15 @@
       "default": "pending",
       "description": "PRN membership status"
     },
+    "market_type": {
+      "type": "string",
+      "enum": [
+        "destination",
+        "exodus"
+      ],
+      "default": "destination",
+      "description": "Market role: destination (Receiver) or exodus (Sender market)"
+    },
     "outreach_notes": {
       "type": "string",
       "description": "Internal notes on outreach / rescue cases"

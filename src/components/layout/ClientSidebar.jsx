@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, BookOpen, Users, TrendingUp, Star
+  CreditCard, Building2, Home, BookOpen, Users, TrendingUp, Star, ArrowRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
+import SendingAgentModal from '@/components/directory/SendingAgentModal';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -52,6 +53,7 @@ export default function ClientSidebar() {
   const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
+  const [showSendingModal, setShowSendingModal] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [portalRole, setPortalRole] = useState(null);
 
@@ -118,6 +120,13 @@ export default function ClientSidebar() {
           <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
           REAL ESTATE ANSWERS
         </Link>
+        <button
+          onClick={() => setShowSendingModal(true)}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10 text-left"
+          style={{ color: '#fff', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          I AM A SENDING AGENT
+        </button>
       </div>
 
       {/* Scrollable area */}
@@ -267,6 +276,7 @@ export default function ClientSidebar() {
       </div>
 
       <RelocationManagementModal isOpen={showRelocationModal} onClose={() => setShowRelocationModal(false)} />
+      {showSendingModal && <SendingAgentModal onClose={() => setShowSendingModal(false)} />}
     </aside>
   );
 }

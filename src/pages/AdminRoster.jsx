@@ -65,6 +65,20 @@ function AgentRow({ agent, onUpdate }) {
         </div>
       </td>
       <td className="px-3 py-3">
+        <select
+          value={agent.market_type || 'destination'}
+          onChange={e => onUpdate(agent.id, { market_type: e.target.value })}
+          className="text-[10px] font-black px-2 py-0.5 rounded-full border outline-none cursor-pointer"
+          style={agent.market_type === 'exodus'
+            ? { background: 'rgba(239,68,68,0.1)', color: '#dc2626', borderColor: 'rgba(239,68,68,0.3)' }
+            : { background: 'rgba(16,185,129,0.1)', color: '#059669', borderColor: 'rgba(16,185,129,0.3)' }
+          }
+        >
+          <option value="destination">Destination / Receiver</option>
+          <option value="exodus">Exodus / Sender</option>
+        </select>
+      </td>
+      <td className="px-3 py-3">
         <StatusBadge status={agent.status || 'pending'} onChange={v => onUpdate(agent.id, { status: v })} />
       </td>
       <td className="px-3 py-3 max-w-[180px]">
@@ -213,7 +227,7 @@ function CityTable({ cityLabel, agents, onUpdate }) {
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                {['Rank', 'Name', 'City', 'Brokerage', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Status', 'Notes'].map(h => (
+                {['Rank', 'Name', 'City', 'Brokerage', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Market Type', 'Status', 'Notes'].map(h => (
                   <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
