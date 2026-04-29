@@ -239,6 +239,16 @@ The Vetting Authority: Dyson & Dyson acts as the "Third-Party Vetting Authority.
 
 Future Value: This roster creates the "inventory" for the Agent Side of the app (the $50 Stripe Refills and $1.50 Skip Traces) to be activated as these agents are transitioned from "Pending" to "Active" members.
 
+── THE DYSON VETTING CRITERIA (2025 DATA SET) ──
+
+Tier 1 (Elite): 50+ Sales of Record or $40M+ Volume. (Target for "Rescue" Partners).
+
+Tier 2 (Mid-Market): 20–49 Sales of Record. (Target for standard Relo moves).
+
+Tier 3 (Specialist): High Avg. Price Point ($1.5M+) regardless of volume. (Target for Luxury Story-Solving).
+
+Logic: Performance data is used to justify the "Pending" status. Charlie AI will reference these specific stats when an agent asks why they were selected.
+
 ── HOW THIS CONNECTS TO THE FULL BLUEPRINT ──
 • Section 15 (Pending Affiliate Roster) = The identification and entry strategy
 • Section 16 (Force Multiplier) = The audience-building and authority rationale
