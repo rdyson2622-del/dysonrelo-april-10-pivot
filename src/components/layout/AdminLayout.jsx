@@ -6,6 +6,7 @@ import PageNumberBadge from '../PageNumberBadge';
 import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
+import CommandPills from './CommandPills';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -41,13 +42,7 @@ export default function AdminLayout() {
           </button>
         </div>
         <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-            style={{ background: '#D4AF37', color: '#000', border: '1px solid #D4AF37' }}
-          >
-            ← Client View
-          </Link>
+          <CommandPills />
           <LayoutToggleButton />
         </div>
         <div className={`mx-auto ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`}>
