@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
-  Newspaper, DollarSign, Shield, Fingerprint, RefreshCw,
-  CreditCard, Building2, Home, BookOpen
+  Newspaper, DollarSign, Shield, Fingerprint,
+  CreditCard, Building2, Home, BookOpen, Users, TrendingUp
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -106,35 +106,49 @@ export default function ClientSidebar() {
       {/* Scrollable area */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-        {/* ── 1. PRN AGENT TOOLS SUITE ── */}
+        {/* ══ AGENT PATH: 3-SUITE LAYOUT ══ */}
         {isAgent && (
-          <SuiteBox title="⭐ PRN Agent Tools">
-            <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
-              label="Run Skip Trace"
-              badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
-            />
-            <NavLink to="/admin/outreach-pipeline" icon={RefreshCw} location={location} label="My Lead Loop" />
-            <NavLink to="/admin/prn-agent-plan" icon={BookOpen} location={location} label="PRN Business Plan" />
-            <NavLink to="/financial-services" icon={CreditCard} location={location} label="Refill Fuel (Stripe)" />
-          </SuiteBox>
+          <>
+            {/* SUITE 1: PRN Pro Tools */}
+            <SuiteBox title="⭐ PRN Agent Tools">
+              <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
+                label="Run Skip Trace"
+                badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
+              />
+              <NavLink to="/financial-services" icon={CreditCard} location={location} label="Refill Fuel (Stripe)" />
+              <NavLink to="/agent-invited-clients" icon={Users} location={location} label="My Invited Clients" />
+            </SuiteBox>
+
+            {/* SUITE 2: Client Retention Loop (Mini-CRM) */}
+            <SuiteBox title="🤝 Client Retention Loop">
+              <NavLink to="/agent-invited-clients" icon={TrendingUp} location={location} label="Track My Referrals" />
+              <NavLink to="/financial-services" icon={DollarSign} location={location} label="Lender-Solve Status" />
+            </SuiteBox>
+
+            {/* SUITE 3: Personal Real Estate */}
+            <SuiteBox title="🏠 My Personal Real Estate">
+              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+              <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+              <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
+              <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+            </SuiteBox>
+          </>
         )}
 
-        {/* ── 2. VENDOR UTILITY SUITE ── */}
-        {isVendor && (
-          <SuiteBox title="🔧 Vendor Utility">
-            <NavLink to="/search" icon={Search} location={location} label="Property Search" />
-            <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
-          </SuiteBox>
-        )}
-
-        {/* ── 3. PERSONAL REAL ESTATE SOLVES (for pros who also have personal needs) ── */}
-        {(isAgent || isVendor) && (
-          <SuiteBox title="🏠 Personal Real Estate Solves">
-            <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
-            <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
-            <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
-            <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
-          </SuiteBox>
+        {/* ══ VENDOR PATH ══ */}
+        {isVendor && !isAgent && (
+          <>
+            <SuiteBox title="🔧 Vendor Utility">
+              <NavLink to="/search" icon={Search} location={location} label="Property Search" />
+              <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
+            </SuiteBox>
+            <SuiteBox title="🏠 My Personal Real Estate">
+              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+              <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+              <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
+              <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+            </SuiteBox>
+          </>
         )}
 
         {/* ── 4. STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
