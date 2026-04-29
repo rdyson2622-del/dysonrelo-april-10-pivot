@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MapPin, Zap, Settings, Phone, Map, Users, Search, MessageCircle, Newspaper, DollarSign, Shield, Fingerprint, RefreshCw, CreditCard, Building2 } from 'lucide-react';
+import {
+  MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
+  Newspaper, DollarSign, Shield, Fingerprint, RefreshCw,
+  CreditCard, Building2, Home, BookOpen
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-
-const navItems = [
-  { label: 'My Dashboard',     path: '/',                 icon: LayoutDashboard },
-  { label: 'My Roadmap',       path: '/RelocationRoadmap',   icon: Map },
-  { label: 'City Guide',       path: '/CityGuide',           icon: MapPin },
-  { label: 'Gemini Session',   path: '/GeminiSession',    icon: Zap },
-];
 
 const authorityLinks = [
   { label: '55-Year Legacy', to: '/bob-dyson' },
@@ -20,17 +17,45 @@ const authorityLinks = [
   { label: '21 AI Assistants', to: '/ai-assistants' },
 ];
 
+// Subtle gold-bordered suite box wrapper
+function SuiteBox({ title, children }) {
+  return (
+    <div className="px-3 pt-4 pb-1">
+      <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.55)`, background: 'rgba(212,175,55,0.06)' }}>
+        <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+          <p className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD, textShadow: '0 0 8px rgba(212,175,55,0.4)' }}>
+            {title}
+          </p>
+        </div>
+        <div className="flex flex-col gap-0.5 p-2">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NavLink({ to, icon: Icon, label, badge, location }) {
+  const active = location.pathname === to;
+  return (
+    <Link to={to}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+      style={{ background: active ? GOLD : 'transparent', color: active ? '#000' : '#fff' }}>
+      {Icon && <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: active ? '#000' : GOLD }} />}
+      <span className="flex-1">{label}</span>
+      {badge}
+    </Link>
+  );
+}
+
 export default function ClientSidebar() {
   const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
-  const [clientId, setClientId] = useState(null);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
-  const [showRelocationPill, setShowRelocationPill] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const [portalRole, setPortalRole] = useState(null); // chosen path from RoleSelector
+  const [portalRole, setPortalRole] = useState(null);
 
   useEffect(() => {
-    // Read the path chosen on the Role Selector page
     const stored = sessionStorage.getItem('dyson_role');
     if (stored) setPortalRole(stored);
 
@@ -40,7 +65,6 @@ export default function ClientSidebar() {
       base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1).then(clients => {
         if (clients.length > 0) {
           const id = clients[0].id;
-          setClientId(id);
           base44.entities.ChatMessage.filter({ client_id: id, role: 'admin' }, '-created_date', 10).then(msgs => {
             setUnreadCount(msgs.length);
           });
@@ -49,197 +73,151 @@ export default function ClientSidebar() {
     });
   }, []);
 
-  useEffect(() => {
-    setShowRelocationPill(false);
-  }, [location.pathname]);
+  const isAgent = userRole === 'admin' || userRole === 'agent' || portalRole === 'agent';
+  const isVendor = userRole === 'admin' || userRole === 'vendor' || portalRole === 'vendor';
+  const isAdmin = userRole === 'admin';
+  // Pure client: no professional path selected
+  const isClientOnly = !isAgent && !isVendor;
+
+  const portalLabel = isAgent ? 'AGENT PORTAL' : isVendor ? 'VENDOR PORTAL' : 'CLIENT PORTAL';
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
       style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
-      {/* Logo — pinned, never scrolls away */}
+      {/* Logo */}
       <div className="shrink-0 px-5 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
         <Link to="/Home">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
         </Link>
         <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
-          CLIENT PORTAL
+          {portalLabel}
         </p>
       </div>
 
-      {/* Scrollable area below logo */}
+      {/* Scrollable area */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-      {/* ── PRN AGENT TOOLS (agents, admins, or portal path = agent) ── */}
-      {(userRole === 'admin' || userRole === 'agent' || portalRole === 'agent') && (
-        <div className="px-3 pt-4 pb-3">
-          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
-            <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-              <p className="text-[11px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD, textShadow: '0 0 8px rgba(212,175,55,0.5)' }}>⭐ PRN Agent Tools</p>
-            </div>
-            <div className="flex flex-col gap-1 p-2">
-              <Link to="/admin/skip-trace"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-                style={{ color: '#fff' }}>
-                <Fingerprint className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-                Run Skip Trace <span className="ml-auto text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>
-              </Link>
-              <Link to="/admin/outreach-pipeline"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-                style={{ color: '#fff' }}>
-                <RefreshCw className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-                My Lead Loop
-              </Link>
-              <Link to="/financial-services"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-                style={{ color: '#fff' }}>
-                <CreditCard className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-                Refill Fuel (Stripe)
-              </Link>
-            </div>
+        {/* ── 1. PRN AGENT TOOLS SUITE ── */}
+        {isAgent && (
+          <SuiteBox title="⭐ PRN Agent Tools">
+            <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
+              label="Run Skip Trace"
+              badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
+            />
+            <NavLink to="/admin/outreach-pipeline" icon={RefreshCw} location={location} label="My Lead Loop" />
+            <NavLink to="/admin/prn-agent-plan" icon={BookOpen} location={location} label="PRN Business Plan" />
+            <NavLink to="/financial-services" icon={CreditCard} location={location} label="Refill Fuel (Stripe)" />
+          </SuiteBox>
+        )}
+
+        {/* ── 2. VENDOR UTILITY SUITE ── */}
+        {isVendor && (
+          <SuiteBox title="🔧 Vendor Utility">
+            <NavLink to="/search" icon={Search} location={location} label="Property Search" />
+            <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
+          </SuiteBox>
+        )}
+
+        {/* ── 3. PERSONAL REAL ESTATE SOLVES (for pros who also have personal needs) ── */}
+        {(isAgent || isVendor) && (
+          <SuiteBox title="🏠 Personal Real Estate Solves">
+            <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+            <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+            <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
+            <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+          </SuiteBox>
+        )}
+
+        {/* ── 4. STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
+        <div className="px-3 pt-4 pb-1">
+          {/* Communications */}
+          <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
+            {isClientOnly ? 'Your Portal' : 'Communications'}
+          </p>
+          <div className="flex flex-col gap-1">
+            <Link to="/communications-explainer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+              style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+              <div className="relative shrink-0">
+                <MessageCircle className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
+                    style={{ background: '#ef4444', color: '#fff' }}>
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </div>
+              {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
+            </Link>
+
+            {/* Pure client also gets Relo Management inline */}
+            {isClientOnly && (
+              <>
+                <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+                <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
+                <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+                <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+              </>
+            )}
           </div>
         </div>
-      )}
 
-      {/* ── VENDOR UTILITY (vendors, admins, or portal path = vendor) ── */}
-      {(userRole === 'admin' || userRole === 'vendor' || portalRole === 'vendor') && (
-        <div className="px-3 pt-4 pb-3">
-          <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
-            <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Vendor Utility</p>
-            </div>
-            <div className="flex flex-col gap-1 p-2">
-              <Link to="/search"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-                style={{ color: '#fff' }}>
-                <Search className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-                Property Search
+        {/* DNN Section */}
+        <div className="px-3 pb-4 pt-2">
+          <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
+            Dyson News Network
+          </p>
+          <div className="flex flex-col gap-1">
+            <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />
+            <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
+            <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
+          </div>
+        </div>
+
+        {/* Heritage & Authority */}
+        <div className="pt-3 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+          <div className="text-[10px] uppercase tracking-[2px] mb-2 px-2 font-bold" style={{ color: GOLD }}>
+            Our Authority
+          </div>
+          <nav className="space-y-0.5">
+            {authorityLinks.map(({ label, to }) => (
+              <Link key={label} to={to}
+                className="block px-2 py-1 text-xs transition-colors hover:text-[#D4AF37]"
+                style={{ color: 'rgba(255,255,255,0.7)' }}>
+                {label}
               </Link>
-              <Link to="/admin/skip-trace"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
+            ))}
+          </nav>
+        </div>
+
+        {/* Human Help */}
+        <div className="mx-3 mt-3 mb-3 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+          <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>NEED A HUMAN?</p>
+          <p className="text-xs mb-2" style={{ color: '#fff' }}>Mon–Sat, 9am–7pm PT</p>
+          <a href="tel:+18583531200" className="flex items-center gap-2 group">
+            <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+            <span className="text-sm font-bold tracking-wide group-hover:underline" style={{ color: '#fff' }}>
+              (858) 353-1200
+            </span>
+          </a>
+        </div>
+
+        {/* Footer — Admin link */}
+        {isAdmin && (
+          <div className="px-3 py-3 pb-8 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
+            <Link to="/admin">
+              <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-white/5 transition-all"
                 style={{ color: '#fff' }}>
-                <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-                Verified Owner Data
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Quick Links Header */}
-      <div className="px-3 py-3">
-        <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
-          QUICK LINKS
-        </p>
-      </div>
-
-      {/* Communications */}
-      <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          Communications
-        </div>
-        <Link to="/communications-explainer" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-         style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-         <div className="relative shrink-0">
-           <MessageCircle className="w-3.5 h-3.5" />
-           {unreadCount > 0 && (
-             <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
-               style={{ background: '#ef4444', color: '#fff' }}>
-               {unreadCount > 9 ? '9+' : unreadCount}
-             </span>
-           )}
-         </div>
-         {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
-        </Link>
-      </div>
-
-      {/* Relocation Management */}
-      <div className="px-3 pb-4 space-y-2">
-        <Link to="/relo-management" className="block text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2 hover:underline cursor-pointer" style={{ color: GOLD }}>
-          Relocation Management
-        </Link>
-        <div>
-          <div className="flex flex-col gap-2 mt-2">
-            <Link to="/RelocationRoadmap" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/RelocationRoadmap' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/RelocationRoadmap' ? '#000' : '#fff' }}>
-              <Map className="w-3.5 h-3.5" /> My Roadmap
-            </Link>
-            <Link to="/CityGuide" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/CityGuide' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/CityGuide' ? '#000' : '#fff' }}>
-              <MapPin className="w-3.5 h-3.5" /> City Guide
-            </Link>
-            <Link to="/GeminiSession" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10" style={{ background: location.pathname === '/GeminiSession' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/GeminiSession' ? '#000' : '#fff' }}>
-              <Zap className="w-3.5 h-3.5" /> Gemini Session
+                <Settings className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+                Admin Panel
+              </div>
             </Link>
           </div>
-        </div>
+        )}
+
       </div>
 
-      {/* Dyson News Network */}
-      <div className="px-3 pb-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[2px] px-2 font-bold" style={{ color: GOLD }}>
-          Dyson News Network (DNN)
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Link to="/dnn-news" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/dnn-news' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/dnn-news' ? '#000' : '#fff' }}>
-            <Newspaper className="w-3.5 h-3.5" /> DNN News
-          </Link>
-          <Link to="/my-agent" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/my-agent' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/my-agent' ? '#000' : '#fff' }}>
-            <Shield className="w-3.5 h-3.5" /> Looking to Vette an Agent?
-          </Link>
-          <Link to="/financial-services" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-            style={{ background: location.pathname === '/financial-services' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/financial-services' ? '#000' : '#fff' }}>
-            <DollarSign className="w-3.5 h-3.5" /> Looking to Select a Lender?
-          </Link>
-
-        </div>
-      </div>
-
-      {/* Heritage & Authority */}
-      <div className="pt-4 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="text-[10px] uppercase tracking-[2px] mb-3 px-2 font-bold" style={{ color: GOLD }}>
-          Our Authority
-        </div>
-        <nav className="space-y-1">
-          {authorityLinks.map(({ label, to }) => (
-            <Link
-              key={label}
-              to={to}
-              className="block px-2 py-1 text-sm transition-colors hover:text-[#D4AF37]"
-              style={{ color: '#fff' }}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Human Help */}
-      <div className="mx-3 mb-3 rounded-xl p-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
-        <p className="text-xs font-bold tracking-widest mb-1" style={{ color: GOLD }}>NEED A HUMAN?</p>
-        <p className="text-xs mb-2" style={{ color: '#fff' }}>We're here Mon–Sat, 9am–7pm PT</p>
-        <a href="tel:+18583531200" className="flex items-center gap-2 group">
-          <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          <span className="text-sm font-bold tracking-wide group-hover:underline" style={{ color: '#fff' }}>
-            (858) 353-1200
-          </span>
-        </a>
-        <p className="text-xs mt-1" style={{ color: '#fff' }}>Dyson Relo Direct Line</p>
-      </div>
-
-      {/* Footer */}
-      <div className="px-3 py-4 pb-8 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
-        <Link to="/admin">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-white/5 transition-all"
-            style={{ color: '#fff' }}>
-            <Settings className="w-4 h-4 shrink-0" />
-            Admin Panel
-          </div>
-        </Link>
-      </div>
-
-      </div>{/* end scrollable area */}
-      
       <RelocationManagementModal isOpen={showRelocationModal} onClose={() => setShowRelocationModal(false)} />
     </aside>
   );

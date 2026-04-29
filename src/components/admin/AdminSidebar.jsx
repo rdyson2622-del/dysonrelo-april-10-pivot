@@ -200,6 +200,33 @@ export default function AdminSidebar() {
         </div>
       </div>
 
+      {/* ── VIEW AS: Master Key Action Boxes ── */}
+      <div className="px-3 pt-3 pb-2 shrink-0">
+        <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: '#D4AF37' }}>View Portal As:</p>
+        <div className="grid grid-cols-3 gap-1.5">
+          {[
+            { label: 'CLIENT', path: '/dashboard', emoji: '🏠' },
+            { label: 'AGENT', path: '/admin/skip-trace', emoji: '⭐' },
+            { label: 'VENDOR', path: '/search', emoji: '🔧' },
+          ].map(({ label, path, emoji }) => (
+            <Link
+              key={label}
+              to={path}
+              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl text-center transition-all hover:scale-105 active:scale-95"
+              style={{
+                background: 'rgba(212,175,55,0.1)',
+                border: '1px solid rgba(212,175,55,0.35)',
+                color: '#D4AF37',
+                textDecoration: 'none',
+              }}
+            >
+              <span className="text-lg leading-none mb-0.5">{emoji}</span>
+              <span className="text-[9px] font-black tracking-[0.15em]">{label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* Admin Dashboard — always visible */}
       <div className="px-3 pt-2 space-y-0.5">
         <Link
