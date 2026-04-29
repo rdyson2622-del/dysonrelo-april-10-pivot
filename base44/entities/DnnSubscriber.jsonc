@@ -64,6 +64,20 @@
     "unsubscribed": {
       "type": "boolean",
       "default": false
+    },
+    "referral_status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "vetting",
+        "matched",
+        "introduced",
+        "in_escrow",
+        "closed",
+        "stalled"
+      ],
+      "default": "new",
+      "description": "Status of a Sending Agent referral request (only applies to source='Sending Agent Portal')"
     }
   },
   "required": [

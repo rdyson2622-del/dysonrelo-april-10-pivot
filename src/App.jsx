@@ -89,6 +89,7 @@ import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
 import AdminRoster from './pages/AdminRoster';
 import VettedAgentsCity from './pages/VettedAgentsCity';
+import SendingAgentDashboard from './pages/SendingAgentDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -213,6 +214,7 @@ const AuthenticatedApp = () => {
         <Route path="/solve-my-story" element={<SolveMyStory />} />
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
+        <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
