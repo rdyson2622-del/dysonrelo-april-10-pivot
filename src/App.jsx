@@ -86,6 +86,7 @@ import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 import RoleSelector from './pages/RoleSelector';
 import AgentInvitedClients from './pages/AgentInvitedClients';
 import RealEstateAnswers from './pages/RealEstateAnswers';
+import NationalVettedDirectory from './pages/NationalVettedDirectory';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -152,6 +153,7 @@ const AuthenticatedApp = () => {
         <Route path="/ai-assistants" element={<AIAssistants />} />
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
+        <Route path="/national-directory" element={<NationalVettedDirectory />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
