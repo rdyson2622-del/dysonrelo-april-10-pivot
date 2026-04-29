@@ -205,6 +205,27 @@ Product defined (This Interface).
 The 14-Section PRN Master Plan is complete.`
   },
   {
+    id: 'pending_affiliate_roster',
+    dividerAbove: true,
+    title: 'SECTION 15: THE "PENDING AFFILIATE" ROSTER & B2B RECOVERY',
+    content: `The Logic: Instead of "cold calling" agents, we build a national roster of 1,000+ agents based on performance data (Gemini/PropStream vetted). They are entered as "Pending Affiliates."
+
+The B2B Hook: We target high-volume agents in destination cities (Nashville, Boise, etc.) with the "Escrow Rescue" proposition. We fix their "stuck" CA buyer's home sale so they can close their deal.
+
+The Roster Strategy: We promote these agents on DysonHome.com within a "Vetted City Directory." We share their stats and performance, but keep the contact "blind" (Contact goes to Dyson first).
+
+The Conversion: Once an agent realizes we are already promoting them and have a "Rescue" case for them, they are moved from "Pending" to "Active PRN Member" at no cost, provided they agree to the Dyson 8-Phase Logistics protocol.
+
+── ROSTER WORKFLOW ──
+1. IDENTIFY — Use Gemini + PropStream to pull top-volume agents in target destination cities (50+ transactions/year, strong close rates).
+2. ENTER — Add them to the PartnerAgent entity with status: "prospect" and a note: "Pending Affiliate — not yet contacted."
+3. PROMOTE — Feature their stats in the DNN Vetted City Directory with blind contact routing (all inquiries come to Dyson inbox first).
+4. RESCUE TRIGGER — When a Dyson client's CA escrow is stalled, we identify the destination agent in our roster and reach out with the live case.
+5. CONVERT — Agent sees the value (free promotion + a live deal), agrees to the 8-Phase Protocol, and is upgraded to Active PRN Member.
+
+This eliminates cold outreach entirely. Every agent "onboarded" has already been warmed by the Directory and pulled in by a real deal.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
