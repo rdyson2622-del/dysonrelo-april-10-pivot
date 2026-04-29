@@ -36,18 +36,18 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-2xl overflow-hidden transition-all"
-      style={{ border: '1px solid rgba(212,175,55,0.3)', background: open ? 'rgba(212,175,55,0.07)' : '#fff8ee' }}>
+      style={{ border: '1px solid rgba(212,175,55,0.3)', background: open ? '#1a1a1a' : '#111' }}>
       <button onClick={() => setOpen(v => !v)}
         className="w-full flex items-start justify-between gap-4 px-5 py-4 text-left"
       >
-        <span className="font-bold text-sm leading-snug" style={{ color: '#1a1a1a' }}>{q}</span>
+        <span className="font-bold text-sm leading-snug text-white">{q}</span>
         {open
           ? <ChevronUp className="w-4 h-4 shrink-0 mt-0.5" style={{ color: GOLD }} />
           : <ChevronDown className="w-4 h-4 shrink-0 mt-0.5" style={{ color: GOLD }} />
         }
       </button>
       {open && (
-        <div className="px-5 pb-5 text-sm leading-relaxed" style={{ color: '#3a2f1e', fontFamily: 'Georgia, serif' }}>
+        <div className="px-5 pb-5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)', fontFamily: 'Georgia, serif' }}>
           {a}
         </div>
       )}
