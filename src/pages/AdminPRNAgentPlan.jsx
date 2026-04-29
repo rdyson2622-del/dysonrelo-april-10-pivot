@@ -226,6 +226,28 @@ The Conversion: Once an agent realizes we are already promoting them and have a 
 This eliminates cold outreach entirely. Every agent "onboarded" has already been warmed by the Directory and pulled in by a real deal.`
   },
   {
+    id: 'force_multiplier_roster',
+    dividerAbove: true,
+    title: 'SECTION 16: THE "FORCE MULTIPLIER" ROSTER (B2B AUDIENCE BUILDING)',
+    content: `The "Trojan Horse" Strategy: To build a "Day One" audience, we utilize Gemini and PropStream data to identify top-performing agents in key destination cities (Nashville, Boise, etc.).
+
+The "Pending Affiliate" Status: These agents are automatically entered into a "Vetted Directory" as "Pending Affiliates." This creates immediate SEO value and a "Seat at the Table" that agents can later "Claim."
+
+The Zero-Friction Entry: We offer these agents exposure and "Escrow Rescue" support at no upfront cost. We do not require complex T&Cs — only adherence to the Dyson 8-Phase Logistics protocol for mutual clients.
+
+The Vetting Authority: Dyson & Dyson acts as the "Third-Party Vetting Authority." We tell the public "Don't go to an agent first" precisely because we are the ones who filter the noise to find the top 1% who meet our logistics standards.
+
+Future Value: This roster creates the "inventory" for the Agent Side of the app (the $50 Stripe Refills and $1.50 Skip Traces) to be activated as these agents are transitioned from "Pending" to "Active" members.
+
+── HOW THIS CONNECTS TO THE FULL BLUEPRINT ──
+• Section 15 (Pending Affiliate Roster) = The identification and entry strategy
+• Section 16 (Force Multiplier) = The audience-building and authority rationale
+• Section 14 (Skip-Trace Interface) = The monetization layer that activates once agents go Active
+• Section 10 (Flat $50 Stripe) = The fuel model that sustains ongoing agent tool usage
+
+Together, these four sections form a self-reinforcing flywheel: we build the roster → agents claim profiles → agents use tools → tools generate recurring revenue.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
