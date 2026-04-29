@@ -81,8 +81,9 @@ export default function ClientSidebar() {
     return () => window.removeEventListener('dyson_role_change', onRoleChange);
   }, []);
 
-  const isAgent = userRole === 'admin' || userRole === 'agent' || portalRole === 'agent';
-  const isVendor = userRole === 'admin' || userRole === 'vendor' || portalRole === 'vendor';
+  // Agent/Vendor suites only appear when that portal pill is explicitly active
+  const isAgent = userRole === 'agent' || portalRole === 'agent';
+  const isVendor = (userRole === 'vendor' || portalRole === 'vendor') && !isAgent;
   const isAdmin = userRole === 'admin';
   // Pure client: no professional path selected
   const isClientOnly = !isAgent && !isVendor;

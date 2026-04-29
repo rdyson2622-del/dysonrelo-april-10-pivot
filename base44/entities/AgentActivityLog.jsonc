@@ -1,0 +1,56 @@
+{
+  "name": "AgentActivityLog",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "RelocationClient ID this log entry belongs to"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Email of the PRN agent assigned to this client"
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "new_lead",
+        "in_consultation",
+        "actively_searching",
+        "under_contract",
+        "moved",
+        "closed",
+        "inactive",
+        "general"
+      ],
+      "default": "general",
+      "description": "Which phase this update relates to"
+    },
+    "message": {
+      "type": "string",
+      "description": "The update/milestone message posted by Dyson admin or system"
+    },
+    "posted_by": {
+      "type": "string",
+      "description": "Email of the person who posted this update"
+    },
+    "posted_by_label": {
+      "type": "string",
+      "description": "Display label: 'Dyson Team', 'System', or agent name"
+    },
+    "is_milestone": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this is a major milestone that triggers agent notification"
+    },
+    "agent_followed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the agent has Follow turned on for this client"
+    }
+  },
+  "required": [
+    "client_id",
+    "agent_email",
+    "message"
+  ]
+}
