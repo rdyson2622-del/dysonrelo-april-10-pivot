@@ -270,6 +270,57 @@ The Dyson Solution: We offer the Sending Agent a "National Vetting Desk." We vet
 The Monetization: Dyson & Dyson sits in the middle of the "Sending" and "Receiving" transaction, capturing management fees or referral splits for providing the "Vetting and Logistics" infrastructure.`
   },
   {
+    id: 'boutique_focus',
+    dividerAbove: true,
+    title: 'SECTION 18: STRATEGIC EXCLUSION — THE BOUTIQUE FOCUS',
+    content: `Target Audience: Independent Boutique Brokerage Firms (Excluding Compass, Coldwell Banker, Sotheby's, C21, etc.).
+
+The Logic: These firms represent ~50% of the market but lack internal national relocation departments. Dyson & Dyson acts as their "De Facto Relo Department," providing them with national reach without the corporate overhead or commission-grabbing "Relo Fees" of the big franchises.
+
+The Value Prop: We protect the Boutique Agent's referral fee and provide elite-level logistics that match their high-end, personalized brand.
+
+── WHY WE EXCLUDE THE BIG FRANCHISES ──
+
+Compass, Coldwell Banker, Sotheby's, Century 21, and similar national brands already have internal relocation divisions that:
+• Skim 30–40% of the referring agent's commission via corporate "Relo Fees"
+• Prioritize in-house agent assignment over best-fit client matching
+• Provide cookie-cutter logistics with no personalized concierge layer
+
+These franchises are not our partners. They are our competition for the boutique agent's loyalty.
+
+── THE BOUTIQUE AGENT PROFILE ──
+
+• 10–80 agents at the firm level (non-franchise, independently owned)
+• Typically high average price point ($800K–$3M+ per transaction)
+• Deep local market expertise but zero national infrastructure
+• Client relationships are personal — referrals are reputation-critical
+• Terrified of sending a client out of state and losing them (or their fee)
+
+── HOW DYSON FILLS THE GAP ──
+
+1. DE FACTO RELO DEPARTMENT — The boutique firm promotes Dyson & Dyson as their "national relocation partner." Their agents refer out with confidence because Dyson manages the destination side completely.
+
+2. FEE PROTECTION — We guarantee the referring boutique agent's 25% referral fee is documented, tracked, and enforced through our PRN referral agreement — something a big franchise would never do on their behalf.
+
+3. BRAND ALIGNMENT — Boutique firms compete on white-glove service. Our concierge model (Charlie AI + dedicated Relocation Manager + escrow monitoring) matches their brand promise perfectly. No cookie-cutter handoffs.
+
+4. CO-MARKETING EXCLUSIVITY — PRN Boutique Partners are co-branded in DNN, positioning both firms as elite relocation specialists in their market. No big franchise agent gets this benefit.
+
+── OUTREACH STRATEGY ──
+
+• Identify top-performing boutique brokerages in target Exodus markets (LA, SF, Seattle, Chicago)
+• Approach the broker/owner directly — not the individual agent
+• Pitch: "We are your national relocation department. You keep 75% of every referral your agents send out. We handle everything else."
+• Offer a 90-day pilot: one or two live referral cases, managed end-to-end, at no upfront cost to the firm
+
+── EXCLUSION POLICY ──
+
+The following franchise brands are permanently excluded from PRN partnership consideration:
+Compass · Coldwell Banker · Sotheby's International Realty · Century 21 · RE/MAX · Berkshire Hathaway HomeServices · Keller Williams · eXp Realty · Better Homes & Gardens Real Estate
+
+Exception: Individual agents who have recently left a franchise and joined an independent firm may be considered after a 6-month waiting period.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
