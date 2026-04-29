@@ -83,6 +83,7 @@ import AdminBureauStories from './pages/AdminBureauStories';
 import ReloManagement from './pages/ReloManagement';
 import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
+import RoleSelector from './pages/RoleSelector';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -106,6 +107,9 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      {/* Role Selector — standalone, no sidebar */}
+      <Route path="/portal" element={<RoleSelector />} />
+
       {/* Home — standalone, no sidebar */}
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />

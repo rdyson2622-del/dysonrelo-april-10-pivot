@@ -27,8 +27,13 @@ export default function ClientSidebar() {
   const [showRelocationModal, setShowRelocationModal] = useState(false);
   const [showRelocationPill, setShowRelocationPill] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [portalRole, setPortalRole] = useState(null); // chosen path from RoleSelector
 
   useEffect(() => {
+    // Read the path chosen on the Role Selector page
+    const stored = sessionStorage.getItem('dyson_role');
+    if (stored) setPortalRole(stored);
+
     base44.auth.me().then(user => {
       if (!user?.email) return;
       setUserRole(user.role);
@@ -65,8 +70,8 @@ export default function ClientSidebar() {
       {/* Scrollable area below logo */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
-      {/* ── PRN AGENT TOOLS (agents + admins) ── */}
-      {(userRole === 'agent' || userRole === 'admin') && (
+      {/* ── PRN AGENT TOOLS (agents, admins, or portal path = agent) ── */}
+      {(userRole === 'admin' || userRole === 'agent' || portalRole === 'agent') && (
         <div className="px-3 pt-4 pb-3">
           <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
             <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
@@ -96,8 +101,8 @@ export default function ClientSidebar() {
         </div>
       )}
 
-      {/* ── VENDOR UTILITY (vendors + admins) ── */}
-      {(userRole === 'vendor' || userRole === 'admin') && (
+      {/* ── VENDOR UTILITY (vendors, admins, or portal path = vendor) ── */}
+      {(userRole === 'admin' || userRole === 'vendor' || portalRole === 'vendor') && (
         <div className="px-3 pt-4 pb-3">
           <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.5)`, background: 'rgba(212,175,55,0.07)' }}>
             <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>

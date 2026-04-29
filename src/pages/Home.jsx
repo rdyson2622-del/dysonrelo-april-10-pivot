@@ -13,7 +13,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 const QUICK_STARTS = [
   { label: "I'm moving and need a plan.", desc: "Relo Prong", link: "/relocation-intake" },
   { label: "I'm stuck in a deal.", desc: "Story-Solving / Escrow", link: "/chat" },
-  { label: "I'm an Agent or Lender.", desc: "Enterprise Portal", link: "/find-agent" },
+  { label: "I'm an Agent or Lender.", desc: "Enterprise Portal", link: "/portal" },
 ];
 
 export default function Home() {
@@ -134,7 +134,7 @@ export default function Home() {
                 />
                 </div>
               </div>
-              <Link to="/solve-my-story" className="shrink-0">
+              <Link to="/portal" className="shrink-0">
                 <button
                   className="px-3 py-1.5 rounded-md text-[11px] font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{ 
