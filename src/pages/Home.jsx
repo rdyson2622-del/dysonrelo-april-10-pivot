@@ -164,6 +164,53 @@ export default function Home() {
             </div>
           </div>
 
+          {/* ── MARKETING BRIDGE ── */}
+          <div className="w-full max-w-4xl mt-14 mb-2">
+            <div className="rounded-2xl px-8 py-10 text-center"
+              style={{ background: 'rgba(0,0,0,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+              <p className="font-black leading-tight mb-2"
+                style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  fontSize: 'clamp(1.4rem, 3.5vw, 2.25rem)',
+                  color: '#1a1a1a',
+                  letterSpacing: '0.04em',
+                }}>
+                Moving is a Logistics Problem.<br />
+                Selling is a Story Problem.<br />
+                <span style={{ color: GOLD }}>We Solve Both.</span>
+              </p>
+              <p className="text-sm mt-4 mb-8 max-w-lg mx-auto leading-relaxed" style={{ color: '#4a3a28', fontFamily: 'Georgia, serif' }}>
+                Whether you need a full relocation managed end-to-end, or you're stuck in a deal that won't close — we have a path for you.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="/relo-management"
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
+                  style={{
+                    background: 'rgba(0,0,0,0.5)',
+                    border: `1px solid ${GOLD}`,
+                    color: GOLD,
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
+                  }}>
+                  🏠 Explore Relocation Services
+                </a>
+                <a href="/real-estate-answers"
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
+                  style={{
+                    background: 'rgba(0,0,0,0.5)',
+                    border: `1px solid ${GOLD}`,
+                    color: GOLD,
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
+                  }}>
+                  💬 Get Real Estate Answers
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-4xl mt-12 text-left">
 
