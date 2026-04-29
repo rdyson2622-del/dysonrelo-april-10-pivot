@@ -26,6 +26,17 @@
       "type": "string",
       "description": "Brokerage name"
     },
+    "brokerage_category": {
+      "type": "string",
+      "enum": [
+        "boutique_independent",
+        "franchise",
+        "team",
+        "other"
+      ],
+      "default": "boutique_independent",
+      "description": "Category of brokerage: Boutique Independent, Franchise, Team, or Other"
+    },
     "sales_count_2025": {
       "type": "number",
       "description": "Number of transactions in 2025"

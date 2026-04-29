@@ -5,15 +5,17 @@ import { Upload, CheckCircle, AlertCircle, FileText } from 'lucide-react';
 const GOLD = '#D4AF37';
 
 const FIELD_MAP = {
-  'agent name': 'agent_name', 'name': 'agent_name',
+  'agent name': 'agent_name', 'name': 'agent_name', 'agent_name': 'agent_name',
   'city': 'city',
   'state': 'state',
   'city slug': 'city_slug', 'slug': 'city_slug',
   'rank': 'rank',
   'brokerage': 'brokerage', 'broker': 'brokerage',
-  'sales count': 'sales_count_2025', 'sales #': 'sales_count_2025', 'transactions': 'sales_count_2025', '2025 sales': 'sales_count_2025', 'sales count 2025': 'sales_count_2025',
-  'sales volume': 'sales_volume_2025', 'volume': 'sales_volume_2025', '2025 volume': 'sales_volume_2025', 'sales volume 2025': 'sales_volume_2025',
-  'avg price': 'avg_price_point', 'avg price point': 'avg_price_point', 'average price': 'avg_price_point',
+  'brokerage category': 'brokerage_category', 'brokerage_category': 'brokerage_category', 'category': 'brokerage_category',
+  'market type': 'market_type', 'market_type': 'market_type',
+  'sales count': 'sales_count_2025', 'sales #': 'sales_count_2025', 'transactions': 'sales_count_2025', '2025 sales': 'sales_count_2025', 'sales_2025': 'sales_count_2025', 'sales count 2025': 'sales_count_2025',
+  'sales volume': 'sales_volume_2025', 'volume': 'sales_volume_2025', '2025 volume': 'sales_volume_2025', 'volume_2025': 'sales_volume_2025', 'sales volume 2025': 'sales_volume_2025',
+  'avg price': 'avg_price_point', 'avg price point': 'avg_price_point', 'average price': 'avg_price_point', 'avg_price': 'avg_price_point',
   'phone': 'phone',
   'email': 'email',
   'status': 'status',
@@ -94,8 +96,9 @@ export default function VettedPartnerCSVImport({ onDone }) {
         {/* Expected columns hint */}
         <div className="rounded-xl px-4 py-3 mb-5 text-xs leading-relaxed" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', color: '#6b5c45' }}>
           <strong style={{ color: GOLD }}>Expected CSV Columns:</strong>{' '}
-          Agent Name, City, State, Rank, Brokerage, Sales Count, Sales Volume, Avg Price, Phone, Email, Notes
-          <br />Column names are flexible — we auto-map common variations.
+          Market_Type, City, Brokerage, Agent_Name, Sales_2025, Volume_2025, Avg_Price, Email, Phone
+          <br />Also supports: State, Rank, Brokerage_Category, Notes. Column names are flexible — we auto-map common variations.
+          <br /><span style={{ color: GOLD }}>Brokerage_Category:</span> boutique_independent · franchise · team · other
         </div>
 
         {stage === 'idle' && (

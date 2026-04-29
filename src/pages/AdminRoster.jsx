@@ -5,6 +5,15 @@ import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X } 
 import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
 
 const GOLD = '#D4AF37';
+const FRANCHISE_BRANDS = ['compass', 'coldwell banker', 'sotheby', 'century 21', 'remax', 're/max', 'berkshire hathaway', 'keller williams', 'exp realty', 'better homes'];
+
+const CATEGORY_LABELS = {
+  boutique_independent: { label: 'Boutique Independent', bg: 'rgba(212,175,55,0.15)', color: '#92400e', border: 'rgba(212,175,55,0.4)' },
+  franchise:           { label: 'Franchise', bg: 'rgba(239,68,68,0.1)', color: '#dc2626', border: 'rgba(239,68,68,0.3)' },
+  team:                { label: 'Team', bg: 'rgba(99,102,241,0.12)', color: '#6366f1', border: 'rgba(99,102,241,0.35)' },
+  other:               { label: 'Other', bg: 'rgba(156,163,175,0.15)', color: '#6b7280', border: 'rgba(156,163,175,0.3)' },
+};
+
 const STATUS_COLORS = {
   pending:   { bg: 'rgba(251,191,36,0.15)',  color: '#b45309', border: 'rgba(251,191,36,0.4)' },
   active:    { bg: 'rgba(16,185,129,0.12)',  color: '#059669', border: 'rgba(16,185,129,0.35)' },
