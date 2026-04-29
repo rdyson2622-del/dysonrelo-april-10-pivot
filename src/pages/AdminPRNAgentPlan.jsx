@@ -258,6 +258,18 @@ Logic: Performance data is used to justify the "Pending" status. Charlie AI will
 Together, these four sections form a self-reinforcing flywheel: we build the roster → agents claim profiles → agents use tools → tools generate recurring revenue.`
   },
   {
+    id: 'sending_agent_bridge',
+    dividerAbove: true,
+    title: 'SECTION 17: THE "SENDING AGENT" REVENUE BRIDGE',
+    content: `The Core Audience: We prioritize the "Exodus Markets" (LA, SF, Seattle, Chicago). These agents are the "Senders."
+
+The Problem: Sending agents are often "flying blind" when referring clients out of state. They risk their reputation and their 25% referral fee on agents they don't know.
+
+The Dyson Solution: We offer the Sending Agent a "National Vetting Desk." We vet the destination agent using 2025 performance data and manage the logistics, ensuring the Sending Agent's referral fee is protected and the client is handled with elite care.
+
+The Monetization: Dyson & Dyson sits in the middle of the "Sending" and "Receiving" transaction, capturing management fees or referral splits for providing the "Vetting and Logistics" infrastructure.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
