@@ -75,6 +75,19 @@ function AgentRow({ agent, onUpdate }) {
       </td>
       <td className="px-3 py-3">
         <select
+          value={agent.brokerage_category || 'boutique_independent'}
+          onChange={e => onUpdate(agent.id, { brokerage_category: e.target.value })}
+          className="text-[10px] font-black px-2 py-0.5 rounded-full border outline-none cursor-pointer"
+          style={(() => {
+            const c = CATEGORY_LABELS[agent.brokerage_category || 'boutique_independent'];
+            return { background: c.bg, color: c.color, borderColor: c.border };
+          })()}
+        >
+          {Object.entries(CATEGORY_LABELS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+        </select>
+      </td>
+      <td className="px-3 py-3">
+        <select
           value={agent.market_type || 'destination'}
           onChange={e => onUpdate(agent.id, { market_type: e.target.value })}
           className="text-[10px] font-black px-2 py-0.5 rounded-full border outline-none cursor-pointer"
@@ -236,7 +249,7 @@ function CityTable({ cityLabel, agents, onUpdate }) {
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                {['Rank', 'Name', 'City', 'Brokerage', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Market Type', 'Status', 'Notes'].map(h => (
+                {['Rank', 'Name', 'City', 'Brokerage', 'Category', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Market Type', 'Status', 'Notes'].map(h => (
                   <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
