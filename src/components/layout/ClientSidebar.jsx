@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, BookOpen, Users, TrendingUp
+  CreditCard, Building2, Home, BookOpen, Users, TrendingUp, Star
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -104,6 +104,22 @@ export default function ClientSidebar() {
         </p>
       </div>
 
+      {/* ── Two Core Value Links ── */}
+      <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <Link to="/relo-management"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+          style={{ color: GOLD }}>
+          <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          RELOCATION SERVICES
+        </Link>
+        <Link to="/real-estate-answers"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+          style={{ color: GOLD }}>
+          <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          REAL ESTATE ANSWERS
+        </Link>
+      </div>
+
       {/* Scrollable area */}
       <div className="flex-1 overflow-y-auto flex flex-col">
 
@@ -174,13 +190,22 @@ export default function ClientSidebar() {
               {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
             </Link>
 
-            {/* Pure client also gets Relo Management inline */}
+            {/* Pure client sub-sections */}
             {isClientOnly && (
               <>
+                {/* Relocation Services */}
+                <div className="mt-2 mb-1 px-1">
+                  <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: 'rgba(212,175,55,0.55)' }}>Relocation Services</p>
+                </div>
                 <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
                 <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
-                <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+
+                {/* Real Estate Answers */}
+                <div className="mt-2 mb-1 px-1">
+                  <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: 'rgba(212,175,55,0.55)' }}>Real Estate Answers</p>
+                </div>
                 <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+                <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
               </>
             )}
           </div>

@@ -85,6 +85,7 @@ import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 import RoleSelector from './pages/RoleSelector';
 import AgentInvitedClients from './pages/AgentInvitedClients';
+import RealEstateAnswers from './pages/RealEstateAnswers';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -150,6 +151,7 @@ const AuthenticatedApp = () => {
         <Route path="/explainers" element={<Explainers />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
+        <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
