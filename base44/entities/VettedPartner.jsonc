@@ -1,0 +1,74 @@
+{
+  "name": "VettedPartner",
+  "type": "object",
+  "properties": {
+    "agent_name": {
+      "type": "string",
+      "description": "Agent's full name"
+    },
+    "city": {
+      "type": "string",
+      "description": "Primary market city"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "city_slug": {
+      "type": "string",
+      "description": "URL-safe city slug e.g. nashville"
+    },
+    "rank": {
+      "type": "number",
+      "description": "Rank within the city (1 = top)"
+    },
+    "brokerage": {
+      "type": "string",
+      "description": "Brokerage name"
+    },
+    "sales_count_2025": {
+      "type": "number",
+      "description": "Number of transactions in 2025"
+    },
+    "sales_volume_2025": {
+      "type": "number",
+      "description": "Total sales volume in 2025 (dollars)"
+    },
+    "avg_price_point": {
+      "type": "number",
+      "description": "Average transaction price"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Agent phone number (admin-only)"
+    },
+    "email": {
+      "type": "string",
+      "description": "Agent email (admin-only)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "contacted",
+        "converted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "PRN membership status"
+    },
+    "outreach_notes": {
+      "type": "string",
+      "description": "Internal notes on outreach / rescue cases"
+    },
+    "import_batch": {
+      "type": "string",
+      "description": "CSV batch name this record came from"
+    }
+  },
+  "required": [
+    "agent_name",
+    "city"
+  ]
+}

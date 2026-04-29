@@ -1,0 +1,231 @@
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X } from 'lucide-react';
+import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
+
+const GOLD = '#D4AF37';
+const STATUS_COLORS = {
+  pending:   { bg: 'rgba(251,191,36,0.15)',  color: '#b45309', border: 'rgba(251,191,36,0.4)' },
+  active:    { bg: 'rgba(16,185,129,0.12)',  color: '#059669', border: 'rgba(16,185,129,0.35)' },
+  contacted: { bg: 'rgba(99,102,241,0.12)',  color: '#6366f1', border: 'rgba(99,102,241,0.35)' },
+  converted: { bg: 'rgba(212,175,55,0.15)',  color: '#92400e', border: 'rgba(212,175,55,0.4)' },
+  declined:  { bg: 'rgba(239,68,68,0.1)',    color: '#dc2626', border: 'rgba(239,68,68,0.3)' },
+};
+
+function fmt(n) {
+  if (!n) return '—';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n}`;
+}
+
+function StatusBadge({ status, onChange }) {
+  const s = STATUS_COLORS[status] || STATUS_COLORS.pending;
+  return (
+    <select
+      value={status}
+      onChange={e => onChange(e.target.value)}
+      className="text-[10px] font-black px-2 py-0.5 rounded-full border outline-none cursor-pointer"
+      style={{ background: s.bg, color: s.color, borderColor: s.border }}
+    >
+      {Object.keys(STATUS_COLORS).map(k => <option key={k} value={k}>{k.charAt(0).toUpperCase() + k.slice(1)}</option>)}
+    </select>
+  );
+}
+
+function AgentRow({ agent, onUpdate }) {
+  const [editNotes, setEditNotes] = useState(false);
+  const [notes, setNotes] = useState(agent.outreach_notes || '');
+
+  const saveNotes = () => { onUpdate(agent.id, { outreach_notes: notes }); setEditNotes(false); };
+
+  return (
+    <tr className="border-b text-sm" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
+      <td className="px-3 py-3 font-bold" style={{ color: '#1a1a1a' }}>{agent.rank || '—'}</td>
+      <td className="px-3 py-3 font-bold" style={{ color: '#1a1a1a' }}>{agent.agent_name}</td>
+      <td className="px-3 py-3" style={{ color: '#4a3a28' }}>{agent.city}{agent.state ? `, ${agent.state}` : ''}</td>
+      <td className="px-3 py-3" style={{ color: '#4a3a28' }}>{agent.brokerage || '—'}</td>
+      <td className="px-3 py-3 text-center font-semibold" style={{ color: '#1a1a1a' }}>{agent.sales_count_2025 || '—'}</td>
+      <td className="px-3 py-3 text-right font-semibold" style={{ color: GOLD }}>{fmt(agent.sales_volume_2025)}</td>
+      <td className="px-3 py-3 text-right" style={{ color: '#4a3a28' }}>{fmt(agent.avg_price_point)}</td>
+      <td className="px-3 py-3">
+        <div className="flex flex-col gap-0.5">
+          {agent.phone && (
+            <a href={`tel:${agent.phone}`} className="flex items-center gap-1 text-xs hover:underline" style={{ color: '#059669' }}>
+              <Phone className="w-3 h-3" />{agent.phone}
+            </a>
+          )}
+          {agent.email && (
+            <a href={`mailto:${agent.email}`} className="flex items-center gap-1 text-xs hover:underline" style={{ color: '#6366f1' }}>
+              <Mail className="w-3 h-3" />{agent.email}
+            </a>
+          )}
+          {!agent.phone && !agent.email && <span className="text-xs" style={{ color: '#9b8a70' }}>No contact</span>}
+        </div>
+      </td>
+      <td className="px-3 py-3">
+        <StatusBadge status={agent.status || 'pending'} onChange={v => onUpdate(agent.id, { status: v })} />
+      </td>
+      <td className="px-3 py-3 max-w-[180px]">
+        {editNotes ? (
+          <div className="flex gap-1 items-start">
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
+              className="text-xs px-2 py-1 rounded-lg flex-1 resize-none outline-none"
+              style={{ background: '#ede0cc', border: `1px solid ${GOLD}`, color: '#1a1a1a' }} />
+            <button onClick={saveNotes}><Check className="w-3.5 h-3.5 text-green-600" /></button>
+            <button onClick={() => setEditNotes(false)}><X className="w-3.5 h-3.5 text-red-500" /></button>
+          </div>
+        ) : (
+          <div className="flex gap-1 items-start group cursor-pointer" onClick={() => setEditNotes(true)}>
+            <span className="text-xs leading-snug flex-1" style={{ color: '#6b5c45' }}>{notes || 'Add note…'}</span>
+            <Edit2 className="w-3 h-3 opacity-0 group-hover:opacity-100 shrink-0 mt-0.5" style={{ color: GOLD }} />
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+}
+
+export default function AdminRoster() {
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [showImport, setShowImport] = useState(false);
+  const qc = useQueryClient();
+
+  const { data: partners = [], isLoading } = useQuery({
+    queryKey: ['vetted_partners'],
+    queryFn: () => base44.entities.VettedPartner.list('-created_date', 500),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.VettedPartner.update(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['vetted_partners'] }),
+  });
+
+  const filtered = partners.filter(p => {
+    const matchSearch = !search ||
+      p.agent_name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.city?.toLowerCase().includes(search.toLowerCase()) ||
+      p.brokerage?.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || p.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  // Group by city
+  const grouped = filtered.reduce((acc, p) => {
+    const key = `${p.city}${p.state ? ', ' + p.state : ''}`;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(p);
+    return acc;
+  }, {});
+
+  return (
+    <div className="min-h-screen px-6 py-8" style={{ background: '#ede0cc' }}>
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <p className="text-xs font-black tracking-[0.3em] mb-1" style={{ color: GOLD }}>PRN ADMIN</p>
+            <h1 className="font-black text-2xl" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
+              Master Partner Roster
+            </h1>
+            <p className="text-sm mt-1" style={{ color: '#6b5c45' }}>
+              {partners.length} agents across {Object.keys(partners.reduce((a, p) => ({ ...a, [p.city]: 1 }), {})).length} cities
+            </p>
+          </div>
+          <button onClick={() => setShowImport(v => !v)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
+            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            <Upload className="w-4 h-4" /> Import CSV
+          </button>
+        </div>
+
+        {/* CSV Import Panel */}
+        {showImport && (
+          <div className="mb-8">
+            <VettedPartnerCSVImport onDone={() => { setShowImport(false); qc.invalidateQueries({ queryKey: ['vetted_partners'] }); }} />
+          </div>
+        )}
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full flex-1 min-w-[220px]"
+            style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
+            <Search className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+            <input placeholder="Search agent, city, brokerage…" value={search} onChange={e => setSearch(e.target.value)}
+              className="flex-1 bg-transparent text-sm outline-none" style={{ color: '#1a1a1a' }} />
+          </div>
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+            className="px-4 py-2 rounded-full text-sm font-semibold outline-none"
+            style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)', color: '#1a1a1a' }}>
+            <option value="all">All Statuses</option>
+            {Object.keys(STATUS_COLORS).map(k => <option key={k} value={k}>{k.charAt(0).toUpperCase() + k.slice(1)}</option>)}
+          </select>
+        </div>
+
+        {/* Table by City Group */}
+        {isLoading ? (
+          <div className="text-center py-16" style={{ color: GOLD }}>Loading roster…</div>
+        ) : Object.keys(grouped).length === 0 ? (
+          <div className="text-center py-16 rounded-2xl" style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <p className="text-2xl mb-2">📋</p>
+            <p className="font-bold" style={{ color: '#1a1a1a' }}>No agents yet</p>
+            <p className="text-sm mt-1" style={{ color: '#6b5c45' }}>Use the Import CSV button to load your first batch.</p>
+          </div>
+        ) : (
+          Object.entries(grouped).map(([cityLabel, agents]) => (
+            <CityTable key={cityLabel} cityLabel={cityLabel} agents={agents}
+              onUpdate={(id, data) => updateMutation.mutate({ id, data })} />
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CityTable({ cityLabel, agents, onUpdate }) {
+  const [open, setOpen] = useState(true);
+  const citySlug = agents[0]?.city_slug || agents[0]?.city?.toLowerCase().replace(/\s+/g, '-');
+
+  return (
+    <div className="mb-6 rounded-2xl overflow-hidden shadow-sm" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
+      <button onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between px-5 py-3 text-left"
+        style={{ background: 'rgba(212,175,55,0.08)', borderBottom: open ? '1px solid rgba(212,175,55,0.15)' : 'none' }}>
+        <div className="flex items-center gap-3">
+          <span className="font-black text-base" style={{ color: '#1a1a1a' }}>{cityLabel}</span>
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
+            {agents.length} agents
+          </span>
+          <a href={`/vetted-agents/${citySlug}`} target="_blank" rel="noreferrer"
+            className="text-[10px] font-bold px-2 py-0.5 rounded-full hover:opacity-80"
+            onClick={e => e.stopPropagation()}
+            style={{ background: 'rgba(99,102,241,0.12)', color: '#6366f1', border: '1px solid rgba(99,102,241,0.3)' }}>
+            SEO Page ↗
+          </a>
+        </div>
+        {open ? <ChevronUp className="w-4 h-4" style={{ color: GOLD }} /> : <ChevronDown className="w-4 h-4" style={{ color: GOLD }} />}
+      </button>
+      {open && (
+        <div style={{ background: '#fff8ee', overflowX: 'auto' }}>
+          <table className="w-full text-xs">
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+                {['Rank', 'Name', 'City', 'Brokerage', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Status', 'Notes'].map(h => (
+                  <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {agents.sort((a, b) => (a.rank || 99) - (b.rank || 99)).map(agent => (
+                <AgentRow key={agent.id} agent={agent} onUpdate={onUpdate} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

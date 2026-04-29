@@ -87,6 +87,8 @@ import RoleSelector from './pages/RoleSelector';
 import AgentInvitedClients from './pages/AgentInvitedClients';
 import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
+import AdminRoster from './pages/AdminRoster';
+import VettedAgentsCity from './pages/VettedAgentsCity';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -154,6 +156,7 @@ const AuthenticatedApp = () => {
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
+        <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -209,6 +212,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/bureau-stories" element={<AdminBureauStories />} />
         <Route path="/solve-my-story" element={<SolveMyStory />} />
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
+        <Route path="/admin/roster" element={<AdminRoster />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
