@@ -37,10 +37,13 @@ const FIELD_MAP = {
   'avg_price': 'avg_price_point', 'average sale price': 'avg_price_point', 'avg sale price': 'avg_price_point',
   'average sales price': 'avg_price_point', 'median price': 'avg_price_point', 'avg sold price': 'avg_price_point',
   // phone
-  'phone': 'phone', 'phone number': 'phone', 'cell': 'phone', 'mobile': 'phone', 'cell phone': 'phone',
-  'telephone': 'phone', 'contact phone': 'phone',
+  'phone': 'phone', 'phone number': 'phone', 'phone_number': 'phone', 'cell': 'phone', 'mobile': 'phone',
+  'cell phone': 'phone', 'cell_phone': 'phone', 'telephone': 'phone', 'contact phone': 'phone',
+  'contact_phone': 'phone', 'agent phone': 'phone', 'agent_phone': 'phone',
+  'direct': 'phone', 'direct phone': 'phone', 'direct_phone': 'phone',
   // email
-  'email': 'email', 'email address': 'email', 'contact email': 'email', 'e-mail': 'email',
+  'email': 'email', 'email address': 'email', 'email_address': 'email', 'contact email': 'email',
+  'contact_email': 'email', 'e-mail': 'email', 'agent email': 'email', 'agent_email': 'email',
   // status
   'status': 'status', 'prn status': 'status', 'membership status': 'status',
   // notes
@@ -56,8 +59,9 @@ function parseXLSX(arrayBuffer) {
   const rows = jsonRows.map(raw => {
     const row = {};
     Object.entries(raw).forEach(([col, val]) => {
-      const key = FIELD_MAP[String(col).trim().toLowerCase()];
-      if (key) row[key] = String(val || '');
+      const normalized = String(col).trim().toLowerCase().replace(/_/g, ' ');
+      const key = FIELD_MAP[normalized] || FIELD_MAP[String(col).trim().toLowerCase()];
+      if (key) row[key] = String(val ?? '');
     });
     return row;
   }).filter(r => r.agent_name);
@@ -72,7 +76,8 @@ function parseCSVFull(text) {
     const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
     const row = {};
     headers.forEach((h, i) => {
-      const key = FIELD_MAP[h.toLowerCase()];
+      const normalized = h.toLowerCase().replace(/_/g, ' ');
+      const key = FIELD_MAP[normalized] || FIELD_MAP[h.toLowerCase()];
       if (key) row[key] = vals[i] || '';
     });
     return row;
@@ -178,7 +183,7 @@ export default function VettedPartnerCSVImport({ onDone }) {
               <p className="font-black mb-2" style={{ color: GOLD }}>Column Detection ({rawHeaders.length} headers found)</p>
               <div className="flex flex-wrap gap-1.5">
                 {rawHeaders.map(h => {
-                  const mapped = FIELD_MAP[h.toLowerCase()];
+                  const mapped = FIELD_MAP[h.toLowerCase().replace(/_/g, ' ')] || FIELD_MAP[h.toLowerCase()];
                   return (
                     <span key={h} className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
                       style={{ background: mapped ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.1)', color: mapped ? '#059669' : '#dc2626', border: `1px solid ${mapped ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.25)'}` }}>
