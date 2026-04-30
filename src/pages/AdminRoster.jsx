@@ -126,7 +126,7 @@ function AgentRow({ agent, onUpdate }) {
 export default function AdminRoster() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [showImport, setShowImport] = useState(false);
+  const [showImport, setShowImport] = useState(true);
   const qc = useQueryClient();
 
   const { data: partners = [], isLoading } = useQuery({
@@ -173,8 +173,8 @@ export default function AdminRoster() {
           </div>
           <button onClick={() => setShowImport(v => !v)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
-            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-            <Upload className="w-4 h-4" /> Import CSV
+            style={{ background: showImport ? 'rgba(0,0,0,0.1)' : `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: showImport ? '#1a1a1a' : '#000', border: showImport ? '1px solid rgba(0,0,0,0.2)' : 'none' }}>
+            <Upload className="w-4 h-4" /> {showImport ? 'Hide Importer' : 'Import Spreadsheet'}
           </button>
         </div>
 
