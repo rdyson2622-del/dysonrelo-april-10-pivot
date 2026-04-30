@@ -6,43 +6,54 @@ import * as XLSX from 'xlsx';
 const GOLD = '#D4AF37';
 
 const FIELD_MAP = {
+  // agent name
   'agent name': 'agent_name', 'name': 'agent_name', 'agent_name': 'agent_name',
-  'city': 'city',
-  'state': 'state',
-  'city slug': 'city_slug', 'slug': 'city_slug',
-  'rank': 'rank',
-  'brokerage': 'brokerage', 'broker': 'brokerage',
-  'brokerage category': 'brokerage_category', 'brokerage_category': 'brokerage_category', 'category': 'brokerage_category',
-  'market type': 'market_type', 'market_type': 'market_type',
-  'sales count': 'sales_count_2025', 'sales #': 'sales_count_2025', 'transactions': 'sales_count_2025', '2025 sales': 'sales_count_2025', 'sales_2025': 'sales_count_2025', 'sales count 2025': 'sales_count_2025',
-  'sales volume': 'sales_volume_2025', 'volume': 'sales_volume_2025', '2025 volume': 'sales_volume_2025', 'volume_2025': 'sales_volume_2025', 'sales volume 2025': 'sales_volume_2025',
-  'avg price': 'avg_price_point', 'avg price point': 'avg_price_point', 'average price': 'avg_price_point', 'avg_price': 'avg_price_point',
-  'phone': 'phone',
-  'email': 'email',
-  'status': 'status',
-  'notes': 'outreach_notes',
+  'full name': 'agent_name', 'fullname': 'agent_name', 'agent': 'agent_name',
+  // city
+  'city': 'city', 'market': 'city', 'market city': 'city',
+  // state
+  'state': 'state', 'st': 'state',
+  // city slug
+  'city slug': 'city_slug', 'slug': 'city_slug', 'city_slug': 'city_slug',
+  // rank
+  'rank': 'rank', '#': 'rank', 'ranking': 'rank',
+  // brokerage
+  'brokerage': 'brokerage', 'broker': 'brokerage', 'brokerage name': 'brokerage', 'company': 'brokerage', 'firm': 'brokerage',
+  // brokerage category
+  'brokerage category': 'brokerage_category', 'brokerage_category': 'brokerage_category', 'category': 'brokerage_category', 'type': 'brokerage_category',
+  // market type
+  'market type': 'market_type', 'market_type': 'market_type', 'market role': 'market_type',
+  // sales count
+  'sales count': 'sales_count_2025', 'sales #': 'sales_count_2025', 'transactions': 'sales_count_2025',
+  '2025 sales': 'sales_count_2025', 'sales_2025': 'sales_count_2025', 'sales count 2025': 'sales_count_2025',
+  'units': 'sales_count_2025', 'units sold': 'sales_count_2025', 'closed transactions': 'sales_count_2025',
+  'sales': 'sales_count_2025', '# of sales': 'sales_count_2025', 'number of sales': 'sales_count_2025',
+  // sales volume
+  'sales volume': 'sales_volume_2025', 'volume': 'sales_volume_2025', '2025 volume': 'sales_volume_2025',
+  'volume_2025': 'sales_volume_2025', 'sales volume 2025': 'sales_volume_2025',
+  'total volume': 'sales_volume_2025', 'total sales volume': 'sales_volume_2025', 'gross volume': 'sales_volume_2025',
+  // avg price
+  'avg price': 'avg_price_point', 'avg price point': 'avg_price_point', 'average price': 'avg_price_point',
+  'avg_price': 'avg_price_point', 'average sale price': 'avg_price_point', 'avg sale price': 'avg_price_point',
+  'average sales price': 'avg_price_point', 'median price': 'avg_price_point', 'avg sold price': 'avg_price_point',
+  // phone
+  'phone': 'phone', 'phone number': 'phone', 'cell': 'phone', 'mobile': 'phone', 'cell phone': 'phone',
+  'telephone': 'phone', 'contact phone': 'phone',
+  // email
+  'email': 'email', 'email address': 'email', 'contact email': 'email', 'e-mail': 'email',
+  // status
+  'status': 'status', 'prn status': 'status', 'membership status': 'status',
+  // notes
+  'notes': 'outreach_notes', 'note': 'outreach_notes', 'outreach notes': 'outreach_notes', 'comments': 'outreach_notes', 'comment': 'outreach_notes',
 };
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
-  return lines.slice(1).map(line => {
-    const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-    const row = {};
-    headers.forEach((h, i) => {
-      const key = FIELD_MAP[h];
-      if (key) row[key] = vals[i] || '';
-    });
-    return row;
-  }).filter(r => r.agent_name);
-}
 
 function parseXLSX(arrayBuffer) {
   const workbook = XLSX.read(arrayBuffer, { type: 'array' });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
   const jsonRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-  return jsonRows.map(raw => {
+  const headers = jsonRows.length > 0 ? Object.keys(jsonRows[0]) : [];
+  const rows = jsonRows.map(raw => {
     const row = {};
     Object.entries(raw).forEach(([col, val]) => {
       const key = FIELD_MAP[String(col).trim().toLowerCase()];
@@ -50,6 +61,23 @@ function parseXLSX(arrayBuffer) {
     });
     return row;
   }).filter(r => r.agent_name);
+  return { rows, headers };
+}
+
+function parseCSVFull(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return { rows: [], headers: [] };
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  const rows = lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+    const row = {};
+    headers.forEach((h, i) => {
+      const key = FIELD_MAP[h.toLowerCase()];
+      if (key) row[key] = vals[i] || '';
+    });
+    return row;
+  }).filter(r => r.agent_name);
+  return { rows, headers };
 }
 
 function cleanRow(row, batchName) {
@@ -65,6 +93,7 @@ function cleanRow(row, batchName) {
 export default function VettedPartnerCSVImport({ onDone }) {
   const [stage, setStage] = useState('idle'); // idle | preview | importing | done | error
   const [rows, setRows] = useState([]);
+  const [rawHeaders, setRawHeaders] = useState([]);
   const [batchName, setBatchName] = useState('');
   const [result, setResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -79,12 +108,14 @@ export default function VettedPartnerCSVImport({ onDone }) {
 
     const reader = new FileReader();
     reader.onload = (ev) => {
-      let parsed = [];
+      let result;
       if (isExcel) {
-        parsed = parseXLSX(ev.target.result);
+        result = parseXLSX(ev.target.result);
       } else {
-        parsed = parseCSV(ev.target.result);
+        result = parseCSVFull(ev.target.result);
       }
+      const { rows: parsed, headers } = result;
+      setRawHeaders(headers || []);
       if (!parsed.length) { setErrorMsg('No valid rows found. Make sure your column headers match the expected names (see hint above).'); setStage('error'); return; }
       setRows(parsed);
       setStage('preview');
@@ -142,6 +173,21 @@ export default function VettedPartnerCSVImport({ onDone }) {
 
         {stage === 'preview' && (
           <div>
+            {/* Header mapping debug */}
+            <div className="rounded-xl px-4 py-3 mb-4 text-xs" style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <p className="font-black mb-2" style={{ color: GOLD }}>Column Detection ({rawHeaders.length} headers found)</p>
+              <div className="flex flex-wrap gap-1.5">
+                {rawHeaders.map(h => {
+                  const mapped = FIELD_MAP[h.toLowerCase()];
+                  return (
+                    <span key={h} className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                      style={{ background: mapped ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.1)', color: mapped ? '#059669' : '#dc2626', border: `1px solid ${mapped ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.25)'}` }}>
+                      {h} {mapped ? `→ ${mapped}` : '✗ unmapped'}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5" style={{ color: GOLD }} />
