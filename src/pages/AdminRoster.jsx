@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X } from 'lucide-react';
+import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2 } from 'lucide-react';
 import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
 
 const GOLD = '#D4AF37';
@@ -43,7 +43,7 @@ function StatusBadge({ status, onChange }) {
   );
 }
 
-function AgentRow({ agent, onUpdate }) {
+function AgentRow({ agent, onUpdate, onDelete }) {
   const [editNotes, setEditNotes] = useState(false);
   const [notes, setNotes] = useState(agent.outreach_notes || '');
 
@@ -119,6 +119,12 @@ function AgentRow({ agent, onUpdate }) {
           </div>
         )}
       </td>
+      <td className="px-3 py-3">
+        <button onClick={() => { if (window.confirm(`Delete ${agent.agent_name}?`)) onDelete(agent.id); }}
+          className="p-1.5 rounded-lg hover:bg-red-50 transition-colors">
+          <Trash2 className="w-3.5 h-3.5" style={{ color: '#dc2626' }} />
+        </button>
+      </td>
     </tr>
   );
 }
@@ -138,6 +144,19 @@ export default function AdminRoster() {
     mutationFn: ({ id, data }) => base44.entities.VettedPartner.update(id, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['vetted_partners'] }),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.VettedPartner.delete(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['vetted_partners'] }),
+  });
+
+  const handleDeleteAll = async () => {
+    if (!window.confirm(`Delete ALL ${partners.length} agents from the roster? This cannot be undone.`)) return;
+    for (const p of partners) {
+      await base44.entities.VettedPartner.delete(p.id);
+    }
+    qc.invalidateQueries({ queryKey: ['vetted_partners'] });
+  };
 
   const filtered = partners.filter(p => {
     const matchSearch = !search ||
@@ -171,6 +190,13 @@ export default function AdminRoster() {
               {partners.length} agents across {Object.keys(partners.reduce((a, p) => ({ ...a, [p.city]: 1 }), {})).length} cities
             </p>
           </div>
+          {partners.length > 0 && (
+            <button onClick={handleDeleteAll}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all hover:opacity-80"
+              style={{ background: 'rgba(239,68,68,0.1)', color: '#dc2626', border: '1px solid rgba(239,68,68,0.3)' }}>
+              <Trash2 className="w-4 h-4" /> Clear All
+            </button>
+          )}
           <button onClick={() => setShowImport(v => !v)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
             style={{ background: showImport ? 'rgba(0,0,0,0.1)' : `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: showImport ? '#1a1a1a' : '#000', border: showImport ? '1px solid rgba(0,0,0,0.2)' : 'none' }}>
@@ -213,7 +239,8 @@ export default function AdminRoster() {
         ) : (
           Object.entries(grouped).map(([cityLabel, agents]) => (
             <CityTable key={cityLabel} cityLabel={cityLabel} agents={agents}
-              onUpdate={(id, data) => updateMutation.mutate({ id, data })} />
+              onUpdate={(id, data) => updateMutation.mutate({ id, data })}
+              onDelete={(id) => deleteMutation.mutate(id)} />
           ))
         )}
       </div>
@@ -221,7 +248,7 @@ export default function AdminRoster() {
   );
 }
 
-function CityTable({ cityLabel, agents, onUpdate }) {
+function CityTable({ cityLabel, agents, onUpdate, onDelete }) {
   const [open, setOpen] = useState(true);
   const citySlug = agents[0]?.city_slug || agents[0]?.city?.toLowerCase().replace(/\s+/g, '-');
 
@@ -249,14 +276,14 @@ function CityTable({ cityLabel, agents, onUpdate }) {
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                {['Rank', 'Name', 'City', 'Brokerage', 'Category', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Market Type', 'Status', 'Notes'].map(h => (
+                {['Rank', 'Name', 'City', 'Brokerage', 'Category', 'Sales #', 'Volume', 'Avg Price', 'Contact', 'Market Type', 'Status', 'Notes', ''].map(h => (
                   <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {agents.sort((a, b) => (a.rank || 99) - (b.rank || 99)).map(agent => (
-                <AgentRow key={agent.id} agent={agent} onUpdate={onUpdate} />
+                <AgentRow key={agent.id} agent={agent} onUpdate={onUpdate} onDelete={onDelete} />
               ))}
             </tbody>
           </table>
