@@ -152,9 +152,7 @@ export default function AdminRoster() {
 
   const handleDeleteAll = async () => {
     if (!window.confirm(`Delete ALL ${partners.length} agents from the roster? This cannot be undone.`)) return;
-    for (const p of partners) {
-      await base44.entities.VettedPartner.delete(p.id);
-    }
+    await Promise.allSettled(partners.map(p => base44.entities.VettedPartner.delete(p.id)));
     qc.invalidateQueries({ queryKey: ['vetted_partners'] });
   };
 
