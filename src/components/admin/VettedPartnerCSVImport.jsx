@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Upload, CheckCircle, AlertCircle, FileText } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 const GOLD = '#D4AF37';
 
@@ -37,6 +38,20 @@ function parseCSV(text) {
   }).filter(r => r.agent_name);
 }
 
+function parseXLSX(arrayBuffer) {
+  const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const jsonRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+  return jsonRows.map(raw => {
+    const row = {};
+    Object.entries(raw).forEach(([col, val]) => {
+      const key = FIELD_MAP[String(col).trim().toLowerCase()];
+      if (key) row[key] = String(val || '');
+    });
+    return row;
+  }).filter(r => r.agent_name);
+}
+
 function cleanRow(row, batchName) {
   const out = { ...row, import_batch: batchName, status: row.status || 'pending' };
   if (out.rank) out.rank = parseInt(out.rank) || null;
@@ -58,16 +73,27 @@ export default function VettedPartnerCSVImport({ onDone }) {
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const defaultBatch = file.name.replace('.csv', '');
+    const defaultBatch = file.name.replace(/\.(csv|xlsx|xls|numbers)$/i, '');
     setBatchName(defaultBatch);
+    const isExcel = /\.(xlsx|xls|numbers)$/i.test(file.name);
+
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const parsed = parseCSV(ev.target.result);
-      if (!parsed.length) { setErrorMsg('No valid rows found. Check your CSV headers.'); setStage('error'); return; }
+      let parsed = [];
+      if (isExcel) {
+        parsed = parseXLSX(ev.target.result);
+      } else {
+        parsed = parseCSV(ev.target.result);
+      }
+      if (!parsed.length) { setErrorMsg('No valid rows found. Make sure your column headers match the expected names (see hint above).'); setStage('error'); return; }
       setRows(parsed);
       setStage('preview');
     };
-    reader.readAsText(file);
+    if (isExcel) {
+      reader.readAsArrayBuffer(file);
+    } else {
+      reader.readAsText(file);
+    }
   };
 
   const handleImport = async () => {
@@ -95,21 +121,21 @@ export default function VettedPartnerCSVImport({ onDone }) {
       <div className="px-6 py-6">
         {/* Expected columns hint */}
         <div className="rounded-xl px-4 py-3 mb-5 text-xs leading-relaxed" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', color: '#6b5c45' }}>
-          <strong style={{ color: GOLD }}>Expected CSV Columns:</strong>{' '}
-          Market_Type, City, Brokerage, Agent_Name, Sales_2025, Volume_2025, Avg_Price, Email, Phone
-          <br />Also supports: State, Rank, Brokerage_Category, Notes. Column names are flexible — we auto-map common variations.
-          <br /><span style={{ color: GOLD }}>Brokerage_Category:</span> boutique_independent · franchise · team · other
+          <strong style={{ color: GOLD }}>Expected Column Names (row 1 headers):</strong>{' '}
+          Agent_Name · City · State · Brokerage · Market_Type · Sales_2025 · Volume_2025 · Avg_Price · Email · Phone
+          <br />Also accepts: Rank, Brokerage_Category, Notes. Column names are flexible — we auto-map common variations.
+          <br /><strong style={{ color: GOLD }}>Tip:</strong> Export from Numbers or Google Sheets as <strong>.xlsx</strong> — no conversion needed.
         </div>
 
         {stage === 'idle' && (
           <div>
-            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleFile} />
+            <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,.numbers" className="hidden" onChange={handleFile} />
             <button onClick={() => fileRef.current.click()}
               className="w-full py-8 rounded-2xl border-2 border-dashed flex flex-col items-center gap-3 transition-all hover:opacity-80"
               style={{ borderColor: 'rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)' }}>
               <Upload className="w-8 h-8" style={{ color: GOLD }} />
-              <span className="font-bold text-sm" style={{ color: '#1a1a1a' }}>Click to select your CSV file</span>
-              <span className="text-xs" style={{ color: '#9b8a70' }}>Supports standard CSV exports from Excel, PropStream, or Google Sheets</span>
+              <span className="font-bold text-sm" style={{ color: '#1a1a1a' }}>Click to select your spreadsheet</span>
+              <span className="text-xs" style={{ color: '#9b8a70' }}>Supports .xlsx · .csv · Apple Numbers · Google Sheets</span>
             </button>
           </div>
         )}
