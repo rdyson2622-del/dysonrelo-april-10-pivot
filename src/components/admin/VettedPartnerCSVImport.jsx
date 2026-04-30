@@ -87,10 +87,12 @@ function parseCSVFull(text) {
 
 function cleanRow(row, batchName) {
   const out = { ...row, import_batch: batchName, status: row.status || 'pending' };
-  if (out.rank) out.rank = parseInt(out.rank) || null;
-  if (out.sales_count_2025) out.sales_count_2025 = parseInt(out.sales_count_2025) || null;
-  if (out.sales_volume_2025) out.sales_volume_2025 = parseFloat(String(out.sales_volume_2025).replace(/[$,]/g, '')) || null;
-  if (out.avg_price_point) out.avg_price_point = parseFloat(String(out.avg_price_point).replace(/[$,]/g, '')) || null;
+  const toInt = v => { const n = parseInt(String(v).replace(/[^0-9-]/g, '')); return isNaN(n) ? null : n; };
+  const toFloat = v => { const n = parseFloat(String(v).replace(/[$,\s]/g, '')); return isNaN(n) ? null : n; };
+  out.rank = out.rank ? toInt(out.rank) : null;
+  out.sales_count_2025 = out.sales_count_2025 ? toInt(out.sales_count_2025) : null;
+  out.sales_volume_2025 = out.sales_volume_2025 ? toFloat(out.sales_volume_2025) : null;
+  out.avg_price_point = out.avg_price_point ? toFloat(out.avg_price_point) : null;
   if (!out.city_slug && out.city) out.city_slug = out.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   return out;
 }
