@@ -50,6 +50,15 @@ export default function AdminExodusPitch() {
     <div className="min-h-screen px-6 py-10" style={{ background: TAN }}>
       <div className="max-w-3xl mx-auto">
 
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
+            alt="Dyson & Dyson"
+            className="h-16 w-auto"
+          />
+        </div>
+
         {/* Header */}
         <div className="mb-10">
           <p className="text-xs font-black tracking-[0.3em] mb-2" style={{ color: GOLD }}>PRIVATE REFERRAL NETWORK (PRN) · EXODUS MARKET PROGRAM</p>
