@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2 } from 'lucide-react';
+import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2, UserPlus } from 'lucide-react';
 import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
+import AddAgentModal from '@/components/admin/AddAgentModal';
 
 const GOLD = '#D4AF37';
 const FRANCHISE_BRANDS = ['compass', 'coldwell banker', 'sotheby', 'century 21', 'remax', 're/max', 'berkshire hathaway', 'keller williams', 'exp realty', 'better homes'];
@@ -133,6 +134,7 @@ export default function AdminRoster() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showImport, setShowImport] = useState(true);
+  const [showAddAgent, setShowAddAgent] = useState(false);
   const qc = useQueryClient();
 
   const { data: partners = [], isLoading } = useQuery({
@@ -195,12 +197,21 @@ export default function AdminRoster() {
               <Trash2 className="w-4 h-4" /> Clear All
             </button>
           )}
+          <button onClick={() => setShowAddAgent(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
+            style={{ background: 'rgba(99,102,241,0.12)', color: '#6366f1', border: '1px solid rgba(99,102,241,0.3)' }}>
+            <UserPlus className="w-4 h-4" /> Add Agent
+          </button>
           <button onClick={() => setShowImport(v => !v)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
             style={{ background: showImport ? 'rgba(0,0,0,0.1)' : `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: showImport ? '#1a1a1a' : '#000', border: showImport ? '1px solid rgba(0,0,0,0.2)' : 'none' }}>
             <Upload className="w-4 h-4" /> {showImport ? 'Hide Importer' : 'Import Spreadsheet'}
           </button>
         </div>
+
+        {showAddAgent && (
+          <AddAgentModal onClose={() => setShowAddAgent(false)} onSaved={() => qc.invalidateQueries({ queryKey: ['vetted_partners'] })} />
+        )}
 
         {/* CSV Import Panel */}
         {showImport && (
