@@ -321,6 +321,43 @@ Compass · Coldwell Banker · Sotheby's International Realty · Century 21 · RE
 Exception: Individual agents who have recently left a franchise and joined an independent firm may be considered after a 6-month waiting period.`
   },
   {
+    id: 'sending_agent_agreement',
+    dividerAbove: true,
+    title: 'SECTION 19: SENDING AGENT PARTICIPATION AGREEMENT',
+    content: `Title: Dyson & Dyson Managed Referral Opt-In
+
+THE COMMITMENT:
+By submitting a referral to Dyson & Dyson, the Sending Brokerage authorizes Dyson & Dyson to act as the Relocation Manager for the duration of the transaction.
+
+FEE STRUCTURE:
+• Dyson & Dyson will secure a 25% Referral Fee for the Sending Brokerage.
+• Dyson & Dyson will collect a separate 10% Management Fee from the Receiving Broker.
+• Total fee at destination: 35% of the Receiving Broker's gross commission.
+
+OUR PROMISE:
+We vet the destination agent, manage the full logistics protocol, and provide real-time milestone tracking through the DysonRelo Portal. The Sending Brokerage receives their 25% check at closing, managed by our compliance team — with zero logistics overhead on their end.`
+  },
+  {
+    id: 'receiving_agent_agreement',
+    title: 'SECTION 20: RECEIVING AGENT PERFORMANCE AGREEMENT',
+    content: `Title: Dyson Private Referral Network – Referral Acceptance
+
+FEE AGREEMENT:
+The Receiving Brokerage agrees to pay a total referral/management fee of 35% of the gross commission earned on the subject transaction.
+
+DISTRIBUTION:
+• 25% shall be paid to the [Originating Brokerage] (the Sending Agent's firm)
+• 10% shall be paid to Dyson & Dyson Relocation Management
+
+PERFORMANCE STANDARD:
+Acceptance of this lead requires:
+1. A 24-hour initial client contact guarantee from the time of introduction.
+2. Weekly status updates submitted via the DysonRelo Portal at each escrow milestone.
+3. Failure to update the portal may result in removal from the Vetted Partner Roster.
+
+NOTE: Both agreements are generated automatically through the platform and signed digitally before any client introduction is made. All referral fees are paid broker-to-broker in compliance with applicable DRE regulations.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:
