@@ -27,6 +27,7 @@ const FEATURES = [
 
 export default function SendingAgentLanding() {
   const [form, setForm] = useState({ agent_name: '', agent_email: '', client_name: '', destination_state: '', notes: '' });
+  const [smsConsent, setSmsConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -165,7 +166,24 @@ export default function SendingAgentLanding() {
                   className="w-full px-3 py-2.5 rounded-lg text-sm outline-none resize-none"
                   style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.3)', color: '#fff' }} />
               </div>
-              <button type="submit" disabled={submitting}
+              {/* SMS Consent Checkbox — required for Twilio A2P compliance */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  checked={smsConsent}
+                  onChange={e => setSmsConsent(e.target.checked)}
+                  className="mt-1 shrink-0 w-4 h-4 accent-yellow-400"
+                />
+                <span className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  I agree to receive SMS updates from Dyson & Dyson regarding referral opportunities and transaction milestones. Msg &amp; data rates may apply. Reply STOP to unsubscribe. View our{' '}
+                  <a href="/privacy" target="_blank" className="underline" style={{ color: GOLD }}>Privacy Policy</a>{' '}
+                  and{' '}
+                  <a href="/terms" target="_blank" className="underline" style={{ color: GOLD }}>Terms</a>.
+                </span>
+              </label>
+
+              <button type="submit" disabled={submitting || !smsConsent}
                 className="w-full py-3.5 rounded-full font-black text-sm tracking-wide flex items-center justify-center gap-2 transition-all hover:scale-[1.02] disabled:opacity-50"
                 style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
                 <ArrowRight className="w-4 h-4" />
