@@ -4,7 +4,11 @@ import { Copy, CheckCircle, MessageSquare, ArrowRight } from 'lucide-react';
 const GOLD = '#D4AF37';
 const TAN = '#ede0cc';
 
-const SMS_TEMPLATE = `Hi [Agent Name], congrats on the new listing on [Street Name]. I'm with Dyson & Dyson. Since your sellers are moving out of [City], we want to help you monetize that move. We manage the destination vetting and logistics, securing a 25% referral fee for you with zero extra paperwork. See how we act as your national relo department: dysonrelo.com/exodus`;
+const SMS_TEMPLATE = `Hi [Agent Name], congrats on your volume in [City]. As a fellow independent, we want to offer you a national infrastructure without the franchise fees. We've added you to the Dyson Private Referral Network.
+
+The Math: You send a referral, we manage the vetting and logistics. You keep 25%, we take a 10% management fee (Total 35% at destination). No work, full fee protection.
+
+See the Managed Referral Workflow here: dysonrelo.com/partner-benefits`;
 
 const TIPS = [
   { label: 'Who to target', body: 'Independent boutique agents who just listed in outflow markets (LA, SF, Seattle, Chicago). Exclude Compass, Coldwell, Sotheby\'s, KW, eXp.' },
@@ -15,13 +19,11 @@ const TIPS = [
 
 export default function AdminExodusOutreach() {
   const [agentName, setAgentName] = useState('');
-  const [streetName, setStreetName] = useState('');
   const [city, setCity] = useState('');
   const [copied, setCopied] = useState(false);
 
   const personalized = SMS_TEMPLATE
     .replace('[Agent Name]', agentName || '[Agent Name]')
-    .replace('[Street Name]', streetName || '[Street Name]')
     .replace('[City]', city || '[City]');
 
   const handleCopy = () => {
@@ -51,18 +53,11 @@ export default function AdminExodusOutreach() {
             <p className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>PERSONALIZE YOUR MESSAGE</p>
           </div>
           <div className="px-5 py-5 space-y-4" style={{ background: '#fff8ee' }}>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-[10px] font-black tracking-widest uppercase block mb-1" style={{ color: GOLD }}>Agent First Name</label>
                 <input value={agentName} onChange={e => setAgentName(e.target.value)}
                   placeholder="e.g. Sarah"
-                  className="w-full px-3 py-2 rounded-lg text-sm outline-none"
-                  style={{ background: '#ede0cc', border: '1px solid rgba(212,175,55,0.4)', color: '#1a1a1a' }} />
-              </div>
-              <div>
-                <label className="text-[10px] font-black tracking-widest uppercase block mb-1" style={{ color: GOLD }}>Street Name</label>
-                <input value={streetName} onChange={e => setStreetName(e.target.value)}
-                  placeholder="e.g. Oak Ave"
                   className="w-full px-3 py-2 rounded-lg text-sm outline-none"
                   style={{ background: '#ede0cc', border: '1px solid rgba(212,175,55,0.4)', color: '#1a1a1a' }} />
               </div>

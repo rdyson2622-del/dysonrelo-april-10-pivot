@@ -1,37 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, DollarSign, Monitor, ArrowRight, X, Check } from 'lucide-react';
+import { ArrowRight, X, Check, Shield, DollarSign, FileText } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const TAN = '#ede0cc';
-
-const PROCESS = [
-  {
-    icon: Star,
-    number: '1',
-    title: 'The Lead',
-    body: 'You receive a high-intent, Dyson-vetted relocation lead — a client who has already completed our intake process, defined their destination, and committed to the move.',
-  },
-  {
-    icon: DollarSign,
-    number: '2',
-    title: 'The Fee',
-    body: 'Standard 35% total referral/management fee: 25% goes to the Sending Agent\'s brokerage, 10% to Dyson Relocation Management. Paid broker-to-broker at closing.',
-  },
-  {
-    icon: Monitor,
-    number: '3',
-    title: 'The Tech',
-    body: 'Use your Dyson Dashboard to update the client\'s Roadmap at each milestone. The Sending Agent stays informed in real time — building trust and protecting your reputation.',
-  },
-];
 
 const COMPARISON = [
   { label: 'Client Type', boutique: 'Pre-vetted, high-intent relocation clients', bigbox: 'Cold, unqualified directory leads' },
   { label: 'Referral Fee', boutique: '25% goes to peer agent — fully protected', bigbox: '30–40% skimmed by corporate relo division' },
   { label: 'Territory', boutique: 'Exclusive per market — no competing PRN agent', bigbox: 'Shared with dozens of franchisees' },
   { label: 'Co-Marketing', boutique: 'Featured in DNN — broadcast to thousands', bigbox: 'No co-marketing infrastructure' },
-  { label: 'Logistics', boutique: 'Full concierge support: AI, escrow monitoring, city guides', bigbox: 'Cookie-cutter handoffs, no follow-through' },
+  { label: 'Logistics', boutique: 'Full concierge: AI, escrow monitoring, city guides', bigbox: 'Cookie-cutter handoffs, no follow-through' },
 ];
 
 export default function AdminPartnerBenefits() {
@@ -41,40 +20,110 @@ export default function AdminPartnerBenefits() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-xs font-black tracking-[0.3em] mb-2" style={{ color: GOLD }}>PRN RECEIVING AGENT PROGRAM</p>
+          <p className="text-xs font-black tracking-[0.3em] mb-2" style={{ color: GOLD }}>PRN · SENDING AGENT PROGRAM</p>
           <h1 className="font-black text-4xl leading-tight mb-4" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
-            The Boutique Advantage.
+            The Independent<br />Boutique Advantage.
           </h1>
           <p className="text-base leading-relaxed" style={{ color: '#4a3a28', maxWidth: 560 }}>
-            Most relocation companies favor "Big Box" franchises — corporate-owned, fee-heavy, and impersonal. We only work with vetted independent boutique agents who compete on service, not brand name.
+            You shouldn't lose 40% to a corporate "Big Box" fee just to send a client out of state.
+            We act as your back-office — protecting your commission while we handle everything else.
           </p>
         </div>
 
-        {/* Process Steps */}
-        <p className="text-xs font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>HOW IT WORKS</p>
-        <div className="grid gap-4 mb-10">
-          {PROCESS.map(({ icon: Icon, number, title, body }) => (
-            <div key={number} className="flex gap-5 rounded-2xl p-6"
-              style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-black text-lg"
-                style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
-                {number}
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Icon className="w-4 h-4" style={{ color: GOLD }} />
-                  <p className="font-black text-sm tracking-wide" style={{ color: '#1a1a1a' }}>{title}</p>
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#4a3a28' }}>{body}</p>
-              </div>
+        {/* ── TRUTH 1: The Independent Advantage ── */}
+        <div className="rounded-2xl p-7 mb-6" style={{ background: '#fff8ee', border: `2px solid ${GOLD}` }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0"
+              style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>1</div>
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4" style={{ color: GOLD }} />
+              <p className="font-black text-sm tracking-widest uppercase" style={{ color: GOLD }}>THE INDEPENDENT ADVANTAGE</p>
             </div>
-          ))}
+          </div>
+          <p className="text-lg font-black mb-3" style={{ color: '#1a1a1a', fontFamily: 'Cormorant Garamond, serif' }}>
+            "You built your reputation without a franchise. Don't let one steal your referral fee."
+          </p>
+          <p className="text-sm leading-relaxed mb-4" style={{ color: '#4a3a28' }}>
+            Big Box relocation firms charge the destination agent 30–40% in combined referral fees, then split most of it internally. As an independent, you have no corporate relo desk — so your out-of-state referrals have been walking out the door with no fee protection.
+          </p>
+          <p className="text-sm leading-relaxed font-semibold" style={{ color: '#1a1a1a' }}>
+            Dyson & Dyson is your national relo department. We charge less, do more, and your 25% is always the priority.
+          </p>
+        </div>
+
+        {/* ── TRUTH 2: The 25/10 Formula ── */}
+        <div className="rounded-2xl overflow-hidden mb-6" style={{ border: '2px solid rgba(212,175,55,0.5)' }}>
+          <div className="px-6 py-4 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0"
+              style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>2</div>
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4" style={{ color: GOLD }} />
+              <p className="font-black text-sm tracking-widest uppercase" style={{ color: GOLD }}>THE 25/10 FORMULA</p>
+            </div>
+          </div>
+
+          {/* Math Breakdown */}
+          <div className="px-6 py-6" style={{ background: '#fff8ee' }}>
+            <p className="text-sm mb-5" style={{ color: '#4a3a28' }}>
+              On a <strong>$1,000,000 transaction</strong> at 3% gross commission ($30,000):
+            </p>
+            <div className="space-y-3 mb-6">
+              {[
+                { label: 'Gross Commission (3%)', value: '$30,000', sub: 'Paid by buyer to Receiving Broker', color: '#1a1a1a', bg: 'rgba(212,175,55,0.07)' },
+                { label: 'Your Referral Fee (25%)', value: '$7,500', sub: 'Secured & protected by Dyson — paid directly to you at closing', color: '#059669', bg: 'rgba(16,185,129,0.08)', bold: true },
+                { label: 'Dyson Management Fee (10%)', value: '$3,000', sub: 'Earned by Dyson for vetting, logistics, escrow monitoring & reporting', color: GOLD, bg: 'rgba(212,175,55,0.1)' },
+                { label: 'Total at Destination (35%)', value: '$10,500', sub: 'vs. 40–50% charged by corporate relo divisions', color: '#1a1a1a', bg: '#ede0cc', divider: true },
+              ].map((row, i) => (
+                <div key={i}>
+                  {row.divider && <div className="border-t my-2" style={{ borderColor: 'rgba(212,175,55,0.3)' }} />}
+                  <div className="flex items-center justify-between rounded-xl px-4 py-3"
+                    style={{ background: row.bg, border: `1px solid ${row.bold ? 'rgba(16,185,129,0.3)' : 'rgba(212,175,55,0.2)'}` }}>
+                    <div>
+                      <p className={`text-sm ${row.bold ? 'font-black' : 'font-semibold'}`} style={{ color: row.color }}>{row.label}</p>
+                      <p className="text-xs mt-0.5" style={{ color: '#6b5c45' }}>{row.sub}</p>
+                    </div>
+                    <p className={`text-lg font-black shrink-0 ml-4 ${row.bold ? 'text-xl' : ''}`} style={{ color: row.color }}>{row.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs font-semibold px-4 py-3 rounded-xl" style={{ background: 'rgba(212,175,55,0.1)', color: '#4a3a28', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <strong style={{ color: GOLD }}>The key difference:</strong> Your 25% is the priority. Dyson's 10% is earned through active management — not skimmed off the top before you see a dime.
+            </p>
+          </div>
+        </div>
+
+        {/* ── TRUTH 3: The Hero CTA ── */}
+        <div className="rounded-2xl p-7 mb-8" style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shrink-0"
+              style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>3</div>
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4" style={{ color: GOLD }} />
+              <p className="font-black text-sm tracking-widest uppercase" style={{ color: GOLD }}>HOW IT WORKS — 3 STEPS</p>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {[
+              { step: 'You send us the referral', detail: 'Your seller mentions they\'re moving out of state. You connect us. That\'s it — zero paperwork on your end.' },
+              { step: 'We vet, manage & track everything', detail: 'Dyson vets the destination agent, manages the move logistics, monitors escrow milestones, and keeps you updated via the PRN portal.' },
+              { step: 'You collect 25% at closing', detail: 'Dyson\'s compliance team ensures your 25% referral fee is documented, tracked, and paid broker-to-broker — protected by a signed agreement from day one.' },
+            ].map((item, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center font-black text-xs shrink-0 mt-0.5"
+                  style={{ background: 'rgba(212,175,55,0.2)', color: GOLD }}>{i + 1}</div>
+                <div>
+                  <p className="font-black text-sm" style={{ color: '#1a1a1a' }}>{item.step}</p>
+                  <p className="text-xs leading-relaxed mt-0.5" style={{ color: '#4a3a28' }}>{item.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Comparison Table */}
         <p className="text-xs font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>BOUTIQUE vs. BIG BOX</p>
-        <div className="rounded-2xl overflow-hidden mb-10" style={{ border: '1px solid rgba(212,175,55,0.3)' }}>
-          {/* Table Header */}
+        <div className="rounded-2xl overflow-hidden mb-8" style={{ border: '1px solid rgba(212,175,55,0.3)' }}>
           <div className="grid grid-cols-3 px-4 py-3" style={{ background: '#0d0d0d' }}>
             <div />
             <p className="text-xs font-black text-center tracking-widest" style={{ color: GOLD }}>PRN BOUTIQUE</p>
@@ -96,21 +145,29 @@ export default function AdminPartnerBenefits() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* Hero CTA */}
         <div className="rounded-2xl p-8 text-center" style={{ background: '#0d0d0d', border: `2px solid ${GOLD}` }}>
-          <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>READY TO JOIN THE PRN?</p>
+          <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>READY TO PROTECT YOUR FEE?</p>
           <h2 className="font-black text-2xl text-white mb-3" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-            Claim Your Market Territory
+            Submit a Managed Referral
           </h2>
           <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Only one boutique agent per market. Once your territory is claimed, no other PRN agent competes with you.
+            Sign the Sending Agent Opt-In Agreement and we'll take it from there — vetting, logistics, and fee protection included.
           </p>
-          <Link to="/admin/roster"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-black text-sm tracking-wide transition-all hover:scale-[1.02]"
-            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-            <ArrowRight className="w-4 h-4" />
-            View the Partner Roster
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link to="/admin/prn-agreements"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-black text-sm tracking-wide transition-all hover:scale-[1.02]"
+              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+              <FileText className="w-4 h-4" />
+              Download Referral Agreement
+            </Link>
+            <Link to="/admin/sending-agents"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-black text-sm tracking-wide transition-all hover:scale-[1.02]"
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff' }}>
+              <ArrowRight className="w-4 h-4" />
+              Submit Managed Referral
+            </Link>
+          </div>
         </div>
 
         <div className="h-12" />
