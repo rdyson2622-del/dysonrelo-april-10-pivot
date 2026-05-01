@@ -299,9 +299,9 @@ export default function AdminSidebar() {
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                         style={{
                           background: isActive ? `${childColor}22` : 'transparent',
-                          color: child.indent ? 'rgba(255,255,255,0.4)' : (isActive ? childColor : '#ccc'),
+                          color: child.indent ? '#ffffff' : (isActive ? childColor : '#ccc'),
                           marginLeft: child.indent ? '8px' : '0',
-                          fontSize: child.indent ? '11px' : '14px',
+                          fontSize: child.indent ? '12px' : '14px',
                           paddingTop: child.indent ? '4px' : undefined,
                           paddingBottom: child.indent ? '4px' : undefined,
                         }}
