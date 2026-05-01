@@ -94,6 +94,7 @@ import AdminExodusPitch from './pages/AdminExodusPitch';
 import AdminPartnerBenefits from './pages/AdminPartnerBenefits';
 import AdminExodusOutreach from './pages/AdminExodusOutreach';
 import AdminPRNAgreements from './pages/AdminPRNAgreements';
+import SendingAgentLanding from './pages/SendingAgentLanding';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -225,6 +226,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/prn-agreements" element={<AdminPRNAgreements />} />
       </Route>
       
+      <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
