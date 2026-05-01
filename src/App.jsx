@@ -90,6 +90,8 @@ import NationalVettedDirectory from './pages/NationalVettedDirectory';
 import AdminRoster from './pages/AdminRoster';
 import VettedAgentsCity from './pages/VettedAgentsCity';
 import SendingAgentDashboard from './pages/SendingAgentDashboard';
+import AdminExodusPitch from './pages/AdminExodusPitch';
+import AdminPartnerBenefits from './pages/AdminPartnerBenefits';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -215,6 +217,8 @@ const AuthenticatedApp = () => {
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
+        <Route path="/admin/exodus-pitch" element={<AdminExodusPitch />} />
+        <Route path="/admin/partner-benefits" element={<AdminPartnerBenefits />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
