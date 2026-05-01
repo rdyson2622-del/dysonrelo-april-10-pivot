@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/components/ui/use-toast';
 import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, CheckCircle2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -153,6 +154,8 @@ const slides = [
 
 export default function AdminReloManagement() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { dismiss } = useToast();
+  useEffect(() => { dismiss(); }, []);
   const slide = slides[currentSlide];
 
   return (
