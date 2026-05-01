@@ -130,9 +130,18 @@ function AgentRow({ agent, onUpdate, onDelete }) {
   );
 }
 
+const FRANCHISE_KEYWORDS = ['compass', 'coldwell', "sotheby", 'sre', 'century 21', 'remax', 're/max', 'keller williams', 'exp realty', 'berkshire hathaway', 'better homes'];
+
+function isFranchise(brokerage) {
+  if (!brokerage) return false;
+  const b = brokerage.toLowerCase();
+  return FRANCHISE_KEYWORDS.some(kw => b.includes(kw));
+}
+
 export default function AdminRoster() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [independentOnly, setIndependentOnly] = useState(false);
   const [showImport, setShowImport] = useState(true);
   const [showAddAgent, setShowAddAgent] = useState(false);
   const qc = useQueryClient();
@@ -164,7 +173,8 @@ export default function AdminRoster() {
       p.city?.toLowerCase().includes(search.toLowerCase()) ||
       p.brokerage?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'all' || p.status === statusFilter;
-    return matchSearch && matchStatus;
+    const matchIndependent = !independentOnly || !isFranchise(p.brokerage);
+    return matchSearch && matchStatus && matchIndependent;
   });
 
   // Group by city
@@ -234,6 +244,21 @@ export default function AdminRoster() {
             <option value="all">All Statuses</option>
             {Object.keys(STATUS_COLORS).map(k => <option key={k} value={k}>{k.charAt(0).toUpperCase() + k.slice(1)}</option>)}
           </select>
+          <button
+            onClick={() => setIndependentOnly(v => !v)}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-black transition-all"
+            style={{
+              background: independentOnly ? `linear-gradient(135deg, #e8c84a, ${GOLD})` : '#fff8ee',
+              color: independentOnly ? '#000' : '#6b5c45',
+              border: independentOnly ? 'none' : '1px solid rgba(212,175,55,0.3)',
+            }}>
+            {independentOnly ? '✦ Independent Only' : '⬡ Independent Only'}
+          </button>
+          {independentOnly && (
+            <span className="text-xs font-semibold px-3 py-2 rounded-full" style={{ background: 'rgba(16,185,129,0.1)', color: '#059669', border: '1px solid rgba(16,185,129,0.3)' }}>
+              {filtered.length} outreach-ready
+            </span>
+          )}
         </div>
 
         {/* Table by City Group */}
