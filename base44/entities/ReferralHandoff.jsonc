@@ -1,0 +1,61 @@
+{
+  "name": "ReferralHandoff",
+  "type": "object",
+  "properties": {
+    "receiving_agent": {
+      "type": "string",
+      "description": "Receiving agent email"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Receiving agent first name"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client full name"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "Destination city"
+    },
+    "relocation_reason": {
+      "type": "string",
+      "description": "Reason for relocation"
+    },
+    "move_by_date": {
+      "type": "string",
+      "description": "Target move-by date"
+    },
+    "specialized_assets": {
+      "type": "string",
+      "description": "Any specialized assets requiring logistics"
+    },
+    "price_range": {
+      "type": "string",
+      "description": "Pre-vetted price range"
+    },
+    "sending_broker": {
+      "type": "string",
+      "description": "Sending broker name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "accepted",
+        "declined",
+        "pending"
+      ],
+      "default": "sent",
+      "description": "Hand-off status"
+    },
+    "sent_by": {
+      "type": "string",
+      "description": "Admin email who generated this hand-off"
+    }
+  },
+  "required": [
+    "client_name",
+    "receiving_agent"
+  ]
+}

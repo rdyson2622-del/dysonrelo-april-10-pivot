@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Copy, CheckCircle, Mail, ArrowRight } from 'lucide-react';
+import { Copy, CheckCircle, Mail, ArrowRight, Save } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const TAN = '#ede0cc';
@@ -56,17 +57,26 @@ Dyson & Dyson Companies, Inc.
 export default function AdminLeadHandoff() {
   const [form, setForm] = useState(DEFAULT);
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const saveHandoff = async () => {
+    await base44.entities.ReferralHandoff.create({ ...form, status: 'sent' });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const email = buildEmail(form);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    await saveHandoff();
   };
 
-  const handleMailto = () => {
+  const handleMailto = async () => {
+    await saveHandoff();
     const subject = encodeURIComponent(`Managed Referral: ${form.client_name || '[Client Name]'} ➔ ${form.destination_city || '[Destination City]'} (Dyson Private Referral Network)`);
     const body = encodeURIComponent(email);
     window.open(`mailto:${form.receiving_agent}?subject=${subject}&body=${body}`);
@@ -133,6 +143,14 @@ export default function AdminLeadHandoff() {
             </pre>
           </div>
         </div>
+
+        {/* Saved confirmation */}
+        {saved && (
+          <div className="mb-3 rounded-xl px-4 py-2.5 flex items-center gap-2 text-sm font-semibold"
+            style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.35)', color: '#059669' }}>
+            <Save className="w-4 h-4" /> Hand-off saved to database.
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
