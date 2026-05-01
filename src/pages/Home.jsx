@@ -93,9 +93,20 @@ export default function Home() {
           }}>
             HOMES
           </div>
-          <p className="font-black tracking-[0.25em] uppercase text-white mb-0" style={{ fontSize: '1.125rem' }}>
+          <p className="font-black tracking-[0.25em] uppercase text-white mb-6" style={{ fontSize: '1.125rem' }}>
             Home Owner Management Ecosystem
           </p>
+          <Link
+            to="/portal"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-sm tracking-widest uppercase transition-all hover:scale-105 active:scale-95"
+            style={{
+              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
+              color: '#000',
+              boxShadow: '0 4px 24px rgba(212,175,55,0.35)',
+            }}
+          >
+            Get Started — Choose Your Path →
+          </Link>
         </div>
 
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
