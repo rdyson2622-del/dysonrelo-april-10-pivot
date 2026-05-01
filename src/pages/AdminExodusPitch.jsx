@@ -52,7 +52,7 @@ export default function AdminExodusPitch() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-xs font-black tracking-[0.3em] mb-2" style={{ color: GOLD }}>PRN EXODUS MARKET PROGRAM</p>
+          <p className="text-xs font-black tracking-[0.3em] mb-2" style={{ color: GOLD }}>PRIVATE REFERRAL NETWORK (PRN) · EXODUS MARKET PROGRAM</p>
           <h1 className="font-black text-4xl leading-tight mb-4" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
             Don't Leave Money on the Table<br />When Your Client Leaves the State.
           </h1>
