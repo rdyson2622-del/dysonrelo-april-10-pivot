@@ -93,6 +93,7 @@ import SendingAgentDashboard from './pages/SendingAgentDashboard';
 import AdminExodusPitch from './pages/AdminExodusPitch';
 import AdminPartnerBenefits from './pages/AdminPartnerBenefits';
 import AdminExodusOutreach from './pages/AdminExodusOutreach';
+import AdminPRNAgreements from './pages/AdminPRNAgreements';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -221,6 +222,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/exodus-pitch" element={<AdminExodusPitch />} />
         <Route path="/admin/partner-benefits" element={<AdminPartnerBenefits />} />
         <Route path="/admin/exodus-outreach" element={<AdminExodusOutreach />} />
+        <Route path="/admin/prn-agreements" element={<AdminPRNAgreements />} />
       </Route>
       
       <Route path="*" element={<PageNotFound />} />
