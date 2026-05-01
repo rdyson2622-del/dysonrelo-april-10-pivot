@@ -160,7 +160,7 @@ export default function VettedPartnerCSVImport({ onDone }) {
         {/* Expected columns hint */}
         <div className="rounded-xl px-4 py-3 mb-5 text-xs leading-relaxed" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)', color: '#6b5c45' }}>
           <strong style={{ color: GOLD }}>Expected Column Names (row 1 headers):</strong>{' '}
-          Agent_Name · City · State · Brokerage · Market_Type · Sales_2025 · Volume_2025 · Avg_Price · Email · Phone
+          Agent_Name · City · State · Rank · Brokerage · Market_Type · Sales_2025 · Volume_2025 · Avg_Price · Phone · Email
           <br />Also accepts: Rank, Brokerage_Category, Notes. Column names are flexible — we auto-map common variations.
           <br /><strong style={{ color: GOLD }}>Tip:</strong> Export from Numbers or Google Sheets as <strong>.xlsx</strong> — no conversion needed.
         </div>
@@ -210,7 +210,7 @@ export default function VettedPartnerCSVImport({ onDone }) {
               <table className="w-full text-xs">
                 <thead style={{ background: 'rgba(212,175,55,0.08)', position: 'sticky', top: 0 }}>
                   <tr>
-                    {['Name', 'City', 'State', 'Rank', 'Sales #', 'Volume', 'Phone', 'Email'].map(h => (
+                    {['Name', 'City', 'State', 'Rank', 'Brokerage', 'Market Type', 'Sales #', 'Volume', 'Avg Price', 'Phone', 'Email'].map(h => (
                       <th key={h} className="px-3 py-2 text-left font-black whitespace-nowrap" style={{ color: GOLD }}>{h}</th>
                     ))}
                   </tr>
@@ -222,8 +222,11 @@ export default function VettedPartnerCSVImport({ onDone }) {
                       <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.city}</td>
                       <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.state}</td>
                       <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.rank}</td>
+                      <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.brokerage}</td>
+                      <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.market_type}</td>
                       <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.sales_count_2025}</td>
                       <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.sales_volume_2025}</td>
+                      <td className="px-3 py-2" style={{ color: '#4a3a28' }}>{r.avg_price_point}</td>
                       <td className="px-3 py-2" style={{ color: '#059669' }}>{r.phone}</td>
                       <td className="px-3 py-2" style={{ color: '#6366f1' }}>{r.email}</td>
                     </tr>
