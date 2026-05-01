@@ -55,7 +55,7 @@ export default function AdminExodusPitch() {
           <img
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
             alt="Dyson & Dyson"
-            className="h-16 w-auto"
+            className="h-20 w-auto"
           />
         </div>
 
