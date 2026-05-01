@@ -13,6 +13,7 @@ import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
 import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
 
+const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
 // All collapsible section groups
@@ -65,7 +66,7 @@ const NAV_SECTIONS = [
       { label: '↳ Exodus Pitch Page', path: '/admin/exodus-pitch', icon: ArrowRight, indent: true },
       { label: '↳ Partner Benefits', path: '/admin/partner-benefits', icon: ArrowRight, indent: true },
       { label: '[Targeting] Exodus Agent Outreach', path: '/admin/exodus-outreach', icon: ArrowRight, indent: true },
-      { label: '[Management] Referral Fee Agreements', path: '/admin/prn-agreements', icon: ArrowRight, indent: true },
+      { label: '⚖ [Management] Referral Fee Agreements', path: '/admin/prn-agreements', icon: ArrowRight, indent: true, highlight: true },
       { label: '[Tracking] Managed Referral Pipeline', path: '/admin/sending-agents', icon: ArrowRight, indent: true },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Lenders', path: '/admin/owners', icon: Users },
@@ -303,12 +304,14 @@ export default function AdminSidebar() {
                         to={child.path}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                         style={{
-                          background: isActive ? `${childColor}22` : 'transparent',
-                          color: child.indent ? '#ffffff' : (isActive ? childColor : '#ccc'),
+                          background: child.highlight ? 'rgba(212,175,55,0.15)' : (isActive ? `${childColor}22` : 'transparent'),
+                          color: child.highlight ? GOLD : (child.indent ? '#ffffff' : (isActive ? childColor : '#ccc')),
+                          border: child.highlight ? `1px solid rgba(212,175,55,0.4)` : 'none',
                           marginLeft: child.indent ? '8px' : '0',
                           fontSize: child.indent ? '12px' : '14px',
                           paddingTop: child.indent ? '4px' : undefined,
                           paddingBottom: child.indent ? '4px' : undefined,
+                          fontWeight: child.highlight ? 900 : undefined,
                         }}
                       >
                         <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />

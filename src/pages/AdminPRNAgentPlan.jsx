@@ -358,6 +358,58 @@ Acceptance of this lead requires:
 NOTE: Both agreements are generated automatically through the platform and signed digitally before any client introduction is made. All referral fees are paid broker-to-broker in compliance with applicable DRE regulations.`
   },
   {
+    id: 'stay_in_loop',
+    dividerAbove: true,
+    title: 'SECTION 21: THE "STAY-IN-THE-LOOP" PROTOCOL',
+    content: `Definition: The Sending Agent receives an automated push/email at every major milestone of the transaction — roughly every 10% of progress toward close.
+
+MILESTONE TRIGGER EMAILS:
+
+EMAIL 1 — Referral Accepted & Vetting Complete
+Subject: We've secured your 25% referral for [Client Name]
+Body: Hi [Sending Agent Name], great news. We have successfully vetted the destination agent in [Destination City] for your client, [Client Name]. We have executed the Receiving Agent Performance Agreement, securing a total 35% fee (25% for you / 10% for Dyson Management). You can track the live roadmap and logistics here: [Link to Sending Agent Tracker]
+
+EMAIL 2 — Inspection/Appraisal Passed
+Subject: [Client Name] is one step closer to closing in [City]
+Body: Just a quick update on your referral. The destination property has cleared the [Inspection/Appraisal] phase. Our management team is ensuring the logistics remain on schedule. Your 25% referral fee is tracked and scheduled for collection upon close. View the full timeline here: [Link to Sending Agent Tracker]
+
+FUTURE TRIGGERS (to be automated):
+• Offer Accepted
+• Contingencies Released
+• Clear to Close
+• Funding Confirmed
+• Check Issued
+
+PURPOSE: Keeps the Sending Agent emotionally connected to the check — reinforcing that Dyson is actively managing the outcome on their behalf. This loyalty loop is what turns a one-time referral into a repeat partner.`
+  },
+  {
+    id: 'managed_fee_collection',
+    dividerAbove: true,
+    title: 'SECTION 22: MANAGED FEE COLLECTION — THE "ESCROW SHIELD"',
+    content: `Definition: Dyson & Dyson handles all "bad cop" work of collecting the 35% from the destination broker and distributing the 25% back to the boutique partner at closing.
+
+THE COLLECTION PROCESS:
+
+1. AGREEMENT FIRST — Before any client introduction is made, the Receiving Agent signs the Performance Agreement committing to the 35% total fee (25% Sending / 10% Dyson).
+
+2. ESCROW INSTRUCTION — Dyson's compliance team submits a written demand to escrow at opening, ensuring the fee split is embedded in the closing instructions before the transaction proceeds.
+
+3. MILESTONE MONITORING — The PRN portal tracks escrow progress. If the Receiving Agent goes dark or updates stall, Dyson escalates directly — the Sending Agent never has to chase.
+
+4. DISTRIBUTION AT CLOSE — Upon funding, escrow cuts two checks: 25% to the Sending Broker and 10% to Dyson Relocation Management (CalDRE #XXXXXXX). Both paid broker-to-broker per DRE regulations.
+
+5. CONFIRMATION SENT — Sending Agent receives a final "Your check is on the way" email with the net amount and expected delivery date.
+
+THE REVENUE MATH (Per Transaction):
+• Average Transaction: $1,000,000
+• Gross Commission (3%): $30,000
+• Sending Agent Fee (25%): $7,500 — pure profit for your boutique partner
+• Dyson Management Fee (10%): $3,000 — Dyson's earned revenue for the bridge
+• Total Referral Cost to Receiver: $10,500 (35%)
+
+WHY THIS MATTERS: The biggest fear of the independent boutique agent is that their 25% disappears in the chaos of a cross-state transaction. By embedding the fee demand directly into escrow instructions — and monitoring every milestone — Dyson eliminates that fear entirely. We are the Escrow Shield.`
+  },
+  {
     id: 'notes',
     title: 'INTERNAL NOTES & OPEN ITEMS',
     content: `Items to finalize before PRN launch:

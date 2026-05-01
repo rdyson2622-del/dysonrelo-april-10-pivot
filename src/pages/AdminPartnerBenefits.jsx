@@ -145,6 +145,21 @@ export default function AdminPartnerBenefits() {
           ))}
         </div>
 
+        {/* Legal Source of Truth Banner */}
+        <div className="rounded-2xl px-6 py-4 mb-4 flex items-center justify-between gap-4"
+          style={{ background: 'rgba(212,175,55,0.1)', border: `2px solid ${GOLD}` }}>
+          <div>
+            <p className="text-xs font-black tracking-widest uppercase mb-0.5" style={{ color: GOLD }}>LEGAL SOURCE OF TRUTH</p>
+            <p className="text-sm" style={{ color: '#2a1f0e' }}>The 25/10 split is formalized in two signed agreements — one for each side of the transaction.</p>
+          </div>
+          <Link to="/admin/prn-agreements"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-sm tracking-wide shrink-0 transition-all hover:scale-[1.02]"
+            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            <FileText className="w-4 h-4" />
+            View Agreements
+          </Link>
+        </div>
+
         {/* Hero CTA */}
         <div className="rounded-2xl p-8 text-center" style={{ background: '#0d0d0d', border: `2px solid ${GOLD}` }}>
           <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>READY TO PROTECT YOUR FEE?</p>
