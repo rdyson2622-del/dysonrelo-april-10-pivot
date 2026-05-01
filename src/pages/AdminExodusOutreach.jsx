@@ -211,6 +211,22 @@ export default function AdminExodusOutreach() {
           </a>
         </div>
 
+        {/* Compliance Footer */}
+        <div className="rounded-2xl px-6 py-5 mt-6 space-y-2" style={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.4)' }}>
+          <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: '#10b981' }}>✅ CARRIER COMPLIANCE STATUS — A2P 10DLC REGISTERED</p>
+          <div className="space-y-2 text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <p>📵 <strong style={{ color: '#fff' }}>Opt-Out:</strong> Every initial message must include "Reply STOP to opt-out."</p>
+            <p>🔗 <strong style={{ color: '#fff' }}>Transparency:</strong> All links must lead to dysonrelo.com (verified).</p>
+            <p>🔒 <strong style={{ color: '#fff' }}>Privacy:</strong> No mobile data is shared with 3rd parties per our <a href="/privacy" target="_blank" className="underline" style={{ color: GOLD }}>Privacy Policy</a>.</p>
+          </div>
+          <div className="mt-4 pt-4 rounded-xl px-4 py-3" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+            <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>FIRST TOUCH SAFE TEMPLATE (USE WHILE CAMPAIGN IS PENDING)</p>
+            <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)', fontFamily: 'Georgia, serif' }}>
+              "Hi [Agent Name], this is Dyson & Dyson. We have an out-of-state referral for [Street Address] and want to secure a 25% fee for you. See the workflow and our privacy terms at dysonrelo.com/partner-benefits. Reply STOP to opt-out."
+            </p>
+          </div>
+        </div>
+
         <div className="h-12" />
       </div>
     </div>
