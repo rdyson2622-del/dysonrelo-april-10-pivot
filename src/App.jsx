@@ -95,6 +95,8 @@ import AdminPartnerBenefits from './pages/AdminPartnerBenefits';
 import AdminExodusOutreach from './pages/AdminExodusOutreach';
 import AdminPRNAgreements from './pages/AdminPRNAgreements';
 import SendingAgentLanding from './pages/SendingAgentLanding';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -227,6 +229,8 @@ const AuthenticatedApp = () => {
       </Route>
       
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
