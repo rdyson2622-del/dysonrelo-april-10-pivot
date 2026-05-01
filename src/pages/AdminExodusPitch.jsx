@@ -65,7 +65,7 @@ export default function AdminExodusPitch() {
         <div className="grid gap-4 mb-10">
           {FEATURES.map(({ icon: Icon, number, title, body }) => (
             <div key={number} className="flex gap-5 rounded-2xl p-6"
-              style={{ background: '#fff8ee', border: '1px solid rgba(212,175,55,0.3)' }}>
+              style={{ background: '#0d0d0d', border: '1px solid rgba(212,175,55,0.3)' }}>
               <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-black text-lg"
                 style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
                 {number}
@@ -73,9 +73,9 @@ export default function AdminExodusPitch() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Icon className="w-4 h-4" style={{ color: GOLD }} />
-                  <p className="font-black text-sm tracking-wide" style={{ color: '#1a1a1a' }}>{title}</p>
+                  <p className="font-black text-sm tracking-wide" style={{ color: '#fff' }}>{title}</p>
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#4a3a28' }}>{body}</p>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{body}</p>
               </div>
             </div>
           ))}
