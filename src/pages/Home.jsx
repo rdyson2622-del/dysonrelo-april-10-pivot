@@ -76,8 +76,15 @@ export default function Home() {
         <div className="flex-1 flex flex-col relative overflow-hidden md:pt-0 pt-11" style={{ background: 'transparent' }}>
 
         {/* ── DARK TOP SECTION: Logo + Title ── */}
+        {/* OLD STYLE (revert if needed): background: '#0a0a0a' */}
         <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
-          style={{ background: '#0a0a0a' }}>
+          style={{
+            background: 'rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '12px',
+          }}>
 
           {/* Logo */}
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
