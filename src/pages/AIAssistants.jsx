@@ -41,11 +41,16 @@ export default function AIAssistants() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
           <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png" alt="Dyson & Dyson" className="h-32 w-auto mx-auto mb-6" />
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.154rem, 2.565vw, 1.924rem)', letterSpacing: '0.18em', color: '#000' }}>
-            Each Assistant Specializes in One Domain
+          <p className="text-xs font-black tracking-[0.35em] uppercase mb-3" style={{ color: GOLD }}>DYSON & DYSON · HOMES ECOSYSTEM</p>
+          <h1 className="display-heading mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', letterSpacing: '0.12em', color: '#000' }}>
+            21 AI ASSISTANTS
+          </h1>
+          <div className="w-16 h-px mx-auto mb-5" style={{ background: GOLD }} />
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1rem, 2.2vw, 1.6rem)', letterSpacing: '0.18em', color: '#333' }}>
+            Each Specialist Owns One Domain
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
-            They communicate with each other — passing insights, triggering actions, and optimizing outcomes together.
+          <p className="text-lg max-w-3xl mx-auto leading-relaxed" style={{ color: '#4a3a28', fontFamily: 'Georgia, serif' }}>
+            They communicate with each other — passing insights, triggering actions, and optimizing outcomes together — so you never have to manage the complexity.
           </p>
         </motion.div>
 
