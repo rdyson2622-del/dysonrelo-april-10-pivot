@@ -113,53 +113,6 @@ export default function SolveMyStory() {
       <div className="flex justify-center px-6 pb-20">
         <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-6">
 
-          {/* Contact Info */}
-          <div className="rounded-2xl px-6 py-7 space-y-4"
-            style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>
-              We will need your contact info so we can get solutions back to you ASAP
-            </p>
-
-            <div>
-              <label className="block text-xs font-semibold text-white mb-1.5">Full Name *</label>
-              <input
-                type="text"
-                required
-                value={form.full_name}
-                onChange={e => setForm({ ...form, full_name: e.target.value })}
-                placeholder="Full Name"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
-                style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-white mb-1.5">Email Address *</label>
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={e => setForm({ ...form, email: e.target.value })}
-                  placeholder="you@email.com"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
-                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-white mb-1.5">Phone Number</label>
-                <input
-                  type="tel"
-                  value={form.phone}
-                  onChange={e => setForm({ ...form, phone: e.target.value })}
-                  placeholder="(858) 555-0000"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
-                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Situation Type */}
           <div className="rounded-2xl px-6 py-7"
             style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -205,6 +158,53 @@ export default function SolveMyStory() {
                 caretColor: GOLD
               }}
             />
+          </div>
+
+          {/* Contact Info */}
+          <div className="rounded-2xl px-6 py-7 space-y-4"
+            style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>
+              We will need your contact info so we can get solutions back to you ASAP
+            </p>
+
+            <div>
+              <label className="block text-xs font-semibold text-white mb-1.5">Full Name *</label>
+              <input
+                type="text"
+                required
+                value={form.full_name}
+                onChange={e => setForm({ ...form, full_name: e.target.value })}
+                placeholder="Full Name"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
+                style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-white mb-1.5">Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  placeholder="you@email.com"
+                  className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
+                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-white mb-1.5">Phone Number</label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={e => setForm({ ...form, phone: e.target.value })}
+                  placeholder="(858) 555-0000"
+                  className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none"
+                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', caretColor: GOLD }}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Submit */}
