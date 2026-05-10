@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
 export default function MobileTopBar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+  }, []);
 
   const handleDashboard = () => navigate('/dashboard');
   const handleHome = () => navigate('/');
@@ -42,6 +48,7 @@ export default function MobileTopBar() {
                 { label: 'Dashboard', handler: () => { handleDashboard(); closeMenu(); } },
                 { label: 'Roadmap', handler: () => { handleRoadmap(); closeMenu(); } },
                 { label: 'Chat', handler: () => { handleChat(); closeMenu(); } },
+                ...(isAdmin ? [{ label: 'Admin Panel', handler: () => { navigate('/admin'); closeMenu(); } }] : []),
               ].map(item => (
                 <button key={item.label}
                   onClick={item.handler}

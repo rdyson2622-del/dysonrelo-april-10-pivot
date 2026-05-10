@@ -65,7 +65,7 @@ export default function Home() {
         {isAdmin && (
           <Link
             to="/admin"
-            className="fixed top-3 right-3 z-[10000] flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+            className="fixed top-3 right-3 z-[10000] hidden md:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
             style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
           >
             Admin Panel
@@ -98,7 +98,8 @@ export default function Home() {
           </p>
           <Link
             to="/portal"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-sm tracking-widest uppercase transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black tracking-widest uppercase transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+            style={{ fontSize: 'clamp(0.6rem, 3vw, 0.875rem)' }}
             style={{
               background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
               color: '#000',
