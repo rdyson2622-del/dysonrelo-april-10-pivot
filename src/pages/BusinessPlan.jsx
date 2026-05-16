@@ -611,6 +611,116 @@ Charlie (via FloatingCharlie) is present on the landing page and trained to:
 All new Q&A pairs developed during landing page testing are saved to CharlieKnowledgeBase for permanent training.`,
   },
   {
+    id: 'dyson-media-desk',
+    title: '🎙️ Dyson Media Desk — Two-Character Interview Strategy',
+    icon: Mic,
+    content: `ENTRY DATE: May 16, 2026
+
+THE "DYSON MEDIA DESK" — REPLACING A $90K/YEAR PR FIRM WITH A $500/MONTH AI STACK
+
+────────────────────────────────
+THE CORE CONCEPT: TWO-CHARACTER INTERVIEW FORMAT
+────────────────────────────────
+Instead of Bob appearing as a solo monologue on every piece of content (which risks "overkill"), we create a two-character Dialogue format. Psychology calls this the "Social Proof" model — when people eavesdrop on an expert conversation, engagement increases dramatically compared to a standard pitch.
+
+CHARACTER 1 — THE INTERVIEWER ("The Journalist")
+• A distinct persona — NOT Bob. Think "Global Relocation Reporter" or "Tech Correspondent"
+• Voice: Pre-made ElevenLabs voice — professional, inquisitive, punchy (60 Minutes / NPR style)
+• Visual: AI-generated headshot via Midjourney/DALL-E — professional journalist appearance
+• Role: Asks the "hard questions" clients are actually thinking ("What happens to my utility deposits when I move through Dyson Relo?")
+• The Anchor: Stays consistent across all content. They are the face of "Dyson News."
+
+CHARACTER 2 — THE SUBJECT MATTER EXPERT (Bob Dyson)
+• Bob's Personal Clone — the "Talking Photo" AI avatar
+• Role: Provides visionary answers. The expert who simplified the 8-step relocation process.
+• Appears only for "Visionary Insight" — not on every page
+• The Dynamic: Creates a "ping-pong" effect. 5-minute explainer feels like 2 minutes.
+
+────────────────────────────────
+PRODUCTION WORKFLOW
+────────────────────────────────
+1. SCRIPT (Gemini): "Write a 2-minute interview about the Dyson Home utility connection process." Gemini writes BOTH parts — interviewer questions AND expert answers.
+
+2. VOICE (ElevenLabs): Two distinct voices — one for the Journalist, one for Bob's clone.
+
+3. VISUAL (HeyGen or D-ID): Two "talking photo" avatars. Layout: side-by-side bubbles OR flip-flop like a televised news segment.
+
+4. BACKGROUND (Gemini Image Gen + Veo): 
+   • Static: "A high-end modern real estate executive office in a San Diego skyscraper, sunset lighting, cinematic depth of field"
+   • Dynamic: Use Veo for subtle motion — dust motes, city traffic through the window, flickering screen — 5–10 second loop
+
+────────────────────────────────
+THE DNN DAILY FORMAT (BASE44 AUTOMATION)
+────────────────────────────────
+Morning News Segment:
+• The "Journalist" clone introduces the daily real estate headline
+• Bob's clone comes on to explain how that news affects Dyson Relo clients
+• The segment is auto-generated from DNN's daily article feed
+
+This creates a "Variety Show" format — not a "One-Man Show." It feels like a production, not a lecture.
+
+────────────────────────────────
+WHERE EACH FORMAT IS USED
+────────────────────────────────
+Internal App (The 8 Steps): "Personal Concierge" approach — just Bob, small bubble, helpful and brief. 15–30 seconds max.
+
+External Marketing/PR: "Two-Character Interview" — used for Big Picture concepts. Explaining the WHY and HOW of Dyson Relo to press and new audiences.
+
+Press Releases / Media Outreach: Send as a "Ready-to-Air" Video News Release (VNR). TV stations and news blogs can literally take the Journalist's questions out, have their anchor read them, then play Bob's cloned response. VNR on steroids.
+
+────────────────────────────────
+THE FULL DISTRIBUTION STACK (REPLACING THE $7,500/MO QUOTE)
+────────────────────────────────
+Channel                    | Tool                          | Est. Monthly Cost
+---------------------------|-------------------------------|------------------
+Direct Media (PR Wire)     | Newsworthy.ai or Prowly.com   | $300–$500
+Social Media (Auto-Post)   | Metricool or Buffer           | $20–$50
+SMS (Targeted Lists)       | Twilio (pay-per-message)      | ~$0.01/text
+Email / Newsletter         | Beehiiv or Mailchimp          | $0–$100
+Video Avatar               | HeyGen or Synthesia           | $50–$150/mo
+Workflow Automation        | Make.com                      | ~$30/mo
+
+TOTAL ESTIMATED TECH SPEND: $400–$800/month
+vs. $7,500/month quote = SAVINGS OF OVER $80,000/YEAR
+
+────────────────────────────────
+AUTOMATED CAMPAIGN WORKFLOW
+────────────────────────────────
+1. Gemini writes the script and Interviewer questions
+2. ElevenLabs generates both voices
+3. HeyGen renders both talking-photo avatars with Gemini-generated background
+4. Base44 automation pushes:
+   → To Social: YouTube / Instagram / LinkedIn (auto-upload via Make.com)
+   → To Press: Video link + Gemini-written press release sent via Newsworthy.ai → Google News + industry wires
+   → To Clients: Twilio SMS to targeted leads: "Check out our latest update on relocation trends" + link
+
+────────────────────────────────
+BASE44 EXECUTION CAPABILITY ASSESSMENT
+────────────────────────────────
+✅ FULLY EXECUTABLE ON BASE44:
+• DNN daily article generation (Gemini API — already live)
+• Script writing for both characters (Gemini InvokeLLM — trivial addition)
+• SMS distribution to targeted lists (Twilio — already live)
+• Email blasting to subscriber tiers (SendEmail integration — already live)
+• Campaign orchestration and scheduling (Base44 automations — already live)
+• Subscriber CRM tagging and segmentation (DnnSubscriber entity — already live)
+• Social post content generation (Gemini — can add SocialPost entity workflow)
+
+🔧 REQUIRES EXTERNAL INTEGRATION (NOT NATIVE TO BASE44):
+• ElevenLabs voice synthesis — requires ElevenLabs API key + backend function
+• HeyGen / D-ID video rendering — requires HeyGen API key + webhook handler
+• Newsworthy.ai / Prowly PR distribution — requires account + API
+• Veo video background generation — requires Google Veo API access (waitlist)
+• Metricool / Buffer social auto-posting — requires OAuth connector or Make.com bridge
+
+📋 RECOMMENDED NEXT STEPS:
+1. Set ELEVENLABS_API_KEY secret → build charlieSpeak-style backend function for Journalist voice
+2. Get HeyGen API key → build backend function to submit avatar video jobs
+3. Connect Make.com to Base44 webhook → automate social posting from DNN article publish event
+4. Register Newsworthy.ai account → trigger PR blast when article status = "blasted"
+5. Produce first "Test Interview" using Bob headshot + generated Journalist headshot`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -782,7 +892,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v5.0 • Last Updated: April 24, 2026 • Added: Landing Page Transition Plan — H.O.M.E. ecosystem, Solve My Story intake flow, pre-launch checklist, Charlie coordination strategy. Previously: DNN Broadcast Intelligence Network — Three-Pillar Strategy (Relocation Intelligence, Agent Bureau, Financial Services Network), Subscriber Flywheel, Charlie editorial loop, Tier architecture, Communications Hub workflow</p>
+          <p>Business Plan v6.0 • Last Updated: May 16, 2026 • Added: Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Full Distribution Stack ($400–$800/mo vs. $7,500/mo quote), Base44 execution capability assessment, automated campaign workflow. Previously: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
