@@ -721,6 +721,70 @@ BASE44 EXECUTION CAPABILITY ASSESSMENT
 5. Produce first "Test Interview" using Bob headshot + generated Journalist headshot`,
   },
   {
+    id: 'aviation-media-assets',
+    title: '✈️ Global Aviation & Travel Asset Library',
+    icon: Mic,
+    content: `LOOK B EXPANDED: THE GLOBAL MARKET AUTHORITY (AVIATION ASSETS)
+Entry Date: May 16, 2026
+
+These assets will be used as b-roll, transitions, and video intro hooks whenever Bob is delivering heavy-hitting national real estate metrics or international residential market updates. Integrating private aviation doesn't just show how you travel — it visually validates 54+ years of scale, the background as a former Chief Pilot, and the absolute reality of how high-end residential relocation actually moves. It instantly separates Dyson & Dyson from a typical local real estate agent and frames Bob as a global logistics mastermind who can deploy anywhere at a moment's notice.
+
+────────────────────────────────
+ASSET B-1: THE PRE-FLIGHT DEPARTURE (ENTERING THE SCENE)
+────────────────────────────────
+VISUAL PROMPT:
+"A cinematic, sharp corporate media shot of Bob Dyson walking purposefully across a sun-drenched private tarmac in San Diego County toward a sleek, modern private luxury jet. He possesses his signature broad, dignified build and perfectly groomed silver hair, looking sharp and authoritative. He is wearing his custom-tailored dark charcoal executive suit, a crisp white dress shirt, and a solid burgundy silk tie. He carries a premium leather briefcase in one hand, captured mid-stride with a confident, focused expression. The background shows the gleaming fuselage of the aircraft with clean reflections, softly blurred for an elite depth of field."
+
+STRATEGIC MESSAGE:
+Ultimate execution. It tells the viewer that a high-end relocation doesn't wait around for commercial flight schedules — your operation moves with absolute speed.
+
+USE CASE: Opening hook for national market update videos. Transition into DNN daily briefings.
+
+────────────────────────────────
+ASSET B-2: THE IN-TRANSIT COMMAND (ON-LOCATION STRATEGY)
+────────────────────────────────
+VISUAL PROMPT:
+"A high-end, interior lifestyle shot of Bob Dyson seated comfortably inside the cabin of a luxurious private jet in mid-flight. He is looking out the window thoughtfully or reviewing real estate market metrics on a sleek digital tablet. He is in his sharp grey broadcast suit and burgundy tie, embodying complete financial competence and high-tech command. Natural daylight streams through the cabin windows, illuminating the premium wood and leather interior. Crisp, cinematic editorial lighting."
+
+STRATEGIC MESSAGE:
+You are managing the global network in real-time, matching the high-tech capabilities built right into the DysonRelo Base44 Workspace.
+
+USE CASE: B-roll for "managing your move remotely" content. Mid-video transition between market data segments.
+
+────────────────────────────────
+ASSET B-3: THE ARRIVAL / OUT-OF-AREA DEPLOYMENT (LEAVING THE SCENE)
+────────────────────────────────
+VISUAL PROMPT:
+"An authoritative, cinematic exterior shot of Bob Dyson stepping out of a private aircraft onto a pristine tarmac at an out-of-state or international airport. He is adjusting his grey suit jacket, looking out at the destination skyline with an open, confident smile. The scene represents executive movement and global real estate capability, completely avoiding generic corporate stock imagery in favor of a clean, premium, high-integrity lifestyle environment."
+
+STRATEGIC MESSAGE:
+Global reach. Whether a client is moving a high-end estate into or out of North County, you have the boots-on-the-ground capability to oversee the transition.
+
+USE CASE: Intro for out-of-area market reports. Agent recruitment videos. Corporate relocation pitch decks.
+
+────────────────────────────────
+HOW THIS INTEGRATES WITH THE 21 AI ASSISTANTS
+────────────────────────────────
+This aviation layer fits perfectly with the infrastructure documented in the corporate layout. While the 21 AI Assistants live on DysonHomes.com automate the friction of utility connections, document tracking, and escrow milestones behind the scenes — these private aviation visuals tell the client WHY Bob has that time: because the technology gives him the freedom to live, work, and dominate the high-end luxury lifestyle he represents.
+
+The message is: "The machine handles the details. Bob handles the vision."
+
+────────────────────────────────
+STAGING THE DESKTOP FOLDER
+────────────────────────────────
+Copy the three prompts above into a text file and drop it directly into your CLONE ASSETS folder next to your master headshots.
+
+File naming convention:
+• bob_dyson_B1_preflight_departure_prompt.txt
+• bob_dyson_B2_intransit_command_prompt.txt
+• bob_dyson_B3_arrival_deployment_prompt.txt
+
+────────────────────────────────
+NEXT STEP: SCRIPT TRANSITION FORMULA
+────────────────────────────────
+Recommended next build: Map out the exact script formula for transitioning from the private jet scene directly into a U.S. financial real estate news update. This creates a signature "arrival hook" — Bob steps off the plane, looks at the camera, and delivers the week's most important relocation market data. That segment becomes the flagship format for DNN's weekly broadcast.`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
