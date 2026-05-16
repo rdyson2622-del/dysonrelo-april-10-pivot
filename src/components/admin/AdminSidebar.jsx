@@ -249,6 +249,22 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
+      {/* Business Plan — always visible */}
+      <div className="px-3 pt-1 pb-2">
+        <Link
+          to="/admin/business-plan"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/business-plan' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <FileText className="w-4 h-4" />
+          📋 Business Plan
+        </Link>
+      </div>
+
       {/* Collapsible Sections */}
       <nav className="py-2 px-3 space-y-0.5 flex-1">
         {NAV_SECTIONS.map(section => {
