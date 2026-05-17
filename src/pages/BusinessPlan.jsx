@@ -625,13 +625,13 @@ Instead of Bob appearing as a solo monologue on every piece of content (which ri
 
 CHARACTER 1 — THE INTERVIEWER ("The Journalist")
 • A distinct persona — NOT Bob. Think "Global Relocation Reporter" or "Tech Correspondent"
-• Voice: Pre-made ElevenLabs voice — professional, inquisitive, punchy (60 Minutes / NPR style)
+• Voice: Google Gemini 3.1 Flash Live API — pre-built native voice (e.g. "Puck" or "Charon") — professional, inquisitive, punchy (60 Minutes / NPR style)
 • Visual: AI-generated headshot via Midjourney/DALL-E — professional journalist appearance
 • Role: Asks the "hard questions" clients are actually thinking ("What happens to my utility deposits when I move through Dyson Relo?")
 • The Anchor: Stays consistent across all content. They are the face of "Dyson News."
 
 CHARACTER 2 — THE SUBJECT MATTER EXPERT (Bob Dyson)
-• Bob's Personal Clone — the "Talking Photo" AI avatar
+• Bob's Personal Clone — Google Gemini Native Voice Clone (clearing beta — deploy immediately upon GA release)
 • Role: Provides visionary answers. The expert who simplified the 8-step relocation process.
 • Appears only for "Visionary Insight" — not on every page
 • The Dynamic: Creates a "ping-pong" effect. 5-minute explainer feels like 2 minutes.
@@ -641,7 +641,7 @@ PRODUCTION WORKFLOW
 ────────────────────────────────
 1. SCRIPT (Gemini): "Write a 2-minute interview about the Dyson Home utility connection process." Gemini writes BOTH parts — interviewer questions AND expert answers.
 
-2. VOICE (ElevenLabs): Two distinct voices — one for the Journalist, one for Bob's clone.
+2. VOICE (Gemini 3.1 Flash Live API): Two distinct native voices — one for the Journalist (e.g. "Puck"), one for Bob's clone (Google Native Voice Clone, pending GA). Audio streamed via Google's native WebSocket audio stream — no third-party voice API required.
 
 3. VISUAL (HeyGen or D-ID): Two "talking photo" avatars. Layout: side-by-side bubbles OR flip-flop like a televised news segment.
 
@@ -673,6 +673,8 @@ THE FULL DISTRIBUTION STACK (REPLACING THE $7,500/MO QUOTE)
 ────────────────────────────────
 Channel                    | Tool                          | Est. Monthly Cost
 ---------------------------|-------------------------------|------------------
+Voice Synthesis            | Gemini 3.1 Flash Live (native)| ~$0 (API usage)
+Voice Clone (Bob)          | Google Native Voice Clone     | TBD on GA pricing
 Direct Media (PR Wire)     | Newsworthy.ai or Prowly.com   | $300–$500
 Social Media (Auto-Post)   | Metricool or Buffer           | $20–$50
 SMS (Targeted Lists)       | Twilio (pay-per-message)      | ~$0.01/text
@@ -682,24 +684,47 @@ Workflow Automation        | Make.com                      | ~$30/mo
 
 TOTAL ESTIMATED TECH SPEND: $400–$800/month
 vs. $7,500/month quote = SAVINGS OF OVER $80,000/YEAR
+Note: ElevenLabs explicitly removed from stack. All voice runs natively through Gemini.
 
 ────────────────────────────────
 AUTOMATED CAMPAIGN WORKFLOW
 ────────────────────────────────
 1. Gemini writes the script and Interviewer questions
-2. ElevenLabs generates both voices
-3. HeyGen renders both talking-photo avatars with Gemini-generated background
+2. Gemini 3.1 Flash Live API generates both voices via native WebSocket audio stream (Journalist: pre-built voice / Bob: Native Voice Clone on GA)
+3. HeyGen renders both talking-photo avatars using Gemini-generated audio as lip-sync input, with Gemini-generated background
 4. Base44 automation pushes:
    → To Social: YouTube / Instagram / LinkedIn (auto-upload via Make.com)
    → To Press: Video link + Gemini-written press release sent via Newsworthy.ai → Google News + industry wires
    → To Clients: Twilio SMS to targeted leads: "Check out our latest update on relocation trends" + link
 
 ────────────────────────────────
+BACKEND ARCHITECTURE — GEMINI 3.1 FLASH LIVE API (NATIVE, NO ELEVENLABS)
+────────────────────────────────
+DECISION: We are deploying exclusively on Google's native Gemini 3.1 Flash Live API.
+ElevenLabs is explicitly NOT used. All voice synthesis runs through Google's native WebSocket audio streams and pre-built voices.
+
+HOW THE AUDIO PIPELINE WORKS:
+1. Base44 Deno backend function opens a persistent WebSocket connection to the Gemini Live API endpoint:
+   wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent
+
+2. The script for each character (Journalist + Bob clone) is segmented into turn-based chunks and sent as text input over the WebSocket.
+
+3. Gemini streams back raw PCM audio chunks in real-time using the configured native voice per character:
+   • Journalist character → assigned a pre-built Gemini voice (e.g. "Puck", "Charon", "Fenrir", "Aoede")
+   • Bob Dyson clone → Google Native Voice Clone (production deployment pending GA clearance of beta; drop-in replacement requires no architecture change — same WebSocket, same stream, different voiceName parameter)
+
+4. The Base44 backend function buffers the audio stream, assembles the final audio file, and stores it via UploadFile integration → returns the file_url for use in HeyGen avatar rendering or direct playback.
+
+VOICE CLONE READINESS:
+The architecture is intentionally designed so that when Google Native Voice Clone exits beta, the ONLY required change is swapping the voiceName parameter from a pre-built voice to Bob's registered clone ID. The entire WebSocket stream, audio assembly, and downstream HeyGen pipeline remain unchanged. Zero re-architecture required.
+
 BASE44 EXECUTION CAPABILITY ASSESSMENT
 ────────────────────────────────
-✅ FULLY EXECUTABLE ON BASE44:
+✅ FULLY EXECUTABLE ON BASE44 (NATIVE GEMINI STACK):
 • DNN daily article generation (Gemini API — already live)
 • Script writing for both characters (Gemini InvokeLLM — trivial addition)
+• Journalist voice synthesis (Gemini 3.1 Flash Live — native WebSocket stream, Deno backend function)
+• Bob Dyson voice clone (Gemini Native Voice Clone — deploy on GA; same backend, swap voiceName)
 • SMS distribution to targeted lists (Twilio — already live)
 • Email blasting to subscriber tiers (SendEmail integration — already live)
 • Campaign orchestration and scheduling (Base44 automations — already live)
@@ -707,18 +732,18 @@ BASE44 EXECUTION CAPABILITY ASSESSMENT
 • Social post content generation (Gemini — can add SocialPost entity workflow)
 
 🔧 REQUIRES EXTERNAL INTEGRATION (NOT NATIVE TO BASE44):
-• ElevenLabs voice synthesis — requires ElevenLabs API key + backend function
-• HeyGen / D-ID video rendering — requires HeyGen API key + webhook handler
+• HeyGen / D-ID video rendering — requires HeyGen API key + webhook handler (voice audio fed IN from Gemini output)
 • Newsworthy.ai / Prowly PR distribution — requires account + API
 • Veo video background generation — requires Google Veo API access (waitlist)
 • Metricool / Buffer social auto-posting — requires OAuth connector or Make.com bridge
 
 📋 RECOMMENDED NEXT STEPS:
-1. Set ELEVENLABS_API_KEY secret → build charlieSpeak-style backend function for Journalist voice
-2. Get HeyGen API key → build backend function to submit avatar video jobs
+1. Build geminiVoiceStream Deno backend function — opens Gemini 3.1 Flash Live WebSocket, sends script text, buffers PCM audio output, uploads assembled audio file via UploadFile, returns file_url
+2. Get HeyGen API key → build backend function to submit avatar video jobs using Gemini-generated audio as lip-sync input
 3. Connect Make.com to Base44 webhook → automate social posting from DNN article publish event
 4. Register Newsworthy.ai account → trigger PR blast when article status = "blasted"
-5. Produce first "Test Interview" using Bob headshot + generated Journalist headshot`,
+5. Produce first "Test Interview" using Bob headshot + generated Journalist headshot + Gemini native audio
+6. On Google Voice Clone GA → register Bob's voice, update voiceName in geminiVoiceStream function — done`,
   },
   {
     id: 'aviation-media-assets',
@@ -956,7 +981,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.0 • Last Updated: May 16, 2026 • Added: Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Full Distribution Stack ($400–$800/mo vs. $7,500/mo quote), Base44 execution capability assessment, automated campaign workflow. Previously: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v6.1 • Last Updated: May 17, 2026 • Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
