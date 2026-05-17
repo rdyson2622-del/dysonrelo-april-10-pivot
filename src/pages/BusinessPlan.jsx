@@ -257,6 +257,27 @@ Market Metrics:
 • Data: Base44 database (entities: ChatMessage, RelocationClient, RelocationTask, ListingImport, SellerOutreach, AgentReferral, etc.)
 • Integrations: MLS feeds, Zillow API, CrissCross skip tracing
 
+────────────────────────────────
+🔔 GOOGLE GEMINI I/O — MAY 19, 2026 UPDATE
+────────────────────────────────
+Google's Gemini I/O announcement on May 19, 2026 opens the door to full Gemini 3.1 Flash Live API deployment.
+
+CURRENT STATE (Pre-May 19):
+• Charlie currently uses Gemini for voice-to-TEXT — the user speaks, Gemini transcribes and generates a text response. This is the existing charlieVoiceChat / charlieSpeak pipeline already live in the app.
+
+NEXT STATE (Post-May 19 — Gemini 3.1 Flash Live):
+• Full voice-to-VOICE — the user speaks, Gemini responds with a real-time native audio stream. No transcription step, no text-to-speech step. A true continuous voice conversation.
+• This is the upgrade path: same Gemini API key, same Base44 backend, new Live API WebSocket endpoint.
+• Latency drops dramatically. Conversation feels natural and uninterrupted.
+• This is the foundation for the Two-Character Interview Format (Journalist + Bob Clone) documented in the Dyson Media Desk section.
+
+MIGRATION PLAN:
+1. Monitor Google I/O May 19 announcement for Gemini 3.1 Flash Live GA availability
+2. Update geminiLiveProxy backend function to use the new Live API WebSocket endpoint
+3. Test voice-to-voice flow with a single Charlie session
+4. Roll out to full client intake pipeline
+5. Activate Two-Character Interview format for DNN media production
+
 Infrastructure Priorities:
 1. Scale LLM inference (caching common queries, batch processing)
 2. Build MLS aggregation layer (reduce Zillow dependency)
@@ -981,7 +1002,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.1 • Last Updated: May 17, 2026 • Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v6.2 • Last Updated: May 17, 2026 • Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
