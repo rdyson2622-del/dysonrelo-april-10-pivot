@@ -632,6 +632,69 @@ Charlie (via FloatingCharlie) is present on the landing page and trained to:
 All new Q&A pairs developed during landing page testing are saved to CharlieKnowledgeBase for permanent training.`,
   },
   {
+    id: 'clone-deployment-roadmap',
+    title: '🧬 Clone Deployment Roadmap — Post Google I/O',
+    icon: Mic,
+    content: `ENTRY DATE: May 18, 2026
+
+VIDEO/AUDIO CLONE DEPLOYMENT — THE NEXT PHASE
+────────────────────────────────
+
+DECISION: After Google I/O (May 19, 2026), we begin building and refining two clones:
+
+CLONE 1 — THE NEWS PRESENTER ("The Journalist")
+• A distinct AI persona — professional broadcast journalist character
+• Voice: Gemini 3.1 Flash Live native voice (pre-built, e.g. "Puck" or "Charon")
+• Visual: AI-generated video avatar via HeyGen — consistent anchor appearance across all DNN content
+• Role: Delivers the daily DNN news briefing in video format
+• Deployed: Next to the scripted copy of every news article in the consumer-facing DNN feed
+
+CLONE 2 — BOB DYSON PERSONAL CLONE
+• Bob's personal voice + likeness clone (Google Native Voice Clone + HeyGen avatar)
+• Role: Delivers "Visionary Insight" commentary on key national real estate and relocation market stories
+• Appears alongside The Journalist in the Two-Character Interview format
+• Also deployed: On the consumer-facing news feed next to scripted article copy
+
+────────────────────────────────
+WHERE THE VIDEO CLONES APPEAR IN THE APP
+────────────────────────────────
+• DNN News Feed (consumer-facing): Each published article shows a video player with the clone delivering the story, beside the written article text. Consumer gets both formats — read it or watch it.
+• Social Distribution: Same video auto-distributed to LinkedIn, Instagram, YouTube via Make.com automation
+• Press / VNR: Video formatted as a Video News Release for media outreach
+
+────────────────────────────────
+CHARLIE — KEPT, UPDATED, AND RENAMED
+────────────────────────────────
+DECISION: Charlie is NOT being retired. He is being evolved.
+
+CURRENT STATE: Charlie = text + voice-to-text AI concierge (Gemini Flash)
+NEXT STATE: Charlie's voice layer is upgraded to use the Bob Dyson personal voice clone for ALL voice-to-voice responses across ALL categories (relocation intake, city guide, escrow support, agent matching, etc.)
+
+This means:
+• Consumers will hear Bob Dyson's voice when talking to the AI concierge
+• Charlie's intelligence and knowledge base remain intact — only the voice changes
+• Charlie will be RENAMED to reflect the upgrade (name TBD — options: "Bob", "Dyson", "The Advisor", "Your Concierge")
+• The rename is a brand moment — announced as an upgrade, not a replacement
+
+MIGRATION SEQUENCE:
+1. ✅ DNN content keeps running (no cost, no disruption)
+2. Post-May 19: Build Journalist clone + Bob clone using Gemini 3.1 Flash Live
+3. QA clones until satisfactory — test on internal DNN articles first
+4. Deploy video player to DNN news feed (article page + consumer app)
+5. Once clones are approved → swap Charlie's voice layer to Bob clone
+6. Rename Charlie → announce to users as a premium upgrade
+7. Full rollout: Bob's voice responds to every consumer on every category
+
+────────────────────────────────
+WHAT STAYS THE SAME
+────────────────────────────────
+• DNN Daily Article automation — continues running (free, Gemini-only)
+• DNN Morning Brief automation — continues running
+• Charlie's knowledge base, scripts, escalation logic — all preserved
+• All existing relocation intake flows — unchanged until clone QA is complete
+• Twilio SMS campaigns — paused pending post-Google I/O media strategy review`,
+  },
+  {
     id: 'dyson-media-desk',
     title: '🎙️ Dyson Media Desk — Two-Character Interview Strategy',
     icon: Mic,
@@ -1002,7 +1065,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.2 • Last Updated: May 17, 2026 • Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v6.3 • Last Updated: May 18, 2026 • Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
