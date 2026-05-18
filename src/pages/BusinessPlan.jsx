@@ -175,6 +175,34 @@ In Admin → Listing Owners → Import CSV. Select your SkipTrace file. Preview 
 Bob's Gmail is monitored in real-time for replies matching an owner's email. YES → interested. STOP → OptOut table. All other replies → in_conversation with content saved to notes.
 
 ────────────────────────────────
+📅 MAY 18, 2026 — PLATFORM DECISIONS LOG
+────────────────────────────────
+
+DECISION 1 — TWILIO: FULLY RETAINED (NO CHANGES)
+Twilio remains the backbone of all automated SMS operations:
+• Bulk homeowner outreach (skip-trace → batch send)
+• Day 3 / Day 7 automated follow-ups
+• Inbound reply processing (STOP → opt-out, YES → opt-in, other → in_conversation)
+• Client SMS notifications
+• All Twilio webhook handlers remain active and unchanged
+Reason: Twilio is infrastructure — deeply integrated and working. The complexity of replacement far exceeds any benefit at this stage.
+
+DECISION 2 — SIMPLETEXTING.COM: REINSTATED FOR AGENT CAMPAIGN ONLY
+SimpleTexting.com is reinstated exclusively for the Top 200 Independent Agent outreach campaign.
+• Operated manually outside the Base44 app — no API integration at this time
+• Used for high-touch, 1-on-1 conversational outreach (not bulk blasting)
+• Agents are managed directly in the SimpleTexting inbox by Bob / admin staff
+• Responses are manually logged back into the VettedPartner entity in Base44
+• Future: If agent campaign scales, evaluate SimpleTexting API integration at that time
+
+DECISION 3 — GEMINI 3.1 FLASH LIVE: DEPLOYMENT BEGINS POST-MAY 19
+Post-Google I/O (May 19, 2026), the Gemini 3.1 Flash Live API deployment begins:
+• Voice-to-text (current) upgrades to full voice-to-voice (native audio stream)
+• ElevenLabs permanently removed from consideration — all voice is native Gemini
+• Bob Dyson voice clone deployment begins on Google Native Voice Clone GA
+• Charlie's voice layer upgrades to Bob's clone — rename announcement to follow
+
+────────────────────────────────
 PHASE EXPANSION ROADMAP
 ────────────────────────────────
 
@@ -1154,7 +1182,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.4 • Last Updated: May 18, 2026 • Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v6.5 • Last Updated: May 18, 2026 • DECISIONS LOGGED TODAY: (1) Twilio remains fully intact — zero changes. All automated homeowner SMS, opt-in/opt-out processing, and batch outreach continue running on Twilio. (2) SimpleTexting.com reinstated — used exclusively for the Top 200 Independent Agent outreach campaign, managed manually outside the app. No app integration at this time. (3) Gemini 3.1 Flash Live API deployment begins post-Google I/O May 19 — full voice-to-voice upgrade path confirmed; all voice synthesis native to Google, ElevenLabs permanently off the stack. Previously v6.4: Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
