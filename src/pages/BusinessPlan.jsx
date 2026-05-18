@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Share2, Globe } from 'lucide-react';
+import { Download, ArrowLeft, FileText, TrendingUp, Zap, Shield, BarChart3, Mic, Share2, Globe, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const GOLD = '#D4AF37';
@@ -894,6 +894,95 @@ NEXT STEP: SCRIPT TRANSITION FORMULA
 Recommended next build: Map out the exact script formula for transitioning from the private jet scene directly into a U.S. financial real estate news update. This creates a signature "arrival hook" — Bob steps off the plane, looks at the camera, and delivers the week's most important relocation market data. That segment becomes the flagship format for DNN's weekly broadcast.`,
   },
   {
+    id: 'top200-agent-campaign',
+    title: '🎯 Top 200 Independent Agent Campaign',
+    icon: Users,
+    content: `ENTRY DATE: May 18, 2026
+
+THE STRATEGY: SELECTIVE EXECUTIVE INVITATION — NOT MASS MARKETING
+────────────────────────────────
+We have pulled 2025 production numbers on 200 top-performing independent agents from across the country using Gemini research. These are NOT big-box brokerage agents (no Compass, no Coldwell Banker, no Keller Williams). These are elite boutique and independent operators who pride themselves on agility, high-end service, and freedom from corporate bureaucracy.
+
+This is a two-way pitch:
+1. WE WANT THEM as our exclusive regional buyer lead partners — sending our relocation buyer leads to them in their markets.
+2. WE WANT THEM to send US their referrals — clients relocating out of their market who need a full-service concierge to manage the move, stay in the loop, and close the deal.
+
+────────────────────────────────
+WHY INDEPENDENT AGENTS — NOT BIG-BOX
+────────────────────────────────
+Big-box brokerages (Compass, Coldwell Banker, etc.) force agents and clients into rigid, in-house corporate relocation software. Independent agents have no such constraint. They can partner freely and they are actively looking for elite alternatives that match their brand standard.
+
+By leading with Bob's 55-year legacy, the HOMES Ecosystem, and the AI-managed relocation process, we speak their exact language: independence, quality, accountability, and real results.
+
+────────────────────────────────
+EXECUTION PLATFORM: SIMPLETEXTING.COM
+────────────────────────────────
+Because these are high-value top producers — NOT mass SMS targets — the campaign runs through SimpleTexting.com, NOT Twilio batch blasts. SimpleTexting allows direct 1-on-1 reply management from a clean inbox, protecting sender reputation and enabling real conversations with decision-makers.
+
+Export the 200-agent list from Base44 (VettedPartner entity, market_type=destination, status=active/pending) and upload as a dedicated segment in SimpleTexting.
+
+────────────────────────────────
+STEP 1 — THE SELECTIVE HOOK (NO LINKS IN FIRST MESSAGE)
+────────────────────────────────
+Script:
+"Hi [Agent Name], saw your impressive 2025 production numbers with [Brokerage Name]. We're selectively reaching out to top independent agents outside the big-box firms to act as our exclusive regional partner for incoming relocation buyer leads in [City]. Are you currently accepting new corporate referral clients?"
+
+Why it works:
+• Personalized — references their specific 2025 production and brokerage
+• Positions this as an exclusive territory offer, not a mass pitch
+• No link = no carrier filtering, no spam flags
+• Opens with a yes/no question that invites a reply
+
+────────────────────────────────
+STEP 2 — THE VALUE-ADD REPLY (AFTER THEY ENGAGE)
+────────────────────────────────
+Once they reply with interest, carriers freely pass links because it is now a two-way conversation.
+
+Script:
+"Fantastic. Unlike standard hand-off networks, we manage the entire logistics pipeline alongside you — all the way to closing. You can review our client process map and AI assistant platform here: [Link to App/AIAssistants]. Our platform keeps you permanently in the loop with live escrow and sale milestones for every client you refer to us. We'd love your thoughts on this model."
+
+────────────────────────────────
+THREE STRATEGIC PILLARS FOR THE PITCH
+────────────────────────────────
+1. THE ANTI-BIG-BOX ALLIANCE
+"We're built for independent operators like you — not for corporate in-house relocation software. We protect your local brand autonomy while delivering a white-glove concierge process your clients will rave about."
+
+2. THE CO-PILOT ESCROW PROMISE
+"Most relocation networks take 35% and disappear. We stay in every escrow alongside you. Our workspace keeps you copied on every relocation task, utility transition, and milestone — from day one through close. We absorb the moving stress so you can focus purely on the transaction."
+
+3. CAMERA-READY VALIDATION (COMING SOON)
+"As we roll out our Gemini-powered video news capabilities, this agent group will be among the first to receive personalized video market updates co-branded for their territory."
+
+────────────────────────────────
+WHAT AGENTS GET BY PARTNERING WITH DYSON & DYSON
+────────────────────────────────
+• Exclusive territory buyer leads from our national relocation marketing
+• Live escrow and milestone visibility in the Dyson platform — always in the loop
+• Zero added workload — we handle 100% of the relocation logistics
+• 25% referral fee at close on any buyer we send their way
+• Co-branded DNN intelligence content for their farm (Bureau Chief tier)
+• Their clients return after the move and refer them friends
+
+────────────────────────────────
+WHAT WE GET FROM SENDING AGENTS
+────────────────────────────────
+• Inbound referrals — their clients relocating OUT of market
+• 25% referral fee from the receiving agent at destination close
+• 10–15% relocation management fee from the seller at close of their current home
+• Expanded national network — every agent who sends becomes a flywheel node
+
+────────────────────────────────
+NEXT STEPS
+────────────────────────────────
+1. Export 200-agent list from Base44 VettedPartner entity
+2. Upload to SimpleTexting as dedicated "Top Independent Agents" segment
+3. Personalize Step 1 script with each agent's name, brokerage, and city
+4. Launch initial outreach — monitor replies in SimpleTexting inbox
+5. For every interested reply: send Step 2 with app link + process overview
+6. Log all responses back into VettedPartner entity (status: contacted → converted)
+7. Schedule onboarding call for agents who say yes`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -1065,7 +1154,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.3 • Last Updated: May 18, 2026 • Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v6.4 • Last Updated: May 18, 2026 • Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
