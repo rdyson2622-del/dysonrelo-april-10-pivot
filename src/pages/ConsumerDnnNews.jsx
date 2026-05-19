@@ -390,14 +390,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
       className={`relative w-full aspect-video rounded-xl overflow-hidden group ${article.video_url && !article.video_url.startsWith('heygen:pending:') ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
       onClick={article.video_url && !article.video_url.startsWith('heygen:pending:') ? onExpand : undefined}
-      onMouseEnter={(e) => {
-        const overlay = e.currentTarget.querySelector('[data-admin-overlay]');
-        if (overlay) overlay.style.opacity = '1';
-      }}
-      onMouseLeave={(e) => {
-        const overlay = e.currentTarget.querySelector('[data-admin-overlay]');
-        if (overlay) overlay.style.opacity = '0';
-      }}
+
     >
       {thumbnail ? (
         <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
@@ -428,7 +421,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
         </>
       )}
       {isAdmin && (
-        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100]">
+        <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100] opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
             className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
