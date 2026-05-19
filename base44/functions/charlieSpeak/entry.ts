@@ -34,10 +34,7 @@ Deno.serve(async (req) => {
             input: { text: clean },
             voice: { languageCode: 'en-US', name: voice.name },
             audioConfig: {
-              audioEncoding: 'MP3',
-              speakingRate: 0.85,   // ~150 wpm measured cadence
-              pitch: -6.0,          // hard-clamp to low baritone (100-120 Hz range)
-              effectsProfileId: ['headphone-class-device']
+              audioEncoding: 'MP3'
             }
           })
         }
