@@ -95,6 +95,7 @@ import AdminPartnerBenefits from './pages/AdminPartnerBenefits';
 import AdminExodusOutreach from './pages/AdminExodusOutreach';
 import AdminPRNAgreements from './pages/AdminPRNAgreements';
 import AdminLeadHandoff from './pages/AdminLeadHandoff';
+import DnnStudioDashboard from './pages/DnnStudioDashboard';
 import SendingAgentLanding from './pages/SendingAgentLanding';
 import AgentLanding from './pages/AgentLanding';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -229,6 +230,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/exodus-outreach" element={<AdminExodusOutreach />} />
         <Route path="/admin/prn-agreements" element={<AdminPRNAgreements />} />
         <Route path="/admin/lead-handoff" element={<AdminLeadHandoff />} />
+        <Route path="/admin/dnn/studio" element={<DnnStudioDashboard />} />
       </Route>
       
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
