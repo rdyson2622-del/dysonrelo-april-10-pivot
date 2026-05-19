@@ -15,52 +15,40 @@ Deno.serve(async (req) => {
 
     const clean = text.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim();
 
-    const response = await fetch(
-      `https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          input: { text: clean },
-          voice: {
-            languageCode: 'en-US',
-            name: 'en-US-Chirp3-HD-Orus'
-          },
-          audioConfig: {
-            audioEncoding: 'MP3'
-          }
-        })
-      }
-    );
+    // Voice priority: Charon (deep baritone) → Fenrir → Neural2-D fallback
+    // speakingRate 0.85 ≈ 150 wpm; pitch -6.0 hard-clamps to low baritone register
+    const VOICE_ATTEMPTS = [
+      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Charon' },
+      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Fenrir' },
+      { api: 'v1',      name: 'en-US-Neural2-D' },
+    ];
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error('TTS error:', data.error?.message);
-      // Fallback to a reliable Neural2 male voice if Charon not available
-      const fallback = await fetch(
-        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${GEMINI_API_KEY}`,
+    let audio = null;
+    for (const voice of VOICE_ATTEMPTS) {
+      const resp = await fetch(
+        `https://texttospeech.googleapis.com/${voice.api}/text:synthesize?key=${GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             input: { text: clean },
-            voice: {
-              languageCode: 'en-US',
-              name: 'en-US-Neural2-D'  // deep male Neural2 voice
-            },
+            voice: { languageCode: 'en-US', name: voice.name },
             audioConfig: {
-              audioEncoding: 'MP3'
+              audioEncoding: 'MP3',
+              speakingRate: 0.85,   // ~150 wpm measured cadence
+              pitch: -6.0,          // hard-clamp to low baritone (100-120 Hz range)
+              effectsProfileId: ['headphone-class-device']
             }
           })
         }
       );
-      const fallbackData = await fallback.json();
-      if (!fallback.ok) return Response.json({ error: fallbackData.error?.message || 'TTS failed' }, { status: 500 });
-      return Response.json({ audio: fallbackData.audioContent, mimeType: 'audio/mpeg' });
+      const d = await resp.json();
+      if (resp.ok && d.audioContent) { audio = d.audioContent; break; }
+      console.warn(`Voice ${voice.name} failed:`, d.error?.message);
     }
 
-    return Response.json({ audio: data.audioContent, mimeType: 'audio/mpeg' });
+    if (!audio) return Response.json({ error: 'All voice models failed' }, { status: 500 });
+    return Response.json({ audio, mimeType: 'audio/mpeg' });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
