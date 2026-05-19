@@ -105,6 +105,7 @@ const NAV_SECTIONS = [
       { label: 'Agent Vetting Process', path: '/admin/dnn/agent-vetting', icon: FileCheck },
       { label: 'Lender Vetting Process', path: '/admin/dnn/lender-vetting', icon: DollarSign },
       { label: 'Bureau Story Hub', path: '/admin/dnn/bureau-stories', icon: BookOpen },
+      { label: '🎬 Studio Dashboard', path: '/admin/dnn/studio', icon: Video },
     ],
   },
   {
