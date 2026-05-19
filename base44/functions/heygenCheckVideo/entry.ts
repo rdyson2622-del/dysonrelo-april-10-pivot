@@ -30,6 +30,7 @@ Deno.serve(async (req) => {
       headers: { 'X-Api-Key': HEYGEN_API_KEY },
     });
     const data = await res.json();
+    console.log('RAW HEYGEN RESPONSE:', JSON.stringify(data, null, 2));
 
     const status = data.data?.status;
     const videoUrl = data.data?.video_url;
