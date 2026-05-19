@@ -454,6 +454,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 
 
 // --- Main Page ---
+// v2
 export default function ConsumerDnnNews() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
