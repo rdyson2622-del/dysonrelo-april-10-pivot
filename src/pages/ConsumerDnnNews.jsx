@@ -363,9 +363,10 @@ function getEmbedSrc(url) {
 
 // --- Video Thumbnail Card ---
 function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
-  const thumbnail = getYouTubeThumbnail(article.video_url);
+  const realVideoUrl = article.video_url && !article.video_url.startsWith('heygen:pending:') ? article.video_url : null;
+  const thumbnail = getYouTubeThumbnail(realVideoUrl);
 
-  if (isFullscreen) {
+  if (isFullscreen && realVideoUrl) {
     return (
       <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
         <button onClick={onClose}
@@ -373,7 +374,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           style={{ fontSize: '2rem' }}>✕</button>
         <div className="w-full max-w-4xl aspect-video">
           <iframe
-            src={getEmbedSrc(article.video_url)}
+            src={getEmbedSrc(realVideoUrl)}
             title={article.headline}
             className="w-full h-full rounded-xl"
             allow="autoplay; fullscreen"
@@ -386,9 +387,9 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 
   return (
     <div
-      className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
+      className={`relative w-full aspect-video rounded-xl overflow-hidden group ${article.video_url && !article.video_url.startsWith('heygen:pending:') ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
-      onClick={onExpand}
+      onClick={article.video_url && !article.video_url.startsWith('heygen:pending:') ? onExpand : undefined}
       onMouseEnter={(e) => {
         const overlay = e.currentTarget.querySelector('[data-admin-overlay]');
         if (overlay) overlay.style.opacity = '1';
@@ -401,21 +402,31 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
       {thumbnail ? (
         <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
       ) : (
-        <div className="w-full h-full" style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #111 100%)' }} />
-      )}
-      <div className="absolute inset-0" style={{ background: thumbnail ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.55)' }} />
-      <div className="absolute inset-0 flex items-center justify-center">
-        {article.video_url ? (
-          <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl"
-            style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
-            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+        <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4"
+          style={{ background: 'linear-gradient(135deg, #1c1c1c 0%, #141414 100%)' }}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#D4AF37', marginLeft: '2px' }}>
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>
           </div>
-        ) : (
-          <p className="text-xs text-slate-500 font-semibold">Coming Soon</p>
-        )}
-      </div>
+          <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: 'rgba(212,175,55,0.5)' }}>Video Coming Soon</p>
+          <p className="text-[9px] text-center leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.3)' }}>{article.headline}</p>
+        </div>
+      )}
+      {thumbnail && (
+        <>
+          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-2xl"
+              style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
+              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+              </svg>
+            </div>
+          </div>
+        </>
+      )}
       {isAdmin && (
         <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100]">
           <button
@@ -507,9 +518,7 @@ export default function ConsumerDnnNews() {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
-  const textArticles = allArticles.filter(a => !a.video_url || a.video_url.startsWith('heygen:pending:'));
-  // Only show in video column if it has a real playable URL (not pending)
-  const videoArticles = allArticles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
+  const textArticles = allArticles;
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
@@ -578,7 +587,7 @@ export default function ConsumerDnnNews() {
             <div className="flex-1 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
               {textArticles.length > 0 ? (
-                <div className={videoArticles.length === 0 ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3' : 'space-y-3'}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {textArticles.map(article => (
                     <CompactArticleCard
                       key={article.id}
@@ -594,26 +603,24 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video column — only show when there are real playable videos */}
-            {videoArticles.length > 0 && (
-              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-                <div className="space-y-3">
-                  {videoArticles.slice(0, 10).map(article => (
-                    <VideoThumbnail
-                      key={article.id}
-                      article={article}
-                      isFullscreen={fullscreenVideo?.id === article.id}
-                      onExpand={() => setFullscreenVideo(article)}
-                      onClose={() => setFullscreenVideo(null)}
-                      isAdmin={isAdmin}
-                      onEdit={handleEditArticle}
-                      onDelete={handleDeleteArticle}
-                    />
-                  ))}
-                </div>
+            {/* Featured Videos — always present right column */}
+            <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+              <div className="space-y-3">
+                {allArticles.slice(0, 10).map(article => (
+                  <VideoThumbnail
+                    key={article.id}
+                    article={article}
+                    isFullscreen={fullscreenVideo?.id === article.id}
+                    onExpand={() => setFullscreenVideo(article)}
+                    onClose={() => setFullscreenVideo(null)}
+                    isAdmin={isAdmin}
+                    onEdit={handleEditArticle}
+                    onDelete={handleDeleteArticle}
+                  />
+                ))}
               </div>
-            )}
+            </div>
 
           </div>
         )}
