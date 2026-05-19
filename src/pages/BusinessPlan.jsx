@@ -1011,6 +1011,52 @@ NEXT STEPS
 7. Schedule onboarding call for agents who say yes`,
   },
   {
+    id: 'strategic-execution-plan',
+    title: '🚀 2026 Strategic Execution Plan',
+    icon: TrendingUp,
+    content: `Dyson Homes: 2026 Strategic Execution Plan
+Founder: Bob Dyson
+Core Objective: To leverage 55 years of real estate authority and AI-driven "Professional Information" to disrupt the relocation and residential market.
+
+────────────────────────────────
+THE 7-STEP PRODUCTION & DISTRIBUTION ROADMAP
+────────────────────────────────
+
+STEP 1 — DIGITAL TWIN CREATION
+Finalize AI Clones for Bob (Authority) and a professional Newscaster (Interviewer). Leverage the May 2026 Gemini-Apple "Siri Intelligence" handshake for native device integration.
+
+STEP 2 — CONTENT FORGE
+Build a daily pipeline using white-labeled 6:00 AM news. Generate 60-second "Professional Audits" of the news where the Clone-Interviewer grills Bob on the real market impact.
+
+STEP 3 — MULTI-CHANNEL DISTRIBUTION
+Automate posting via Base44 to YouTube Shorts, LinkedIn, X, and TikTok. Use these high-reach, free social platforms to maximize reach and bypass SMS carrier restrictions.
+
+STEP 4 — THE CONVERSION LOOP
+Every piece of content must end with the Call to Action: "For the professional breakdown and direct access to Bob, download the Dyson Homes App."
+
+STEP 5 — APP ECOSYSTEM
+Use the app as the "Master Warehouse" for all segmented content (Consumer, Referral Agent, Active Agent, and Relocation) to ensure high-deliverability via Push Notifications.
+
+STEP 6 — AUTHORITY CONCIERGE
+Execute the "High-Value" manual phase: Vetting agents for relocation requests and managing referral activity for the 35,000-strong inactive agent network.
+
+STEP 7 — PROPERTY PROFILING
+Deploy automated "Professional Property Audits" within the app. Provide members with veteran-vetted data that corrects generic AVM (Zillow/Redfin) pricing errors.
+
+────────────────────────────────
+STRATEGIC ADVANTAGE (THE "MOAT")
+────────────────────────────────
+
+THE "COMPASS" COUNTER-MOVE:
+While the industry consolidates into corporate "Black Boxes," Dyson Homes provides the "Independent Authority" voice that consumers and independent agents crave.
+
+VOICE-FIRST ARCHITECTURE:
+Designed for the 2026 shift toward audio-native interfaces (Siri/Gemini), allowing Bob's authority to reach clients through their devices without friction.
+
+REFERRAL ENGINE:
+Monetizing a dormant network of 35,000 California agents by providing them a "System for Life" to generate secondary income with zero overhead.`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
