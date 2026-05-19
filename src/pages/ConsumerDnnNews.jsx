@@ -595,7 +595,30 @@ export default function ConsumerDnnNews() {
             <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
               <div className="space-y-3">
-                {allArticles.slice(0, 10).map(article => (
+                {/* DNN Journalist Voice Profile — First Featured Video Box */}
+                {allArticles.slice(0, 1).map(article => (
+                  <div key={`voice-${article.id}`}>
+                    <VideoThumbnail
+                      article={article}
+                      isFullscreen={fullscreenVideo?.id === article.id}
+                      onExpand={() => setFullscreenVideo(article)}
+                      onClose={() => setFullscreenVideo(null)}
+                      isAdmin={isAdmin}
+                      onEdit={handleEditArticle}
+                      onDelete={handleDeleteArticle}
+                    />
+                    <div className="mt-2 rounded-xl px-4 py-3 text-[10px] font-mono leading-relaxed"
+                      style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
+                      <p className="font-black tracking-widest uppercase text-[9px] mb-1.5 opacity-60">🎙 Voice Profile</p>
+                      <p><span className="opacity-50">voice_profile:</span> <span className="text-white">DNN_Journalist_Anchor</span></p>
+                      <p><span className="opacity-50">vocal_base:</span> <span className="text-white">Bob_Losure_CNN_Model</span></p>
+                      <p><span className="opacity-50">frequency:</span> <span className="text-white">Deep Baritone (100–120 Hz)</span></p>
+                      <p><span className="opacity-50">speech_rate:</span> <span className="text-white">150 wpm</span></p>
+                      <p><span className="opacity-50">inflection:</span> <span className="text-white">Steady-state · soft downward slope</span></p>
+                    </div>
+                  </div>
+                ))}
+                {allArticles.slice(1, 10).map(article => (
                   <VideoThumbnail
                     key={article.id}
                     article={article}
