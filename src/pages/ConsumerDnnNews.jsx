@@ -440,49 +440,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 
 
 
-const PILOT_SCRIPT = `Chicago Homeowners Face Record 16.7% Property Tax Increase. In 2024, Chicago homeowners experienced a 16.7% surge in median property tax bills, the highest in over three decades. This unprecedented hike is primarily due to a significant decline in commercial property values in the Loop, which shifted the tax burden onto residential properties. Consequently, homeowners are now shouldering a larger portion of the city's property tax obligations. For families considering relocation to or from Chicago, this development is crucial. Prospective residents should anticipate higher property taxes, which could impact overall housing affordability. Conversely, those planning to sell may find their properties less attractive due to increased tax liabilities, potentially affecting resale values. Looking ahead, the city's fiscal policies may continue to evolve, potentially leading to further tax adjustments. Homebuyers and sellers should stay informed about these changes to make well-informed decisions in the dynamic Chicago real estate market.`;
 
-// --- Pilot Script Player ---
-function PilotScriptPlayer() {
-  const [playing, setPlaying] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const audioRef = React.useRef(null);
-
-  const handlePlay = async () => {
-    if (playing) {
-      audioRef.current?.pause();
-      setPlaying(false);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await base44.functions.invoke('charlieSpeak', { text: PILOT_SCRIPT });
-      const audioContent = res.data?.audio;
-      if (!audioContent) throw new Error('No audio returned');
-      const blob = new Blob([Uint8Array.from(atob(audioContent), c => c.charCodeAt(0))], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      audio.onended = () => setPlaying(false);
-      audio.play();
-      setPlaying(true);
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <button
-      onClick={handlePlay}
-      disabled={loading}
-      className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-black tracking-widest uppercase transition-all disabled:opacity-50"
-      style={{ background: playing ? 'rgba(212,175,55,0.25)' : 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)', color: '#D4AF37' }}
-    >
-      {loading ? '⏳ Loading...' : playing ? '⏹ Stop' : '▶ Play Pilot Script'}
-    </button>
-  );
-}
 
 // --- Main Page ---
 export default function ConsumerDnnNews() {
@@ -635,48 +593,26 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video thumbnails — fixed 350px right sidebar, 10-stack vertical design */}
+            {/* Video thumbnails — only show if there are actual videos */}
+            {videoArticles.length > 0 && (
             <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              <div className="space-y-3">
-                {/* DNN Journalist Voice Profile — First Featured Video Box */}
-                {allArticles.slice(0, 1).map(article => (
-                  <div key={`voice-${article.id}`}>
-                    <VideoThumbnail
-                      article={article}
-                      isFullscreen={fullscreenVideo?.id === article.id}
-                      onExpand={() => setFullscreenVideo(article)}
-                      onClose={() => setFullscreenVideo(null)}
-                      isAdmin={isAdmin}
-                      onEdit={handleEditArticle}
-                      onDelete={handleDeleteArticle}
-                    />
-                    <div className="mt-2 rounded-xl px-4 py-3 text-[10px] font-mono leading-relaxed"
-                      style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
-                      <p className="font-black tracking-widest uppercase text-[9px] mb-1.5 opacity-60">🎙 Voice Profile</p>
-                      <p><span className="opacity-50">voice_profile:</span> <span className="text-white">DNN_Journalist_Anchor</span></p>
-                      <p><span className="opacity-50">vocal_base:</span> <span className="text-white">Bob_Losure_CNN_Model</span></p>
-                      <p><span className="opacity-50">frequency:</span> <span className="text-white">Deep Baritone (100–120 Hz)</span></p>
-                      <p><span className="opacity-50">speech_rate:</span> <span className="text-white">150 wpm</span></p>
-                      <p><span className="opacity-50">inflection:</span> <span className="text-white">Steady-state · soft downward slope</span></p>
-                      <PilotScriptPlayer />
-                    </div>
-                  </div>
-                ))}
-                {allArticles.slice(1, 10).map(article => (
-                  <VideoThumbnail
-                    key={article.id}
-                    article={article}
-                    isFullscreen={fullscreenVideo?.id === article.id}
-                    onExpand={() => setFullscreenVideo(article)}
-                    onClose={() => setFullscreenVideo(null)}
-                    isAdmin={isAdmin}
-                    onEdit={handleEditArticle}
-                    onDelete={handleDeleteArticle}
-                  />
-                ))}
-              </div>
+            <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+            <div className="space-y-3">
+              {videoArticles.slice(0, 10).map(article => (
+                <VideoThumbnail
+                  key={article.id}
+                  article={article}
+                  isFullscreen={fullscreenVideo?.id === article.id}
+                  onExpand={() => setFullscreenVideo(article)}
+                  onClose={() => setFullscreenVideo(null)}
+                  isAdmin={isAdmin}
+                  onEdit={handleEditArticle}
+                  onDelete={handleDeleteArticle}
+                />
+              ))}
             </div>
+            </div>
+            )}
 
           </div>
         )}
