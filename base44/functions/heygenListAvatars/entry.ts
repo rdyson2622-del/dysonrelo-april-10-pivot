@@ -21,10 +21,14 @@ Deno.serve(async (req) => {
     });
     const talkingPhotosData = await talkingPhotosRes.json();
 
+    const allAvatars = talkingPhotosData?.data?.avatars || [];
+    const maleAvatars = allAvatars.filter(a => a.gender === 'male');
+    console.log('MALE AVATARS:', JSON.stringify(maleAvatars.map(a => ({ id: a.avatar_id, name: a.avatar_name })), null, 2));
+
     return Response.json({
-      raw: talkingPhotosData,
-      avatars: talkingPhotosData?.data?.avatars || [],
-      talking_photos: talkingPhotosData?.data?.talking_photos || [],
+      male_avatars: maleAvatars.map(a => ({ id: a.avatar_id, name: a.avatar_name, preview: a.preview_image_url })),
+      all_count: allAvatars.length,
+      male_count: maleAvatars.length,
     });
 
   } catch (error) {
