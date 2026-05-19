@@ -594,12 +594,12 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Video column — always visible on desktop, shows real videos only */}
-            <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              <div className="space-y-3">
-                {videoArticles.length > 0 ? (
-                  videoArticles.slice(0, 10).map(article => (
+            {/* Video column — only show when there are real playable videos */}
+            {videoArticles.length > 0 && (
+              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
+                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+                <div className="space-y-3">
+                  {videoArticles.slice(0, 10).map(article => (
                     <VideoThumbnail
                       key={article.id}
                       article={article}
@@ -610,22 +610,10 @@ export default function ConsumerDnnNews() {
                       onEdit={handleEditArticle}
                       onDelete={handleDeleteArticle}
                     />
-                  ))
-                ) : (
-                  <div className="rounded-xl p-8 text-center space-y-3"
-                    style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
-                      style={{ background: 'rgba(212,175,55,0.1)' }}>
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#D4AF37', marginLeft: '3px' }}>
-                        <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                      </svg>
-                    </div>
-                    <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Video Coming Soon</p>
-                    <p className="text-xs text-slate-600 leading-relaxed">DNN anchor videos are produced daily via the HeyGen pipeline. Check back shortly.</p>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
         )}
