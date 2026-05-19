@@ -34,32 +34,47 @@ Deno.serve(async (req) => {
     if (!article) return Response.json({ error: 'Article not found' }, { status: 404 });
 
     const scriptText = `${article.headline}. ${article.body}`.slice(0, 1500);
+    const cleanText = scriptText.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim();
 
-    // 2. Synthesize Charon audio via charlieSpeak
-    const ttsRes = await base44.asServiceRole.functions.invoke('charlieSpeak', { text: scriptText });
-    const audioB64 = ttsRes?.audio;
-    if (!audioB64) return Response.json({ error: 'Audio synthesis failed' }, { status: 500 });
+    // 2. Synthesize Charon audio directly via Google TTS (inlined to avoid auth proxy)
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    if (!GEMINI_API_KEY) return Response.json({ error: 'GEMINI_API_KEY not set' }, { status: 500 });
 
-    // 3. Upload audio to HeyGen as an asset
-    const audioBytes = Uint8Array.from(atob(audioB64), c => c.charCodeAt(0));
-    const formData = new FormData();
-    formData.append('file', new Blob([audioBytes], { type: 'audio/mpeg' }), 'anchor_audio.mp3');
-    formData.append('type', 'audio');
+    const VOICE_ATTEMPTS = [
+      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Charon' },
+      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Fenrir' },
+      { api: 'v1',      name: 'en-US-Neural2-D' },
+    ];
 
-    const uploadRes = await fetch(`${HEYGEN_API}/v1/asset`, {
-      method: 'POST',
-      headers: { 'X-Api-Key': HEYGEN_API_KEY },
-      body: formData,
-    });
-    const uploadData = await uploadRes.json();
-    if (!uploadRes.ok || !uploadData.data?.id) {
-      console.error('HeyGen upload error:', uploadData);
-      return Response.json({ error: 'HeyGen audio upload failed', detail: uploadData }, { status: 500 });
+    let audioB64 = null;
+    for (const voice of VOICE_ATTEMPTS) {
+      const ttsResp = await fetch(
+        `https://texttospeech.googleapis.com/${voice.api}/text:synthesize?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: { text: cleanText },
+            voice: { languageCode: 'en-US', name: voice.name },
+            audioConfig: { audioEncoding: 'MP3' },
+          }),
+        }
+      );
+      const ttsData = await ttsResp.json();
+      if (ttsResp.ok && ttsData.audioContent) { audioB64 = ttsData.audioContent; break; }
+      console.warn(`Voice ${voice.name} failed:`, ttsData.error?.message);
     }
-    const audioAssetId = uploadData.data.id;
+    if (!audioB64) return Response.json({ error: 'Audio synthesis failed — all voice models failed' }, { status: 500 });
 
-    // 4. Submit avatar video render job
-    // Layout: anchor slightly right-of-center (x=0.55), leaving left third for data graphics
+    // 3. Upload audio to Base44 public storage to get a URL HeyGen can fetch
+    const audioBytes = Uint8Array.from(atob(audioB64), c => c.charCodeAt(0));
+    const audioFile = new File([audioBytes], 'anchor_audio.mp3', { type: 'audio/mpeg' });
+
+    const { file_url: audioUrl } = await base44.asServiceRole.integrations.Core.UploadFile({ file: audioFile });
+    if (!audioUrl) return Response.json({ error: 'Failed to upload audio to storage' }, { status: 500 });
+    console.log('Audio uploaded to:', audioUrl);
+
+    // 4. Submit avatar video render job — pass audio as a public URL
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -72,30 +87,27 @@ Deno.serve(async (req) => {
             type: 'avatar',
             avatar_id: avatar_id,
             avatar_style: 'normal',
-            // Medium close-up, slightly right of center for L1/3 data graphic overlay
-            scale: 1.0,
-            offset: { x: 0.1, y: 0.0 },
           },
           voice: {
             type: 'audio',
-            audio_asset_id: audioAssetId,
+            audio_url: audioUrl,
           },
           background: {
             type: 'image',
-            // Coastal city high-rise at dusk — warm key light, cool blue rim
-            // Replace with your own uploaded background asset ID after uploading to HeyGen
             url: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=80',
           },
         }],
         dimension: { width: 1920, height: 1080 },
-        // 30fps target
-        fps: 30,
       }),
     });
 
-    const renderData = await renderRes.json();
+    const renderText = await renderRes.text();
+    console.log('HeyGen render status:', renderRes.status, 'body:', renderText.slice(0, 500));
+    let renderData;
+    try { renderData = JSON.parse(renderText); } catch (_) {
+      return Response.json({ error: 'HeyGen render returned non-JSON', raw: renderText.slice(0, 300) }, { status: 500 });
+    }
     if (!renderRes.ok || !renderData.data?.video_id) {
-      console.error('HeyGen render error:', renderData);
       return Response.json({ error: 'HeyGen render job failed', detail: renderData }, { status: 500 });
     }
 
