@@ -507,8 +507,8 @@ export default function ConsumerDnnNews() {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
-  const textArticles = allArticles.filter(a => !a.video_url);
-  const videoArticles = allArticles.filter(a => !!a.video_url);
+  const textArticles = allArticles.filter(a => !a.video_url || a.video_url.startsWith('heygen:pending:'));
+  const videoArticles = allArticles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
