@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const article_id = body.article_id;
     // Default to preferred male newscaster avatar
-    const avatar_id = body.avatar_id || '4c9f4855c6914ac2ba676544524709eb';
+    const avatar_id = body.avatar_id || 'Adrian_public_2_20240312';
     if (!article_id) {
       return Response.json({ error: 'article_id is required' }, { status: 400 });
     }
