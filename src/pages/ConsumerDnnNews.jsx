@@ -420,6 +420,13 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           </div>
         </>
       )}
+      {/* DNN Logo Bug — always visible on all video cards */}
+      <div className="absolute top-2 left-2 z-10 pointer-events-none flex items-center gap-1.5 px-2 py-1 rounded-lg"
+        style={{ background: 'rgba(0,0,0,0.65)', border: '1px solid rgba(212,175,55,0.4)', backdropFilter: 'blur(4px)' }}>
+        <img src={DNN_LOGO} alt="DNN" className="h-4 w-auto" />
+        <span className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>LIVE</span>
+        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
+      </div>
       {isAdmin && (
         <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100] opacity-0 group-hover:opacity-100 transition-opacity">
           <button

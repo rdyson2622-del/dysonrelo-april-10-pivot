@@ -23,9 +23,12 @@ Deno.serve(async (req) => {
     const HEYGEN_API_KEY = Deno.env.get('HEYGEN_API_KEY');
     if (!HEYGEN_API_KEY) return Response.json({ error: 'HEYGEN_API_KEY not set' }, { status: 500 });
 
-    const { article_id, avatar_id } = await req.json();
-    if (!article_id || !avatar_id) {
-      return Response.json({ error: 'article_id and avatar_id are required' }, { status: 400 });
+    const body = await req.json();
+    const article_id = body.article_id;
+    // Default to Adrian in Blue Suit — professional male newscaster
+    const avatar_id = body.avatar_id || 'Adrian_public_2_20240312';
+    if (!article_id) {
+      return Response.json({ error: 'article_id is required' }, { status: 400 });
     }
 
     // 1. Fetch the article
