@@ -364,10 +364,13 @@ function getEmbedSrc(url) {
 // --- Video Thumbnail Card ---
 function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
   const realVideoUrl = article.video_url && !article.video_url.startsWith('heygen:pending:') ? article.video_url : null;
-  const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('heygen.ai'));
+  const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('heygen.ai') || realVideoUrl.includes('.webm'));
   const thumbnail = getYouTubeThumbnail(realVideoUrl);
 
-  if (isFullscreen && realVideoUrl) {
+  // No real video = render nothing
+  if (!realVideoUrl) return null;
+
+  if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
         <button onClick={onClose}
@@ -416,19 +419,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: '#D4AF37' }}>▶ Play Video</p>
           <p className="text-[9px] text-center leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{article.headline}</p>
         </div>
-      ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4"
-          style={{ background: 'linear-gradient(135deg, #1c1c1c 0%, #141414 100%)' }}>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#D4AF37', marginLeft: '2px' }}>
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-            </svg>
-          </div>
-          <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: 'rgba(212,175,55,0.5)' }}>Video Coming Soon</p>
-          <p className="text-[9px] text-center leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.3)' }}>{article.headline}</p>
-        </div>
-      )}
+      ) : null}
       {thumbnail && (
         <>
           <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
