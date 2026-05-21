@@ -365,7 +365,7 @@ function getEmbedSrc(url) {
 function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
   const [playing, setPlaying] = useState(false);
   const realVideoUrl = article.video_url && !article.video_url.startsWith('heygen:pending:') ? article.video_url : null;
-  const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('heygen.ai') || realVideoUrl.includes('.webm'));
+  const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('.webm')) && !realVideoUrl.includes('heygen.com');
   const thumbnail = getYouTubeThumbnail(realVideoUrl);
 
   if (!realVideoUrl) return null;
@@ -397,10 +397,13 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
     return (
       <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
         <iframe
-          src={getEmbedSrc(realVideoUrl)}
+          src={realVideoUrl.includes('heygen.com/embeds') ? realVideoUrl : getEmbedSrc(realVideoUrl)}
           title={article.headline}
+          width="100%"
+          height="100%"
           style={{ width: '100%', height: '100%', border: 'none' }}
-          allow="autoplay; fullscreen"
+          frameBorder="0"
+          allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
         <button
@@ -478,7 +481,7 @@ export default function ConsumerDnnNews() {
   const HARDCODED_VIDEO = {
     id: '__hardcoded__',
     headline: 'DNN Intelligence Report',
-    video_url: 'https://files2.heygen.ai/aws_pacific/avatar_tmp/33dec76283f44f80b7d658cc9060acbb/1734e301414441b38f71769668a49040.mp4',
+    video_url: 'https://app.heygen.com/embeds/1734e301414441b38f71769668a49040',
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
