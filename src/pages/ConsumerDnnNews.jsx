@@ -249,12 +249,33 @@ function AudioPlayer({ url }) {
 }
 
 // --- Compact Article Card (text briefs) ---
-function CompactArticleCard({ article, isAdmin, onEdit, onDelete }) {
+function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onGenerateVideo, onCheckVideo }) {
   const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(false);
+  const [videoMsg, setVideoMsg] = useState(null);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
+  const isPending = article.video_url?.startsWith('heygen:pending:');
+  const hasVideo = article.video_url && !isPending;
+  const videoId = isPending ? article.video_url.replace('heygen:pending:', '') : null;
+
+  const handleGenerate = async () => {
+    setVideoLoading(true);
+    setVideoMsg(null);
+    const res = await onGenerateVideo(article.id);
+    setVideoMsg(res?.video_id ? '⏳ Rendering... click "Check" in ~3 min' : `✗ ${res?.error || 'Failed'}`);
+    setVideoLoading(false);
+  };
+
+  const handleCheck = async () => {
+    setVideoLoading(true);
+    setVideoMsg(null);
+    const res = await onCheckVideo(videoId, article.id);
+    setVideoMsg(res?.status === 'completed' ? '✓ Video ready! Refresh to see it.' : res?.status === 'failed' ? `✗ Render failed` : '⏳ Still rendering...');
+    setVideoLoading(false);
+  };
 
   return (
     <div className="rounded-xl p-4 transition-all relative group"
