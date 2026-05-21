@@ -105,7 +105,7 @@ const NAV_SECTIONS = [
       { label: 'Agent Vetting Process', path: '/admin/dnn/agent-vetting', icon: FileCheck },
       { label: 'Lender Vetting Process', path: '/admin/dnn/lender-vetting', icon: DollarSign },
       { label: 'Bureau Story Hub', path: '/admin/dnn/bureau-stories', icon: BookOpen },
-      { label: '🎬 Studio Dashboard', path: '/admin/dnn/studio', icon: Video },
+      { label: '🎬 DNN Studio', path: '/admin/dnn/studio', icon: Video },
     ],
   },
   {
@@ -165,8 +165,12 @@ export default function AdminSidebar() {
     const initial = {};
     NAV_SECTIONS.forEach(s => {
       const hasActive = getSectionPaths(s).some(p => location.pathname === p || location.pathname.startsWith(p));
-      // Use saved state if it exists, otherwise auto-open if active OR in default-open set
-      initial[s.key] = saved[s.key] !== undefined ? saved[s.key] : (hasActive || DEFAULT_OPEN.has(s.key));
+      // DEFAULT_OPEN sections always start open regardless of saved state
+      if (DEFAULT_OPEN.has(s.key)) {
+        initial[s.key] = true;
+      } else {
+        initial[s.key] = saved[s.key] !== undefined ? saved[s.key] : hasActive;
+      }
     });
     return initial;
   });

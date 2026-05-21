@@ -604,32 +604,28 @@ export default function ConsumerDnnNews() {
         )}
 
         {!isLoading && allArticles.length > 0 && (
-          <div className="flex gap-6">
+          <div className="flex gap-6 items-start">
 
             {/* Text briefs — flex-1 to fill available space */}
-            <div className="flex-1 space-y-3">
+            <div className="flex-1 min-w-0 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
-              {textArticles.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {textArticles.map(article => (
-                    <CompactArticleCard
-                      key={article.id}
-                      article={article}
-                      isAdmin={isAdmin}
-                      onEdit={handleEditArticle}
-                      onDelete={handleDeleteArticle}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-center py-8" style={{ color: 'rgba(26,26,26,0.4)' }}>No text briefs today.</p>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {textArticles.map(article => (
+                  <CompactArticleCard
+                    key={article.id}
+                    article={article}
+                    isAdmin={isAdmin}
+                    onEdit={handleEditArticle}
+                    onDelete={handleDeleteArticle}
+                  />
+                ))}
+              </div>
             </div>
 
-            {/* Featured Videos — only articles with real video URLs */}
-            {allArticles.some(a => a.video_url && !a.video_url.startsWith('heygen:pending:')) && (
-              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+            {/* Featured Videos — always shown on large screens */}
+            <div className="hidden lg:block shrink-0 w-[320px] space-y-3">
+              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+              {allArticles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:')).length > 0 ? (
                 <div className="space-y-3">
                   {allArticles
                     .filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'))
@@ -647,8 +643,18 @@ export default function ConsumerDnnNews() {
                       />
                     ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="rounded-xl p-6 text-center space-y-3" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
+                  <div className="w-12 h-12 rounded-full mx-auto flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#D4AF37', marginLeft: '2px' }}>
+                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Videos Coming Soon</p>
+                  <p className="text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>DNN anchor videos are produced in the Studio and will appear here automatically.</p>
+                </div>
+              )}
+            </div>
 
           </div>
         )}
