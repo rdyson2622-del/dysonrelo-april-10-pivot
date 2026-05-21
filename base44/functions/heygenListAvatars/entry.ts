@@ -1,17 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 /**
- * heygenListAvatars - DEEP RAW AUDIT
- * Pulls ALL asset types with zero filtering — raw JSON logged for inspection.
+ * BRUTE FORCE AVATAR HUNT
+ * Hits 3 endpoints in parallel, dumps full raw JSON to console.
+ * Looking for Bob Dyson custom clone.
  */
-
-async function safeFetch(url, headers) {
-  const res = await fetch(url, { headers });
-  const text = await res.text();
-  let data = null;
-  try { data = JSON.parse(text); } catch (_) {}
-  return { ok: res.ok, status: res.status, data, raw: text.slice(0, 2000) };
-}
 
 Deno.serve(async (req) => {
   try {
@@ -24,96 +17,79 @@ Deno.serve(async (req) => {
 
     const headers = { 'X-Api-Key': HEYGEN_API_KEY, 'Accept': 'application/json' };
 
-    // 1. /v2/avatars — full unfiltered list
-    const r1 = await safeFetch('https://api.heygen.com/v2/avatars', headers);
-    const allAvatars = r1.data?.data?.avatars || [];
-    console.log('=== RAW /v2/avatars TOTAL:', allAvatars.length);
+    // PARALLEL — hit all 3 endpoints simultaneously
+    const [r1, r2, r3] = await Promise.all([
+      fetch('https://api.heygen.com/v2/avatars', { headers }).then(r => r.json()),
+      fetch('https://api.heygen.com/v2/video_avatar/list', { headers }).then(r => r.json()),
+      fetch('https://api.heygen.com/v1/avatar.list', { headers }).then(r => r.json()),
+    ]);
 
-    // Extract ALL non-stock avatars (anything not matching standard public naming)
-    const customAvatars = allAvatars.filter(a => {
-      const id = a.avatar_id || '';
-      return (
-        !id.match(/^[A-Z][a-z]+_.*_public/) &&
-        !id.match(/_(pro|pro\d)_/) &&
-        !id.match(/^(Abigail|Adriana|Aiko|Amanda|Angel|Anna|Anthony|Brian|Bryan|Carlos|Carter|Daniel|David|Emma|Eric|Eva|Grace|Henry|James|Jasmine|Jeffrey|John|Joshua|Judy|Justin|Kate|Kevin|Kim|Lea|Lena|Lewis|Lily|Lucas|Madison|Marcus|Maya|Michael|Miles|Morgan|Nora|Oliver|Owen|Paul|Peter|Philip|Rachel|Rebecca|Ryan|Sara|Sarah|Scott|Sofia|Steven|Susan|Thomas|Tina|Tom|Tyler|Victoria|William|Wilson|Zara)/)
-      );
+    // === ENDPOINT 1: v2/avatars — filter for is_custom: true ===
+    const v2Avatars = r1?.data?.avatars || [];
+    const customAvatars = v2Avatars.filter(a => a.is_custom === true || a.type === 'custom' || a.is_public === false);
+
+    console.log('=== ENDPOINT 1: GET /v2/avatars ===');
+    console.log('TOTAL COUNT:', v2Avatars.length);
+    console.log('CUSTOM (is_custom=true OR is_public=false):', customAvatars.length);
+    console.log('--- ALL AVATAR NAMES + IDS (v2) ---');
+    v2Avatars.forEach(a => {
+      console.log(`ID: ${a.avatar_id} | NAME: ${a.avatar_name} | is_custom: ${a.is_custom} | is_public: ${a.is_public} | type: ${a.type}`);
     });
 
-    console.log('=== CUSTOM/NON-STOCK AVATARS FOUND:', customAvatars.length);
-    console.log(JSON.stringify(customAvatars.map(a => ({
-      id: a.avatar_id,
-      name: a.avatar_name,
-      gender: a.gender,
-      is_public: a.is_public,
-      type: a.type,
-      group_id: a.group_id,
-      preview: a.preview_image_url,
-    })), null, 2));
+    // === ENDPOINT 2: v2/video_avatar/list ===
+    const videoAvatars = r2?.data?.video_avatar_list || r2?.data?.avatars || r2?.data || [];
+    console.log('\n=== ENDPOINT 2: GET /v2/video_avatar/list ===');
+    console.log('RAW RESPONSE:', JSON.stringify(r2, null, 2));
+    if (Array.isArray(videoAvatars)) {
+      videoAvatars.forEach(a => {
+        console.log(`VIDEO_AVATAR ID: ${a.avatar_id || a.id} | NAME: ${a.avatar_name || a.name} | TYPE: ${a.type}`);
+      });
+    }
 
-    // 2. /v1/talking_photo — all uploaded talking photos
-    const r2 = await safeFetch('https://api.heygen.com/v1/talking_photo', headers);
-    console.log('=== RAW /v1/talking_photo:', JSON.stringify(r2.data, null, 2));
+    // === ENDPOINT 3: v1/avatar.list ===
+    const v1Avatars = r3?.data?.avatar_list || r3?.data?.avatars || r3?.data || [];
+    console.log('\n=== ENDPOINT 3: GET /v1/avatar.list ===');
+    console.log('RAW RESPONSE:', JSON.stringify(r3, null, 2));
+    if (Array.isArray(v1Avatars)) {
+      v1Avatars.forEach(a => {
+        console.log(`V1 AVATAR ID: ${a.avatar_id || a.id} | NAME: ${a.avatar_name || a.name} | TYPE: ${a.type}`);
+      });
+    }
 
-    // 3. /v1/avatar — older v1 endpoint, sometimes has clones not in v2
-    const r3 = await safeFetch('https://api.heygen.com/v1/avatar.list', headers);
-    console.log('=== RAW /v1/avatar.list:', JSON.stringify(r3.data, null, 2));
+    // === SEARCH ALL THREE for Bob / Dyson / custom / clone ===
+    const allFound = [
+      ...v2Avatars,
+      ...(Array.isArray(videoAvatars) ? videoAvatars : []),
+      ...(Array.isArray(v1Avatars) ? v1Avatars : []),
+    ];
 
-    // 4. /v2/avatar/group — avatar groups (clones are often in groups)
-    const r4 = await safeFetch('https://api.heygen.com/v2/avatar/group.list', headers);
-    console.log('=== RAW /v2/avatar/group.list:', JSON.stringify(r4.data, null, 2));
-
-    // 5. Check account info / remaining credits
-    const r5 = await safeFetch('https://api.heygen.com/v1/user/remaining_quota', headers);
-    console.log('=== ACCOUNT QUOTA:', JSON.stringify(r5.data, null, 2));
-
-    // 6. /v2/video_avatar — instant clone / video avatar list
-    const r6 = await safeFetch('https://api.heygen.com/v2/video_avatar', headers);
-    console.log('=== RAW /v2/video_avatar:', JSON.stringify(r6.data, null, 2));
-
-    // 7. /v1/avatars?include_private=true — force private/cloned avatars
-    const r7 = await safeFetch('https://api.heygen.com/v1/avatars?include_private=true', headers);
-    console.log('=== RAW /v1/avatars?include_private=true:', JSON.stringify(r7.data, null, 2));
-
-    // 8. /v2/avatars?include_private=true
-    const r8 = await safeFetch('https://api.heygen.com/v2/avatars?include_private=true', headers);
-    console.log('=== RAW /v2/avatars?include_private:', JSON.stringify(r8.data?.data?.avatars?.length, null, 2));
-    const privateAvatars = r8.data?.data?.avatars || [];
-    const privateOnly = privateAvatars.filter(a => !allAvatars.find(b => b.avatar_id === a.avatar_id));
-    console.log('=== PRIVATE-ONLY AVATARS (not in public list):', JSON.stringify(privateOnly, null, 2));
-
-    // Search ALL avatars for "bob", "dyson", "news" in name/id
-    const nameSearch = allAvatars.filter(a => {
-      const id = (a.avatar_id || '').toLowerCase();
-      const name = (a.avatar_name || '').toLowerCase();
+    const bobMatches = allFound.filter(a => {
+      const id = (a.avatar_id || a.id || '').toLowerCase();
+      const name = (a.avatar_name || a.name || '').toLowerCase();
       return id.includes('bob') || id.includes('dyson') || id.includes('news') ||
              name.includes('bob') || name.includes('dyson') || name.includes('news') ||
-             id.includes('custom') || id.includes('private') || id.includes('clone');
+             id.includes('custom') || id.includes('clone') || id.includes('private');
     });
-    console.log('=== BOB/DYSON/NEWS/CUSTOM SEARCH RESULTS:', JSON.stringify(nameSearch, null, 2));
 
-    const talkingPhotos = r2.data?.data?.talking_photos || r2.data?.data || [];
+    console.log('\n=== BOB/DYSON/NEWS/CUSTOM MATCHES ACROSS ALL ENDPOINTS ===');
+    console.log(JSON.stringify(bobMatches, null, 2));
 
     return Response.json({
-      summary: {
-        total_avatars_v2: allAvatars.length,
-        custom_non_stock: customAvatars.length,
-        talking_photos: Array.isArray(talkingPhotos) ? talkingPhotos.length : 'see raw',
-        avatar_groups: r4.data?.data || 'none',
-        quota: r5.data?.data || r5.data,
-        bob_dyson_news_matches: nameSearch.length,
+      endpoint1_v2_avatars: {
+        total: v2Avatars.length,
+        custom_count: customAvatars.length,
+        custom_list: customAvatars.map(a => ({ id: a.avatar_id, name: a.avatar_name, type: a.type, is_public: a.is_public })),
+        all_names: v2Avatars.map(a => ({ id: a.avatar_id, name: a.avatar_name, is_custom: a.is_custom, is_public: a.is_public })),
       },
-      custom_avatars: customAvatars.map(a => ({
-        id: a.avatar_id,
-        name: a.avatar_name,
-        gender: a.gender,
-        is_public: a.is_public,
-        type: a.type,
-      })),
-      talking_photos: Array.isArray(talkingPhotos)
-        ? talkingPhotos.map(t => ({ id: t.talking_photo_id || t.id, name: t.talking_photo_name || t.name, preview: t.preview_image_url }))
-        : r2.data,
-      avatar_groups_raw: r4.data,
-      bob_dyson_matches: nameSearch,
+      endpoint2_video_avatar_list: {
+        raw: r2,
+        parsed: Array.isArray(videoAvatars) ? videoAvatars.map(a => ({ id: a.avatar_id || a.id, name: a.avatar_name || a.name })) : videoAvatars,
+      },
+      endpoint3_v1_avatar_list: {
+        raw: r3,
+        parsed: Array.isArray(v1Avatars) ? v1Avatars.map(a => ({ id: a.avatar_id || a.id, name: a.avatar_name || a.name })) : v1Avatars,
+      },
+      bob_dyson_matches: bobMatches,
     });
 
   } catch (error) {
