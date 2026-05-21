@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X } from 'lucide-react';
@@ -371,36 +372,40 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
   if (!realVideoUrl) return null;
 
   if (isFullscreen) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={onClose}>
-        <button onClick={onClose}
-          className="absolute top-6 right-6 text-white hover:opacity-70 transition-opacity z-10"
-          style={{ fontSize: '2rem' }}>✕</button>
-        <div className="w-full max-w-4xl aspect-video flex flex-col items-center justify-center gap-4" onClick={e => e.stopPropagation()}>
+    return ReactDOM.createPortal(
+      <div
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, zIndex: 999999, background: 'rgba(0,0,0,0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
+      >
+        <button
+          onClick={onClose}
+          style={{ position: 'absolute', top: '20px', right: '24px', background: 'none', border: 'none', color: '#fff', fontSize: '2.5rem', cursor: 'pointer', lineHeight: 1, zIndex: 1000000 }}
+        >✕</button>
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{ width: '100%', maxWidth: '900px', aspectRatio: '16/9' }}
+        >
           {isDirectMp4 ? (
-            <>
-              <video
-                key={realVideoUrl}
-                src={realVideoUrl}
-                controls
-                autoPlay
-                playsInline
-                crossOrigin="anonymous"
-                className="w-full h-full rounded-xl bg-black"
-              />
-
-            </>
+            <video
+              key={realVideoUrl}
+              src={realVideoUrl}
+              controls
+              autoPlay
+              playsInline
+              style={{ width: '100%', height: '100%', borderRadius: '12px', background: '#000', display: 'block' }}
+            />
           ) : (
             <iframe
               src={getEmbedSrc(realVideoUrl)}
               title={article.headline}
-              className="w-full h-full rounded-xl"
+              style={{ width: '100%', height: '100%', borderRadius: '12px', border: 'none' }}
               allow="autoplay; fullscreen"
               allowFullScreen
             />
           )}
         </div>
-      </div>
+      </div>,
+      document.body
     );
   }
 
