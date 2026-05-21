@@ -648,11 +648,10 @@ export default function ConsumerDnnNews() {
                   <video
                     controls
                     playsInline
-                    className="w-full h-full object-cover"
+                    className="w-full h-full"
                     style={{ background: '#000' }}
-                  >
-                    <source src="" type="video/mp4" />
-                  </video>
+                    src="https://files2.heygen.ai/aws_pacific/avatar_tmp/33dec76283f44f80b7d658cc9060acbb"
+                  />
                 </div>
               )}
             </div>
