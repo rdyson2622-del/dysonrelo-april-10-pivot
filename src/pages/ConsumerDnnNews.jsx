@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X } from 'lucide-react';
@@ -363,58 +362,63 @@ function getEmbedSrc(url) {
 }
 
 // --- Video Thumbnail Card ---
-function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
+function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
+  const [playing, setPlaying] = useState(false);
   const realVideoUrl = article.video_url && !article.video_url.startsWith('heygen:pending:') ? article.video_url : null;
   const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('heygen.ai') || realVideoUrl.includes('.webm'));
   const thumbnail = getYouTubeThumbnail(realVideoUrl);
 
-  // No real video = render nothing
   if (!realVideoUrl) return null;
 
-  if (isFullscreen) {
-    // For direct MP4s (HeyGen), open in new tab — CORS blocks embedded playback
-    if (isDirectMp4) {
-      window.open(realVideoUrl, '_blank');
-      onClose();
-      return null;
-    }
-
-    return ReactDOM.createPortal(
-      <div
-        onClick={onClose}
-        style={{ position: 'fixed', inset: 0, zIndex: 999999, background: 'rgba(0,0,0,0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
-      >
+  // If playing, show the native video player inline
+  if (playing && isDirectMp4) {
+    return (
+      <div className="relative w-full rounded-xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
+        <video
+          src={realVideoUrl}
+          controls
+          autoPlay
+          playsInline
+          style={{ width: '100%', display: 'block', borderRadius: '12px' }}
+        />
         <button
-          onClick={onClose}
-          style={{ position: 'absolute', top: '20px', right: '24px', background: 'none', border: 'none', color: '#fff', fontSize: '2.5rem', cursor: 'pointer', lineHeight: 1, zIndex: 1000000 }}
+          onClick={() => setPlaying(false)}
+          className="absolute top-2 right-2 text-white text-xs px-2 py-1 rounded-lg font-bold"
+          style={{ background: 'rgba(0,0,0,0.7)' }}
         >✕</button>
-        <div
-          onClick={e => e.stopPropagation()}
-          style={{ width: '100%', maxWidth: '900px', aspectRatio: '16/9' }}
-        >
-          <iframe
-            src={getEmbedSrc(realVideoUrl)}
-            title={article.headline}
-            style={{ width: '100%', height: '100%', borderRadius: '12px', border: 'none' }}
-            allow="autoplay; fullscreen"
-            allowFullScreen
-          />
-        </div>
-      </div>,
-      document.body
+      </div>
     );
   }
 
+  if (playing && !isDirectMp4) {
+    return (
+      <div className="relative w-full rounded-xl overflow-hidden" style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
+        <iframe
+          src={getEmbedSrc(realVideoUrl)}
+          title={article.headline}
+          style={{ width: '100%', height: '100%', border: 'none' }}
+          allow="autoplay; fullscreen"
+          allowFullScreen
+        />
+        <button
+          onClick={() => setPlaying(false)}
+          className="absolute top-2 right-2 text-white text-xs px-2 py-1 rounded-lg font-bold"
+          style={{ background: 'rgba(0,0,0,0.7)' }}
+        >✕</button>
+      </div>
+    );
+  }
+
+  // Thumbnail / play button state
   return (
     <div
-      className={`relative w-full aspect-video rounded-xl overflow-hidden group ${realVideoUrl ? 'cursor-pointer' : 'cursor-default'}`}
+      className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer"
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
-      onClick={onExpand}
-
+      onClick={() => setPlaying(true)}
     >
       {thumbnail ? (
         <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
-      ) : isDirectMp4 ? (
+      ) : (
         <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4"
           style={{ background: 'linear-gradient(135deg, #1c1c1c 0%, #141414 100%)' }}>
           <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
@@ -426,7 +430,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: '#D4AF37' }}>▶ Play Video</p>
           <p className="text-[9px] text-center leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{article.headline}</p>
         </div>
-      ) : null}
+      )}
       {thumbnail && (
         <>
           <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
@@ -440,7 +444,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           </div>
         </>
       )}
-      {/* DNN Logo Bug — always visible on all video cards */}
+      {/* DNN Logo Bug */}
       <div className="absolute top-2 left-2 z-10 pointer-events-none flex items-center gap-1.5 px-2 py-1 rounded-lg"
         style={{ background: 'rgba(0,0,0,0.65)', border: '1px solid rgba(212,175,55,0.4)', backdropFilter: 'blur(4px)' }}>
         <img src={DNN_LOGO} alt="DNN" className="h-4 w-auto" />
@@ -449,20 +453,12 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
       </div>
       {isAdmin && (
         <div className="absolute top-2 right-2 flex items-center gap-1.5 z-[100] opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
-            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
-            style={{ background: '#1a1a1a', border: '1px solid #00ccff', boxShadow: '0 0 8px #00ccff' }}
-          >
-            ✎
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
-            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto transition-all hover:scale-105"
-            style={{ background: '#1a1a1a', border: '1px solid #ff3333', boxShadow: '0 0 8px #ff3333' }}
-          >
-            🗑
-          </button>
+          <button onClick={(e) => { e.stopPropagation(); onEdit?.(article); }}
+            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto"
+            style={{ background: '#1a1a1a', border: '1px solid #00ccff', boxShadow: '0 0 8px #00ccff' }}>✎</button>
+          <button onClick={(e) => { e.stopPropagation(); onDelete?.(article.id); }}
+            className="px-2 py-1.5 rounded-lg text-xs font-bold text-white pointer-events-auto"
+            style={{ background: '#1a1a1a', border: '1px solid #ff3333', boxShadow: '0 0 8px #ff3333' }}>🗑</button>
         </div>
       )}
     </div>
@@ -483,7 +479,6 @@ export default function ConsumerDnnNews() {
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [fullscreenVideo, setFullscreenVideo] = useState(null);
   const [editingArticle, setEditingArticle] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [savingEdit, setSavingEdit] = useState(false);
@@ -638,9 +633,6 @@ export default function ConsumerDnnNews() {
                       <VideoThumbnail
                         key={article.id}
                         article={article}
-                        isFullscreen={fullscreenVideo?.id === article.id}
-                        onExpand={() => setFullscreenVideo(article)}
-                        onClose={() => setFullscreenVideo(null)}
                         isAdmin={isAdmin}
                         onEdit={handleEditArticle}
                         onDelete={handleDeleteArticle}
@@ -650,9 +642,6 @@ export default function ConsumerDnnNews() {
               ) : (
                 <VideoThumbnail
                   article={HARDCODED_VIDEO}
-                  isFullscreen={fullscreenVideo?.id === '__hardcoded__'}
-                  onExpand={() => setFullscreenVideo(HARDCODED_VIDEO)}
-                  onClose={() => setFullscreenVideo(null)}
                   isAdmin={false}
                 />
               )}
