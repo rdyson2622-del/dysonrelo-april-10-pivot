@@ -382,7 +382,7 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
           preload="auto"
           crossOrigin="anonymous"
           style={{ width: '100%', display: 'block', borderRadius: '12px' }}
-          onError={() => { window.open(realVideoUrl, '_blank'); setPlaying(false); }}
+          onError={(e) => console.warn('Video load error:', e)}
         />
         <button
           onClick={() => setPlaying(false)}
