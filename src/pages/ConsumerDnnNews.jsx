@@ -372,6 +372,13 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
   if (!realVideoUrl) return null;
 
   if (isFullscreen) {
+    // For direct MP4s (HeyGen), open in new tab — CORS blocks embedded playback
+    if (isDirectMp4) {
+      window.open(realVideoUrl, '_blank');
+      onClose();
+      return null;
+    }
+
     return ReactDOM.createPortal(
       <div
         onClick={onClose}
@@ -385,24 +392,13 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           onClick={e => e.stopPropagation()}
           style={{ width: '100%', maxWidth: '900px', aspectRatio: '16/9' }}
         >
-          {isDirectMp4 ? (
-            <video
-              key={realVideoUrl}
-              src={realVideoUrl}
-              controls
-              autoPlay
-              playsInline
-              style={{ width: '100%', height: '100%', borderRadius: '12px', background: '#000', display: 'block' }}
-            />
-          ) : (
-            <iframe
-              src={getEmbedSrc(realVideoUrl)}
-              title={article.headline}
-              style={{ width: '100%', height: '100%', borderRadius: '12px', border: 'none' }}
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            />
-          )}
+          <iframe
+            src={getEmbedSrc(realVideoUrl)}
+            title={article.headline}
+            style={{ width: '100%', height: '100%', borderRadius: '12px', border: 'none' }}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
         </div>
       </div>,
       document.body
