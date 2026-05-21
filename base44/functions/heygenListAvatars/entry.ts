@@ -66,6 +66,21 @@ Deno.serve(async (req) => {
     const r5 = await safeFetch('https://api.heygen.com/v1/user/remaining_quota', headers);
     console.log('=== ACCOUNT QUOTA:', JSON.stringify(r5.data, null, 2));
 
+    // 6. /v2/video_avatar — instant clone / video avatar list
+    const r6 = await safeFetch('https://api.heygen.com/v2/video_avatar', headers);
+    console.log('=== RAW /v2/video_avatar:', JSON.stringify(r6.data, null, 2));
+
+    // 7. /v1/avatars?include_private=true — force private/cloned avatars
+    const r7 = await safeFetch('https://api.heygen.com/v1/avatars?include_private=true', headers);
+    console.log('=== RAW /v1/avatars?include_private=true:', JSON.stringify(r7.data, null, 2));
+
+    // 8. /v2/avatars?include_private=true
+    const r8 = await safeFetch('https://api.heygen.com/v2/avatars?include_private=true', headers);
+    console.log('=== RAW /v2/avatars?include_private:', JSON.stringify(r8.data?.data?.avatars?.length, null, 2));
+    const privateAvatars = r8.data?.data?.avatars || [];
+    const privateOnly = privateAvatars.filter(a => !allAvatars.find(b => b.avatar_id === a.avatar_id));
+    console.log('=== PRIVATE-ONLY AVATARS (not in public list):', JSON.stringify(privateOnly, null, 2));
+
     // Search ALL avatars for "bob", "dyson", "news" in name/id
     const nameSearch = allAvatars.filter(a => {
       const id = (a.avatar_id || '').toLowerCase();
