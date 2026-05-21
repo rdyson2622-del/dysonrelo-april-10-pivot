@@ -372,18 +372,27 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 
   if (isFullscreen) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={onClose}>
         <button onClick={onClose}
           className="absolute top-6 right-6 text-white hover:opacity-70 transition-opacity z-10"
           style={{ fontSize: '2rem' }}>✕</button>
-        <div className="w-full max-w-4xl aspect-video">
+        <div className="w-full max-w-4xl aspect-video flex flex-col items-center justify-center gap-4" onClick={e => e.stopPropagation()}>
           {isDirectMp4 ? (
-            <video
-              src={realVideoUrl}
-              controls
-              autoPlay
-              className="w-full h-full rounded-xl"
-            />
+            <>
+              <video
+                key={realVideoUrl}
+                src={realVideoUrl}
+                controls
+                autoPlay
+                playsInline
+                crossOrigin="anonymous"
+                className="w-full h-full rounded-xl bg-black"
+              />
+              <a href={realVideoUrl} target="_blank" rel="noreferrer"
+                className="text-xs underline mt-2" style={{ color: '#D4AF37' }}>
+                ↗ Open video in new tab if it doesn't load
+              </a>
+            </>
           ) : (
             <iframe
               src={getEmbedSrc(realVideoUrl)}
@@ -402,7 +411,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
     <div
       className={`relative w-full aspect-video rounded-xl overflow-hidden group ${realVideoUrl ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
-      onClick={article.video_url && !article.video_url.startsWith('heygen:pending:') ? onExpand : undefined}
+      onClick={isDirectMp4 ? () => window.open(realVideoUrl, '_blank') : onExpand}
 
     >
       {thumbnail ? (
