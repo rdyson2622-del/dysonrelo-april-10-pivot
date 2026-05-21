@@ -388,10 +388,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
                 crossOrigin="anonymous"
                 className="w-full h-full rounded-xl bg-black"
               />
-              <a href={realVideoUrl} target="_blank" rel="noreferrer"
-                className="text-xs underline mt-2" style={{ color: '#D4AF37' }}>
-                ↗ Open video in new tab if it doesn't load
-              </a>
+
             </>
           ) : (
             <iframe
@@ -411,7 +408,7 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
     <div
       className={`relative w-full aspect-video rounded-xl overflow-hidden group ${realVideoUrl ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
-      onClick={isDirectMp4 ? () => window.open(realVideoUrl, '_blank') : onExpand}
+      onClick={onExpand}
 
     >
       {thumbnail ? (
@@ -478,6 +475,12 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 // --- Main Page ---
 // v2
 export default function ConsumerDnnNews() {
+  const HARDCODED_VIDEO = {
+    id: '__hardcoded__',
+    headline: 'DNN Intelligence Report',
+    video_url: 'https://files2.heygen.ai/aws_pacific/avatar_tmp/33dec76283f44f80b7d658cc9060acbb/1734e301414441b38f71769668a49040.mp4',
+  };
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [fullscreenVideo, setFullscreenVideo] = useState(null);
   const [editingArticle, setEditingArticle] = useState(null);
@@ -644,22 +647,13 @@ export default function ConsumerDnnNews() {
                     ))}
                 </div>
               ) : (
-                <div className="rounded-xl overflow-hidden w-full aspect-video relative group" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
-                  <video
-                    controls
-                    playsInline
-                    className="w-full h-full"
-                    style={{ background: '#000' }}
-                    poster="https://dynamic.heygen.ai/aws_pacific/avatar_tmp/33dec76283f44f80b7d658cc9060acbb/1734e301414441b38f71769668a49040.jpeg"
-                    src="https://files2.heygen.ai/aws_pacific/avatar_tmp/33dec76283f44f80b7d658cc9060acbb/1734e301414441b38f71769668a49040.mp4"
-                  />
-                  <div className="absolute top-2 left-2 pointer-events-none flex items-center gap-1.5 px-2 py-1 rounded-lg"
-                    style={{ background: 'rgba(0,0,0,0.65)', border: '1px solid rgba(212,175,55,0.4)', backdropFilter: 'blur(4px)' }}>
-                    <img src={DNN_LOGO} alt="DNN" className="h-4 w-auto" />
-                    <span className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>LIVE</span>
-                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
-                  </div>
-                </div>
+                <VideoThumbnail
+                  article={HARDCODED_VIDEO}
+                  isFullscreen={fullscreenVideo?.id === '__hardcoded__'}
+                  onExpand={() => setFullscreenVideo(HARDCODED_VIDEO)}
+                  onClose={() => setFullscreenVideo(null)}
+                  isAdmin={false}
+                />
               )}
             </div>
 
