@@ -157,13 +157,16 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
 
+  // Sections that are always open by default (never collapsed on first visit)
+  const DEFAULT_OPEN = new Set(['dnn']);
+
   const [openSections, setOpenSections] = useState(() => {
     const saved = loadOpenState();
     const initial = {};
     NAV_SECTIONS.forEach(s => {
       const hasActive = getSectionPaths(s).some(p => location.pathname === p || location.pathname.startsWith(p));
-      // Use saved state if it exists, otherwise auto-open if active
-      initial[s.key] = saved[s.key] !== undefined ? saved[s.key] : hasActive;
+      // Use saved state if it exists, otherwise auto-open if active OR in default-open set
+      initial[s.key] = saved[s.key] !== undefined ? saved[s.key] : (hasActive || DEFAULT_OPEN.has(s.key));
     });
     return initial;
   });
