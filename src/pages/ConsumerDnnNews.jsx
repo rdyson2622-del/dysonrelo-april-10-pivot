@@ -644,14 +644,15 @@ export default function ConsumerDnnNews() {
                     ))}
                 </div>
               ) : (
-                <div className="rounded-xl p-6 text-center space-y-3" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
-                  <div className="w-12 h-12 rounded-full mx-auto flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#D4AF37', marginLeft: '2px' }}>
-                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                    </svg>
-                  </div>
-                  <p className="text-xs font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Videos Coming Soon</p>
-                  <p className="text-[11px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.3)' }}>DNN anchor videos are produced in the Studio and will appear here automatically.</p>
+                <div className="rounded-xl overflow-hidden w-full aspect-video" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  <video
+                    controls
+                    playsInline
+                    className="w-full h-full object-cover"
+                    style={{ background: '#000' }}
+                  >
+                    <source src="" type="video/mp4" />
+                  </video>
                 </div>
               )}
             </div>
