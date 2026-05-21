@@ -249,33 +249,12 @@ function AudioPlayer({ url }) {
 }
 
 // --- Compact Article Card (text briefs) ---
-function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onGenerateVideo, onCheckVideo }) {
+function CompactArticleCard({ article, isAdmin, onEdit, onDelete }) {
   const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(false);
-  const [videoMsg, setVideoMsg] = useState(null);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
   const label = TRIGGER_LABELS[article.trigger_type] || 'GENERAL';
-  const isPending = article.video_url?.startsWith('heygen:pending:');
-  const hasVideo = article.video_url && !isPending;
-  const videoId = isPending ? article.video_url.replace('heygen:pending:', '') : null;
-
-  const handleGenerate = async () => {
-    setVideoLoading(true);
-    setVideoMsg(null);
-    const res = await onGenerateVideo(article.id);
-    setVideoMsg(res?.video_id ? '⏳ Rendering... click "Check" in ~3 min' : `✗ ${res?.error || 'Failed'}`);
-    setVideoLoading(false);
-  };
-
-  const handleCheck = async () => {
-    setVideoLoading(true);
-    setVideoMsg(null);
-    const res = await onCheckVideo(videoId, article.id);
-    setVideoMsg(res?.status === 'completed' ? '✓ Video ready! Refresh to see it.' : res?.status === 'failed' ? `✗ Render failed` : '⏳ Still rendering...');
-    setVideoLoading(false);
-  };
 
   return (
     <div className="rounded-xl p-4 transition-all relative group"
@@ -316,30 +295,6 @@ function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onGenerateVide
       </h3>
 
       {article.audio_url && <AudioPlayer url={article.audio_url} />}
-
-      {/* Admin video controls */}
-      {isAdmin && (
-        <div className="mt-2 mb-1 flex items-center gap-2 flex-wrap">
-          {!hasVideo && !isPending && (
-            <button onClick={handleGenerate} disabled={videoLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-black text-black disabled:opacity-50 transition-all hover:opacity-80"
-              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-              {videoLoading ? '⏳' : '🎬'} {videoLoading ? 'Submitting...' : 'Generate Video'}
-            </button>
-          )}
-          {isPending && (
-            <button onClick={handleCheck} disabled={videoLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-black disabled:opacity-50 transition-all hover:opacity-80"
-              style={{ background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24' }}>
-              {videoLoading ? '⏳' : '🔄'} {videoLoading ? 'Checking...' : 'Check Status'}
-            </button>
-          )}
-          {hasVideo && (
-            <span className="text-[11px] font-bold" style={{ color: '#4ade80' }}>✓ Video Ready</span>
-          )}
-          {videoMsg && <span className="text-[10px]" style={{ color: videoMsg.startsWith('✓') ? '#4ade80' : videoMsg.startsWith('⏳') ? '#fbbf24' : '#f87171' }}>{videoMsg}</span>}
-        </div>
-      )}
 
       <button
         onClick={() => setShowText(v => !v)}
@@ -572,22 +527,6 @@ export default function ConsumerDnnNews() {
     queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
   };
 
-  const handleGenerateVideo = async (articleId) => {
-    const res = await base44.functions.invoke('heygenRenderVideo', { article_id: articleId, avatar_id: 'Adrian_public_2_20240312' });
-    queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
-    queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
-    return res.data;
-  };
-
-  const handleCheckVideo = async (videoId, articleId) => {
-    const res = await base44.functions.invoke('heygenCheckVideo', { video_id: videoId, article_id: articleId });
-    if (res.data?.status === 'completed') {
-      queryClient.invalidateQueries({ queryKey: ['dnnArticlesConsumer'] });
-      queryClient.invalidateQueries({ queryKey: ['dnnArticlesBlasted'] });
-    }
-    return res.data;
-  };
-
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ['dnnArticlesConsumer'],
     queryFn: () => base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 50),
@@ -679,8 +618,6 @@ export default function ConsumerDnnNews() {
                       isAdmin={isAdmin}
                       onEdit={handleEditArticle}
                       onDelete={handleDeleteArticle}
-                      onGenerateVideo={handleGenerateVideo}
-                      onCheckVideo={handleCheckVideo}
                     />
                   ))}
                 </div>

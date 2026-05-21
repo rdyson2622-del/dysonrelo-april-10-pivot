@@ -158,7 +158,7 @@ export default function AdminSidebar() {
   const [pageCode, setPageCode] = useState('');
 
   // Sections that are always open by default (never collapsed on first visit)
-  const DEFAULT_OPEN = new Set(['dnn']);
+  const DEFAULT_OPEN = new Set(['dnn', 'dnn']);
 
   const [openSections, setOpenSections] = useState(() => {
     const saved = loadOpenState();
