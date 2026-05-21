@@ -626,24 +626,29 @@ export default function ConsumerDnnNews() {
               )}
             </div>
 
-            {/* Featured Videos — always present right column */}
-            <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
-              <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
-              <div className="space-y-3">
-                {allArticles.slice(0, 10).map(article => (
-                  <VideoThumbnail
-                    key={article.id}
-                    article={article}
-                    isFullscreen={fullscreenVideo?.id === article.id}
-                    onExpand={() => setFullscreenVideo(article)}
-                    onClose={() => setFullscreenVideo(null)}
-                    isAdmin={isAdmin}
-                    onEdit={handleEditArticle}
-                    onDelete={handleDeleteArticle}
-                  />
-                ))}
+            {/* Featured Videos — only articles with real video URLs */}
+            {allArticles.some(a => a.video_url && !a.video_url.startsWith('heygen:pending:')) && (
+              <div className="hidden lg:block shrink-0 space-y-3 w-[350px]">
+                <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>Featured Videos</p>
+                <div className="space-y-3">
+                  {allArticles
+                    .filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'))
+                    .slice(0, 10)
+                    .map(article => (
+                      <VideoThumbnail
+                        key={article.id}
+                        article={article}
+                        isFullscreen={fullscreenVideo?.id === article.id}
+                        onExpand={() => setFullscreenVideo(article)}
+                        onClose={() => setFullscreenVideo(null)}
+                        isAdmin={isAdmin}
+                        onEdit={handleEditArticle}
+                        onDelete={handleDeleteArticle}
+                      />
+                    ))}
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
         )}
