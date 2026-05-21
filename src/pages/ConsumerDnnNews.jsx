@@ -481,7 +481,7 @@ export default function ConsumerDnnNews() {
   const HARDCODED_VIDEO = {
     id: '__hardcoded__',
     headline: 'DNN Intelligence Report',
-    video_url: 'https://app.heygen.com/embeds/1734e301414441b38f71769668a49040',
+    video_url: 'https://app.heygen.com/embeds/1b0ea329a2d448079a01f67ea3559ac6',
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
