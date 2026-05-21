@@ -379,7 +379,10 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
           controls
           autoPlay
           playsInline
+          preload="auto"
+          crossOrigin="anonymous"
           style={{ width: '100%', display: 'block', borderRadius: '12px' }}
+          onError={() => { window.open(realVideoUrl, '_blank'); setPlaying(false); }}
         />
         <button
           onClick={() => setPlaying(false)}
