@@ -341,30 +341,6 @@ function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onGenerateVide
         </div>
       )}
 
-      {/* Admin video controls */}
-      {isAdmin && (
-        <div className="flex items-center gap-2 mt-2 flex-wrap">
-          {!hasVideo && !isPending && (
-            <button onClick={handleGenerate} disabled={videoLoading}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black transition-all disabled:opacity-50"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
-              {videoLoading ? '⏳' : '🎬'} {videoLoading ? 'Submitting...' : 'Generate Video'}
-            </button>
-          )}
-          {isPending && (
-            <button onClick={handleCheck} disabled={videoLoading}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black transition-all disabled:opacity-50"
-              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.35)' }}>
-              {videoLoading ? '⏳' : '🔄'} {videoLoading ? 'Checking...' : 'Check Status'}
-            </button>
-          )}
-          {hasVideo && (
-            <span className="text-[10px] font-bold" style={{ color: '#4ade80' }}>✓ Video Ready</span>
-          )}
-          {videoMsg && <span className="text-[10px]" style={{ color: videoMsg.startsWith('✓') ? '#4ade80' : videoMsg.startsWith('✗') ? '#f87171' : '#fbbf24' }}>{videoMsg}</span>}
-        </div>
-      )}
-
       <button
         onClick={() => setShowText(v => !v)}
         className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase mb-2 mt-2"
