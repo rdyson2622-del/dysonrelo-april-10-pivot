@@ -364,6 +364,7 @@ function getEmbedSrc(url) {
 // --- Video Thumbnail Card ---
 function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onEdit, onDelete }) {
   const realVideoUrl = article.video_url && !article.video_url.startsWith('heygen:pending:') ? article.video_url : null;
+  const isDirectMp4 = realVideoUrl && (realVideoUrl.includes('.mp4') || realVideoUrl.includes('heygen.ai'));
   const thumbnail = getYouTubeThumbnail(realVideoUrl);
 
   if (isFullscreen && realVideoUrl) {
@@ -373,13 +374,22 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
           className="absolute top-6 right-6 text-white hover:opacity-70 transition-opacity z-10"
           style={{ fontSize: '2rem' }}>✕</button>
         <div className="w-full max-w-4xl aspect-video">
-          <iframe
-            src={getEmbedSrc(realVideoUrl)}
-            title={article.headline}
-            className="w-full h-full rounded-xl"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-          />
+          {isDirectMp4 ? (
+            <video
+              src={realVideoUrl}
+              controls
+              autoPlay
+              className="w-full h-full rounded-xl"
+            />
+          ) : (
+            <iframe
+              src={getEmbedSrc(realVideoUrl)}
+              title={article.headline}
+              className="w-full h-full rounded-xl"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+          )}
         </div>
       </div>
     );
@@ -387,13 +397,25 @@ function VideoThumbnail({ article, isFullscreen, onExpand, onClose, isAdmin, onE
 
   return (
     <div
-      className={`relative w-full aspect-video rounded-xl overflow-hidden group ${article.video_url && !article.video_url.startsWith('heygen:pending:') ? 'cursor-pointer' : 'cursor-default'}`}
+      className={`relative w-full aspect-video rounded-xl overflow-hidden group ${realVideoUrl ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
       onClick={article.video_url && !article.video_url.startsWith('heygen:pending:') ? onExpand : undefined}
 
     >
       {thumbnail ? (
         <img src={thumbnail} alt={article.headline} className="w-full h-full object-cover" />
+      ) : isDirectMp4 ? (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4"
+          style={{ background: 'linear-gradient(135deg, #1c1c1c 0%, #141414 100%)' }}>
+          <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+            style={{ background: 'rgba(212,175,55,0.92)', boxShadow: '0 0 40px rgba(212,175,55,0.3)' }}>
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#000', marginLeft: '3px' }}>
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+            </svg>
+          </div>
+          <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: '#D4AF37' }}>▶ Play Video</p>
+          <p className="text-[9px] text-center leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{article.headline}</p>
+        </div>
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4"
           style={{ background: 'linear-gradient(135deg, #1c1c1c 0%, #141414 100%)' }}>
