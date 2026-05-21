@@ -1,316 +1,296 @@
-import React, { useState, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Video, Mic, FileText, RefreshCw, Play, Clock, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { ArrowLeft, Video, Mic, FileText, RefreshCw, Play, Clock, CheckCircle, AlertCircle, Loader, Trash2, RotateCcw } from 'lucide-react';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 
-const STATUS_STYLE = {
-  published:  { color: '#4ade80', bg: 'rgba(74,222,128,0.12)', label: 'Published' },
-  blasted:    { color: '#60a5fa', bg: 'rgba(96,165,250,0.12)', label: 'Blasted' },
-  staged:     { color: '#fbbf24', bg: 'rgba(251,191,36,0.12)', label: 'Staged' },
-  archived:   { color: '#6b7280', bg: 'rgba(107,114,128,0.12)', label: 'Archived' },
-};
+// Default avatar — can be changed here
+const DEFAULT_AVATAR_ID = 'Adrian_public_2_20240312';
 
-function StatusBadge({ status }) {
-  const s = STATUS_STYLE[status] || STATUS_STYLE.staged;
+function StatusBadge({ label, color, bg }) {
   return (
     <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full"
-      style={{ background: s.bg, color: s.color }}>
-      {s.label}
+      style={{ background: bg, color }}>
+      {label}
     </span>
   );
 }
 
-function VideoAssetCard({ article }) {
+function VideoCard({ article, onRender, onCheck, onClearVideo }) {
   const isPending = article.video_url?.startsWith('heygen:pending:');
   const hasVideo = article.video_url && !isPending;
+  const videoId = isPending ? article.video_url.replace('heygen:pending:', '') : null;
 
-  return (
-    <div className="rounded-xl p-4 flex gap-4 items-start"
-      style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
-      {/* Thumbnail */}
-      <div className="w-28 h-16 rounded-lg shrink-0 flex items-center justify-center overflow-hidden"
-        style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}>
-        {hasVideo ? (
-          <a href={article.video_url} target="_blank" rel="noreferrer"
-            className="w-full h-full flex items-center justify-center hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(212,175,55,0.9)' }}>
-              <Play className="w-4 h-4 text-black ml-0.5" />
-            </div>
-          </a>
-        ) : isPending ? (
-          <div className="flex flex-col items-center gap-1">
-            <Loader className="w-5 h-5 animate-spin" style={{ color: '#D4AF37' }} />
-            <p className="text-[9px] text-slate-600">Rendering</p>
-          </div>
-        ) : (
-          <p className="text-[9px] text-slate-700 text-center px-1">No video</p>
-        )}
-      </div>
+  const [rendering, setRendering] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [checkResult, setCheckResult] = useState(null);
 
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <StatusBadge status={article.status} />
-          {isPending && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }}>
-              ⏳ HeyGen Rendering
-            </span>
-          )}
-          {hasVideo && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80' }}>
-              ✓ Video Ready
-            </span>
-          )}
-        </div>
-        <p className="text-sm font-bold text-white leading-snug mb-1 truncate">{article.headline}</p>
-        <p className="text-[10px] text-slate-500">{article.dateline}</p>
-        {isPending && (
-          <p className="text-[10px] mt-1 font-mono" style={{ color: '#D4AF37' }}>
-            ID: {article.video_url?.replace('heygen:pending:', '')}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
+  const handleRender = async () => {
+    setRendering(true);
+    setCheckResult(null);
+    await onRender(article.id);
+    setRendering(false);
+  };
 
-function AudioScriptCard({ article }) {
-  const [playing, setPlaying] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const audioRef = React.useRef(null);
-
-  const handlePlay = async () => {
-    if (playing) { audioRef.current?.pause(); setPlaying(false); return; }
-    setLoading(true);
-    const scriptText = `${article.headline}. ${article.body}`.slice(0, 800);
-    const res = await base44.functions.invoke('charlieSpeak', { text: scriptText });
-    const audioContent = res.data?.audio;
-    if (audioContent) {
-      const blob = new Blob([Uint8Array.from(atob(audioContent), c => c.charCodeAt(0))], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      audio.onended = () => setPlaying(false);
-      audio.play();
-      setPlaying(true);
-    }
-    setLoading(false);
+  const handleCheck = async () => {
+    setChecking(true);
+    setCheckResult(null);
+    const result = await onCheck(videoId, article.id);
+    setCheckResult(result);
+    setChecking(false);
   };
 
   return (
-    <div className="rounded-xl p-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex-1 min-w-0">
-          <StatusBadge status={article.status} />
-          <p className="text-sm font-bold text-white mt-1 leading-snug">{article.headline}</p>
-          <p className="text-[10px] text-slate-500 mt-0.5">
-            {article.trigger_type?.replace(/_/g, ' ')} · {new Date(article.generated_date || article.created_date).toLocaleDateString()}
-          </p>
-        </div>
-        <button onClick={handlePlay} disabled={loading}
-          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-50"
-          style={{ background: playing ? 'rgba(212,175,55,0.3)' : 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)' }}>
-          {loading ? <Loader className="w-4 h-4 animate-spin" style={{ color: '#D4AF37' }} />
-            : playing ? <span style={{ color: '#D4AF37', fontSize: '10px', fontWeight: 900 }}>■</span>
-            : <Play className="w-4 h-4 ml-0.5" style={{ color: '#D4AF37' }} />}
-        </button>
+    <div className="rounded-xl p-4 space-y-3"
+      style={{ background: '#1a1a1a', border: `1px solid ${hasVideo ? 'rgba(74,222,128,0.25)' : isPending ? 'rgba(251,191,36,0.25)' : 'rgba(255,255,255,0.07)'}` }}>
+
+      {/* Status row */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {hasVideo && <StatusBadge label="✓ Video Ready" color="#4ade80" bg="rgba(74,222,128,0.12)" />}
+        {isPending && <StatusBadge label="⏳ Rendering" color="#fbbf24" bg="rgba(251,191,36,0.12)" />}
+        {!hasVideo && !isPending && <StatusBadge label="No Video" color="#6b7280" bg="rgba(107,114,128,0.12)" />}
+        <span className="text-[10px] text-slate-600 ml-auto">{article.status}</span>
       </div>
-      <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">{article.body?.split('\n')[0]}</p>
-      {article.audio_url && (
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-[10px] font-bold" style={{ color: '#4ade80' }}>✓ Audio Cached</span>
-          <audio controls className="h-6 flex-1" style={{ accentColor: '#D4AF37' }}>
-            <source src={article.audio_url} />
-          </audio>
+
+      {/* Headline */}
+      <p className="text-sm font-bold text-white leading-snug">{article.headline}</p>
+      <p className="text-[10px] text-slate-600">{article.dateline} · {article.trigger_type?.replace(/_/g, ' ')}</p>
+
+      {/* Video preview */}
+      {hasVideo && (
+        <div className="flex items-center gap-2">
+          <a href={article.video_url} target="_blank" rel="noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-80"
+            style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.3)' }}>
+            <Play className="w-3 h-3" /> Play Video
+          </a>
+          <button onClick={() => onClearVideo(article.id)}
+            className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs text-slate-600 transition-all hover:text-red-400 hover:bg-red-400/10">
+            <RotateCcw className="w-3 h-3" /> Re-render
+          </button>
         </div>
+      )}
+
+      {/* Pending: show check button */}
+      {isPending && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-mono text-yellow-700">Job ID: {videoId?.slice(0, 20)}...</p>
+          <button onClick={handleCheck} disabled={checking}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-80 disabled:opacity-50"
+            style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}>
+            {checking ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+            {checking ? 'Checking...' : 'Check Status'}
+          </button>
+          {checkResult && (
+            <p className="text-xs" style={{ color: checkResult.status === 'completed' ? '#4ade80' : checkResult.status === 'failed' ? '#f87171' : '#fbbf24' }}>
+              {checkResult.status === 'completed' ? '✓ Done! Refresh page to see video.' :
+               checkResult.status === 'failed' ? `✗ Failed: ${checkResult.detail || 'unknown error'}` :
+               `Still rendering (${checkResult.status})...`}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* No video: render button */}
+      {!hasVideo && !isPending && (
+        <button onClick={handleRender} disabled={rendering}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-80 disabled:opacity-50"
+          style={{ background: 'rgba(212,175,55,0.12)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}>
+          {rendering ? <Loader className="w-3 h-3 animate-spin" /> : <Video className="w-3 h-3" />}
+          {rendering ? 'Submitting to HeyGen...' : 'Generate Video'}
+        </button>
       )}
     </div>
   );
 }
 
-function StatCard({ icon: Icon, label, value, color }) {
-  return (
-    <div className="rounded-xl p-4 flex items-center gap-4"
-      style={{ background: '#1a1a1a', border: `1px solid ${color}30` }}>
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-        style={{ background: `${color}18` }}>
-        <Icon className="w-5 h-5" style={{ color }} />
-      </div>
-      <div>
-        <p className="text-2xl font-black text-white">{value}</p>
-        <p className="text-xs text-slate-500">{label}</p>
-      </div>
-    </div>
-  );
-}
-
 export default function DnnStudioDashboard() {
+  const queryClient = useQueryClient();
+  const [globalMessage, setGlobalMessage] = useState(null);
+
   const { data: allArticles = [], isLoading, refetch } = useQuery({
     queryKey: ['dnnStudioAll'],
     queryFn: () => base44.entities.DnnArticle.list('-generated_date', 100),
-    refetchInterval: 30000,
+    refetchInterval: 60000,
   });
 
   const published = allArticles.filter(a => a.status === 'published' || a.status === 'blasted');
-  const staged = allArticles.filter(a => a.status === 'staged');
   const withVideo = allArticles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
   const pending = allArticles.filter(a => a.video_url?.startsWith('heygen:pending:'));
-  const withAudio = allArticles.filter(a => a.audio_url);
+  const noVideo = allArticles.filter(a => !a.video_url || a.video_url === '');
+
+  const handleRender = async (articleId) => {
+    setGlobalMessage(null);
+    const res = await base44.functions.invoke('heygenRenderVideo', {
+      article_id: articleId,
+      avatar_id: DEFAULT_AVATAR_ID,
+    });
+    if (res.data?.video_id) {
+      setGlobalMessage({ type: 'success', text: `✓ Render job submitted. Job ID: ${res.data.video_id}. Check status in ~2-3 minutes.` });
+    } else {
+      setGlobalMessage({ type: 'error', text: `✗ Render failed: ${res.data?.error || 'Unknown error'}` });
+    }
+    refetch();
+    return res.data;
+  };
+
+  const handleCheck = async (videoId, articleId) => {
+    const res = await base44.functions.invoke('heygenCheckVideo', { video_id: videoId, article_id: articleId });
+    if (res.data?.status === 'completed') {
+      refetch();
+    }
+    return res.data;
+  };
+
+  const handleClearVideo = async (articleId) => {
+    if (!confirm('This will clear the current video URL so you can re-render. Continue?')) return;
+    await base44.entities.DnnArticle.update(articleId, { video_url: null });
+    refetch();
+  };
+
+  const handleCheckAllPending = async () => {
+    setGlobalMessage({ type: 'info', text: `Checking ${pending.length} pending render(s)...` });
+    let completed = 0;
+    for (const article of pending) {
+      const videoId = article.video_url.replace('heygen:pending:', '');
+      const res = await base44.functions.invoke('heygenCheckVideo', { video_id: videoId, article_id: article.id });
+      if (res.data?.status === 'completed') completed++;
+    }
+    setGlobalMessage({ type: 'success', text: `Check complete. ${completed} of ${pending.length} render(s) finished.` });
+    refetch();
+  };
 
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d' }}>
+
       {/* Header */}
       <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-4"
-        style={{ background: 'rgba(13,13,13,0.95)', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
+        style={{ background: 'rgba(13,13,13,0.97)', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
         <div className="flex items-center gap-4">
-          <Link to="/admin">
-            <button className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:opacity-70"
+          <Link to="/admin/dnn/news-feed">
+            <button className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70"
               style={{ background: 'rgba(255,255,255,0.07)' }}>
               <ArrowLeft className="w-4 h-4 text-white" />
             </button>
           </Link>
           <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
           <div>
-            <p className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Studio Dashboard</p>
-            <p className="text-[10px] tracking-widest uppercase text-slate-600">Production · Audio · Video</p>
+            <p className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>DNN Studio</p>
+            <p className="text-[10px] tracking-widest uppercase text-slate-600">Video Production Control Panel</p>
           </div>
         </div>
         <button onClick={() => refetch()}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-80"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold hover:opacity-80"
           style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
           <RefreshCw className="w-3 h-3" /> Refresh
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={FileText} label="Total Articles" value={allArticles.length} color="#D4AF37" />
-          <StatCard icon={CheckCircle} label="Published / Blasted" value={published.length} color="#4ade80" />
-          <StatCard icon={Video} label="Videos Ready" value={withVideo.length} color="#60a5fa" />
-          <StatCard icon={Mic} label="Audio Cached" value={withAudio.length} color="#c084fc" />
-        </div>
-
-        {/* Pending renders alert */}
-        {pending.length > 0 && (
-          <div className="rounded-xl px-5 py-4 flex items-center gap-3"
-            style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)' }}>
-            <Loader className="w-5 h-5 animate-spin shrink-0" style={{ color: '#fbbf24' }} />
-            <div>
-              <p className="text-sm font-bold" style={{ color: '#fbbf24' }}>{pending.length} HeyGen render{pending.length > 1 ? 's' : ''} in progress</p>
-              <p className="text-xs text-slate-500">Dashboard auto-refreshes every 30s. Run <code className="text-yellow-600">heygenCheckVideo</code> to poll manually.</p>
-            </div>
-          </div>
-        )}
-
-        <div className="grid lg:grid-cols-2 gap-8">
-
-          {/* Video Assets */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Video className="w-4 h-4" style={{ color: '#60a5fa' }} />
-              <p className="text-sm font-black tracking-[0.2em] uppercase text-white">Video Assets</p>
-              <span className="text-xs px-2 py-0.5 rounded-full font-bold ml-auto"
-                style={{ background: 'rgba(96,165,250,0.12)', color: '#60a5fa' }}>
-                {withVideo.length + pending.length} total
-              </span>
-            </div>
-            {isLoading ? (
-              <div className="flex justify-center py-12">
-                <Loader className="w-6 h-6 animate-spin" style={{ color: '#D4AF37' }} />
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {[...pending, ...withVideo].length > 0
-                  ? [...pending, ...withVideo].slice(0, 10).map(a => <VideoAssetCard key={a.id} article={a} />)
-                  : (
-                    <div className="rounded-xl p-8 text-center" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <Video className="w-8 h-8 mx-auto mb-3 opacity-20 text-white" />
-                      <p className="text-sm text-slate-600">No video assets yet.</p>
-                      <p className="text-xs text-slate-700 mt-1">Run <code>heygenRenderVideo</code> with an article ID + HeyGen avatar ID to generate the first video.</p>
-                    </div>
-                  )}
-              </div>
-            )}
-          </div>
-
-          {/* Audio / Script Status */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Mic className="w-4 h-4" style={{ color: '#c084fc' }} />
-              <p className="text-sm font-black tracking-[0.2em] uppercase text-white">Scripts & Audio</p>
-              <span className="text-xs px-2 py-0.5 rounded-full font-bold ml-auto"
-                style={{ background: 'rgba(192,132,252,0.12)', color: '#c084fc' }}>
-                {allArticles.length} scripts
-              </span>
-            </div>
-            {isLoading ? (
-              <div className="flex justify-center py-12">
-                <Loader className="w-6 h-6 animate-spin" style={{ color: '#D4AF37' }} />
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {allArticles.slice(0, 10).map(a => <AudioScriptCard key={a.id} article={a} />)}
-                {allArticles.length === 0 && (
-                  <div className="rounded-xl p-8 text-center" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <FileText className="w-8 h-8 mx-auto mb-3 opacity-20 text-white" />
-                    <p className="text-sm text-slate-600">No articles found.</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Staged Queue */}
-        {staged.length > 0 && (
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-4 h-4" style={{ color: '#fbbf24' }} />
-              <p className="text-sm font-black tracking-[0.2em] uppercase text-white">Staged Queue</p>
-              <span className="text-xs px-2 py-0.5 rounded-full font-bold ml-auto"
-                style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }}>
-                {staged.length} pending publish
-              </span>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {staged.map(a => (
-                <div key={a.id} className="rounded-xl p-4" style={{ background: '#1a1a1a', border: '1px solid rgba(251,191,36,0.15)' }}>
-                  <StatusBadge status="staged" />
-                  <p className="text-sm font-bold text-white mt-2 leading-snug">{a.headline}</p>
-                  <p className="text-[10px] text-slate-500 mt-1">{a.trigger_type?.replace(/_/g, ' ')}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Pipeline Status */}
-        <div className="rounded-xl p-6" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.15)' }}>
-          <p className="text-sm font-black tracking-[0.2em] uppercase mb-4" style={{ color: '#D4AF37' }}>Pipeline Status</p>
-          <div className="grid sm:grid-cols-3 gap-4">
+        {/* How it works */}
+        <div className="rounded-xl p-5" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: '#D4AF37' }}>How Video Production Works</p>
+          <div className="grid sm:grid-cols-3 gap-3">
             {[
-              { step: '1. Charon Audio', fn: 'charlieSpeak', status: 'live', color: '#4ade80' },
-              { step: '2. HeyGen Render', fn: 'heygenRenderVideo', status: 'pending key', color: '#fbbf24' },
-              { step: '3. Video Playback', fn: 'DNN News Feed', status: 'live', color: '#4ade80' },
-            ].map(p => (
-              <div key={p.step} className="rounded-lg p-3" style={{ background: 'rgba(0,0,0,0.4)', border: `1px solid ${p.color}25` }}>
-                <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: p.color }}>
-                  {p.status === 'live' ? '✓ LIVE' : '⚠ PENDING KEY'}
-                </p>
-                <p className="text-sm font-bold text-white">{p.step}</p>
-                <p className="text-[10px] text-slate-600 mt-0.5 font-mono">{p.fn}</p>
+              { n: '1', title: 'Click "Generate Video"', desc: 'Submits the article text + HeyGen avatar to render a talking-head MP4. Takes ~2-5 minutes.' },
+              { n: '2', title: 'Click "Check Status"', desc: 'Polls HeyGen. When done, the MP4 is downloaded and saved permanently to DNN storage.' },
+              { n: '3', title: 'Video appears on DNN News', desc: 'The permanent URL is saved to the article. It will never expire or go dead.' },
+            ].map(s => (
+              <div key={s.n} className="rounded-lg p-3 flex gap-3 items-start" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                <div className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs font-black text-black"
+                  style={{ background: '#D4AF37' }}>{s.n}</div>
+                <div>
+                  <p className="text-xs font-bold text-white">{s.title}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Global message */}
+        {globalMessage && (
+          <div className="rounded-xl px-5 py-4 flex items-start gap-3"
+            style={{
+              background: globalMessage.type === 'error' ? 'rgba(248,113,113,0.1)' : globalMessage.type === 'success' ? 'rgba(74,222,128,0.1)' : 'rgba(251,191,36,0.1)',
+              border: `1px solid ${globalMessage.type === 'error' ? 'rgba(248,113,113,0.3)' : globalMessage.type === 'success' ? 'rgba(74,222,128,0.3)' : 'rgba(251,191,36,0.3)'}`
+            }}>
+            <p className="text-sm" style={{ color: globalMessage.type === 'error' ? '#f87171' : globalMessage.type === 'success' ? '#4ade80' : '#fbbf24' }}>
+              {globalMessage.text}
+            </p>
+            <button onClick={() => setGlobalMessage(null)} className="ml-auto text-slate-600 hover:text-white text-xs">✕</button>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { label: 'Total Articles', value: allArticles.length, color: '#D4AF37', icon: FileText },
+            { label: 'Videos Ready', value: withVideo.length, color: '#4ade80', icon: CheckCircle },
+            { label: 'Rendering', value: pending.length, color: '#fbbf24', icon: Loader },
+            { label: 'Need Video', value: noVideo.length, color: '#f87171', icon: AlertCircle },
+          ].map(s => (
+            <div key={s.label} className="rounded-xl p-4 flex items-center gap-3"
+              style={{ background: '#1a1a1a', border: `1px solid ${s.color}25` }}>
+              <s.icon className="w-5 h-5 shrink-0" style={{ color: s.color }} />
+              <div>
+                <p className="text-xl font-black text-white">{s.value}</p>
+                <p className="text-[11px] text-slate-600">{s.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pending renders — check all button */}
+        {pending.length > 0 && (
+          <div className="rounded-xl px-5 py-4 flex items-center justify-between gap-3"
+            style={{ background: 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.25)' }}>
+            <div className="flex items-center gap-3">
+              <Loader className="w-4 h-4 animate-spin shrink-0" style={{ color: '#fbbf24' }} />
+              <p className="text-sm font-bold" style={{ color: '#fbbf24' }}>
+                {pending.length} render job{pending.length > 1 ? 's' : ''} in progress
+              </p>
+            </div>
+            <button onClick={handleCheckAllPending}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black hover:opacity-80"
+              style={{ background: 'rgba(251,191,36,0.2)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.4)' }}>
+              <RefreshCw className="w-3 h-3" /> Check All
+            </button>
+          </div>
+        )}
+
+        {/* Article video grid */}
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader className="w-6 h-6 animate-spin" style={{ color: '#D4AF37' }} />
+          </div>
+        ) : (
+          <div>
+            <p className="text-xs font-black tracking-[0.25em] uppercase mb-4" style={{ color: '#D4AF37' }}>
+              All Articles — Video Status
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {allArticles.map(article => (
+                <VideoCard
+                  key={article.id}
+                  article={article}
+                  onRender={handleRender}
+                  onCheck={handleCheck}
+                  onClearVideo={handleClearVideo}
+                />
+              ))}
+            </div>
+            {allArticles.length === 0 && (
+              <div className="rounded-xl p-12 text-center" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <FileText className="w-10 h-10 mx-auto mb-3 opacity-20 text-white" />
+                <p className="text-sm text-slate-600">No articles found. Generate articles from the DNN News Feed first.</p>
+              </div>
+            )}
+          </div>
+        )}
 
       </div>
     </div>
