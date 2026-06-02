@@ -22,6 +22,21 @@
       "type": "string",
       "description": "URL to Gemini TTS-generated audio file for this article"
     },
+    "interview_qa": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Charlie-asks / Bob-answers interview Q&A pairs for this article"
+    },
     "tags": {
       "type": "array",
       "items": {

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import DnnAdminBar from '@/components/dnn/DnnAdminBar';
 import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
+import InterviewSegment from '@/components/dnn/InterviewSegment';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -251,7 +252,7 @@ function AudioPlayer({ url }) {
 }
 
 // --- Compact Article Card (text briefs) ---
-function CompactArticleCard({ article, isAdmin, onEdit, onDelete }) {
+function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onListenBob }) {
   const [showText, setShowText] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
@@ -318,6 +319,13 @@ function CompactArticleCard({ article, isAdmin, onEdit, onDelete }) {
               ))}
             </div>
           )}
+
+          {/* Interview Q&A segment */}
+          <InterviewSegment
+            qa={article.interview_qa}
+            onListenBob={onListenBob}
+          />
+
           <Link to="/chat"
             className="flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl text-xs font-bold text-black w-fit transition-all hover:opacity-90"
             style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
@@ -626,8 +634,9 @@ export default function ConsumerDnnNews() {
                       isAdmin={isAdmin}
                       onEdit={handleEditArticle}
                       onDelete={handleDeleteArticle}
+                      onListenBob={(text) => speak('bob', text)}
                     />
-                    {/* Listen button */}
+                    {/* Listen to full article button */}
                     <button
                       onClick={() => speak('bob', `${article.headline}. ${article.body || ''}`)}
                       disabled={talkLoading}

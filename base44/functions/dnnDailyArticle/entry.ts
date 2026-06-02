@@ -51,6 +51,8 @@ function shuffle(arr) {
 
 async function generateArticle(base44, market, trigger_type) {
   const topic = TOPIC_MAP[trigger_type];
+
+  // Step 1: Generate article body
   const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt: `You are the DNN Intelligence Bureau — the editorial voice of Dyson & Dyson Real Estate Concierge. Write in the "1927 Parallel" style: authoritative, data-grounded, cinematic, sophisticated. No fluff. No external links.
 
@@ -80,12 +82,54 @@ Return JSON:
     }
   });
 
+  // Step 2: Generate interview Q&A from the article — Charlie interviews Bob
+  const qaResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
+    prompt: `You are writing a live TV news segment script. Charlie is the anchor/interviewer. Bob Dyson is the expert guest — a real estate relocation specialist.
+
+Based on this article:
+HEADLINE: ${result.headline}
+BODY: ${result.body}
+
+Write 3 interview exchanges. Charlie asks sharp, natural anchor questions (not reading the article — probing, curious). Bob answers conversationally as an expert — confident, specific, gives the listener actionable insight. 
+
+CRITICAL RULES:
+- Bob NEVER says things like "That's a great question" or "Absolutely" — he just answers directly.
+- Charlie never reads stats verbatim from the article — she reacts and asks follow-ups.
+- Keep each answer under 60 words. Natural spoken language only — no bullet points, no headers.
+- Answers must sound like someone talking, not reading. Contractions, direct address ("if you're moving to ${market.city}..."), real specifics.
+
+Return JSON:
+{
+  "qa": [
+    { "question": "Charlie's question", "answer": "Bob's answer" },
+    { "question": "Charlie's question", "answer": "Bob's answer" },
+    { "question": "Charlie's question", "answer": "Bob's answer" }
+  ]
+}`,
+    response_json_schema: {
+      type: 'object',
+      properties: {
+        qa: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              question: { type: 'string' },
+              answer: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
+  });
+
   await base44.asServiceRole.entities.DnnArticle.create({
     headline: result.headline,
     dateline: market.dateline,
     body: result.body,
     tags: result.tags || [market.city.toLowerCase()],
     trigger_type,
+    interview_qa: qaResult?.qa || [],
     status: 'published',
     generated_date: new Date().toISOString(),
     published_date: new Date().toISOString(),
