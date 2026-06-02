@@ -1,0 +1,89 @@
+{
+  "name": "OwnerOutreachCampaign",
+  "type": "object",
+  "properties": {
+    "listing_owner_id": {
+      "type": "string",
+      "description": "Reference to ListingOwner ID"
+    },
+    "owner_name": {
+      "type": "string",
+      "description": "Owner name"
+    },
+    "owner_phone": {
+      "type": "string",
+      "description": "Owner phone number"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address"
+    },
+    "listing_price": {
+      "type": "number",
+      "description": "Listed property price"
+    },
+    "workflow_stage": {
+      "type": "string",
+      "enum": [
+        "outreach",
+        "response",
+        "profile_complete",
+        "processing",
+        "closed"
+      ],
+      "default": "outreach",
+      "description": "Current workflow stage"
+    },
+    "sms_sent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When SMS was sent"
+    },
+    "response_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When owner responded"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "City owner is moving to (from response)"
+    },
+    "destination_state": {
+      "type": "string",
+      "description": "State owner is moving to (from response)"
+    },
+    "destination_price_range": {
+      "type": "string",
+      "description": "Budget range for new home"
+    },
+    "timeline": {
+      "type": "string",
+      "description": "Moving timeline (from response)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes and conversation history"
+    },
+    "charlie_engaged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has Charlie engaged with this owner"
+    },
+    "target_close_of_escrow": {
+      "type": "string",
+      "format": "date",
+      "description": "Target/expected escrow close date"
+    },
+    "escrow_complete_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual escrow completion date and time"
+    }
+  },
+  "required": [
+    "listing_owner_id",
+    "owner_name",
+    "owner_phone",
+    "workflow_stage"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user",
+      "description": "User role"
+    },
+    "is_suspended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user account is suspended"
+    },
+    "suspension_reason": {
+      "type": "string",
+      "description": "Reason for suspension"
+    },
+    "suspension_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date user was suspended"
+    }
+  },
+  "required": [
+    "suspension_reason",
+    "suspension_date"
+  ]
+}

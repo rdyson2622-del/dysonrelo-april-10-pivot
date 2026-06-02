@@ -1,0 +1,78 @@
+{
+  "name": "TransactionMilestone",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "intake",
+        "consultation",
+        "agent",
+        "search",
+        "offer",
+        "escrow",
+        "title",
+        "inspection",
+        "financing",
+        "closing",
+        "post_close"
+      ],
+      "description": "Phase of the transaction"
+    },
+    "title": {
+      "type": "string",
+      "description": "Milestone title"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Detail notes, parties involved, outcome"
+    },
+    "parties_involved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Names/roles of parties (agent, escrow officer, title rep, etc.)"
+    },
+    "is_critical": {
+      "type": "boolean",
+      "default": false,
+      "description": "Time-sensitive/critical deadline"
+    },
+    "deadline_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Deadline if applicable"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When this milestone was completed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "overdue",
+        "flagged"
+      ],
+      "default": "completed",
+      "description": "Milestone status"
+    },
+    "logged_by": {
+      "type": "string",
+      "description": "Admin who logged this entry"
+    }
+  },
+  "required": [
+    "client_id",
+    "category",
+    "title"
+  ]
+}

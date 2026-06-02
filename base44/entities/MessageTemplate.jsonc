@@ -1,0 +1,57 @@
+{
+  "name": "MessageTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "initial_outreach",
+        "trust_building",
+        "information_gathering",
+        "task_coordination",
+        "follow_up",
+        "charlie_intro"
+      ],
+      "description": "Template category"
+    },
+    "communication_type": {
+      "type": "string",
+      "enum": [
+        "sms",
+        "email"
+      ],
+      "description": "SMS or email template"
+    },
+    "content": {
+      "type": "string",
+      "description": "Template content with {{placeholders}}"
+    },
+    "placeholders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of placeholder names like owner_name, property_address"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this template is used for"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether template is available for use"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "communication_type",
+    "content",
+    "placeholders"
+  ]
+}

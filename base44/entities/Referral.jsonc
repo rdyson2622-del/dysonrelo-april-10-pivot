@@ -1,0 +1,127 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referral_type": {
+      "type": "string",
+      "enum": [
+        "outgoing",
+        "incoming"
+      ],
+      "description": "Direction of referral"
+    },
+    "seller_outreach_id": {
+      "type": "string",
+      "description": "Reference to SellerOutreach (outgoing) or RelocationClient (incoming)"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Reference to Agent record"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Agent name for reference"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Agent email"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "City for referral"
+    },
+    "destination_state": {
+      "type": "string",
+      "description": "State for referral"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Name of relocating party"
+    },
+    "estimated_sale_price": {
+      "type": "number",
+      "description": "Estimated home sale price for fee calculation"
+    },
+    "referral_fee_percent": {
+      "type": "number",
+      "default": 25,
+      "description": "Agreed referral fee percentage"
+    },
+    "mgmt_fee_percent": {
+      "type": "number",
+      "default": 15,
+      "description": "Management fee percentage"
+    },
+    "estimated_referral_fee": {
+      "type": "number",
+      "description": "Calculated referral fee at 100k sale"
+    },
+    "estimated_mgmt_fee": {
+      "type": "number",
+      "description": "Calculated management fee"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "accepted",
+        "in_progress",
+        "closed",
+        "rejected",
+        "withdrawn"
+      ],
+      "default": "pending",
+      "description": "Referral status"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When referral was sent"
+    },
+    "response_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When agent responded"
+    },
+    "close_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Deal close date"
+    },
+    "actual_sale_price": {
+      "type": "number",
+      "description": "Final sale price"
+    },
+    "actual_referral_fee": {
+      "type": "number",
+      "description": "Actual referral fee earned"
+    },
+    "actual_mgmt_fee": {
+      "type": "number",
+      "description": "Actual management fee earned"
+    },
+    "fees_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether fees have been paid"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date fees were paid"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Referral notes and details"
+    }
+  },
+  "required": [
+    "referral_type",
+    "agent_id",
+    "agent_name",
+    "agent_email",
+    "destination_city",
+    "destination_state"
+  ]
+}

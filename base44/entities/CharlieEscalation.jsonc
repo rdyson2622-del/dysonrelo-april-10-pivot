@@ -1,0 +1,97 @@
+{
+  "name": "CharlieEscalation",
+  "type": "object",
+  "properties": {
+    "consumer_question": {
+      "type": "string",
+      "description": "The exact question the consumer asked that Charlie couldn't answer"
+    },
+    "consumer_name": {
+      "type": "string",
+      "description": "Consumer's name if known"
+    },
+    "consumer_email": {
+      "type": "string",
+      "description": "Consumer's email if known"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID if logged in"
+    },
+    "handoff_response": {
+      "type": "string",
+      "description": "The handoff line Charlie used when deflecting"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in_progress",
+        "answered",
+        "saved_to_kb",
+        "dismissed"
+      ],
+      "default": "open",
+      "description": "Current status of this escalation"
+    },
+    "human_response": {
+      "type": "string",
+      "description": "The human team's answer to the consumer question"
+    },
+    "responded_by": {
+      "type": "string",
+      "description": "Admin email who responded"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the human responded"
+    },
+    "saved_to_kb": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this Q&A was saved to the knowledge base"
+    },
+    "kb_entry_id": {
+      "type": "string",
+      "description": "Reference to CharlieKnowledgeBase entry if saved"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Priority level for human response"
+    },
+    "page_context": {
+      "type": "string",
+      "description": "Which page the consumer was on when they asked"
+    },
+    "notifications_sent": {
+      "type": "object",
+      "properties": {
+        "sms": {
+          "type": "boolean",
+          "default": false
+        },
+        "email": {
+          "type": "boolean",
+          "default": false
+        },
+        "dashboard": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "description": "Notification channels that fired"
+    }
+  },
+  "required": [
+    "consumer_question",
+    "status"
+  ]
+}

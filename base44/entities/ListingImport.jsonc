@@ -1,0 +1,93 @@
+{
+  "name": "ListingImport",
+  "type": "object",
+  "properties": {
+    "mls_id": {
+      "type": "string",
+      "description": "MLS listing ID"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Full property address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip": {
+      "type": "string",
+      "description": "ZIP code"
+    },
+    "price": {
+      "type": "number",
+      "description": "List price"
+    },
+    "bedrooms": {
+      "type": "number",
+      "description": "Number of bedrooms"
+    },
+    "bathrooms": {
+      "type": "number",
+      "description": "Number of bathrooms"
+    },
+    "sqft": {
+      "type": "number",
+      "description": "Square footage"
+    },
+    "seller_name": {
+      "type": "string",
+      "description": "Seller name (if known)"
+    },
+    "list_agent_name": {
+      "type": "string",
+      "description": "Listing agent name"
+    },
+    "list_agent_email": {
+      "type": "string",
+      "description": "Listing agent email"
+    },
+    "list_agent_phone": {
+      "type": "string",
+      "description": "Listing agent phone"
+    },
+    "list_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When listed"
+    },
+    "days_on_market": {
+      "type": "number",
+      "description": "Days on market"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual_entry",
+        "idx_feed",
+        "zillow"
+      ],
+      "description": "Where listing came from"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "sold",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Listing status"
+    }
+  },
+  "required": [
+    "property_address",
+    "city",
+    "state",
+    "price"
+  ]
+}

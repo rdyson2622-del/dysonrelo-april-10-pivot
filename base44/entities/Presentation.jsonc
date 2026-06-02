@@ -1,0 +1,91 @@
+{
+  "name": "Presentation",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Presentation title"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "client_intro",
+        "listing_agent",
+        "receiving_agent",
+        "ai_explainer",
+        "referral_model",
+        "philosophy",
+        "process",
+        "other"
+      ],
+      "description": "Presentation category"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "What this presentation is for and who should see it"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of presentation content"
+    },
+    "slides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "number",
+            "description": "Slide order"
+          },
+          "title": {
+            "type": "string",
+            "description": "Slide title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Slide content (markdown or HTML)"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Optional slide image/screenshot URL"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Speaker notes or additional details"
+          }
+        },
+        "required": [
+          "order",
+          "title",
+          "content"
+        ]
+      },
+      "description": "Array of presentation slides"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether presentation is in active use"
+    },
+    "send_as_link": {
+      "type": "boolean",
+      "default": true,
+      "description": "Can be sent as standalone link"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "User email who last updated"
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "purpose",
+    "slides"
+  ]
+}

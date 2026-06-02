@@ -1,0 +1,80 @@
+{
+  "name": "CharlieKnowledgeBase",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The consumer question or trigger phrase"
+    },
+    "answer": {
+      "type": "string",
+      "description": "Charlie's trained answer to this question"
+    },
+    "topic": {
+      "type": "string",
+      "enum": [
+        "agent_selection",
+        "relocation_process",
+        "costs_fees",
+        "timeline",
+        "city_info",
+        "market_data",
+        "our_services",
+        "technology",
+        "general",
+        "legal",
+        "other"
+      ],
+      "description": "Topic category for this Q&A pair"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords that help match this entry to consumer questions"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "auto_extracted",
+        "escalation_saved"
+      ],
+      "default": "manual",
+      "description": "How this entry was created"
+    },
+    "source_document": {
+      "type": "string",
+      "description": "Name or description of the document this was extracted from"
+    },
+    "confidence": {
+      "type": "number",
+      "description": "AI confidence score 0-1 when auto-extracted"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether Charlie uses this entry"
+    },
+    "times_used": {
+      "type": "number",
+      "default": 0,
+      "description": "How many times this answer has been served"
+    },
+    "last_used": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time this answer was served to a consumer"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    }
+  },
+  "required": [
+    "question",
+    "answer",
+    "topic"
+  ]
+}

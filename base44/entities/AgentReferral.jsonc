@@ -1,0 +1,92 @@
+{
+  "name": "AgentReferral",
+  "type": "object",
+  "properties": {
+    "seller_outreach_id": {
+      "type": "string",
+      "description": "Reference to SellerOutreach ID"
+    },
+    "list_agent_name": {
+      "type": "string",
+      "description": "Listing agent name"
+    },
+    "list_agent_email": {
+      "type": "string",
+      "description": "Listing agent email"
+    },
+    "list_agent_phone": {
+      "type": "string",
+      "description": "Listing agent phone"
+    },
+    "broker_name": {
+      "type": "string",
+      "description": "Agent's broker/company"
+    },
+    "referral_fee_percent": {
+      "type": "number",
+      "default": 25,
+      "description": "Referral fee percentage (default 25%)"
+    },
+    "relocation_mgmt_fee_percent": {
+      "type": "number",
+      "default": 15,
+      "description": "Our relocation management fee percentage (10-20%)"
+    },
+    "referral_agreement_sent": {
+      "type": "string",
+      "format": "date",
+      "description": "When agreement was sent"
+    },
+    "referral_agreement_signed": {
+      "type": "string",
+      "format": "date",
+      "description": "When agreement was signed"
+    },
+    "referral_status": {
+      "type": "string",
+      "enum": [
+        "proposal_sent",
+        "agreed",
+        "in_process",
+        "closed",
+        "rejected"
+      ],
+      "default": "proposal_sent",
+      "description": "Referral agreement status"
+    },
+    "receiving_broker": {
+      "type": "string",
+      "description": "Destination broker (where seller moving to)"
+    },
+    "receiving_broker_agreement": {
+      "type": "string",
+      "description": "Agreement with receiving broker on our fee split"
+    },
+    "commission_notes": {
+      "type": "string",
+      "description": "Commission structure notes"
+    },
+    "estimated_referral_fee": {
+      "type": "number",
+      "description": "Estimated referral fee at close"
+    },
+    "estimated_mgmt_fee": {
+      "type": "number",
+      "description": "Estimated relocation management fee at close"
+    },
+    "close_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Deal close date"
+    },
+    "fees_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether fees have been paid"
+    }
+  },
+  "required": [
+    "seller_outreach_id",
+    "list_agent_name"
+  ]
+}

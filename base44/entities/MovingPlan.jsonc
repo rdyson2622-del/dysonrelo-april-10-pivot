@@ -1,0 +1,163 @@
+{
+  "name": "MovingPlan",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "Primary destination city"
+    },
+    "destination_state": {
+      "type": "string",
+      "description": "Destination state"
+    },
+    "budget_range": {
+      "type": "string",
+      "description": "Home budget range (e.g., '400k_600k')"
+    },
+    "move_timeline": {
+      "type": "string",
+      "description": "When buyer plans to move (e.g., 'Q2 2026')"
+    },
+    "neighborhoods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Top neighborhood preferences"
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lifestyle priorities (schools, commute, etc.)"
+    },
+    "property_type": {
+      "type": "string",
+      "enum": [
+        "single_family",
+        "condo",
+        "townhouse",
+        "multi_family"
+      ],
+      "description": "Preferred property type"
+    },
+    "buying_vs_renting": {
+      "type": "string",
+      "enum": [
+        "buying",
+        "renting",
+        "undecided"
+      ],
+      "default": "buying",
+      "description": "Buying or renting"
+    },
+    "pivot_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the pivot occurred"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "budget_change",
+              "destination_change",
+              "timeline_shift",
+              "priority_update",
+              "property_type_change"
+            ],
+            "description": "Type of change"
+          },
+          "old_value": {
+            "type": "string",
+            "description": "Previous value"
+          },
+          "new_value": {
+            "type": "string",
+            "description": "New value"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "voice_note",
+              "gemini_session",
+              "agent_call",
+              "listing_view"
+            ],
+            "description": "How the change was detected"
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Agent ID if change detected during agent call"
+          }
+        },
+        "required": [
+          "timestamp",
+          "type"
+        ]
+      },
+      "description": "Log of all preference changes detected"
+    },
+    "active_listings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mls_id": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "viewed_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Listings recently viewed"
+    },
+    "action_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Current action items for buyer"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time plan was modified"
+    },
+    "last_updated_by": {
+      "type": "string",
+      "enum": [
+        "user_voice_note",
+        "gemini_session",
+        "agent_moderator",
+        "system"
+      ],
+      "description": "Source of last update"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes on plan"
+    }
+  },
+  "required": [
+    "client_id",
+    "destination_city"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "SellerOutreach",
+  "type": "object",
+  "properties": {
+    "listing_id": {
+      "type": "string",
+      "description": "Reference to ListingImport ID"
+    },
+    "seller_name": {
+      "type": "string",
+      "description": "Seller name"
+    },
+    "seller_phone": {
+      "type": "string",
+      "description": "Seller phone (from CrissCross)"
+    },
+    "seller_email": {
+      "type": "string",
+      "description": "Seller email (if available)"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address"
+    },
+    "outreach_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "contacted_seller",
+        "seller_responded",
+        "no_response_30days",
+        "agent_contacted",
+        "agent_agreed",
+        "in_process",
+        "closed"
+      ],
+      "default": "pending",
+      "description": "Outreach workflow status"
+    },
+    "seller_moving_destination": {
+      "type": "string",
+      "description": "Where seller is moving (if disclosed)"
+    },
+    "seller_moving_timeline": {
+      "type": "string",
+      "description": "When seller is moving"
+    },
+    "contact_date": {
+      "type": "string",
+      "format": "date",
+      "description": "First contact attempt date"
+    },
+    "seller_response_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When seller responded"
+    },
+    "agent_contact_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When we contacted listing agent"
+    },
+    "agent_response_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When agent responded"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Conversation notes and outcomes"
+    },
+    "charlie_briefing": {
+      "type": "string",
+      "description": "Detailed listing analysis for Charlie to study"
+    }
+  },
+  "required": [
+    "listing_id",
+    "property_address",
+    "outreach_status"
+  ]
+}

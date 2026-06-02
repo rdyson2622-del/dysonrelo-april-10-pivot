@@ -1,0 +1,68 @@
+{
+  "name": "PropertySearch",
+  "type": "object",
+  "properties": {
+    "search_name": {
+      "type": "string",
+      "description": "Name of the saved search"
+    },
+    "city": {
+      "type": "string",
+      "description": "City to search in"
+    },
+    "state": {
+      "type": "string",
+      "description": "State abbreviation"
+    },
+    "min_price": {
+      "type": "number",
+      "description": "Minimum price"
+    },
+    "max_price": {
+      "type": "number",
+      "description": "Maximum price"
+    },
+    "property_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "single_family",
+          "condo",
+          "townhouse",
+          "multi_family",
+          "land"
+        ]
+      },
+      "description": "Property types to include"
+    },
+    "communities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific communities/neighborhoods"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to run daily searches"
+    },
+    "last_run_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time this search ran"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes"
+    }
+  },
+  "required": [
+    "search_name",
+    "city",
+    "state",
+    "min_price",
+    "max_price"
+  ]
+}

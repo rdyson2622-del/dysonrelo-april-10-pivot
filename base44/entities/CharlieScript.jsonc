@@ -1,0 +1,57 @@
+{
+  "name": "CharlieScript",
+  "type": "object",
+  "properties": {
+    "page_number": {
+      "type": "number",
+      "description": "Sequential display number for team reference (e.g. 1, 2, 3). Not tied to page order \u2014 just a stable human-friendly ID."
+    },
+    "page_code": {
+      "type": "string",
+      "description": "Short page identifier code (e.g., HOME, CHAT, GATE-1, GUIDE)"
+    },
+    "page_name": {
+      "type": "string",
+      "description": "Human-readable page name (e.g., Home Hero, Commitment Gate Step 1)"
+    },
+    "context": {
+      "type": "string",
+      "description": "Where/when this script is triggered (e.g., On page load, When user asks about cost)"
+    },
+    "script_text": {
+      "type": "string",
+      "description": "The full script or message Charlie delivers"
+    },
+    "script_type": {
+      "type": "string",
+      "enum": [
+        "greeting",
+        "response",
+        "gate",
+        "cta",
+        "fallback",
+        "system_prompt"
+      ],
+      "description": "Type of script"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this script is currently in use"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this script \u2014 what it does, why it was changed, etc."
+    },
+    "last_edited_by": {
+      "type": "string",
+      "description": "Email of admin who last edited this script"
+    }
+  },
+  "required": [
+    "page_code",
+    "page_name",
+    "script_text",
+    "script_type"
+  ]
+}

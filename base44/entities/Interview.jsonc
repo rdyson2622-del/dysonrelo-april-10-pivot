@@ -1,0 +1,78 @@
+{
+  "name": "Interview",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client name for reference"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Client email"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the interview is scheduled"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 30,
+      "description": "Interview duration in minutes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "approved",
+        "rejected",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Interview status"
+    },
+    "interview_notes": {
+      "type": "string",
+      "description": "Notes from the interview\u2014family dynamics, intent, engagement level, etc."
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending_review",
+      "description": "Admin approval decision"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Admin email who made approval decision"
+    },
+    "approval_notes": {
+      "type": "string",
+      "description": "Why approved or rejected"
+    },
+    "approval_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When approval decision was made"
+    },
+    "gemini_session_scheduled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether Gemini session has been scheduled post-approval"
+    }
+  },
+  "required": [
+    "client_id",
+    "client_name",
+    "client_email",
+    "scheduled_date"
+  ]
+}

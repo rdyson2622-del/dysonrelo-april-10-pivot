@@ -1,0 +1,53 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Associated client ID"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "charlie"
+      ],
+      "description": "Who sent the message"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "recommendation",
+        "task_update",
+        "city_info",
+        "listing_info"
+      ],
+      "default": "text"
+    },
+    "flag_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "reviewed",
+        "concern",
+        "fraud",
+        "resolved"
+      ],
+      "default": "none",
+      "description": "Admin flag status for review"
+    },
+    "flag_notes": {
+      "type": "string",
+      "description": "Admin notes on flagged message"
+    }
+  },
+  "required": [
+    "role",
+    "content"
+  ]
+}

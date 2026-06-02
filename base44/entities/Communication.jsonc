@@ -1,0 +1,71 @@
+{
+  "name": "Communication",
+  "type": "object",
+  "properties": {
+    "communication_type": {
+      "type": "string",
+      "enum": [
+        "sms",
+        "email"
+      ],
+      "description": "Type of communication"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the recipient"
+    },
+    "recipient_phone": {
+      "type": "string",
+      "description": "Recipient phone number (for SMS)"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Recipient email address (for email)"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address related to communication"
+    },
+    "listing_agent_name": {
+      "type": "string",
+      "description": "Listing agent name if applicable"
+    },
+    "listing_owner_id": {
+      "type": "string",
+      "description": "Reference to ListingOwner ID"
+    },
+    "message_content": {
+      "type": "string",
+      "description": "Full text of the message sent"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the message was sent"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "delivered",
+        "failed",
+        "bounced",
+        "opened"
+      ],
+      "default": "sent",
+      "description": "Delivery status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the communication"
+    }
+  },
+  "required": [
+    "communication_type",
+    "recipient_name",
+    "property_address",
+    "message_content",
+    "sent_date",
+    "status"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "name": "OutreachTask",
+  "type": "object",
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "Reference to OwnerOutreachCampaign ID"
+    },
+    "owner_name": {
+      "type": "string",
+      "description": "Owner name for context"
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address for context"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "order_title_report",
+        "schedule_call",
+        "verify_moving_details",
+        "send_follow_up",
+        "prepare_proposal",
+        "agent_match",
+        "check_response",
+        "update_notes",
+        "send_destination_info"
+      ],
+      "description": "Type of task to perform"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed task description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "skipped"
+      ],
+      "default": "pending",
+      "description": "Task completion status"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Team member email (if assigned)"
+    },
+    "triggered_by_stage": {
+      "type": "string",
+      "description": "Campaign stage that triggered this task"
+    },
+    "triggered_by_script": {
+      "type": "string",
+      "description": "MessageTemplate name that triggered this task"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When task should be completed"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Task priority"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When task was completed"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Team notes on task completion"
+    }
+  },
+  "required": [
+    "campaign_id",
+    "task_type",
+    "title",
+    "triggered_by_stage"
+  ]
+}

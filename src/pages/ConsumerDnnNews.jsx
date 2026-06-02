@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X } from 'lucide-react';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X, Headphones } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DnnAdminBar from '@/components/dnn/DnnAdminBar';
+import TalkingHead from '@/components/avatar/TalkingHead';
+import { useTalkingHead } from '@/hooks/useTalkingHead';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -478,6 +480,8 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
 // --- Main Page ---
 // v2
 export default function ConsumerDnnNews() {
+  const { talkingHeadProps, speak, loading: talkLoading, dismiss } = useTalkingHead();
+
   const HARDCODED_VIDEO = {
     id: '__hardcoded__',
     headline: 'DNN Intelligence Report',
@@ -616,13 +620,25 @@ export default function ConsumerDnnNews() {
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {textArticles.map(article => (
-                  <CompactArticleCard
-                    key={article.id}
-                    article={article}
-                    isAdmin={isAdmin}
-                    onEdit={handleEditArticle}
-                    onDelete={handleDeleteArticle}
-                  />
+                  <div key={article.id} className="relative">
+                    <CompactArticleCard
+                      article={article}
+                      isAdmin={isAdmin}
+                      onEdit={handleEditArticle}
+                      onDelete={handleDeleteArticle}
+                    />
+                    {/* Listen button */}
+                    <button
+                      onClick={() => speak('bob', `${article.headline}. ${article.body || ''}`)}
+                      disabled={talkLoading}
+                      className="absolute top-3 right-16 flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full transition-all hover:opacity-80 disabled:opacity-40"
+                      style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
+                      title="Listen to this article"
+                    >
+                      <Headphones className="w-3 h-3" />
+                      {talkLoading ? '...' : 'Listen'}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -680,6 +696,14 @@ export default function ConsumerDnnNews() {
           <p className="text-xs mt-1" style={{ color: '#1a1a1a' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
+
+      {/* Talking Head Bubble */}
+      {talkingHeadProps && (
+        <TalkingHead
+          {...talkingHeadProps}
+          onClose={dismiss}
+        />
+      )}
 
       {/* Edit Modal */}
       {editingArticle && (

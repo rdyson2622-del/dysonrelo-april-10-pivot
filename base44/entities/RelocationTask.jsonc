@@ -1,0 +1,88 @@
+{
+  "name": "RelocationTask",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Associated client ID"
+    },
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Task description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "housing",
+        "moving",
+        "utilities",
+        "schools",
+        "healthcare",
+        "local_services",
+        "social",
+        "employment",
+        "legal",
+        "other"
+      ],
+      "description": "Task category"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "skipped"
+      ],
+      "default": "pending"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Target due date"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual completion timestamp"
+    },
+    "integration_type": {
+      "type": "string",
+      "enum": [
+        "movers",
+        "utilities",
+        "home_services",
+        "schools",
+        "healthcare",
+        "other"
+      ],
+      "description": "Integration category if applicable"
+    },
+    "vendor_name": {
+      "type": "string",
+      "description": "Vendor/service provider name if booked"
+    },
+    "vendor_contact": {
+      "type": "string",
+      "description": "Vendor contact info"
+    }
+  },
+  "required": [
+    "title",
+    "category"
+  ]
+}

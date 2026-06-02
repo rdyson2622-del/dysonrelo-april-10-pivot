@@ -1,0 +1,80 @@
+{
+  "name": "ScheduledCampaign",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "description": "City for this campaign"
+    },
+    "scheduled_for": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When to fire this campaign"
+    },
+    "owners": {
+      "type": "array",
+      "description": "Array of owner objects to send to",
+      "items": {
+        "type": "object",
+        "properties": {
+          "listing_owner_id": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "owner_name": {
+            "type": "string"
+          },
+          "property_address": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "owner_count": {
+      "type": "number",
+      "description": "Number of recipients"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "sending",
+        "completed",
+        "paused",
+        "cancelled"
+      ],
+      "default": "scheduled",
+      "description": "Campaign status"
+    },
+    "scheduled_by": {
+      "type": "string",
+      "description": "Admin email who scheduled it"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes"
+    },
+    "sent_count": {
+      "type": "number",
+      "description": "Messages sent (filled after run)"
+    },
+    "failed_count": {
+      "type": "number",
+      "description": "Messages failed (filled after run)"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the campaign finished sending"
+    }
+  },
+  "required": [
+    "city",
+    "scheduled_for",
+    "owners",
+    "owner_count",
+    "status"
+  ]
+}

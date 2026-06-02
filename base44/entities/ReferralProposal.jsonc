@@ -1,0 +1,75 @@
+{
+  "name": "ReferralProposal",
+  "type": "object",
+  "properties": {
+    "seller_outreach_id": {
+      "type": "string",
+      "description": "Reference to SellerOutreach ID"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "City where seller is relocating"
+    },
+    "destination_state": {
+      "type": "string",
+      "description": "State where seller is relocating"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Prospective agent name"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Prospective agent email"
+    },
+    "agent_phone": {
+      "type": "string",
+      "description": "Prospective agent phone"
+    },
+    "agent_brokerage": {
+      "type": "string",
+      "description": "Agent's broker/company"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "accepted",
+        "rejected",
+        "selected",
+        "withdrawn"
+      ],
+      "default": "sent",
+      "description": "Proposal status"
+    },
+    "response_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When agent responded"
+    },
+    "referral_fee_acknowledged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Agent acknowledged 25% referral fee"
+    },
+    "mgmt_fee_acknowledged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Agent acknowledged 15% relocation management fee"
+    },
+    "agreement_executed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Agent digitally signed agreement"
+    },
+    "proposal_token": {
+      "type": "string",
+      "description": "Unique token for accept/reject link"
+    }
+  },
+  "required": [
+    "seller_outreach_id",
+    "agent_email",
+    "destination_city"
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "name": "PropertyCandidate",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full property address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "price": {
+      "type": "number",
+      "description": "Listing price"
+    },
+    "bedrooms": {
+      "type": "number",
+      "description": "Number of bedrooms"
+    },
+    "bathrooms": {
+      "type": "number",
+      "description": "Number of bathrooms"
+    },
+    "sqft": {
+      "type": "number",
+      "description": "Square footage"
+    },
+    "listing_url": {
+      "type": "string",
+      "description": "Link to Zillow, Redfin, MLS listing"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Primary photo URL"
+    },
+    "client_notes": {
+      "type": "string",
+      "description": "Client's personal notes from touring"
+    },
+    "client_rating": {
+      "type": "number",
+      "description": "Client's overall gut rating 1-5"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "considering",
+        "top_pick",
+        "eliminated",
+        "offer_made",
+        "selected"
+      ],
+      "default": "considering",
+      "description": "Client's current status on this property"
+    },
+    "neighborhoods": {
+      "type": "object",
+      "description": "Neighborhood research findings",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "schools": {
+      "type": "object",
+      "description": "Schools & education research",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "cost_of_living": {
+      "type": "object",
+      "description": "Cost of living analysis",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "healthcare": {
+      "type": "object",
+      "description": "Healthcare access research",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "recreation": {
+      "type": "object",
+      "description": "Recreation & lifestyle research",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "local_character": {
+      "type": "object",
+      "description": "Local character & community research",
+      "properties": {
+        "rating": {
+          "type": "string",
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "gemini_summary": {
+      "type": "string",
+      "description": "AI-generated overall summary of this property vs client priorities"
+    },
+    "gemini_researched": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether Gemini has completed the deep research on this property"
+    },
+    "fit_score": {
+      "type": "number",
+      "description": "Overall calculated fit score 0-100 based on category ratings vs client priorities"
+    }
+  },
+  "required": [
+    "client_id",
+    "address",
+    "city",
+    "state"
+  ]
+}

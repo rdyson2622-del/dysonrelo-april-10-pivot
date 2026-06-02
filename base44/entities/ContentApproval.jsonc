@@ -1,0 +1,86 @@
+{
+  "name": "ContentApproval",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Reference to RelocationClient ID"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "charlie_chat",
+        "gemini_session",
+        "recommendation",
+        "advice",
+        "task_generated"
+      ],
+      "description": "Where the content came from"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "agent_recommendation",
+        "pricing_advice",
+        "timeline_milestone",
+        "task_suggestion",
+        "city_info",
+        "general_guidance"
+      ],
+      "description": "Type of content requiring review"
+    },
+    "title": {
+      "type": "string",
+      "description": "Brief summary/title"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full content to be reviewed (bullet-point format)"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Admin email who reviewed this"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "edited",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Approval status"
+    },
+    "expert_notes": {
+      "type": "string",
+      "description": "Human expert edits or comments"
+    },
+    "approved_content": {
+      "type": "string",
+      "description": "Final approved/edited content"
+    },
+    "delivered_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When delivered to client"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When content was created"
+    },
+    "review_deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "Daily batch deadline (next day delivery)"
+    }
+  },
+  "required": [
+    "client_id",
+    "source",
+    "content_type",
+    "title",
+    "content"
+  ]
+}
