@@ -1057,6 +1057,95 @@ REFERRAL ENGINE:
 Monetizing a dormant network of 35,000 California agents by providing them a "System for Life" to generate secondary income with zero overhead.`,
   },
   {
+    id: 'three-shard-video-pipeline',
+    title: '🎬 3-Shard Automated Video Pipeline',
+    icon: Mic,
+    content: `PROJECT BRIEF: 3-SHARD AUTOMATED VIDEO PIPELINE
+Entry Date: June 4, 2026
+Stack: Base44 ➔ Make.com ➔ HeyGen
+
+OBJECTIVE:
+Automate a zero-human-intervention video production pipeline that triggers when content is published in Base44 and generates programmatic video variants in HeyGen. Three content formats ("shards") are produced automatically from a single content event.
+
+────────────────────────────────
+THE STACK
+────────────────────────────────
+• Trigger: Base44 webhook/API payload when a daily article or script goes live
+• Middleware / Logic: Make.com using custom Webhooks, Routers, and JSON parsers
+• AI Processing: OpenAI API (gpt-4o) for converting written text into spoken, conversational broadcast scripts
+• Video Generation: HeyGen API v2 — custom Instant Avatar clones and multi-scene pre-saved Templates
+
+────────────────────────────────
+🔹 SHARD 1: DAILY NEWS (SOLO CHARLIE)
+────────────────────────────────
+Input: Raw text payload from morning news generation.
+
+Logic: OpenAI filters out non-spoken syntax, constrains data to natural dialogue (under 60 words per segment), and formats it into a clean speech string.
+
+Action: Make.com pushes the script to a saved HeyGen template using the Charlie Avatar Clone ID.
+
+────────────────────────────────
+🔹 SHARD 2: SITE EDUCATION (SOLO CHARLIE WALKTHROUGH)
+────────────────────────────────
+Input: Core article/product feature text.
+
+Logic: Sent directly without dense rewriting to maintain instructional accuracy.
+
+Action: Triggers a solo Charlie Avatar render to act as an on-screen guide.
+
+────────────────────────────────
+🔹 SHARD 3: PREMIUM INTERVIEW (THE "DONUT" TEMPLATE)
+────────────────────────────────
+Input: Article or script payload containing structured dialogue fields.
+
+Logic: OpenAI structures the text into a strict JSON array of { speaker: "charlie" | "bob", text: "..." } variables.
+
+Action: Make.com targets a 3-Scene HeyGen Template:
+• Scene 1 (Intro): Pre-rendered or dynamically voiced Charlie Anchor intro
+• Scene 2 (The Core): Injects the dynamic Bob Dyson Avatar Clone ID script variable
+• Scene 3 (Outro): Pre-rendered Charlie call-to-action outro
+
+────────────────────────────────
+⚠️ CRITICAL TECHNICAL CONSTRAINTS
+────────────────────────────────
+
+ASYNC POLLING & WEBHOOK LOOP:
+HeyGen video renders take 3–15 minutes. The Make.com scenario must NOT hold a synchronous HTTP request open. Architecture must split into:
+• Scenario A: Triggers the render job and logs the HeyGen video_id to the DnnArticle entity
+• Scenario B: Uses HeyGen's video_completed webhook (or a delayed polling loop) to fetch the final asset once ready and update the article's video_url field in Base44
+
+CORS HANDLING & CROSS-ORIGIN VIDEO:
+HeyGen's direct AWS storage URLs (files2.heygen.ai) frequently trigger strict browser CORS restrictions when embedded natively in HTML5 <video> elements. The engineer must configure the pipeline to capture BOTH:
+• The raw .mp4 file URL (for download/archive)
+• The clean responsive https://app.heygen.com/embeds/[video_id] iframe target (for seamless Base44 front-end embedding)
+
+STRICT AVATAR KEY VALIDATION:
+The application requires variables mapped to custom premium clones (is_custom: true, is_public: false). The engineer must write a robust validation step with fallback paths — e.g., routing to a designated stock avatar library ID like "Adrian in Blue Suit" if a specific custom clone ID returns unassigned.
+
+────────────────────────────────
+ENGINEER DELIVERABLES
+────────────────────────────────
+1. A fully operational, thoroughly tested Make.com blueprint (.json export) with clean routing logical blocks
+
+2. Systematic error-handling pathways for failed API calls or malformed JSON script structures
+
+3. A clean automated payload delivery back to Base44 to update the corresponding article's video_url or embed_id live on the dashboard
+
+────────────────────────────────
+BASE44 INTEGRATION POINTS (FOR THE ENGINEER)
+────────────────────────────────
+• Trigger Source: DnnArticle entity — status changes to "published" fire the Base44 webhook
+• article_id, headline, body, interview_qa (structured Q&A array for Shard 3), trigger_type
+• Return Target: DnnArticle.video_url (embed URL) and/or DnnArticle.audio_url fields
+• Existing HeyGen functions in Base44: heygenRenderVideo, heygenCheckVideo, heygenRenderWithAudio, heygenListAvatars
+• The heygenCheckVideo function already polls status and updates video_url on completion — Make.com Scenario B can call this endpoint or mirror this pattern directly
+
+────────────────────────────────
+STATUS
+────────────────────────────────
+⏳ PENDING — Engineer recruitment in progress. Current DNN article automation and media plan continue running uninterrupted. This pipeline is additive — no changes to existing flows until the Make.com blueprint is tested and approved.`,
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -1228,7 +1317,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v6.5 • Last Updated: May 18, 2026 • DECISIONS LOGGED TODAY: (1) Twilio remains fully intact — zero changes. All automated homeowner SMS, opt-in/opt-out processing, and batch outreach continue running on Twilio. (2) SimpleTexting.com reinstated — used exclusively for the Top 200 Independent Agent outreach campaign, managed manually outside the app. No app integration at this time. (3) Gemini 3.1 Flash Live API deployment begins post-Google I/O May 19 — full voice-to-voice upgrade path confirmed; all voice synthesis native to Google, ElevenLabs permanently off the stack. Previously v6.4: Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v7.0 • Last Updated: June 4, 2026 • NEW: 3-Shard Automated Video Pipeline (Base44 ➔ Make.com ➔ HeyGen) — Shard 1 (Daily News, Solo Charlie), Shard 2 (Site Education, Solo Charlie Walkthrough), Shard 3 (Premium Interview, "Donut" 3-Scene Template). Critical constraints documented: async polling architecture, CORS/embed handling, avatar key validation with fallback paths. Engineer deliverables defined. Existing media plan continues uninterrupted. Previously v6.5 • DECISIONS LOGGED TODAY: (1) Twilio remains fully intact — zero changes. All automated homeowner SMS, opt-in/opt-out processing, and batch outreach continue running on Twilio. (2) SimpleTexting.com reinstated — used exclusively for the Top 200 Independent Agent outreach campaign, managed manually outside the app. No app integration at this time. (3) Gemini 3.1 Flash Live API deployment begins post-Google I/O May 19 — full voice-to-voice upgrade path confirmed; all voice synthesis native to Google, ElevenLabs permanently off the stack. Previously v6.4: Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>
