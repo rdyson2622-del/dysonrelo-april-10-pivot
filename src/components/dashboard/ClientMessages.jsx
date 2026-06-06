@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Send, MessageCircle, Phone } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const GOLD = '#D4AF37';
 

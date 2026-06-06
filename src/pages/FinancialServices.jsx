@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
-  DollarSign, Shield, Lock, ChevronRight, Star, Clock, CheckCircle, Globe,
+  DollarSign, Shield, Star, Clock, CheckCircle,
   ChevronDown, ChevronUp, BookOpen, Award, Search, FileCheck, UserCheck,
-  Mic, Volume2, Send, BarChart3
+  Mic, Volume2
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";

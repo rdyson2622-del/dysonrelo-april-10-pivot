@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Home, ChevronDown, ArrowDown } from 'lucide-react';
+import { Plus, Home, ChevronDown } from 'lucide-react';
 import AddPropertyModal from '@/components/cityguide/AddPropertyModal';
 import PropertyComparisonCard from '@/components/cityguide/PropertyComparisonCard';
 import SamplePropertyCard from '@/components/cityguide/SamplePropertyCard';

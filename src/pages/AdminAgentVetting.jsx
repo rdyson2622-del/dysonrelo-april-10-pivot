@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
-  Shield, Search, CheckCircle, XCircle, AlertTriangle, Star,
+  Shield, CheckCircle, XCircle, AlertTriangle, Star,
   ChevronDown, ChevronUp, Plus, Loader2, FileCheck, UserCheck,
   Award, Globe, Sparkles
 } from 'lucide-react';

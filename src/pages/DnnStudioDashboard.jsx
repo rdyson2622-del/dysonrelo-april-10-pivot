@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Video, Mic, FileText, RefreshCw, Play, Clock, CheckCircle, AlertCircle, Loader, Trash2, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Video, FileText, RefreshCw, Play, CheckCircle, AlertCircle, Loader, RotateCcw } from 'lucide-react';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 

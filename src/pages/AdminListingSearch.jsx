@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Plus, Search, MapPin, DollarSign, Home, Mail, Phone, Zap } from 'lucide-react';
+import { ArrowLeft, Plus, MapPin, Home, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AddListingDialog from '../components/admin/AddListingDialog';

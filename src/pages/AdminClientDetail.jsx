@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Phone, Mail, MapPin, MessageSquare, Send, CheckCircle2, Clock, Home, User, Star, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, MessageSquare, Send, Clock, User, Star } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "@/components/ui/use-toast";

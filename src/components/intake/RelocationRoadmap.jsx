@@ -4,11 +4,10 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import {
   CheckCircle2, ArrowRight, ChevronDown, ChevronUp,
-  UserCheck, MapPin, Home, Search, ClipboardCheck,
+  UserCheck, MapPin, Search, ClipboardCheck,
   FileText, Key, Truck, Sparkles, ArrowLeft,
   MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
-import ReadyToStart from '../dashboard/ReadyToStart';
 
 const GOLD = '#D4AF37';
 

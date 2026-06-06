@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Send, Edit2, Trash2, Flame, CheckCircle, Mail } from 'lucide-react';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

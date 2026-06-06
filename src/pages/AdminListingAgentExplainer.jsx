@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  ArrowRight, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake,
-  MapPin, Shield, Users, Sparkles, Copy, Mail, MessageCircle, Eye as EyeIcon
+import { DollarSign, TrendingUp, Eye, Handshake, Users, Sparkles, Copy, Mail, MessageCircle, Eye as EyeIcon
 } from 'lucide-react';
 import { toast } from 'sonner';
 

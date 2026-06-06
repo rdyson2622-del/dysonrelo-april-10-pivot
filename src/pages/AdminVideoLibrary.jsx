@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Video, Plus, Link, Upload, Trash2, Copy, ExternalLink, CheckCircle2, Tag } from 'lucide-react';
+import { Video, Plus, Link, Upload, Trash2, Copy, ExternalLink, CheckCircle2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

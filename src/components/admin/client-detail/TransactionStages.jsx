@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Upload, CheckCircle2, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Upload, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

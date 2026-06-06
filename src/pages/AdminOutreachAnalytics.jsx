@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Badge } from '@/components/ui/badge';
 import { 
-  Send, CheckCircle2, AlertCircle, Clock, MessageSquare, 
+  Send, AlertCircle, MessageSquare, 
   TrendingUp, Users, MapPin, RefreshCw, ChevronDown, ChevronRight,
   BarChart3, Phone, UserCheck
 } from 'lucide-react';

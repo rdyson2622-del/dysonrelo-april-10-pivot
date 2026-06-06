@@ -2,8 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, ArrowLeft, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake,
-  MapPin, Shield, Users, Sparkles
+  ArrowRight, ArrowLeft, CheckCircle2, DollarSign, TrendingUp, Eye, Handshake, Users, Sparkles
 } from 'lucide-react';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
 

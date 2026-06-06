@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Upload, Trash2, Edit2, Download, Eye, ExternalLink, Globe } from 'lucide-react';
+import { Plus, Trash2, Edit2, Download, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const GOLD = '#D4AF37';

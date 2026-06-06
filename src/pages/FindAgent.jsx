@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Mail, Check, User, Search, FileSignature, Loader2, ShieldCheck, AlertTriangle, Star, ThumbsDown, Award } from 'lucide-react';
+import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

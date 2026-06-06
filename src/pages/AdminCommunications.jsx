@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, ChevronRight, Bell, User, Zap, Pencil, Check, ExternalLink } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Mail, Phone, Send, Trash2, X, Pencil, Check, ExternalLink } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
 const GOLD = '#D4AF37';

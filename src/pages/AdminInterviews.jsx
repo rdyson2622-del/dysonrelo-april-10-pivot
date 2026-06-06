@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, CheckCircle2, X, Loader2 } from 'lucide-react';
+import { Calendar, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const statusColors = {

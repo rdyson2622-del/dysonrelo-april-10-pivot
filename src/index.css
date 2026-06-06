@@ -6,6 +6,17 @@
 
 @layer base {
   :root {
+    --dyson-black: #0a0a0a;
+    --dyson-charcoal: #1a1a1a;
+    --dyson-ink: #111111;
+    --dyson-gold: #D4AF37;
+    --dyson-gold-light: #e8c84a;
+    --dyson-gold-deep: #b8920a;
+    --dyson-cream: #ede0cc;
+    --dyson-warm-paper: #fff8ee;
+    --dyson-taupe: #d8cab6;
+    --dyson-text: #ffffff;
+    --dyson-text-dark: #0a0a0a;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;

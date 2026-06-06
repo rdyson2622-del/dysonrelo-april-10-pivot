@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Edit3, Trash2, Calendar, Target, Zap, CheckCircle2 } from 'lucide-react';
+import { Plus, Edit3, Trash2, Zap } from 'lucide-react';
 import CampaignBuilder from '@/components/admin/marketing/CampaignBuilder';
 import CampaignContentGenerator from '@/components/admin/marketing/CampaignContentGenerator';
 import CampaignScheduleCalendar from '@/components/admin/marketing/CampaignScheduleCalendar';

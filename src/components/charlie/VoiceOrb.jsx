@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Mic, MicOff, Volume2 } from 'lucide-react';
 
 export default function VoiceOrb({ isListening, isSpeaking, onToggle, disabled }) {
   const [level, setLevel] = useState(0);

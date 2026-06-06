@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Eye, MessageSquare, User, MapPin, Calendar, DollarSign, CheckCircle2, Clock, Home, Users, FileText, Star } from "lucide-react";
+import { Plus, Trash2, Eye, MessageSquare, User, MapPin, Calendar, DollarSign, CheckCircle2, Home, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import AddClientModal from "@/components/admin/AddClientModal";

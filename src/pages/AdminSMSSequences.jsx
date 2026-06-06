@@ -4,9 +4,9 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Plus, Trash2, Send, ChevronDown, ChevronRight, Clock, Users,
-  MessageSquare, CheckSquare, Square, Search, Eye, Play, Pencil,
-  CheckCircle2, AlertCircle, Save, X
+  Plus, Trash2, ChevronDown, ChevronRight, Clock, Users,
+  MessageSquare, CheckSquare, Square, Search, Play, Pencil,
+  CheckCircle2, Save, X
 } from 'lucide-react';
 
 // ── helpers ──────────────────────────────────────────────────────────────────

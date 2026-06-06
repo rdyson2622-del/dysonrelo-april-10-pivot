@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, CheckCircle, Mail, ArrowRight, Save } from 'lucide-react';
+import { Copy, CheckCircle, Mail, Save } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';

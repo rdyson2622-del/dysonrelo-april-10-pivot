@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Star, ChevronDown, ChevronUp } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

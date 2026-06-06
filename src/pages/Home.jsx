@@ -99,10 +99,10 @@ export default function Home() {
           <Link
             to="/portal"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black tracking-widest uppercase transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-            style={{ fontSize: 'clamp(0.6rem, 3vw, 0.875rem)' }}
             style={{
               background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
               color: '#000',
+              fontSize: 'clamp(0.6rem, 3vw, 0.875rem)',
               boxShadow: '0 4px 24px rgba(212,175,55,0.35)',
             }}
           >

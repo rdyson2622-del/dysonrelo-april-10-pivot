@@ -10,6 +10,19 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			dyson: {
+  				black: 'var(--dyson-black)',
+  				charcoal: 'var(--dyson-charcoal)',
+  				ink: 'var(--dyson-ink)',
+  				gold: 'var(--dyson-gold)',
+  				'gold-light': 'var(--dyson-gold-light)',
+  				'gold-deep': 'var(--dyson-gold-deep)',
+  				cream: 'var(--dyson-cream)',
+  				'warm-paper': 'var(--dyson-warm-paper)',
+  				taupe: 'var(--dyson-taupe)',
+  				text: 'var(--dyson-text)',
+  				'text-dark': 'var(--dyson-text-dark)'
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

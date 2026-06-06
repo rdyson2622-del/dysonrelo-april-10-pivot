@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, ExternalLink, Copy, MapPin, Upload, CheckCircle2, AlertCircle, X, Users } from 'lucide-react';
+import { ExternalLink, Copy, MapPin, Upload, CheckCircle2, AlertCircle, X, Users } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import * as XLSX from 'xlsx';
 

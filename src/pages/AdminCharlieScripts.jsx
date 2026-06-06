@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Edit2, Plus, MessageSquare, Search, X, Save, ToggleLeft, ToggleRight, ChevronDown, ChevronRight, Trash2, Play, Square, Volume2 } from 'lucide-react';
+import { Edit2, Plus, MessageSquare, Search, X, Save, ToggleLeft, ToggleRight, ChevronDown, ChevronRight, Trash2, Square, Volume2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

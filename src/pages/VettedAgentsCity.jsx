@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Shield, Clock, Star, MapPin, ArrowRight } from 'lucide-react';
+import { Shield, Clock, MapPin, ArrowRight } from 'lucide-react';
 import IntroRequestModal from '@/components/directory/IntroRequestModal';
 
 const GOLD = '#D4AF37';

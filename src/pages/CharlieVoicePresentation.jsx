@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { Volume2, VolumeX, Phone, PhoneCall } from 'lucide-react';
+import { Volume2, VolumeX, Phone } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

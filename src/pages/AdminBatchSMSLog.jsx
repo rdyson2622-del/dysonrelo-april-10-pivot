@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Badge } from '@/components/ui/badge';
 import { ChevronDown, ChevronRight, Send, CheckCircle2, AlertCircle, MapPin, Trash2 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 

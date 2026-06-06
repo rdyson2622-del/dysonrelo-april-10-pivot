@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, ChevronRight, Check } from 'lucide-react';
+import { Mic, ChevronRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { speakAsCharlie, stopCharlie } from './charlieVoice';
 
 const GOLD = '#D4AF37';
 

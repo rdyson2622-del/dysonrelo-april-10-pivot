@@ -1,6 +1,5 @@
 import React from 'react';
 import { Phone, Mail, MessageSquare } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';

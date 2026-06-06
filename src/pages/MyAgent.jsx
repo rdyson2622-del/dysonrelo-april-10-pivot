@@ -4,8 +4,8 @@ import { base44 } from '@/api/base44Client';
 import {
   Shield, Phone, Mail, MapPin, Star, Clock, CheckCircle, Globe,
   ChevronRight, ChevronDown, ChevronUp, BookOpen, Award, Search,
-  FileCheck, UserCheck, Mic, Volume2, DollarSign, TrendingUp,
-  XCircle, AlertTriangle, Video, Send, BarChart3
+  FileCheck, UserCheck, Mic, Volume2, DollarSign,
+  XCircle, Video, BarChart3
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

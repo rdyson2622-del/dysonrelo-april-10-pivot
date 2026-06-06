@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Home, Map, CheckCircle2, LayoutDashboard, Send, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import PlanVoiceNote from '@/components/dashboard/PlanVoiceNote';
 import RelocationProfileCard from '@/components/dashboard/RelocationProfileCard';
-import ReadyToStart from '@/components/dashboard/ReadyToStart';
 import DashboardServicePreviews from '@/components/dashboard/DashboardServicePreviews';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import ClientMessages from '@/components/dashboard/ClientMessages';

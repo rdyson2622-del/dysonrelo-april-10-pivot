@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Star, ExternalLink, ChevronDown, ChevronUp, Trash2, CheckCircle2, GripVertical } from 'lucide-react';
+import { Star, ExternalLink, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

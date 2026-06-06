@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, BookOpen, Users, TrendingUp, Star, ArrowRight
+  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';

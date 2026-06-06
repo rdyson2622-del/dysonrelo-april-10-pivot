@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Check, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Check, Clock, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const TASK_ICONS = {

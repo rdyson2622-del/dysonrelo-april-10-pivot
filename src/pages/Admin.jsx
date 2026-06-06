@@ -3,12 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import {
-  LayoutDashboard, Users, Home, UserCheck, Search, SendHorizontal, Flag,
-  BookOpen, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
-  Brain, AlertTriangle, Sparkles, Zap, ChevronRight, TrendingUp
+import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
+  Brain, AlertTriangle, Sparkles, TrendingUp
 } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const GOLD = '#D4AF37';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
-import { getSectionsForPage, getCurrentSection } from '@/lib/sectionRegistry';
+import { getCurrentSection } from '@/lib/sectionRegistry';
 
 export default function PageNumberBadge() {
   const location = useLocation();

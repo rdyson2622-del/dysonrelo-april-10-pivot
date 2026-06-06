@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate, Link } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
 import PageNumberBadge from '../PageNumberBadge';

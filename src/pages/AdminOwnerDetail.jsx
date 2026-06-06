@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Phone, Clock, FileText } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PropertyHistory from '../components/admin/PropertyHistory';
 import ContactNotesSection from '../components/admin/ContactNotesSection';

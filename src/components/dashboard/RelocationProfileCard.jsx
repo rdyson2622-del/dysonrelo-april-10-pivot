@@ -4,7 +4,7 @@ import {
   MapPin, Calendar, DollarSign, Edit3, Check, X, AlertTriangle,
   ChevronDown, ChevronUp, Clock, TrendingUp, RotateCcw, MapPinned,
   Wallet, Building, ClipboardList, Sparkles, Info, Phone, Mail,
-  FileSignature, UserCheck, Home, Search, FileText, Key, Truck,
+  FileSignature, Home, Search, FileText, Key, Truck,
   ShieldCheck, DollarSign as DollarIcon, Scale, CheckCircle2
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';

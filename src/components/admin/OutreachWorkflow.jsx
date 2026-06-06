@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, MessageSquare, User, CheckCircle2, Zap, Flag } from 'lucide-react';
+import { MessageSquare, User, CheckCircle2, Zap, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const STAGES = [

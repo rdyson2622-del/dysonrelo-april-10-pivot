@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const TAN = '#ede0cc';

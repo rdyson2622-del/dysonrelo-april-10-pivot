@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Send, X, Maximize2, Minimize2, MessageCircle, Map, ClipboardList, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import ChatBubble from './ChatBubble';
 import VoiceOnboarding from './VoiceOnboarding';
 import MovePlan from './MovePlan';
 import { base44 } from '@/api/base44Client';
-import { speakAsCharlie, stopCharlie, isCharlieSpeaking } from './charlieVoice';
+import { speakAsCharlie, stopCharlie } from './charlieVoice';
 
 
 const GOLD = '#D4AF37';

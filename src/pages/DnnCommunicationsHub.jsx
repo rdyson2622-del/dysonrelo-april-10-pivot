@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Send, Plus, Edit2, Trash2, CheckCircle, Archive, Globe } from 'lucide-react';
+import { Send, Plus, Edit2, Trash2, Archive, Globe } from 'lucide-react';
 
 const STATUS_STYLES = {
   draft:    { bg: 'bg-slate-100', text: 'text-slate-600', label: 'Draft' },

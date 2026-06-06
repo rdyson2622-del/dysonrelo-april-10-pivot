@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
-import ChatInterface from '../components/charlie/ChatInterface';
 
 const GOLD = '#D4AF37';
 

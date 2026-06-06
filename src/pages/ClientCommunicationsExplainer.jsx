@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, MessageSquare, Phone, CheckCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle, MessageSquare, CheckCircle } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

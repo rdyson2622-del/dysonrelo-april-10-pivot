@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, ChevronRight, User, CheckCircle2, Zap, Flag, Phone, MapPin, DollarSign, Calendar, Star, ChevronDown } from 'lucide-react';
+import { MessageSquare, ChevronRight, User, CheckCircle2, Zap, Flag, Phone, Star } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, Send, Pause, Play, X, MapPin } from 'lucide-react';
+import { Calendar, Pause, Play, X, MapPin } from 'lucide-react';
 
 const STATUS_COLORS = {
   scheduled: 'bg-amber-100 text-amber-700',

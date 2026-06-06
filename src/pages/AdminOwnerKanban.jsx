@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Phone, MapPin, MessageSquare, Calendar, DollarSign, X, ChevronRight, Plus, ExternalLink } from 'lucide-react';
+import { Phone, MapPin, MessageSquare, Calendar, DollarSign, X, ChevronRight } from 'lucide-react';
 
 // ── Column definitions ────────────────────────────────────────────────────────
 const COLUMNS = [

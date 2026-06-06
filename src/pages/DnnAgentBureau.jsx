@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Users, Plus, Edit2, Trash2, Upload, Copy, CheckCircle, Star, Shield, Globe } from 'lucide-react';
+import { Plus, Edit2, Trash2, Upload, Copy, CheckCircle, Shield } from 'lucide-react';
 
 const STATUS_STYLES = {
   prospect: { bg: 'bg-slate-700', text: 'text-slate-200', label: 'Prospect' },
