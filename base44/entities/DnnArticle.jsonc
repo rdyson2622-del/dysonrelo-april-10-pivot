@@ -18,6 +18,27 @@
       "type": "string",
       "description": "Optional video URL (YouTube, Vimeo, Loom, etc.)"
     },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Thumbnail image URL for the video"
+    },
+    "production_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "rendering",
+        "complete",
+        "failed"
+      ],
+      "default": "none",
+      "description": "Video production pipeline status"
+    },
+    "video_completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the video render completed"
+    },
     "audio_url": {
       "type": "string",
       "description": "URL to Gemini TTS-generated audio file for this article"
