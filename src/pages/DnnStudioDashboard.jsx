@@ -181,11 +181,18 @@ export default function DnnStudioDashboard() {
             <p className="text-[10px] tracking-widest uppercase text-slate-600">Video Production Control Panel</p>
           </div>
         </div>
-        <button onClick={() => refetch()}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold hover:opacity-80"
-          style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
-          <RefreshCw className="w-3 h-3" /> Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <Link to="/admin/dnn/script-review"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold hover:opacity-80"
+            style={{ background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)', color: '#4ade80' }}>
+            <FileText className="w-3 h-3" /> Script Review
+          </Link>
+          <button onClick={() => refetch()}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.25)', color: '#D4AF37' }}>
+            <RefreshCw className="w-3 h-3" /> Refresh
+          </button>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">

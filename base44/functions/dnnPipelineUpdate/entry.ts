@@ -21,7 +21,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  * videoUrl is OPTIONAL (only required/used when status = "complete").
  */
 
-const VALID_STATUSES = ['pending', 'rendering', 'complete', 'failed'];
+const VALID_STATUSES = ['pending', 'rendering', 'complete', 'failed', 'approved_for_render', 'needs_revision', 'pending_review'];
 
 async function sendAdminSMS(message) {
   const sid = Deno.env.get('TWILIO_ACCOUNT_SID');
@@ -66,7 +66,19 @@ Deno.serve(async (req) => {
 
     // 2. Validate body
     const body = await req.json();
-    const { articleId, videoUrl, thumbnail, thumbnailUrl, status } = body || {};
+    const {
+      articleId,
+      videoUrl,
+      thumbnail,
+      thumbnailUrl,
+      status,
+      heygenVideoId,
+      heygen_video_id,
+      renderVersion,
+      render_version,
+      lastRenderError,
+      last_render_error,
+    } = body || {};
 
     if (!articleId) {
       return Response.json({ error: 'articleId is required' }, { status: 400 });
@@ -86,11 +98,32 @@ Deno.serve(async (req) => {
     if (status === 'complete') {
       updates.video_url = videoUrl;
       updates.video_completed_at = new Date().toISOString();
+      updates.render_requested = false;
       const thumb = thumbnail || thumbnailUrl;
       if (thumb) updates.thumbnail_url = thumb;
     } else if (videoUrl) {
       // allow setting a URL on non-complete statuses if provided (optional)
       updates.video_url = videoUrl;
+    }
+
+    // When rendering starts, clear the render_requested flag so n8n won't re-pull it
+    if (status === 'rendering') {
+      updates.render_requested = false;
+    }
+
+    // Capture optional render metadata regardless of status
+    const hgId = heygenVideoId || heygen_video_id;
+    if (hgId !== undefined && hgId !== null) updates.heygen_video_id = hgId;
+
+    const rv = renderVersion ?? render_version;
+    if (rv !== undefined && rv !== null && Number.isFinite(Number(rv))) {
+      updates.render_version = Number(rv);
+    }
+
+    // On failure, record the error message
+    if (status === 'failed') {
+      const errMsg = lastRenderError || last_render_error;
+      if (errMsg) updates.last_render_error = String(errMsg);
     }
 
     // 4. Update the article

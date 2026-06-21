@@ -26,10 +26,15 @@
       "type": "string",
       "enum": [
         "none",
+        "new",
+        "script_generated",
+        "pending_review",
+        "approved_for_render",
         "pending",
         "rendering",
         "complete",
-        "failed"
+        "failed",
+        "needs_revision"
       ],
       "default": "none",
       "description": "Video production pipeline status"
@@ -42,6 +47,89 @@
     "audio_url": {
       "type": "string",
       "description": "URL to Gemini TTS-generated audio file for this article"
+    },
+    "generated_opening_script": {
+      "type": "string",
+      "description": "AI-generated DNN branded opening script (Scene 1)"
+    },
+    "generated_body_script": {
+      "type": "string",
+      "description": "AI-generated local news story script (Scene 2)"
+    },
+    "generated_closing_script": {
+      "type": "string",
+      "description": "AI-generated Dyson & Dyson closing/outro script (Scene 3)"
+    },
+    "generated_full_script": {
+      "type": "string",
+      "description": "AI-generated complete script (opening + body + closing)"
+    },
+    "generated_lower_third_text": {
+      "type": "string",
+      "description": "AI-generated lower-third / chyron text"
+    },
+    "edited_opening_script": {
+      "type": "string",
+      "description": "Admin-edited opening script"
+    },
+    "edited_body_script": {
+      "type": "string",
+      "description": "Admin-edited body script"
+    },
+    "edited_closing_script": {
+      "type": "string",
+      "description": "Admin-edited closing script"
+    },
+    "edited_full_script": {
+      "type": "string",
+      "description": "Admin-edited full script \u2014 takes priority over generated_full_script when present"
+    },
+    "edited_lower_third_text": {
+      "type": "string",
+      "description": "Admin-edited lower-third text"
+    },
+    "pronunciation_notes": {
+      "type": "string",
+      "description": "Admin pronunciation guidance for HeyGen/TTS"
+    },
+    "correction_notes": {
+      "type": "string",
+      "description": "Internal admin correction notes"
+    },
+    "admin_approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether admin has approved this script for rendering"
+    },
+    "render_requested": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a render has been requested for n8n to pick up"
+    },
+    "render_version": {
+      "type": "number",
+      "default": 0,
+      "description": "Increments each time a re-render is requested"
+    },
+    "heygen_video_id": {
+      "type": "string",
+      "description": "HeyGen video job ID for the current render"
+    },
+    "last_render_error": {
+      "type": "string",
+      "description": "Last render failure error message"
+    },
+    "scene_1_background_url": {
+      "type": "string",
+      "description": "Background image URL for Scene 1 (opening)"
+    },
+    "scene_2_background_url": {
+      "type": "string",
+      "description": "Background image URL for Scene 2 (body)"
+    },
+    "scene_3_background_url": {
+      "type": "string",
+      "description": "Background image URL for Scene 3 (closing)"
     },
     "interview_qa": {
       "type": "array",
