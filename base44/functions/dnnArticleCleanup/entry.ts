@@ -12,6 +12,8 @@ Deno.serve(async (req) => {
     const oldArticles = await base44.asServiceRole.entities.DnnArticle.filter({});
     
     const toDelete = oldArticles.filter(a => {
+      // Never delete pinned/featured articles (e.g. the standalone DNN Intelligence Report video)
+      if ((a.tags || []).includes('featured')) return false;
       const generated = new Date(a.generated_date || a.created_date);
       return generated < new Date(twoDaysAgo);
     });
