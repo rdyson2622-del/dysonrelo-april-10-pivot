@@ -97,6 +97,11 @@ import AdminPRNAgreements from './pages/AdminPRNAgreements';
 import AdminLeadHandoff from './pages/AdminLeadHandoff';
 import DnnStudioDashboard from './pages/DnnStudioDashboard';
 import DnnScriptReview from './pages/DnnScriptReview';
+import Shard2Dashboard from './pages/Shard2Dashboard.js';
+import Shard2Pages from './pages/Shard2Pages.js';
+import Shard2Scripts from './pages/Shard2Scripts.js';
+import Shard2Library from './pages/Shard2Library.js';
+import Shard2Settings from './pages/Shard2Settings.js';
 import SendingAgentLanding from './pages/SendingAgentLanding';
 import AgentLanding from './pages/AgentLanding';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -233,6 +238,11 @@ const AuthenticatedApp = () => {
         <Route path="/admin/lead-handoff" element={<AdminLeadHandoff />} />
         <Route path="/admin/dnn/studio" element={<DnnStudioDashboard />} />
         <Route path="/admin/dnn/script-review" element={<DnnScriptReview />} />
+        <Route path="/admin/shard2" element={<Shard2Dashboard />} />
+        <Route path="/admin/shard2/pages" element={<Shard2Pages />} />
+        <Route path="/admin/shard2/scripts" element={<Shard2Scripts />} />
+        <Route path="/admin/shard2/library" element={<Shard2Library />} />
+        <Route path="/admin/shard2/settings" element={<Shard2Settings />} />
       </Route>
       
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
