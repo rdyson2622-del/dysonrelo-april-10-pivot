@@ -1,0 +1,62 @@
+{
+  "name": "DysonPage",
+  "type": "object",
+  "properties": {
+    "pageKey": {
+      "type": "string",
+      "description": "Unique slug/key for this page e.g. relocation-services"
+    },
+    "pageTitle": {
+      "type": "string",
+      "description": "Human-readable page title"
+    },
+    "pageUrl": {
+      "type": "string",
+      "description": "Full public URL of the page"
+    },
+    "pageRoute": {
+      "type": "string",
+      "description": "In-app route e.g. /relo-management"
+    },
+    "pageType": {
+      "type": "string",
+      "enum": [
+        "consumer_page",
+        "service_page",
+        "presentation_page",
+        "explainer_page"
+      ],
+      "default": "service_page",
+      "description": "Type/category of the page"
+    },
+    "pageText": {
+      "type": "string",
+      "description": "Raw page content / copy used to generate Charlie's script"
+    },
+    "pageSummary": {
+      "type": "string",
+      "description": "Short summary of the page"
+    },
+    "pageScreenshotUrl": {
+      "type": "string",
+      "description": "URL to a screenshot of the page used as Cloudinary background"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active",
+      "description": "Whether this page is in rotation for explainers"
+    },
+    "displayOrder": {
+      "type": "number",
+      "default": 0,
+      "description": "Sort order in the manager"
+    }
+  },
+  "required": [
+    "pageTitle"
+  ]
+}

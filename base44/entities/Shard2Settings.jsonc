@@ -1,0 +1,55 @@
+{
+  "name": "Shard2Settings",
+  "type": "object",
+  "properties": {
+    "defaultAvatarId": {
+      "type": "string",
+      "description": "Default Charlie Simmons HeyGen avatar id"
+    },
+    "defaultVoiceId": {
+      "type": "string",
+      "description": "Default Charlie Simmons HeyGen voice id"
+    },
+    "defaultVideoWidth": {
+      "type": "number",
+      "default": 1920,
+      "description": "Final composed video width"
+    },
+    "defaultVideoHeight": {
+      "type": "number",
+      "default": 1080,
+      "description": "Final composed video height"
+    },
+    "defaultCharliePosition": {
+      "type": "string",
+      "enum": [
+        "upper_right",
+        "upper_left",
+        "lower_right",
+        "lower_left"
+      ],
+      "default": "upper_right",
+      "description": "Default position for Charlie's box"
+    },
+    "defaultCharlieBoxWidth": {
+      "type": "number",
+      "default": 480,
+      "description": "Default Charlie box width"
+    },
+    "defaultCharlieBoxHeight": {
+      "type": "number",
+      "default": 270,
+      "description": "Default Charlie box height"
+    },
+    "n8nRenderWebhookUrl": {
+      "type": "string",
+      "description": "n8n webhook URL to trigger render (optional)"
+    },
+    "singleton_key": {
+      "type": "string",
+      "default": "default",
+      "description": "Ensures a single settings record"
+    }
+  },
+  "required": []
+}

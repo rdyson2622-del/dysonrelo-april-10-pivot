@@ -1,0 +1,43 @@
+{
+  "name": "CharlieVideoLibrary",
+  "type": "object",
+  "properties": {
+    "explainerId": {
+      "type": "string",
+      "description": "Relation to CharliePageExplainer id"
+    },
+    "pageTitle": {
+      "type": "string",
+      "description": "Denormalized page title"
+    },
+    "videoTitle": {
+      "type": "string",
+      "description": "Display title for the video"
+    },
+    "finalVideoUrl": {
+      "type": "string",
+      "description": "Final composed explainer video URL"
+    },
+    "thumbnailUrl": {
+      "type": "string",
+      "description": "Thumbnail image URL"
+    },
+    "durationSeconds": {
+      "type": "number",
+      "description": "Duration in seconds"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed",
+        "archived"
+      ],
+      "default": "completed",
+      "description": "Library status"
+    }
+  },
+  "required": [
+    "pageTitle"
+  ]
+}

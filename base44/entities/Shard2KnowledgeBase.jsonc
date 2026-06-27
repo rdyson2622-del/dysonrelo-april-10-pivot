@@ -1,0 +1,39 @@
+{
+  "name": "Shard2KnowledgeBase",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short title for this knowledge entry"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "brand_tone",
+        "service_info",
+        "script_rule",
+        "faq",
+        "visual_rule"
+      ],
+      "default": "script_rule",
+      "description": "Type of guidance"
+    },
+    "content": {
+      "type": "string",
+      "description": "The guidance content fed to the script generator"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active",
+      "description": "Whether this entry is used during generation"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

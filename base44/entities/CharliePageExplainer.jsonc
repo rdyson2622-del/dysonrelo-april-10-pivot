@@ -1,0 +1,146 @@
+{
+  "name": "CharliePageExplainer",
+  "type": "object",
+  "properties": {
+    "pageId": {
+      "type": "string",
+      "description": "Relation to DysonPage id"
+    },
+    "pageKey": {
+      "type": "string",
+      "description": "Denormalized page key"
+    },
+    "pageTitle": {
+      "type": "string",
+      "description": "Denormalized page title"
+    },
+    "pageUrl": {
+      "type": "string",
+      "description": "Denormalized page URL"
+    },
+    "pageScreenshotUrl": {
+      "type": "string",
+      "description": "Denormalized screenshot URL used as Cloudinary background"
+    },
+    "rawPageText": {
+      "type": "string",
+      "description": "Raw page content snapshot at generation time"
+    },
+    "aiGeneratedOverview": {
+      "type": "string",
+      "description": "AI-generated overview of the page"
+    },
+    "aiGeneratedScript": {
+      "type": "string",
+      "description": "AI-generated Charlie script (never used directly)"
+    },
+    "finalScript": {
+      "type": "string",
+      "description": "Admin-edited final script \u2014 the only script n8n renders"
+    },
+    "scriptStatus": {
+      "type": "string",
+      "enum": [
+        "new",
+        "generated",
+        "needs_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "new",
+      "description": "Script review lifecycle"
+    },
+    "renderStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "queued",
+        "rendering",
+        "heygen_completed",
+        "composing",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render lifecycle"
+    },
+    "avatarId": {
+      "type": "string",
+      "description": "HeyGen avatar id (Charlie)"
+    },
+    "voiceId": {
+      "type": "string",
+      "description": "HeyGen voice id (Charlie)"
+    },
+    "heygenVideoId": {
+      "type": "string",
+      "description": "HeyGen render job id"
+    },
+    "heygenVideoUrl": {
+      "type": "string",
+      "description": "Raw HeyGen avatar video URL"
+    },
+    "cloudinaryAvatarPublicId": {
+      "type": "string",
+      "description": "Cloudinary public id for the uploaded avatar clip"
+    },
+    "cloudinaryFinalPublicId": {
+      "type": "string",
+      "description": "Cloudinary public id for the final composed video"
+    },
+    "finalVideoUrl": {
+      "type": "string",
+      "description": "Final composed explainer video URL (Charlie box over page background)"
+    },
+    "thumbnailUrl": {
+      "type": "string",
+      "description": "Thumbnail image URL"
+    },
+    "charliePosition": {
+      "type": "string",
+      "enum": [
+        "upper_right",
+        "upper_left",
+        "lower_right",
+        "lower_left"
+      ],
+      "default": "upper_right",
+      "description": "Where Charlie's box sits over the page"
+    },
+    "charlieBoxWidth": {
+      "type": "number",
+      "default": 480,
+      "description": "Charlie box width in px"
+    },
+    "charlieBoxHeight": {
+      "type": "number",
+      "default": 270,
+      "description": "Charlie box height in px"
+    },
+    "durationSeconds": {
+      "type": "number",
+      "description": "Final video duration in seconds"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last error message if render failed"
+    },
+    "retryCount": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of retries attempted"
+    },
+    "approvedBy": {
+      "type": "string",
+      "description": "Admin email who approved"
+    },
+    "approvedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the script was approved"
+    }
+  },
+  "required": [
+    "pageTitle"
+  ]
+}
