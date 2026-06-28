@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+
+// Belt-and-suspenders: forcibly hide the dev PageNumberBadge from the captured DOM,
+// regardless of any stray global mount. The badge is the only fixed element with
+// a gold "16" pill; we target it by its distinctive title + position via JS on mount.
+function useHideDevBadge() {
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.id = 'video-bg-hide-chrome';
+    // Hide any fixed bottom-right pill badge that isn't part of this background.
+    style.textContent = `[title*="(Client)"], [title*="(Admin)"] { display: none !important; }`;
+    document.head.appendChild(style);
+    return () => { document.getElementById('video-bg-hide-chrome')?.remove(); };
+  }, []);
+}
 
 const SERVICES = [
   { icon: MessageCircle, title: 'AI Concierge Chat' },
@@ -27,6 +41,7 @@ const SERVICES = [
  * Captured by shard2CapturePageScreenshot at viewport 1920x1080.
  */
 export default function ReloManagementVideoBg() {
+  useHideDevBadge();
   return (
     <div
       className="fixed inset-0 overflow-hidden flex flex-col"
