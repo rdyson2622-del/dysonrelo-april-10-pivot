@@ -1,4 +1,37 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { Image } from 'https://deno.land/x/imagescript@1.2.17/mod.ts';
+
+const OUT_W = 1920;
+const OUT_H = 1080;
+
+/**
+ * Force any decoded image into an exact OUT_W x OUT_H frame using a cover-crop
+ * (fill the whole frame, crop overflow, never letterbox/pillarbox).
+ */
+async function toExact16x9(buffer) {
+  const img = await Image.decode(new Uint8Array(buffer));
+  const srcRatio = img.width / img.height;
+  const dstRatio = OUT_W / OUT_H;
+
+  let cropW, cropH, cropX, cropY;
+  if (srcRatio > dstRatio) {
+    // Source too wide -> crop the sides
+    cropH = img.height;
+    cropW = Math.round(img.height * dstRatio);
+    cropX = Math.round((img.width - cropW) / 2);
+    cropY = 0;
+  } else {
+    // Source too tall -> crop top/bottom (keep the top of the page)
+    cropW = img.width;
+    cropH = Math.round(img.width / dstRatio);
+    cropX = 0;
+    cropY = 0; // anchor to top so the hero/header stays in frame
+  }
+
+  const cropped = img.crop(cropX, cropY, cropW, cropH);
+  cropped.resize(OUT_W, OUT_H);
+  return await cropped.encode();
+}
 
 /**
  * shard2CapturePageScreenshot
@@ -75,17 +108,22 @@ Deno.serve(async (req) => {
     //   /viewport/1920x1080 -> render at desktop 16:9 viewport (no mobile sidebars)
     //   /crop/1080   -> crop height to 1080 (kills the long vertical scroll)
     //   /fullpage is intentionally OMITTED so we get the visible viewport only
-    const encoded = encodeURIComponent(targetUrl);
+    // Render at a real desktop 1920x1080 viewport, visible area only (no fullpage).
+    // crop/1080 trims the long vertical scroll. We still hard-normalize below.
     const shotUrl = `https://image.thum.io/get/width/1920/viewport/1920x1080/crop/1080/noanimate/${targetUrl}`;
 
     const shotRes = await fetch(shotUrl);
     if (!shotRes.ok) {
       return Response.json({ error: `Screenshot service failed (${shotRes.status})`, shotUrl }, { status: 502 });
     }
-    const imgBuffer = await shotRes.arrayBuffer();
-    if (!imgBuffer || imgBuffer.byteLength < 1000) {
+    const rawBuffer = await shotRes.arrayBuffer();
+    if (!rawBuffer || rawBuffer.byteLength < 1000) {
       return Response.json({ error: 'Screenshot service returned an empty image', shotUrl }, { status: 502 });
     }
+
+    // Hard-normalize to EXACTLY 1920x1080 via cover-crop so HeyGen always gets a
+    // true full-frame 16:9 background — no sidebars, no letterboxing, ever.
+    const imgBuffer = await toExact16x9(rawBuffer);
 
     // Re-upload to Base44 public storage for a stable direct URL
     const file = new File([imgBuffer], `shard2-bg-${Date.now()}.png`, { type: 'image/png' });
