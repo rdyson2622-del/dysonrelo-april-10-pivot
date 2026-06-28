@@ -57,7 +57,7 @@ export default function ReloManagementVideoBg() {
         style={{ border: '1px solid rgba(212,175,55,0.18)' }} />
 
       {/* ── Brand eyebrow ── */}
-      <div className="px-20 pt-16">
+      <div className="px-20 pt-10">
         <p className="text-sm font-black tracking-[0.5em] uppercase" style={{ color: GOLD }}>
           DYSON &amp; DYSON · RELOCATION SERVICES
         </p>
@@ -65,7 +65,7 @@ export default function ReloManagementVideoBg() {
       </div>
 
       {/* ── Main headline block (left-weighted so top-right stays clear for the avatar) ── */}
-      <div className="flex-1 flex flex-col justify-start pt-8 px-20 max-w-[64%]">
+      <div className="flex-1 flex flex-col justify-start pt-0 -mt-6 px-20 max-w-[64%]">
         <h1 className="display-heading"
           style={{ fontSize: '4rem', lineHeight: 1.02, letterSpacing: '0.1em', color: '#fff' }}>
           WE DON'T SEND
