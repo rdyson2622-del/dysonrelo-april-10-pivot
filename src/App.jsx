@@ -263,7 +263,7 @@ function App() {
         <Router>
           <AuthenticatedApp />
           <Toaster />
-          <PageNumberBadge />
+          {new URLSearchParams(window.location.search).get('videoMode') !== 'true' && <PageNumberBadge />}
         </Router>
       </QueryClientProvider>
     </AuthProvider>
