@@ -7,18 +7,30 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  *
  * Auth: x-pipeline-secret header must match N8N_PIPELINE_SECRET.
  *
- * Body:
+ * n8n-friendly body (matches Shard1-style naming):
  *   {
- *     explainerId: string (required),
- *     renderStatus: "queued" | "rendering" | "heygen_completed" | "composing" | "completed" | "failed",
- *     heygenVideoId?, heygenVideoUrl?, cloudinaryAvatarPublicId?, cloudinaryFinalPublicId?,
- *     finalVideoUrl?, thumbnailUrl?, durationSeconds?, errorMessage?
+ *     "articleId": "record_id",          // required (alias: explainerId)
+ *     "status": "rendering",             // required (alias: renderStatus)
+ *     "heygen_video_id": "video_id",     // optional
+ *     "videoUrl": "final_video_url",     // optional (on complete)
+ *     "thumbnail": "thumbnail_url",      // optional (on complete)
+ *     "last_render_error": "error msg"   // optional (on failed)
  *   }
  *
- * When renderStatus = "completed", a CharlieVideoLibrary record is upserted
- * (updated if one already exists for this explainerId, otherwise created).
+ * Accepted status values: queued | rendering | heygen_completed | composing | complete | completed | failed
+ * ("complete" is normalized to "completed").
+ *
+ * When status = complete/completed, a CharlieVideoLibrary record is upserted.
  */
-const VALID_RENDER_STATUSES = ['queued', 'rendering', 'heygen_completed', 'composing', 'completed', 'failed'];
+const STATUS_MAP = {
+  queued: 'queued',
+  rendering: 'rendering',
+  heygen_completed: 'heygen_completed',
+  composing: 'composing',
+  complete: 'completed',
+  completed: 'completed',
+  failed: 'failed',
+};
 
 Deno.serve(async (req) => {
   try {
@@ -37,24 +49,23 @@ Deno.serve(async (req) => {
 
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
-    const {
-      explainerId,
-      renderStatus,
-      heygenVideoId,
-      heygenVideoUrl,
-      cloudinaryAvatarPublicId,
-      cloudinaryFinalPublicId,
-      finalVideoUrl,
-      thumbnailUrl,
-      durationSeconds,
-      errorMessage,
-    } = body || {};
+
+    // Accept both n8n naming and internal naming
+    const explainerId = body.articleId || body.explainerId;
+    const rawStatus = body.status || body.renderStatus;
+    const heygenVideoId = body.heygen_video_id ?? body.heygenVideoId;
+    const finalVideoUrl = body.videoUrl ?? body.finalVideoUrl;
+    const thumbnailUrl = body.thumbnail ?? body.thumbnailUrl;
+    const errorMessage = body.last_render_error ?? body.errorMessage;
+    const durationSeconds = body.durationSeconds;
+    const heygenVideoUrl = body.heygenVideoUrl;
 
     if (!explainerId) {
-      return Response.json({ error: 'explainerId is required' }, { status: 400 });
+      return Response.json({ error: 'articleId is required' }, { status: 400 });
     }
-    if (!renderStatus || !VALID_RENDER_STATUSES.includes(renderStatus)) {
-      return Response.json({ error: `renderStatus must be one of: ${VALID_RENDER_STATUSES.join(', ')}` }, { status: 400 });
+    const renderStatus = STATUS_MAP[rawStatus];
+    if (!renderStatus) {
+      return Response.json({ error: `status must be one of: ${Object.keys(STATUS_MAP).join(', ')}` }, { status: 400 });
     }
 
     const explainerArr = await base44.asServiceRole.entities.CharliePageExplainer.filter({ id: explainerId });
@@ -66,8 +77,6 @@ Deno.serve(async (req) => {
     const updates = { renderStatus };
     if (heygenVideoId !== undefined) updates.heygenVideoId = heygenVideoId;
     if (heygenVideoUrl !== undefined) updates.heygenVideoUrl = heygenVideoUrl;
-    if (cloudinaryAvatarPublicId !== undefined) updates.cloudinaryAvatarPublicId = cloudinaryAvatarPublicId;
-    if (cloudinaryFinalPublicId !== undefined) updates.cloudinaryFinalPublicId = cloudinaryFinalPublicId;
     if (finalVideoUrl !== undefined) updates.finalVideoUrl = finalVideoUrl;
     if (thumbnailUrl !== undefined) updates.thumbnailUrl = thumbnailUrl;
     if (durationSeconds !== undefined) updates.durationSeconds = durationSeconds;
@@ -99,7 +108,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({ success: true, explainerId, renderStatus });
+    return Response.json({ success: true, articleId: explainerId, status: renderStatus });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

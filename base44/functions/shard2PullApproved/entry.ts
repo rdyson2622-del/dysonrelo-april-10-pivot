@@ -4,15 +4,29 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  * shard2PullApproved
  *
  * M2M endpoint called by n8n to pull CharliePageExplainer records that are
- * approved and queued for rendering.
+ * ready for rendering (scriptStatus = "approved" AND renderStatus = "queued").
+ * Backwards-compat: approved records still in "not_started" are also returned.
  *
  * Auth: x-pipeline-secret header must match N8N_PIPELINE_SECRET.
  *
- * Render trigger: scriptStatus = "approved" AND renderStatus = "queued".
- * For backwards compatibility, records still in "not_started" are also returned.
+ * Request body:
+ *   { "limit": 1 }   // optional, default 1
  *
- * Clean lifecycle:
- *   new → needs_review → approved → queued → rendering → heygen_completed → composing → completed
+ * Response:
+ *   {
+ *     "items": [
+ *       {
+ *         "id": "record_id",
+ *         "script": "voice script for Ruben",
+ *         "pageScreenshotUrl": "public image URL",
+ *         "renderStatus": "queued",
+ *         // extra fields for HeyGen Template API:
+ *         "pageTitle", "pageUrl", "avatarId", "voiceId",
+ *         "charliePosition", "charlieBoxWidth", "charlieBoxHeight"
+ *       }
+ *     ],
+ *     "count": 1
+ *   }
  */
 Deno.serve(async (req) => {
   try {
@@ -24,6 +38,9 @@ Deno.serve(async (req) => {
     if (!providedSecret || providedSecret !== expectedSecret) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const body = await req.json().catch(() => ({}));
+    const limit = Number(body?.limit) > 0 ? Number(body.limit) : 1;
 
     const base44 = createClientFromRequest(req);
 
@@ -44,25 +61,23 @@ Deno.serve(async (req) => {
       if (seen.has(e.id)) return false;
       seen.add(e.id);
       return true;
-    });
+    }).slice(0, limit);
 
-    const payload = explainers.map((e) => ({
-      explainerId: e.id,
-      pageId: e.pageId,
-      pageKey: e.pageKey,
+    const items = explainers.map((e) => ({
+      id: e.id,
+      script: e.finalScript,
+      pageScreenshotUrl: e.pageScreenshotUrl,
+      renderStatus: e.renderStatus,
       pageTitle: e.pageTitle,
       pageUrl: e.pageUrl,
-      pageScreenshotUrl: e.pageScreenshotUrl,
-      finalScript: e.finalScript,
       avatarId: e.avatarId,
       voiceId: e.voiceId,
       charliePosition: e.charliePosition,
       charlieBoxWidth: e.charlieBoxWidth,
       charlieBoxHeight: e.charlieBoxHeight,
-      renderStatus: e.renderStatus,
     }));
 
-    return Response.json({ success: true, count: payload.length, explainers: payload });
+    return Response.json({ items, count: items.length });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
