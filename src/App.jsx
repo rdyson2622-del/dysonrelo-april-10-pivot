@@ -81,6 +81,7 @@ import AdminAgentVetting from './pages/AdminAgentVetting';
 import AdminLenderVetting from './pages/AdminLenderVetting';
 import AdminBureauStories from './pages/AdminBureauStories';
 import ReloManagement from './pages/ReloManagement';
+import ReloManagementVideoBg from './pages/ReloManagementVideoBg';
 import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 import RoleSelector from './pages/RoleSelector';
@@ -245,6 +246,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/shard2/settings" element={<Shard2Settings />} />
       </Route>
       
+      <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/agent-landing" element={<AgentLanding />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
