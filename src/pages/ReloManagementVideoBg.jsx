@@ -65,18 +65,18 @@ export default function ReloManagementVideoBg() {
       </div>
 
       {/* ── Main headline block (left-weighted so top-right stays clear for the avatar) ── */}
-      <div className="flex-1 flex flex-col justify-center px-20 max-w-[64%]">
+      <div className="flex-1 flex flex-col justify-start pt-8 px-20 max-w-[64%]">
         <h1 className="display-heading"
-          style={{ fontSize: '4.6rem', lineHeight: 1.02, letterSpacing: '0.1em', color: '#fff' }}>
+          style={{ fontSize: '4rem', lineHeight: 1.02, letterSpacing: '0.1em', color: '#fff' }}>
           WE DON'T SEND
           <br />YOU A MAP.
         </h1>
-        <h2 className="display-heading mt-5"
-          style={{ fontSize: '3rem', lineHeight: 1.05, letterSpacing: '0.1em', color: GOLD }}>
+        <h2 className="display-heading mt-4"
+          style={{ fontSize: '2.6rem', lineHeight: 1.05, letterSpacing: '0.1em', color: GOLD }}>
           WE MAKE THE
           <br />JOURNEY WITH YOU.
         </h2>
-        <p className="mt-8 text-2xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.82)', maxWidth: '46rem' }}>
+        <p className="mt-6 text-2xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.82)', maxWidth: '46rem' }}>
           A white-glove relocation management program — vetted agents, full
           logistics, escrow tracking, and a dedicated AI concierge guiding every
           step of your move.
