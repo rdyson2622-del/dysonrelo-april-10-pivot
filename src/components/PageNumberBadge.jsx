@@ -22,6 +22,9 @@ export default function PageNumberBadge() {
 
   if (!location?.pathname) return null;
 
+  // Hide in video pipeline mode — the badge must not appear in HeyGen backgrounds.
+  if (new URLSearchParams(location.search).get('videoMode') === 'true') return null;
+
   // Find page number by path
   let pageNumber = null;
   let pageInfo = null;
