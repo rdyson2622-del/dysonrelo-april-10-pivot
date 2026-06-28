@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Pencil, Sparkles, ExternalLink, Trash2, FileStack } from 'lucide-react';
+import { Plus, Pencil, Sparkles, ExternalLink, Trash2, FileStack, Camera, Loader } from 'lucide-react';
 import Shard2Header from '@/components/shard2/Shard2Header';
 import PageFormModal from '@/components/shard2/PageFormModal';
 
@@ -12,6 +12,8 @@ export default function Shard2Pages() {
   const [modalPage, setModalPage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [creating, setCreating] = useState(null);
+  const [capturing, setCapturing] = useState(null);
+  const [captureMsg, setCaptureMsg] = useState(null);
 
   const { data: pages = [], isLoading } = useQuery({
     queryKey: ['shard2Pages'],
@@ -36,6 +38,26 @@ export default function Shard2Pages() {
     if (!confirm(`Delete "${page.pageTitle}"?`)) return;
     await base44.entities.DysonPage.delete(page.id);
     queryClient.invalidateQueries({ queryKey: ['shard2Pages'] });
+  };
+
+  // Capture a clean 1920x1080 16:9 background from the page's public URL,
+  // upload it to public storage, and save it to pageScreenshotUrl (+ any explainer).
+  const handleCapture = async (page) => {
+    if (!page.pageUrl) {
+      setCaptureMsg({ id: page.id, type: 'err', text: 'Add a public Page URL first.' });
+      return;
+    }
+    setCapturing(page.id);
+    setCaptureMsg(null);
+    const res = await base44.functions.invoke('shard2CapturePageScreenshot', { pageId: page.id });
+    if (res.data?.success) {
+      setCaptureMsg({ id: page.id, type: 'ok', text: 'Background captured.' });
+      await queryClient.invalidateQueries({ queryKey: ['shard2Pages'] });
+      await queryClient.invalidateQueries({ queryKey: ['shard2Explainers'] });
+    } else {
+      setCaptureMsg({ id: page.id, type: 'err', text: res.data?.error || 'Capture failed.' });
+    }
+    setCapturing(null);
   };
 
   // Create an explainer from a page, then jump to the script editor.
@@ -110,8 +132,25 @@ export default function Shard2Pages() {
                   return (
                     <tr key={page.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                       <td className="px-4 py-3">
-                        <p className="font-bold text-white">{page.pageTitle}</p>
-                        {page.pageUrl && <p className="text-[11px] text-slate-600 truncate max-w-[220px]">{page.pageUrl}</p>}
+                        <div className="flex items-center gap-3">
+                          <div className="w-20 aspect-video rounded overflow-hidden flex-shrink-0"
+                            style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            {page.pageScreenshotUrl ? (
+                              <img src={page.pageScreenshotUrl} alt="bg" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Camera className="w-3.5 h-3.5 text-slate-700" />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-bold text-white">{page.pageTitle}</p>
+                            {page.pageUrl && <p className="text-[11px] text-slate-600 truncate max-w-[220px]">{page.pageUrl}</p>}
+                            {captureMsg?.id === page.id && (
+                              <p className="text-[10px] mt-0.5" style={{ color: captureMsg.type === 'err' ? '#f87171' : '#4ade80' }}>{captureMsg.text}</p>
+                            )}
+                          </div>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-slate-400 text-xs">{page.pageType?.replace(/_/g, ' ')}</td>
                       <td className="px-4 py-3">
@@ -130,6 +169,13 @@ export default function Shard2Pages() {
                               <ExternalLink className="w-3.5 h-3.5" />
                             </a>
                           )}
+                          <button onClick={() => handleCapture(page)} disabled={capturing === page.id}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                            style={{ background: 'rgba(96,165,250,0.12)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}
+                            title="Capture 1920×1080 background from page URL">
+                            {capturing === page.id ? <Loader className="w-3 h-3 animate-spin" /> : <Camera className="w-3 h-3" />}
+                            {capturing === page.id ? '...' : 'Capture BG'}
+                          </button>
                           <button onClick={() => openEdit(page)} className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400" title="Edit">
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
