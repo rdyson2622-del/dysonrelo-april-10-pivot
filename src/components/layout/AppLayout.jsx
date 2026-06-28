@@ -22,6 +22,16 @@ export default function AppLayout() {
   const hideFloatingCharlie = ['/Chat', '/Dashboard'].some(path => 
     location.pathname.startsWith(path)
   );
+
+  // Video pipeline mode: strip ALL portal chrome and render only the page.
+  const isVideoMode = new URLSearchParams(location.search).get('videoMode') === 'true';
+  if (isVideoMode) {
+    return (
+      <div className="fixed inset-0 overflow-hidden" style={{ background: '#0d0d0d' }}>
+        <Outlet />
+      </div>
+    );
+  }
   
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>

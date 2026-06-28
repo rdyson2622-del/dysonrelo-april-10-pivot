@@ -2,10 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, CheckCircle2, ArrowRight } from 'lucide-react';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
+import ReloManagementVideoBg from './ReloManagementVideoBg';
 
 const GOLD = '#D4AF37';
 
 export default function ReloManagement() {
+  // Video pipeline mode: render only the clean 1920×1080 background, no chrome.
+  const isVideoMode = new URLSearchParams(window.location.search).get('videoMode') === 'true';
+  if (isVideoMode) {
+    return <ReloManagementVideoBg />;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
 
