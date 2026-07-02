@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle, MapPin, UserCheck, Building2, Truck, Zap, GraduationCap, HeartPulse, CheckCircle2, ArrowRight } from 'lucide-react';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import ReloManagementVideoBg from './ReloManagementVideoBg';
 
 const GOLD = '#D4AF37';
@@ -15,6 +16,9 @@ export default function ReloManagement() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
+
+      {/* ── Shard2: Charlie video presenter (upper-right, non-intrusive) ── */}
+      <CharliePagePresenter pageKey="relocation-services" />
 
       {/* ── Charlie Banner ── */}
       <div className="px-6 py-5 flex items-start gap-4"
