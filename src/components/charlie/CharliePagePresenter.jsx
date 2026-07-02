@@ -101,7 +101,7 @@ export default function CharliePagePresenter({ pageKey }) {
             <video
               ref={videoRef}
               src={presenterSrc}
-              poster={explainer.thumbnailUrl || undefined}
+              preload="auto"
               muted
               playsInline
               onEnded={() => { setPlaying(false); setEnded(true); }}
