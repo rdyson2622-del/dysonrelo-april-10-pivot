@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
     const rawStatus = body.status || body.renderStatus;
     const heygenVideoId = body.heygen_video_id ?? body.heygenVideoId;
     const finalVideoUrl = body.videoUrl ?? body.finalVideoUrl;
+    const presenterVideoUrl = body.presenterVideoUrl ?? body.avatarVideoUrl ?? body.charlieVideoUrl;
     const thumbnailUrl = body.thumbnail ?? body.thumbnailUrl;
     const errorMessage = body.last_render_error ?? body.errorMessage;
     const durationSeconds = body.durationSeconds;
@@ -78,6 +79,7 @@ Deno.serve(async (req) => {
     if (heygenVideoId !== undefined) updates.heygenVideoId = heygenVideoId;
     if (heygenVideoUrl !== undefined) updates.heygenVideoUrl = heygenVideoUrl;
     if (finalVideoUrl !== undefined) updates.finalVideoUrl = finalVideoUrl;
+    if (presenterVideoUrl !== undefined) updates.presenterVideoUrl = presenterVideoUrl;
     if (thumbnailUrl !== undefined) updates.thumbnailUrl = thumbnailUrl;
     if (durationSeconds !== undefined) updates.durationSeconds = durationSeconds;
     if (renderStatus === 'failed' && errorMessage) updates.errorMessage = String(errorMessage);

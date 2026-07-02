@@ -36,7 +36,10 @@ export default function CharliePagePresenter({ pageKey }) {
 
   if (!loaded || dismissed) return null;
 
-  const hasVideo = explainer?.renderStatus === 'completed' && explainer?.finalVideoUrl;
+  // Prefer the Charlie-only presenter clip; the composed full-screen video
+  // (finalVideoUrl) is a demo/render artifact and is NOT shown in the widget.
+  const presenterSrc = explainer?.renderStatus === 'completed' ? explainer?.presenterVideoUrl : null;
+  const hasVideo = Boolean(presenterSrc);
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -97,7 +100,7 @@ export default function CharliePagePresenter({ pageKey }) {
           <div className="relative">
             <video
               ref={videoRef}
-              src={explainer.finalVideoUrl}
+              src={presenterSrc}
               poster={explainer.thumbnailUrl || undefined}
               muted
               playsInline

@@ -78,7 +78,7 @@
     },
     "heygenVideoUrl": {
       "type": "string",
-      "description": "Raw HeyGen avatar video URL"
+      "description": "Raw HeyGen avatar video URL (signed, expires)"
     },
     "cloudinaryAvatarPublicId": {
       "type": "string",
@@ -90,7 +90,11 @@
     },
     "finalVideoUrl": {
       "type": "string",
-      "description": "Final composed explainer video URL (Charlie box over page background)"
+      "description": "Final composed explainer video URL (Charlie box over page background) \u2014 demo/full-screen use"
+    },
+    "presenterVideoUrl": {
+      "type": "string",
+      "description": "Charlie-only presenter video URL (no page background) \u2014 used by the in-app CharliePagePresenter widget"
     },
     "thumbnailUrl": {
       "type": "string",
