@@ -52,6 +52,18 @@ const SEED = [
     bobScript: "Both kinds — and we have the testimonials to prove it. We've managed personal family moves and full corporate relocations for over five decades. We've lived these moves ourselves. That's why we treat your client's move like it's our own.",
   },
   {
+    kind: 'qa', faqIndex: 4,
+    question: "How do the referral fees and commissions work when I send you a client?",
+    charlieScript: "Bob, here's the money question. When an affiliate agent or broker sends you a client, how do the referral fees and commissions actually work?",
+    bobScript: "Here's exactly how we participate in the commissions disbursed at the close of escrow. First — you refer your client to us for the management of the entire move, including the vetting of the agent for the buyer's selection. Second — our referral agreement with you is for twenty-five percent of the commission earned on the buy side of the purchase, paid to you through your broker arrangement. In addition, we collect another fifteen to twenty-five percent of that commission as our management fee for managing the entire move. Now, you might ask — will a receiving broker really agree to a total of fifty percent in relocation and referral fees? Well, remember — the sweat equity of selling a buyer a three hundred thousand dollar home is the same sweat equity as a three million dollar home. The receiving broker can make that call. But I will tell you this — we have never had a receiving agent decline our referral and management fee.",
+  },
+  {
+    kind: 'qa', faqIndex: 5,
+    question: "What bonuses do Dyson affiliate agents and brokers receive?",
+    charlieScript: "Bob, tell them about the monthly bonus pool for Dyson and Dyson Relocation Network affiliates.",
+    bobScript: "This is my favorite part. As an incentive and bonus to you — the sending affiliate agent or broker — at the end of each month, we add up all the sales that closed that month, nationwide and worldwide. We allocate between five and ten percent of our management fee as a bonus, distributed to every agent and broker who closed a transaction that month. Remember — as a producing Dyson affiliate and subscriber, we sought you out based on your performance, your production, your average sale price — all of which is of record. And another one to three percent is paid equally to our passive affiliate agents and brokers on all sales for that month. Here's an example: two hundred seventy-five agents close forty sales collectively in a month, averaging two million dollars per sale at two and a half percent gross commission. It's realistic that each producing agent or brokerage could receive a bonus of over ten thousand dollars that month — in addition to their own referral. And even non-producing affiliates receive a bonus that month. We don't stop there. We're approaching the point where we can offer you daily broadcast real estate news — with you as the presenter to your local audience, your contact list, and your past clients. We clone you as our spokesman or spokeswoman with DNN Real Estate News.",
+  },
+  {
     kind: 'outro',
     charlieScript: "Ready to put the Vetting Desk to work? Fill out the referral form below with as much detail about your client as you can — destination, timetable, and anything special. We'll take it from there.",
   },

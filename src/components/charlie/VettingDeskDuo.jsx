@@ -22,6 +22,14 @@ const QUESTIONS = [
     q: "Do you have real relocation experience — personal and corporate?",
     a: "Both — with testimonials to prove it. Five decades of personal family moves and full corporate relocations. We've lived these moves ourselves, and we treat your client's move like it's our own.",
   },
+  {
+    q: "How do the referral fees and commissions work when I send you a client?",
+    a: "Our referral agreement pays you 25% of the buy-side commission, through your broker arrangement. We collect an additional 15–25% as our management fee for the entire move. Will a receiving broker agree to 50% total? The sweat equity on a $300K home is the same as a $3M home — and we've never had a receiving agent decline.",
+  },
+  {
+    q: "What bonuses do Dyson affiliate agents and brokers receive?",
+    a: "Each month we allocate 5–10% of our management fee as a bonus pool for every affiliate who closed a transaction that month — nationwide and worldwide — plus 1–3% paid equally to passive affiliates. And soon: daily broadcast real estate news with YOU cloned as the presenter via DNN Real Estate News.",
+  },
 ];
 
 export default function VettingDeskDuo() {
