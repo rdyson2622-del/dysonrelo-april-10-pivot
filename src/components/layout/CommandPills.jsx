@@ -47,6 +47,22 @@ export default function CommandPills() {
         );
       })}
 
+      {/* CORPORATE RELO HR pill — links to the HR landing page */}
+      <Link
+        to="/corporate-relo"
+        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+        style={{
+          background: location.pathname === '/corporate-relo' ? '#000' : 'rgba(0,0,0,0.45)',
+          border: `1px solid ${location.pathname === '/corporate-relo' ? '#000' : 'rgba(212,175,55,0.35)'}`,
+          color: location.pathname === '/corporate-relo' ? '#fff' : 'rgba(212,175,55,0.7)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          boxShadow: location.pathname === '/corporate-relo' ? '0 2px 8px rgba(0,0,0,0.4)' : 'none',
+        }}
+      >
+        <span>🏢</span><span>CORPORATE RELO HR</span>
+      </Link>
+
       {/* ADMIN pill — highlights when on admin routes */}
       <Link
         to="/admin"
