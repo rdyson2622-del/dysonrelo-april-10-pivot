@@ -74,6 +74,16 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    key: 'referral_agent',
+    label: 'REFERRAL AGENT',
+    children: [
+      { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
+      { label: 'Sending Agent Tracker', path: '/admin/sending-agents', icon: ArrowRight },
+      { label: 'Referral Fee Agreements', path: '/admin/prn-agreements', icon: FileCheck },
+      { label: 'Lead Handoff', path: '/admin/lead-handoff', icon: Send },
+    ],
+  },
+  {
     key: 'relo_management',
     label: 'RELO MANAGEMENT',
     children: [
