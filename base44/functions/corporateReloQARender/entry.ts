@@ -45,6 +45,24 @@ const SEED = [
     bobScript: "This is the part HR managers love most. Our selection process makes the decision for them. No awkward phone calls. No hurt feelings. No favors owed. Your employee never has to appear to be the one choosing — the system chose, not them. Those uncomfortable situations simply disappear.",
   },
   {
+    kind: 'qa', faqIndex: 3,
+    question: "Give me the overview — what exactly does Dyson & Dyson do for a corporate transferee?",
+    charlieScript: "Bob, for an HR manager hearing about us for the first time — walk them through the overview. What exactly does Dyson and Dyson do for a corporate transferee?",
+    bobScript: "We manage the entire move, end to end — as if we were packing boxes right alongside your employee. We vet and select the receiving agent, coordinate the sale of their current home and the purchase of the new one, manage escrow timelines, and handle the landing: schools, utilities, healthcare, and a thirty, sixty, ninety day settle-in plan. Your employee gets one point of contact and a full team behind it. Your HR department gets status visibility the whole way — and never a surprise.",
+  },
+  {
+    kind: 'qa', faqIndex: 4,
+    question: "What are the features and benefits for the company and the employee?",
+    charlieScript: "Bob, break down the features and benefits — first for the company, then for the relocating employee.",
+    bobScript: "For the company: zero management fees, zero markups, and a transferee who's productive faster because the move isn't consuming them. Predictable, professional, and off your HR team's plate. For the employee: a production-vetted agent on the receiving end, an AI concierge named Charlie available twenty-four seven, neighborhood and school research done for them, moving logistics coordinated, and utilities live before the boxes arrive. White-glove treatment their previous employer's relocation company never gave them — at no cost to them or to you.",
+  },
+  {
+    kind: 'qa', faqIndex: 5,
+    question: "Why the Dyson & Dyson way?",
+    charlieScript: "Bob, last question. There are big-name relocation companies out there. Why the Dyson and Dyson way?",
+    bobScript: "Fifty-five years of relocation management experience — personal moves and full corporate relocations, and we've lived these moves ourselves. A national and international network of vetted agents we sought out based on performance and production, all of record. Daily market intelligence through DNN Real Estate News. And a business model where our incentives line up with yours: we only win when the transaction closes well. The big names bill you for the process. We're paid by the outcome. That's the Dyson and Dyson way.",
+  },
+  {
     kind: 'outro',
     charlieScript: "Vetted pros. Zero management fees. Zero awkward conversations. That's corporate relocation done right. Reach out below, and let's talk about your next transferee — where your people land well.",
   },
