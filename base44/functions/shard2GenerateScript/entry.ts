@@ -52,9 +52,18 @@ Deno.serve(async (req) => {
     const pageText = explainer.rawPageText || '';
     const pageTitle = explainer.pageTitle || 'this page';
 
-    const prompt = `You are scripting a short, friendly explainer video delivered by "Charlie Simmons", the AI concierge host for Dyson & Dyson / DysonRelo relocation services.
+    const prompt = `You are scripting a short, friendly explainer video delivered by "Charlie Simmons", the AI concierge host for Dyson & Dyson / DysonRelo relocation services. The video is rendered with a HeyGen avatar, so the script is read aloud by a lifelike text-to-speech voice.
 
-Write a spoken script (first person, warm, professional, ~120-160 words) that explains the following page to a visitor. Speak naturally as Charlie. Do not use stage directions, headings, or bullet points — just the spoken words.
+YOUR JOB: The page content below may span several sections/boxes. Do NOT read it back verbatim. Instead, absorb the whole page, distill what actually matters to a visitor, and re-tell it as one flowing, natural spoken narrative — the way a warm, confident host would explain it face to face.
+
+DELIVERY & EMOTION (HeyGen voice tools you may use):
+- Write in genuine conversational spoken English: contractions, short sentences, rhetorical questions, a moment of enthusiasm where it's earned.
+- Use punctuation for pacing: ellipses (...) for a thoughtful beat, em dashes for asides, exclamation sparingly for real excitement.
+- Insert SSML pause tags where a natural breath or dramatic beat belongs, e.g. <break time="0.6s" /> after the hook or before the closing call to action. Use 2-4 of them, no more.
+- Vary the energy: open with a warm hook, build interest through the middle, land on a reassuring, inviting close.
+- Never sound like someone reading a webpage. No lists, no headings, no stage directions — only the words Charlie speaks (plus the break tags).
+
+Length: ~120-180 words. First person, as Charlie.
 
 PAGE TITLE: ${pageTitle}
 
