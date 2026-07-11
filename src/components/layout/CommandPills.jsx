@@ -14,6 +14,7 @@ export default function CommandPills() {
   const navigate = useNavigate();
   const location = useLocation();
   const onAdmin = location.pathname.startsWith('/admin');
+  const onCorpRelo = location.pathname === '/corporate-relo';
   const [activeRole, setActiveRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
 
   const switchRole = (role, path) => {
@@ -26,7 +27,7 @@ export default function CommandPills() {
   return (
     <div className="flex items-center gap-1">
       {PORTAL_PILLS.map(({ label, emoji, role, path }) => {
-        const isActive = !onAdmin && activeRole === role;
+        const isActive = !onAdmin && !onCorpRelo && activeRole === role;
         return (
           <button
             key={role}
