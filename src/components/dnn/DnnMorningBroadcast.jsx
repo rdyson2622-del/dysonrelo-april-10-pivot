@@ -32,6 +32,16 @@ export default function DnnMorningBroadcast() {
 
   // Latest broadcast that has playable video — tag-team clips or legacy solo video
   const broadcast = broadcasts.find(b => isTagTeamReady(b) || b.videoUrl);
+
+  // Auto-open the broadcast once per day when someone lands on DNN News
+  React.useEffect(() => {
+    if (!broadcast) return;
+    const key = `dnn-auto-broadcast-${broadcast.broadcast_date}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+    turnOnRef.current?.();
+  }, [broadcast?.id]);
+
   if (!broadcast) return null;
   const tagTeam = isTagTeamReady(broadcast);
 
