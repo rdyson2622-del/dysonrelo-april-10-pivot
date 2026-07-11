@@ -7,6 +7,7 @@ import DnnAdminBar from '@/components/dnn/DnnAdminBar';
 import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
+import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -596,6 +597,9 @@ export default function ConsumerDnnNews() {
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
       </div>
+
+      {/* Daily Morning Broadcast */}
+      <DnnMorningBroadcast />
 
       {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">

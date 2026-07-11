@@ -1,0 +1,58 @@
+{
+  "name": "DnnBroadcast",
+  "type": "object",
+  "properties": {
+    "broadcast_date": {
+      "type": "string",
+      "format": "date",
+      "description": "The date this broadcast covers (YYYY-MM-DD)"
+    },
+    "script": {
+      "type": "string",
+      "description": "Full anchor script covering the top headlines"
+    },
+    "headlines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Headlines covered in this broadcast"
+    },
+    "presenter": {
+      "type": "string",
+      "enum": [
+        "bob",
+        "charlie"
+      ],
+      "default": "bob",
+      "description": "Which avatar presents this broadcast"
+    },
+    "heygenId": {
+      "type": "string",
+      "description": "HeyGen render job id"
+    },
+    "videoUrl": {
+      "type": "string",
+      "description": "Permanent URL of the rendered broadcast video"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "script_ready",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "draft",
+      "description": "Broadcast production lifecycle"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    }
+  },
+  "required": [
+    "broadcast_date"
+  ]
+}
