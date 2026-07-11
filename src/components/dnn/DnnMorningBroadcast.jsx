@@ -2,12 +2,23 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play } from 'lucide-react';
+import { playNewsSting } from '@/components/dnn/newsSting';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
 export default function DnnMorningBroadcast() {
   const [playing, setPlaying] = useState(false);
+  const [intro, setIntro] = useState(false);
+
+  const startBroadcast = () => {
+    playNewsSting();
+    setIntro(true);
+    setTimeout(() => {
+      setIntro(false);
+      setPlaying(true);
+    }, 3200);
+  };
 
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['dnnMorningBroadcast'],
@@ -28,8 +39,21 @@ export default function DnnMorningBroadcast() {
         <div className="relative w-full aspect-video" style={{ background: '#000' }}>
           {playing ? (
             <video src={broadcast.videoUrl} controls autoPlay playsInline className="w-full h-full object-cover" />
+          ) : intro ? (
+            <div className="w-full h-full relative overflow-hidden">
+              <img src={STUDIO_BG} alt="" className="w-full h-full object-cover" style={{ filter: 'brightness(0.4)' }} />
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                <div className="px-6 py-2 animate-pulse" style={{ background: '#b91c1c' }}>
+                  <span className="text-white font-black text-sm tracking-[0.4em] uppercase">● Broadcast</span>
+                </div>
+                <p className="font-black text-3xl md:text-5xl tracking-[0.2em] uppercase" style={{ color: GOLD, textShadow: '0 4px 30px rgba(0,0,0,0.8)' }}>
+                  DNN NEWS
+                </p>
+                <p className="text-white text-xs font-bold tracking-[0.35em] uppercase">Morning Broadcast · Bob Dyson</p>
+              </div>
+            </div>
           ) : (
-            <button onClick={() => setPlaying(true)} className="group w-full h-full block relative">
+            <button onClick={startBroadcast} className="group w-full h-full block relative">
               <img src={STUDIO_BG} alt="DNN Real Estate News studio" className="w-full h-full object-cover" />
               <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.35)' }} />
               <div className="absolute inset-0 flex items-center justify-center">
