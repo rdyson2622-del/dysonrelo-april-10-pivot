@@ -66,7 +66,7 @@ export default function AppLayout() {
           style={{ background: '#0d0d0d', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)' }}
         >
           <PanelLeft className="w-4 h-4" />
-          {PORTAL_LABELS[portalRole] || 'CLIENT PORTAL'}
+          {location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')}
         </button>
 
         <button

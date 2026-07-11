@@ -93,7 +93,15 @@ export default function ClientSidebar() {
   // Pure client: no professional path selected
   const isClientOnly = !isAgent && !isVendor;
 
-  const portalLabel = isAgent ? 'AGENT PORTAL' : isVendor ? 'VENDOR PORTAL' : 'CLIENT PORTAL';
+  const PORTAL_LABELS = {
+    client: 'CLIENT PORTAL',
+    agent: 'RELOCATION AGENT PORTAL',
+    referral_agent: 'REFERRAL AGENT PORTAL',
+    vendor: 'VENDOR PORTAL',
+  };
+  const portalLabel = location.pathname === '/corporate-relo'
+    ? 'CORPORATE HR PORTAL'
+    : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL');
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
