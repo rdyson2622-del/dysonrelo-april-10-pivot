@@ -87,7 +87,10 @@ export default function QADuoPresenter({ segments, onClose }) {
               playsInline
               onEnded={handleEnded}
               className="w-full h-full object-cover"
-              style={{ transform: 'scale(1.35)' }}
+              style={{
+                // Bob's headshot sits lower in the circle so his hair and full head stay visible
+                transform: seg.speaker === 'bob' ? 'scale(1.25) translateY(8%)' : 'scale(1.35)',
+              }}
             />
           </div>
           {ended && (
