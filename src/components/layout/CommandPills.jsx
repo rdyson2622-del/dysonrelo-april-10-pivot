@@ -33,12 +33,12 @@ export default function CommandPills() {
             onClick={() => switchRole(role, path)}
             className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
             style={{
-              background: isActive ? 'rgba(212,175,55,0.25)' : 'rgba(0,0,0,0.45)',
-              border: `1px solid ${isActive ? GOLD : 'rgba(212,175,55,0.35)'}`,
-              color: isActive ? GOLD : 'rgba(212,175,55,0.7)',
+              background: isActive ? '#000' : 'rgba(0,0,0,0.45)',
+              border: `1px solid ${isActive ? '#000' : 'rgba(212,175,55,0.35)'}`,
+              color: isActive ? '#fff' : 'rgba(212,175,55,0.7)',
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
-              boxShadow: isActive ? '0 0 10px rgba(212,175,55,0.2)' : 'none',
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.4)' : 'none',
             }}
           >
             <span>{emoji}</span>
@@ -52,12 +52,12 @@ export default function CommandPills() {
         to="/admin"
         className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
         style={{
-          background: onAdmin ? 'rgba(212,175,55,0.25)' : 'rgba(0,0,0,0.45)',
-          border: `1px solid ${onAdmin ? GOLD : 'rgba(212,175,55,0.35)'}`,
-          color: onAdmin ? GOLD : 'rgba(212,175,55,0.7)',
+          background: onAdmin ? '#000' : 'rgba(0,0,0,0.45)',
+          border: `1px solid ${onAdmin ? '#000' : 'rgba(212,175,55,0.35)'}`,
+          color: onAdmin ? '#fff' : 'rgba(212,175,55,0.7)',
           backdropFilter: 'blur(8px)',
           WebkitBackdropFilter: 'blur(8px)',
-          boxShadow: onAdmin ? '0 0 10px rgba(212,175,55,0.2)' : 'none',
+          boxShadow: onAdmin ? '0 2px 8px rgba(0,0,0,0.4)' : 'none',
         }}
       >
         <span>⚙️</span><span>ADMIN</span>
