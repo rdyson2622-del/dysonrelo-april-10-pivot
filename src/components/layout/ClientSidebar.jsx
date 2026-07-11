@@ -127,7 +127,7 @@ export default function ClientSidebar() {
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10 text-left"
           style={{ color: '#fff', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
           <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          I AM A SENDING AGENT
+          I AM A REFERRAL SENDING AGENT
         </button>
         <button
           onClick={() => setShowReceivingModal(true)}
