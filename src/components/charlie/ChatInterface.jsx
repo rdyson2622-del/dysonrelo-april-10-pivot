@@ -48,9 +48,26 @@ Key messages to weave in naturally:
 Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.${profileContext}`;
 };
 
+const BOB_FAQS = [
+  "What's the difference between a relocation manager and a standard real estate agent?",
+  "How does Dyson & Dyson handle a complex move involving two states?",
+  "Is there really no cost to me as the buyer?",
+  "What if my deal is stuck or something is going wrong in escrow?",
+  "How quickly can Dyson & Dyson start working my case?",
+  "What cities does Dyson & Dyson cover?",
+];
+
 export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
+  const [qaClips, setQaClips] = useState([]);
+
+  // Load Bob Dyson's pre-rendered video answers
+  useEffect(() => {
+    base44.entities.RealEstateQAClip.filter({ kind: 'qa' })
+      .then(setQaClips)
+      .catch(() => {});
+  }, []);
 
   // Load existing client profile from DB on mount
   useEffect(() => {
@@ -216,10 +233,39 @@ ${conversationHistory}
 
 User just said: "${messageText}"
 
-Respond as Charlie. Remember: acknowledge first, then answer directly.`;
+Respond as Charlie. Remember: acknowledge first, then answer directly.
 
-      const res = await base44.integrations.Core.InvokeLLM({ prompt });
-      const responseText = typeof res === 'string' ? res : (res?.response || res?.text || String(res));
+ALSO: Bob Dyson has personally recorded video answers to these known questions:
+${BOB_FAQS.map((q, i) => `${i}. ${q}`).join('\n')}
+If the user's question is essentially asking one of those (same meaning, even if worded differently), set matched_faq_index to its number. Otherwise set it to -1.`;
+
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            matched_faq_index: { type: 'integer', description: 'Index 0-5 of the matched known question, or -1' },
+            response: { type: 'string', description: "Charlie's text response" },
+          },
+          required: ['matched_faq_index', 'response'],
+        },
+      });
+      const responseText = res?.response || '';
+      const matchedIdx = typeof res?.matched_faq_index === 'number' ? res.matched_faq_index : -1;
+      const bobClip = matchedIdx >= 0 ? qaClips.find(c => c.faqIndex === matchedIdx && c.bobVideoUrl) : null;
+
+      if (bobClip) {
+        // Bob Dyson answers this one himself, on video with his own voice
+        stopCharlie();
+        setMessages(prev => [...prev, {
+          role: 'charlie',
+          type: 'video',
+          videoUrl: bobClip.bobVideoUrl,
+          content: "Great question — here's Bob Dyson himself with the answer:",
+        }]);
+        setIsTyping(false);
+        return;
+      }
 
       const charlieMsg = { role: 'charlie', content: responseText, type: 'text' };
       setMessages(prev => [...prev, charlieMsg]);

@@ -21,7 +21,25 @@ export default function ChatBubble({ message }) {
           : { background: 'linear-gradient(135deg, #D4AF37, #B8860B)', color: '#000', fontWeight: 500 }
         }
       >
-        {isCharlie ? (
+        {isCharlie && message.type === 'video' ? (
+          <div>
+            {message.content && <p className="my-1 text-gray-200">{message.content}</p>}
+            <div className="mt-2 w-44 h-44 rounded-full overflow-hidden mx-auto"
+              style={{ border: '3px solid #D4AF37', background: '#0d0d0d' }}>
+              <video
+                src={message.videoUrl}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover cursor-pointer"
+                style={{ transform: 'scale(1.35)' }}
+                onClick={(e) => e.target.paused ? e.target.play() : e.target.pause()}
+              />
+            </div>
+            <p className="mt-2 text-center text-[10px] font-black tracking-[0.2em]" style={{ color: '#D4AF37' }}>
+              BOB DYSON · FOUNDER
+            </p>
+          </div>
+        ) : isCharlie ? (
           <ReactMarkdown
             className="prose prose-sm max-w-none"
             components={{
