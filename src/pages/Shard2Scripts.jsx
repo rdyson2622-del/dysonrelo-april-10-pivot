@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, CheckCircle, Send, Loader, ExternalLink, FileText } from 'lucide-react';
+import { Sparkles, CheckCircle, Send, Loader, ExternalLink, FileText, Clapperboard, RefreshCw } from 'lucide-react';
 import Shard2Header from '@/components/shard2/Shard2Header';
 
 const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.2)' };
@@ -38,6 +38,7 @@ function ScriptEditor({ explainer, onChanged }) {
   const [script, setScript] = useState(explainer.finalScript || explainer.aiGeneratedScript || '');
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [rendering, setRendering] = useState(false);
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
@@ -93,6 +94,45 @@ function ScriptEditor({ explainer, onChanged }) {
     setSaving(false);
     setMsg({ type: 'ok', text: 'Queued for render — n8n will pick this up.' });
     onChanged();
+  };
+
+  // Direct HeyGen render — no n8n round-trip. Starts the render, then polls
+  // every 20s until the presenter clip is completed and stored.
+  const handleRenderNow = async () => {
+    setRendering(true);
+    setMsg(null);
+    // Persist the latest script first so HeyGen renders exactly what's on screen
+    await base44.entities.CharliePageExplainer.update(explainer.id, { finalScript: script });
+    const startRes = await base44.functions.invoke('shard2RenderPresenterClip', {
+      action: 'start', explainerId: explainer.id,
+    });
+    if (!startRes.data?.success) {
+      setMsg({ type: 'err', text: startRes.data?.error || 'HeyGen render failed to start.' });
+      setRendering(false);
+      onChanged();
+      return;
+    }
+    setMsg({ type: 'ok', text: 'Rendering in HeyGen — this usually takes 2–5 minutes...' });
+    onChanged();
+
+    const poll = async () => {
+      const res = await base44.functions.invoke('shard2RenderPresenterClip', {
+        action: 'check', explainerId: explainer.id,
+      });
+      const status = res.data?.status;
+      if (status === 'completed') {
+        setMsg({ type: 'ok', text: 'Video completed! It is now live on the page.' });
+        setRendering(false);
+        onChanged();
+      } else if (status === 'failed') {
+        setMsg({ type: 'err', text: res.data?.error || 'HeyGen render failed.' });
+        setRendering(false);
+        onChanged();
+      } else {
+        setTimeout(poll, 20000);
+      }
+    };
+    setTimeout(poll, 20000);
   };
 
   return (
@@ -151,6 +191,12 @@ function ScriptEditor({ explainer, onChanged }) {
           className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold text-black disabled:opacity-50"
           style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
           <Send className="w-3 h-3" /> Send to Render
+        </button>
+        <button onClick={handleRenderNow} disabled={rendering || saving}
+          className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold disabled:opacity-60"
+          style={{ background: 'rgba(167,139,250,0.15)', color: '#a78bfa', border: '1px solid rgba(167,139,250,0.4)' }}>
+          {rendering ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Clapperboard className="w-3 h-3" />}
+          {rendering ? 'Rendering in HeyGen...' : 'Render Now (HeyGen Direct)'}
         </button>
       </div>
     </div>

@@ -88,6 +88,7 @@ Deno.serve(async (req) => {
 
       await base44.asServiceRole.entities.CharliePageExplainer.update(explainerId, {
         heygenVideoId: videoId,
+        renderStatus: 'rendering',
       });
       return Response.json({ success: true, videoId, status: 'started' });
     }
@@ -118,6 +119,7 @@ Deno.serve(async (req) => {
 
         await base44.asServiceRole.entities.CharliePageExplainer.update(explainerId, {
           presenterVideoUrl: up.file_url,
+          renderStatus: 'completed',
           durationSeconds: data?.data?.duration ?? explainer.durationSeconds,
         });
         return Response.json({ success: true, status: 'completed', presenterVideoUrl: up.file_url });
@@ -125,6 +127,10 @@ Deno.serve(async (req) => {
 
       if (status === 'failed') {
         const errMsg = data?.data?.error?.message || 'HeyGen render failed';
+        await base44.asServiceRole.entities.CharliePageExplainer.update(explainerId, {
+          renderStatus: 'failed',
+          errorMessage: errMsg,
+        });
         return Response.json({ success: false, status: 'failed', error: errMsg });
       }
 
