@@ -1,0 +1,98 @@
+{
+  "name": "ComplianceDocument",
+  "type": "object",
+  "properties": {
+    "file_name": {
+      "type": "string",
+      "description": "Original uploaded file name"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded document"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "dre",
+        "association_of_realtors",
+        "title_company",
+        "escrow_company",
+        "brokerage_internal",
+        "other"
+      ],
+      "default": "other",
+      "description": "Where the document originated"
+    },
+    "document_type": {
+      "type": "string",
+      "description": "AI-detected or user-provided document type (e.g. Purchase Agreement, Transfer Disclosure Statement)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "uploaded",
+        "reviewing",
+        "reviewed",
+        "failed"
+      ],
+      "default": "uploaded",
+      "description": "Review pipeline status"
+    },
+    "ai_summary": {
+      "type": "string",
+      "description": "Condensed AI summary of the document"
+    },
+    "ai_opinion": {
+      "type": "string",
+      "description": "AI compliance opinion / recommendation"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "AI-assessed compliance risk level"
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific compliance concerns found"
+    },
+    "missing_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Missing signatures, dates, disclosures, or required sections"
+    },
+    "key_dates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Important dates/deadlines found in the document"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AI review completed"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if the review failed"
+    },
+    "officer_notes": {
+      "type": "string",
+      "description": "Compliance officer's own notes on this document"
+    }
+  },
+  "required": [
+    "file_name",
+    "file_url"
+  ]
+}

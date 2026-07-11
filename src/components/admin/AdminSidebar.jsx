@@ -84,6 +84,7 @@ const NAV_SECTIONS = [
     key: 'operations',
     label: 'OPERATIONS',
     children: [
+      { label: '🛡 Compliance Doc Review', path: '/admin/compliance-review', icon: FileCheck },
       { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
       { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
       { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
