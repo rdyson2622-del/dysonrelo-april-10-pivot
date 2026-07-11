@@ -237,7 +237,7 @@ Respond as Charlie. Remember: acknowledge first, then answer directly.
 
 ALSO: Bob Dyson has personally recorded video answers to these known questions:
 ${BOB_FAQS.map((q, i) => `${i}. ${q}`).join('\n')}
-If the user's question is essentially asking one of those (same meaning, even if worded differently), set matched_faq_index to its number. Otherwise set it to -1.`;
+Be GENEROUS with matching: if the user's question covers the same topic or would be well answered by one of those recorded answers — even with very different wording (e.g. "do I have to pay?", "is this free?", "what does it cost?" all match question 2; "can you help in Texas?" matches question 5) — set matched_faq_index to its number. Only set -1 when none of the recorded answers would address what they asked.`;
 
       const res = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -251,7 +251,7 @@ If the user's question is essentially asking one of those (same meaning, even if
         },
       });
       const responseText = res?.response || '';
-      const matchedIdx = typeof res?.matched_faq_index === 'number' ? res.matched_faq_index : -1;
+      const matchedIdx = Number.isInteger(Number(res?.matched_faq_index)) ? Number(res.matched_faq_index) : -1;
       const bobClip = matchedIdx >= 0 ? qaClips.find(c => c.faqIndex === matchedIdx && c.bobVideoUrl) : null;
 
       if (bobClip) {
