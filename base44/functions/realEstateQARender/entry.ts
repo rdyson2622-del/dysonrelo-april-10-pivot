@@ -94,6 +94,9 @@ Deno.serve(async (req) => {
         ? { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID }
         : { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' };
       const voiceId = role === 'bob' ? BOB_VOICE_ID : CHARLIE_VOICE_ID;
+      const voice = role === 'bob'
+        ? { type: 'text', voice_id: voiceId, input_text: script, emotion: 'Excited', speed: 1.05 }
+        : { type: 'text', voice_id: voiceId, input_text: script };
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
@@ -101,7 +104,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           video_inputs: [{
             character,
-            voice: { type: 'text', voice_id: voiceId, input_text: script },
+            voice,
             background: { type: 'color', value: '#0d0d0d' },
           }],
           dimension: { width: 1280, height: 720 },
