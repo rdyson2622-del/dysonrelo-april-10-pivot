@@ -83,12 +83,12 @@ export default function DnnMorningBroadcast() {
             <div className="w-full h-full relative overflow-hidden">
               <img src={STUDIO_BG} alt="" className="w-full h-full object-cover" style={{ filter: 'brightness(0.4)' }} />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="px-8 py-2.5 animate-pulse" style={{ background: '#b91c1c' }}>
-                  <span className="text-white font-black text-base tracking-[0.4em] uppercase">● Broadcast</span>
-                </div>
-                <p className="font-black text-5xl md:text-7xl tracking-[0.2em] uppercase" style={{ color: GOLD, textShadow: '0 4px 40px rgba(0,0,0,0.8)' }}>
-                  DNN NEWS
-                </p>
+                <img
+                  src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png"
+                  alt="DNN — Dyson News Network"
+                  className="w-48 md:w-64 h-auto"
+                  style={{ filter: 'drop-shadow(0 8px 40px rgba(212,175,55,0.4))' }}
+                />
                 <p className="text-white text-sm font-bold tracking-[0.35em] uppercase">Morning Broadcast · Charlie Simmons</p>
               </div>
             </div>
