@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Play, Pause, Volume2, VolumeX, RotateCcw, X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+const CHARLIE_HEADSHOT = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a0f097ef2_generated_image.png';
 
 /**
  * CharliePagePresenter — Shard2 in-app presentation layer.
@@ -104,28 +105,20 @@ export default function CharliePagePresenter({ pageKey }) {
       <button
         onClick={openAndSpeak}
         aria-label="Hear Charlie explain this page"
-        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-14 h-14 md:w-16 md:h-16 transition-all hover:scale-110 active:scale-95"
+        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[168px] h-[168px] md:w-48 md:h-48 transition-all hover:scale-105 active:scale-95"
       >
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
-          style={{ background: '#0d0d0d', border: `2px solid ${GOLD}` }}>
-          {hasVideo ? (
-            /* Paused first frame of Charlie's clip = his headshot */
-            <video
-              src={presenterSrc}
-              muted
-              playsInline
-              preload="metadata"
-              onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
-              className="w-full h-full object-cover scale-[1.6] pointer-events-none"
-            />
-          ) : (
-            <span className="w-full h-full flex items-center justify-center text-2xl">🎩</span>
-          )}
+          style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
+          <img
+            src={CHARLIE_HEADSHOT}
+            alt="Charlie — Dyson AI Concierge"
+            className="w-full h-full object-cover pointer-events-none"
+          />
         </span>
         {/* Play badge */}
-        <span className="absolute bottom-0 right-0 w-5 h-5 rounded-full flex items-center justify-center"
-          style={{ background: GOLD, border: '1px solid #0d0d0d' }}>
-          <Play className="w-2.5 h-2.5 ml-px" style={{ color: '#000' }} />
+        <span className="absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center"
+          style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
+          <Play className="w-5 h-5 ml-0.5" style={{ color: '#000' }} />
         </span>
       </button>
     );
