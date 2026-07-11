@@ -1,0 +1,77 @@
+{
+  "name": "ReceivingAgentClip",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "intro",
+        "qa",
+        "outro"
+      ],
+      "default": "qa",
+      "description": "Segment type: section intro (Charlie), Q&A pair, or closing line (Charlie)"
+    },
+    "faqIndex": {
+      "type": "number",
+      "description": "Index of the differentiator this clip belongs to (qa kind only)"
+    },
+    "question": {
+      "type": "string",
+      "description": "The receiving-agent differentiator title"
+    },
+    "charlieScript": {
+      "type": "string",
+      "description": "Charlie's spoken script (intro, question ask, or outro)"
+    },
+    "bobScript": {
+      "type": "string",
+      "description": "Bob Dyson's spoken answer script (qa kind only)"
+    },
+    "charlieHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for Charlie's clip"
+    },
+    "bobHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for Bob's clip"
+    },
+    "charlieVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Charlie's rendered clip"
+    },
+    "bobVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Bob's rendered clip"
+    },
+    "charlieStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of Charlie's clip"
+    },
+    "bobStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of Bob's clip"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    }
+  },
+  "required": [
+    "kind"
+  ]
+}

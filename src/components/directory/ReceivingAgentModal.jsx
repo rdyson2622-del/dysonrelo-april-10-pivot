@@ -1,5 +1,7 @@
-import React from 'react';
-import { X, ShieldCheck, Users, Mic, DollarSign, Handshake, TrendingUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, ShieldCheck, Users, Mic, DollarSign, Handshake, TrendingUp, Play } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
 const GOLD = '#D4AF37';
 
@@ -37,6 +39,31 @@ const POINTS = [
 ];
 
 export default function ReceivingAgentModal({ onClose }) {
+  const [clips, setClips] = useState([]);
+  const [segments, setSegments] = useState(null);
+
+  useEffect(() => {
+    base44.entities.ReceivingAgentClip.list().then(setClips).catch(() => {});
+  }, []);
+
+  const introClip = clips.find(c => c.kind === 'intro' && c.charlieStatus === 'completed');
+  const qaClip = (i) => clips.find(c => c.kind === 'qa' && c.faqIndex === i
+    && c.charlieStatus === 'completed' && c.bobStatus === 'completed');
+
+  const playIntro = () => {
+    if (!introClip) return;
+    setSegments([{ src: introClip.charlieVideoUrl, speaker: 'charlie' }]);
+  };
+
+  const playQA = (i) => {
+    const clip = qaClip(i);
+    if (!clip) return;
+    setSegments([
+      { src: clip.charlieVideoUrl, speaker: 'charlie' },
+      { src: clip.bobVideoUrl, speaker: 'bob' },
+    ]);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={onClose}>
       <div
@@ -53,6 +80,15 @@ export default function ReceivingAgentModal({ onClose }) {
             <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.55)' }}>
               Not another corporate relo company. Here's what changes when the referral comes from us.
             </p>
+            {introClip && (
+              <button
+                onClick={playIntro}
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black tracking-wide"
+                style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}`, color: GOLD }}
+              >
+                <Play className="w-3 h-3" /> WATCH THE INTRO
+              </button>
+            )}
           </div>
           <button onClick={onClose} aria-label="Close" className="p-1 hover:opacity-70 shrink-0" style={{ color: GOLD }}>
             <X className="w-4 h-4" />
@@ -60,19 +96,31 @@ export default function ReceivingAgentModal({ onClose }) {
         </div>
 
         <div className="px-5 py-5 space-y-3 overflow-y-auto">
-          {POINTS.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="flex gap-3.5 rounded-xl p-4"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.2)' }}>
-              <div className="w-9 h-9 rounded-full shrink-0 flex items-center justify-center"
-                style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
-                <Icon className="w-4 h-4" style={{ color: GOLD }} />
+          {POINTS.map(({ icon: Icon, title, body }, i) => {
+            const hasVideo = !!qaClip(i);
+            return (
+              <div key={title} className="flex gap-3.5 rounded-xl p-4"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                <div className="w-9 h-9 rounded-full shrink-0 flex items-center justify-center"
+                  style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
+                  <Icon className="w-4 h-4" style={{ color: GOLD }} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-black text-sm text-white mb-1">{title}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>{body}</p>
+                  {hasVideo && (
+                    <button
+                      onClick={() => playQA(i)}
+                      className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black tracking-wide"
+                      style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}`, color: GOLD }}
+                    >
+                      <Play className="w-3 h-3" /> HEAR IT FROM BOB
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="font-black text-sm text-white mb-1">{title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>{body}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
 
           {/* CTA */}
           <div className="rounded-xl px-5 py-4 text-center" style={{ background: 'rgba(212,175,55,0.1)', border: `1px solid ${GOLD}` }}>
@@ -87,6 +135,8 @@ export default function ReceivingAgentModal({ onClose }) {
           </div>
         </div>
       </div>
+
+      {segments && <QADuoPresenter segments={segments} onClose={() => setSegments(null)} />}
     </div>
   );
 }
