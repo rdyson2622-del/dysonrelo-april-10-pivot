@@ -24,16 +24,53 @@
         "bob",
         "charlie"
       ],
-      "default": "bob",
-      "description": "Which avatar presents this broadcast"
+      "default": "charlie",
+      "description": "Primary anchor for this broadcast"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "solo",
+        "tag_team"
+      ],
+      "default": "solo",
+      "description": "solo = single anchor video; tag_team = Charlie at desk + Bob remote box"
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "charlie",
+              "bob"
+            ]
+          },
+          "script": {
+            "type": "string"
+          },
+          "heygenId": {
+            "type": "string"
+          },
+          "videoUrl": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Ordered clip sequence for tag_team broadcasts"
     },
     "heygenId": {
       "type": "string",
-      "description": "HeyGen render job id"
+      "description": "HeyGen render job id (solo format)"
     },
     "videoUrl": {
       "type": "string",
-      "description": "Permanent URL of the rendered broadcast video"
+      "description": "Permanent URL of the rendered broadcast video (solo format)"
     },
     "status": {
       "type": "string",

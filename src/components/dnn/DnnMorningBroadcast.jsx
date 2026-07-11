@@ -3,6 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play, X } from 'lucide-react';
 import { playNewsSting } from '@/components/dnn/newsSting';
+import TagTeamBroadcastPlayer from '@/components/dnn/TagTeamBroadcastPlayer';
+
+const isTagTeamReady = (b) => b.clips?.length > 0 && b.clips.every(c => c.videoUrl);
 
 const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -24,9 +27,10 @@ export default function DnnMorningBroadcast() {
     queryFn: () => base44.entities.DnnBroadcast.list('-broadcast_date', 10),
   });
 
-  // Latest broadcast that has a playable video — even if a newer render is in progress
-  const broadcast = broadcasts.find(b => b.videoUrl);
-  if (!broadcast?.videoUrl) return null;
+  // Latest broadcast that has playable video — tag-team clips or legacy solo video
+  const broadcast = broadcasts.find(b => isTagTeamReady(b) || b.videoUrl);
+  if (!broadcast) return null;
+  const tagTeam = isTagTeamReady(broadcast);
 
   const dateLabel = new Date(broadcast.broadcast_date + 'T12:00:00').toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
@@ -85,6 +89,8 @@ export default function DnnMorningBroadcast() {
                 <p className="text-white text-sm font-bold tracking-[0.35em] uppercase">Morning Broadcast · Charlie Simmons</p>
               </div>
             </div>
+          ) : tagTeam ? (
+            <TagTeamBroadcastPlayer clips={broadcast.clips} onEnded={() => setTvState('off')} />
           ) : (
             <video src={broadcast.videoUrl} controls autoPlay playsInline
               className="w-full h-full object-contain"
