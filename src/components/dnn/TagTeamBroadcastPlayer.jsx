@@ -32,7 +32,7 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
       <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
 
       {/* Charlie — green-screen cutout, lower left, in the room with the map behind him */}
-      <div className="absolute" style={{ bottom: '3%', left: '2%', width: '40%' }}>
+      <div className="absolute" style={{ bottom: '0.5%', left: '0.5%', width: '40%' }}>
         <ChromaKeyVideo
           src={charlieUrl}
           className="w-full block"
@@ -49,7 +49,7 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
 
       {/* Bob — remote correspondent box, upper right */}
       {isBobPhase && (
-        <div className="absolute dnn-remote-box" style={{ top: '7%', right: '4%', width: '26%' }}>
+        <div className="absolute dnn-remote-box" style={{ bottom: '4%', right: '3%', width: '26%' }}>
           <div className="rounded-lg overflow-hidden"
             style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
             <video
@@ -75,7 +75,7 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
           0% { opacity: 0; transform: scale(0.7); }
           100% { opacity: 1; transform: scale(1); }
         }
-        .dnn-remote-box { animation: dnnRemoteIn 0.35s ease-out; transform-origin: top right; }
+        .dnn-remote-box { animation: dnnRemoteIn 0.35s ease-out; transform-origin: bottom right; }
       `}</style>
     </div>
   );
