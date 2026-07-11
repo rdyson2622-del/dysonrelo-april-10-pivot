@@ -136,25 +136,39 @@ export default function CharliePagePresenter({ pageKey }) {
     );
   }
 
-  /* ── Expanded: the video box ── */
+  /* ── Expanded: centered frosted-glass stage over the blurred page ── */
   return (
-    <div
-      className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[240px] sm:w-[280px] md:w-[320px]"
-      style={{ maxWidth: 'calc(100vw - 2rem)' }}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Frozen-glass backdrop — the page stays visible but blurred behind Charlie */}
       <div
-        className="rounded-2xl overflow-hidden shadow-2xl"
-        style={{ background: '#0d0d0d', border: '1px solid rgba(212,175,55,0.4)' }}
+        className="absolute inset-0"
+        onClick={collapse}
+        style={{
+          background: 'rgba(10,10,10,0.35)',
+          backdropFilter: 'blur(18px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(140%)',
+        }}
+      />
+      <div
+        className="relative w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl"
+        style={{
+          background: 'rgba(20,20,20,0.55)',
+          backdropFilter: 'blur(30px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(30px) saturate(160%)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          boxShadow: '0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+        }}
       >
         {/* Header bar */}
-        <div className="flex items-center justify-between px-3 py-1.5"
-          style={{ background: 'rgba(212,175,55,0.12)', borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
-          <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+        <div className="flex items-center justify-between px-4 py-2.5"
+          style={{ background: 'rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
             Charlie · Page Overview
           </p>
           <button onClick={collapse} aria-label="Minimize Charlie overview"
-            className="p-0.5 hover:opacity-70" style={{ color: GOLD }}>
-            <X className="w-3.5 h-3.5" />
+            className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+            style={{ color: GOLD }}>
+            <X className="w-4 h-4" />
           </button>
         </div>
 
