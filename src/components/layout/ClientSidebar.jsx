@@ -8,6 +8,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
 import SendingAgentModal from '@/components/directory/SendingAgentModal';
+import ReceivingAgentModal from '@/components/directory/ReceivingAgentModal';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -54,6 +55,7 @@ export default function ClientSidebar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
   const [showSendingModal, setShowSendingModal] = useState(false);
+  const [showReceivingModal, setShowReceivingModal] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [portalRole, setPortalRole] = useState(null);
 
@@ -126,6 +128,13 @@ export default function ClientSidebar() {
           style={{ color: '#fff', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
           <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
           I AM A SENDING AGENT
+        </button>
+        <button
+          onClick={() => setShowReceivingModal(true)}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10 text-left"
+          style={{ color: '#fff', background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <ArrowRight className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          I AM A REFERRAL RECEIVING AGENT
         </button>
       </div>
 
@@ -277,6 +286,7 @@ export default function ClientSidebar() {
 
       <RelocationManagementModal isOpen={showRelocationModal} onClose={() => setShowRelocationModal(false)} />
       {showSendingModal && <SendingAgentModal onClose={() => setShowSendingModal(false)} />}
+      {showReceivingModal && <ReceivingAgentModal onClose={() => setShowReceivingModal(false)} />}
     </aside>
   );
 }
