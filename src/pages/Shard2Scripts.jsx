@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Sparkles, CheckCircle, Send, Loader, ExternalLink, FileText, Clapperboard, RefreshCw } from 'lucide-react';
 import Shard2Header from '@/components/shard2/Shard2Header';
+import RenderStatusTracker from '@/components/shard2/RenderStatusTracker';
 
 const inputStyle = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.2)' };
 
@@ -158,6 +159,8 @@ function ScriptEditor({ explainer, onChanged }) {
       {explainer.aiGeneratedOverview && (
         <p className="text-[11px] text-slate-500 italic leading-relaxed">{explainer.aiGeneratedOverview}</p>
       )}
+
+      <RenderStatusTracker explainer={explainer} onStatusChange={onChanged} />
 
       <div className="flex items-center gap-2 flex-wrap">
         <button onClick={handleGenerate} disabled={generating}
