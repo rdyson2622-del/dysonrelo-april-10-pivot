@@ -21,10 +21,11 @@ export default function DnnMorningBroadcast() {
 
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['dnnMorningBroadcast'],
-    queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 1),
+    queryFn: () => base44.entities.DnnBroadcast.list('-broadcast_date', 10),
   });
 
-  const broadcast = broadcasts[0];
+  // Latest broadcast that has a playable video — even if a newer render is in progress
+  const broadcast = broadcasts.find(b => b.videoUrl);
   if (!broadcast?.videoUrl) return null;
 
   const dateLabel = new Date(broadcast.broadcast_date + 'T12:00:00').toLocaleDateString('en-US', {
