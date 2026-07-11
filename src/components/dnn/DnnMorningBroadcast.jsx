@@ -26,7 +26,7 @@ export default function DnnMorningBroadcast() {
   const turnOn = () => {
     playNewsSting();
     setTvState('intro');
-    setTimeout(() => setTvState('on'), 3200);
+    setTimeout(() => setTvState('on'), 4200);
   };
 
   return (
@@ -53,7 +53,7 @@ export default function DnnMorningBroadcast() {
             <div className="absolute bottom-0 left-0 right-0 px-5 py-3 pointer-events-none"
               style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.85))' }}>
               <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DNN Real Estate News · Morning Broadcast</p>
-              <p className="text-white font-bold text-sm">{dateLabel} · Bob Dyson, Anchor</p>
+              <p className="text-white font-bold text-sm">{dateLabel} · Charlie Simmons, Anchor</p>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function DnnMorningBroadcast() {
                 <p className="font-black text-5xl md:text-7xl tracking-[0.2em] uppercase" style={{ color: GOLD, textShadow: '0 4px 40px rgba(0,0,0,0.8)' }}>
                   DNN NEWS
                 </p>
-                <p className="text-white text-sm font-bold tracking-[0.35em] uppercase">Morning Broadcast · Bob Dyson</p>
+                <p className="text-white text-sm font-bold tracking-[0.35em] uppercase">Morning Broadcast · Charlie Simmons</p>
               </div>
             </div>
           ) : (
