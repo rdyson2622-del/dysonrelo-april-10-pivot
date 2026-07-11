@@ -236,10 +236,12 @@ export default function AdminSidebar() {
             { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐' },
             { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
             { label: 'VENDOR', role: 'vendor', emoji: '🔧' },
-          ].map(({ label, role, emoji }) => (
+            { label: 'CORP RELO HR', role: 'corporate_hr', emoji: '🏢', path: '/corporate-relo' },
+          ].map(({ label, role, emoji, path }) => (
             <button
               key={role}
               onClick={() => {
+                if (path) { navigate(path); return; }
                 sessionStorage.setItem('dyson_role', role);
                 window.dispatchEvent(new Event('dyson_role_change'));
                 navigate('/dashboard');
