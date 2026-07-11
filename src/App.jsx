@@ -33,6 +33,7 @@ import AdminReferrals from './pages/AdminReferrals';
 import AdminCharlieScripts from './pages/AdminCharlieScripts';
 import AdminCharlieKnowledgeBase from './pages/AdminCharlieKnowledgeBase.jsx';
 import AdminCharlieEscalations from './pages/AdminCharlieEscalations.jsx';
+import AdminBobLibrary from './pages/AdminBobLibrary';
 import BusinessPlan from './pages/BusinessPlan';
 import Explainers from './pages/Explainers';
 import Chat from './pages/Chat';
@@ -215,6 +216,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/charlie-scripts" element={<AdminCharlieScripts />} />
         <Route path="/admin/charlie-knowledge-base" element={<AdminCharlieKnowledgeBase />} />
         <Route path="/admin/charlie-escalations" element={<AdminCharlieEscalations />} />
+        <Route path="/admin/bob-library" element={<AdminBobLibrary />} />
         <Route path="/admin/skip-trace" element={<AdminSkipTrace />} />
         <Route path="/admin/bulk-skip-trace" element={<AdminBulkSkipTrace />} />
         <Route path="/admin/marketing-campaigns" element={<AdminMarketingCampaigns />} />

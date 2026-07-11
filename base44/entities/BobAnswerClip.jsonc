@@ -1,0 +1,46 @@
+{
+  "name": "BobAnswerClip",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The consumer question this clip answers"
+    },
+    "answerScript": {
+      "type": "string",
+      "description": "Bob Dyson's spoken answer script"
+    },
+    "heygenId": {
+      "type": "string",
+      "description": "HeyGen render job id"
+    },
+    "videoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Bob's rendered clip"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "draft",
+      "description": "Render lifecycle"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the chat uses this clip"
+    }
+  },
+  "required": [
+    "question",
+    "answerScript"
+  ]
+}

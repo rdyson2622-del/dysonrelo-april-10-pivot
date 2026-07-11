@@ -48,25 +48,22 @@ Key messages to weave in naturally:
 Keep responses to 2-3 paragraphs. Be conversational. Use the person's name if you know it.${profileContext}`;
 };
 
-const BOB_FAQS = [
-  "What's the difference between a relocation manager and a standard real estate agent?",
-  "How does Dyson & Dyson handle a complex move involving two states?",
-  "Is there really no cost to me as the buyer?",
-  "What if my deal is stuck or something is going wrong in escrow?",
-  "How quickly can Dyson & Dyson start working my case?",
-  "What cities does Dyson & Dyson cover?",
-];
-
 export default function ChatInterface({ expanded = false, onToggleExpand, onClose, initialProfile = null }) {
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
-  const [qaClips, setQaClips] = useState([]);
+  const [bobAnswers, setBobAnswers] = useState([]);
 
-  // Load Bob Dyson's pre-rendered video answers
+  // Load Bob Dyson's pre-rendered video answers (FAQ page clips + answer library)
   useEffect(() => {
-    base44.entities.RealEstateQAClip.filter({ kind: 'qa' })
-      .then(setQaClips)
-      .catch(() => {});
+    Promise.all([
+      base44.entities.RealEstateQAClip.filter({ kind: 'qa', bobStatus: 'completed' }).catch(() => []),
+      base44.entities.BobAnswerClip.filter({ status: 'completed', isActive: true }).catch(() => []),
+    ]).then(([qa, lib]) => {
+      setBobAnswers([
+        ...qa.filter(c => c.bobVideoUrl).map(c => ({ question: c.question, videoUrl: c.bobVideoUrl })),
+        ...lib.filter(c => c.videoUrl).map(c => ({ question: c.question, videoUrl: c.videoUrl })),
+      ]);
+    });
   }, []);
 
   // Load existing client profile from DB on mount
@@ -236,15 +233,15 @@ User just said: "${messageText}"
 Respond as Charlie. Remember: acknowledge first, then answer directly.
 
 ALSO: Bob Dyson has personally recorded video answers to these known questions:
-${BOB_FAQS.map((q, i) => `${i}. ${q}`).join('\n')}
-Be GENEROUS with matching: if the user's question covers the same topic or would be well answered by one of those recorded answers — even with very different wording (e.g. "do I have to pay?", "is this free?", "what does it cost?" all match question 2; "can you help in Texas?" matches question 5) — set matched_faq_index to its number. Only set -1 when none of the recorded answers would address what they asked.`;
+${bobAnswers.map((q, i) => `${i}. ${q.question}`).join('\n')}
+Be GENEROUS with matching: if the user's question covers the same topic or would be well answered by one of those recorded answers — even with very different wording (e.g. "do I have to pay?", "is this free?", "what does it cost?" all match the cost question) — set matched_faq_index to its number. Only set -1 when none of the recorded answers would address what they asked.`;
 
       const res = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
           type: 'object',
           properties: {
-            matched_faq_index: { type: 'integer', description: 'Index 0-5 of the matched known question, or -1' },
+            matched_faq_index: { type: 'integer', description: 'Index of the matched known question, or -1' },
             response: { type: 'string', description: "Charlie's text response" },
           },
           required: ['matched_faq_index', 'response'],
@@ -252,7 +249,7 @@ Be GENEROUS with matching: if the user's question covers the same topic or would
       });
       const responseText = res?.response || '';
       const matchedIdx = Number.isInteger(Number(res?.matched_faq_index)) ? Number(res.matched_faq_index) : -1;
-      const bobClip = matchedIdx >= 0 ? qaClips.find(c => c.faqIndex === matchedIdx && c.bobVideoUrl) : null;
+      const bobClip = matchedIdx >= 0 && matchedIdx < bobAnswers.length ? bobAnswers[matchedIdx] : null;
 
       if (bobClip) {
         // Bob Dyson answers this one himself, on video with his own voice
@@ -260,7 +257,7 @@ Be GENEROUS with matching: if the user's question covers the same topic or would
         setMessages(prev => [...prev, {
           role: 'charlie',
           type: 'video',
-          videoUrl: bobClip.bobVideoUrl,
+          videoUrl: bobClip.videoUrl,
           content: "Great question — here's Bob Dyson himself with the answer:",
         }]);
         setIsTyping(false);

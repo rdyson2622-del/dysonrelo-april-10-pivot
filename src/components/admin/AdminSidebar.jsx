@@ -133,6 +133,7 @@ const NAV_SECTIONS = [
     children: [
       { label: 'Scripts', path: '/admin/charlie-scripts', icon: ScrollText },
       { label: 'Knowledge Base', path: '/admin/charlie-knowledge-base', icon: Brain },
+      { label: "Bob's Video Answers", path: '/admin/bob-library', icon: Video },
       { label: 'Escalations', path: '/admin/charlie-escalations', icon: AlertTriangle },
       { label: 'Voice Presentation', path: '/charlie-voice', icon: MessageCircle },
     ],
