@@ -36,6 +36,15 @@ export default function CharliePagePresenter({ pageKey }) {
 
   if (!loaded || dismissed) return null;
 
+  // Per-page placement + size, driven by the explainer record (adjustable per page in Shard 2)
+  const posClasses = {
+    upper_right: 'top-44 right-3 md:top-52 md:right-5',
+    upper_left: 'top-44 left-3 md:top-52 md:left-5',
+    lower_right: 'bottom-6 right-3 md:bottom-8 md:right-5',
+    lower_left: 'bottom-6 left-3 md:bottom-8 md:left-5',
+  }[explainer?.charliePosition || 'upper_right'];
+  const boxWidth = Math.min(Math.max(explainer?.charlieBoxWidth || 220, 140), 480);
+
   // Prefer the Charlie-only presenter clip; the composed full-screen video
   // (finalVideoUrl) is a demo/render artifact and is NOT shown in the widget.
   const presenterSrc = explainer?.renderStatus === 'completed' ? explainer?.presenterVideoUrl : null;
@@ -77,8 +86,8 @@ export default function CharliePagePresenter({ pageKey }) {
 
   return (
     <div
-      className="fixed z-40 top-44 right-3 md:top-52 md:right-5 w-[160px] sm:w-[190px] md:w-[220px]"
-      style={{ maxWidth: 'calc(100vw - 2rem)' }}
+      className={`fixed z-40 ${posClasses}`}
+      style={{ width: boxWidth, maxWidth: 'calc(100vw - 2rem)' }}
     >
       <div
         className="rounded-2xl overflow-hidden shadow-2xl"
