@@ -77,7 +77,7 @@ export default function CharliePagePresenter({ pageKey }) {
 
   return (
     <div
-      className="fixed z-40 top-36 right-3 md:top-44 md:right-5 w-[160px] sm:w-[190px] md:w-[220px]"
+      className="fixed z-40 top-44 right-3 md:top-52 md:right-5 w-[160px] sm:w-[190px] md:w-[220px]"
       style={{ maxWidth: 'calc(100vw - 2rem)' }}
     >
       <div
