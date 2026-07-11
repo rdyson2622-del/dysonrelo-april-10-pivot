@@ -35,16 +35,18 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
       <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
 
       {/* Charlie — bordered anchor box, lower left */}
-      <div className="absolute" style={{ bottom: '2%', left: '1%', width: '40%' }}>
+      <div className="absolute" style={{ bottom: '2%', left: '1%', width: '24%' }}>
         <div className="rounded-lg overflow-hidden"
           style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
-          <ChromaKeyVideo
-            ref={charlieRef}
-            src={charlieUrl}
-            className="w-full block"
-            onEnded={() => { if (!isBobPhase) advance(); }}
-            onPlayBlocked={() => setBlocked(true)}
-          />
+          <div className="w-full overflow-hidden" style={{ aspectRatio: '3 / 4' }}>
+            <ChromaKeyVideo
+              ref={charlieRef}
+              src={charlieUrl}
+              className="w-full h-full block object-cover"
+              onEnded={() => { if (!isBobPhase) advance(); }}
+              onPlayBlocked={() => setBlocked(true)}
+            />
+          </div>
           <div className="px-2 py-1 flex items-center gap-1.5"
             style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)', borderTop: `1px solid rgba(212,175,55,0.5)` }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
@@ -57,16 +59,18 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
 
       {/* Bob — remote correspondent box, upper right */}
       {isBobPhase && (
-        <div className="absolute dnn-remote-box" style={{ bottom: '2%', right: '1%', width: '40%' }}>
+        <div className="absolute dnn-remote-box" style={{ bottom: '2%', right: '1%', width: '24%' }}>
           <div className="rounded-lg overflow-hidden"
             style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
-            <video
-              src={current.videoUrl}
-              autoPlay
-              playsInline
-              className="w-full block"
-              onEnded={advance}
-            />
+            <div className="w-full overflow-hidden" style={{ aspectRatio: '3 / 4' }}>
+              <video
+                src={current.videoUrl}
+                autoPlay
+                playsInline
+                className="w-full h-full block object-cover"
+                onEnded={advance}
+              />
+            </div>
             <div className="px-2 py-1 flex items-center gap-1.5"
               style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)', borderTop: `1px solid rgba(212,175,55,0.5)` }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
