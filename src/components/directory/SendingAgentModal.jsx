@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
 const GOLD = '#D4AF37';
 
@@ -8,10 +9,37 @@ const EXODUS_CITIES = ['Los Angeles', 'San Francisco', 'Seattle', 'Chicago', 'Ne
 
 export default function SendingAgentModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
+  const [clips, setClips] = useState([]);
+  const [sequence, setSequence] = useState(null);
   const [form, setForm] = useState({
     name: '', email: '', phone: '', brokerage: '',
     seller_city: '', destination_city: '', notes: ''
   });
+
+  useEffect(() => {
+    base44.entities.VettingDeskClip.list()
+      .then(setClips)
+      .catch(() => {});
+  }, []);
+
+  const intro = clips.find(c => c.kind === 'intro');
+  const outro = clips.find(c => c.kind === 'outro');
+  const introReady = intro?.charlieStatus === 'completed' && intro?.charlieVideoUrl;
+
+  const playIntro = () => {
+    if (!introReady) return;
+    const segs = [{ src: intro.charlieVideoUrl, speaker: 'charlie' }];
+    // Play the full donut sequence: Charlie intro → each Q&A (Charlie asks, Bob answers) → Charlie outro
+    clips
+      .filter(c => c.kind === 'qa' && c.charlieVideoUrl && c.bobVideoUrl)
+      .sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0))
+      .forEach(qa => {
+        segs.push({ src: qa.charlieVideoUrl, speaker: 'charlie' });
+        segs.push({ src: qa.bobVideoUrl, speaker: 'bob' });
+      });
+    if (outro?.charlieVideoUrl) segs.push({ src: outro.charlieVideoUrl, speaker: 'charlie' });
+    setSequence(segs);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,16 +56,42 @@ export default function SendingAgentModal({ onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={onClose}>
+      {sequence && (
+        <div onClick={e => e.stopPropagation()}>
+          <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
+        </div>
+      )}
       <div className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}
         style={{ background: '#fff8ee', border: `2px solid ${GOLD}` }}>
 
         {/* Header */}
-        <div className="px-6 py-4 flex items-start justify-between" style={{ background: '#0d0d0d' }}>
-          <div>
+        <div className="px-6 py-4 flex items-start justify-between gap-3" style={{ background: '#0d0d0d' }}>
+          <div className="flex-1 min-w-0">
             <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DYSON NATIONAL VETTING DESK</p>
             <p className="text-white font-bold text-sm mt-0.5">Sending Agent Referral Request</p>
             <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.55)' }}>We'll vet the best destination agent and protect your 25% fee.</p>
           </div>
+          {/* Charlie & Bob video circle — plays the Vetting Desk walkthrough */}
+          {introReady && (
+            <button onClick={playIntro} aria-label="Watch Charlie and Bob explain the Vetting Desk"
+              className="relative shrink-0 w-20 h-20 transition-all hover:scale-105 active:scale-95">
+              <span className="absolute inset-0 rounded-full overflow-hidden shadow-lg"
+                style={{ background: '#0d0d0d', border: `2.5px solid ${GOLD}` }}>
+                <video
+                  src={intro.charlieVideoUrl}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              </span>
+              <span className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center"
+                style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
+                <Play className="w-3.5 h-3.5 ml-0.5" style={{ color: '#000' }} />
+              </span>
+            </button>
+          )}
           <button onClick={onClose} className="p-1.5 rounded-full hover:bg-white/10">
             <X className="w-4 h-4 text-white" />
           </button>
