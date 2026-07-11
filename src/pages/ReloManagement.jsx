@@ -214,6 +214,20 @@ export default function ReloManagement() {
         </div>
       </section>
 
+      {/* ── For Employers strip ── */}
+      <section className="px-8 md:px-16 py-12 text-center"
+        style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
+        <p className="text-xs font-black tracking-[0.35em] uppercase mb-3" style={{ color: GOLD }}>FOR EMPLOYERS</p>
+        <p className="text-base leading-relaxed max-w-xl mx-auto mb-6 text-white">
+          Managing relocations for your company? See how we eliminate corporate relocation management fees entirely.
+        </p>
+        <Link to="/corporate-relo"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-sm transition-all hover:scale-105"
+          style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+          Corporate Relo Services <ArrowRight className="w-4 h-4" />
+        </Link>
+      </section>
+
       {/* ── SLIDE 7: The Dyson & Dyson Promise ── */}
       <section className="min-h-screen flex flex-col items-center justify-center px-8 md:px-16 py-20 text-center"
         style={{ background: '#ede0cc' }}>

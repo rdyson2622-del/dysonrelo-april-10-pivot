@@ -81,6 +81,14 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    key: 'corporate_relo',
+    label: 'CORPORATE RELO / HR',
+    children: [
+      { label: 'HR Explainer Videos & Guidelines', path: '/admin/corporate-relo', icon: Video },
+      { label: 'Public Corporate Relo Page', path: '/corporate-relo', icon: Globe },
+    ],
+  },
+  {
     key: 'operations',
     label: 'OPERATIONS',
     children: [

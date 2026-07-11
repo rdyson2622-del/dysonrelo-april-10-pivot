@@ -107,6 +107,8 @@ import Shard2Scripts from './pages/Shard2Scripts';
 import Shard2Library from './pages/Shard2Library';
 import Shard2Settings from './pages/Shard2Settings';
 import SendingAgentLanding from './pages/SendingAgentLanding';
+import CorporateRelo from './pages/CorporateRelo';
+import AdminCorporateRelo from './pages/AdminCorporateRelo';
 import AgentLanding from './pages/AgentLanding';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
@@ -170,6 +172,7 @@ const AuthenticatedApp = () => {
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
         <Route path="/relo-management" element={<ReloManagement />} />
+        <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
         <Route path="/Explainers" element={<Explainers />} />
         <Route path="/explainers" element={<Explainers />} />
@@ -228,6 +231,7 @@ const AuthenticatedApp = () => {
         <Route path="/business-plan" element={<Navigate to="/admin/business-plan" replace />} />
         <Route path="/admin/new-landing-page" element={<AdminNewLandingPage />} />
         <Route path="/admin/relo-management" element={<AdminReloManagement />} />
+        <Route path="/admin/corporate-relo" element={<AdminCorporateRelo />} />
         <Route path="/admin/dnn/revenue" element={<AdminDnnRevenue />} />
         <Route path="/admin/dnn/agent-vetting" element={<AdminAgentVetting />} />
         <Route path="/admin/dnn/lender-vetting" element={<AdminLenderVetting />} />
