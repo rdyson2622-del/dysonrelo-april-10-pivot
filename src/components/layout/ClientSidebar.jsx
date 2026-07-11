@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight,
-  ChevronRight, ChevronLeft
+  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -59,14 +58,7 @@ export default function ClientSidebar() {
   const [showReceivingModal, setShowReceivingModal] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [portalRole, setPortalRole] = useState(null);
-  const [expanded, setExpanded] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
 
-  const toggleExpanded = () => {
-    setExpanded(prev => {
-      sessionStorage.setItem('dyson_sidebar_expanded', String(!prev));
-      return !prev;
-    });
-  };
 
   useEffect(() => {
     const stored = sessionStorage.getItem('dyson_role');
@@ -103,50 +95,15 @@ export default function ClientSidebar() {
 
   const portalLabel = isAgent ? 'AGENT PORTAL' : isVendor ? 'VENDOR PORTAL' : 'CLIENT PORTAL';
 
-  // ── Collapsed rail: slim strip that expands the full panel on click ──
-  if (!expanded) {
-    return (
-      <aside className="w-14 shrink-0 flex flex-col items-center h-full py-4 gap-4"
-        style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
-        <Link to="/Home">
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-8 w-auto" />
-        </Link>
-        <button
-          onClick={toggleExpanded}
-          aria-label={`Open ${portalLabel.toLowerCase()}`}
-          className="flex-1 flex flex-col items-center justify-start gap-3 pt-2 w-full transition-all hover:bg-white/5"
-        >
-          <span className="w-7 h-7 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
-            <ChevronRight className="w-4 h-4" style={{ color: GOLD }} />
-          </span>
-          <span className="text-[10px] font-black tracking-[0.3em]"
-            style={{ color: GOLD, writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-            {portalLabel}
-          </span>
-        </button>
-      </aside>
-    );
-  }
-
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
       style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
       {/* Logo */}
       <div className="shrink-0 px-5 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-        <div className="flex items-start justify-between">
-          <Link to="/Home">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
-          </Link>
-          <button
-            onClick={toggleExpanded}
-            aria-label="Collapse sidebar"
-            className="w-6 h-6 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)' }}>
-            <ChevronLeft className="w-3.5 h-3.5" style={{ color: GOLD }} />
-          </button>
-        </div>
+        <Link to="/Home">
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
+        </Link>
         <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
           {portalLabel}
         </p>

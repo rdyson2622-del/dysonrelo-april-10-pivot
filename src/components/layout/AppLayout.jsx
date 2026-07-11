@@ -5,7 +5,7 @@ import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PanelLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 
@@ -13,6 +13,14 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') !== 'false');
+
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => {
+      sessionStorage.setItem('dyson_sidebar_expanded', String(!prev));
+      return !prev;
+    });
+  };
 
   useEffect(() => {
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
@@ -37,6 +45,16 @@ export default function AppLayout() {
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#A9A9A9' }}>
+        {/* Client Portal box — far left, toggles the sidebar */}
+        <button
+          onClick={toggleSidebar}
+          className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
+          style={{ background: '#0d0d0d', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)' }}
+        >
+          <PanelLeft className="w-4 h-4" />
+          CLIENT PORTAL
+        </button>
+
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
@@ -60,10 +78,12 @@ export default function AppLayout() {
       </div>
       {/* Content area with sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left sidebar — desktop only */}
-        <div className="hidden md:flex">
-          <ClientSidebar />
-        </div>
+        {/* Left sidebar — desktop only, toggled by the Client Portal box */}
+        {sidebarOpen && (
+          <div className="hidden md:flex">
+            <ClientSidebar />
+          </div>
+        )}
         {/* Main content */}
         <div className="flex-1 overflow-auto pb-16 md:pb-0">
           <Outlet />
