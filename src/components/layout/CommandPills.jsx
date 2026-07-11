@@ -24,14 +24,14 @@ export default function CommandPills() {
   };
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1">
       {PORTAL_PILLS.map(({ label, emoji, role, path }) => {
         const isActive = !onAdmin && activeRole === role;
         return (
           <button
             key={role}
             onClick={() => switchRole(role, path)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-black tracking-[0.15em] transition-all hover:scale-105 active:scale-95"
+            className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
             style={{
               background: isActive ? 'rgba(212,175,55,0.25)' : 'rgba(0,0,0,0.45)',
               border: `1px solid ${isActive ? GOLD : 'rgba(212,175,55,0.35)'}`,
@@ -50,7 +50,7 @@ export default function CommandPills() {
       {/* ADMIN pill — highlights when on admin routes */}
       <Link
         to="/admin"
-        className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-black tracking-[0.15em] transition-all hover:scale-105 active:scale-95"
+        className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
         style={{
           background: onAdmin ? 'rgba(212,175,55,0.25)' : 'rgba(0,0,0,0.45)',
           border: `1px solid ${onAdmin ? GOLD : 'rgba(212,175,55,0.35)'}`,
