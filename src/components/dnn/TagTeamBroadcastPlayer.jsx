@@ -52,7 +52,7 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
 
       {/* Bob — remote correspondent box, upper right */}
       {isBobPhase && (
-        <div className="absolute dnn-remote-box" style={{ bottom: '4%', right: '3%', width: '26%' }}>
+        <div className="absolute dnn-remote-box" style={{ bottom: '2%', right: '1%', width: '40%' }}>
           <div className="rounded-lg overflow-hidden"
             style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
             <video
