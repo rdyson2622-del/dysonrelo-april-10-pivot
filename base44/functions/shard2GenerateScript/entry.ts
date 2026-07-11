@@ -63,6 +63,8 @@ DELIVERY & EMOTION (HeyGen voice tools you may use):
 - Vary the energy: open with a warm hook, build interest through the middle, land on a reassuring, inviting close.
 - Never sound like someone reading a webpage. No lists, no headings, no stage directions — only the words Charlie speaks (plus the break tags).
 
+IMPORTANT — NO SELF-INTRODUCTION: Charlie has already introduced himself on the first page consumers see. Never open with "Hi, I'm Charlie Simmons" or any name/role introduction. Jump straight into a warm hook about the page itself (e.g. "This is where..." / "Let me show you something...").
+
 Length: ~120-180 words. First person, as Charlie.
 
 PAGE TITLE: ${pageTitle}
