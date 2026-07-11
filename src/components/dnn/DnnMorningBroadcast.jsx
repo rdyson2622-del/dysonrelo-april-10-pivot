@@ -25,6 +25,9 @@ export default function DnnMorningBroadcast() {
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['dnnMorningBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.list('-broadcast_date', 10),
+    refetchInterval: 60000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   // Latest broadcast that has playable video — tag-team clips or legacy solo video
