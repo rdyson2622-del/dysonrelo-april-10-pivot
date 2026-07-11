@@ -7,19 +7,21 @@ const GOLD = '#D4AF37';
 /**
  * CharliePagePresenter — Shard2 in-app presentation layer.
  *
- * Floats a small Charlie Simmons video box in the upper-right corner of a
- * client-facing explainer page. Loads the CharliePageExplainer record for the
- * given pageKey and plays its finalVideoUrl when the render is completed.
- * Falls back to a clean "overview coming soon" card otherwise.
+ * Collapsed: a small Charlie pill pinned near the top of the page — no page
+ * content needs to move. Clicking it expands into the video box and Charlie
+ * begins speaking (unmuted, since it's a user gesture).
+ *
+ * Built as a single self-contained widget so the one-way video can later be
+ * swapped for a live voice-to-voice session without touching any page.
  *
  * Usage: <CharliePagePresenter pageKey="relocation-services" />
  */
 export default function CharliePagePresenter({ pageKey }) {
   const [explainer, setExplainer] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
-  const [dismissed, setDismissed] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [ended, setEnded] = useState(false);
   const videoRef = useRef(null);
 
@@ -34,20 +36,33 @@ export default function CharliePagePresenter({ pageKey }) {
     return () => { cancelled = true; };
   }, [pageKey]);
 
-  if (!loaded || dismissed) return null;
-
-  // Per-page placement + size, driven by the explainer record (adjustable per page in Shard 2)
-  const posClasses = {
-    upper_right: 'top-44 right-3 md:top-52 md:right-5',
-    upper_left: 'top-44 left-3 md:top-52 md:left-5',
-    lower_right: 'bottom-6 right-3 md:bottom-8 md:right-5',
-    lower_left: 'bottom-6 left-3 md:bottom-8 md:left-5',
-  }[explainer?.charliePosition || 'upper_right'];
+  if (!loaded) return null;
 
   // Prefer the Charlie-only presenter clip; the composed full-screen video
   // (finalVideoUrl) is a demo/render artifact and is NOT shown in the widget.
   const presenterSrc = explainer?.renderStatus === 'completed' ? explainer?.presenterVideoUrl : null;
   const hasVideo = Boolean(presenterSrc);
+
+  const openAndSpeak = () => {
+    setExpanded(true);
+    setEnded(false);
+    // Start speaking on the click gesture — unmuted playback is allowed here
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (v) {
+        v.muted = false;
+        setMuted(false);
+        v.play().then(() => setPlaying(true)).catch(() => {});
+      }
+    }, 50);
+  };
+
+  const collapse = () => {
+    const v = videoRef.current;
+    if (v) v.pause();
+    setPlaying(false);
+    setExpanded(false);
+  };
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -83,9 +98,31 @@ export default function CharliePagePresenter({ pageKey }) {
     </button>
   );
 
+  /* ── Collapsed: small Charlie pill at the top — never covers page copy ── */
+  if (!expanded) {
+    return (
+      <button
+        onClick={openAndSpeak}
+        aria-label="Hear Charlie explain this page"
+        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 shadow-xl"
+        style={{ background: '#0d0d0d', border: `1px solid ${GOLD}` }}
+      >
+        <span className="w-6 h-6 rounded-full flex items-center justify-center text-sm shrink-0"
+          style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
+          🎩
+        </span>
+        <span className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+          Charlie Explains
+        </span>
+        <Play className="w-3 h-3" style={{ color: GOLD }} />
+      </button>
+    );
+  }
+
+  /* ── Expanded: the video box ── */
   return (
     <div
-      className={`fixed z-40 ${posClasses} w-[160px] sm:w-[190px] md:w-[220px]`}
+      className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[240px] sm:w-[280px] md:w-[320px]"
       style={{ maxWidth: 'calc(100vw - 2rem)' }}
     >
       <div
@@ -98,7 +135,7 @@ export default function CharliePagePresenter({ pageKey }) {
           <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
             Charlie · Page Overview
           </p>
-          <button onClick={() => setDismissed(true)} aria-label="Close Charlie overview"
+          <button onClick={collapse} aria-label="Minimize Charlie overview"
             className="p-0.5 hover:opacity-70" style={{ color: GOLD }}>
             <X className="w-3.5 h-3.5" />
           </button>
@@ -110,7 +147,6 @@ export default function CharliePagePresenter({ pageKey }) {
               ref={videoRef}
               src={presenterSrc}
               preload="auto"
-              muted
               playsInline
               onEnded={() => { setPlaying(false); setEnded(true); }}
               className="w-full block aspect-video object-cover cursor-pointer"
