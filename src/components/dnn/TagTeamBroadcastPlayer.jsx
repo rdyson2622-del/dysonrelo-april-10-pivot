@@ -31,19 +31,22 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
       {/* Studio background — full frame so the national wall map stays visible */}
       <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
 
-      {/* Charlie — green-screen cutout, lower left, in the room with the map behind him */}
-      <div className="absolute" style={{ bottom: '0.5%', left: '0.5%', width: '40%' }}>
-        <ChromaKeyVideo
-          src={charlieUrl}
-          className="w-full block"
-          onEnded={() => { if (!isBobPhase) advance(); }}
-        />
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded"
-          style={{ background: 'rgba(0,0,0,0.75)', border: `1px solid rgba(212,175,55,0.5)` }}>
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-          <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-            CHARLIE SIMMONS · DNN NEWS DESK
-          </span>
+      {/* Charlie — bordered anchor box, lower left */}
+      <div className="absolute" style={{ bottom: '2%', left: '1%', width: '40%' }}>
+        <div className="rounded-lg overflow-hidden"
+          style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
+          <ChromaKeyVideo
+            src={charlieUrl}
+            className="w-full block"
+            onEnded={() => { if (!isBobPhase) advance(); }}
+          />
+          <div className="px-2 py-1 flex items-center gap-1.5"
+            style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)', borderTop: `1px solid rgba(212,175,55,0.5)` }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+            <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
+              CHARLIE SIMMONS · DNN NEWS DESK
+            </span>
+          </div>
         </div>
       </div>
 
