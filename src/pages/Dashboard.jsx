@@ -35,7 +35,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchClient = async () => {
-      const user = await base44.auth.me();
+      const isAuthed = await base44.auth.isAuthenticated();
+      if (!isAuthed) return;
+      const user = await base44.auth.me().catch(() => null);
       if (user?.email) {
         const clients = await base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1);
         if (clients.length > 0) setClientId(clients[0].id);
