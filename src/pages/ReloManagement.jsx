@@ -18,7 +18,7 @@ export default function ReloManagement() {
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
 
       {/* ── Shard2: Charlie video presenter (upper-right, non-intrusive) ── */}
-      <CharliePagePresenter pageKey="relocation-services" />
+      <CharliePagePresenter pageKey="relocation-services" topOffsetClass="top-44 md:top-48" />
 
       {/* ── Charlie Banner ── */}
       <div className="px-6 py-5 flex items-start gap-4"
