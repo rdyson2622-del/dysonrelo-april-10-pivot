@@ -5,8 +5,8 @@ const GOLD = '#D4AF37';
 
 const PORTAL_PILLS = [
   { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/dashboard' },
-  { label: 'RELOCATION AGENT',  emoji: '⭐', role: 'agent',  path: '/dashboard' },
-  { label: 'REFERRAL AGENT',  emoji: '🤝', role: 'referral_agent',  path: '/dashboard' },
+  { label: 'RELOCATION AGENT NETWORK',  emoji: '⭐', role: 'agent',  path: '/dashboard' },
+  { label: 'REFERRAL AGENT NETWORK',  emoji: '🤝', role: 'referral_agent',  path: '/dashboard' },
   { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/dashboard' },
 ];
 
@@ -31,7 +31,7 @@ export default function CommandPills() {
           <button
             key={role}
             onClick={() => switchRole(role, path)}
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
             style={{
               background: isActive ? '#000' : 'rgba(0,0,0,0.45)',
               border: `1px solid ${isActive ? '#000' : 'rgba(212,175,55,0.35)'}`,
@@ -50,7 +50,7 @@ export default function CommandPills() {
       {/* ADMIN pill — highlights when on admin routes */}
       <Link
         to="/admin"
-        className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
         style={{
           background: onAdmin ? '#000' : 'rgba(0,0,0,0.45)',
           border: `1px solid ${onAdmin ? '#000' : 'rgba(212,175,55,0.35)'}`,
