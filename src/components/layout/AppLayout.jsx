@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
@@ -67,14 +67,6 @@ export default function AppLayout() {
 
         {/* ── ADMIN-ONLY COMMAND PILLS ── */}
         {isAdmin && <CommandPills />}
-
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-full transition-all hover:opacity-80"
-          style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
-        >
-          Dashboard
-        </Link>
       </div>
       {/* Content area with sidebar */}
       <div className="flex flex-1 overflow-hidden">
