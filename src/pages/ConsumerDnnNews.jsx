@@ -575,10 +575,13 @@ export default function ConsumerDnnNews() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm font-semibold tracking-widest" style={{ color: '#D4AF37' }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#D4AF37' }} />
-            LIVE FEED
-          </div>
+          <button
+            onClick={() => window.dispatchEvent(new Event('dnn-live-broadcast'))}
+            className="flex items-center gap-2 text-sm font-black tracking-widest px-4 py-2 rounded-full transition-all hover:scale-105"
+            style={{ color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', boxShadow: '0 0 20px rgba(212,175,55,0.35)' }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
+            LIVE BROADCAST
+          </button>
         </div>
       </div>
 

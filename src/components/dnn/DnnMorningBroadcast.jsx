@@ -11,6 +11,14 @@ export default function DnnMorningBroadcast() {
   // tvState: 'off' | 'intro' | 'on'
   const [tvState, setTvState] = useState('off');
 
+  // Allow the header LIVE FEED button to launch the broadcast
+  const turnOnRef = React.useRef(null);
+  React.useEffect(() => {
+    const handler = () => turnOnRef.current?.();
+    window.addEventListener('dnn-live-broadcast', handler);
+    return () => window.removeEventListener('dnn-live-broadcast', handler);
+  }, []);
+
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['dnnMorningBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 1),
@@ -28,6 +36,7 @@ export default function DnnMorningBroadcast() {
     setTvState('intro');
     setTimeout(() => setTvState('on'), 4200);
   };
+  turnOnRef.current = turnOn;
 
   return (
     <>
