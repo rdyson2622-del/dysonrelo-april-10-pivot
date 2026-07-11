@@ -5,7 +5,7 @@ const GOLD = '#D4AF37';
 
 const PORTAL_PILLS = [
   { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/dashboard' },
-  { label: 'AGENT',  emoji: '⭐', role: 'agent',  path: '/dashboard' },
+  { label: 'RELOCATION AGENT',  emoji: '⭐', role: 'agent',  path: '/dashboard' },
   { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/dashboard' },
 ];
 
