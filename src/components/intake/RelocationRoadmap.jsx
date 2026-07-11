@@ -9,6 +9,8 @@ import {
   MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
 
+import RoadmapQASection, { RoadmapPhasePlay } from '@/components/roadmap/RoadmapQASection';
+
 const GOLD = '#D4AF37';
 
 const PHASES = [
@@ -198,6 +200,9 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         </motion.div>
       </div>
 
+      {/* Bob & Charlie Roadmap Briefing */}
+      <RoadmapQASection />
+
       {/* Phases */}
       <div className="max-w-2xl mx-auto px-6 pb-10 space-y-3">
         {PHASES.map((phase, i) => {
@@ -313,8 +318,9 @@ function ExpandedPhaseContent({ phase, isActive, GOLD }) {
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.25 }}
-      className="px-5 pb-5"
+      className="px-5 pb-5 space-y-4"
     >
+      <RoadmapPhasePlay phaseNumber={phase.number} />
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
           <p className="text-xs font-bold tracking-widest mb-3" style={{ color: GOLD }}>WHAT HAPPENS</p>
