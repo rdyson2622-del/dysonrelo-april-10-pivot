@@ -74,16 +74,6 @@ const NAV_SECTIONS = [
     ],
   },
   {
-    key: 'referral_agent',
-    label: 'REFERRAL AGENT',
-    children: [
-      { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },
-      { label: 'Sending Agent Tracker', path: '/admin/sending-agents', icon: ArrowRight },
-      { label: 'Referral Fee Agreements', path: '/admin/prn-agreements', icon: FileCheck },
-      { label: 'Lead Handoff', path: '/admin/lead-handoff', icon: Send },
-    ],
-  },
-  {
     key: 'relo_management',
     label: 'RELO MANAGEMENT',
     children: [
@@ -230,26 +220,30 @@ export default function AdminSidebar() {
       {/* ── VIEW AS: Master Key Action Boxes ── */}
       <div className="px-3 pt-3 pb-2 shrink-0">
         <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: '#D4AF37' }}>View Portal As:</p>
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-2 gap-1.5">
           {[
-            { label: 'CLIENT', path: '/dashboard', emoji: '🏠' },
-            { label: 'AGENT', path: '/admin/skip-trace', emoji: '⭐' },
-            { label: 'VENDOR', path: '/search', emoji: '🔧' },
-          ].map(({ label, path, emoji }) => (
-            <Link
-              key={label}
-              to={path}
+            { label: 'CLIENT', role: 'client', emoji: '🏠' },
+            { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐' },
+            { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
+            { label: 'VENDOR', role: 'vendor', emoji: '🔧' },
+          ].map(({ label, role, emoji }) => (
+            <button
+              key={role}
+              onClick={() => {
+                sessionStorage.setItem('dyson_role', role);
+                window.dispatchEvent(new Event('dyson_role_change'));
+                navigate('/dashboard');
+              }}
               className="flex flex-col items-center justify-center py-2 px-1 rounded-xl text-center transition-all hover:scale-105 active:scale-95"
               style={{
                 background: 'rgba(212,175,55,0.1)',
                 border: '1px solid rgba(212,175,55,0.35)',
                 color: '#D4AF37',
-                textDecoration: 'none',
               }}
             >
               <span className="text-lg leading-none mb-0.5">{emoji}</span>
-              <span className="text-[9px] font-black tracking-[0.15em]">{label}</span>
-            </Link>
+              <span className="text-[9px] font-black tracking-[0.1em] leading-tight">{label}</span>
+            </button>
           ))}
         </div>
       </div>
