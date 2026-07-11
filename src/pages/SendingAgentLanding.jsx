@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Shield, DollarSign, Truck, ArrowRight, CheckCircle, Phone } from 'lucide-react';
+import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
 
 const GOLD = '#D4AF37';
 
@@ -110,6 +111,9 @@ export default function SendingAgentLanding() {
           </p>
         </div>
       </div>
+
+      {/* National Vetting Desk — Charlie/Bob duo */}
+      <VettingDeskDuo />
 
       {/* Submission Form */}
       <div id="submit" className="px-6 pb-20 max-w-2xl mx-auto">
