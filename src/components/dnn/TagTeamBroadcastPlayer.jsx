@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
+import { Play } from 'lucide-react';
 import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
 
 const GOLD = '#D4AF37';
@@ -9,6 +10,8 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 // box in the upper right while Charlie holds his last frame.
 export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
   const [phase, setPhase] = useState(0);
+  const [blocked, setBlocked] = useState(false);
+  const charlieRef = useRef(null);
   const current = clips[phase];
 
   // The Charlie video shown full-screen: current clip if Charlie, otherwise the last Charlie clip
@@ -36,9 +39,11 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
         <div className="rounded-lg overflow-hidden"
           style={{ border: `2px solid ${GOLD}`, boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.35)', background: '#000' }}>
           <ChromaKeyVideo
+            ref={charlieRef}
             src={charlieUrl}
             className="w-full block"
             onEnded={() => { if (!isBobPhase) advance(); }}
+            onPlayBlocked={() => setBlocked(true)}
           />
           <div className="px-2 py-1 flex items-center gap-1.5"
             style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)', borderTop: `1px solid rgba(212,175,55,0.5)` }}>
@@ -71,6 +76,22 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Tap-to-start overlay when the browser blocks unmuted autoplay */}
+      {blocked && (
+        <button
+          onClick={() => { charlieRef.current?.play(); setBlocked(false); }}
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3"
+          style={{ background: 'rgba(0,0,0,0.45)' }}>
+          <span className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(212,175,55,0.95)', boxShadow: '0 0 60px rgba(212,175,55,0.4)' }}>
+            <Play className="w-9 h-9 ml-1" style={{ color: '#000' }} fill="#000" />
+          </span>
+          <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>
+            Tap to Start Broadcast
+          </span>
+        </button>
       )}
 
       <style>{`

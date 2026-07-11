@@ -1,15 +1,24 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
 // Plays a green-screen video and keys out the green so only the subject shows.
-export default function ChromaKeyVideo({ src, onEnded, className, style }) {
+const ChromaKeyVideo = forwardRef(function ChromaKeyVideo({ src, onEnded, onPlayBlocked, className, style }, ref) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    play: () => videoRef.current?.play(),
+  }));
 
   useEffect(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let raf;
+
+    // Browsers block unmuted autoplay without a user gesture — surface it so
+    // the player can show a tap-to-start overlay instead of a black box.
+    const p = video.play();
+    if (p?.catch) p.catch(() => onPlayBlocked?.());
 
     const draw = () => {
       if (video.videoWidth) {
@@ -38,4 +47,6 @@ export default function ChromaKeyVideo({ src, onEnded, className, style }) {
       <canvas ref={canvasRef} className={className} style={style} />
     </>
   );
-}
+});
+
+export default ChromaKeyVideo;
