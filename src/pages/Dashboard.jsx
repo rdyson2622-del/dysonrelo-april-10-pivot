@@ -9,6 +9,14 @@ import DashboardServicePreviews from '@/components/dashboard/DashboardServicePre
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
 import ClientMessages from '@/components/dashboard/ClientMessages';
 import { toast } from "@/components/ui/use-toast";
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
+
+const PORTAL_PAGE_KEYS = {
+  client: 'portal-client',
+  agent: 'portal-relocation-agent',
+  referral_agent: 'portal-referral-agent',
+  vendor: 'portal-vendor',
+};
 
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
@@ -16,7 +24,14 @@ const GOLD = '#D4AF37';
 export default function Dashboard() {
   const [clientId, setClientId] = useState(null);
   const [isCommitting, setIsCommitting] = useState(false);
+  const [portalRole, setPortalRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const onRoleChange = () => setPortalRole(sessionStorage.getItem('dyson_role') || 'client');
+    window.addEventListener('dyson_role_change', onRoleChange);
+    return () => window.removeEventListener('dyson_role_change', onRoleChange);
+  }, []);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -59,6 +74,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+      {/* Charlie explainer video — one per portal view */}
+      <CharliePagePresenter key={portalRole} pageKey={PORTAL_PAGE_KEYS[portalRole] || 'portal-client'} />
       <main className="max-w-5xl mx-auto px-6 pt-8 pb-16 space-y-8">
         {clientId ? (
           <>
