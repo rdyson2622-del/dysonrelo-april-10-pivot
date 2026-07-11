@@ -19,7 +19,24 @@ Deno.serve(async (req) => {
     const date = data?.broadcast_date || 'unknown date';
     const err = (data?.errorMessage || 'No error details recorded').slice(0, 160);
 
-    const alertText = `🚨 DNN BROADCAST RENDER FAILED\nBroadcast: ${date}\nError: ${err}\n\nFix it at: dysonrelo.com/admin/dnn/studio`;
+    // Include remaining HeyGen balance so low credits are caught early
+    let quotaLine = '';
+    const heygenKey = Deno.env.get('HEYGEN_API_KEY');
+    if (heygenKey) {
+      try {
+        const qRes = await fetch('https://api.heygen.com/v2/user/remaining_quota', {
+          headers: { 'X-Api-Key': heygenKey },
+        });
+        const qData = await qRes.json();
+        const units = qData?.data?.remaining_quota;
+        if (typeof units === 'number') {
+          const minutes = (units / 60).toFixed(1);
+          quotaLine = `\nHeyGen balance: ~${minutes} min of render time left`;
+        }
+      } catch (_) { /* quota lookup must never block the alert */ }
+    }
+
+    const alertText = `🚨 DNN BROADCAST RENDER FAILED\nBroadcast: ${date}\nError: ${err}${quotaLine}\n\nFix it at: dysonrelo.com/admin/dnn/studio`;
 
     const twilioAuth = btoa(`${accountSid}:${authToken}`);
     const params = new URLSearchParams({ From: fromPhone, To: adminPhone, Body: alertText });
