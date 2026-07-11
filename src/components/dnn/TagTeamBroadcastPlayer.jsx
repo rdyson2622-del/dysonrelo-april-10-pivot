@@ -43,6 +43,7 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
               ref={charlieRef}
               src={charlieUrl}
               className="w-full h-full block object-cover"
+              style={{ transform: 'scale(1.35)', transformOrigin: 'center bottom' }}
               onEnded={() => { if (!isBobPhase) advance(); }}
               onPlayBlocked={() => setBlocked(true)}
             />
