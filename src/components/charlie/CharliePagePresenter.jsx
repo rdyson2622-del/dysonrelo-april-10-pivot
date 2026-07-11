@@ -119,8 +119,9 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass }) {
               src={presenterSrc}
               muted
               playsInline
-              preload="metadata"
-              onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
+              preload="auto"
+              onLoadedMetadata={(e) => { e.target.currentTime = 1.5; }}
+              onLoadedData={(e) => { if (e.target.currentTime < 1) e.target.currentTime = 1.5; }}
               className="w-full h-full object-cover pointer-events-none"
             />
           ) : (

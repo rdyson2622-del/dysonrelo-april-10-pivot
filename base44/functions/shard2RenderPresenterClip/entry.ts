@@ -117,8 +117,22 @@ Deno.serve(async (req) => {
         const file = new File([buf], `charlie_presenter_${explainerId}.mp4`, { type: 'video/mp4' });
         const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
+        // Save a permanent thumbnail for the collapsed circle widget
+        let thumbnailUrl = explainer.thumbnailUrl;
+        const heygenThumb = data?.data?.thumbnail_url;
+        if (heygenThumb) {
+          const tRes = await fetch(heygenThumb);
+          if (tRes.ok) {
+            const tBuf = await tRes.arrayBuffer();
+            const tFile = new File([tBuf], `charlie_presenter_${explainerId}_thumb.jpg`, { type: 'image/jpeg' });
+            const tUp = await base44.asServiceRole.integrations.Core.UploadFile({ file: tFile });
+            thumbnailUrl = tUp.file_url;
+          }
+        }
+
         await base44.asServiceRole.entities.CharliePageExplainer.update(explainerId, {
           presenterVideoUrl: up.file_url,
+          thumbnailUrl,
           renderStatus: 'completed',
           durationSeconds: data?.data?.duration ?? explainer.durationSeconds,
         });
