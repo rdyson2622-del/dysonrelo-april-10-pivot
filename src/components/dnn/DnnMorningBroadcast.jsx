@@ -50,7 +50,7 @@ export default function DnnMorningBroadcast() {
   });
 
   const turnOn = () => {
-    playNewsSting();
+    try { playNewsSting(); } catch (_) { /* audio must never block the broadcast */ }
     setTvState('intro');
     setTimeout(() => setTvState('on'), 4200);
   };
