@@ -98,23 +98,34 @@ export default function CharliePagePresenter({ pageKey }) {
     </button>
   );
 
-  /* ── Collapsed: small Charlie pill at the top — never covers page copy ── */
+  /* ── Collapsed: round Charlie headshot in the upper right — never covers page copy ── */
   if (!expanded) {
     return (
       <button
         onClick={openAndSpeak}
         aria-label="Hear Charlie explain this page"
-        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95 shadow-xl"
-        style={{ background: '#0d0d0d', border: `1px solid ${GOLD}` }}
+        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-14 h-14 md:w-16 md:h-16 transition-all hover:scale-110 active:scale-95"
       >
-        <span className="w-6 h-6 rounded-full flex items-center justify-center text-sm shrink-0"
-          style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
-          🎩
+        <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
+          style={{ background: '#0d0d0d', border: `2px solid ${GOLD}` }}>
+          {hasVideo ? (
+            /* Paused first frame of Charlie's clip = his headshot */
+            <video
+              src={presenterSrc}
+              muted
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover scale-[1.6] pointer-events-none"
+            />
+          ) : (
+            <span className="w-full h-full flex items-center justify-center text-2xl">🎩</span>
+          )}
         </span>
-        <span className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-          Charlie Explains
+        {/* Play badge */}
+        <span className="absolute bottom-0 right-0 w-5 h-5 rounded-full flex items-center justify-center"
+          style={{ background: GOLD, border: '1px solid #0d0d0d' }}>
+          <Play className="w-2.5 h-2.5 ml-px" style={{ color: '#000' }} />
         </span>
-        <Play className="w-3 h-3" style={{ color: GOLD }} />
       </button>
     );
   }
