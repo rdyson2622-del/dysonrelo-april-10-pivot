@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, ChevronDown, ChevronUp, Zap, Home, ArrowRight } from 'lucide-react';
+import { MessageCircle, ChevronDown, ChevronUp, Zap, Home, ArrowRight, Play } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
+import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
 const GOLD = '#D4AF37';
 
@@ -32,7 +34,7 @@ const FAQS = [
   },
 ];
 
-function FaqItem({ q, a }) {
+function FaqItem({ q, a, canPlay, onPlay }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="rounded-2xl overflow-hidden transition-all"
@@ -47,8 +49,17 @@ function FaqItem({ q, a }) {
         }
       </button>
       {open && (
-        <div className="px-5 pb-5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)', fontFamily: 'Georgia, serif' }}>
-          {a}
+        <div className="px-5 pb-5">
+          {canPlay && (
+            <button onClick={onPlay}
+              className="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all hover:scale-105"
+              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+              <Play className="w-3.5 h-3.5" /> Hear Bob Dyson answer this
+            </button>
+          )}
+          <div className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)', fontFamily: 'Georgia, serif' }}>
+            {a}
+          </div>
         </div>
       )}
     </div>
@@ -56,8 +67,71 @@ function FaqItem({ q, a }) {
 }
 
 export default function RealEstateAnswers() {
+  const [clips, setClips] = useState([]);
+  const [sequence, setSequence] = useState(null);
+
+  useEffect(() => {
+    base44.entities.RealEstateQAClip.list()
+      .then(setClips)
+      .catch(() => {});
+  }, []);
+
+  const intro = clips.find(c => c.kind === 'intro');
+  const outro = clips.find(c => c.kind === 'outro');
+  const introReady = intro?.charlieStatus === 'completed' && intro?.charlieVideoUrl;
+
+  const qaReady = (i) => {
+    const qa = clips.find(c => c.kind === 'qa' && c.faqIndex === i);
+    return qa?.charlieStatus === 'completed' && qa?.bobStatus === 'completed';
+  };
+
+  const playIntro = () => {
+    if (!introReady) return;
+    setSequence([{ src: intro.charlieVideoUrl, speaker: 'charlie' }]);
+  };
+
+  const playFaq = (i) => {
+    const qa = clips.find(c => c.kind === 'qa' && c.faqIndex === i);
+    if (!qa) return;
+    const segs = [];
+    if (qa.charlieVideoUrl) segs.push({ src: qa.charlieVideoUrl, speaker: 'charlie' });
+    if (qa.bobVideoUrl) segs.push({ src: qa.bobVideoUrl, speaker: 'bob' });
+    if (outro?.charlieVideoUrl) segs.push({ src: outro.charlieVideoUrl, speaker: 'charlie' });
+    if (segs.length) setSequence(segs);
+  };
+
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+
+      {/* ── Collapsed Charlie circle — upper right, plays the page overview ── */}
+      {introReady && !sequence && (
+        <button
+          onClick={playIntro}
+          aria-label="Hear Charlie explain this page"
+          className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
+        >
+          <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
+            style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
+            <video
+              src={intro.charlieVideoUrl}
+              muted
+              playsInline
+              preload="metadata"
+              onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
+              className="w-full h-full object-cover pointer-events-none"
+            />
+          </span>
+          <span className="absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
+            <Play className="w-5 h-5 ml-0.5" style={{ color: '#000' }} />
+          </span>
+        </button>
+      )}
+
+      {/* ── Q&A player overlay ── */}
+      {sequence && (
+        <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
+      )}
 
       {/* ── Charlie Banner ── */}
       <div className="px-6 py-5 flex items-start gap-4"
@@ -119,7 +193,9 @@ export default function RealEstateAnswers() {
       <div className="px-8 pb-16 max-w-2xl mx-auto">
         <p className="text-xs font-black tracking-[0.25em] uppercase mb-5" style={{ color: GOLD }}>COMMON QUESTIONS</p>
         <div className="space-y-3">
-          {FAQS.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
+          {FAQS.map((item, i) => (
+            <FaqItem key={i} q={item.q} a={item.a} canPlay={qaReady(i)} onPlay={() => playFaq(i)} />
+          ))}
         </div>
 
         {/* CTA */}
