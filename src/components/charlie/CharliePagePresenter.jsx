@@ -3,7 +3,6 @@ import { base44 } from '@/api/base44Client';
 import { Play, Pause, Volume2, VolumeX, RotateCcw, X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const CHARLIE_HEADSHOT = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a0f097ef2_generated_image.png';
 
 /**
  * CharliePagePresenter — Shard2 in-app presentation layer.
@@ -105,15 +104,28 @@ export default function CharliePagePresenter({ pageKey }) {
       <button
         onClick={openAndSpeak}
         aria-label="Hear Charlie explain this page"
-        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[168px] h-[168px] md:w-48 md:h-48 transition-all hover:scale-105 active:scale-95"
+        className="fixed z-40 top-16 right-3 md:top-[4.5rem] md:right-5 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
       >
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
           style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
-          <img
-            src={CHARLIE_HEADSHOT}
-            alt="Charlie — Dyson AI Concierge"
-            className="w-full h-full object-cover pointer-events-none"
-          />
+          {explainer?.thumbnailUrl ? (
+            <img
+              src={explainer.thumbnailUrl}
+              alt="Charlie — Dyson AI Concierge"
+              className="w-full h-full object-cover pointer-events-none"
+            />
+          ) : hasVideo ? (
+            <video
+              src={presenterSrc}
+              muted
+              playsInline
+              preload="metadata"
+              onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
+              className="w-full h-full object-cover pointer-events-none"
+            />
+          ) : (
+            <span className="w-full h-full flex items-center justify-center text-4xl">🎩</span>
+          )}
         </span>
         {/* Play badge */}
         <span className="absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center"
