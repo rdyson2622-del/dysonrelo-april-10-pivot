@@ -129,6 +129,18 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, started: results.length, results });
     }
 
+    if (action === 'rerenderAll') {
+      const clips = await Clips.list(null, 200);
+      const results = [];
+      for (const clip of clips) {
+        if (clip.answerScript && clip.status !== 'rendering') {
+          const r = await startRender(clip);
+          results.push({ clipId: clip.id, question: clip.question, ...r });
+        }
+      }
+      return Response.json({ success: true, started: results.length, results });
+    }
+
     if (action === 'checkAll') {
       const clips = await Clips.filter({ status: 'rendering' }, null, 200);
       const results = [];

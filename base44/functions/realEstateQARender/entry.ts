@@ -172,6 +172,18 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, started: results });
     }
 
+    if (action === 'rerenderBob') {
+      const clips = await Clips.list();
+      const results = [];
+      for (const clip of clips) {
+        if (clip.bobScript && clip.bobStatus !== 'rendering') {
+          const r = await startRender(clip, 'bob');
+          results.push({ clipId: clip.id, faqIndex: clip.faqIndex, ...r });
+        }
+      }
+      return Response.json({ success: true, started: results.length, results });
+    }
+
     if (action === 'checkAll') {
       const clips = await Clips.list();
       const results = [];
