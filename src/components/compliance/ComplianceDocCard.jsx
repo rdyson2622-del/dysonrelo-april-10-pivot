@@ -84,10 +84,22 @@ export default function ComplianceDocCard({ doc, onChanged }) {
             {doc.risk_level} risk
           </span>
         )}
-        <span className="text-xs font-bold flex items-center gap-1.5" style={{ color: status.color }}>
-          {doc.status === 'reviewing' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-          {status.label}
-        </span>
+        {doc.status === 'reviewed' ? (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            title={expanded ? 'Hide full review' : 'View full review'}
+            className="text-xs font-bold flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-colors hover:bg-white/10"
+            style={{ color: status.color, border: '1px solid rgba(74,222,128,0.35)', background: 'rgba(74,222,128,0.08)' }}
+          >
+            {status.label}
+            {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+        ) : (
+          <span className="text-xs font-bold flex items-center gap-1.5" style={{ color: status.color }}>
+            {doc.status === 'reviewing' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {status.label}
+          </span>
+        )}
         <div className="flex items-center gap-1.5">
           <a href={doc.file_url} target="_blank" rel="noreferrer" title="Open original document"
             className="p-2 rounded-lg hover:bg-white/5" style={{ color: GOLD }}>
