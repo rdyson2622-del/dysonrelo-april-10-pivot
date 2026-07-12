@@ -81,23 +81,23 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
           style={{ background: '#0a0a0a' }}>
 
-          {/* Logo */}
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
-
-          {/* H.O.M.E. Title */}
-          <div className="mb-1" style={{
+          {/* Title */}
+          <div className="mb-2" style={{
             color: GOLD,
-            fontSize: '4rem',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             fontFamily: 'Cormorant Garamond, serif',
             fontWeight: 600,
-            letterSpacing: '0.15em',
-            lineHeight: 1
+            letterSpacing: '0.12em',
+            lineHeight: 1.1
           }}>
-            HOMES
+            The Dyson &amp; Dyson Companies
           </div>
           <p className="font-black tracking-[0.25em] uppercase text-white mb-6" style={{ fontSize: '1.125rem' }}>
-            Home Owner Management Ecosystem
+            The Home Owner Management Ecosystem
           </p>
+
+          {/* Logo */}
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
           <Link
             to="/portal"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black tracking-widest uppercase transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
