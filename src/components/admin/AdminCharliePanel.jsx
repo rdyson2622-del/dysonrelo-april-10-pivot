@@ -80,7 +80,7 @@ export default function AdminCharliePanel() {
       <button
         data-charlie-toggle
         onClick={() => setOpen(o => !o)}
-        className="fixed top-32 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105"
         style={{
           background: open ? '#111' : `linear-gradient(135deg, #e8c84a, ${GOLD})`,
           color: open ? GOLD : '#000',
@@ -95,7 +95,7 @@ export default function AdminCharliePanel() {
       {/* Panel */}
       {open && (
         <div
-          className="fixed top-48 right-6 z-50 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
+          className="fixed bottom-20 right-6 z-50 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
           style={{
             width: '420px',
             height: '560px',
