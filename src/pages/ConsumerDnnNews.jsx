@@ -7,6 +7,7 @@ import DnnAdminBar from '@/components/dnn/DnnAdminBar';
 import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
+import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
 import BroadcastVideoStack from '@/components/dnn/BroadcastVideoStack';
 import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
@@ -256,8 +257,7 @@ function AudioPlayer({ url }) {
 }
 
 // --- Compact Article Card (text briefs) ---
-function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onListenBob }) {
-  const [showText, setShowText] = useState(false);
+function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onListenBob, onRead }) {
   const [showShare, setShowShare] = useState(false);
   const bgColor = TRIGGER_COLORS[article.trigger_type] || TRIGGER_COLORS.general;
   const textColor = TRIGGER_TEXT[article.trigger_type] || TRIGGER_TEXT.general;
@@ -303,65 +303,17 @@ function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onListenBob })
 
       {article.audio_url && <AudioPlayer url={article.audio_url} />}
 
+      {/* Preview snippet — first paragraph only */}
+      <p className="text-xs leading-relaxed line-clamp-3 mt-2" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        {article.body?.split('\n').filter(p => p.trim())[0]}
+      </p>
+
       <button
-        onClick={() => setShowText(v => !v)}
-        className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase mb-2 mt-2"
-        style={{ color: showText ? '#D4AF37' : 'rgba(255,255,255,0.35)' }}>
-        {showText ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        {showText ? 'Hide' : 'Read'}
+        onClick={() => onRead?.(article)}
+        className="flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase mt-3 transition-all hover:opacity-80"
+        style={{ color: '#D4AF37' }}>
+        Read Full Article <ChevronRight className="w-3 h-3" />
       </button>
-
-      {showText && (
-        <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          {article.body?.split('\n').filter(p => p.trim()).map((para, i) => (
-            <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>{para}</p>
-          ))}
-          {article.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {article.tags.map(t => (
-                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }}>#{t}</span>
-              ))}
-            </div>
-          )}
-
-          {/* Dyson Solutions — News → Impact → Solution framework */}
-          {(article.client_solution || article.agent_solution || article.vendor_solution) && (
-            <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}>
-              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>Dyson Solutions</p>
-              {article.client_solution && (
-                <div className="flex gap-2">
-                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#60a5fa' }}>Client</span>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.client_solution}</p>
-                </div>
-              )}
-              {article.agent_solution && (
-                <div className="flex gap-2">
-                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#D4AF37' }}>Agent</span>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.agent_solution}</p>
-                </div>
-              )}
-              {article.vendor_solution && (
-                <div className="flex gap-2">
-                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#4ade80' }}>Vendor</span>
-                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.vendor_solution}</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Interview Q&A segment */}
-          <InterviewSegment
-            qa={article.interview_qa}
-            onListenBob={onListenBob}
-          />
-
-          <Link to="/chat"
-            className="flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl text-xs font-bold text-black w-fit transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-            Ask Charlie About This <ChevronRight className="w-3 h-3" />
-          </Link>
-        </div>
-      )}
 
       {showShare && (
         <div className="mt-2 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
@@ -529,6 +481,7 @@ export default function ConsumerDnnNews() {
   const [editingArticle, setEditingArticle] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [savingEdit, setSavingEdit] = useState(false);
+  const [readingArticle, setReadingArticle] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -674,12 +627,13 @@ export default function ConsumerDnnNews() {
                 {textArticles.map(article => (
                   <div key={article.id} className="relative">
                     <CompactArticleCard
-                      article={article}
-                      isAdmin={isAdmin}
-                      onEdit={handleEditArticle}
-                      onDelete={handleDeleteArticle}
-                      onListenBob={(text) => speak('bob', text)}
-                    />
+                       article={article}
+                       isAdmin={isAdmin}
+                       onEdit={handleEditArticle}
+                       onDelete={handleDeleteArticle}
+                       onListenBob={(text) => speak('bob', text)}
+                       onRead={setReadingArticle}
+                     />
                     {/* Listen to full article button */}
                     <button
                       onClick={() => speak('bob', `${article.headline}. ${article.body || ''}`)}
@@ -755,6 +709,16 @@ export default function ConsumerDnnNews() {
           <p className="text-xs mt-1" style={{ color: '#1a1a1a' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
         </div>
       </div>
+
+      {/* Full-screen Article Reader */}
+      {readingArticle && (
+        <ArticleReaderModal
+          article={readingArticle}
+          onClose={() => setReadingArticle(null)}
+          onListen={(text) => speak('bob', text)}
+          onListenBob={(text) => speak('bob', text)}
+        />
+      )}
 
       {/* Talking Head Bubble */}
       {talkingHeadProps && (
