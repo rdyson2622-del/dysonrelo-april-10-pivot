@@ -93,10 +93,6 @@ export default function SolveMyStory() {
        {/* Header */}
        <div className="relative flex flex-col items-center pt-14 pb-10 text-center px-6"
          style={{ background: '#ede0cc' }}>
-        {/* Charlie & Bob duo presenter — upper right, in flow */}
-        <div className="w-full flex justify-end -mb-20 md:-mb-24 pr-1 md:pr-4">
-          <SolveMyStoryPresenter />
-        </div>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[57.6px] w-auto mb-6" />
         <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
           DYSON &amp; DYSON · RELOCATION MANAGEMENT
