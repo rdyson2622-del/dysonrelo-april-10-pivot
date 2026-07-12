@@ -5,7 +5,7 @@ import {
   SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText,
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
-  Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen
+  Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -123,6 +123,7 @@ const NAV_SECTIONS = [
       { label: '📣 Agent Recruiting Broadcast', path: '/admin/dnn/recruiting', icon: Send },
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
+      { label: '⚡ HeyGen Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
     ],
   },
   {
