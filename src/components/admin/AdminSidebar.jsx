@@ -23,6 +23,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
   {
@@ -40,6 +41,8 @@ const NAV_SECTIONS = [
       { label: 'Video Library', path: '/admin/video-library', icon: Video },
       { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
       { label: 'SMS Sequences', path: '/admin/sms-sequences', icon: MessageCircle },
+      { label: 'Agreements', isHeader: true },
+      { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, indent: true, highlight: true },
     ],
   },
   {
