@@ -1,0 +1,98 @@
+{
+  "name": "DnnNewsSource",
+  "type": "object",
+  "properties": {
+    "source_name": {
+      "type": "string",
+      "description": "Official name of the source e.g. Freddie Mac PMMS"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "federal_reserve",
+        "mortgage_lending",
+        "federal_legislation",
+        "national_housing_data",
+        "economic_indicators",
+        "demographics_migration",
+        "insurance_climate",
+        "regulatory_compliance",
+        "construction_supply",
+        "consumer_protection",
+        "industry_trade"
+      ],
+      "description": "National news category this source feeds"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Primary URL or RSS feed for this source"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "government",
+        "industry_data",
+        "news_aggregation",
+        "migration_demographics",
+        "climate_risk"
+      ],
+      "description": "Type of source \u2014 affects white-label rules"
+    },
+    "license_type": {
+      "type": "string",
+      "enum": [
+        "public_domain",
+        "attribution_required",
+        "rewrite_only"
+      ],
+      "default": "rewrite_only",
+      "description": "How DNN may use content from this source"
+    },
+    "cadence": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "event_driven"
+      ],
+      "default": "weekly",
+      "description": "How often this source publishes new data"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "client",
+        "agent",
+        "vendor",
+        "all"
+      ],
+      "default": "all",
+      "description": "Primary audience this source's stories serve"
+    },
+    "what_it_provides": {
+      "type": "string",
+      "description": "Brief description of what data/news this source gives DNN"
+    },
+    "last_pulled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AI Bureau last ingested from this source"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the AI Bureau should pull from this source"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sort order in the source manager"
+    }
+  },
+  "required": [
+    "source_name",
+    "category",
+    "source_type"
+  ]
+}

@@ -162,9 +162,51 @@
         "interest_rates",
         "migration_data",
         "employer_news",
-        "general"
+        "general",
+        "federal_reserve",
+        "mortgage_lending",
+        "federal_legislation",
+        "national_housing_data",
+        "economic_indicators",
+        "demographics_migration",
+        "insurance_climate",
+        "regulatory_compliance",
+        "construction_supply",
+        "consumer_protection"
       ],
-      "description": "Category of relocation trigger"
+      "description": "Category of relocation trigger \u2014 local (original) or national desk"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "local",
+        "national"
+      ],
+      "default": "local",
+      "description": "Whether this article covers a local market story or a national desk story"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "client",
+        "agent",
+        "vendor",
+        "all"
+      ],
+      "default": "all",
+      "description": "Primary audience this article's solution targets"
+    },
+    "client_solution": {
+      "type": "string",
+      "description": "Dyson recommendation: what a relocating client should do about this story"
+    },
+    "agent_solution": {
+      "type": "string",
+      "description": "Dyson recommendation: what a partner agent should do or say about this story"
+    },
+    "vendor_solution": {
+      "type": "string",
+      "description": "Dyson recommendation: what a vendor (lender, mover, title) should do about this story"
     },
     "status": {
       "type": "string",
