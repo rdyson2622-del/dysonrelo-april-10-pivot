@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, ShieldCheck, Users, Mic, DollarSign, Handshake, TrendingUp, Play } from 'lucide-react';
+import { X, ShieldCheck, Users, Mic, DollarSign, Handshake, TrendingUp, Play, Scale } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
@@ -25,6 +25,11 @@ const POINTS = [
     icon: Handshake,
     title: 'A Fee Structure That Works',
     body: "Our referral and management fee totals 50% of the buy-side commission — 25% to the sending agent, 15–25% to us for managing the entire move. Remember: the sweat equity of selling a $300K home is the same as a $3M home. We've never had a receiving agent decline.",
+  },
+  {
+    icon: Scale,
+    title: 'The Sweat Equity Test — How We Vet Your Mindset',
+    body: "This is the conversation no agent wants to have — and that's exactly why we have it. Does it take the same time, skill, and effort to sell a $300K home as a $3M home? The answer is yes. The sweat equity is identical. Yet for 75 years this industry has clung to a percentage-based formula that punishes affordability. When we bring up our referral fee, we're watching and listening: if an agent's tone shifts, if their eyes narrow, if they start calculating their percentage instead of focusing on the qualified client we're handing them — we know immediately. The wrong candidate reveals themselves in their voice and their face. The right agent? They see income, not percentage. They see a managed pipeline of corporate relocation clients delivered to their door. We never have to guess who's who.",
   },
   {
     icon: ShieldCheck,
