@@ -78,11 +78,8 @@ export default function Home() {
         <div className="flex-1 flex flex-col relative overflow-hidden md:pt-0 pt-11" style={{ background: 'transparent' }}>
 
         {/* ── DARK TOP SECTION: Logo + Title ── */}
-        <div className="relative flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
+        <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
           style={{ background: '#0a0a0a' }}>
-
-          {/* Charlie welcome — anchored in the hero, upper right, scrolls with the page */}
-          <CharliePagePresenter pageKey="client-home" inline topOffsetClass="top-14 md:top-14" />
 
           {/* Logo */}
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
@@ -116,7 +113,14 @@ export default function Home() {
         </div>
 
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
-        <div className="flex flex-col items-center px-8 py-14 text-center" style={{ background: '#ede0cc' }}>
+        <div className="relative flex flex-col items-center px-8 pt-6 pb-14 text-center" style={{ background: '#ede0cc' }}>
+
+          {/* Charlie welcome — upper left of the page content, in flow so it never overlaps */}
+          <div className="w-full flex justify-start mb-4">
+            <div className="relative w-[126px] h-[126px] md:w-36 md:h-36 shrink-0">
+              <CharliePagePresenter pageKey="client-home" inline positionClass="top-0 left-0" />
+            </div>
+          </div>
 
           {/* ── THE PILL ── */}
           <div className="w-full max-w-4xl">
