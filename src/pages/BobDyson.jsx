@@ -18,7 +18,7 @@ export default function BobDyson() {
         </Link>
 
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-14 md:pr-48">
           <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>BACKED BY EXPERIENCE</p>
           <h1 className="display-heading mb-4 whitespace-nowrap" style={{ fontSize: 'clamp(1.48rem, 3.28vw, 2.62rem)', letterSpacing: '0.22em', color: '#1a1a1a' }}>
             THE DYSON & DYSON COMPANIES
