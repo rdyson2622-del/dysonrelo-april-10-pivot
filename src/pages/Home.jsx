@@ -271,6 +271,18 @@ export default function Home() {
               label="4-State Relocation · Arizona → Arkansas"
               headline="The 4-State Farm Relocation: How We Moved a Family (and 13 Chickens) Without a Hitch."
             >
+              {/* Windeans testimonial video */}
+              <div className="rounded-2xl overflow-hidden mb-8" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
+                <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 px-4 pt-4" style={{ color: GOLD }}>▶ WATCH THE WINDEANS' STORY</p>
+                <video
+                  src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="w-full block"
+                  style={{ aspectRatio: '16/9' }}
+                />
+              </div>
               <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>THE SITUATION</p>
               <p className="text-white leading-relaxed mb-3" style={{ fontFamily: 'Georgia, serif', fontSize: '0.97rem' }}>
                 Moving across town is stressful. Now imagine moving across four states, coordinating the sale of your current home, the purchase of a new one, managing two moving trucks, and transporting a cat and 13 chickens.
