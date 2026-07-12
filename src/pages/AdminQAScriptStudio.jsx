@@ -11,6 +11,7 @@ const FAMILIES = [
   { key: 'receiving', label: '🤝 Receiving Agent', entity: 'ReceivingAgentClip', fn: 'receivingAgentQARender' },
   { key: 'vetting', label: '🛡 Vetting Desk', entity: 'VettingDeskClip', fn: 'vettingDeskQARender' },
   { key: 'roadmap', label: '🗺 Roadmap', entity: 'RoadmapClip', fn: 'roadmapQARender' },
+  { key: 'dnn', label: '📡 DNN National Desk', entity: 'DnnNewsClip', fn: 'dnnNewsRender' },
 ];
 
 const KIND_ORDER = { intro: 0, qa: 1, outro: 2 };
