@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
 import PageNumberBadge from '../PageNumberBadge';
@@ -12,7 +13,27 @@ export default function AdminLayout() {
   const { landscape } = useLayout();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+  const [access, setAccess] = useState('loading'); // 'loading' | 'allowed' | 'denied'
+
+  useEffect(() => {
+    base44.auth.me()
+      .then(u => setAccess(u?.role === 'admin' ? 'allowed' : 'denied'))
+      .catch(() => setAccess('denied'));
+  }, []);
+
+  if (access === 'loading') {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
+        <div className="w-8 h-8 border-4 rounded-full animate-spin"
+          style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
+      </div>
+    );
+  }
+
+  if (access === 'denied') {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#ede0cc' }}>
       {/* Desktop Sidebar */}

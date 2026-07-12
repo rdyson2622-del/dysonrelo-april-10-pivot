@@ -140,8 +140,8 @@ const AuthenticatedApp = () => {
       {/* Role Selector — standalone, no sidebar */}
       <Route path="/portal" element={<RoleSelector />} />
 
-      {/* Home — standalone, no sidebar */}
-      <Route path="/" element={<Home />} />
+      {/* Front door — qualifying landing page, no portal chrome */}
+      <Route path="/" element={<RoleSelector />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Home" element={<Home />} />
 
