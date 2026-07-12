@@ -49,6 +49,7 @@ Deno.serve(async (req) => {
         );
         const statusData = await statusRes.json();
         const s = statusData?.data?.status;
+        console.log(`Polling ${videoId}: status=${s}, raw=${JSON.stringify(statusData?.data).slice(0, 300)}`);
 
         if (s === 'completed' && statusData?.data?.video_url) {
           // Download and store the video
@@ -81,7 +82,7 @@ Deno.serve(async (req) => {
           });
           results.push({ article_id: article.id, headline: article.headline, status: 'failed' });
         } else {
-          results.push({ article_id: article.id, headline: article.headline, status: 'still_rendering' });
+          results.push({ article_id: article.id, headline: article.headline, status: 'still_rendering', heygen_status: s, raw: statusData?.data });
         }
       } catch (e) {
         results.push({ article_id: article.id, error: e.message });
