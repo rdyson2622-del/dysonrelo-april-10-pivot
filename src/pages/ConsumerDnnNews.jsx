@@ -11,7 +11,6 @@ import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
 import BroadcastVideoStack from '@/components/dnn/BroadcastVideoStack';
 import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
-import DnnComparisonCircle from '@/components/dnn/DnnComparisonCircle';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -730,7 +729,6 @@ export default function ConsumerDnnNews() {
 
       {/* Competitive Comparison — Why DNN Is Different */}
       <div style={{ background: '#ede0cc', borderTop: '1px solid rgba(212,175,55,0.12)' }}>
-        <DnnComparisonCircle />
         <DnnComparisonSection />
       </div>
 

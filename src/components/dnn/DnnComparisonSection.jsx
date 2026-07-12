@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, X, Globe, Video, Users, Wrench, MapPin, Bell } from 'lucide-react';
+import DnnComparisonCircle from '@/components/dnn/DnnComparisonCircle';
 
 const GOLD = '#D4AF37';
 
@@ -33,19 +34,24 @@ function renderCell(val) {
 export default function DnnComparisonSection() {
   return (
     <div className="w-full max-w-6xl mx-auto px-6 md:px-12 py-16">
-      {/* Section Header */}
-      <div className="text-center mb-12">
-        <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
-          Why DNN Is Different
-        </p>
-        <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', letterSpacing: '0.12em', color: '#1a1a1a' }}>
-          The Only News Network That Solves Problems
-        </h2>
-        <p className="text-sm leading-relaxed mx-auto" style={{ color: '#4a4a4a', maxWidth: '640px' }}>
-          HousingWire reports the news. Inman covers the industry. Sirva moves your boxes.
-          Nobody does what DNN does — report market-moving news AND deliver tailored solutions
-          to clients, agents, and vendors through AI video presenters. Here's the proof.
-        </p>
+      {/* Section Header — text + video circle side by side */}
+      <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
+        <div className="flex-1 text-center md:text-left">
+          <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
+            Why DNN Is Different
+          </p>
+          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', letterSpacing: '0.12em', color: '#1a1a1a' }}>
+            The Only News Network That Solves Problems
+          </h2>
+          <p className="text-sm leading-relaxed" style={{ color: '#4a4a4a', maxWidth: '640px' }}>
+            HousingWire reports the news. Inman covers the industry. Sirva moves your boxes.
+            Nobody does what DNN does — report market-moving news AND deliver tailored solutions
+            to clients, agents, and vendors through AI video presenters. Here's the proof.
+          </p>
+        </div>
+        <div className="shrink-0">
+          <DnnComparisonCircle />
+        </div>
       </div>
 
       {/* Comparison Table */}
