@@ -95,21 +95,9 @@ export default function Home() {
           }}>
             The Dyson &amp; Dyson Companies
           </div>
-          <p className="font-black tracking-[0.25em] uppercase text-white mb-6" style={{ fontSize: '1.125rem' }}>
+          <p className="font-black tracking-[0.25em] uppercase text-white" style={{ fontSize: '1.125rem' }}>
             The Home Owner Management Ecosystem
           </p>
-          <Link
-            to="/portal"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black tracking-widest uppercase transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-            style={{
-              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
-              color: '#000',
-              fontSize: 'clamp(0.6rem, 3vw, 0.875rem)',
-              boxShadow: '0 4px 24px rgba(212,175,55,0.35)',
-            }}
-          >
-            Get Started — Choose Your Path →
-          </Link>
         </div>
 
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
