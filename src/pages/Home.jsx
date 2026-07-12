@@ -85,19 +85,16 @@ export default function Home() {
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
 
           {/* Title */}
-          <div className="mb-2" style={{
+          <div style={{
             color: GOLD,
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontSize: 'clamp(1.6rem, 4vw, 2.75rem)',
             fontFamily: 'Cormorant Garamond, serif',
             fontWeight: 600,
             letterSpacing: '0.12em',
-            lineHeight: 1.1
+            lineHeight: 1.15
           }}>
-            The Dyson &amp; Dyson Companies
-          </div>
-          <p className="font-black tracking-[0.25em] uppercase text-white" style={{ fontSize: '1.125rem' }}>
             The Home Owner Management Ecosystem
-          </p>
+          </div>
         </div>
 
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
