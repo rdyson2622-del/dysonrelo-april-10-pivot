@@ -159,10 +159,12 @@ export default function ClientSidebar() {
           <>
             {/* SUITE 1: PRN Pro Tools */}
             <SuiteBox title="⭐ PRN Agent Tools">
-              <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
-                label="Run Skip Trace"
-                badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
-              />
+              {isAdmin && (
+                <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
+                  label="Run Skip Trace"
+                  badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
+                />
+              )}
               <NavLink to="/financial-services" icon={CreditCard} location={location} label="Refill Fuel (Stripe)" />
               <NavLink to="/agent-invited-clients" icon={Users} location={location} label="My Invited Clients" />
             </SuiteBox>
@@ -188,7 +190,9 @@ export default function ClientSidebar() {
           <>
             <SuiteBox title="🔧 Vendor Utility">
               <NavLink to="/search" icon={Search} location={location} label="Property Search" />
-              <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
+              {isAdmin && (
+                <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
+              )}
             </SuiteBox>
             <SuiteBox title="🏠 My Personal Real Estate">
               <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
