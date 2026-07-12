@@ -5,25 +5,23 @@ import { X, Play, RotateCcw, Volume2 } from 'lucide-react';
 const GOLD = '#D4AF37';
 
 const CHARLIE_PHOTO = null;
-const BOB_PHOTO = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
-  bob: 'BOB DYSON · FOUNDER',
 };
 
 const SCRIPTS = [
   {
     speaker: 'charlie',
-    text: `When it comes to choosing a lender, there's more to it than just finding the lowest rate. Bob Dyson has guided families through every lending scenario imaginable over his 55-year career — and he knows that the type of lender you choose can shape your entire loan experience. Let me hand it to Bob to explain the two lending configurations you'll encounter, and why we stay involved in the selection process.`,
-  },
-  {
-    speaker: 'bob',
-    text: `Thank you, Charlie. Basically, in the lending process you have two different lending configurations. The first is proprietary lenders — these are lenders that only sell their own mortgage products. That limits your selection of loans, types of loans, and various other options. There's usually no wiggle room in pricing or lending fees either. Now, if you are in private backing at a large bank, your weight could change things — but for most buyers, a proprietary lender narrows your choices. That's why we always shop the market. And to best do that, we recommend a loan brokerage — a brokerage that offers and processes loans for various third-party lenders. That really opens up so many ways to select a loan that best works for you and your situation. As part of our services, we stay involved in the selection process and vet the lenders based on not only the loan itself, but their service history and knowledge of specific communities and loan products. It's an art, if you do it right!`,
+    text: `When it comes to choosing a lender, there's more to it than just finding the lowest rate. Bob Dyson has guided families through every lending scenario imaginable over his 55-year career — and he knows that the type of lender you choose can shape your entire loan experience. Let me walk you through the two lending configurations you'll encounter, and why we stay involved in the selection process.`,
   },
   {
     speaker: 'charlie',
-    text: `And that's exactly why every lender on this page has been through our 5-step vetting process. Bob's team doesn't just check rates — they evaluate service history, community knowledge, and relocation fit. When you choose a DNN-vetted lender, you're getting the benefit of that artistry Bob described. If you have any questions about which lending configuration is right for your move, just ask — I'm here to help.`,
+    text: `Basically, in the lending process you have two different lending configurations. The first is proprietary lenders — these are lenders that only sell their own mortgage products. That limits your selection of loans, types of loans, and various other options. There's usually no wiggle room in pricing or lending fees either. Now, if you are in private backing at a large bank, your weight could change things — but for most buyers, a proprietary lender narrows your choices. That's why we always shop the market. And to best do that, we recommend a loan brokerage — a brokerage that offers and processes loans for various third-party lenders. That really opens up so many ways to select a loan that best works for you and your situation. As part of our services, we stay involved in the selection process and vet the lenders based on not only the loan itself, but their service history and knowledge of specific communities and loan products. It's an art, if you do it right!`,
+  },
+  {
+    speaker: 'charlie',
+    text: `And that's exactly why every lender on this page has been through our 5-step vetting process. Bob's team doesn't just check rates — they evaluate service history, community knowledge, and relocation fit. When you choose a DNN-vetted lender, you're getting the benefit of that artistry. If you have any questions about which lending configuration is right for your move, just ask — I'm here to help.`,
   },
 ];
 
@@ -85,7 +83,6 @@ export default function LenderDuo() {
   };
 
   const seg = SCRIPTS[idx];
-  const photo = seg?.speaker === 'bob' ? BOB_PHOTO : CHARLIE_PHOTO;
 
   if (!open) {
     return (
@@ -96,11 +93,7 @@ export default function LenderDuo() {
       >
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
           style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
-          {CHARLIE_PHOTO ? (
-            <img src={CHARLIE_PHOTO} alt="Charlie" className="w-full h-full object-cover" />
-          ) : (
-            <span className="w-full h-full flex items-center justify-center text-4xl">🎩</span>
-          )}
+          <span className="w-full h-full flex items-center justify-center text-4xl">🎩</span>
         </span>
         <span className="absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center"
           style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
@@ -108,7 +101,7 @@ export default function LenderDuo() {
         </span>
         <span className="absolute -top-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-black tracking-widest px-2 py-0.5 rounded-full"
           style={{ background: '#0d0d0d', color: GOLD, border: `1px solid ${GOLD}` }}>
-          CHARLIE & BOB
+          MEET CHARLIE
         </span>
       </button>
     );
@@ -144,12 +137,7 @@ export default function LenderDuo() {
             className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden"
             style={{ border: `4px solid ${GOLD}`, background: '#0d0d0d', boxShadow: '0 12px 40px rgba(0,0,0,0.6)' }}
           >
-            {photo ? (
-              <img src={photo} alt={seg?.speaker} className="w-full h-full object-cover"
-                style={{ transform: seg?.speaker === 'bob' ? 'scale(1.25) translateY(8%)' : 'scale(1.35)' }} />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-6xl">🎩</div>
-            )}
+            <div className="w-full h-full flex items-center justify-center text-6xl">🎩</div>
           </div>
           {(loading || playing) && (
             <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center animate-pulse"
