@@ -28,6 +28,24 @@
       "type": "string",
       "description": "Bob Dyson's spoken answer script (qa kind only)"
     },
+    "originalCharlieScript": {
+      "type": "string",
+      "description": "Original seeded Charlie script preserved before first admin edit"
+    },
+    "originalBobScript": {
+      "type": "string",
+      "description": "Original seeded Bob script preserved before first admin edit"
+    },
+    "scriptStatus": {
+      "type": "string",
+      "enum": [
+        "seeded",
+        "needs_review",
+        "approved"
+      ],
+      "default": "seeded",
+      "description": "Script review lifecycle for the Q&A Script Studio"
+    },
     "charlieHeygenId": {
       "type": "string",
       "description": "HeyGen job id for Charlie's clip"

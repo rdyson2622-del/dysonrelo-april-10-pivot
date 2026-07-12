@@ -97,6 +97,7 @@ const NAV_SECTIONS = [
     label: 'OPERATIONS',
     children: [
       { label: '🛡 Compliance Doc Review', path: '/admin/compliance-review', icon: FileCheck },
+      { label: '🎬 Q&A Script Studio', path: '/admin/qa-script-studio', icon: Video },
       { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
       { label: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag },
       { label: 'Referral Management', path: '/admin/referrals', icon: LinkIcon },

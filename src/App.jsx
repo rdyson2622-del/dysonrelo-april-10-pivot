@@ -110,6 +110,7 @@ import Shard2Settings from './pages/Shard2Settings';
 import SendingAgentLanding from './pages/SendingAgentLanding';
 import CorporateRelo from './pages/CorporateRelo';
 import AdminCorporateRelo from './pages/AdminCorporateRelo';
+import AdminQAScriptStudio from './pages/AdminQAScriptStudio';
 import AgentLanding from './pages/AgentLanding';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
@@ -251,6 +252,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/recruiting" element={<AdminRecruitingBroadcast />} />
         <Route path="/admin/dnn/script-review" element={<DnnScriptReview />} />
         <Route path="/admin/compliance-review" element={<AdminComplianceReview />} />
+        <Route path="/admin/qa-script-studio" element={<AdminQAScriptStudio />} />
         <Route path="/admin/shard2" element={<Shard2Dashboard />} />
         <Route path="/admin/shard2/pages" element={<Shard2Pages />} />
         <Route path="/admin/shard2/scripts" element={<Shard2Scripts />} />
