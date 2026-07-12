@@ -9,7 +9,8 @@ import {
   MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
 
-import RoadmapQASection, { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
+import { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
+import RoadmapCharlieCircle from '@/components/roadmap/RoadmapCharlieCircle';
 
 const GOLD = '#D4AF37';
 
@@ -200,8 +201,8 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
         </motion.div>
       </div>
 
-      {/* Bob & Charlie Roadmap Briefing */}
-      <RoadmapQASection />
+      {/* Charlie circle — replaces yellow banner, plays full roadmap briefing */}
+      <RoadmapCharlieCircle />
 
       {/* Phases */}
       <div className="max-w-2xl mx-auto px-6 pb-10 space-y-3">
