@@ -164,7 +164,7 @@ Deno.serve(async (req) => {
         for (const role of ['charlie', 'bob']) {
           const script = role === 'bob' ? clip.bobScript : clip.charlieScript;
           const status = clip[`${role}Status`];
-          if (script && status !== 'completed' && status !== 'rendering') {
+          if (script && clip.scriptStatus === 'approved' && status !== 'completed' && status !== 'rendering') {
             const r = await startRender(clip, role);
             results.push({ clipId: clip.id, kind: clip.kind, faqIndex: clip.faqIndex, role, ...r });
           }
@@ -177,7 +177,7 @@ Deno.serve(async (req) => {
       const clips = await Clips.list();
       const results = [];
       for (const clip of clips) {
-        if (clip.bobScript && clip.bobStatus !== 'rendering') {
+        if (clip.bobScript && clip.scriptStatus === 'approved' && clip.bobStatus !== 'rendering') {
           const r = await startRender(clip, 'bob');
           results.push({ clipId: clip.id, faqIndex: clip.faqIndex, ...r });
         }
@@ -207,6 +207,9 @@ Deno.serve(async (req) => {
       const arr = await Clips.filter({ id: clipId });
       const clip = arr?.[0];
       if (!clip) return Response.json({ error: 'Clip not found' }, { status: 404 });
+      if (action === 'start' && clip.scriptStatus !== 'approved') {
+        return Response.json({ success: false, error: 'Script must be approved before rendering' }, { status: 400 });
+      }
       const r = action === 'start' ? await startRender(clip, role) : await checkRender(clip, role);
       return Response.json({ success: !r.error, ...r });
     }
