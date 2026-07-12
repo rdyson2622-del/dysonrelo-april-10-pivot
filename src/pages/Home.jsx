@@ -81,6 +81,9 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
           style={{ background: '#0a0a0a' }}>
 
+          {/* Logo */}
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
+
           {/* Title */}
           <div className="mb-2" style={{
             color: GOLD,
@@ -95,9 +98,6 @@ export default function Home() {
           <p className="font-black tracking-[0.25em] uppercase text-white mb-6" style={{ fontSize: '1.125rem' }}>
             The Home Owner Management Ecosystem
           </p>
-
-          {/* Logo */}
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
           <Link
             to="/portal"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black tracking-widest uppercase transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
