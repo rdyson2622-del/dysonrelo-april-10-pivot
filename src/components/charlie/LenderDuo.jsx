@@ -89,7 +89,7 @@ export default function LenderDuo() {
       <button
         onClick={handleOpen}
         aria-label="Hear Charlie and Bob explain the lending process"
-        className="fixed bottom-6 right-6 z-40 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
+        className="fixed top-20 right-6 z-40 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
       >
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
           style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
