@@ -58,8 +58,6 @@ export default function Home() {
       </div>
 
       <div className="flex-1 flex flex-col relative overflow-hidden">
-        {/* Charlie welcome — circle, upper right below top bar */}
-        <CharliePagePresenter pageKey="client-home" topOffsetClass="top-14 md:top-4" />
         {/* Mobile Top Bar */}
         <div className="md:hidden">
           <MobileTopBar />
@@ -80,8 +78,11 @@ export default function Home() {
         <div className="flex-1 flex flex-col relative overflow-hidden md:pt-0 pt-11" style={{ background: 'transparent' }}>
 
         {/* ── DARK TOP SECTION: Logo + Title ── */}
-        <div className="flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
+        <div className="relative flex flex-col items-center justify-center px-8 pt-16 pb-12 text-center"
           style={{ background: '#0a0a0a' }}>
+
+          {/* Charlie welcome — anchored in the hero, upper right, scrolls with the page */}
+          <CharliePagePresenter pageKey="client-home" inline topOffsetClass="top-14 md:top-14" />
 
           {/* Logo */}
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[70px] w-auto mb-6" />
