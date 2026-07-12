@@ -145,6 +145,16 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, created: created.length });
     }
 
+    if (action === 'approveAll') {
+      const clips = await Clips.list();
+      const results = [];
+      for (const clip of clips) {
+        await Clips.update(clip.id, { scriptStatus: 'approved' });
+        results.push({ clipId: clip.id, kind: clip.kind, scriptStatus: 'approved' });
+      }
+      return Response.json({ success: true, approved: results });
+    }
+
     if (action === 'startAll') {
       const clips = await Clips.list();
       const results = [];
