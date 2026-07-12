@@ -9,6 +9,7 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
 import BroadcastVideoStack from '@/components/dnn/BroadcastVideoStack';
+import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import DnnComparisonCircle from '@/components/dnn/DnnComparisonCircle';
 
@@ -633,13 +634,16 @@ export default function ConsumerDnnNews() {
 
       </div>
 
-      {/* Charlie circle removed — was overlapping header elements */}
+      {/* Charlie circle — fixed below both header bars, right-aligned */}
+      <div className="fixed top-40 right-6 z-30">
+        <DnnNewsPresenter />
+      </div>
 
       {/* Daily Morning Broadcast */}
       <DnnMorningBroadcast />
 
       {/* Articles Feed */}
-      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
+      <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
         {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
