@@ -605,10 +605,11 @@ export default function ConsumerDnnNews() {
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
 
-        {/* Charlie + Bob duo presenter — National Desk explainer */}
-        <div className="flex justify-center">
-          <DnnNewsPresenter />
-        </div>
+      </div>
+
+      {/* Charlie circle — upper right, below the black header bar */}
+      <div className="fixed top-20 right-4 z-30">
+        <DnnNewsPresenter />
       </div>
 
       {/* Daily Morning Broadcast */}
