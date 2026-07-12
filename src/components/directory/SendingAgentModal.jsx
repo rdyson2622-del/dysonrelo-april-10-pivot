@@ -74,7 +74,7 @@ export default function SendingAgentModal({ onClose }) {
           {/* Charlie & Bob video circle — plays the Vetting Desk walkthrough */}
           {introReady && (
             <button onClick={playIntro} aria-label="Watch Charlie and Bob explain the Vetting Desk"
-              className="relative shrink-0 w-20 h-20 transition-all hover:scale-105 active:scale-95">
+              className="relative shrink-0 w-20 h-20 mt-8 transition-all hover:scale-105 active:scale-95">
               <span className="absolute inset-0 rounded-full overflow-hidden shadow-lg"
                 style={{ background: '#0d0d0d', border: `2.5px solid ${GOLD}` }}>
                 <video
