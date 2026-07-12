@@ -52,28 +52,31 @@ Deno.serve(async (req) => {
         console.log(`Polling ${videoId}: status=${s}, raw=${JSON.stringify(statusData?.data).slice(0, 300)}`);
 
         if (s === 'completed' && statusData?.data?.video_url) {
-          // Download and store the video
-          const vidRes = await fetch(statusData.data.video_url);
-          if (vidRes.ok) {
-            const buf = await vidRes.arrayBuffer();
-            const file = new File([buf], `dnn_${article.id}_charlie.mp4`, { type: 'video/mp4' });
-            const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+          const cdnUrl = statusData.data.video_url;
+          let savedUrl = null;
 
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              video_url: up.file_url,
-              production_status: 'complete',
-              video_completed_at: new Date().toISOString(),
-            });
-            results.push({ article_id: article.id, headline: article.headline, status: 'completed', video_url: up.file_url });
-          } else {
-            // Save the HeyGen CDN URL directly if download fails
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              video_url: statusData.data.video_url,
-              production_status: 'complete',
-              video_completed_at: new Date().toISOString(),
-            });
-            results.push({ article_id: article.id, headline: article.headline, status: 'completed', video_url: statusData.data.video_url });
+          // Try to download and re-upload to Base44 storage
+          try {
+            const vidRes = await fetch(cdnUrl);
+            if (vidRes.ok) {
+              const buf = await vidRes.arrayBuffer();
+              const file = new File([buf], `dnn_${article.id}_charlie.mp4`, { type: 'video/mp4' });
+              const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+              if (up?.file_url) savedUrl = up.file_url;
+            }
+          } catch (uploadErr) {
+            console.log(`Upload failed for ${videoId}, using CDN URL: ${uploadErr.message}`);
           }
+
+          // Fallback: save the HeyGen CDN URL directly
+          if (!savedUrl) savedUrl = cdnUrl;
+
+          await base44.asServiceRole.entities.DnnArticle.update(article.id, {
+            video_url: savedUrl,
+            production_status: 'complete',
+            video_completed_at: new Date().toISOString(),
+          });
+          results.push({ article_id: article.id, headline: article.headline, status: 'completed', video_url: savedUrl, uploaded: savedUrl !== cdnUrl });
         } else if (s === 'failed') {
           await base44.asServiceRole.entities.DnnArticle.update(article.id, {
             video_url: null,
