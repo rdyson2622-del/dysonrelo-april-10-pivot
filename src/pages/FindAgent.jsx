@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import AgentRecruitCharlieCircle from '@/components/charlie/AgentRecruitCharlieCircle';
 
 const GOLD = '#D4AF37';
 
@@ -198,6 +199,9 @@ export default function FindAgent() {
         )}
 
       </div>
+
+      {/* Charlie & Bob tag-team — agent recruitment pitch */}
+      <AgentRecruitCharlieCircle />
     </div>
   );
 }
