@@ -55,13 +55,37 @@ Deno.serve(async (req) => {
       migration_data: 'MIGRATION DATA',
       employer_news: 'EMPLOYER NEWS',
       general: 'INTELLIGENCE BRIEF',
+      federal_reserve: 'FEDERAL RESERVE',
+      mortgage_lending: 'MORTGAGE LENDING',
+      federal_legislation: 'FEDERAL LEGISLATION',
+      national_housing_data: 'NATIONAL HOUSING DATA',
+      economic_indicators: 'ECONOMIC INDICATORS',
+      demographics_migration: 'DEMOGRAPHICS & MIGRATION',
+      insurance_climate: 'INSURANCE & CLIMATE',
+      regulatory_compliance: 'REGULATORY COMPLIANCE',
+      construction_supply: 'CONSTRUCTION & SUPPLY',
+      consumer_protection: 'CONSUMER PROTECTION',
     }[article.trigger_type] || 'INTELLIGENCE BRIEF';
+
+    // Build the solution section — this is what makes DNN different
+    let solutionSection = '';
+    if (article.client_solution) {
+      solutionSection += `\n🔵 FOR CLIENTS: ${article.client_solution}`;
+    }
+    if (article.agent_solution) {
+      solutionSection += `\n🟡 FOR AGENTS: ${article.agent_solution}`;
+    }
+    if (article.vendor_solution) {
+      solutionSection += `\n🟢 FOR VENDORS: ${article.vendor_solution}`;
+    }
 
     const socialText = `📡 DNN Intelligence Bureau — ${triggerLabel}
 
 ${article.headline}
 
 ${teaser}
+
+${solutionSection}
 
 Dyson & Dyson Real Estate Concierge — the only news network that reports what happened AND tells you exactly what to do about it.
 
