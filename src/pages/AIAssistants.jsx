@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import AIAssistantsCharlieCircle from '@/components/charlie/AIAssistantsCharlieCircle';
 
 const GOLD = '#D4AF37';
 
@@ -14,7 +15,7 @@ const AGENTS = [
   { icon: '⏰', name: 'Relay', role: 'Follow-Up Automation', color: '#DC143C' },
   { icon: '✍️', name: 'Composer', role: 'Content Generator', color: '#20B2AA' },
   { icon: '📢', name: 'Signal', role: 'Notification Engine', color: '#FF6347' },
-  { icon: '📊', name: 'Advisor', role: 'Escrower Simulator', color: '#20B820' },
+  { icon: '📊', name: 'Advisor', role: 'Escrow Simulator', color: '#20B820' },
   { icon: '🏠', name: 'Keeper', role: 'Homeowner Assistant', color: '#1E90FF' },
   { icon: '🚀', name: 'Bridge', role: 'Referral Coordinator', color: '#FF1493' },
   { icon: '👁️', name: 'Lens', role: 'Profile Optimizer', color: '#9932CC' },
@@ -75,6 +76,9 @@ export default function AIAssistants() {
           ))}
         </div>
       </div>
+
+      {/* Charlie Circle — the backside of D&D explained */}
+      <AIAssistantsCharlieCircle />
     </div>
   );
 }
