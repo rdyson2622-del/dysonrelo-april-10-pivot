@@ -325,6 +325,31 @@ function CompactArticleCard({ article, isAdmin, onEdit, onDelete, onListenBob })
             </div>
           )}
 
+          {/* Dyson Solutions — News → Impact → Solution framework */}
+          {(article.client_solution || article.agent_solution || article.vendor_solution) && (
+            <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}>
+              <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>Dyson Solutions</p>
+              {article.client_solution && (
+                <div className="flex gap-2">
+                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#60a5fa' }}>Client</span>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.client_solution}</p>
+                </div>
+              )}
+              {article.agent_solution && (
+                <div className="flex gap-2">
+                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#D4AF37' }}>Agent</span>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.agent_solution}</p>
+                </div>
+              )}
+              {article.vendor_solution && (
+                <div className="flex gap-2">
+                  <span className="text-[10px] font-bold tracking-widest uppercase shrink-0 mt-0.5" style={{ color: '#4ade80' }}>Vendor</span>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{article.vendor_solution}</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Interview Q&A segment */}
           <InterviewSegment
             qa={article.interview_qa}
