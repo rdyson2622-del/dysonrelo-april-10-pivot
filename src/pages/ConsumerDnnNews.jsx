@@ -634,8 +634,8 @@ export default function ConsumerDnnNews() {
 
       </div>
 
-      {/* Charlie circle — upper right, below the header bar */}
-      <div className="fixed top-28 right-4 z-30">
+      {/* Charlie circle — fixed top right, clears header + content */}
+      <div className="fixed top-24 right-6 z-30">
         <DnnNewsPresenter />
       </div>
 
@@ -643,7 +643,7 @@ export default function ConsumerDnnNews() {
       <DnnMorningBroadcast />
 
       {/* Articles Feed */}
-      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
+      <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
         {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
