@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle } from 'lucide-react';
+import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper } from 'lucide-react';
 import CorporateReloQASection from '@/components/corporate/CorporateReloQASection';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
@@ -96,6 +96,11 @@ export default function CorporateRelo() {
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-base transition-all hover:scale-105"
             style={{ border: `1px solid ${GOLD}`, color: GOLD }}>
             How We Manage a Move <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link to="/dnn-news"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-base transition-all hover:scale-105"
+            style={{ border: `1px solid ${GOLD}`, color: GOLD }}>
+            <Newspaper className="w-4 h-4" /> Real Estate News (Free)
           </Link>
         </div>
         <div className="mt-12 max-w-2xl mx-auto text-left">
