@@ -286,7 +286,7 @@ export default function FinancialServices() {
   });
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#ede0cc' }}>
+    <div className="min-h-screen p-6 md:pr-48" style={{ background: '#ede0cc' }}>
       <div className="max-w-6xl mx-auto">
 
         {/* Tan Background Section */}
