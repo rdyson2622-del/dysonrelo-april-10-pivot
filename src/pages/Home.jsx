@@ -115,8 +115,8 @@ export default function Home() {
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
         <div className="relative flex flex-col items-center px-8 pt-6 pb-14 text-center" style={{ background: '#ede0cc' }}>
 
-          {/* Charlie welcome — upper left of the page content, in flow so it never overlaps */}
-          <div className="w-full flex justify-start mb-4">
+          {/* Charlie welcome — upper right of the page content, in flow so it never overlaps */}
+          <div className="w-full flex justify-end mb-4">
             <div className="relative w-[126px] h-[126px] md:w-36 md:h-36 shrink-0">
               <CharliePagePresenter pageKey="client-home" inline positionClass="top-0 left-0" />
             </div>
