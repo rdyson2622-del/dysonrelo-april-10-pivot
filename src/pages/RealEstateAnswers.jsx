@@ -108,28 +108,6 @@ export default function RealEstateAnswers() {
         <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
       )}
 
-      {/* ── Charlie Banner ── */}
-      <div className="px-6 py-5 flex items-start gap-4"
-        style={{ background: '#0d0d0d', borderBottom: '2px solid rgba(212,175,55,0.25)' }}>
-        <div className="w-11 h-11 rounded-full shrink-0 flex items-center justify-center text-xl"
-          style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
-          💬
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1" style={{ color: GOLD }}>
-            CHARLIE · DYSON AI CONCIERGE
-          </p>
-          <p className="text-sm text-white leading-snug">
-            I'm Charlie — ask me anything about how Dyson &amp; Dyson handles complex moves, standard real estate, or whether your situation qualifies for our concierge service.
-          </p>
-          <Link to="/chat"
-            className="inline-flex items-center gap-1.5 mt-2 text-xs font-black tracking-wide"
-            style={{ color: GOLD }}>
-            <MessageCircle className="w-3.5 h-3.5" /> Ask Charlie Now <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-
       {/* ── Charlie circle — in flow, upper right of the tan content area ── */}
       {introReady && !sequence && (
         <div className="w-full flex justify-end px-3 md:px-5 pt-4">
