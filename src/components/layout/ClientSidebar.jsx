@@ -108,9 +108,9 @@ export default function ClientSidebar() {
       style={{ background: '#0d0d0d', borderRight: '1px solid rgba(212,175,55,0.15)' }}>
 
       {/* Logo */}
-      <div className="shrink-0 px-5 py-5 border-b" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
+      <div className="shrink-0 px-5 py-5 border-b flex flex-col items-center text-center" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
         <Link to="/" title="Back to landing page">
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto mx-auto" />
         </Link>
         <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
           {portalLabel}
