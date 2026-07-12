@@ -17,7 +17,7 @@ const PATHS = [
   },
   {
     icon: Star,
-    label: 'I am a Relocation Agent',
+    label: 'I am an Active Real Estate Agent or Broker',
     sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
     badge: 'RELOCATION AGENT NETWORK',
     dest: '/find-agent',
@@ -25,7 +25,7 @@ const PATHS = [
   },
   {
     icon: Handshake,
-    label: 'I am a Referral Agent',
+    label: 'I am an Inactive Real Estate Agent',
     sub: 'Send us your out-of-state client. We manage everything — your 25% referral fee is protected.',
     badge: 'REFERRAL AGENT NETWORK',
     dest: '/partner-benefits',
@@ -33,7 +33,7 @@ const PATHS = [
   },
   {
     icon: Wrench,
-    label: 'I am a Vendor',
+    label: 'I am a Real Estate Vendor',
     sub: 'Movers, inspectors, contractors, and service providers supporting our relocations.',
     badge: 'VENDOR UTILITY',
     dest: '/search',
@@ -41,7 +41,7 @@ const PATHS = [
   },
   {
     icon: Building2,
-    label: 'I am a Corporate Relo / HR Manager',
+    label: 'I am a Corporate Relocation / HR Manager',
     sub: 'White-glove employee relocation with zero management fees. See how the model works.',
     badge: 'CORPORATE RELO / HR',
     dest: '/corporate-relo',
