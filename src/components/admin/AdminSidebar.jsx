@@ -67,6 +67,7 @@ const NAV_SECTIONS = [
       { label: '↳ Partner Benefits', path: '/admin/partner-benefits', icon: ArrowRight, indent: true },
       { label: '[Targeting] Exodus Agent Outreach', path: '/admin/exodus-outreach', icon: ArrowRight, indent: true },
       { label: '⚖ [Management] Referral Fee Agreements', path: '/admin/prn-agreements', icon: ArrowRight, indent: true, highlight: true },
+      { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, indent: true, highlight: true },
       { label: '[Tracking] Managed Referral Pipeline', path: '/admin/sending-agents', icon: ArrowRight, indent: true },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Lenders', path: '/admin/owners', icon: Users },
