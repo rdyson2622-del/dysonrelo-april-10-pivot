@@ -26,16 +26,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 1. Get the most recent published/blasted article
-    const published = await base44.asServiceRole.entities.DnnArticle.filter(
-      { status: 'published' }, '-generated_date', 10
-    );
-    const blasted = await base44.asServiceRole.entities.DnnArticle.filter(
-      { status: 'blasted' }, '-generated_date', 10
-    );
-
-    const candidates = [...published, ...blasted].sort(
-      (a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
+    // 1. Get the most recent published article (not yet blasted)
+    const candidates = await base44.asServiceRole.entities.DnnArticle.filter(
+      { status: 'published' }, '-generated_date', 50
     );
 
     if (!candidates.length) {
@@ -110,7 +103,7 @@ Read the full brief: ${appUrl}
       }
     }
 
-    // --- 4. Post to LinkedIn ---
+    // --- 4. Post to LinkedIn (new Videos API + Posts API) ---
     try {
       const { accessToken: linkedinToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
 
@@ -120,110 +113,126 @@ Read the full brief: ${appUrl}
       const profile = await profileRes.json();
       const authorUrn = `urn:li:person:${profile.sub}`;
 
+      const linkedinHeaders = {
+        Authorization: `Bearer ${linkedinToken}`,
+        'Content-Type': 'application/json',
+        'X-Restli-Protocol-Version': '2.0.0',
+        'Linkedin-Version': '202506',
+      };
+
       if (hasVideo && videoBuffer) {
-        // --- Video post ---
-        // Step 1: Register the upload
-        const registerRes = await fetch('https://api.linkedin.com/v2/assets/registerUpload', {
+        // Step 1: Initialize upload via new Videos API
+        const initRes = await fetch('https://api.linkedin.com/rest/videos?action=initializeUpload', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${linkedinToken}`,
-            'Content-Type': 'application/json',
-            'X-Restli-Protocol-Version': '2.0.0',
-          },
+          headers: linkedinHeaders,
           body: JSON.stringify({
-            registerUploadRequest: {
-              recipes: ['urn:li:digitalmediaRecipe:feedshare-video'],
+            initializeUploadRequest: {
               owner: authorUrn,
-              relationships: [{
-                relationshipType: 'CONTENT',
-                target: { urn: 'urn:li:digitalmediaRecipe:feedshare-video' }
-              }]
-            }
+              fileSizeBytes: videoBuffer.byteLength,
+              uploadCaptions: false,
+              uploadThumbnail: false,
+            },
           }),
         });
 
-        const registerData = await registerRes.json();
-        const assetUrn = registerData?.value?.asset;
-        const uploadUrl = registerData?.value?.uploadUrl;
+        const initData = await initRes.json();
+        const videoUrn = initData?.value?.video;
+        const uploadUrl = initData?.value?.uploadInstructions?.[0]?.uploadUrl;
 
-        if (assetUrn && uploadUrl) {
-          // Step 2: Upload the video binary
-          const uploadRes = await fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/octet-stream' },
-            body: videoBuffer,
-          });
+        if (videoUrn && uploadUrl) {
+          // Step 2: Upload video binary — handle multi-part chunked uploads
+          const instructions = initData?.value?.uploadInstructions || [{ uploadUrl, firstByte: 0, lastByte: videoBuffer.byteLength - 1 }];
+          const videoBytes = new Uint8Array(videoBuffer);
+          let allUploadsOk = true;
+          let uploadErrorDetail = '';
 
-          if (uploadRes.ok) {
-            // Step 3: Create the video post
-            const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+          for (const instr of instructions) {
+            const start = instr.firstByte || 0;
+            const end = (instr.lastByte ?? videoBuffer.byteLength - 1) + 1;
+            const chunk = videoBytes.subarray(start, end);
+
+            const uploadRes = await fetch(instr.uploadUrl, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/octet-stream' },
+              body: chunk,
+            });
+
+            if (!uploadRes.ok) {
+              allUploadsOk = false;
+              try { uploadErrorDetail = await uploadRes.text(); } catch (_) {}
+              break;
+            }
+          }
+
+          if (allUploadsOk) {
+            // Step 2b: Finalize the upload
+            await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
               method: 'POST',
-              headers: {
-                Authorization: `Bearer ${linkedinToken}`,
-                'Content-Type': 'application/json',
-                'X-Restli-Protocol-Version': '2.0.0',
-              },
+              headers: linkedinHeaders,
+              body: JSON.stringify({ video: videoUrn }),
+            });
+            // Step 3: Create video post via new Posts API
+
+            const postRes = await fetch('https://api.linkedin.com/rest/posts', {
+              method: 'POST',
+              headers: linkedinHeaders,
               body: JSON.stringify({
                 author: authorUrn,
-                lifecycleState: 'PUBLISHED',
-                specificContent: {
-                  'com.linkedin.ugc.ShareContent': {
-                    shareCommentary: { text: socialText },
-                    shareMediaCategory: 'VIDEO',
-                    media: [{
-                      status: 'READY',
-                      media: assetUrn,
-                      title: { text: article.headline },
-                    }],
+                commentary: socialText,
+                visibility: 'PUBLIC',
+                distribution: {
+                  feedDistribution: 'MAIN_FEED',
+                  targetEntities: [],
+                  thirdPartyDistributionChannels: [],
+                },
+                content: {
+                  media: {
+                    title: article.headline,
+                    id: videoUrn,
                   },
                 },
-                visibility: {
-                  'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-                },
+                lifecycleState: 'PUBLISHED',
+                isReshareDisabledByAuthor: false,
               }),
             });
 
-            const linkedinResult = await postRes.json();
+            let postResult = {};
+            try { postResult = await postRes.json(); } catch (_) {}
             if (!postRes.ok) {
-              results.linkedin = { success: false, error: linkedinResult.message || 'LinkedIn video post failed', details: linkedinResult };
+              results.linkedin = { success: false, error: postResult.message || `LinkedIn video post failed (status ${postRes.status})`, details: postResult };
             } else {
-              results.linkedin = { success: true, post_id: linkedinResult.id, type: 'video' };
+              results.linkedin = { success: true, post_id: postResult.id || 'created', type: 'video' };
             }
           } else {
-            results.linkedin = { success: false, error: 'LinkedIn video binary upload failed' };
+            results.linkedin = { success: false, error: 'LinkedIn video binary upload failed', details: uploadErrorDetail.slice(0, 500) };
           }
         } else {
-          results.linkedin = { success: false, error: 'LinkedIn upload registration failed', details: registerData };
+          results.linkedin = { success: false, error: 'LinkedIn upload initialization failed', details: initData };
         }
       } else {
-        // --- Text-only fallback ---
-        const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+        // --- Text-only fallback via new Posts API ---
+        const postRes = await fetch('https://api.linkedin.com/rest/posts', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${linkedinToken}`,
-            'Content-Type': 'application/json',
-            'X-Restli-Protocol-Version': '2.0.0',
-          },
+          headers: linkedinHeaders,
           body: JSON.stringify({
             author: authorUrn,
+            commentary: socialText,
+            visibility: 'PUBLIC',
+            distribution: {
+              feedDistribution: 'MAIN_FEED',
+              targetEntities: [],
+              thirdPartyDistributionChannels: [],
+            },
             lifecycleState: 'PUBLISHED',
-            specificContent: {
-              'com.linkedin.ugc.ShareContent': {
-                shareCommentary: { text: socialText },
-                shareMediaCategory: 'NONE',
-              },
-            },
-            visibility: {
-              'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-            },
+            isReshareDisabledByAuthor: false,
           }),
         });
 
-        const linkedinResult = await postRes.json();
+        const postResult = await postRes.json();
         if (!postRes.ok) {
-          results.linkedin = { success: false, error: linkedinResult.message || 'LinkedIn API error', details: linkedinResult };
+          results.linkedin = { success: false, error: postResult.message || 'LinkedIn API error', details: postResult };
         } else {
-          results.linkedin = { success: true, post_id: linkedinResult.id, type: 'text', note: 'No video available — posted text only' };
+          results.linkedin = { success: true, post_id: postResult.id, type: 'text', note: 'No video available — posted text only' };
         }
       }
     } catch (e) {
@@ -288,8 +297,9 @@ Read the full brief: ${appUrl}
 
     console.log('DNN Social Blast results:', JSON.stringify(results));
 
-    // Mark article as blasted
-    if (article.status === 'published') {
+    // Mark article as blasted only if at least one platform succeeded
+    const anySuccess = results.linkedin?.success || results.facebook?.success;
+    if (anySuccess && article.status === 'published') {
       await base44.asServiceRole.entities.DnnArticle.update(article.id, { status: 'blasted' });
     }
 
