@@ -9,6 +9,7 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
 import BroadcastVideoStack from '@/components/dnn/BroadcastVideoStack';
+import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -600,9 +601,14 @@ export default function ConsumerDnnNews() {
           style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#1a1a1a', lineHeight: 1.05 }}>
           REAL ESTATE NEWS
         </h1>
-        <p className="text-base leading-relaxed mx-auto" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
+        <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
+
+        {/* Charlie + Bob duo presenter — National Desk explainer */}
+        <div className="flex justify-center">
+          <DnnNewsPresenter />
+        </div>
       </div>
 
       {/* Daily Morning Broadcast */}
