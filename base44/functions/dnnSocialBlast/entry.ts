@@ -83,25 +83,30 @@ Read the full brief: ${appUrl}
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
-    const results = {
-      article_headline: article.headline,
-      has_video: hasVideo,
-      linkedin: null,
-      facebook: null,
-    };
-
     // 3. Download the video if we have one
     let videoBuffer = null;
     if (hasVideo) {
       try {
         const vidRes = await fetch(article.video_url);
+        console.log('Video download status:', vidRes.status, 'for URL:', article.video_url?.slice(0, 80));
         if (vidRes.ok) {
           videoBuffer = await vidRes.arrayBuffer();
+          console.log('Video buffer size:', videoBuffer.byteLength, 'bytes');
+        } else {
+          console.warn('Video download returned non-ok status:', vidRes.status, await vidRes.text().catch(() => ''));
         }
       } catch (e) {
         console.warn('Video download failed:', e.message);
       }
     }
+
+    const results = {
+      article_headline: article.headline,
+      has_video: hasVideo,
+      video_byte_length: videoBuffer?.byteLength || 0,
+      linkedin: null,
+      facebook: null,
+    };
 
     // --- 4. Post to LinkedIn (new Videos API + Posts API) ---
     try {
@@ -117,7 +122,7 @@ Read the full brief: ${appUrl}
         Authorization: `Bearer ${linkedinToken}`,
         'Content-Type': 'application/json',
         'X-Restli-Protocol-Version': '2.0.0',
-        'Linkedin-Version': '202506',
+        'Linkedin-Version': '202603',
       };
 
       if (hasVideo && videoBuffer) {
@@ -136,6 +141,8 @@ Read the full brief: ${appUrl}
         });
 
         const initData = await initRes.json();
+        const uploadToken = initData?.value?.uploadToken;
+        debugLog.push({ step: 'init', status: initRes.status, video_urn: initData?.value?.video, has_token: !!uploadToken, has_instructions: !!initData?.value?.uploadInstructions });
         const videoUrn = initData?.value?.video;
         const uploadUrl = initData?.value?.uploadInstructions?.[0]?.uploadUrl;
 
@@ -145,18 +152,28 @@ Read the full brief: ${appUrl}
           const videoBytes = new Uint8Array(videoBuffer);
           let allUploadsOk = true;
           let uploadErrorDetail = '';
+          const uploadedPartIds = [];
 
           for (const instr of instructions) {
             const start = instr.firstByte || 0;
             const end = (instr.lastByte ?? videoBuffer.byteLength - 1) + 1;
-            const chunk = videoBytes.subarray(start, end);
+            const chunkSize = end - start;
+            const chunk = new Blob([videoBytes.slice(start, end)], { type: 'application/octet-stream' });
 
             const uploadRes = await fetch(instr.uploadUrl, {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/octet-stream' },
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                'Content-Length': String(chunkSize),
+              },
               body: chunk,
             });
 
+            // LinkedIn returns an ETag header for each uploaded part
+            const etag = uploadRes.headers.get('etag') || uploadRes.headers.get('ETag');
+            if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
+
+            debugLog.push({ step: 'upload_chunk', status: uploadRes.status, chunk_size: chunkSize, etag: etag?.slice(0, 40) });
             if (!uploadRes.ok) {
               allUploadsOk = false;
               try { uploadErrorDetail = await uploadRes.text(); } catch (_) {}
@@ -165,43 +182,74 @@ Read the full brief: ${appUrl}
           }
 
           if (allUploadsOk) {
-            // Step 2b: Finalize the upload
-            await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
+            // Step 2b: Finalize the upload — uploadToken is always "" (empty string per LinkedIn docs)
+            const finalizeBody = {
+              finalizeUploadRequest: {
+                video: videoUrn,
+                uploadToken: uploadToken || '',
+                uploadedPartIds,
+              },
+            };
+            const finalizeRes = await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
               method: 'POST',
               headers: linkedinHeaders,
-              body: JSON.stringify({ video: videoUrn }),
+              body: JSON.stringify(finalizeBody),
             });
-            // Step 3: Create video post via new Posts API
+            const finalizeData = await finalizeRes.json().catch(() => ({}));
+            debugLog.push({ step: 'finalize', status: finalizeRes.status, data: finalizeData });
 
+            // Step 2c: Poll video status until READY (max 30s)
+            let videoReady = false;
+            let pollStatus = 'unknown';
+            for (let attempt = 0; attempt < 6; attempt++) {
+              await new Promise(r => setTimeout(r, 5000));
+              const statusRes = await fetch(`https://api.linkedin.com/rest/videos/${encodeURIComponent(videoUrn)}`, {
+                headers: linkedinHeaders,
+              });
+              const statusData = await statusRes.json().catch(() => ({}));
+              pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
+              debugLog.push({ step: `poll_${attempt + 1}`, status: pollStatus });
+              if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') {
+                videoReady = true;
+                break;
+              }
+              if (pollStatus === 'FAILED' || pollStatus === 'ERROR') {
+                break;
+              }
+            }
+
+            // Step 3: Create video post via new Posts API
+            const postBody = {
+              author: authorUrn,
+              commentary: socialText,
+              visibility: 'PUBLIC',
+              distribution: {
+                feedDistribution: 'MAIN_FEED',
+                targetEntities: [],
+                thirdPartyDistributionChannels: [],
+              },
+              content: {
+                media: {
+                  title: article.headline,
+                  id: videoUrn,
+                },
+              },
+              lifecycleState: 'PUBLISHED',
+              isReshareDisabledByAuthor: false,
+            };
             const postRes = await fetch('https://api.linkedin.com/rest/posts', {
               method: 'POST',
               headers: linkedinHeaders,
-              body: JSON.stringify({
-                author: authorUrn,
-                commentary: socialText,
-                visibility: 'PUBLIC',
-                distribution: {
-                  feedDistribution: 'MAIN_FEED',
-                  targetEntities: [],
-                  thirdPartyDistributionChannels: [],
-                },
-                content: {
-                  media: {
-                    title: article.headline,
-                    id: videoUrn,
-                  },
-                },
-                lifecycleState: 'PUBLISHED',
-                isReshareDisabledByAuthor: false,
-              }),
+              body: JSON.stringify(postBody),
             });
 
             let postResult = {};
             try { postResult = await postRes.json(); } catch (_) {}
+            debugLog.push({ step: 'create_post', status: postRes.status, data: postResult });
             if (!postRes.ok) {
               results.linkedin = { success: false, error: postResult.message || `LinkedIn video post failed (status ${postRes.status})`, details: postResult };
             } else {
-              results.linkedin = { success: true, post_id: postResult.id || 'created', type: 'video' };
+              results.linkedin = { success: true, post_id: postResult.id || 'created', type: 'video', video_ready: videoReady, video_status: pollStatus };
             }
           } else {
             results.linkedin = { success: false, error: 'LinkedIn video binary upload failed', details: uploadErrorDetail.slice(0, 500) };
