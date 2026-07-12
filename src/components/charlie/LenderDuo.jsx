@@ -20,13 +20,22 @@ export default function LenderDuo() {
   });
 
   const sorted = clips.sort((a, b) => (a.faqIndex ?? 0) - (b.faqIndex ?? 0));
-  const firstReady = sorted.find(c => c.charlieStatus === 'completed' && !!c.charlieVideoUrl);
+
+  // Build interleaved segments: Charlie asks, Bob answers — per clip
+  const allSegs = [];
+  for (const c of sorted) {
+    if (c.charlieStatus === 'completed' && c.charlieVideoUrl) {
+      allSegs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+    }
+    if (c.bobStatus === 'completed' && c.bobVideoUrl) {
+      allSegs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+    }
+  }
+
+  const firstReady = allSegs[0] || null;
 
   const playFull = () => {
-    const segs = sorted
-      .filter(c => c.charlieStatus === 'completed' && c.charlieVideoUrl)
-      .map(c => ({ src: c.charlieVideoUrl, speaker: 'charlie' }));
-    if (segs.length) setSegments(segs);
+    if (allSegs.length) setSegments(allSegs);
   };
 
   if (!firstReady) return null;
@@ -41,7 +50,7 @@ export default function LenderDuo() {
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
           style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
           <video
-            src={firstReady.charlieVideoUrl}
+            src={firstReady.src}
             muted
             playsInline
             preload="metadata"
