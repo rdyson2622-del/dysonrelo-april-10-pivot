@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import QADuoPresenter from '@/components/charlie/QADuoPresenter';
+import InlineCharliePlayer from '@/components/charlie/InlineCharliePlayer';
 
 const GOLD = '#D4AF37';
 
@@ -57,9 +57,7 @@ export default function SendingAgentModal({ onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)' }} onClick={onClose}>
       {sequence && (
-        <div onClick={e => e.stopPropagation()}>
-          <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
-        </div>
+        <InlineCharliePlayer segments={sequence} onClose={() => setSequence(null)} />
       )}
       <div className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}
         style={{ background: '#fff8ee', border: `2px solid ${GOLD}` }}>
