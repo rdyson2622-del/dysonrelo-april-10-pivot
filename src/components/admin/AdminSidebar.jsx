@@ -237,6 +237,7 @@ export default function AdminSidebar() {
         <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: '#D4AF37' }}>View Portal As:</p>
         <div className="grid grid-cols-2 gap-1.5">
           {[
+            { label: 'D&D LANDING PAGE', role: 'landing', emoji: '🚪', path: '/' },
             { label: 'CLIENT', role: 'client', emoji: '🏠' },
             { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐' },
             { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
