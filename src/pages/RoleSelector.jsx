@@ -8,7 +8,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 const PATHS = [
   {
     icon: Home,
-    label: 'I am a Potential Client',
+    label: 'I am an Existing or Potential Client',
     sub: 'Full relocation management, real estate answers, city guides, and concierge service — always free to you.',
     badge: 'CLIENT CONCIERGE',
     dest: '/home',
