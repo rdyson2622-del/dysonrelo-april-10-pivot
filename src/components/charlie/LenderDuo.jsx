@@ -38,7 +38,27 @@ export default function LenderDuo() {
     if (allSegs.length) setSegments(allSegs);
   };
 
-  if (!firstReady) return null;
+  // Placeholder while HeyGen renders are in progress
+  if (!firstReady) {
+    return (
+      <div
+        aria-label="Charlie is preparing his presentation"
+        className="fixed top-32 right-6 z-40 w-[126px] h-[126px] md:w-36 md:h-36 flex flex-col items-center justify-center"
+      >
+        <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
+          style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
+          <div className="w-full h-full flex flex-col items-center justify-center gap-1.5 p-2">
+            <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: `${GOLD}40`, borderTopColor: GOLD }} />
+            <span className="text-[8px] font-black tracking-widest uppercase text-center leading-tight" style={{ color: GOLD }}>Preparing</span>
+          </div>
+        </span>
+        <span className="absolute -top-1 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-black tracking-widest px-2 py-0.5 rounded-full"
+          style={{ background: '#0d0d0d', color: GOLD, border: `1px solid ${GOLD}` }}>
+          MEET CHARLIE
+        </span>
+      </div>
+    );
+  }
 
   return (
     <>
