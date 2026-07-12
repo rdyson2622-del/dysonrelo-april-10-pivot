@@ -21,6 +21,7 @@ export default function SolveMyStory() {
     phone: '',
     situation_type: '',
     story: '',
+    subscribe: true,
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,8 +38,9 @@ export default function SolveMyStory() {
       phone: form.phone,
       source: 'Solve My Story - Landing Page',
       tier: 'tier1',
-      notes: `SITUATION: ${form.situation_type}\n\nSTORY: ${form.story}`,
+      notes: `SITUATION: ${form.situation_type}\n\nSTORY: ${form.story}${form.subscribe ? '\n\n✅ OPTED IN to free DNN news & messaging' : ''}`,
       is_hot_lead: true,
+      unsubscribed: !form.subscribe,
     }).catch(err => console.error('DnnSubscriber create error:', err));
     base44.integrations.Core.SendEmail({
       to: 'bob@dysondyson.com',
@@ -210,6 +212,28 @@ export default function SolveMyStory() {
                 />
               </div>
             </div>
+
+            {/* Free subscribe opt-in */}
+            <label className="flex items-start gap-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all"
+              style={{
+                background: form.subscribe ? 'rgba(212,175,55,0.12)' : '#1a1a1a',
+                border: form.subscribe ? `1.5px solid ${GOLD}` : '1.5px solid rgba(255,255,255,0.1)',
+              }}>
+              <input
+                type="checkbox"
+                checked={form.subscribe}
+                onChange={e => setForm({ ...form, subscribe: e.target.checked })}
+                className="mt-0.5 w-4 h-4 shrink-0 accent-[#D4AF37]"
+              />
+              <span>
+                <span className="block text-sm font-bold" style={{ color: form.subscribe ? GOLD : '#fff' }}>
+                  Yes — subscribe me for FREE
+                </span>
+                <span className="block text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  Get the Dyson News Network morning brief, real estate alerts, and solutions delivered at 6 AM. No cost, unsubscribe anytime.
+                </span>
+              </span>
+            </label>
           </div>
 
           {/* Submit */}
