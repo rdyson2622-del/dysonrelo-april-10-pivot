@@ -8,6 +8,7 @@ import {
   XCircle, Video, BarChart3
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import VettedAgentDuo from '@/components/charlie/VettedAgentDuo';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -488,6 +489,9 @@ export default function MyAgent() {
         <CharlieTeaser />
 
       </div>
+
+      {/* Charlie & Bob duo presenter — vetting philosophy + commission model */}
+      <VettedAgentDuo />
     </div>
   );
 }
