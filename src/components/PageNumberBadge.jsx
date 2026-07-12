@@ -2,16 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import { getCurrentSection } from '@/lib/sectionRegistry';
-import { base44 } from '@/api/base44Client';
 
 export default function PageNumberBadge() {
   const location = useLocation();
   const [currentSection, setCurrentSection] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,9 +19,6 @@ export default function PageNumberBadge() {
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
-
-  // Internal navigation aid — admins only, never shown to the public.
-  if (!isAdmin) return null;
 
   if (!location?.pathname) return null;
 
@@ -76,7 +67,7 @@ export default function PageNumberBadge() {
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-40 font-bold"
+      className="fixed bottom-28 right-5 z-40 font-bold"
       style={{
         color: '#D4AF37',
         opacity: 1,
