@@ -113,6 +113,7 @@ import AdminCorporateRelo from './pages/AdminCorporateRelo';
 import AdminQAScriptStudio from './pages/AdminQAScriptStudio';
 import AgentLanding from './pages/AgentLanding';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Subscribe from './pages/Subscribe';
 import TermsOfService from './pages/TermsOfService';
 
 const AuthenticatedApp = () => {
@@ -182,6 +183,7 @@ const AuthenticatedApp = () => {
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
+        <Route path="/subscribe" element={<Subscribe />} />
         <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
       </Route>
       

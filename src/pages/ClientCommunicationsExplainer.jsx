@@ -13,6 +13,11 @@ export default function ClientCommunicationsExplainer() {
           <ArrowLeft className="w-5 h-5 text-white" />
         </Link>
         <h1 className="text-xl font-bold text-white">Communications Hub</h1>
+        <Link to="/subscribe"
+          className="ml-auto px-4 py-2 rounded-full text-xs font-black tracking-wide whitespace-nowrap transition-all hover:opacity-90"
+          style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+          Subscribe Free
+        </Link>
       </div>
 
       {/* Main Content */}
@@ -105,6 +110,19 @@ export default function ClientCommunicationsExplainer() {
               <p className="text-base leading-relaxed text-white" style={{ fontFamily: 'Georgia, serif' }}>
                 <strong>Bottom line:</strong> You're never talking to different people. You're always talking to the same team who knows your move, your timeline, and your goals.
               </p>
+            </div>
+
+            {/* Subscribe CTA */}
+            <div className="rounded-2xl p-8 mt-8 text-center" style={{ background: '#1a1a1a', border: `2px solid ${GOLD}` }}>
+              <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>STAY IN THE LOOP — FREE</p>
+              <p className="text-base leading-relaxed mb-6 text-white" style={{ fontFamily: 'Georgia, serif' }}>
+                Subscribe free to get the Dyson News Network morning brief, real estate alerts, and team messaging — all in one place.
+              </p>
+              <Link to="/subscribe"
+                className="inline-block px-10 py-4 rounded-full font-bold text-base tracking-wider transition-all hover:opacity-90"
+                style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+                Subscribe Free →
+              </Link>
             </div>
           </div>
         </div>
