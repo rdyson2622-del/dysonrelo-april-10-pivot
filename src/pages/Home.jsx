@@ -227,11 +227,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── CLIENT SUBSCRIBE ── */}
-          <div className="w-full max-w-4xl mt-12 text-left">
-            <PortalSubscribeForm portalName="Client Concierge" source="Client Portal" roleKey="client" dest="/home" />
-          </div>
-
           {/* ── CLIENT STORIES ── */}
           <div className="w-full max-w-4xl mt-12 text-left">
 
@@ -315,6 +310,11 @@ export default function Home() {
                 Solve My Story →
               </button>
               <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
+            </div>
+
+            {/* ── CLIENT SUBSCRIBE — bottom of the scroll ── */}
+            <div className="mt-12">
+              <PortalSubscribeForm portalName="Client Concierge" source="Client Portal" roleKey="client" dest="/home" />
             </div>
 
           </div>
