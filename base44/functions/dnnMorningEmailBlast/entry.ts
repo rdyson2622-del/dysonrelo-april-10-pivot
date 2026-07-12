@@ -40,8 +40,20 @@ Deno.serve(async (req) => {
 
     const subscribers = allSubscribers.filter(s => s.email && s.email.trim());
 
-    if (!subscribers.length) {
-      return Response.json({ error: 'No subscribers with email addresses' }, { status: 404 });
+    // Also get admin team emails so the brief goes to the internal team every day
+    const adminUsers = await base44.asServiceRole.entities.User.filter(
+      { role: 'admin' },
+      '-created_date',
+      100
+    );
+    const adminEmails = adminUsers.filter(u => u.email && u.email.trim()).map(u => u.email);
+
+    // Merge subscribers + admin team, dedup by email
+    const subscriberEmails = subscribers.map(s => s.email);
+    const allRecipients = [...new Set([...subscriberEmails, ...adminEmails])];
+
+    if (!allRecipients.length) {
+      return Response.json({ error: 'No subscribers or admin recipients with email addresses' }, { status: 404 });
     }
 
     // Build the first paragraph of the article as the teaser
@@ -118,15 +130,15 @@ Deno.serve(async (req) => {
 </html>
     `.trim();
 
-    // Send to all subscribers — batch with small delay to avoid rate limits
+    // Send to all subscribers + admin team — batch with small delay to avoid rate limits
     let sent = 0;
     let failed = 0;
     const errors = [];
 
-    for (const subscriber of subscribers) {
+    for (const email of allRecipients) {
       try {
         await base44.asServiceRole.integrations.Core.SendEmail({
-          to: subscriber.email,
+          to: email,
           subject: `📡 DNN Morning Brief: ${article.headline}`,
           body: emailBody,
           from_name: 'DNN Intelligence Bureau',
@@ -134,7 +146,7 @@ Deno.serve(async (req) => {
         sent++;
       } catch (e) {
         failed++;
-        errors.push(`${subscriber.email}: ${e.message}`);
+        errors.push(`${email}: ${e.message}`);
       }
     }
 
@@ -143,7 +155,9 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       article_headline: article.headline,
-      subscribers_total: subscribers.length,
+      recipients_total: allRecipients.length,
+      subscribers: subscriberEmails.length,
+      admins: adminEmails.length,
       sent,
       failed,
       errors: errors.slice(0, 10),
