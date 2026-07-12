@@ -89,9 +89,10 @@ export default function SolveMyStory() {
 
   return (
      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
+       <SolveMyStoryPresenter />
 
        {/* Header */}
-       <div className="relative flex flex-col items-center pt-14 pb-10 text-center px-6"
+       <div className="relative flex flex-col items-center pt-14 pb-10 text-center px-6 md:pr-48"
          style={{ background: '#ede0cc' }}>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[57.6px] w-auto mb-6" />
         <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
