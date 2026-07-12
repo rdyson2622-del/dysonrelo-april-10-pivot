@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 
@@ -51,6 +51,21 @@ const PATHS = [
 
 export default function RoleSelector() {
   const navigate = useNavigate();
+
+  // Subscribed visitors go straight to their portal — unless they explicitly
+  // asked for the landing page (logo click adds ?choose=1)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('choose')) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem('dyson_portal'));
+      if (saved?.dest) {
+        sessionStorage.setItem('dyson_role', saved.roleKey || 'client');
+        window.dispatchEvent(new Event('dyson_role_change'));
+        navigate(saved.dest, { replace: true });
+      }
+    } catch {}
+  }, [navigate]);
 
   const handleSelect = (path) => {
     sessionStorage.setItem('dyson_role', path.roleKey);

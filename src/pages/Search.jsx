@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 
@@ -86,6 +87,10 @@ export default function Search() {
             </div>
             <div className="text-center">•</div>
             <div className="text-center">NATIONWIDE NETWORK</div>
+          </div>
+
+          <div className="mt-12 max-w-xl mx-auto text-left">
+            <PortalSubscribeForm portalName="Vendor Utility" source="Vendor Portal" roleKey="vendor" dest="/search" />
           </div>
         </motion.div>
       </main>

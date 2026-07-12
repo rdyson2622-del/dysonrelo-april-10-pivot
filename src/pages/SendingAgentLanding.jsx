@@ -43,6 +43,7 @@ export default function SendingAgentLanding() {
       referral_status: 'new',
       notes: `Sending Agent: ${form.agent_name} (${form.agent_email}) | Destination: ${form.destination_state} | Notes: ${form.notes}`,
     });
+    localStorage.setItem('dyson_portal', JSON.stringify({ roleKey: 'referral_agent', dest: '/partner-benefits' }));
     setSubmitted(true);
     setSubmitting(false);
   };
@@ -53,11 +54,13 @@ export default function SendingAgentLanding() {
       {/* Hero */}
       <div className="px-6 py-16 text-center" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
         <div className="flex justify-center mb-8">
-          <img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
-            alt="Dyson & Dyson"
-            className="h-20 w-auto"
-          />
+          <a href="/?choose=1" title="Back to landing page">
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
+              alt="Dyson & Dyson"
+              className="h-20 w-auto"
+            />
+          </a>
         </div>
         <p className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: GOLD }}>
           PRIVATE REFERRAL NETWORK · BOUTIQUE AGENT PROGRAM

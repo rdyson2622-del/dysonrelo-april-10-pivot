@@ -4,6 +4,7 @@ import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircl
 import CorporateReloQASection from '@/components/corporate/CorporateReloQASection';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 
@@ -96,6 +97,9 @@ export default function CorporateRelo() {
             style={{ border: `1px solid ${GOLD}`, color: GOLD }}>
             How We Manage a Move <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+        <div className="mt-12 max-w-2xl mx-auto text-left">
+          <PortalSubscribeForm portalName="Corporate Relo / HR Portal" source="Corporate HR Portal" roleKey="client" dest="/corporate-relo" />
         </div>
         <p className="text-sm mt-10" style={{ color: '#8a8a8a' }}>
           The Dyson &amp; Dyson Companies, Inc. · California DRE #02303118 · (858) 353-1200

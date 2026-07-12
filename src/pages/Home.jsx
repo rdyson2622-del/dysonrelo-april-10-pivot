@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import ClientStory from '@/components/landing/ClientStory';
 import MobileTopBar from '@/components/home/MobileTopBar';
 import ClientSidebar from '@/components/layout/ClientSidebar';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -221,6 +222,11 @@ export default function Home() {
                 </a>
               </div>
             </div>
+          </div>
+
+          {/* ── CLIENT SUBSCRIBE ── */}
+          <div className="w-full max-w-4xl mt-12 text-left">
+            <PortalSubscribeForm portalName="Client Concierge" source="Client Portal" roleKey="client" dest="/home" />
           </div>
 
           {/* ── CLIENT STORIES ── */}
