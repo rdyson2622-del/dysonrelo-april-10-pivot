@@ -11,7 +11,7 @@ const GOLD = '#D4AF37';
  * Bob's AI vision message in the duo talk box.
  */
 export default function SolveMyStoryPresenter() {
-  const [segments, setSegments] = useState([]);
+  const [segments, setSegments] = useState(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -28,10 +28,10 @@ export default function SolveMyStoryPresenter() {
         }
         setSegments(segs);
       })
-      .catch(() => {});
+      .catch(() => setSegments([]));
   }, []);
 
-  if (segments.length === 0) return null;
+  if (!segments || segments.length === 0) return null;
 
   return (
     <>
