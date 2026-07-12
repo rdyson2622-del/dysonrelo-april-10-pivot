@@ -46,6 +46,54 @@ export default function RoadmapQASection() {
   );
 }
 
+// Compact per-phase play badge shown on the phase header row itself.
+// Visible to everyone — clicking it plays Charlie's question + Bob's answer
+// for that phase without expanding the card.
+export function RoadmapPhasePlayBadge({ phaseNumber }) {
+  const [segments, setSegments] = useState(null);
+
+  const { data: clips = [] } = useQuery({
+    queryKey: ['roadmapClips'],
+    queryFn: () => base44.entities.RoadmapClip.list(),
+  });
+
+  const clip = clips.find(c => c.kind === 'qa' && c.faqIndex === phaseNumber);
+  if (!clip || (!clip.charlieVideoUrl && !clip.bobVideoUrl)) return null;
+
+  const play = (e) => {
+    e.stopPropagation();
+    const segs = [];
+    if (clip.charlieVideoUrl) segs.push({ src: clip.charlieVideoUrl, speaker: 'charlie' });
+    if (clip.bobVideoUrl) segs.push({ src: clip.bobVideoUrl, speaker: 'bob' });
+    if (segs.length) setSegments(segs);
+  };
+
+  return (
+    <>
+      <span
+        role="button"
+        tabIndex={0}
+        onClick={play}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') play(e); }}
+        aria-label={`Hear Bob explain Phase ${phaseNumber}`}
+        title={`Hear Bob explain Phase ${phaseNumber}`}
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full shrink-0 cursor-pointer transition-all hover:scale-105"
+        style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}
+      >
+        <Play className="w-3 h-3" fill={GOLD} style={{ color: GOLD }} />
+        <span className="text-[10px] font-black tracking-wide uppercase hidden sm:inline" style={{ color: GOLD }}>
+          Bob explains
+        </span>
+      </span>
+      {segments && (
+        <span onClick={(e) => e.stopPropagation()}>
+          <QADuoPresenter segments={segments} onClose={() => setSegments(null)} />
+        </span>
+      )}
+    </>
+  );
+}
+
 // Per-phase play button used inside each expanded phase card
 export function RoadmapPhasePlay({ phaseNumber }) {
   const [segments, setSegments] = useState(null);

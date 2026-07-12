@@ -9,7 +9,7 @@ import {
   MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
 
-import RoadmapQASection, { RoadmapPhasePlay } from '@/components/roadmap/RoadmapQASection';
+import RoadmapQASection, { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
 
 const GOLD = '#D4AF37';
 
@@ -224,8 +224,10 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
              }}
             >
               {/* Phase Header */}
-              <button
-                className="w-full flex items-center gap-4 px-5 py-4 text-left"
+              <div
+                role="button"
+                tabIndex={0}
+                className="w-full flex items-center gap-4 px-5 py-4 text-left cursor-pointer"
                 onClick={() => {
                   if (phase.number === 1 && !clientId) {
                     navigate('/RelocationIntake');
@@ -264,12 +266,15 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
                   </p>
                 </div>
 
+                {/* Bob explains this phase — plays the phase video */}
+                <RoadmapPhasePlayBadge phaseNumber={phase.number} />
+
                 {/* Chevron */}
                 {isOpen
                   ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.4)' }} />
                   : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.4)' }} />
                 }
-              </button>
+              </div>
 
               {/* Lock overlay for Phase 1 only */}
               {!clientId && phase.number === 1 && (
