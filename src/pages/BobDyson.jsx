@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { CORPORATE_PROFILE } from '../lib/corporateProfile';
+import BobDysonCharlieCircle from '@/components/charlie/BobDysonCharlieCircle';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -69,6 +70,8 @@ export default function BobDyson() {
           </Link>
         </div>
       </div>
+      {/* Charlie circle — Bob Dyson story */}
+      <BobDysonCharlieCircle />
     </div>
   );
 }
