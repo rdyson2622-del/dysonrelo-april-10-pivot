@@ -68,15 +68,20 @@ export default function Home() {
         </div>
       )}
 
-      {/* Client Portal pill — top left, toggles the sidebar */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-3 left-3 z-[10000] hidden md:flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
-        style={{ background: '#0d0d0d', color: GOLD, border: '1px solid rgba(212,175,55,0.5)' }}
-      >
-        <PanelLeft className="w-4 h-4" />
-        CLIENT PORTAL
-      </button>
+      {/* D&D logo + Client Portal pill — top left */}
+      <div className="fixed top-3 left-3 z-[10000] hidden md:flex flex-col items-center gap-2">
+        <Link to="/?choose=1" title="Back to landing page">
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto transition-all hover:opacity-80" />
+        </Link>
+        <button
+          onClick={toggleSidebar}
+          className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
+          style={{ background: '#0d0d0d', color: GOLD, border: '1px solid rgba(212,175,55,0.5)' }}
+        >
+          <PanelLeft className="w-4 h-4" />
+          CLIENT PORTAL
+        </button>
+      </div>
 
       <div className="flex-1 flex flex-col relative overflow-hidden">
         {/* Mobile Top Bar */}
