@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play } from 'lucide-react';
-import QADuoPresenter from '@/components/charlie/QADuoPresenter';
+import InlineCharliePlayer from '@/components/charlie/InlineCharliePlayer';
 
 const GOLD = '#D4AF37';
 
@@ -58,7 +58,7 @@ export default function VettedAgentDuo() {
           MEET CHARLIE
         </span>
       </button>
-      {segments && <QADuoPresenter segments={segments} onClose={() => setSegments(null)} />}
+      {segments && <InlineCharliePlayer segments={segments} onClose={() => setSegments(null)} />}
     </>
   );
 }
