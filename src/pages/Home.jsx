@@ -7,6 +7,7 @@ import ClientStory from '@/components/landing/ClientStory';
 import MobileTopBar from '@/components/home/MobileTopBar';
 import ClientSidebar from '@/components/layout/ClientSidebar';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -57,6 +58,8 @@ export default function Home() {
       </div>
 
       <div className="flex-1 flex flex-col relative overflow-hidden">
+        {/* Charlie welcome — circle, upper right below top bar */}
+        <CharliePagePresenter pageKey="client-home" topOffsetClass="top-14 md:top-4" />
         {/* Mobile Top Bar */}
         <div className="md:hidden">
           <MobileTopBar />
