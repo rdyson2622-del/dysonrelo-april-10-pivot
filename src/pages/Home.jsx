@@ -24,7 +24,8 @@ export default function Home() {
   const [story, setStory] = useState('');
   const [storySubmitted, setStorySubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
+  // Always land clean — the sidebar never shows until the visitor clicks the Client Portal pill
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
