@@ -58,7 +58,7 @@ export default function DnnMorningBroadcast() {
 
   return (
     <>
-      <div className="w-full px-6 md:px-12 lg:px-20 pt-10 max-w-5xl mx-auto">
+      <div className="w-full px-6 md:px-12 lg:px-20 md:pr-48 pt-10 max-w-5xl mx-auto">
         <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.4)`, boxShadow: '0 16px 60px rgba(0,0,0,0.35)' }}>
           {/* TV-off screen — click to power on */}
           <div className="relative w-full aspect-video" style={{ background: '#000' }}>
