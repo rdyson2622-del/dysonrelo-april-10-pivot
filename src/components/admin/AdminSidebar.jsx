@@ -122,6 +122,7 @@ const NAV_SECTIONS = [
       { label: '🎬 DNN Studio', path: '/admin/dnn/studio', icon: Video },
       { label: '📣 Agent Recruiting Broadcast', path: '/admin/dnn/recruiting', icon: Send },
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
+      { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
     ],
   },
   {
