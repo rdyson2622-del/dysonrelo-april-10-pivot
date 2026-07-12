@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import SolveMyStoryPresenter from '@/components/charlie/SolveMyStoryPresenter';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -88,8 +89,12 @@ export default function SolveMyStory() {
      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
        {/* Header */}
-       <div className="flex flex-col items-center pt-14 pb-10 text-center px-6"
+       <div className="relative flex flex-col items-center pt-14 pb-10 text-center px-6"
          style={{ background: '#ede0cc' }}>
+        {/* Charlie & Bob duo presenter — upper right, in flow */}
+        <div className="w-full flex justify-end -mb-20 md:-mb-24 pr-1 md:pr-4">
+          <SolveMyStoryPresenter />
+        </div>
         <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[57.6px] w-auto mb-6" />
         <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
           DYSON &amp; DYSON · RELOCATION MANAGEMENT
