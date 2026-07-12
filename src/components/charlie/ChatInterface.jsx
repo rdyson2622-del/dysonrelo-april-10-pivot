@@ -293,8 +293,11 @@ Be GENEROUS with matching: if the user's question covers the same topic or would
   return (
     <motion.div
       className={`flex flex-col rounded-2xl shadow-2xl overflow-hidden ${expanded ? 'fixed inset-4 z-50' : 'w-full'}`}
-      style={!expanded ? { height: 'min(720px, calc(100vh - 8rem))' } : undefined}
-      style={{ background: '#808080', border: `1px solid ${GOLD}` }}
+      style={{
+        background: '#808080',
+        border: `1px solid ${GOLD}`,
+        ...(!expanded ? { height: 'min(720px, calc(100vh - 8rem))' } : {}),
+      }}
       layout
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >

@@ -108,7 +108,7 @@ export default function RealEstateAnswers() {
         <button
           onClick={playIntro}
           aria-label="Hear Charlie explain this page"
-          className="fixed z-40 top-48 right-3 md:top-52 md:right-5 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
+          className="fixed z-40 top-48 left-3 md:top-52 md:left-5 w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95"
         >
           <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
             style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
