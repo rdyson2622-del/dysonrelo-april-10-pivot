@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, PanelLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ClientStory from '@/components/landing/ClientStory';
@@ -24,6 +24,14 @@ export default function Home() {
   const [story, setStory] = useState('');
   const [storySubmitted, setStorySubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
+
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => {
+      sessionStorage.setItem('dyson_sidebar_expanded', String(!prev));
+      return !prev;
+    });
+  };
   const [headingVisible, setHeadingVisible] = useState(false);
   const headingRef = useRef(null);
 
@@ -52,10 +60,22 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen" style={{ background: '#0a0a0a' }}>
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
-        <ClientSidebar />
-      </div>
+      {/* Desktop Sidebar — hidden until the visitor engages via the Client Portal pill */}
+      {sidebarOpen && (
+        <div className="hidden md:flex">
+          <ClientSidebar />
+        </div>
+      )}
+
+      {/* Client Portal pill — top left, toggles the sidebar */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-3 left-3 z-[10000] hidden md:flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
+        style={{ background: '#0d0d0d', color: GOLD, border: '1px solid rgba(212,175,55,0.5)' }}
+      >
+        <PanelLeft className="w-4 h-4" />
+        CLIENT PORTAL
+      </button>
 
       <div className="flex-1 flex flex-col relative overflow-hidden">
         {/* Mobile Top Bar */}
