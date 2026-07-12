@@ -25,7 +25,7 @@ const PATHS = [
   },
   {
     icon: Handshake,
-    label: 'I am an Inactive Real Estate Agent',
+    label: 'I am an Inactive Real Estate Agent or Broker',
     sub: 'Send us your out-of-state client. We manage everything — your 25% referral fee is protected.',
     badge: 'REFERRAL AGENT NETWORK',
     dest: '/partner-benefits',
