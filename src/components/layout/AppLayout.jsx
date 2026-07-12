@@ -13,7 +13,7 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') !== 'false');
+  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
   const [portalRole, setPortalRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
 
   useEffect(() => {
