@@ -103,7 +103,6 @@ Read the full brief: ${appUrl}
     const results = {
       article_headline: article.headline,
       has_video: hasVideo,
-      video_byte_length: videoBuffer?.byteLength || 0,
       linkedin: null,
       facebook: null,
     };
@@ -142,7 +141,6 @@ Read the full brief: ${appUrl}
 
         const initData = await initRes.json();
         const uploadToken = initData?.value?.uploadToken;
-        debugLog.push({ step: 'init', status: initRes.status, video_urn: initData?.value?.video, has_token: !!uploadToken, has_instructions: !!initData?.value?.uploadInstructions });
         const videoUrn = initData?.value?.video;
         const uploadUrl = initData?.value?.uploadInstructions?.[0]?.uploadUrl;
 
@@ -173,7 +171,6 @@ Read the full brief: ${appUrl}
             const etag = uploadRes.headers.get('etag') || uploadRes.headers.get('ETag');
             if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
 
-            debugLog.push({ step: 'upload_chunk', status: uploadRes.status, chunk_size: chunkSize, etag: etag?.slice(0, 40) });
             if (!uploadRes.ok) {
               allUploadsOk = false;
               try { uploadErrorDetail = await uploadRes.text(); } catch (_) {}
@@ -196,7 +193,6 @@ Read the full brief: ${appUrl}
               body: JSON.stringify(finalizeBody),
             });
             const finalizeData = await finalizeRes.json().catch(() => ({}));
-            debugLog.push({ step: 'finalize', status: finalizeRes.status, data: finalizeData });
 
             // Step 2c: Poll video status until READY (max 30s)
             let videoReady = false;
@@ -208,7 +204,6 @@ Read the full brief: ${appUrl}
               });
               const statusData = await statusRes.json().catch(() => ({}));
               pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
-              debugLog.push({ step: `poll_${attempt + 1}`, status: pollStatus });
               if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') {
                 videoReady = true;
                 break;
@@ -245,7 +240,6 @@ Read the full brief: ${appUrl}
 
             let postResult = {};
             try { postResult = await postRes.json(); } catch (_) {}
-            debugLog.push({ step: 'create_post', status: postRes.status, data: postResult });
             if (!postRes.ok) {
               results.linkedin = { success: false, error: postResult.message || `LinkedIn video post failed (status ${postRes.status})`, details: postResult };
             } else {
