@@ -95,6 +95,9 @@ export default function Home() {
           }}>
             The Home Owner Management Ecosystem
           </div>
+          <p className="font-black tracking-[0.3em] uppercase text-white mt-3" style={{ fontSize: '0.95rem' }}>
+            ONE OF A KIND
+          </p>
         </div>
 
         {/* ── TAN BOTTOM SECTION: Pill + Story ── */}
