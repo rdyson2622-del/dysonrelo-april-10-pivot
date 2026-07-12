@@ -169,7 +169,7 @@ export default function Home() {
                 />
                 </div>
               </div>
-              <Link to="/portal" className="shrink-0">
+              <Link to="/solve-my-story" className="shrink-0">
                 <button
                   className="px-3 py-1.5 rounded-md text-[11px] font-black text-black shrink-0 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
                   style={{ 
