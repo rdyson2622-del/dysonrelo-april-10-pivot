@@ -194,7 +194,7 @@ Read the full brief: ${appUrl}
             });
             const finalizeData = await finalizeRes.json().catch(() => ({}));
 
-            // Step 2c: Poll video status until READY (max 30s)
+            // Step 2c: Poll video status until AVAILABLE (max 30s)
             let videoReady = false;
             let pollStatus = 'unknown';
             for (let attempt = 0; attempt < 6; attempt++) {
@@ -213,37 +213,48 @@ Read the full brief: ${appUrl}
               }
             }
 
-            // Step 3: Create video post via new Posts API
-            const postBody = {
+            // Step 3: Create video post via ugcPosts API (rest/posts has a known bug with video)
+            // Convert urn:li:video: → urn:li:digitalmediaAsset: for the ugcPosts API
+            const mediaUrn = videoUrn.replace(':video:', ':digitalmediaAsset:');
+            const ugcPostBody = {
               author: authorUrn,
-              commentary: socialText,
-              visibility: 'PUBLIC',
-              distribution: {
-                feedDistribution: 'MAIN_FEED',
-                targetEntities: [],
-                thirdPartyDistributionChannels: [],
-              },
-              content: {
-                media: {
-                  title: article.headline,
-                  id: videoUrn,
+              lifecycleState: 'PUBLISHED',
+              specificContent: {
+                'com.linkedin.ugc.ShareContent': {
+                  media: [
+                    {
+                      media: mediaUrn,
+                      status: 'READY',
+                      title: {
+                        attributes: [],
+                        text: article.headline,
+                      },
+                    },
+                  ],
+                  shareCommentary: {
+                    attributes: [],
+                    text: socialText,
+                  },
+                  shareMediaCategory: 'VIDEO',
                 },
               },
-              lifecycleState: 'PUBLISHED',
-              isReshareDisabledByAuthor: false,
+              visibility: {
+                'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
+              },
             };
-            const postRes = await fetch('https://api.linkedin.com/rest/posts', {
+            const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
               method: 'POST',
               headers: linkedinHeaders,
-              body: JSON.stringify(postBody),
+              body: JSON.stringify(ugcPostBody),
             });
 
             let postResult = {};
             try { postResult = await postRes.json(); } catch (_) {}
+            const postId = postRes.headers.get('x-restli-id') || postResult.id || 'created';
             if (!postRes.ok) {
               results.linkedin = { success: false, error: postResult.message || `LinkedIn video post failed (status ${postRes.status})`, details: postResult };
             } else {
-              results.linkedin = { success: true, post_id: postResult.id || 'created', type: 'video', video_ready: videoReady, video_status: pollStatus };
+              results.linkedin = { success: true, post_id: postId, type: 'video', video_ready: videoReady, video_status: pollStatus };
             }
           } else {
             results.linkedin = { success: false, error: 'LinkedIn video binary upload failed', details: uploadErrorDetail.slice(0, 500) };
