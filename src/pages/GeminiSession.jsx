@@ -10,6 +10,7 @@ import RelocationIntakeForm from '../components/charlie/RelocationIntakeForm';
 import PathChooser from '../components/charlie/PathChooser';
 import LayoutToggleButton from '../components/layout/LayoutToggleButton';
 import { useLayout } from '@/lib/LayoutContext';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -46,6 +47,8 @@ export default function GeminiSession() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#ede0cc' }}>
+      {/* Charlie page explainer — round circle, upper right */}
+      <CharliePagePresenter pageKey="gemini-session" />
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#1a1a1a' }}>
@@ -102,6 +105,15 @@ export default function GeminiSession() {
                            <span><span style={{ color: GOLD, fontWeight: 600 }}>Elite Vetting:</span> This data is used exclusively by our human team to select the specific <span style={{ color: GOLD, fontWeight: 600 }}>boots on the ground</span> agent that fits your profile.</span>
                          </li>
                        </ul>
+                     </div>
+                     <div className="rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.07)', border: `1px solid ${GOLD}44` }}>
+                       <p className="text-xs font-bold mb-3 uppercase tracking-[0.2em]" style={{ color: GOLD }}>The Taped Agent Interviews</p>
+                       <p className="text-sm md:text-base leading-relaxed mb-2" style={{ color: '#e5e5e5' }}>
+                         As part of our agent vetting process, we conduct a <span style={{ color: GOLD, fontWeight: 600 }}>taping session with every agent we vet</span>. Each candidate answers the same specific questions, captured on tape for you to hear.
+                       </p>
+                       <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e5e5e5' }}>
+                         In your session, you and Gemini listen together — the voice, the tone, the inflection, and the substance of every answer. These details dramatically inform your decision. It has proven to be one of our greatest assets: <span style={{ color: GOLD, fontWeight: 600 }}>you stay in full control of choosing your agent</span> — not someone else's opinion or selection.
+                       </p>
                      </div>
                  </div>
                </div>
