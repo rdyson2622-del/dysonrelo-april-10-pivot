@@ -47,8 +47,6 @@ export default function GeminiSession() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#ede0cc' }}>
-      {/* Charlie page explainer — round circle, upper right */}
-      <CharliePagePresenter pageKey="gemini-session" />
       {/* Header */}
       <header className="px-6 py-3 flex items-center gap-3 shrink-0 frosted-dark"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#1a1a1a' }}>
@@ -69,6 +67,12 @@ export default function GeminiSession() {
 
       {/* Content */}
        <div className={`flex-1 w-full mx-auto flex flex-col ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`} style={{ minHeight: 0 }}>
+         {/* Charlie page explainer — in flow, upper right of the content area */}
+         <div className="w-full flex justify-end px-4 pt-4 -mb-2">
+           <div className="relative w-[126px] h-[126px] md:w-36 md:h-36 shrink-0">
+             <CharliePagePresenter pageKey="gemini-session" inline positionClass="top-0 left-0" />
+           </div>
+         </div>
          <AnimatePresence mode="wait">
 
            {/* CONTEXT EXPLAINER - shown before signing */}
