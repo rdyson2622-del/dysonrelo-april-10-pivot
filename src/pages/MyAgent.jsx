@@ -424,7 +424,7 @@ export default function MyAgent() {
   const bureauAgents = agents.filter(a => !myAgent || a.id !== myAgent.id);
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#080808' }}>
+    <div className="min-h-screen p-6 md:pr-48" style={{ background: '#080808' }}>
       <div className="max-w-6xl mx-auto">
 
         {/* Tan Background Section */}
