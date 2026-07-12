@@ -25,7 +25,7 @@ export default function HeygenCreditMonitor() {
     queryKey: ['heygenQuota'],
     queryFn: async () => {
       const res = await base44.functions.invoke('heygenQuota', {});
-      return res.data;
+      return res.data?.data || res.data;
     },
     refetchInterval: 15000,
     enabled: isAdmin,
