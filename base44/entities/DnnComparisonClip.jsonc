@@ -1,0 +1,95 @@
+{
+  "name": "DnnComparisonClip",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "intro",
+        "qa",
+        "outro"
+      ],
+      "default": "intro",
+      "description": "Segment type: intro (Charlie opens), qa (Charlie asks / Bob answers), outro (Charlie closes)"
+    },
+    "faqIndex": {
+      "type": "number",
+      "description": "Ordering index within the sequence"
+    },
+    "question": {
+      "type": "string",
+      "description": "Segment title"
+    },
+    "charlieScript": {
+      "type": "string",
+      "description": "Charlie's spoken script"
+    },
+    "bobScript": {
+      "type": "string",
+      "description": "Bob Dyson's spoken script"
+    },
+    "originalCharlieScript": {
+      "type": "string",
+      "description": "Original seeded Charlie script preserved before first admin edit"
+    },
+    "originalBobScript": {
+      "type": "string",
+      "description": "Original seeded Bob script preserved before first admin edit"
+    },
+    "scriptStatus": {
+      "type": "string",
+      "enum": [
+        "seeded",
+        "needs_review",
+        "approved"
+      ],
+      "default": "seeded",
+      "description": "Script review lifecycle"
+    },
+    "charlieHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for Charlie's clip"
+    },
+    "bobHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for Bob's clip"
+    },
+    "charlieVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Charlie's rendered clip"
+    },
+    "bobVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Bob's rendered clip"
+    },
+    "charlieStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of Charlie's clip"
+    },
+    "bobStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of Bob's clip"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    }
+  },
+  "required": [
+    "kind"
+  ]
+}
