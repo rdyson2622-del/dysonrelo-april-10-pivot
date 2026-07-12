@@ -1,0 +1,68 @@
+{
+  "name": "VettedAgentClip",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "intro",
+        "qa",
+        "outro"
+      ],
+      "default": "qa",
+      "description": "Segment type: intro (Charlie opens), qa (Charlie explains), outro (Charlie closes)"
+    },
+    "faqIndex": {
+      "type": "number",
+      "description": "Ordering index within the sequence"
+    },
+    "question": {
+      "type": "string",
+      "description": "Segment title"
+    },
+    "charlieScript": {
+      "type": "string",
+      "description": "Charlie's spoken script"
+    },
+    "originalCharlieScript": {
+      "type": "string",
+      "description": "Original seeded Charlie script preserved before first admin edit"
+    },
+    "scriptStatus": {
+      "type": "string",
+      "enum": [
+        "seeded",
+        "needs_review",
+        "approved"
+      ],
+      "default": "seeded",
+      "description": "Script review lifecycle"
+    },
+    "charlieHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for Charlie's clip"
+    },
+    "charlieVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of Charlie's rendered clip"
+    },
+    "charlieStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of Charlie's clip"
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Last render error"
+    }
+  },
+  "required": [
+    "kind"
+  ]
+}
