@@ -179,10 +179,10 @@ export default function RoleSelector() {
         </p>
 
         {/* Three-logo footer row */}
-        <div className="mt-6 flex items-center justify-center gap-8 md:gap-16">
-          <img src={DNN_LOGO} alt="DNN" className="h-10 md:h-12 w-auto object-contain" />
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 md:h-12 w-auto object-contain" />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="h-10 md:h-12 w-auto object-contain" />
+        <div className="mt-6 flex items-center justify-center gap-16 md:gap-32">
+          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '60px' }} />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '60px' }} />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '60px' }} />
         </div>
       </section>
     </div>
