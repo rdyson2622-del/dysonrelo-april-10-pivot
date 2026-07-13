@@ -26,16 +26,23 @@ Deno.serve(async (req) => {
     }
 
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user || user.role !== 'admin') {
+    const body = await req.json().catch(() => ({}));
+    const { action } = body || {};
+
+    // Allow checkAll without auth (scheduled poller); all other actions require admin
+    let isAdmin = false;
+    try {
+      const user = await base44.auth.me();
+      isAdmin = !!user && user.role === 'admin';
+    } catch (_) { /* scheduled invocation — no user session */ }
+
+    if (action !== 'checkAll' && !isAdmin) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const heygenKey = Deno.env.get('HEYGEN_API_KEY');
     if (!heygenKey) return Response.json({ error: 'HEYGEN_API_KEY not configured' }, { status: 500 });
 
-    const body = await req.json().catch(() => ({}));
-    const { action } = body || {};
     const Clips = base44.asServiceRole.entities.PortalLeadInClip;
 
     const startRender = async (clip, role) => {
