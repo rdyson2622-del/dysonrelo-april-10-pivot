@@ -118,72 +118,76 @@ export default function AgentRecruitCharlieCircle() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50">
       <div
-        className="absolute inset-0"
-        onClick={() => { setOpen(false); setPlaying(false); if (audioRef.current) audioRef.current.pause(); }}
-        style={{ background: 'rgba(10,10,10,0.35)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' }}
-      />
-      <div
-        className="relative rounded-3xl px-8 pt-4 pb-6 flex flex-col items-center"
+        className="relative rounded-xl overflow-hidden"
         style={{
-          background: 'rgba(20,20,20,0.55)',
-          backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
-          border: '1px solid rgba(255,255,255,0.18)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+          width: 240,
+          background: '#1a1a1a',
+          border: `2px solid ${accent}`,
+          boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
+          transition: 'border-color 0.4s ease',
         }}
       >
-        <button
-          onClick={() => { setOpen(false); setPlaying(false); if (audioRef.current) audioRef.current.pause(); }}
-          aria-label="Close"
-          className="self-end -mr-4 w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-          style={{ color: accent }}
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div className="relative">
-          <div
-            className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden flex items-center justify-center text-6xl"
-            style={{
-              border: `4px solid ${accent}`,
-              background: isBob ? '#0a0f1e' : '#0d0d0d',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
-              transition: 'border-color 0.4s ease, background 0.4s ease',
-            }}
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-3 py-2"
+          style={{ background: '#262626', borderBottom: `1px solid rgba(212,175,55,0.25)` }}>
+          <p className="text-[9px] font-black tracking-[0.15em] uppercase truncate" style={{ color: accent }}>
+            {seg?.label || 'CHARLIE'}
+          </p>
+          <button
+            onClick={() => { setOpen(false); setPlaying(false); if (audioRef.current) audioRef.current.pause(); }}
+            aria-label="Close"
+            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors shrink-0"
+            style={{ color: accent }}
           >
-            {isBob ? '🎤' : '🎩'}
-          </div>
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Video / avatar area */}
+        <div className="relative flex items-center justify-center"
+          style={{ height: 320, background: isBob ? '#0a0f1e' : '#0d0d0d' }}>
+          <span className="text-6xl">{isBob ? '🎤' : '🎩'}</span>
+
           {(loading || playing) && (
-            <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center animate-pulse"
+            <div className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center animate-pulse"
               style={{ background: 'rgba(0,0,0,0.7)', border: `2px solid ${accent}` }}>
-              <Volume2 className="w-5 h-5" style={{ color: accent }} />
+              <Volume2 className="w-4 h-4" style={{ color: accent }} />
             </div>
           )}
+
           {ended && (
             <button onClick={replay} aria-label="Replay"
-              className="absolute inset-0 rounded-full flex items-center justify-center transition-all hover:bg-black/30">
-              <span className="w-14 h-14 rounded-full flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30">
+              <span className="w-12 h-12 rounded-full flex items-center justify-center"
                 style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-                <RotateCcw className="w-6 h-6" style={{ color: GOLD }} />
+                <RotateCcw className="w-5 h-5" style={{ color: GOLD }} />
               </span>
             </button>
           )}
+
+          {/* Progress dots */}
+          <div className="absolute top-2 left-2 flex gap-1">
+            {SCRIPTS.map((s, i) => (
+              <span key={i} className="w-1.5 h-1.5 rounded-full"
+                style={{
+                  background: i <= idx
+                    ? (s.speaker === 'bob' ? BOB_BLUE : GOLD)
+                    : 'rgba(255,255,255,0.25)',
+                }} />
+            ))}
+          </div>
         </div>
 
-        <p className="mt-4 text-[11px] font-black tracking-[0.25em] uppercase" style={{ color: accent }}>
-          {seg?.label || ''}
-        </p>
-
-        <div className="flex gap-1.5 mt-3">
-          {SCRIPTS.map((s, i) => (
-            <span key={i} className="w-1.5 h-1.5 rounded-full"
-              style={{
-                background: i <= idx
-                  ? (s.speaker === 'bob' ? BOB_BLUE : GOLD)
-                  : 'rgba(255,255,255,0.25)',
-              }} />
-          ))}
+        {/* Footer controls bar */}
+        <div className="flex items-center justify-center gap-3 px-3 py-2"
+          style={{ background: '#262626', borderTop: `1px solid rgba(212,175,55,0.15)` }}>
+          <button onClick={replay} aria-label="Replay"
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: accent }}>
+            <RotateCcw className="w-4 h-4" />
+          </button>
         </div>
 
         <audio ref={audioRef} onEnded={handleAudioEnded} />

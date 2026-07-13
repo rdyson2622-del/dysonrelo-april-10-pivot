@@ -137,81 +137,79 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
     );
   }
 
-  /* ── Expanded: centered frosted-glass stage over the blurred page ── */
+  /* ── Expanded: rectangular video box pinned upper-right, page stays visible ── */
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Frozen-glass backdrop — the page stays visible but blurred behind Charlie */}
+    <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50">
       <div
-        className="absolute inset-0"
-        onClick={collapse}
+        className="relative rounded-xl overflow-hidden"
         style={{
-          background: 'rgba(10,10,10,0.35)',
-          backdropFilter: 'blur(18px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-        }}
-      />
-      <div
-        className="relative w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl"
-        style={{
-          background: 'rgba(20,20,20,0.55)',
-          backdropFilter: 'blur(30px) saturate(160%)',
-          WebkitBackdropFilter: 'blur(30px) saturate(160%)',
-          border: '1px solid rgba(255,255,255,0.18)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+          width: 240,
+          background: '#1a1a1a',
+          border: `2px solid ${GOLD}`,
+          boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
         }}
       >
         {/* Header bar */}
-        <div className="flex items-center justify-between px-4 py-2.5"
-          style={{ background: 'rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-          <p className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+        <div className="flex items-center justify-between px-3 py-2"
+          style={{ background: '#262626', borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
+          <p className="text-[9px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
             Charlie · Page Overview
           </p>
           <button onClick={collapse} aria-label="Minimize Charlie overview"
-            className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors shrink-0"
             style={{ color: GOLD }}>
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {hasVideo ? (
-          <div className="relative">
-            <video
-              ref={videoRef}
-              src={presenterSrc}
-              preload="auto"
-              playsInline
-              onEnded={() => { setPlaying(false); setEnded(true); }}
-              className="w-full block aspect-video object-cover cursor-pointer"
-              onClick={togglePlay}
-            />
-            {/* Big play overlay when not playing */}
-            {!playing && (
-              <button
-                onClick={ended ? replay : togglePlay}
-                aria-label="Play Charlie overview"
-                className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
-              >
-                <span className="w-12 h-12 rounded-full flex items-center justify-center"
-                  style={{ background: 'rgba(0,0,0,0.6)', border: `2px solid ${GOLD}` }}>
-                  {ended
-                    ? <RotateCcw className="w-5 h-5" style={{ color: GOLD }} />
-                    : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} />}
-                </span>
-              </button>
-            )}
-            {/* Controls */}
-            <div className="absolute bottom-2 right-2 flex gap-1.5">
-              <ControlBtn onClick={togglePlay} label={playing ? 'Pause' : 'Play'}>
-                {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-              </ControlBtn>
-              <ControlBtn onClick={toggleMute} label={muted ? 'Unmute' : 'Mute'}>
-                {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              </ControlBtn>
-              <ControlBtn onClick={replay} label="Replay">
-                <RotateCcw className="w-4 h-4" />
-              </ControlBtn>
+          <>
+            <div className="relative" style={{ height: 320, background: '#0d0d0d' }}>
+              <video
+                ref={videoRef}
+                src={presenterSrc}
+                preload="auto"
+                playsInline
+                onEnded={() => { setPlaying(false); setEnded(true); }}
+                onClick={togglePlay}
+                className="w-full h-full object-cover cursor-pointer"
+              />
+              {/* Big play overlay when not playing */}
+              {!playing && (
+                <button
+                  onClick={ended ? replay : togglePlay}
+                  aria-label={ended ? 'Replay' : 'Play'}
+                  className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
+                >
+                  <span className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
+                    {ended
+                      ? <RotateCcw className="w-5 h-5" style={{ color: GOLD }} />
+                      : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} />}
+                  </span>
+                </button>
+              )}
             </div>
-          </div>
+            {/* Footer controls bar */}
+            <div className="flex items-center justify-center gap-3 px-3 py-2"
+              style={{ background: '#262626', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+              <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ color: GOLD }}>
+                {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+              </button>
+              <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ color: GOLD }}>
+                {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <button onClick={replay} aria-label="Replay"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ color: GOLD }}>
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            </div>
+          </>
         ) : (
           /* Fallback: no completed video yet */
           <div className="px-4 py-5 flex flex-col items-center text-center gap-2">

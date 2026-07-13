@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, RotateCcw, Play } from 'lucide-react';
+import { X, RotateCcw, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -9,21 +9,38 @@ const SPEAKER_LABELS = {
 };
 
 /**
- * QADuoPresenter — frosted-glass overlay that plays a sequence of clips in a
- * circular "talk box", switching between Charlie and Bob as speakers change.
+ * QADuoPresenter — a non-blocking rectangular video box pinned to the
+ * upper-right corner. The page beneath remains fully visible and scrollable.
+ * Plays through segments sequentially, switching between Charlie and Bob.
  *
  * Props:
  *   segments: [{ src, speaker: 'charlie'|'bob' }]
  *   onClose: () => void
+ *   title: optional header label (defaults to speaker label)
  */
-export default function QADuoPresenter({ segments, onClose }) {
+export default function QADuoPresenter({ segments, onClose, title }) {
   const [idx, setIdx] = useState(0);
   const [ended, setEnded] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
     setIdx(0);
     setEnded(false);
+    setPlaying(true);
+    // Auto-play on mount (user gesture from the trigger button)
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (v) {
+        v.muted = false;
+        v.play().then(() => setPlaying(true)).catch(() => {
+          v.muted = true;
+          setMuted(true);
+          v.play().then(() => setPlaying(true)).catch(() => {});
+        });
+      }
+    }, 50);
   }, [segments]);
 
   const seg = segments[idx];
@@ -34,91 +51,119 @@ export default function QADuoPresenter({ segments, onClose }) {
       setIdx(i => i + 1);
     } else {
       setEnded(true);
+      setPlaying(false);
     }
   };
 
   const replay = () => {
     setIdx(0);
     setEnded(false);
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (v) { v.currentTime = 0; v.play().then(() => setPlaying(true)).catch(() => {}); }
+    }, 50);
   };
 
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); setEnded(false); }
+    else { v.pause(); setPlaying(false); }
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
+
+  const headerLabel = title || SPEAKER_LABELS[seg.speaker] || 'CHARLIE';
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Frosted backdrop */}
+    <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50">
       <div
-        className="absolute inset-0"
-        onClick={onClose}
+        className="relative rounded-xl overflow-hidden"
         style={{
-          background: 'rgba(10,10,10,0.35)',
-          backdropFilter: 'blur(18px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-        }}
-      />
-      <div
-        className="relative rounded-3xl px-8 pt-4 pb-6 flex flex-col items-center"
-        style={{
-          background: 'rgba(20,20,20,0.55)',
-          backdropFilter: 'blur(30px) saturate(160%)',
-          WebkitBackdropFilter: 'blur(30px) saturate(160%)',
-          border: '1px solid rgba(255,255,255,0.18)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+          width: 240,
+          background: '#1a1a1a',
+          border: `2px solid ${GOLD}`,
+          boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
         }}
       >
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="self-end -mr-4 w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
-          style={{ color: GOLD }}
-        >
-          <X className="w-4 h-4" />
-        </button>
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-3 py-2"
+          style={{ background: '#262626', borderBottom: `1px solid rgba(212,175,55,0.25)` }}>
+          <p className="text-[9px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
+            {headerLabel}
+          </p>
+          <button onClick={onClose} aria-label="Close"
+            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors shrink-0"
+            style={{ color: GOLD }}>
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
 
-        {/* Circular talk box — switches between Charlie and Bob */}
-        <div className="relative">
-          <div
-            className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden"
-            style={{ border: `4px solid ${GOLD}`, background: '#0d0d0d', boxShadow: '0 12px 40px rgba(0,0,0,0.6)' }}
-          >
-            <video
-              key={seg.src}
-              ref={videoRef}
-              src={seg.src}
-              autoPlay
-              playsInline
-              onEnded={handleEnded}
-              className="w-full h-full object-cover"
-              style={{
-                // Bob's headshot sits lower in the circle so his hair and full head stay visible
-                transform: seg.speaker === 'bob' ? 'scale(1.25) translateY(8%)' : 'scale(1.35)',
-              }}
-            />
-          </div>
-          {ended && (
+        {/* Video area — portrait aspect ratio */}
+        <div className="relative" style={{ height: 320, background: '#0d0d0d' }}>
+          <video
+            key={seg.src}
+            ref={videoRef}
+            src={seg.src}
+            autoPlay
+            playsInline
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            className="w-full h-full object-cover cursor-pointer"
+            style={{ transform: seg.speaker === 'bob' ? 'scale(1.15) translateY(5%)' : 'scale(1.25)' }}
+          />
+
+          {/* Big play overlay when paused/ended */}
+          {!playing && (
             <button
-              onClick={replay}
-              aria-label="Replay"
-              className="absolute inset-0 rounded-full flex items-center justify-center transition-all hover:bg-black/30"
+              onClick={ended ? replay : togglePlay}
+              aria-label={ended ? 'Replay' : 'Play'}
+              className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
             >
-              <span className="w-14 h-14 rounded-full flex items-center justify-center"
+              <span className="w-12 h-12 rounded-full flex items-center justify-center"
                 style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-                <RotateCcw className="w-6 h-6" style={{ color: GOLD }} />
+                {ended
+                  ? <RotateCcw className="w-5 h-5" style={{ color: GOLD }} />
+                  : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} />}
               </span>
             </button>
           )}
+
+          {/* Progress dots */}
+          {segments.length > 1 && (
+            <div className="absolute top-2 left-2 flex gap-1">
+              {segments.map((_, i) => (
+                <span key={i} className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: i <= idx ? GOLD : 'rgba(255,255,255,0.25)' }} />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Speaker label */}
-        <p className="mt-4 text-[11px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>
-          {SPEAKER_LABELS[seg.speaker] || ''}
-        </p>
-        {segments.length > 1 && (
-          <div className="flex gap-1.5 mt-3">
-            {segments.map((_, i) => (
-              <span key={i} className="w-1.5 h-1.5 rounded-full"
-                style={{ background: i <= idx ? GOLD : 'rgba(255,255,255,0.25)' }} />
-            ))}
-          </div>
-        )}
+        {/* Footer controls bar */}
+        <div className="flex items-center justify-center gap-3 px-3 py-2"
+          style={{ background: '#262626', borderTop: `1px solid rgba(212,175,55,0.15)` }}>
+          <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+          </button>
+          <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+          <button onClick={replay} aria-label="Replay"
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            <RotateCcw className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
