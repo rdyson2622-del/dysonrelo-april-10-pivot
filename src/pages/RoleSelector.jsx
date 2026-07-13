@@ -81,17 +81,17 @@ export default function RoleSelector() {
       <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto mb-6" />
 
       {/* Headline */}
-      <p className="text-sm font-black tracking-[0.4em] uppercase mb-4" style={{ color: GOLD }}>
+      <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
         Real Estate
       </p>
       <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
-        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News.</span>
-        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation.</span>
-        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence.</span>
+        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
       </div>
       <h1 style={{
         fontFamily: 'Cormorant Garamond, serif',
-        fontSize: 'clamp(2rem, 5vw, 3.2rem)',
+        fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
         fontWeight: 600,
         color: '#fff',
         letterSpacing: '0.05em',
