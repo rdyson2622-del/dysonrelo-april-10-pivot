@@ -120,7 +120,7 @@ export default function RoleSelector() {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-2">
-          <p className="text-xl md:text-2xl text-center max-w-2xl" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
+          <p className="uppercase whitespace-nowrap text-center" style={{ color: '#d4b46a', fontFamily: 'Cormorant Garamond, serif', fontWeight: 500, letterSpacing: '0.25em', fontSize: '1.5rem' }}>
             Select your path. Your experience will be tailored exclusively to your needs.
           </p>
         </div>
