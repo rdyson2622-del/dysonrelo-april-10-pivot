@@ -81,9 +81,14 @@ export default function RoleSelector() {
       <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto mb-6" />
 
       {/* Headline */}
-      <p className="text-xs font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
-        Welcome to Dyson &amp; Dyson
+      <p className="text-sm font-black tracking-[0.4em] uppercase mb-4" style={{ color: GOLD }}>
+        Real Estate
       </p>
+      <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
+        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News.</span>
+        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation.</span>
+        <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence.</span>
+      </div>
       <h1 style={{
         fontFamily: 'Cormorant Garamond, serif',
         fontSize: 'clamp(2rem, 5vw, 3.2rem)',
@@ -101,14 +106,14 @@ export default function RoleSelector() {
       </p>
 
       {/* Path Cards */}
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {PATHS.map((path, i) => {
           const Icon = path.icon;
           return (
             <button
               key={i}
               onClick={() => handleSelect(path)}
-              className="group flex flex-col items-start text-left p-7 rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+              className="group flex flex-col items-start text-left p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
               style={{
                 background: path.featured
                   ? 'linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.05) 100%)'
@@ -117,25 +122,25 @@ export default function RoleSelector() {
                 boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
               }}
             >
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-all"
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-all"
                 style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.3)` }}>
-                <Icon className="w-5 h-5" style={{ color: GOLD }} />
+                <Icon className="w-4 h-4" style={{ color: GOLD }} />
               </div>
 
-              <span className="text-[9px] font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>
+              <span className="text-[8px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: GOLD }}>
                 {path.badge}
               </span>
 
               <h2 className="text-white font-bold leading-snug mb-3"
-                style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.25rem' }}>
+                style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
                 {path.label}
               </h2>
 
-              <p className="text-xs leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-[11px] leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
                 {path.sub}
               </p>
 
-              <div className="mt-auto flex items-center gap-2 text-xs font-bold transition-all group-hover:gap-3"
+              <div className="mt-auto flex items-center gap-2 text-[11px] font-bold transition-all group-hover:gap-3"
                 style={{ color: GOLD }}>
                 Enter <span>→</span>
               </div>
