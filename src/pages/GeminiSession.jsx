@@ -45,6 +45,14 @@ export default function GeminiSession() {
 
   const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
 
+  // Agent portals (not client) get the lead-in script addressed to agents
+  const isAgentPortal = (() => {
+    try {
+      const role = sessionStorage.getItem('dyson_role');
+      return role && role !== 'client';
+    } catch { return false; }
+  })();
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#ede0cc' }}>
       {/* Header */}
@@ -80,6 +88,13 @@ export default function GeminiSession() {
              <motion.div key="explainer" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full px-4 pt-4">
                <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}33` }}>
                  <div className="space-y-4">
+                   {isAgentPortal && (
+                     <div className="rounded-xl p-4 mb-2" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}44` }}>
+                       <p className="text-sm md:text-base leading-relaxed" style={{ color: '#e5e5e5' }}>
+                         Following is how and why we establish a private session with a new relocating client. Their voices, personality, interests and objectives are all discussed so we and Gemini hear their desires live. Let me share how this works and why:
+                       </p>
+                     </div>
+                   )}
                    <div>
                        <h2 className="serif-heading text-2xl md:text-3xl mb-3" style={{ color: '#fff' }}>What's This Session About?</h2>
                        <p className="text-sm md:text-base leading-relaxed mb-2" style={{ color: '#e5e5e5' }}>
