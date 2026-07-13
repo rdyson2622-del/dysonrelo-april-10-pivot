@@ -85,9 +85,9 @@ export default function RoleSelector() {
         Real Estate
       </p>
       <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
-        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
-        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
-        <span className="text-xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
+        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
       </div>
       <h1 style={{
         fontFamily: 'Cormorant Garamond, serif',
