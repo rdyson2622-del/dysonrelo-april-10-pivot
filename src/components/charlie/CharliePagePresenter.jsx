@@ -143,7 +143,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
       <div
         className="relative rounded-xl overflow-hidden"
         style={{
-          width: 240,
+          width: 130,
           background: '#1a1a1a',
           border: `2px solid ${GOLD}`,
           boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
@@ -164,7 +164,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
 
         {hasVideo ? (
           <>
-            <div className="relative" style={{ height: 320, background: '#0d0d0d' }}>
+            <div className="relative" style={{ height: 170, background: '#0d0d0d' }}>
               <video
                 ref={videoRef}
                 src={presenterSrc}

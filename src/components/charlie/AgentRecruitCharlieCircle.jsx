@@ -122,7 +122,7 @@ export default function AgentRecruitCharlieCircle() {
       <div
         className="relative rounded-xl overflow-hidden"
         style={{
-          width: 240,
+          width: 130,
           background: '#1a1a1a',
           border: `2px solid ${accent}`,
           boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
@@ -147,7 +147,7 @@ export default function AgentRecruitCharlieCircle() {
 
         {/* Video / avatar area */}
         <div className="relative flex items-center justify-center"
-          style={{ height: 320, background: isBob ? '#0a0f1e' : '#0d0d0d' }}>
+          style={{ height: 170, background: isBob ? '#0a0f1e' : '#0d0d0d' }}>
           <span className="text-6xl">{isBob ? '🎤' : '🎩'}</span>
 
           {(loading || playing) && (
