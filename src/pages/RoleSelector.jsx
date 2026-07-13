@@ -84,37 +84,37 @@ export default function RoleSelector() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
-      />
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-8">
+          <div className="flex items-center justify-center gap-6 md:gap-10 mb-4">
+            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
+          </div>
+
+          <h1
+            style={{
+              fontFamily: 'Cormorant Garamond, serif',
+              fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
+              fontWeight: 600,
+              color: '#fff',
+              letterSpacing: '0.05em',
+              textAlign: 'center',
+              lineHeight: 1.15,
+              marginBottom: '0.5rem',
+            }}
+          >
+            How Are You Here Today?
+          </h1>
+          <p className="text-sm text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            Select your path. Your experience will be tailored exclusively to your needs.
+          </p>
+        </div>
+      </section>
 
       {/* ── Path Selection ── */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-black">
-
-        <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
-          Real Estate
-        </p>
-        <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
-        </div>
-
-        <h1
-          style={{
-            fontFamily: 'Cormorant Garamond, serif',
-            fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
-            fontWeight: 600,
-            color: '#fff',
-            letterSpacing: '0.05em',
-            textAlign: 'center',
-            lineHeight: 1.15,
-            marginBottom: '0.5rem',
-          }}
-        >
-          How Are You Here Today?
-        </h1>
-        <p className="text-sm mb-12 text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Select your path. Your experience will be tailored exclusively to your needs.
-        </p>
+      <section className="flex flex-col items-center px-6 pt-8 pb-16 bg-black">
 
         <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {PATHS.map((path, i) => {
