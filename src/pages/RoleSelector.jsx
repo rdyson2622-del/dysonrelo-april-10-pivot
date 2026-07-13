@@ -119,7 +119,7 @@ export default function RoleSelector() {
           ))}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-4">
+        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-1">
           <h1
             style={{
               fontFamily: 'Cormorant Garamond, serif',
