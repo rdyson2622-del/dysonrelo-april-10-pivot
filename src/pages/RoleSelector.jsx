@@ -93,7 +93,7 @@ export default function RoleSelector() {
           {['News', 'Relocation', 'Intelligence'].map((word) => (
             <div
               key={word}
-              className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full"
+              className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90"
               style={{
                 background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
                 border: '1px solid rgba(212,180,106,0.45)',
