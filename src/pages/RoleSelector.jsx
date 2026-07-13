@@ -182,7 +182,7 @@ export default function RoleSelector() {
         <div className="mt-6 flex items-center justify-center gap-16 md:gap-32">
           <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '60px' }} />
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '60px' }} />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '60px' }} />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '120px' }} />
         </div>
         </section>
     </div>
