@@ -74,8 +74,13 @@ export default function RoleSelector() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16"
-      style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 relative"
+      style={{
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.82), rgba(10,10,10,0.82)), url('https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f408a6a7_generated_image.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}>
 
       {/* Logo */}
       <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto mb-6" />
