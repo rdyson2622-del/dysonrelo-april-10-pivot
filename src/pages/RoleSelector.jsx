@@ -87,10 +87,10 @@ export default function RoleSelector() {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
         <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-8">
-          <div className="flex items-center justify-center gap-6 md:gap-10 mb-4">
-            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#c9a84c' }}>News</span>
-            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#c9a84c' }}>Relocation</span>
-            <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#c9a84c' }}>Intelligence</span>
+          <div className="flex items-center justify-center gap-12 md:gap-20 mb-4">
+            <span className="text-[2.7rem] font-black tracking-[0.3em] uppercase" style={{ color: '#d4b46a' }}>News</span>
+            <span className="text-[2.7rem] font-black tracking-[0.3em] uppercase" style={{ color: '#d4b46a' }}>Relocation</span>
+            <span className="text-[2.7rem] font-black tracking-[0.3em] uppercase" style={{ color: '#d4b46a' }}>Intelligence</span>
           </div>
 
           <h1
