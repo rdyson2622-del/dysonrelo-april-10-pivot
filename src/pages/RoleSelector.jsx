@@ -89,7 +89,7 @@ export default function RoleSelector() {
 
         {/* Three pills — positioned just below the studio desk/map area */}
         <div className="absolute left-0 right-0 flex items-center justify-center gap-4 md:gap-6 px-6"
-          style={{ bottom: '22%' }}>
+          style={{ bottom: '18%' }}>
           {['News', 'Relocation', 'Intelligence'].map((word) => (
             <div
               key={word}
