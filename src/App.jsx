@@ -86,6 +86,7 @@ import ReloManagementVideoBg from './pages/ReloManagementVideoBg';
 import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 import RoleSelector from './pages/RoleSelector';
+import BroadcastPreview from './pages/BroadcastPreview';
 import AgentInvitedClients from './pages/AgentInvitedClients';
 import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
@@ -142,6 +143,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Role Selector — standalone, no sidebar */}
       <Route path="/portal" element={<RoleSelector />} />
+      <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
       {/* Front door — qualifying landing page, no portal chrome */}
       <Route path="/" element={<RoleSelector />} />
