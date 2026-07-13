@@ -192,11 +192,8 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
             {city ? `Your ${city} Roadmap` : 'Your Relocation Roadmap'}
           </h1>
-          <p className="text-base max-w-xl mx-auto" style={{ color: '#1a1a1a' }}>
-            Here's every step of your journey — and exactly what Dyson & Dyson handles for you at each stage.
-          </p>
-          <p className="text-sm mt-3 font-semibold" style={{ color: GOLD }}>
-            ✦ All 8 phases. Completely managed. Always free to you.
+          <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
+            We are pleased to share our relocation map for all clients. Following is what they will hear and what they can expect. Take note of each of the steps since we keep the referring agent in the loop and we fully expect the receiving agents and their brokers to follow this commitment before they accept the client referral, all of which is in the management and referral agreement.
           </p>
         </motion.div>
       </div>
