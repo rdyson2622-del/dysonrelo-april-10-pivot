@@ -76,29 +76,15 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
-      {/* ── Hero: DNN Studio backdrop, full screen ── */}
+      {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
-        className="relative h-screen flex flex-col items-center justify-center px-6"
+        className="relative h-screen"
         style={{
-          backgroundImage: `linear-gradient(rgba(10,10,10,0.35), rgba(10,10,10,0.35)), url('${STUDIO_BG}')`,
+          backgroundImage: `url('${STUDIO_BG}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-20 w-auto mb-8" />
-
-        <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
-          Real Estate
-        </p>
-        <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
-          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
-        </div>
-        <p className="text-base text-center max-w-lg" style={{ color: 'rgba(255,255,255,0.75)' }}>
-          The only news network that reports what happened — and tells you exactly what to do about it.
-        </p>
-
         {/* Scroll cue */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
           <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -112,6 +98,17 @@ export default function RoleSelector() {
 
       {/* ── Path Selection ── */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-black">
+        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto mb-8" />
+
+        <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
+          Real Estate
+        </p>
+        <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
+        </div>
+
         <h1
           style={{
             fontFamily: 'Cormorant Garamond, serif',
