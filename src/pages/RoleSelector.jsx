@@ -4,7 +4,7 @@ import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/ff58e0c08_generated_image.png';
+const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
 const PATHS = [
   {
