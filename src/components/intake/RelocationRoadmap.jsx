@@ -135,6 +135,14 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showRoadmap, setShowRoadmap] = useState(false);
+
+  // Agent portals (not client) get the lead-in script addressed to agents
+  const isAgentPortal = (() => {
+    try {
+      const role = sessionStorage.getItem('dyson_role');
+      return role && role !== 'client';
+    } catch { return false; }
+  })();
   const roadmapRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -192,6 +200,13 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
             {city ? `Your ${city} Roadmap` : 'Your Relocation Roadmap'}
           </h1>
+          {isAgentPortal && (
+            <div className="rounded-xl p-4 max-w-2xl mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}44` }}>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: '#1a1a1a' }}>
+                Following is how and why we establish a private session with a new relocating client. Their voices, personality, interests and objectives are all discussed so we and Gemini hear their desires live. Let me share how this works and why:
+              </p>
+            </div>
+          )}
           <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
             We are pleased to share our relocation map for all clients. Following is what they will hear and what they can expect. Take note of each of the steps since we keep the referring agent in the loop and we fully expect the receiving agents and their brokers to follow this commitment before they accept the client referral, all of which is in the management and referral agreement.
           </p>
