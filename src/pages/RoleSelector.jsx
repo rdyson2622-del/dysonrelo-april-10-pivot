@@ -89,34 +89,40 @@ export default function RoleSelector() {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
-        {/* Three pills — positioned just below the studio desk/map area */}
-        <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
-          style={{ bottom: '18%' }}>
-          {['News', 'Relocation', 'Intelligence'].map((word) => (
-            <div
-              key={word}
-              className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90"
-              style={{
-                background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
-                border: '1px solid rgba(212,180,106,0.45)',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                minWidth: '7rem',
-                maxWidth: '12rem',
-                height: '3.25rem',
-              }}
-            >
-              <span
-                className="uppercase whitespace-nowrap"
+        {/* Three logo + pill columns — logos centered above each pill, cleared from studio floorboards */}
+        <div className="absolute left-0 right-0 flex items-end justify-center gap-8 md:gap-16 px-6"
+          style={{ bottom: '12%' }}>
+          {[
+            { word: 'News', logo: DNN_LOGO, alt: 'DNN' },
+            { word: 'Relocation', logo: DYSON_LOGO, alt: 'Dyson & Dyson' },
+            { word: 'Intelligence', logo: INTEL_LOGO, alt: 'Real Estate Intelligence' },
+          ].map(({ word, logo, alt }) => (
+            <div key={word} className="flex flex-col items-center gap-3">
+              <img src={logo} alt={alt} className="w-auto object-contain" style={{ height: '60px' }} />
+              <div
+                className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90"
                 style={{
-                  color: '#d4b46a',
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontWeight: 500,
-                  letterSpacing: '0.25em',
-                  fontSize: word.length > 6 ? '1.15rem' : '1.5rem',
+                  background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
+                  border: '1px solid rgba(212,180,106,0.45)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  minWidth: '7rem',
+                  maxWidth: '12rem',
+                  height: '3.25rem',
                 }}
               >
-                {word}
-              </span>
+                <span
+                  className="uppercase whitespace-nowrap"
+                  style={{
+                    color: '#d4b46a',
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontWeight: 500,
+                    letterSpacing: '0.25em',
+                    fontSize: word.length > 6 ? '1.15rem' : '1.5rem',
+                  }}
+                >
+                  {word}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -178,12 +184,6 @@ export default function RoleSelector() {
           Dyson &amp; Dyson · 55 Years of Relocation Management
         </p>
 
-        {/* Three-logo footer row */}
-        <div className="mt-6 flex items-center justify-center gap-16 md:gap-32">
-          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '60px' }} />
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '60px' }} />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '60px' }} />
-        </div>
       </section>
     </div>
   );
