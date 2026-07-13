@@ -3,8 +3,8 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-export default function ClientStory({ label, headline, children }) {
-  const [open, setOpen] = useState(false);
+export default function ClientStory({ label, headline, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div className="w-full rounded-2xl mb-4 overflow-hidden" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.25)' }}>

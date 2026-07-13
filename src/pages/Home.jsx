@@ -270,6 +270,7 @@ export default function Home() {
             <ClientStory
               label="4-State Relocation · Arizona → Arkansas"
               headline="The 4-State Farm Relocation: How We Moved a Family (and 13 Chickens) Without a Hitch."
+              defaultOpen
             >
               {/* Windeans testimonial video */}
               <div className="rounded-2xl overflow-hidden mb-8" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
