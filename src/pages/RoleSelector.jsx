@@ -89,25 +89,6 @@ export default function RoleSelector() {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
-        {/* Left-wall logo stack — blacked-out panel over the studio's left wall */}
-        <div
-          className="absolute flex flex-col items-center justify-center gap-8"
-          style={{
-            left: 0,
-            top: '12%',
-            bottom: '12%',
-            width: '14%',
-            background: 'rgba(0,0,0,0.92)',
-            borderRight: '1px solid rgba(212,175,55,0.15)',
-          }}
-        >
-          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '50px' }} />
-          <div className="w-12 h-px" style={{ background: 'rgba(212,175,55,0.2)' }} />
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '50px' }} />
-          <div className="w-12 h-px" style={{ background: 'rgba(212,175,55,0.2)' }} />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '80px' }} />
-        </div>
-
         {/* Three pills — positioned just below the studio desk/map area */}
         <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
           style={{ bottom: '18%' }}>
@@ -197,6 +178,12 @@ export default function RoleSelector() {
           Dyson &amp; Dyson · 55 Years of Relocation Management
         </p>
 
+        {/* Three-logo footer row */}
+        <div className="mt-6 flex items-center justify-center gap-16 md:gap-32">
+          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '60px' }} />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '60px' }} />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '120px' }} />
+        </div>
       </section>
     </div>
   );
