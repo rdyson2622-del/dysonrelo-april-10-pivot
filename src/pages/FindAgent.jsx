@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import AgentRecruitCharlieCircle from '@/components/charlie/AgentRecruitCharlieCircle';
 
 const GOLD = '#D4AF37';
@@ -98,6 +99,9 @@ export default function FindAgent() {
             But before we talk about who that person is, we need to talk about how we find them — because the way most people end up with an agent is one of the most broken parts of the entire real estate experience.
           </p>
         </motion.div>
+
+        {/* Charlie & Bob — DNN strategy lead-in */}
+        <PortalLeadInDuo />
 
         {/* Agent Status — only if client exists and has an agent */}
         {client?.agent_name && (

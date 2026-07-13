@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Shield, DollarSign, Truck, ArrowRight, CheckCircle, Phone } from 'lucide-react';
 import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
+import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 
 const GOLD = '#D4AF37';
 
@@ -114,6 +115,9 @@ export default function SendingAgentLanding() {
           </p>
         </div>
       </div>
+
+      {/* Charlie & Bob — DNN strategy lead-in */}
+      <PortalLeadInDuo />
 
       {/* National Vetting Desk — Charlie/Bob duo */}
       <VettingDeskDuo />

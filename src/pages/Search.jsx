@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 
 const GOLD = '#D4AF37';
 
@@ -88,6 +89,9 @@ export default function Search() {
             <div className="text-center">•</div>
             <div className="text-center">NATIONWIDE NETWORK</div>
           </div>
+
+          {/* Charlie & Bob — DNN strategy lead-in */}
+          <PortalLeadInDuo />
 
           <div className="mt-12 max-w-xl mx-auto text-left">
             <PortalSubscribeForm portalName="Vendor Utility" source="Vendor Portal" roleKey="vendor" dest="/search" />

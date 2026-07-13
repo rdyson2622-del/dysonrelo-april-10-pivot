@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper } from 'lucide-react';
 import CorporateReloQASection from '@/components/corporate/CorporateReloQASection';
+import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
@@ -51,6 +52,9 @@ export default function CorporateRelo() {
           networks — so your people land well, and your budget stays intact.
         </p>
       </section>
+
+      {/* ── Charlie & Bob — DNN strategy lead-in ── */}
+      <PortalLeadInDuo />
 
       {/* ── Video Q&A Briefing ── */}
       <section className="px-8 md:px-16 py-16" style={{ background: '#0d0d0d' }}>
