@@ -89,13 +89,18 @@ export default function RoleSelector() {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
-        {/* Three pills — positioned just below the studio desk/map area */}
+        {/* Three pills — direct routing to News / Relocation / Intelligence */}
         <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
           style={{ bottom: '18%' }}>
-          {['News', 'Relocation', 'Intelligence'].map((word) => (
-            <div
-              key={word}
-              className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90"
+          {[
+            { word: 'News', dest: '/dnn-news', sub: "Today's Clips" },
+            { word: 'Relocation', dest: '/subscribe', sub: 'Free Access' },
+            { word: 'Intelligence', dest: '/solve-my-story', sub: 'Tell Your Story' },
+          ].map((pill) => (
+            <button
+              key={pill.word}
+              onClick={() => navigate(pill.dest)}
+              className="flex flex-col items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group"
               style={{
                 background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
                 border: '1px solid rgba(212,180,106,0.45)',
@@ -112,12 +117,18 @@ export default function RoleSelector() {
                   fontFamily: 'Cormorant Garamond, serif',
                   fontWeight: 500,
                   letterSpacing: '0.25em',
-                  fontSize: word.length > 6 ? '1.15rem' : '1.5rem',
+                  fontSize: pill.word.length > 6 ? '1.15rem' : '1.5rem',
                 }}
               >
-                {word}
+                {pill.word}
               </span>
-            </div>
+              <span
+                className="text-[8px] tracking-[0.2em] uppercase mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity"
+                style={{ color: '#d4b46a' }}
+              >
+                {pill.sub}
+              </span>
+            </button>
           ))}
         </div>
 
