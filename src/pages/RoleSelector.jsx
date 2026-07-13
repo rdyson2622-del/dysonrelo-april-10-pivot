@@ -94,7 +94,7 @@ export default function RoleSelector() {
           style={{ bottom: '18%' }}>
           {[
             { word: 'News', dest: '/dnn-news', sub: "Today's Clips" },
-            { word: 'Relocation', dest: '/subscribe', sub: 'Free Access' },
+            { word: 'Relocation', dest: '/solve-my-story', sub: 'Free Access' },
             { word: 'Intelligence', dest: '/solve-my-story', sub: 'Tell Your Story' },
           ].map((pill) => (
             <button
