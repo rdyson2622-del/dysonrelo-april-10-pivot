@@ -91,14 +91,16 @@ export default function RoleSelector() {
 
         {/* Three logo + pill columns — logos centered above each pill, cleared from studio floorboards */}
         <div className="absolute left-0 right-0 flex items-end justify-center gap-8 md:gap-16 px-6"
-          style={{ bottom: '12%' }}>
+          style={{ bottom: '9%' }}>
           {[
             { word: 'News', logo: DNN_LOGO, alt: 'DNN' },
             { word: 'Relocation', logo: DYSON_LOGO, alt: 'Dyson & Dyson' },
             { word: 'Intelligence', logo: INTEL_LOGO, alt: 'Real Estate Intelligence' },
           ].map(({ word, logo, alt }) => (
             <div key={word} className="flex flex-col items-center gap-3">
-              <img src={logo} alt={alt} className="w-auto object-contain" style={{ height: '60px' }} />
+              <div style={{ background: 'rgba(0,0,0,0.65)', borderRadius: '8px', padding: '6px 12px' }}>
+                <img src={logo} alt={alt} className="w-auto object-contain" style={{ height: '60px' }} />
+              </div>
               <div
                 className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90"
                 style={{
