@@ -174,7 +174,7 @@ export default function RealEstateAnswers() {
         <p className="text-xs font-black tracking-[0.25em] uppercase mb-5" style={{ color: GOLD }}>COMMON QUESTIONS</p>
         <div className="space-y-3">
           {FAQS.map((item, i) => (
-            <FaqItem key={i} q={item.q} a={item.a} canPlay={qaReady(i)} onPlay={() => playFaq(i)} />
+            <FaqItem key={i} q={item.q} a={item.a} canPlay={true} onPlay={() => playFaq(i)} />
           ))}
         </div>
 
