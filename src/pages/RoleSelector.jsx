@@ -86,37 +86,40 @@ export default function RoleSelector() {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-8">
-          <div className="flex items-center justify-center gap-4 md:gap-6 mb-4">
-            {['News', 'Relocation', 'Intelligence'].map((word) => (
-              <div
-                key={word}
-                className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full"
+
+        {/* Three pills — positioned just below the studio desk/map area */}
+        <div className="absolute left-0 right-0 flex items-center justify-center gap-4 md:gap-6 px-6"
+          style={{ top: '52%' }}>
+          {['News', 'Relocation', 'Intelligence'].map((word) => (
+            <div
+              key={word}
+              className="flex items-center justify-center px-6 md:px-8 py-2 rounded-full"
+              style={{
+                background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
+                border: '1px solid rgba(212,180,106,0.45)',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                minWidth: '7rem',
+                maxWidth: '12rem',
+                height: '3.25rem',
+              }}
+            >
+              <span
+                className="uppercase whitespace-nowrap"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
-                  border: '1px solid rgba(212,180,106,0.45)',
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  minWidth: '7rem',
-                  maxWidth: '12rem',
-                  height: '3.25rem',
+                  color: '#d4b46a',
+                  fontFamily: 'Cormorant Garamond, serif',
+                  fontWeight: 500,
+                  letterSpacing: '0.25em',
+                  fontSize: word.length > 6 ? '1.15rem' : '1.5rem',
                 }}
               >
-                <span
-                  className="uppercase whitespace-nowrap"
-                  style={{
-                    color: '#d4b46a',
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontWeight: 500,
-                    letterSpacing: '0.25em',
-                    fontSize: word.length > 6 ? '1.15rem' : '1.5rem',
-                  }}
-                >
-                  {word}
-                </span>
-              </div>
-            ))}
-          </div>
+                {word}
+              </span>
+            </div>
+          ))}
+        </div>
 
+        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-8">
           <h1
             style={{
               fontFamily: 'Cormorant Garamond, serif',
