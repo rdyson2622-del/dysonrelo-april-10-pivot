@@ -4,6 +4,7 @@ import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f408a6a7_generated_image.png';
 
 const PATHS = [
   {
@@ -74,89 +75,108 @@ export default function RoleSelector() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16 relative"
-      style={{
-        backgroundImage: `linear-gradient(rgba(10,10,10,0.82), rgba(10,10,10,0.82)), url('https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f408a6a7_generated_image.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-      }}>
+    <div className="bg-black">
+      {/* ── Hero: DNN Studio backdrop, full screen ── */}
+      <section
+        className="relative h-screen flex flex-col items-center justify-center px-6"
+        style={{
+          backgroundImage: `linear-gradient(rgba(10,10,10,0.35), rgba(10,10,10,0.35)), url('${STUDIO_BG}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-20 w-auto mb-8" />
 
-      {/* Logo */}
-      <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-16 w-auto mb-6" />
+        <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
+          Real Estate
+        </p>
+        <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
+        </div>
+        <p className="text-base text-center max-w-lg" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          The only news network that reports what happened — and tells you exactly what to do about it.
+        </p>
 
-      {/* Headline */}
-      <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
-        Real Estate
-      </p>
-      <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
-        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
-        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
-        <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
-      </div>
-      <h1 style={{
-        fontFamily: 'Cormorant Garamond, serif',
-        fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
-        fontWeight: 600,
-        color: '#fff',
-        letterSpacing: '0.05em',
-        textAlign: 'center',
-        lineHeight: 1.15,
-        marginBottom: '0.5rem',
-      }}>
-        How Are You Here Today?
-      </h1>
-      <p className="text-sm mb-12 text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
-        Select your path. Your experience will be tailored exclusively to your needs.
-      </p>
+        {/* Scroll cue */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+          <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Choose Your Path
+          </span>
+          <svg className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.6)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
+      </section>
 
-      {/* Path Cards */}
-      <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {PATHS.map((path, i) => {
-          const Icon = path.icon;
-          return (
-            <button
-              key={i}
-              onClick={() => handleSelect(path)}
-              className="group flex flex-col items-start text-left p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
-              style={{
-                background: path.featured
-                  ? 'linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.05) 100%)'
-                  : 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%)',
-                border: `1px solid ${path.featured ? 'rgba(212,175,55,0.55)' : 'rgba(255,255,255,0.22)'}`,
-                boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-              }}
-            >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-all"
-                style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.3)` }}>
-                <Icon className="w-4 h-4" style={{ color: GOLD }} />
-              </div>
+      {/* ── Path Selection ── */}
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-black">
+        <h1
+          style={{
+            fontFamily: 'Cormorant Garamond, serif',
+            fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
+            fontWeight: 600,
+            color: '#fff',
+            letterSpacing: '0.05em',
+            textAlign: 'center',
+            lineHeight: 1.15,
+            marginBottom: '0.5rem',
+          }}
+        >
+          How Are You Here Today?
+        </h1>
+        <p className="text-sm mb-12 text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          Select your path. Your experience will be tailored exclusively to your needs.
+        </p>
 
-              <span className="text-[8px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: GOLD }}>
-                {path.badge}
-              </span>
+        <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {PATHS.map((path, i) => {
+            const Icon = path.icon;
+            return (
+              <button
+                key={i}
+                onClick={() => handleSelect(path)}
+                className="group flex flex-col items-start text-left p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+                style={{
+                  background: path.featured
+                    ? 'linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.05) 100%)'
+                    : 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%)',
+                  border: `1px solid ${path.featured ? 'rgba(212,175,55,0.55)' : 'rgba(255,255,255,0.22)'}`,
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+                }}
+              >
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-all"
+                  style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.3)` }}>
+                  <Icon className="w-4 h-4" style={{ color: GOLD }} />
+                </div>
 
-              <h2 className="text-white font-bold leading-snug mb-3"
-                style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
-                {path.label}
-              </h2>
+                <span className="text-[8px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: GOLD }}>
+                  {path.badge}
+                </span>
 
-              <p className="text-[11px] leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {path.sub}
-              </p>
+                <h2 className="text-white font-bold leading-snug mb-3"
+                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
+                  {path.label}
+                </h2>
 
-              <div className="mt-auto flex items-center gap-2 text-[11px] font-bold transition-all group-hover:gap-3"
-                style={{ color: GOLD }}>
-                Enter <span>→</span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+                <p className="text-[11px] leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {path.sub}
+                </p>
 
-      <p className="mt-12 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-        Dyson &amp; Dyson · 55 Years of Relocation Management
-      </p>
+                <div className="mt-auto flex items-center gap-2 text-[11px] font-bold transition-all group-hover:gap-3"
+                  style={{ color: GOLD }}>
+                  Enter <span>→</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="mt-12 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          Dyson &amp; Dyson · 55 Years of Relocation Management
+        </p>
+      </section>
     </div>
   );
 }
