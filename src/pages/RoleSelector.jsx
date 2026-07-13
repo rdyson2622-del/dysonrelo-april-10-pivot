@@ -4,6 +4,8 @@ import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
+const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/67bc7aa5a_generated_image.png';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
 const PATHS = [
@@ -119,7 +121,7 @@ export default function RoleSelector() {
           ))}
         </div>
 
-        <div className="absolute left-0 right-0 flex flex-col items-center px-6" style={{ bottom: '8%' }}>
+        <div className="absolute left-0 right-0 flex flex-col items-center px-6" style={{ bottom: '6%' }}>
           <p className="text-xl md:text-2xl text-center whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
             Select your path below and your experience will be tailored exclusively to your needs.
           </p>
@@ -127,7 +129,7 @@ export default function RoleSelector() {
       </section>
 
       {/* ── Path Selection ── */}
-      <section className="flex flex-col items-center px-6 pt-8 pb-16 bg-black">
+      <section className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
 
         <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {PATHS.map((path, i) => {
@@ -172,9 +174,16 @@ export default function RoleSelector() {
           })}
         </div>
 
-        <p className="mt-12 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        <p className="mt-8 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
           Dyson &amp; Dyson · 55 Years of Relocation Management
         </p>
+
+        {/* Three-logo footer row */}
+        <div className="mt-6 flex items-center justify-center gap-8 md:gap-16">
+          <img src={DNN_LOGO} alt="DNN" className="h-10 md:h-12 w-auto object-contain" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 md:h-12 w-auto object-contain" />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="h-10 md:h-12 w-auto object-contain" />
+        </div>
       </section>
     </div>
   );
