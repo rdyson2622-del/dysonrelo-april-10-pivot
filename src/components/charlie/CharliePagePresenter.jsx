@@ -143,7 +143,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
       <div
         className="relative rounded-xl overflow-hidden"
         style={{
-          width: 130,
+          width: 150,
           background: '#1a1a1a',
           border: `2px solid ${GOLD}`,
           boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
