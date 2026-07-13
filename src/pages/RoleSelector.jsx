@@ -75,46 +75,33 @@ export default function RoleSelector() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col lg:flex-row">
-      {/* ── Studio Image Panel ── */}
-      <div className="relative lg:w-[42%] h-[38vh] lg:h-screen shrink-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url('${STUDIO_BG}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-black via-black/30 to-transparent" />
-        <div className="absolute bottom-8 left-8 hidden lg:block">
-          <p className="text-xs font-black tracking-[0.4em] uppercase" style={{ color: GOLD }}>
-            DNN Intelligence Bureau
-          </p>
-          <p className="text-[10px] mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Broadcast Studio
-          </p>
-        </div>
-      </div>
+    <div className="bg-black">
+      {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
+      <section
+        className="relative h-screen"
+        style={{
+          backgroundImage: `url('${STUDIO_BG}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
 
       {/* ── Path Selection ── */}
-      <section className="flex-1 flex flex-col items-center justify-center px-6 py-12 lg:py-16 bg-black">
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-black">
 
-        <p className="text-xl md:text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
+        <p className="text-2xl font-black tracking-[0.4em] uppercase mb-3" style={{ color: GOLD }}>
           Real Estate
         </p>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 mb-6">
-          <span className="text-3xl md:text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
-          <span className="hidden md:inline text-2xl" style={{ color: GOLD }}>·</span>
-          <span className="text-3xl md:text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
-          <span className="hidden md:inline text-2xl" style={{ color: GOLD }}>·</span>
-          <span className="text-3xl md:text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
+        <div className="flex items-center justify-center gap-6 md:gap-10 mb-6">
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>News</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Relocation</span>
+          <span className="text-4xl font-black tracking-[0.3em] uppercase" style={{ color: '#fff' }}>Intelligence</span>
         </div>
 
         <h1
           style={{
             fontFamily: 'Cormorant Garamond, serif',
-            fontSize: 'clamp(1.5rem, 3.5vw, 2.4rem)',
+            fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
             fontWeight: 600,
             color: '#fff',
             letterSpacing: '0.05em',
@@ -125,11 +112,11 @@ export default function RoleSelector() {
         >
           How Are You Here Today?
         </h1>
-        <p className="text-sm mb-10 text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <p className="text-sm mb-12 text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
           Select your path. Your experience will be tailored exclusively to your needs.
         </p>
 
-        <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {PATHS.map((path, i) => {
             const Icon = path.icon;
             return (
