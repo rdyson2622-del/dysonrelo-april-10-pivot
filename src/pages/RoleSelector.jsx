@@ -119,22 +119,8 @@ export default function RoleSelector() {
           ))}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-1">
-          <h1
-            style={{
-              fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(1.5rem, 3.75vw, 2.4rem)',
-              fontWeight: 600,
-              color: '#fff',
-              letterSpacing: '0.05em',
-              textAlign: 'center',
-              lineHeight: 1.15,
-              marginBottom: '1.5rem',
-            }}
-          >
-            How Are You Here Today?
-          </h1>
-          <p className="text-sm text-center max-w-md" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center px-6 pb-2">
+          <p className="text-xl md:text-2xl text-center max-w-2xl" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
             Select your path. Your experience will be tailored exclusively to your needs.
           </p>
         </div>
