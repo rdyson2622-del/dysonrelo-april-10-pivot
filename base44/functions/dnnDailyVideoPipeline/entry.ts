@@ -23,6 +23,10 @@ const HEYGEN_API = 'https://api.heygen.com';
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 
+// DNN Intelligence Bureau studio background — generated image of a professional
+// news desk set with monitor wall, used as the HeyGen video background
+const DNN_STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f408a6a7_generated_image.png';
+
 // Build the LLM script prompt for a given article
 function buildScriptPrompt(article) {
   const solutionParts = [];
@@ -72,8 +76,8 @@ async function submitHeyGenRender(cleanScript, heygenApiKey) {
           input_text: cleanScript,
         },
         background: {
-          type: 'color',
-          value: '#0a0a0a',
+          type: 'image',
+          url: DNN_STUDIO_BG_URL,
         },
       }],
       dimension: { width: 1280, height: 720 },
