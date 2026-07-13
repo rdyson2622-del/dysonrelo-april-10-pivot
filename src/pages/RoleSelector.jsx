@@ -121,7 +121,7 @@ export default function RoleSelector() {
 
         <div className="absolute left-0 right-0 flex flex-col items-center px-6" style={{ bottom: '8%' }}>
           <p className="text-xl md:text-2xl text-center whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
-            Select your path. Your experience will be tailored exclusively to your needs.
+            Select your path below and your experience will be tailored exclusively to your needs.
           </p>
         </div>
       </section>
