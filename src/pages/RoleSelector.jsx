@@ -48,7 +48,7 @@ const PATHS = [
     sub: 'White-glove employee relocation with zero management fees. See how the model works.',
     badge: 'CORPORATE RELO / HR',
     dest: '/corporate-relo',
-    roleKey: 'client',
+    roleKey: 'hr',
   },
 ];
 
