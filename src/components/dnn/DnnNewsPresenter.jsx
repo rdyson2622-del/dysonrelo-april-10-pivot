@@ -45,8 +45,14 @@ export default function DnnNewsPresenter() {
           );
           if (!allReady) continue;
           for (const c of articleClips) {
-            segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
-            if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+            if (c.kind === 'qa') {
+              // Q&A: skip Charlie's question clip — the intro already set up the topic.
+              // Only play Bob's answer so Charlie doesn't play twice back-to-back.
+              if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+            } else {
+              // intro / outro: Charlie's clip
+              segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+            }
           }
         }
         segs.push({ src: DNN_STING_URL, speaker: 'sting' });

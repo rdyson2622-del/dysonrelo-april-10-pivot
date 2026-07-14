@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/9db63a022_generated_image.png';
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
@@ -101,6 +102,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
+      {/* Full-screen studio backdrop — sits behind the video boxes */}
+      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.85 }} />
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
         className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
