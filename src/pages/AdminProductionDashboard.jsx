@@ -244,28 +244,58 @@ export default function AdminProductionDashboard() {
               <p className="text-[10px] font-black tracking-[0.3em] uppercase text-red-400">Attention Required</p>
             </div>
             <div className="space-y-3">
-              {pipelineStats.filter(p => p.totalFailed > 0 || p.totalNotStarted > 0).map(p => (
-                <div key={p.entity} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-white">{p.label}</span>
+              {pipelineStats.filter(p => p.totalFailed > 0 || p.totalNotStarted > 0).map(p => {
+                const failedClips = (p.clips || []).filter(c => c.charlieStatus === 'failed' || c.bobStatus === 'failed');
+                const notStartedClips = (p.clips || []).filter(c =>
+                  (c.charlieScript && (!c.charlieStatus || c.charlieStatus === 'not_started')) ||
+                  (c.bobScript && (!c.bobStatus || c.bobStatus === 'not_started'))
+                );
+                return (
+                  <div key={p.entity} className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-white">{p.label}</span>
+                      <div className="flex items-center gap-4 text-xs">
+                        {p.totalFailed > 0 && (
+                          <span className="flex items-center gap-1 text-red-400">
+                            <XCircle className="w-3 h-3" /> {p.totalFailed} failed
+                          </span>
+                        )}
+                        {p.totalNotStarted > 0 && (
+                          <span className="flex items-center gap-1 text-yellow-400">
+                            <Clock className="w-3 h-3" /> {p.totalNotStarted} not started
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {failedClips.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {failedClips.map(c => (
+                          <div key={c.id} className="flex items-start gap-2 text-[10px] pl-2 border-l-2 border-red-500/30">
+                            <span className="text-red-400 shrink-0">✗</span>
+                            <div>
+                              <span className="text-slate-300">{c.question || c.kind}</span>
+                              {c.errorMessage && (
+                                <span className="text-red-400 ml-1">— {c.errorMessage}</span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {notStartedClips.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {notStartedClips.map(c => (
+                          <div key={c.id} className="flex items-start gap-2 text-[10px] pl-2 border-l-2 border-yellow-500/30">
+                            <span className="text-yellow-400 shrink-0">⏳</span>
+                            <span className="text-slate-300">{c.question || c.kind}</span>
+                            <span className="text-slate-500">— script: {c.scriptStatus || 'unknown'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-4 text-xs">
-                    {p.totalFailed > 0 && (
-                      <span className="flex items-center gap-1 text-red-400">
-                        <XCircle className="w-3 h-3" /> {p.totalFailed} failed
-                      </span>
-                    )}
-                    {p.totalNotStarted > 0 && (
-                      <span className="flex items-center gap-1 text-yellow-400">
-                        <Clock className="w-3 h-3" /> {p.totalNotStarted} not started
-                      </span>
-                    )}
-                    {p.fn && (
-                      <span className="text-slate-500 text-[10px]">fn: {p.fn}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <p className="mt-3 text-[10px] text-slate-500">
               Failed clips need re-rendering. Not-started clips need credits or script approval. Use the Q&A Script Studio to approve scripts, then trigger renders from each pipeline's function.
