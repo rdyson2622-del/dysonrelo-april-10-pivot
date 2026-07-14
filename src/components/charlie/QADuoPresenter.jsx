@@ -111,7 +111,7 @@ export default function QADuoPresenter({ segments, onClose, title }) {
         </div>
 
         {/* Video area — portrait aspect ratio */}
-        <div className="relative" style={{ height: 170, background: '#0d0d0d' }}>
+        <div className="relative overflow-hidden" style={{ height: 170, background: '#0d0d0d' }}>
           <video
             key={seg.src}
             ref={videoRef}
@@ -121,7 +121,7 @@ export default function QADuoPresenter({ segments, onClose, title }) {
             onEnded={handleEnded}
             onClick={togglePlay}
             className="w-full h-full object-cover cursor-pointer"
-            style={{ transform: seg.speaker === 'bob' ? 'scale(1.15) translateY(5%)' : 'scale(1.25)' }}
+            style={{ transform: seg.speaker === 'bob' ? 'scale(1.0) translateY(2%)' : 'scale(1.05)' }}
           />
 
           {/* Big play overlay when paused/ended */}
