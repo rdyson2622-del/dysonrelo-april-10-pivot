@@ -28,8 +28,9 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
-// DNN Intelligence Bureau studio background
-const DNN_STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5d5a08498_generated_image.png';
+// No studio background — render avatars on solid black so they blend
+// seamlessly with the full-screen broadcast player's black canvas.
+const DNN_BG = { type: 'color', value: '#000000' };
 
 // Submit a HeyGen render and return { video_id } or null
 async function submitHeyGenRender(script, role, heygenApiKey) {
@@ -45,7 +46,7 @@ async function submitHeyGenRender(script, role, heygenApiKey) {
     method: 'POST',
     headers: { 'X-Api-Key': heygenApiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      video_inputs: [{ character, voice, background: { type: 'image', url: DNN_STUDIO_BG_URL } }],
+      video_inputs: [{ character, voice, background: DNN_BG }],
       dimension: { width: 1280, height: 720 },
     }),
   });
