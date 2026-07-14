@@ -14,10 +14,14 @@ const SPEAKER_LABELS = {
  * DnnNewsBroadcastPlayer — a FULL-SCREEN broadcast player.
  *
  * Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
- * All full screen. No small boxes, no overlapping content.
+ *
+ * Background logic:
+ *   - Sting: full-screen black (DNN logo video)
+ *   - Charlie: studio backdrop (lower-left box)
+ *   - Bob: off-white background with bullet-point overlay (lower-right box)
  *
  * Props:
- *   segments: [{ src, speaker: 'charlie'|'bob' }]
+ *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
  *   onClose: () => void
  */
 export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
@@ -50,8 +54,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   }, [segments]);
 
   useEffect(() => {
-    // When idx changes, auto-play the next segment
-    if (idx === 0) return; // already handled by mount effect
+    if (idx === 0) return;
     const v = videoRef.current;
     if (!v) return;
     v.muted = muted;
@@ -72,7 +75,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     } else {
       setEnded(true);
       setPlaying(false);
-      // Auto-close after a brief pause so viewers return to the landing page
       setTimeout(() => onClose(), 2500);
     }
   };
@@ -101,16 +103,51 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   };
 
   const isSting = seg.speaker === 'sting';
+  const isBob = seg.speaker === 'bob';
+  const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      {/* Full-screen studio backdrop — hidden during sting (sting is full-screen DNN logo) */}
-      {!isSting && (
+      {/* Background layer */}
+      {isSting ? (
+        <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
+      ) : hasBullets ? (
+        /* Off-white presentation background with bullet-point overlay */
+        <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
+          {/* Bullet-point content panel — left side, Bob is lower-right */}
+          <div className="absolute inset-0 flex flex-col justify-center px-[8vw] md:px-[10vw]">
+            {seg.title && (
+              <h2 className="display-heading text-2xl md:text-4xl lg:text-5xl mb-6 md:mb-8"
+                style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
+                {seg.title}
+              </h2>
+            )}
+            <ul className="space-y-4 md:space-y-6">
+              {seg.bullets.map((b, i) => (
+                <li key={i} className="flex items-start gap-3 md:gap-4">
+                  <span className="mt-2 md:mt-3 w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ background: GOLD }} />
+                  <span className="text-base md:text-xl lg:text-2xl"
+                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
+                    {b}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Subtle DNN watermark */}
+          <div className="absolute top-6 left-6 md:top-8 md:left-10">
+            <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase"
+              style={{ color: 'rgba(212,175,55,0.5)' }}>
+              DNN Intelligence Bureau
+            </span>
+          </div>
+        </div>
+      ) : (
+        /* Studio backdrop for Charlie (and Bob without bullets) */
         <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
       )}
-
-
 
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
@@ -119,7 +156,23 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <X className="w-6 h-6" />
       </button>
 
-      {/* Full-screen video — sting is centered; Charlie lower-left, Bob lower-right */}
+      {/* Speaker label badge */}
+      {!isSting && (
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+          style={{
+            background: hasBullets ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.65)',
+            border: `1px solid ${hasBullets ? 'rgba(212,175,55,0.5)' : 'rgba(212,175,55,0.4)'}`,
+            backdropFilter: 'blur(4px)'
+          }}>
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
+          <span className="text-[10px] font-bold tracking-[0.15em] uppercase"
+            style={{ color: hasBullets ? '#1a1a1a' : GOLD }}>
+            {headerLabel}
+          </span>
+        </div>
+      )}
+
+      {/* Video element */}
       {isSting ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
@@ -191,8 +244,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           </span>
         </button>
       )}
-
-
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"

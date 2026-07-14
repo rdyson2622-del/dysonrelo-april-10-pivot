@@ -9,6 +9,24 @@ import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 const GOLD = '#D4AF37';
 
 /**
+ * Extract 3-5 concise bullet points from Bob's spoken script.
+ * Splits on sentence boundaries, filters out filler, and trims to key points.
+ */
+function extractBullets(script) {
+  if (!script) return [];
+  // Split on sentence boundaries
+  const sentences = script
+    .replace(/\n+/g, ' ')
+    .match(/[^.!?]+[.!?]+/g) || [script];
+  // Clean up and filter out short/filler sentences
+  const cleaned = sentences
+    .map(s => s.trim())
+    .filter(s => s.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(s));
+  // Take up to 5, strip trailing punctuation for display
+  return cleaned.slice(0, 5).map(s => s.replace(/[.!?]+$/, ''));
+}
+
+/**
  * DnnNewsPresenter — Charlie + Bob duo presentation for the DNN National Desk.
  *
  * Charlie opens by introducing the national real estate news service,
@@ -48,7 +66,14 @@ export default function DnnNewsPresenter() {
           if (!allReady) continue;
           for (const c of articleClips) {
             if (c.kind === 'qa') {
-              if (c.bobVideoUrl) contentSegs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+              if (c.bobVideoUrl) {
+                contentSegs.push({
+                  src: c.bobVideoUrl,
+                  speaker: 'bob',
+                  title: c.question,
+                  bullets: extractBullets(c.bobScript),
+                });
+              }
             } else {
               contentSegs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
             }
