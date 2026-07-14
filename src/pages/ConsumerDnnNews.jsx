@@ -586,8 +586,8 @@ export default function ConsumerDnnNews() {
 
       </div>
 
-      {/* Charlie circle — fixed top right */}
-      <div className="fixed top-32 right-6 z-30">
+      {/* Charlie circle — fixed below header */}
+      <div className="fixed top-20 right-4 z-30">
         <DnnNewsPresenter />
       </div>
 
