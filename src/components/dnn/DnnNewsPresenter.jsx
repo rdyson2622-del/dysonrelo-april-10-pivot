@@ -18,6 +18,11 @@ export default function DnnNewsPresenter() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    // Auto-open when arriving from the landing page News pill
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('autoplay') === '1') {
+      setOpen(true);
+    }
     base44.entities.DnnNewsClip.list('faqIndex')
       .then((clips) => {
         const segs = [];
