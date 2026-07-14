@@ -81,7 +81,7 @@ export default function QADuoPresenter({ segments, onClose, title }) {
   const headerLabel = title || SPEAKER_LABELS[seg.speaker] || 'CHARLIE';
 
   return (
-    <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50">
+    <div className="fixed top-28 right-4 md:top-32 md:right-6 z-50">
       <div
         className="relative rounded-xl overflow-hidden"
         style={{
