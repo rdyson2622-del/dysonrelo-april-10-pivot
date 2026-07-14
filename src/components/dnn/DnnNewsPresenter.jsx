@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import QADuoPresenter from '@/components/charlie/QADuoPresenter';
+import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
 import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
@@ -34,7 +34,7 @@ export default function DnnNewsPresenter() {
         }
         // Only keep articles where all clips have completed video
         const segs = [];
-        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
+        segs.push({ src: DNN_STING_URL, speaker: 'sting' });
         for (const headline of Object.keys(byArticle)) {
           const articleClips = byArticle[headline].sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0));
           const allDone = articleClips.every(c =>
@@ -46,7 +46,7 @@ export default function DnnNewsPresenter() {
             if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
           }
         }
-        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
+        segs.push({ src: DNN_STING_URL, speaker: 'sting' });
         setSegments(segs);
       })
       .catch(() => {})
@@ -80,7 +80,7 @@ export default function DnnNewsPresenter() {
         </span>
       </button>
 
-      {open && <QADuoPresenter segments={segments} onClose={() => setOpen(false)} />}
+      {open && <DnnNewsBroadcastPlayer segments={segments} onClose={() => setOpen(false)} />}
     </>
   );
 }
