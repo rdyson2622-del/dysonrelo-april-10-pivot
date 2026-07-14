@@ -6,6 +6,8 @@ import { RefreshCw, Zap, DollarSign, TrendingDown, AlertTriangle, CheckCircle2, 
 const GOLD = '#D4AF37';
 const COST_PER_RENDER = 30; // HeyGen credits per video render
 const COST_PER_COMBINED = 60; // Combined Charlie+Bob render (one call, two characters)
+const USD_PER_CREDIT = 0.01; // HeyGen API: 1 credit ≈ $0.01 (verify at heygen.com/settings/billing)
+const creditsToUsd = (c) => `$${(c * USD_PER_CREDIT).toFixed(2)}`;
 
 const PIPELINES = [
   { entity: 'CorporateReloClip', label: 'Corporate Relo / HR', fn: 'corporateReloQARender' },
@@ -162,9 +164,9 @@ export default function AdminProductionDashboard() {
 
         {/* Top KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <KpiCard icon={DollarSign} label="Credits Spent" value={creditsSpent.toLocaleString()} sub="on completed renders" color={GOLD} />
-          <KpiCard icon={Zap} label="API Credits Left" value={apiCredits.toLocaleString()} sub={`Plan: ${planCredits.toLocaleString()}`} color={apiCredits < 200 ? '#ef4444' : '#4ade80'} />
-          <KpiCard icon={AlertTriangle} label="Credits Wasted" value={creditsWasted.toLocaleString()} sub={`${totalFailedRenders} failed renders`} color="#ef4444" />
+          <KpiCard icon={DollarSign} label="Credits Spent" value={creditsSpent.toLocaleString()} sub={`≈ ${creditsToUsd(creditsSpent)} on completed renders`} color={GOLD} />
+          <KpiCard icon={Zap} label="API Credits Left" value={apiCredits.toLocaleString()} sub={`≈ ${creditsToUsd(apiCredits)} remaining`} color={apiCredits < 200 ? '#ef4444' : '#4ade80'} />
+          <KpiCard icon={AlertTriangle} label="Credits Wasted" value={creditsWasted.toLocaleString()} sub={`≈ ${creditsToUsd(creditsWasted)} on ${totalFailedRenders} failed renders`} color="#ef4444" />
           <KpiCard icon={Linkedin} label="LinkedIn Ready" value={linkedInReady} sub="videos ready to post" color="#0a66c2" />
         </div>
 
@@ -172,14 +174,25 @@ export default function AdminProductionDashboard() {
         <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-4">Cost Projections</p>
           <div className="grid grid-cols-3 gap-4">
-            <ProjectionCard label="Daily" cost={dailyCost} sub={`${dailyArticleRenders} renders/day`} />
-            <ProjectionCard label="Weekly" cost={weeklyCost} sub="7-day projection" />
-            <ProjectionCard label="Monthly" cost={monthlyCost} sub="30-day projection" />
+            <ProjectionCard label="Daily" cost={dailyCost} sub={`${dailyArticleRenders} renders/day · ${creditsToUsd(dailyCost)}`} />
+            <ProjectionCard label="Weekly" cost={weeklyCost} sub={`7-day projection · ${creditsToUsd(weeklyCost)}`} />
+            <ProjectionCard label="Monthly" cost={monthlyCost} sub={`30-day projection · ${creditsToUsd(monthlyCost)}`} />
           </div>
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
             <TrendingDown className="w-3.5 h-3.5" />
             <span>Combined render strategy saves ~50% — Charlie+Bob in one API call instead of two.</span>
           </div>
+          {apiCredits > 0 && (
+            <div className="mt-3 flex items-center gap-2 text-xs p-2 rounded-lg" style={{ background: 'rgba(74,222,128,0.06)' }}>
+              <DollarSign className="w-3.5 h-3.5 text-green-400" />
+              <span className="text-slate-300">
+                Account balance: <span className="font-bold text-green-400">{apiCredits.toLocaleString()} credits</span> ≈ <span className="font-bold text-green-400">{creditsToUsd(apiCredits)}</span>
+                {totalNotStarted > 0 && (
+                  <span className="text-yellow-400 ml-2">· {totalNotStarted} pending renders need ~{totalNotStarted * COST_PER_RENDER} credits ({creditsToUsd(totalNotStarted * COST_PER_RENDER)})</span>
+                )}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Pipeline Status Table */}
@@ -196,6 +209,7 @@ export default function AdminProductionDashboard() {
                   <th className="text-center py-2 px-2 font-bold uppercase tracking-wider">Not Started</th>
                   <th className="text-center py-2 px-2 font-bold uppercase tracking-wider">Combined</th>
                   <th className="text-right py-2 px-2 font-bold uppercase tracking-wider">Credits Spent</th>
+                  <th className="text-right py-2 px-2 font-bold uppercase tracking-wider">Est. Cost</th>
                 </tr>
               </thead>
               <tbody>
@@ -218,6 +232,9 @@ export default function AdminProductionDashboard() {
                     <td className="text-right py-2 px-2 font-bold" style={{ color: GOLD }}>
                       {((p.charlieDone + p.bobDone) * COST_PER_RENDER + p.combinedDone * COST_PER_COMBINED).toLocaleString()}
                     </td>
+                    <td className="text-right py-2 px-2 text-slate-400">
+                      {creditsToUsd((p.charlieDone + p.bobDone) * COST_PER_RENDER + p.combinedDone * COST_PER_COMBINED)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -230,6 +247,7 @@ export default function AdminProductionDashboard() {
                   <td className="text-center py-3 px-2 font-black text-yellow-400">{totalNotStarted}</td>
                   <td className="text-center py-3 px-2 font-black" style={{ color: GOLD }}>{totalCombinedDone}</td>
                   <td className="text-right py-3 px-2 font-black" style={{ color: GOLD }}>{creditsSpent.toLocaleString()}</td>
+                  <td className="text-right py-3 px-2 font-black text-slate-300">{creditsToUsd(creditsSpent)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -325,7 +343,7 @@ export default function AdminProductionDashboard() {
         </div>
 
         <p className="text-center text-[10px] text-slate-600 mt-6">
-          Auto-refreshes every 30 seconds · Cost estimates based on ~{COST_PER_RENDER} credits per render · Verify actual costs at heygen.com/settings/billing
+          Auto-refreshes every 30 seconds · ~{COST_PER_RENDER} credits/render · {USD_PER_CREDIT < 0.01 ? `${(USD_PER_CREDIT * 100).toFixed(1)}¢` : `$${USD_PER_CREDIT.toFixed(2)}`}/credit · Verify actual costs at heygen.com/settings/billing
         </p>
       </div>
     </div>
