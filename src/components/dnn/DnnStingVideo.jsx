@@ -3,7 +3,7 @@ import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-export const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/af86207dc_DNN_Logo_Sting.mp4';
+export const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/0b4a4d622_DNN_Logo_Sting_v2.mp4';
 
 /**
  * DnnStingVideo — plays the DNN logo sting before and after a main video.
@@ -85,11 +85,13 @@ export default function DnnStingVideo({ videoUrl, onEnded, fullscreen = false })
 
   return (
     <div className={containerClass} style={fullscreen ? { background: '#000' } : {}}>
-      <button onClick={onEnded} aria-label="Close"
-        className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
-        <X className="w-4 h-4" />
-      </button>
+      {fullscreen && (
+        <button onClick={onEnded} aria-label="Close"
+          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+          <X className="w-5 h-5" />
+        </button>
+      )}
 
       <video
         key={src + phase}
