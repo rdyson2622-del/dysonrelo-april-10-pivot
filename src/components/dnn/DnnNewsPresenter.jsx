@@ -60,6 +60,7 @@ export default function DnnNewsPresenter() {
     <>
       <button
         onClick={() => setOpen(true)}
+        data-dnn-news-trigger
         aria-label="Hear Charlie explain DNN National Desk"
         className="relative w-16 h-16 md:w-20 md:h-20 transition-all hover:scale-105 active:scale-95"
       >

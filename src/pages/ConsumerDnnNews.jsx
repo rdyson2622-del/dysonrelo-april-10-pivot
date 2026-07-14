@@ -8,8 +8,7 @@ import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
-import DnnMorningBroadcast from '@/components/dnn/DnnMorningBroadcast';
-import BroadcastVideoStack from '@/components/dnn/BroadcastVideoStack';
+
 import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
@@ -558,8 +557,8 @@ export default function ConsumerDnnNews() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
-              queryClient.invalidateQueries({ queryKey: ['dnnMorningBroadcast'] });
-              window.dispatchEvent(new Event('dnn-live-broadcast'));
+              const el = document.querySelector('[data-dnn-news-trigger]');
+              if (el) el.click();
             }}
             className="flex items-center gap-2 text-sm font-black tracking-widest px-4 py-2 rounded-full transition-all hover:scale-105"
             style={{ color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', boxShadow: '0 0 20px rgba(212,175,55,0.35)' }}>
@@ -590,9 +589,6 @@ export default function ConsumerDnnNews() {
       <div className="fixed top-36 right-4 md:top-40 md:right-6 z-30">
         <DnnNewsPresenter />
       </div>
-
-      {/* Daily Morning Broadcast */}
-      <DnnMorningBroadcast />
 
       {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
@@ -674,7 +670,6 @@ export default function ConsumerDnnNews() {
                   isAdmin={false}
                 />
               )}
-              <BroadcastVideoStack />
             </div>
 
           </div>
