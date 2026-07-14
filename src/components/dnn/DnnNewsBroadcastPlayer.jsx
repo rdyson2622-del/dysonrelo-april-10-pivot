@@ -116,19 +116,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         /* Off-white presentation background with bullet-point overlay */
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
           {/* Bullet-point content panel — left side, Bob is lower-right */}
-          <div className="absolute inset-0 flex flex-col justify-center px-[8vw] md:px-[10vw]">
+          <div className="absolute inset-0 flex flex-col justify-start px-[8vw] md:px-[10vw] pt-[6vh] md:pt-[8vh] pb-[20vh]">
             {seg.title && (
-              <h2 className="display-heading text-2xl md:text-4xl lg:text-5xl mb-6 md:mb-8"
+              <h2 className="display-heading text-xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
                 style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
                 {seg.title}
               </h2>
             )}
-            <ul className="space-y-4 md:space-y-6">
+            <ul className="space-y-3 md:space-y-5">
               {seg.bullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-2 md:mt-3 w-2.5 h-2.5 rounded-full flex-shrink-0"
+                  <span className="mt-1.5 md:mt-2 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full flex-shrink-0"
                     style={{ background: GOLD }} />
-                  <span className="text-base md:text-xl lg:text-2xl"
+                  <span className="text-sm md:text-lg lg:text-xl"
                     style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
                     {b}
                   </span>
