@@ -156,17 +156,17 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <X className="w-6 h-6" />
       </button>
 
-      {/* Speaker label badge */}
-      {!isSting && (
+      {/* Speaker label badge — only on studio background, not on the off-white bullet view */}
+      {!isSting && !hasBullets && (
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
           style={{
-            background: hasBullets ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.65)',
-            border: `1px solid ${hasBullets ? 'rgba(212,175,55,0.5)' : 'rgba(212,175,55,0.4)'}`,
+            background: 'rgba(0,0,0,0.65)',
+            border: '1px solid rgba(212,175,55,0.4)',
             backdropFilter: 'blur(4px)'
           }}>
           <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
           <span className="text-[10px] font-bold tracking-[0.15em] uppercase"
-            style={{ color: hasBullets ? '#1a1a1a' : GOLD }}>
+            style={{ color: GOLD }}>
             {headerLabel}
           </span>
         </div>
