@@ -38,7 +38,6 @@ export default function QADuoPresenter({ segments, onClose, title }) {
       v.muted = true;
       v.play().then(() => {
         setPlaying(true);
-        // Try to unmute — if blocked, the muted indicator + tap-for-sound prompt will show
         v.muted = false;
         setMuted(false);
       }).catch(() => {
@@ -48,6 +47,20 @@ export default function QADuoPresenter({ segments, onClose, title }) {
       });
     }, 50);
   }, [segments]);
+
+  // When segment index changes (Charlie → Bob → Charlie), explicitly play the new video
+  useEffect(() => {
+    if (idx === 0) return; // skip initial — handled by mount effect above
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = muted;
+    v.currentTime = 0;
+    v.play().then(() => setPlaying(true)).catch(() => {
+      v.muted = true;
+      setMuted(true);
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    });
+  }, [idx]);
 
   const seg = segments[idx];
   if (!seg) return null;
@@ -66,7 +79,7 @@ export default function QADuoPresenter({ segments, onClose, title }) {
     setEnded(false);
     setTimeout(() => {
       const v = videoRef.current;
-      if (v) { v.currentTime = 0; v.play().then(() => setPlaying(true)).catch(() => {}); }
+      if (v) { v.currentTime = 0; v.muted = false; setMuted(false); v.play().then(() => setPlaying(true)).catch(() => {}); }
     }, 50);
   };
 
