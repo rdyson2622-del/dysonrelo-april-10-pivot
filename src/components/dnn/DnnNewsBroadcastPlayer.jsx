@@ -130,7 +130,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             onEnded={handleEnded}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
-            style={{ objectFit: 'contain', transform: 'translate(-1.5%, 10%)' }}
+            style={{ objectFit: 'cover', transform: 'translate(-2%, 11%)' }}
           />
         </div>
       ) : (
