@@ -114,15 +114,21 @@ Read the full brief: ${appUrl}
       const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
         headers: { Authorization: `Bearer ${linkedinToken}` },
       });
-      if (!profileRes.ok) {
-        const errText = await profileRes.text().catch(() => '');
-        results.linkedin = { success: false, error: `LinkedIn profile fetch failed (${profileRes.status}): ${errText.slice(0, 200)}` };
-        throw new Error(`LinkedIn profile fetch HTTP ${profileRes.status}`);
-      }
-      const profile = await profileRes.json();
-      if (!profile.sub) {
-        results.linkedin = { success: false, error: 'LinkedIn profile response missing sub field', details: profile };
-        throw new Error('LinkedIn profile response missing sub');
+      const profileText = await profileRes.text().catch(() => '');
+      let profile = {};
+      try { profile = profileText ? JSON.parse(profileText) : {}; } catch (_) {}
+      if (!profileRes.ok || !profile.sub) {
+        // Fallback to v2/me endpoint
+        const meRes = await fetch('https://api.linkedin.com/v2/me', {
+          headers: { Authorization: `Bearer ${linkedinToken}` },
+        });
+        const meText = await meRes.text().catch(() => '');
+        try { profile = meText ? JSON.parse(meText) : profile; } catch (_) {}
+        if (!meRes.ok || !profile.id) {
+          results.linkedin = { success: false, error: `LinkedIn profile fetch failed (userinfo: ${profileRes.status} "${profileText.slice(0, 100)}", me: ${meRes.status} "${meText.slice(0, 100)}")` };
+          throw new Error('LinkedIn profile fetch failed — cannot determine author URN');
+        }
+        profile.sub = profile.id;
       }
       const authorUrn = `urn:li:person:${profile.sub}`;
 
