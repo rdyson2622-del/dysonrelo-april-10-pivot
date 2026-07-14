@@ -64,8 +64,6 @@ const InvestmentTracker = ({ apiCredits = 0 }) => {
   };
 
   const total = categories.reduce((s, c) => s + (c.amount || 0), 0);
-  const totalCredits = apiCredits > 0 ? apiCredits : 0;
-  const totalInvestment = total + creditsToUsdNum(totalCredits);
 
   return (
     <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: `1px solid rgba(212,175,55,0.2)` }}>
@@ -289,7 +287,7 @@ export default function AdminProductionDashboard() {
         </div>
 
         {/* Total HeyGen Investment Tracker */}
-        <InvestmentTracker />
+        <InvestmentTracker apiCredits={apiCredits} />
 
         {/* Top KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
