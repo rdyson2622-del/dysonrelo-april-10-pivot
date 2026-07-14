@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
@@ -84,6 +84,14 @@ export default function ClientStory({ label, headline, children, defaultOpen = f
                 style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, color: GOLD }}
               >
                 Skip Intro
+              </button>
+              <button
+                onClick={skipSting}
+                aria-label="Close intro"
+                className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, color: GOLD }}
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
           )}

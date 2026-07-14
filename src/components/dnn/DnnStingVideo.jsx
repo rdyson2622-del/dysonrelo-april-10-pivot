@@ -85,13 +85,11 @@ export default function DnnStingVideo({ videoUrl, onEnded, fullscreen = false })
 
   return (
     <div className={containerClass} style={fullscreen ? { background: '#000' } : {}}>
-      {fullscreen && (
-        <button onClick={onEnded} aria-label="Close"
-          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
-          <X className="w-5 h-5" />
-        </button>
-      )}
+      <button onClick={onEnded} aria-label="Close"
+        className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+        <X className="w-4 h-4" />
+      </button>
 
       <video
         key={src + phase}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Play } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
 import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
@@ -72,6 +72,14 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
             onEnded={handleStingEnded}
             className="w-full h-full object-contain"
           />
+          <button
+            onClick={() => { if (stingPhase === 'outro') onEnded?.(); else handleStingEnded(); }}
+            aria-label="Skip"
+            className="absolute bottom-6 right-6 z-30 px-4 py-2 rounded-lg text-xs font-bold tracking-wide transition-all hover:scale-105"
+            style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, color: GOLD }}
+          >
+            {stingPhase === 'outro' ? 'Close' : 'Skip Intro'}
+          </button>
         </div>
       )}
 
