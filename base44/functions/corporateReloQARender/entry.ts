@@ -12,6 +12,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  *   { action: "checkAll" }                   → poll all rendering clips, store completed videos
  *   { action: "start",  clipId, role }       → start one clip (role: "charlie" | "bob")
  *   { action: "check",  clipId, role }       → poll one clip
+ *   { action: "startCombined", clipId }      → render Charlie+Bob as ONE combined clip (cost-optimized)
+ *   { action: "checkCombined", clipId }       → poll a combined render
+ *   { action: "startAllCombined" }            → combined-render all approved Q&A clips
+ *
+ * COMBINED RENDER: Charlie's question + Bob's answer are submitted as a single
+ * HeyGen API call with two video_inputs. One render job, one video file, one
+ * credit charge — instead of two separate renders. This is the standard going
+ * forward for all Q&A pipelines (see Business Plan v8.0).
  *
  * Auth: admin session.
  */
@@ -180,6 +188,111 @@ Deno.serve(async (req) => {
             const r = await checkRender(clip, role);
             results.push({ clipId: clip.id, kind: clip.kind, faqIndex: clip.faqIndex, role, ...r });
           }
+        }
+      }
+      return Response.json({ success: true, checked: results });
+    }
+
+    // ── COMBINED RENDER: Charlie + Bob in a single HeyGen API call ──
+    const startCombinedRender = async (clip) => {
+      if (!clip.charlieScript || !clip.bobScript) return { error: 'Both charlieScript and bobScript required' };
+      const videoInputs = [
+        {
+          character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' },
+          voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.charlieScript },
+          background: { type: 'color', value: '#0d0d0d' },
+        },
+        {
+          character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
+          voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.bobScript, emotion: 'Excited', speed: 1.12 },
+          background: { type: 'color', value: '#0d0d0d' },
+        },
+      ];
+      const res = await fetch('https://api.heygen.com/v2/video/generate', {
+        method: 'POST',
+        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_inputs: videoInputs, dimension: { width: 1280, height: 720 } }),
+      });
+      const data = await res.json();
+      const videoId = data?.data?.video_id;
+      if (!res.ok || !videoId) {
+        await Clips.update(clip.id, { combinedStatus: 'failed', errorMessage: JSON.stringify(data?.error || data) });
+        return { error: data };
+      }
+      await Clips.update(clip.id, { combinedHeygenId: videoId, combinedStatus: 'rendering' });
+      return { videoId };
+    };
+
+    const checkCombinedRender = async (clip) => {
+      const videoId = clip.combinedHeygenId;
+      if (!videoId) return { skipped: true };
+      const res = await fetch(
+        `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(videoId)}`,
+        { headers: { 'X-Api-Key': heygenKey } }
+      );
+      const data = await res.json();
+      const status = data?.data?.status;
+      if (status === 'completed') {
+        const vidRes = await fetch(data?.data?.video_url);
+        if (!vidRes.ok) return { error: 'download failed' };
+        const buf = await vidRes.arrayBuffer();
+        const file = new File([buf], `corprelo_${clip.id}_combined.mp4`, { type: 'video/mp4' });
+        const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+        await Clips.update(clip.id, { combinedVideoUrl: up.file_url, combinedStatus: 'completed' });
+        return { status: 'completed', url: up.file_url };
+      }
+      if (status === 'failed') {
+        const errMsg = data?.data?.error?.message || 'HeyGen combined render failed';
+        await Clips.update(clip.id, { combinedStatus: 'failed', errorMessage: errMsg });
+        return { status: 'failed', error: errMsg };
+      }
+      return { status: status || 'processing' };
+    };
+
+    if (action === 'startCombined') {
+      const { clipId } = body;
+      if (!clipId) return Response.json({ error: 'clipId required' }, { status: 400 });
+      const arr = await Clips.filter({ id: clipId });
+      const clip = arr?.[0];
+      if (!clip) return Response.json({ error: 'Clip not found' }, { status: 404 });
+      if (clip.scriptStatus !== 'approved') {
+        return Response.json({ success: false, error: 'Script must be approved before rendering' }, { status: 400 });
+      }
+      const r = await startCombinedRender(clip);
+      return Response.json({ success: !r.error, ...r });
+    }
+
+    if (action === 'checkCombined') {
+      const { clipId } = body;
+      if (!clipId) return Response.json({ error: 'clipId required' }, { status: 400 });
+      const arr = await Clips.filter({ id: clipId });
+      const clip = arr?.[0];
+      if (!clip) return Response.json({ error: 'Clip not found' }, { status: 404 });
+      const r = await checkCombinedRender(clip);
+      return Response.json({ success: !r.error, ...r });
+    }
+
+    if (action === 'startAllCombined') {
+      const clips = await Clips.list();
+      const results = [];
+      for (const clip of clips) {
+        if (clip.kind === 'qa' && clip.charlieScript && clip.bobScript
+            && clip.scriptStatus === 'approved'
+            && clip.combinedStatus !== 'completed' && clip.combinedStatus !== 'rendering') {
+          const r = await startCombinedRender(clip);
+          results.push({ clipId: clip.id, faqIndex: clip.faqIndex, ...r });
+        }
+      }
+      return Response.json({ success: true, started: results });
+    }
+
+    if (action === 'checkAllCombined') {
+      const clips = await Clips.list();
+      const results = [];
+      for (const clip of clips) {
+        if (clip.combinedStatus === 'rendering') {
+          const r = await checkCombinedRender(clip);
+          results.push({ clipId: clip.id, faqIndex: clip.faqIndex, ...r });
         }
       }
       return Response.json({ success: true, checked: results });

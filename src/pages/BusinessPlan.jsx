@@ -1146,6 +1146,90 @@ STATUS
 ⏳ PENDING — Engineer recruitment in progress. Current DNN article automation and media plan continue running uninterrupted. This pipeline is additive — no changes to existing flows until the Make.com blueprint is tested and approved.`,
   },
   {
+    id: 'heygen-cost-optimization',
+    title: '💡 HeyGen Production Cost Optimization',
+    icon: Zap,
+    content: `ENTRY DATE: July 14, 2026
+
+HEYGEN VIDEO PRODUCTION COST STRATEGY — EVERGREEN LIBRARY + COMBINED RENDERS
+
+────────────────────────────────
+THE PROBLEM
+────────────────────────────────
+Each Q&A segment was rendered as TWO separate HeyGen clips: Charlie asks (1 render) + Bob answers (1 render). A single show with 6 Q&A pairs = 14 renders. Two daily shows = 28 renders/day. At ~15-20 seconds per clip, that's 7-10 minutes of fresh video daily. HeyGen bills per second. This was running ~$100/day = ~$3,000/month in ongoing production costs — before any new content was added.
+
+The deeper issue: most Q&A content is evergreen. "What does a relocation manager do?" doesn't change Monday vs. Wednesday. We were re-rendering identical conceptual content repeatedly, burning credits on videos that already existed.
+
+────────────────────────────────
+THE THREE-TIER COST STRATEGY
+────────────────────────────────
+
+TIER 1 — EVERGREEN LIBRARY (Render Once, Reuse Forever)
+All Q&A clips explaining core concepts (DNN model, relocation process, PRN, corporate relo, etc.) are rendered exactly once. The frontend assembles them into shows from the library. Cost: $0/day for evergreen content.
+
+• Vetting Desk, Corporate Relo, Roadmap, Real Estate Answers, Receiving Agent — all evergreen
+• Standardized opens (Charlie intros) and closes (Charlie outros) rendered once per show
+• Bullet-point overlays and dynamic backgrounds handled on the frontend (no HeyGen cost)
+• Only re-render if the script itself changes substantively — never for aesthetic tweaks
+
+TIER 2 — FRONTEND-ASSEMBLED DAILY SHOWS (Near-Zero Cost)
+Daily shows assemble from: pre-rendered Charlie intros/outros (evergreen) + Bob's pre-rendered evergreen clips + frontend-generated bullet points for the day's actual news content. The only HeyGen cost is if a genuinely new clip is needed that doesn't exist in the library.
+
+• Bob's segments use the off-white bullet-point overlay system (already built in DnnNewsBroadcastPlayer)
+• Background swaps, bullet extraction, and chyron text are all frontend-driven
+• Zero HeyGen credits consumed for daily assembled shows
+
+TIER 3 — FULL FRESH VIDEO RENDER (Rare, Breaking Content Only)
+Reserve full dual-character video renders for genuinely new, high-value content — 2-3 times per week maximum, not daily. Everything else assembles from the library.
+
+────────────────────────────────
+COMBINED RENDER CONSOLIDATION
+────────────────────────────────
+IMPLEMENTED: Charlie's question + Bob's answer are now combined into a SINGLE HeyGen API call using multiple video_inputs. One render job, one video file, one credit charge — instead of two.
+
+BEFORE: 6 Q&A pairs × 2 clips each = 12 renders per show
+AFTER: 6 Q&A pairs × 1 combined clip each = 6 renders per show (50% reduction)
+
+This is the standard for ALL Q&A render pipelines going forward:
+• corporateReloQARender
+• realEstateQARender
+• vettingDeskQARender
+• lenderRender
+• solveMyStoryRender
+• roadmapQARender
+• receivingAgentQARender
+• dnnNewsRender
+• portalLeadInRender
+
+New entity fields: combinedHeygenId, combinedVideoUrl, combinedStatus
+New actions: startCombined, checkCombined, startAllCombined
+
+────────────────────────────────
+COST PROJECTION
+────────────────────────────────
+BEFORE (Pre-Optimization):
+• ~28 renders/day × 7 days = ~196 renders/week
+• Estimated cost: ~$100/day = ~$3,000/month
+
+AFTER (Post-Optimization):
+• Evergreen library: $0/day (rendered once, reused forever)
+• Daily assembled shows: $0/day (frontend-driven)
+• Fresh full renders: ~6 renders/week (Tier 3 breaking content only)
+• Estimated cost: ~$5-10/day = ~$150-300/month
+
+RESULT: ~90-97% reduction in ongoing HeyGen production costs.
+The $1,000 initial setup expense for new video/voice product development is expected and budgeted. The ongoing daily/monthly fees are now minimized through the evergreen library + combined render approach.
+
+────────────────────────────────
+PRODUCTION RULES (ENFORCED GOING FORWARD)
+────────────────────────────────
+1. NEVER re-render an evergreen clip for aesthetic changes. Use frontend overlays.
+2. ALWAYS use combined rendering for new Q&A pairs (one API call, not two).
+3. Standardized opens/closes are rendered once and reused across all shows of the same type.
+4. Script changes require admin approval before any re-render is triggered.
+5. HeyGen quota is monitored daily. Production pauses automatically when credits are low.`
+  },
+  {
     id: 'risks-mitigations',
     title: 'Key Risks & Mitigations',
     icon: Shield,
@@ -1317,7 +1401,7 @@ export default function BusinessPlan() {
           className="mt-12 p-4 rounded-lg text-center text-sm"
           style={{ background: 'rgba(255,255,255,0.7)', color: '#555' }}
         >
-          <p>Business Plan v7.0 • Last Updated: June 4, 2026 • NEW: 3-Shard Automated Video Pipeline (Base44 ➔ Make.com ➔ HeyGen) — Shard 1 (Daily News, Solo Charlie), Shard 2 (Site Education, Solo Charlie Walkthrough), Shard 3 (Premium Interview, "Donut" 3-Scene Template). Critical constraints documented: async polling architecture, CORS/embed handling, avatar key validation with fallback paths. Engineer deliverables defined. Existing media plan continues uninterrupted. Previously v6.5 • DECISIONS LOGGED TODAY: (1) Twilio remains fully intact — zero changes. All automated homeowner SMS, opt-in/opt-out processing, and batch outreach continue running on Twilio. (2) SimpleTexting.com reinstated — used exclusively for the Top 200 Independent Agent outreach campaign, managed manually outside the app. No app integration at this time. (3) Gemini 3.1 Flash Live API deployment begins post-Google I/O May 19 — full voice-to-voice upgrade path confirmed; all voice synthesis native to Google, ElevenLabs permanently off the stack. Previously v6.4: Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
+          <p>Business Plan v8.0 • Last Updated: July 14, 2026 • NEW: HeyGen Production Cost Optimization — Three-tier strategy (Evergreen Library + Frontend-Assembled Shows + Rare Fresh Renders). Combined render consolidation: Charlie's question + Bob's answer now rendered as ONE HeyGen API call instead of two (50% render reduction). Ongoing production costs reduced from ~$100/day to ~$5-10/day. Evergreen clips rendered once and reused forever. Standardized opens/closes rendered once per show type. Frontend overlays handle all aesthetic changes at zero HeyGen cost. Previously v7.0 • 3-Shard Automated Video Pipeline (Base44 ➔ Make.com ➔ HeyGen) — Shard 1 (Daily News, Solo Charlie), Shard 2 (Site Education, Solo Charlie Walkthrough), Shard 3 (Premium Interview, "Donut" 3-Scene Template). Critical constraints documented: async polling architecture, CORS/embed handling, avatar key validation with fallback paths. Engineer deliverables defined. Existing media plan continues uninterrupted. Previously v6.5 • DECISIONS LOGGED TODAY: (1) Twilio remains fully intact — zero changes. All automated homeowner SMS, opt-in/opt-out processing, and batch outreach continue running on Twilio. (2) SimpleTexting.com reinstated — used exclusively for the Top 200 Independent Agent outreach campaign, managed manually outside the app. No app integration at this time. (3) Gemini 3.1 Flash Live API deployment begins post-Google I/O May 19 — full voice-to-voice upgrade path confirmed; all voice synthesis native to Google, ElevenLabs permanently off the stack. Previously v6.4: Added: Top 200 Independent Agent Campaign — SimpleTexting 2-step outreach strategy, anti-big-box positioning, co-pilot escrow promise, exclusive territory pitch. Previously v6.3: Added: Clone Deployment Roadmap — Journalist clone + Bob Dyson personal clone for DNN video feed; Charlie kept, upgraded to Bob's voice, and renamed post-QA. Previously v6.2: Added: Google I/O May 19 Gemini 3.1 Flash Live upgrade path — voice-to-text → voice-to-voice migration plan. Previously v6.1: Updated: Backend architecture rewritten — ElevenLabs removed, all voice synthesis now runs natively on Gemini 3.1 Flash Live API (WebSocket audio streams + pre-built voices). Google Native Voice Clone (Bob Dyson) to deploy on GA. Zero re-architecture required on clone release. Previously v6.0 (May 16): Dyson Media Desk — Two-Character Interview Strategy, Virtual Newsroom, Aviation Asset Library. v5.0: Landing Page Transition Plan (April 2026) • DNN Broadcast Intelligence Network (March 2026)</p>
         </motion.div>
       </main>
     </div>

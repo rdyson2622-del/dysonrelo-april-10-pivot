@@ -48,19 +48,19 @@
     },
     "charlieHeygenId": {
       "type": "string",
-      "description": "HeyGen job id for Charlie's clip"
+      "description": "HeyGen job id for Charlie's clip (legacy separate render)"
     },
     "bobHeygenId": {
       "type": "string",
-      "description": "HeyGen job id for Bob's clip"
+      "description": "HeyGen job id for Bob's clip (legacy separate render)"
     },
     "charlieVideoUrl": {
       "type": "string",
-      "description": "Permanent URL of Charlie's rendered clip"
+      "description": "Permanent URL of Charlie's rendered clip (legacy separate render)"
     },
     "bobVideoUrl": {
       "type": "string",
-      "description": "Permanent URL of Bob's rendered clip"
+      "description": "Permanent URL of Bob's rendered clip (legacy separate render)"
     },
     "charlieStatus": {
       "type": "string",
@@ -71,7 +71,7 @@
         "failed"
       ],
       "default": "not_started",
-      "description": "Render status of Charlie's clip"
+      "description": "Render status of Charlie's clip (legacy separate render)"
     },
     "bobStatus": {
       "type": "string",
@@ -82,7 +82,26 @@
         "failed"
       ],
       "default": "not_started",
-      "description": "Render status of Bob's clip"
+      "description": "Render status of Bob's clip (legacy separate render)"
+    },
+    "combinedHeygenId": {
+      "type": "string",
+      "description": "HeyGen job id for the combined Charlie+Bob render (one API call, one video)"
+    },
+    "combinedVideoUrl": {
+      "type": "string",
+      "description": "Permanent URL of the combined Charlie+Bob video (preferred over separate clips)"
+    },
+    "combinedStatus": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "rendering",
+        "completed",
+        "failed"
+      ],
+      "default": "not_started",
+      "description": "Render status of the combined Charlie+Bob clip"
     },
     "errorMessage": {
       "type": "string",

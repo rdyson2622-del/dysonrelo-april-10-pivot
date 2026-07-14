@@ -22,8 +22,13 @@ export default function CorporateReloQASection() {
 
   const playQA = (clip) => {
     const segs = [];
-    if (clip.charlieVideoUrl) segs.push({ src: clip.charlieVideoUrl, speaker: 'charlie' });
-    if (clip.bobVideoUrl) segs.push({ src: clip.bobVideoUrl, speaker: 'bob' });
+    // Prefer combined render (one video, one credit charge) over separate clips
+    if (clip.combinedVideoUrl) {
+      segs.push({ src: clip.combinedVideoUrl, speaker: 'charlie' });
+    } else {
+      if (clip.charlieVideoUrl) segs.push({ src: clip.charlieVideoUrl, speaker: 'charlie' });
+      if (clip.bobVideoUrl) segs.push({ src: clip.bobVideoUrl, speaker: 'bob' });
+    }
     if (segs.length) setSegments(segs);
   };
 
@@ -31,14 +36,18 @@ export default function CorporateReloQASection() {
     const segs = [];
     if (intro?.charlieVideoUrl) segs.push({ src: intro.charlieVideoUrl, speaker: 'charlie' });
     qas.forEach(c => {
-      if (c.charlieVideoUrl) segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
-      if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+      if (c.combinedVideoUrl) {
+        segs.push({ src: c.combinedVideoUrl, speaker: 'charlie' });
+      } else {
+        if (c.charlieVideoUrl) segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+        if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+      }
     });
     if (outro?.charlieVideoUrl) segs.push({ src: outro.charlieVideoUrl, speaker: 'charlie' });
     if (segs.length) setSegments(segs);
   };
 
-  const anyVideo = clips.some(c => c.charlieVideoUrl || c.bobVideoUrl);
+  const anyVideo = clips.some(c => c.combinedVideoUrl || c.charlieVideoUrl || c.bobVideoUrl);
   if (qas.length === 0) return null;
 
   return (
@@ -52,7 +61,7 @@ export default function CorporateReloQASection() {
       )}
       {qas.map(clip => (
         <button key={clip.id} onClick={() => playQA(clip)}
-          disabled={!clip.charlieVideoUrl && !clip.bobVideoUrl}
+          disabled={!clip.combinedVideoUrl && !clip.charlieVideoUrl && !clip.bobVideoUrl}
           className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left text-sm transition-all hover:scale-[1.01] disabled:opacity-50"
           style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
           <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
