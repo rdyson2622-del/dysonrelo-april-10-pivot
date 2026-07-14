@@ -18,7 +18,7 @@ const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 // DNN Intelligence Bureau studio background
-const DNN_STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f408a6a7_generated_image.png';
+const DNN_STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5d5a08498_generated_image.png';
 
 Deno.serve(async (req) => {
   try {

@@ -108,7 +108,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <X className="w-6 h-6" />
       </button>
 
-      {/* Full-screen video */}
+      {/* Full-screen video — sting is centered; Charlie lower-left, Bob lower-right */}
       <video
         key={seg.src + idx}
         ref={videoRef}
@@ -117,7 +117,25 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         playsInline
         onEnded={handleEnded}
         onClick={togglePlay}
-        className="w-full h-full object-contain cursor-pointer"
+        className="cursor-pointer transition-all duration-300"
+        style={isSting
+          ? { width: '100%', height: '100%', objectFit: 'contain' }
+          : {
+              width: '38vw',
+              maxWidth: '420px',
+              minWidth: '260px',
+              height: 'auto',
+              aspectRatio: '9/16',
+              objectFit: 'cover',
+              position: 'absolute',
+              bottom: '80px',
+              left: seg.speaker === 'charlie' ? '24px' : 'auto',
+              right: seg.speaker === 'bob' ? '24px' : 'auto',
+              borderRadius: '12px',
+              border: `2px solid ${GOLD}`,
+              boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
+            }
+        }
       />
 
       {/* Play overlay when paused/ended */}
