@@ -103,14 +103,18 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
-      {/* Full-screen studio backdrop — bottom layer */}
-      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      {/* Full-screen studio backdrop — hidden during sting (sting is full-screen DNN logo) */}
+      {!isSting && (
+        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      )}
 
-      {/* DNN logo — layered above the backdrop */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[5] pointer-events-none flex flex-col items-center gap-1">
-        <img src={DNN_LOGO_URL} alt="DNN" className="h-10 md:h-14 w-auto" />
-        <span className="text-[10px] md:text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DYSON NEWS NETWORK</span>
-      </div>
+      {/* DNN logo — layered above the backdrop, hidden during sting */}
+      {!isSting && (
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[5] pointer-events-none flex flex-col items-center gap-1">
+          <img src={DNN_LOGO_URL} alt="DNN" className="h-10 md:h-14 w-auto" />
+          <span className="text-[10px] md:text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DYSON NEWS NETWORK</span>
+        </div>
+      )}
 
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
