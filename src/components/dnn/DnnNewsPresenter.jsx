@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
@@ -18,6 +19,7 @@ export default function DnnNewsPresenter() {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const previewRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Auto-open when arriving from the landing page News pill
@@ -111,7 +113,7 @@ export default function DnnNewsPresenter() {
       )}
 
       {open && createPortal(
-        <DnnNewsBroadcastPlayer segments={segments} onClose={() => setOpen(false)} />,
+        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { setOpen(false); navigate('/'); }} />,
         document.body
       )}
     </>
