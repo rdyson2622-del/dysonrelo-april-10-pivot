@@ -26,19 +26,24 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 1. Get the most recent published article (not yet blasted)
+    // 1. Get the most recent published article with a COMPLETED video (not yet blasted)
+    // Only blast articles whose video render is complete — prevents posting
+    // text-only or linking to stale weekend test videos
     const candidates = await base44.asServiceRole.entities.DnnArticle.filter(
       { status: 'published' }, '-generated_date', 50
     );
 
-    if (!candidates.length) {
-      return Response.json({ error: 'No published articles found to post' }, { status: 404 });
+    // Filter to only articles with a real, completed video URL
+    const videoReady = candidates.filter(a =>
+      a.video_url && !a.video_url.startsWith('heygen:pending:') && a.production_status === 'complete'
+    );
+
+    if (!videoReady.length) {
+      return Response.json({ error: 'No published articles with completed video found — skipping blast until videos are ready', status: 'no_video_ready', candidates_checked: candidates.length }, { status: 404 });
     }
 
-    const article = candidates[0];
-
-    // Check if we have a real video URL (not pending)
-    const hasVideo = article.video_url && !article.video_url.startsWith('heygen:pending:');
+    const article = videoReady[0];
+    const hasVideo = true;
 
     // 2. Build social copy
     const appUrl = 'https://dysonrelo.com/dnn-news';
