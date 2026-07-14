@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/9db63a022_generated_image.png';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const DNN_LOGO_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
@@ -102,11 +103,18 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
-      {/* Full-screen studio backdrop — sits behind the video boxes */}
-      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 0.85 }} />
+      {/* Full-screen studio backdrop — bottom layer */}
+      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+
+      {/* DNN logo — layered above the backdrop */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-[5] pointer-events-none flex flex-col items-center gap-1">
+        <img src={DNN_LOGO_URL} alt="DNN" className="h-10 md:h-14 w-auto" />
+        <span className="text-[10px] md:text-xs font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>DYSON NEWS NETWORK</span>
+      </div>
+
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
-        className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
         style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
         <X className="w-6 h-6" />
       </button>
@@ -122,7 +130,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         onClick={togglePlay}
         className="cursor-pointer transition-all duration-300"
         style={isSting
-          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: 'auto' }
+          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: 'auto', zIndex: 10, position: 'relative' }
           : {
               width: 'clamp(200px, 28vw, 360px)',
               height: 'auto',
@@ -135,6 +143,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               borderRadius: '10px',
               border: `2px solid ${GOLD}`,
               boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+              zIndex: 10,
             }
         }
       />
