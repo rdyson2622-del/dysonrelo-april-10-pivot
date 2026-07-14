@@ -585,8 +585,8 @@ export default function ConsumerDnnNews() {
 
       </div>
 
-      {/* Charlie circle — fixed below header */}
-      <div className="fixed top-36 right-4 md:top-40 md:right-6 z-30">
+      {/* Charlie circle — fixed below header; z-[300] so the full-screen player covers edit/trash buttons */}
+      <div className="fixed top-36 right-4 md:top-40 md:right-6 z-[300]">
         <DnnNewsPresenter />
       </div>
 
