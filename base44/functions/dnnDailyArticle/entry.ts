@@ -82,21 +82,27 @@ Return JSON:
     }
   });
 
-  // Step 2: Generate interview Q&A from the article — Charlie interviews Bob
+  // Step 2: Generate interview Q&A from the article — Charlie interviews Bob (tag-team banter style)
   const qaResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
-    prompt: `You are writing a live TV news segment script. Charlie is the anchor/interviewer. Bob Dyson is the expert guest — a real estate relocation specialist.
+    prompt: `You are writing a LIVE tag-team TV news segment script for DNN — Dyson News Network. This is a real broadcast desk, not a reading of an article.
+
+CHARLIE is the anchor — sharp, quick, slightly wry. She thinks on her feet, reacts to Bob's answers, and occasionally lands a light quip. She never reads stats verbatim — she interprets and probes.
+
+BOB DYSON is the expert — warm, seasoned, 55 years in the business. He answers directly with real specifics, but he's got a dry wit. He might use a relatable analogy or a gentle one-liner that makes you smile, not laugh out loud. He never says "That's a great question" or "Absolutely" — he just talks.
 
 Based on this article:
 HEADLINE: ${result.headline}
 BODY: ${result.body}
 
-Write 3 interview exchanges. Charlie asks sharp, natural anchor questions (not reading the article — probing, curious). Bob answers conversationally as an expert — confident, specific, gives the listener actionable insight. 
+Write 3 exchanges that feel like a real back-and-forth between two people who know each other and enjoy working together.
 
 CRITICAL RULES:
-- Bob NEVER says things like "That's a great question" or "Absolutely" — he just answers directly.
-- Charlie never reads stats verbatim from the article — she reacts and asks follow-ups.
-- Keep each answer under 60 words. Natural spoken language only — no bullet points, no headers.
-- Answers must sound like someone talking, not reading. Contractions, direct address ("if you're moving to ${market.city}..."), real specifics.
+- Each question and answer must include NATURAL HANDOFF language. Charlie tosses to Bob naturally ("Bob, you've been watching this market — what's the real story?"). Bob throws it back ("Back to you, Charlie" or "Charlie, here's what I'd watch...").
+- Include a REACTION in at least one exchange — Charlie reacting to something Bob said before asking the next question, or Bob reacting to Charlie's framing ("Well, you're not wrong about that, but...").
+- Include LIGHT HUMOR in roughly 1 of the 3 exchanges — a wry observation, a relatable analogy, or a gentle quip. Keep it natural and professional — never corny, never forced. Think dry wit, not jokes.
+- Keep each answer under 65 words. Natural spoken language only — no bullet points, no headers, no "in conclusion."
+- Use contractions, direct address ("if you're moving to ${market.city}..."), and real specifics from the article data.
+- The segment should sound like two pros who genuinely like each other, not two people reading a script.
 
 Return JSON:
 {
