@@ -119,7 +119,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         onClick={togglePlay}
         className="cursor-pointer transition-all duration-300"
         style={isSting
-          ? { width: '100%', height: '100%', objectFit: 'contain' }
+          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: 'auto' }
           : {
               width: 'clamp(200px, 28vw, 360px)',
               height: 'auto',
