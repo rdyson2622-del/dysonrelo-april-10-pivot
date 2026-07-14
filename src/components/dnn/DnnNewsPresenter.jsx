@@ -23,20 +23,29 @@ export default function DnnNewsPresenter() {
     if (params.get('autoplay') === '1') {
       setOpen(true);
     }
-    base44.entities.DnnNewsClip.list('faqIndex')
+    base44.entities.DnnNewsClip.list(undefined, 200)
       .then((clips) => {
-        const segs = [];
-        // DNN logo sting opens the broadcast
-        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
+        // Group by article headline, sort each group by faqIndex
+        const byArticle = {};
         for (const c of clips) {
-          if (c.charlieVideoUrl && c.charlieStatus === 'completed') {
-            segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
-          }
-          if (c.bobVideoUrl && c.bobStatus === 'completed') {
-            segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+          const key = c.question || 'Other';
+          if (!byArticle[key]) byArticle[key] = [];
+          byArticle[key].push(c);
+        }
+        // Only keep articles where all clips have completed video
+        const segs = [];
+        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
+        for (const headline of Object.keys(byArticle)) {
+          const articleClips = byArticle[headline].sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0));
+          const allDone = articleClips.every(c =>
+            c.charlieStatus === 'completed' && (!c.bobScript || c.bobStatus === 'completed')
+          );
+          if (!allDone) continue;
+          for (const c of articleClips) {
+            if (c.charlieVideoUrl) segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+            if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
           }
         }
-        // DNN logo sting closes the broadcast
         segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
         setSegments(segs);
       })
