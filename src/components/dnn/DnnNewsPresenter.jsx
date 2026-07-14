@@ -33,17 +33,18 @@ export default function DnnNewsPresenter() {
           if (!byArticle[key]) byArticle[key] = [];
           byArticle[key].push(c);
         }
-        // Only keep articles where all clips have completed video
+        // Only keep articles where all clips have BOTH expected video URLs present
         const segs = [];
         segs.push({ src: DNN_STING_URL, speaker: 'sting' });
         for (const headline of Object.keys(byArticle)) {
           const articleClips = byArticle[headline].sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0));
-          const allDone = articleClips.every(c =>
-            c.charlieStatus === 'completed' && (!c.bobScript || c.bobStatus === 'completed')
+          // Every clip must have Charlie's video; Q&A clips must also have Bob's video
+          const allReady = articleClips.every(c =>
+            c.charlieVideoUrl && (!c.bobScript || c.bobVideoUrl)
           );
-          if (!allDone) continue;
+          if (!allReady) continue;
           for (const c of articleClips) {
-            if (c.charlieVideoUrl) segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+            segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
             if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
           }
         }
