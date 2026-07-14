@@ -29,17 +29,23 @@ export default function QADuoPresenter({ segments, onClose, title }) {
     setIdx(0);
     setEnded(false);
     setPlaying(true);
-    // Auto-play on mount (user gesture from the trigger button)
+    setMuted(false);
+    // Auto-play on mount. Start muted to satisfy browser autoplay policies,
+    // then attempt to unmute (works if a user gesture is still active).
     setTimeout(() => {
       const v = videoRef.current;
-      if (v) {
+      if (!v) return;
+      v.muted = true;
+      v.play().then(() => {
+        setPlaying(true);
+        // Try to unmute — if blocked, the muted indicator + tap-for-sound prompt will show
         v.muted = false;
-        v.play().then(() => setPlaying(true)).catch(() => {
-          v.muted = true;
-          setMuted(true);
-          v.play().then(() => setPlaying(true)).catch(() => {});
-        });
-      }
+        setMuted(false);
+      }).catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().then(() => setPlaying(true)).catch(() => {});
+      });
     }, 50);
   }, [segments]);
 
@@ -130,6 +136,23 @@ export default function QADuoPresenter({ segments, onClose, title }) {
                 {ended
                   ? <RotateCcw className="w-5 h-5" style={{ color: GOLD }} />
                   : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} />}
+              </span>
+            </button>
+          )}
+
+          {/* Tap for sound overlay when muted but playing */}
+          {playing && muted && (
+            <button
+              onClick={toggleMute}
+              aria-label="Tap for sound"
+              className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
+            >
+              <span className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg"
+                style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
+                <VolumeX className="w-5 h-5" style={{ color: GOLD }} />
+                <span className="text-[8px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>
+                  Tap for Sound
+                </span>
               </span>
             </button>
           )}
