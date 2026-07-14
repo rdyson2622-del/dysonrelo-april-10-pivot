@@ -72,6 +72,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     } else {
       setEnded(true);
       setPlaying(false);
+      // Auto-close after a brief pause so viewers return to the landing page
+      setTimeout(() => onClose(), 2500);
     }
   };
 
@@ -122,7 +124,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         key={seg.src + idx}
         ref={videoRef}
         src={seg.src}
-        autoPlay
         playsInline
         onEnded={handleEnded}
         onClick={togglePlay}
