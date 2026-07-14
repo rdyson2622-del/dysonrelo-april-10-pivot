@@ -121,7 +121,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
       {/* Full-screen video — sting is centered; Charlie lower-left, Bob lower-right */}
       {isSting ? (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10 }}>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
             key={seg.src + idx}
             ref={videoRef}
@@ -130,7 +130,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             onEnded={handleEnded}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
-            style={{ objectFit: 'cover', objectPosition: 'center 65%' }}
+            style={{ objectFit: 'contain', transform: 'translateY(18%)' }}
           />
         </div>
       ) : (
