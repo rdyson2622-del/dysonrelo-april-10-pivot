@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
       const dateSpoken = new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'long', month: 'long', day: 'numeric' });
 
       const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News Morning Broadcast" for ${dateSpoken}.
+        prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News Broadcast" for ${dateSpoken}.
 
 CAST:
 - Charlie Simmons: the anchor, at the DNN studio news desk.
@@ -62,7 +62,7 @@ CAST:
 Write THREE spoken segments:
 
 1. charlie_open (180-240 words):
-- Begins exactly: "Good morning from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News morning broadcast for ${dateSpoken}."
+- Begins exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}."
 - Covers 3-4 of the most market-moving stories from the digest in punchy anchor style, each rewritten conversationally with smooth transitions.
 - ENDS by tossing to Bob about the single most relocation-relevant remaining story, e.g. "For what this really means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question about that story]?"
 
@@ -72,7 +72,7 @@ Write THREE spoken segments:
 - Ends by handing back, e.g. "...and that's the real story here, Charlie."
 
 3. charlie_close (40-60 words):
-- Thanks Bob briefly, then closes exactly with: "That's your DNN morning brief. The full stories are right below this broadcast — and if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you tomorrow at six."
+- Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast — and if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you next time."
 
 Plain spoken text only. No stage directions, no markdown, no scene labels.
 
