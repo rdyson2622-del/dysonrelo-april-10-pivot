@@ -70,16 +70,18 @@ Deno.serve(async (req) => {
     if (article.agent_solution) solutionSection += `\n🟡 FOR AGENTS: ${article.agent_solution}`;
     if (article.vendor_solution) solutionSection += `\n🟢 FOR VENDORS: ${article.vendor_solution}`;
 
-    const socialText = `📡 DNN Intelligence Bureau — ${triggerLabel}
+    const subscribeUrl = 'https://dysonrelo.com/subscribe';
 
-${article.headline}
+    const socialText = `${article.headline}
 
 ${teaser}
 ${solutionSection}
 
+📡 DNN Intelligence Bureau — ${triggerLabel}
 Dyson & Dyson Real Estate Concierge — the only news network that reports what happened AND tells you exactly what to do about it.
 
-Read the full brief: ${appUrl}
+📖 Read the full brief: ${appUrl}
+🔔 Subscribe for free daily intelligence: ${subscribeUrl}
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
