@@ -31,6 +31,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const [muted, setMuted] = useState(false);
   const [ended, setEnded] = useState(false);
 
+  const segmentsKey = segments.map(s => s.src).join('|');
   useEffect(() => {
     setIdx(0);
     setEnded(false);
@@ -51,7 +52,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       });
     }, 50);
     return () => clearTimeout(timer);
-  }, [segments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [segmentsKey]);
 
   useEffect(() => {
     if (idx === 0) return;
