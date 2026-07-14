@@ -36,7 +36,7 @@ export default function DnnNewsPresenter() {
         }
         // Only keep articles where all clips have BOTH expected video URLs present
         const segs = [];
-        segs.push({ src: DNN_STING_URL, speaker: 'sting' });
+        const contentSegs = [];
         for (const headline of Object.keys(byArticle)) {
           const articleClips = byArticle[headline].sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0));
           // Every clip must have Charlie's video; Q&A clips must also have Bob's video
@@ -46,17 +46,21 @@ export default function DnnNewsPresenter() {
           if (!allReady) continue;
           for (const c of articleClips) {
             if (c.kind === 'qa') {
-              // Q&A: skip Charlie's question clip — the intro already set up the topic.
-              // Only play Bob's answer so Charlie doesn't play twice back-to-back.
-              if (c.bobVideoUrl) segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
+              if (c.bobVideoUrl) contentSegs.push({ src: c.bobVideoUrl, speaker: 'bob' });
             } else {
-              // intro / outro: Charlie's clip
-              segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
+              contentSegs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
             }
           }
         }
-        segs.push({ src: DNN_STING_URL, speaker: 'sting' });
-        setSegments(segs);
+        // Only build the full segment list if there are actual content clips ready
+        if (contentSegs.length > 0) {
+          segs.push({ src: DNN_STING_URL, speaker: 'sting' });
+          segs.push(...contentSegs);
+          segs.push({ src: DNN_STING_URL, speaker: 'sting' });
+          setSegments(segs);
+        } else {
+          setSegments([]);
+        }
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
