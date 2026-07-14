@@ -129,7 +129,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         onClick={togglePlay}
         className="cursor-pointer transition-all duration-300"
         style={isSting
-          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', zIndex: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }
+          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', zIndex: 10, position: 'relative', margin: '0 auto' }
           : {
               width: 'clamp(200px, 28vw, 360px)',
               height: 'auto',
