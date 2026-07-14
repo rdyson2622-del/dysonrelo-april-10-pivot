@@ -157,25 +157,7 @@ export default function ClientSidebar() {
         {/* ══ AGENT PATH: 3-SUITE LAYOUT ══ */}
         {isAgent && (
           <>
-            {/* SUITE 1: PRN Pro Tools */}
-            <SuiteBox title="⭐ PRN Agent Tools">
-              {isAdmin && (
-                <NavLink to="/admin/skip-trace" icon={Fingerprint} location={location}
-                  label="Run Skip Trace"
-                  badge={<span className="text-[10px] font-black" style={{ color: GOLD }}>$1.50</span>}
-                />
-              )}
-              <NavLink to="/financial-services" icon={CreditCard} location={location} label="Refill Fuel (Stripe)" />
-              <NavLink to="/agent-invited-clients" icon={Users} location={location} label="My Invited Clients" />
-            </SuiteBox>
-
-            {/* SUITE 2: Client Retention Loop (Mini-CRM) */}
-            <SuiteBox title="🤝 Client Retention Loop">
-              <NavLink to="/agent-invited-clients" icon={TrendingUp} location={location} label="Track My Referrals" />
-              <NavLink to="/financial-services" icon={DollarSign} location={location} label="Lender-Solve Status" />
-            </SuiteBox>
-
-            {/* SUITE 3: Personal Real Estate */}
+            {/* SUITE 1 & 2: PRN Agent Tools + Client Retention Loop — admin only */}
             <SuiteBox title="🏠 My Personal Real Estate">
               <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
               <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
