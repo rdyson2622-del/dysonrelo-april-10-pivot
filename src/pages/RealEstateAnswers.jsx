@@ -71,6 +71,7 @@ export default function RealEstateAnswers() {
   const [sequence, setSequence] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     base44.entities.RealEstateQAClip.list()
       .then(setClips)
       .catch(() => {});
@@ -110,7 +111,7 @@ export default function RealEstateAnswers() {
 
       {/* ── Charlie circle — in flow, upper right of the tan content area ── */}
       {introReady && !sequence && (
-        <div className="w-full flex justify-end px-3 md:px-5 pt-4">
+        <div className="w-full flex justify-end px-3 md:px-5 pt-20 md:pt-24">
           <button
             onClick={playIntro}
             aria-label="Hear Charlie explain this page"
