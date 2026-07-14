@@ -102,7 +102,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
       {/* Full-screen studio backdrop — hidden during sting (sting is full-screen DNN logo) */}
       {!isSting && (
         <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
@@ -134,7 +134,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         onClick={togglePlay}
         className="cursor-pointer transition-all duration-300"
         style={isSting
-          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: 'auto', zIndex: 10, position: 'relative' }
+          ? { maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: 'contain', display: 'block', zIndex: 10, position: 'relative' }
           : {
               width: 'clamp(200px, 28vw, 360px)',
               height: 'auto',
