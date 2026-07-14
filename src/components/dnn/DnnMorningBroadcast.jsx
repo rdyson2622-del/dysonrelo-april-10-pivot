@@ -52,8 +52,7 @@ export default function DnnMorningBroadcast() {
 
   const turnOn = () => {
     try { playNewsSting(); } catch (_) { /* audio must never block the broadcast */ }
-    setTvState('intro');
-    setTimeout(() => setTvState('on'), 4200);
+    setTvState('on');
   };
   turnOnRef.current = turnOn;
 
@@ -90,20 +89,7 @@ export default function DnnMorningBroadcast() {
       {/* Full-screen TV takeover */}
       {tvState !== 'off' && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center dnn-tv-on" style={{ background: '#000' }}>
-          {tvState === 'intro' ? (
-            <div className="w-full h-full relative overflow-hidden">
-              <img src={STUDIO_BG} alt="" className="w-full h-full object-cover" style={{ filter: 'brightness(0.4)' }} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <img
-                  src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png"
-                  alt="DNN — Dyson News Network"
-                  className="w-48 md:w-64 h-auto"
-                  style={{ filter: 'drop-shadow(0 8px 40px rgba(212,175,55,0.4))' }}
-                />
-                <p className="text-white text-sm font-bold tracking-[0.35em] uppercase">Morning Broadcast · Charlie Simmons</p>
-              </div>
-            </div>
-          ) : tagTeam ? (
+          {tagTeam ? (
             <TagTeamBroadcastPlayer clips={broadcast.clips} onEnded={() => setTvState('off')} />
           ) : (
             <DnnStingVideo videoUrl={broadcast.videoUrl} fullscreen onEnded={() => setTvState('off')} />
