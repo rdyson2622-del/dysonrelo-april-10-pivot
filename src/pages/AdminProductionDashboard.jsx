@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { RefreshCw, Zap, DollarSign, TrendingDown, AlertTriangle, CheckCircle2, XCircle, Clock, Video, Linkedin, BarChart3 } from 'lucide-react';
+import { RefreshCw, Zap, DollarSign, TrendingDown, AlertTriangle, CheckCircle2, XCircle, Clock, Video, Linkedin, BarChart3, Pencil, Save, Plus, Trash2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const COST_PER_RENDER = 30; // HeyGen credits per video render
 const COST_PER_COMBINED = 60; // Combined Charlie+Bob render (one call, two characters)
 const USD_PER_CREDIT = 0.01; // HeyGen API: 1 credit ≈ $0.01 (verify at heygen.com/settings/billing)
 const creditsToUsd = (c) => `$${(c * USD_PER_CREDIT).toFixed(2)}`;
+
+const INVESTMENT_KEY = 'heygen_investment_tracker_v1';
+const DEFAULT_CATEGORIES = [
+  { id: 'api_credits', label: 'API Credits (Pay-As-You-Go)', amount: 0 },
+  { id: 'monthly_plan', label: 'Monthly Plan / Subscription', amount: 0 },
+  { id: 'avatar_cloning', label: 'Custom Avatar Cloning', amount: 0 },
+  { id: 'voice_cloning', label: 'Voice Cloning', amount: 0 },
+  { id: 'photo_avatar', label: 'Talking Photo Avatars', amount: 0 },
+  { id: 'premium_features', label: 'Premium Features / Upsells', amount: 0 },
+  { id: 'storage', label: 'Storage & Bandwidth', amount: 0 },
+  { id: 'other', label: 'Other / Misc', amount: 0 },
+];
 
 const PIPELINES = [
   { entity: 'CorporateReloClip', label: 'Corporate Relo / HR', fn: 'corporateReloQARender' },
@@ -21,6 +33,120 @@ const PIPELINES = [
   { entity: 'SolveMyStoryClip', label: 'Solve My Story', fn: 'solveMyStoryRender' },
   { entity: 'DnnComparisonClip', label: 'DNN Comparison', fn: null },
 ];
+
+const InvestmentTracker = ({ apiCredits = 0 }) => {
+  const [categories, setCategories] = useState(() => {
+    try {
+      const saved = localStorage.getItem(INVESTMENT_KEY);
+      return saved ? JSON.parse(saved) : DEFAULT_CATEGORIES;
+    } catch { return DEFAULT_CATEGORIES; }
+  });
+  const [editing, setEditing] = useState(false);
+  const [newLabel, setNewLabel] = useState('');
+
+  const save = (cats) => {
+    setCategories(cats);
+    localStorage.setItem(INVESTMENT_KEY, JSON.stringify(cats));
+  };
+
+  const updateAmount = (id, amount) => {
+    save(categories.map(c => c.id === id ? { ...c, amount: parseFloat(amount) || 0 } : c));
+  };
+
+  const addCategory = () => {
+    if (!newLabel.trim()) return;
+    save([...categories, { id: 'custom_' + Date.now(), label: newLabel.trim(), amount: 0 }]);
+    setNewLabel('');
+  };
+
+  const removeCategory = (id) => {
+    save(categories.filter(c => c.id !== id));
+  };
+
+  const total = categories.reduce((s, c) => s + (c.amount || 0), 0);
+  const totalCredits = apiCredits > 0 ? apiCredits : 0;
+  const totalInvestment = total + creditsToUsdNum(totalCredits);
+
+  return (
+    <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: `1px solid rgba(212,175,55,0.2)` }}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <DollarSign className="w-4 h-4" style={{ color: GOLD }} />
+          <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Total HeyGen Investment</p>
+        </div>
+        <button onClick={() => setEditing(!editing)}
+          className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-105"
+          style={{ background: editing ? '#333' : 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: editing ? GOLD : '#000' }}>
+          {editing ? <Save className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}
+          {editing ? 'Done' : 'Edit'}
+        </button>
+      </div>
+
+      {/* Grand Total Banner */}
+      <div className="mb-5 p-4 rounded-xl text-center" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid rgba(212,175,55,0.3)` }}>
+        <p className="text-[9px] font-black tracking-[0.3em] uppercase text-slate-400 mb-1">All-Time HeyGen Spend</p>
+        <p className="text-4xl font-black" style={{ color: GOLD, fontFamily: 'Cormorant Garamond, serif' }}>
+          ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </p>
+        <p className="text-[10px] text-slate-500 mt-1">
+          + {apiCredits.toLocaleString()} API credits remaining (≈ {creditsToUsd(apiCredits)})
+        </p>
+      </div>
+
+      {/* Category Breakdown */}
+      <div className="space-y-2">
+        {categories.map(cat => (
+          <div key={cat.id} className="flex items-center gap-3 p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <span className="flex-1 text-xs text-slate-300">{cat.label}</span>
+            {editing ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500">$</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={cat.amount || ''}
+                  onChange={(e) => updateAmount(cat.id, e.target.value)}
+                  placeholder="0.00"
+                  className="w-24 bg-black/40 text-white text-xs px-2 py-1 rounded border border-white/10 focus:border-yellow-500/50 outline-none"
+                />
+                <button onClick={() => removeCategory(cat.id)} className="text-red-400 hover:text-red-300">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <span className="text-sm font-bold" style={{ color: cat.amount > 0 ? GOLD : '#555' }}>
+                ${(cat.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Add new category (edit mode) */}
+      {editing && (
+        <div className="mt-3 flex items-center gap-2">
+          <input
+            type="text"
+            value={newLabel}
+            onChange={(e) => setNewLabel(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addCategory()}
+            placeholder="Add category (e.g. 'Photo Avatar Pro')"
+            className="flex-1 bg-black/40 text-white text-xs px-3 py-2 rounded-lg border border-white/10 focus:border-yellow-500/50 outline-none"
+          />
+          <button onClick={addCategory} className="flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-lg text-black" style={{ background: GOLD }}>
+            <Plus className="w-3.5 h-3.5" /> Add
+          </button>
+        </div>
+      )}
+
+      <p className="mt-4 text-[10px] text-slate-600">
+        Manual entry — HeyGen's API only returns remaining credits, not billing history. Update these amounts as you add funds or upgrade plans. Saved to this browser.
+      </p>
+    </div>
+  );
+};
+
+const creditsToUsdNum = (c) => c * USD_PER_CREDIT;
 
 export default function AdminProductionDashboard() {
   const queryClient = useQueryClient();
@@ -161,6 +287,9 @@ export default function AdminProductionDashboard() {
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
         </div>
+
+        {/* Total HeyGen Investment Tracker */}
+        <InvestmentTracker />
 
         {/* Top KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
