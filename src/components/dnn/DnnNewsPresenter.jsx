@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
@@ -99,7 +100,10 @@ export default function DnnNewsPresenter() {
         </button>
       )}
 
-      {open && <DnnNewsBroadcastPlayer segments={segments} onClose={() => setOpen(false)} />}
+      {open && createPortal(
+        <DnnNewsBroadcastPlayer segments={segments} onClose={() => setOpen(false)} />,
+        document.body
+      )}
     </>
   );
 }
