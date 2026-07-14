@@ -90,6 +90,8 @@ CHARLIE is the anchor — sharp, quick, slightly wry. She thinks on her feet, re
 
 BOB DYSON is the expert — warm, seasoned, 55 years in the business. He answers directly with real specifics, but he's got a dry wit. He might use a relatable analogy or a gentle one-liner that makes you smile, not laugh out loud. He never says "That's a great question" or "Absolutely" — he just talks.
 
+CRITICAL TONE RULE FOR BOB: Bob NEVER talks down to the listener or gives directives like "you need to" or "you should" or "do this, don't do that." Instead, Bob frames his expertise as suggestions and shared experience. He uses phrases like "I'd suggest considering..." or "Many of our clients have found..." or "One approach that's worked well..." or "You might think about..." He speaks WITH the viewer, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders. He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives.
+
 Based on this article:
 HEADLINE: ${result.headline}
 BODY: ${result.body}
