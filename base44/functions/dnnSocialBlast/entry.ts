@@ -114,7 +114,16 @@ Read the full brief: ${appUrl}
       const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
         headers: { Authorization: `Bearer ${linkedinToken}` },
       });
+      if (!profileRes.ok) {
+        const errText = await profileRes.text().catch(() => '');
+        results.linkedin = { success: false, error: `LinkedIn profile fetch failed (${profileRes.status}): ${errText.slice(0, 200)}` };
+        throw new Error(`LinkedIn profile fetch HTTP ${profileRes.status}`);
+      }
       const profile = await profileRes.json();
+      if (!profile.sub) {
+        results.linkedin = { success: false, error: 'LinkedIn profile response missing sub field', details: profile };
+        throw new Error('LinkedIn profile response missing sub');
+      }
       const authorUrn = `urn:li:person:${profile.sub}`;
 
       const linkedinHeaders = {
