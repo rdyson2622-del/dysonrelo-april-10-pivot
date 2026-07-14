@@ -121,19 +121,17 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         style={isSting
           ? { width: '100%', height: '100%', objectFit: 'contain' }
           : {
-              width: '38vw',
-              maxWidth: '420px',
-              minWidth: '260px',
+              width: 'clamp(200px, 28vw, 360px)',
               height: 'auto',
-              aspectRatio: '9/16',
+              aspectRatio: '16/9',
               objectFit: 'cover',
               position: 'absolute',
-              bottom: '80px',
+              bottom: '90px',
               left: seg.speaker === 'charlie' ? '24px' : 'auto',
               right: seg.speaker === 'bob' ? '24px' : 'auto',
-              borderRadius: '12px',
+              borderRadius: '10px',
               border: `2px solid ${GOLD}`,
-              boxShadow: '0 16px 48px rgba(0,0,0,0.7)',
+              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
             }
         }
       />
