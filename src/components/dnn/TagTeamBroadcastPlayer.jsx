@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Play } from 'lucide-react';
 import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
+import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -11,8 +12,37 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
   const [phase, setPhase] = useState(0);
   const [blocked, setBlocked] = useState(false);
+  const [stingPhase, setStingPhase] = useState('intro'); // 'intro' | null | 'outro'
+  const stingRef = useRef(null);
   const charlieRef = useRef(null);
   const current = clips[phase];
+
+  // Auto-play intro sting on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const v = stingRef.current;
+      if (v) {
+        v.muted = false;
+        v.play().catch(() => {
+          v.muted = true;
+          v.play().catch(() => {});
+        });
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleStingEnded = () => {
+    if (stingPhase === 'intro') {
+      setStingPhase(null);
+    } else if (stingPhase === 'outro') {
+      onEnded?.();
+    }
+  };
+
+  const handleBroadcastEnded = () => {
+    setStingPhase('outro');
+  };
 
   // The Charlie video shown full-screen: current clip if Charlie, otherwise the last Charlie clip
   const charlieUrl = useMemo(() => {
@@ -24,13 +54,27 @@ export default function TagTeamBroadcastPlayer({ clips, onEnded }) {
 
   const advance = () => {
     if (phase + 1 < clips.length) setPhase(phase + 1);
-    else onEnded?.();
+    else handleBroadcastEnded();
   };
 
   const isBobPhase = current?.role === 'bob';
 
   return (
     <div className="relative w-full h-full">
+      {/* DNN Logo Sting — intro and outro */}
+      {stingPhase && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center" style={{ background: '#000' }}>
+          <video
+            ref={stingRef}
+            src={DNN_STING_URL}
+            autoPlay
+            playsInline
+            onEnded={handleStingEnded}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      )}
+
       {/* Studio background — full frame so the national wall map stays visible */}
       <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import QADuoPresenter from '@/components/charlie/QADuoPresenter';
+import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
 
@@ -20,6 +21,8 @@ export default function DnnNewsPresenter() {
     base44.entities.DnnNewsClip.list('faqIndex')
       .then((clips) => {
         const segs = [];
+        // DNN logo sting opens the broadcast
+        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
         for (const c of clips) {
           if (c.charlieVideoUrl && c.charlieStatus === 'completed') {
             segs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
@@ -28,6 +31,8 @@ export default function DnnNewsPresenter() {
             segs.push({ src: c.bobVideoUrl, speaker: 'bob' });
           }
         }
+        // DNN logo sting closes the broadcast
+        segs.push({ src: DNN_STING_URL, speaker: 'charlie' });
         setSegments(segs);
       })
       .catch(() => {})

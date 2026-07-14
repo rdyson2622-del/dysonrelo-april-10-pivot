@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play, X } from 'lucide-react';
 import TagTeamBroadcastPlayer from '@/components/dnn/TagTeamBroadcastPlayer';
+import DnnStingVideo from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -60,8 +61,7 @@ export default function BroadcastVideoStack() {
           {playing.clips?.length > 0 && playing.clips.every(c => c.videoUrl) ? (
             <TagTeamBroadcastPlayer clips={playing.clips} onEnded={() => setPlaying(null)} />
           ) : (
-            <video src={playing.videoUrl} controls autoPlay playsInline
-              className="w-full h-full object-contain" onEnded={() => setPlaying(null)} />
+            <DnnStingVideo videoUrl={playing.videoUrl} fullscreen onEnded={() => setPlaying(null)} />
           )}
           <button onClick={() => setPlaying(null)} aria-label="Close broadcast"
             className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"

@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Play, X } from 'lucide-react';
 import { playNewsSting } from '@/components/dnn/newsSting';
 import TagTeamBroadcastPlayer from '@/components/dnn/TagTeamBroadcastPlayer';
+import DnnStingVideo from '@/components/dnn/DnnStingVideo';
 
 const isTagTeamReady = (b) => b.clips?.length > 0 && b.clips.every(c => c.videoUrl);
 
@@ -105,9 +106,7 @@ export default function DnnMorningBroadcast() {
           ) : tagTeam ? (
             <TagTeamBroadcastPlayer clips={broadcast.clips} onEnded={() => setTvState('off')} />
           ) : (
-            <video src={broadcast.videoUrl} controls autoPlay playsInline
-              className="w-full h-full object-contain"
-              onEnded={() => setTvState('off')} />
+            <DnnStingVideo videoUrl={broadcast.videoUrl} fullscreen onEnded={() => setTvState('off')} />
           )}
 
           {/* Channel bug */}

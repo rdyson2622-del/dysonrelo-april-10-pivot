@@ -1,10 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
 
 export default function ClientStory({ label, headline, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
+  const [stingPlaying, setStingPlaying] = useState(false);
+  const stingRef = useRef(null);
+
+  // When the story is opened, auto-play the DNN sting with sound
+  useEffect(() => {
+    if (open && !stingPlaying) {
+      setStingPlaying(true);
+      const timer = setTimeout(() => {
+        const v = stingRef.current;
+        if (v) {
+          v.muted = false;
+          v.play().catch(() => {
+            v.muted = true;
+            v.play().catch(() => {});
+          });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  const handleStingEnded = () => {
+    setStingPlaying(false);
+  };
+
+  const skipSting = () => {
+    setStingPlaying(false);
+  };
 
   return (
     <div className="w-full rounded-2xl mb-4 overflow-hidden" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.25)' }}>
@@ -39,7 +68,26 @@ export default function ClientStory({ label, headline, children, defaultOpen = f
       {/* Expandable body */}
       {open && (
         <div className="px-6 pb-8">
-          {children}
+          {stingPlaying && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-6" style={{ background: '#000' }}>
+              <video
+                ref={stingRef}
+                src={DNN_STING_URL}
+                autoPlay
+                playsInline
+                onEnded={handleStingEnded}
+                className="w-full h-full object-cover"
+              />
+              <button
+                onClick={skipSting}
+                className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:scale-105"
+                style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, color: GOLD }}
+              >
+                Skip Intro
+              </button>
+            </div>
+          )}
+          {!stingPlaying && children}
         </div>
       )}
 
