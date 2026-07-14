@@ -179,22 +179,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </button>
       )}
 
-      {/* Header badge */}
-      <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 rounded-lg"
-        style={{ background: 'rgba(0,0,0,0.65)', border: `1px solid rgba(212,175,55,0.4)`, backdropFilter: 'blur(4px)' }}>
-        {!isSting && <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />}
-        <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>{headerLabel}</span>
-      </div>
 
-      {/* Progress dots */}
-      {segments.length > 1 && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-2">
-          {segments.map((_, i) => (
-            <span key={i} className="w-2 h-2 rounded-full transition-all"
-              style={{ background: i <= idx ? GOLD : 'rgba(255,255,255,0.25)' }} />
-          ))}
-        </div>
-      )}
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
