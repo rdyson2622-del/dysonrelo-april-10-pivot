@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     const hasVideo = article.video_url && !article.video_url.startsWith('heygen:pending:');
 
     // 2. Build social copy
-    const appUrl = 'https://app.base44.com/apps/683966cc2de4e2c5e7699c47/dnn-news';
+    const appUrl = 'https://dysonrelo.com/dnn-news';
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
     const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
 

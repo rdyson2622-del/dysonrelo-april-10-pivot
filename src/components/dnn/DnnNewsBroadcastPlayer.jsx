@@ -120,32 +120,44 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       </button>
 
       {/* Full-screen video — sting is centered; Charlie lower-left, Bob lower-right */}
-      <video
-        key={seg.src + idx}
-        ref={videoRef}
-        src={seg.src}
-        playsInline
-        onEnded={handleEnded}
-        onClick={togglePlay}
-        className="cursor-pointer transition-all duration-300"
-        style={isSting
-          ? { maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', zIndex: 10, position: 'relative', margin: '0 auto' }
-          : {
-              width: 'clamp(200px, 28vw, 360px)',
-              height: 'auto',
-              aspectRatio: '16/9',
-              objectFit: 'cover',
-              position: 'absolute',
-              bottom: '8px',
-              left: seg.speaker === 'charlie' ? '4px' : 'auto',
-              right: seg.speaker === 'bob' ? '4px' : 'auto',
-              borderRadius: '10px',
-              border: `2px solid ${GOLD}`,
-              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
-              zIndex: 10,
-            }
-        }
-      />
+      {isSting ? (
+        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 10 }}>
+          <video
+            key={seg.src + idx}
+            ref={videoRef}
+            src={seg.src}
+            playsInline
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            className="cursor-pointer"
+            style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }}
+          />
+        </div>
+      ) : (
+        <video
+          key={seg.src + idx}
+          ref={videoRef}
+          src={seg.src}
+          playsInline
+          onEnded={handleEnded}
+          onClick={togglePlay}
+          className="cursor-pointer transition-all duration-300"
+          style={{
+            width: 'clamp(200px, 28vw, 360px)',
+            height: 'auto',
+            aspectRatio: '16/9',
+            objectFit: 'cover',
+            position: 'absolute',
+            bottom: '8px',
+            left: seg.speaker === 'charlie' ? '4px' : 'auto',
+            right: seg.speaker === 'bob' ? '4px' : 'auto',
+            borderRadius: '10px',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+            zIndex: 10,
+          }}
+        />
+      )}
 
       {/* Play overlay when paused/ended */}
       {!playing && (
