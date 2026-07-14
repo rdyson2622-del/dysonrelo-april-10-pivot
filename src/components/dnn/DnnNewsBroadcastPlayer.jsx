@@ -129,8 +129,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onClick={togglePlay}
-            className="cursor-pointer"
-            style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }}
+            className="cursor-pointer w-full h-full"
+            style={{ objectFit: 'contain' }}
           />
         </div>
       ) : (
