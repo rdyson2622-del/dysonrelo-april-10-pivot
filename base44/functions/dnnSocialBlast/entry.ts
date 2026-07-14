@@ -296,11 +296,13 @@ Read the full brief: ${appUrl}
           }),
         });
 
-        const postResult = await postRes.json();
+        let postResult = {};
+        try { postResult = await postRes.json(); } catch (_) {}
+        const postId = postRes.headers.get('x-restli-id') || postResult.id;
         if (!postRes.ok) {
-          results.linkedin = { success: false, error: postResult.message || 'LinkedIn API error', details: postResult };
+          results.linkedin = { success: false, error: postResult.message || `LinkedIn API error (status ${postRes.status})`, details: postResult };
         } else {
-          results.linkedin = { success: true, post_id: postResult.id, type: 'text', note: 'No video available — posted text only' };
+          results.linkedin = { success: true, post_id: postId || 'created', type: 'text', note: 'No video available — posted text only' };
         }
       }
     } catch (e) {
@@ -314,10 +316,12 @@ Read the full brief: ${appUrl}
       const accountsRes = await fetch(
         `https://graph.facebook.com/v25.0/me/accounts?fields=id,name,access_token&access_token=${fbToken}`
       );
-      const accountsData = await accountsRes.json();
+      const accountsText = await accountsRes.text().catch(() => '');
+      let accountsData = {};
+      try { accountsData = accountsText ? JSON.parse(accountsText) : {}; } catch (_) {}
 
       if (!accountsData.data || accountsData.data.length === 0) {
-        results.facebook = { success: false, error: 'No Facebook Pages found for this account' };
+        results.facebook = { success: false, error: `No Facebook Pages found (status ${accountsRes.status}): ${accountsText.slice(0, 200)}` };
       } else {
         const page = accountsData.data[0];
 
