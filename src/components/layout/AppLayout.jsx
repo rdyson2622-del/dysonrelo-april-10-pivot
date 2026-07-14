@@ -41,9 +41,9 @@ export default function AppLayout() {
   }, []);
   
   // Don't show FloatingCharlie on pages that already have embedded chat
-  const hideFloatingCharlie = ['/Chat', '/Dashboard'].some(path => 
-    location.pathname.startsWith(path)
-  );
+  const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news'].some(path => 
+     location.pathname.startsWith(path)
+   );
 
   // Video pipeline mode: strip ALL portal chrome and render only the page.
   const isVideoMode = new URLSearchParams(location.search).get('videoMode') === 'true';

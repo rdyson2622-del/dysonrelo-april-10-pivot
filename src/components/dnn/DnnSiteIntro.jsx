@@ -46,7 +46,8 @@ export default function DnnSiteIntro({ children }) {
           autoPlay
           playsInline
           onEnded={dismiss}
-          className="w-full h-full object-contain"
+          className="max-w-full max-h-full"
+          style={{ objectFit: 'contain' }}
         />
         <button
           onClick={dismiss}
