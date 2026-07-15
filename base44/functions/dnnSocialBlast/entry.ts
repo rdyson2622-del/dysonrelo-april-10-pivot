@@ -43,10 +43,9 @@ Deno.serve(async (req) => {
     }
 
     const article = videoReady[0];
-    const hasVideo = true;
 
-    // 2. Build social copy
-    const appUrl = 'https://dysonrelo.com/dnn-news';
+    // 2. Build social copy — link to the broadcast show, not the raw explainer clip
+    const appUrl = 'https://dysonrelo.com/api/functions/broadcastShowMeta';
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
     const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
 
@@ -77,6 +76,8 @@ Deno.serve(async (req) => {
 
     const subscribeUrl = 'https://dysonrelo.com/subscribe';
 
+    const ogDescription = `Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence. Watch the full broadcast.`;
+
     const socialText = `${article.headline}
 
 ${teaser}
@@ -90,22 +91,13 @@ Dyson & Dyson Real Estate Concierge — the only news network that reports what 
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
-    // 3. Download the video if we have one
-    let videoBuffer = null;
-    if (hasVideo) {
-      try {
-        const vidRes = await fetch(article.video_url);
-        console.log('Video download status:', vidRes.status, 'for URL:', article.video_url?.slice(0, 80));
-        if (vidRes.ok) {
-          videoBuffer = await vidRes.arrayBuffer();
-          console.log('Video buffer size:', videoBuffer.byteLength, 'bytes');
-        } else {
-          console.warn('Video download returned non-ok status:', vidRes.status, await vidRes.text().catch(() => ''));
-        }
-      } catch (e) {
-        console.warn('Video download failed:', e.message);
-      }
-    }
+    // 3. No raw video upload — we post the broadcast show link with a studio image instead
+    //    This prevents posting singular HeyGen explainer clips (Bob/Charlie talking head) to LinkedIn.
+    const hasVideo = false;
+    const videoBuffer = null;
+
+    // Studio image for the broadcast show link preview
+    const studioImage = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
 
     const results = {
       article_headline: article.headline,
@@ -311,6 +303,113 @@ Dyson & Dyson Real Estate Concierge — the only news network that reports what 
         } else {
           results.linkedin = { success: true, post_id: postId || 'created', type: 'text', note: 'No video available — posted text only' };
         }
+      }
+    } catch (e) {
+      results.linkedin = { success: false, error: e.message };
+    }
+
+    // --- 4b. Post to LinkedIn (IMAGE post with broadcast show link) ---
+    try {
+      const { accessToken: linkedinToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
+
+      const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+        headers: { Authorization: `Bearer ${linkedinToken}` },
+      });
+      const profileText = await profileRes.text().catch(() => '');
+      let profile = {};
+      try { profile = profileText ? JSON.parse(profileText) : {}; } catch (_) {}
+      if (!profileRes.ok || !profile.sub) {
+        const meRes = await fetch('https://api.linkedin.com/v2/me', {
+          headers: { Authorization: `Bearer ${linkedinToken}` },
+        });
+        const meText = await meRes.text().catch(() => '');
+        try { profile = meText ? JSON.parse(meText) : profile; } catch (_) {}
+        profile.sub = profile.id;
+      }
+      const authorUrn = `urn:li:person:${profile.sub}`;
+
+      const linkedinHeaders = {
+        Authorization: `Bearer ${linkedinToken}`,
+        'X-Restli-Protocol-Version': '2.0.0',
+      };
+
+      // Step 1: Register an image upload
+      const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+        method: 'POST',
+        headers: { ...linkedinHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registerUploadRequest: {
+            owner: authorUrn,
+            recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+            serviceRelationships: [{
+              identifier: 'urn:li:userGeneratedContent',
+              relationshipType: 'OWNER',
+            }],
+          },
+        }),
+      });
+
+      const registerData = await registerRes.json();
+      const uploadUrl = registerData.value?.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
+      const assetUrn = registerData.value?.asset;
+
+      if (assetUrn && uploadUrl) {
+        // Step 2: Download the studio image and upload it to LinkedIn
+        const imgRes = await fetch(studioImage);
+        const imgBuffer = await imgRes.arrayBuffer();
+
+        const uploadRes = await fetch(uploadUrl, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${linkedinToken}`,
+            'Content-Type': imgRes.headers.get('content-type') || 'image/png',
+          },
+          body: imgBuffer,
+        });
+
+        if (uploadRes.ok) {
+          await new Promise(r => setTimeout(r, 2000));
+
+          // Step 3: Create IMAGE post with broadcast show link in the text
+          const postBody = {
+            author: authorUrn,
+            lifecycleState: 'PUBLISHED',
+            specificContent: {
+              'com.linkedin.ugc.ShareContent': {
+                shareCommentary: { text: socialText },
+                shareMediaCategory: 'IMAGE',
+                media: [{
+                  status: 'READY',
+                  description: { text: ogDescription },
+                  media: assetUrn,
+                  title: { text: article.headline },
+                }],
+              },
+            },
+            visibility: {
+              'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
+            },
+          };
+
+          const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+            method: 'POST',
+            headers: { ...linkedinHeaders, 'Content-Type': 'application/json' },
+            body: JSON.stringify(postBody),
+          });
+
+          const result = await postRes.json().catch(() => ({}));
+          const postId = postRes.headers.get('x-restli-id') || result.id;
+
+          if (!postRes.ok) {
+            results.linkedin = { success: false, error: result.message || 'LinkedIn API error', details: result };
+          } else {
+            results.linkedin = { success: true, post_id: postId, type: 'image', note: 'Posted broadcast show link with studio image' };
+          }
+        } else {
+          results.linkedin = { success: false, error: 'Image upload to LinkedIn failed', details: await uploadRes.text().catch(() => '') };
+        }
+      } else {
+        results.linkedin = { success: false, error: 'LinkedIn image upload registration failed', details: registerData };
       }
     } catch (e) {
       results.linkedin = { success: false, error: e.message };
