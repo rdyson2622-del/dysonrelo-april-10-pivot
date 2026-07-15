@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
 </head>
 <body>
   <p>Redirecting to broadcast…</p>
-  <script>window.location.href = "https://dysonrelo.com/";</script>
+  <script>window.location.href = "https://dysonrelo.com/broadcast-show";</script>
 </body>
 </html>`;
 
