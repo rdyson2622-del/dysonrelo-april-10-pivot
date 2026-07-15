@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe } from 'lucide-react';
+import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -20,6 +20,8 @@ function VideoPreviewCard({ article, onBlast }) {
   const [playing, setPlaying] = useState(false);
   const [blasting, setBlasting] = useState(false);
   const [blastResult, setBlastResult] = useState(null);
+  const [liPosting, setLiPosting] = useState(false);
+  const [liResult, setLiResult] = useState(null);
 
   const hasVideo = article.video_url && !article.video_url.startsWith('heygen:pending:');
   const isRendering = article.video_url && article.video_url.startsWith('heygen:pending:');
@@ -35,6 +37,24 @@ function VideoPreviewCard({ article, onBlast }) {
       setBlastResult({ success: false, error: e.message });
     }
     setBlasting(false);
+  };
+
+  const handleLinkedInPost = async () => {
+    setLiPosting(true);
+    setLiResult(null);
+    try {
+      const res = await base44.functions.invoke('postToLinkedInV2', {
+        text: `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${article.body?.split('\n').filter(p => p.trim())[0] || ''}\n\nWatch the full broadcast: https://dysonrelo.com/broadcast-show`,
+        imageUrl: DNN_LOGO,
+        url: 'https://dysonrelo.com/broadcast-show',
+        title: article.headline,
+        description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
+      });
+      setLiResult({ success: true, data: res.data });
+    } catch (e) {
+      setLiResult({ success: false, error: e.message });
+    }
+    setLiPosting(false);
   };
 
   const statusBadge = () => {
@@ -95,14 +115,38 @@ function VideoPreviewCard({ article, onBlast }) {
         <p className="text-xs font-bold text-white leading-snug mb-1">{article.headline}</p>
         <p className="text-[10px] text-slate-500">{article.dateline}</p>
 
-        {/* Blast button */}
+        {/* LinkedIn button */}
+        {hasVideo && (
+          <button onClick={handleLinkedInPost} disabled={liPosting}
+            className="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-50"
+            style={{ background: liPosting ? '#666' : '#0a66c2' }}>
+            {liPosting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Linkedin className="w-3.5 h-3.5" />}
+            {liPosting ? 'Posting...' : 'Post Broadcast to LinkedIn'}
+          </button>
+        )}
+
+        {/* Facebook button */}
         {hasVideo && (
           <button onClick={handleBlast} disabled={blasting}
-            className="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
+            className="w-full mt-2 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
             style={{ background: blasting ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
             {blasting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-            {blasting ? 'Posting...' : 'Blast to LinkedIn + Facebook'}
+            {blasting ? 'Posting...' : 'Post to Facebook'}
           </button>
+        )}
+
+        {/* LinkedIn result */}
+        {liResult && (
+          <div className="mt-2 rounded-lg p-2 text-[10px]" style={{
+            background: liResult.success ? 'rgba(10,102,194,0.1)' : 'rgba(239,68,68,0.1)',
+            border: `1px solid ${liResult.success ? 'rgba(10,102,194,0.3)' : 'rgba(239,68,68,0.3)'}`,
+          }}>
+            {liResult.success ? (
+              <p className="font-bold text-blue-400">✓ Posted to LinkedIn ({liResult.data?.type})</p>
+            ) : (
+              <p className="text-red-400">✗ {liResult.error}</p>
+            )}
+          </div>
         )}
 
         {/* Blast result */}
@@ -204,7 +248,7 @@ export default function DnnVideoPreview() {
       {/* Warning banner */}
       <div className="px-6 py-3" style={{ background: 'rgba(251,191,36,0.06)' }}>
         <p className="text-xs text-center" style={{ color: '#fbbf24' }}>
-          ⚠️ The 6 AM auto-blast is <strong>paused</strong>. Watch each video below, then click "Blast to LinkedIn + Facebook" only on the ones you approve.
+          ⚠️ The 6 AM auto-blast is <strong>paused</strong>. Watch each video below, then click "Post Broadcast to LinkedIn" or "Post to Facebook" only on the ones you approve.
           Videos still rendering will appear automatically as they complete (page refreshes every 30s).
         </p>
       </div>
