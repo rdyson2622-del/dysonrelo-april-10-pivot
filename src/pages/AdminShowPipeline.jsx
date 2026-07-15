@@ -16,6 +16,8 @@ export default function AdminShowPipeline() {
   const queryClient = useQueryClient();
   const [isAdmin, setIsAdmin] = useState(false);
   const [editingShow, setEditingShow] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMsg, setRefreshMsg] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -26,6 +28,35 @@ export default function AdminShowPipeline() {
       }
     }).catch(() => window.location.href = '/');
   }, []);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setRefreshMsg(null);
+    try {
+      // 1. Poll HeyGen for clip render completions
+      let renderMsg = '';
+      try {
+        const renderRes = await base44.functions.invoke('dnnMorningBroadcast', { action: 'check' });
+        renderMsg = renderRes.data?.checked?.length ? `Renders: ${renderRes.data.checked.length} checked` : '';
+      } catch (e) { renderMsg = `Render check: ${e.message}`; }
+
+      // 2. Poll HeyGen for stitching completions
+      let stitchMsg = '';
+      try {
+        const stitchRes = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
+        stitchMsg = stitchRes.data?.checked?.length ? `Stitch: ${stitchRes.data.checked.length} checked` : '';
+      } catch (e) { stitchMsg = `Stitch check: ${e.message}`; }
+
+      // 3. Invalidate all cached queries so the UI picks up DB changes
+      queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] });
+      queryClient.invalidateQueries({ queryKey: ['heygenQuota'] });
+
+      setRefreshMsg(`${renderMsg}${renderMsg && stitchMsg ? ' · ' : ''}${stitchMsg}`.trim() || 'All queries refreshed');
+    } catch (error) {
+      setRefreshMsg(`Error: ${error.message}`);
+    }
+    setRefreshing(false);
+  };
 
   // Fetch all broadcasts (newest first)
   const { data: broadcasts = [], isLoading } = useQuery({
@@ -66,14 +97,17 @@ export default function AdminShowPipeline() {
             <p className="text-[10px] text-slate-500">Step through each show — accumulate, select, script, render, stitch, preview</p>
           </div>
         </div>
-        <button onClick={() => {
-          queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] });
-          queryClient.invalidateQueries({ queryKey: ['heygenQuota'] });
-        }}
-          className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black"
-          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh
-        </button>
+        <div className="flex items-center gap-3">
+          {refreshMsg && (
+            <span className="text-[10px] text-slate-400 max-w-xs truncate">{refreshMsg}</span>
+          )}
+          <button onClick={handleRefresh} disabled={refreshing}
+            className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Refreshing…' : 'Refresh'}
+          </button>
+        </div>
       </div>
 
       {/* HeyGen Credit Bar */}
