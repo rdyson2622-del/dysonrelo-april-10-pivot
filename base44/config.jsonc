@@ -1,5 +1,5 @@
 {
-  "name": "DysonRelo - APRIL 10 PIVOT\"",
+  "name": "DysonRelo",
   "site": {
     "installCommand": "npm install",
     "buildCommand": "npm run build",
