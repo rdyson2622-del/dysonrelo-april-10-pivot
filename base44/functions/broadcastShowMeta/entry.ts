@@ -4,7 +4,7 @@ Deno.serve(async (req) => {
   try {
     const ogTitle = "DNN Intelligence Bureau — Daily Relocation Broadcast";
     const ogDescription = "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence. Watch the full broadcast.";
-    const ogImage = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png";
+    const ogImage = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
     const broadcastUrl = "https://dysonrelo.com/broadcast-show";
     const canonicalUrl = "https://dysonrelo.com/api/functions/broadcastShowMeta";
 
