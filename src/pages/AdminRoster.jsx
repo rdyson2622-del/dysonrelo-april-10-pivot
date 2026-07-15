@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2, UserPlus } from 'lucide-react';
+import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2, UserPlus, Send, Loader2 } from 'lucide-react';
 import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
 import AddAgentModal from '@/components/admin/AddAgentModal';
 
@@ -144,7 +144,25 @@ export default function AdminRoster() {
   const [independentOnly, setIndependentOnly] = useState(false);
   const [showImport, setShowImport] = useState(true);
   const [showAddAgent, setShowAddAgent] = useState(false);
+  const [campaignLoading, setCampaignLoading] = useState(false);
+  const [campaignResult, setCampaignResult] = useState(null);
   const qc = useQueryClient();
+
+  const launchCampaign = async () => {
+    const pending = partners.filter(p => p.status === 'pending' || !p.status);
+    if (pending.length === 0) { alert('No pending agents to invite.'); return; }
+    if (!window.confirm(`Send email + SMS invitations to ${pending.length} agents?\n\nThis will use your Gmail and Twilio to send real messages.`)) return;
+    setCampaignLoading(true);
+    setCampaignResult(null);
+    try {
+      const res = await base44.functions.invoke('agentInviteCampaign', { action: 'send' });
+      setCampaignResult(res.data);
+      qc.invalidateQueries({ queryKey: ['vetted_partners'] });
+    } catch (e) {
+      setCampaignResult({ error: e.message });
+    }
+    setCampaignLoading(false);
+  };
 
   const { data: partners = [], isLoading } = useQuery({
     queryKey: ['vetted_partners'],
@@ -217,7 +235,28 @@ export default function AdminRoster() {
             style={{ background: showImport ? 'rgba(0,0,0,0.1)' : `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: showImport ? '#1a1a1a' : '#000', border: showImport ? '1px solid rgba(0,0,0,0.2)' : 'none' }}>
             <Upload className="w-4 h-4" /> {showImport ? 'Hide Importer' : 'Import Spreadsheet'}
           </button>
+          <button onClick={launchCampaign} disabled={campaignLoading}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02] disabled:opacity-50"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: '#fff', border: 'none' }}>
+            {campaignLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            {campaignLoading ? 'Sending…' : 'Launch Campaign'}
+          </button>
         </div>
+
+        {/* Campaign result */}
+        {campaignResult && (
+          <div className="mb-6 p-4 rounded-xl" style={{ background: campaignResult.error ? 'rgba(239,68,68,0.08)' : 'rgba(16,185,129,0.08)', border: `1px solid ${campaignResult.error ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)'}` }}>
+            {campaignResult.error ? (
+              <p className="text-sm font-bold text-red-600">✗ {campaignResult.error}</p>
+            ) : (
+              <div className="text-sm" style={{ color: '#059669' }}>
+                <p className="font-black mb-1">✓ Campaign Sent</p>
+                <p className="text-xs">{campaignResult.emailed} emails sent · {campaignResult.smsSent} SMS sent · {campaignResult.targets} total targets</p>
+                {campaignResult.errors?.length > 0 && <p className="text-xs mt-1 text-red-500">{campaignResult.errors.length} errors (see logs)</p>}
+              </div>
+            )}
+          </div>
+        )}
 
         {showAddAgent && (
           <AddAgentModal onClose={() => setShowAddAgent(false)} onSaved={() => qc.invalidateQueries({ queryKey: ['vetted_partners'] })} />
