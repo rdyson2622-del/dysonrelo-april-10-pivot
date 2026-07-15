@@ -1,12 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * postToLinkedInV2 — Posts to LinkedIn with a directly-uploaded image.
+ * postToLinkedInV2 — Posts a video (or image fallback) to LinkedIn.
  *
- * Uses the newer Posts API (rest/posts) with direct image upload.
+ * When videoUrl is provided, uploads and posts the video.
+ * Otherwise, falls back to the imageUrl.
  *
  * Body:
- *   { text: string, imageUrl: string, url?: string, title?: string, description?: string }
+ *   { text: string, videoUrl?: string, imageUrl?: string, title?: string, description?: string }
  */
 Deno.serve(async (req) => {
   try {
@@ -16,9 +17,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { text, imageUrl, url, title, description } = await req.json();
-    if (!text || !imageUrl) {
-      return Response.json({ error: 'Missing text or imageUrl' }, { status: 400 });
+    const { text, videoUrl, imageUrl, title, description } = await req.json();
+    if (!text) {
+      return Response.json({ error: 'Missing text' }, { status: 400 });
+    }
+    if (!videoUrl && !imageUrl) {
+      return Response.json({ error: 'Missing videoUrl or imageUrl' }, { status: 400 });
     }
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
@@ -39,11 +43,145 @@ Deno.serve(async (req) => {
       'Linkedin-Version': '202603',
     };
 
-    // Step 1: Download the image
+    if (videoUrl) {
+      // --- VIDEO UPLOAD via LinkedIn Videos API ---
+      // Step 1: Download the video
+      const vidRes = await fetch(videoUrl);
+      const vidBuffer = await vidRes.arrayBuffer();
+      const fileSize = vidBuffer.byteLength;
+
+      // Step 2: Initialize upload
+      const initRes = await fetch('https://api.linkedin.com/rest/videos?action=initializeUpload', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          initializeUploadRequest: {
+            owner: authorUrn,
+            fileSizeBytes: fileSize,
+            uploadCaptions: false,
+            uploadThumbnail: false,
+          },
+        }),
+      });
+
+      const initData = await initRes.json();
+      const uploadToken = initData?.value?.uploadToken;
+      const videoUrn = initData?.value?.video;
+      const instructions = initData?.value?.uploadInstructions;
+
+      if (!videoUrn || !instructions || instructions.length === 0) {
+        return Response.json({ error: 'Video upload initialization failed', details: initData }, { status: 500 });
+      }
+
+      // Step 3: Upload video binary (handle chunked uploads)
+      const vidBytes = new Uint8Array(vidBuffer);
+      const uploadedPartIds = [];
+      let uploadFailed = false;
+      let uploadError = '';
+
+      for (const instr of instructions) {
+        const start = instr.firstByte || 0;
+        const end = (instr.lastByte ?? fileSize - 1) + 1;
+        const chunk = new Blob([vidBytes.slice(start, end)], { type: 'application/octet-stream' });
+
+        const uploadRes = await fetch(instr.uploadUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': String(end - start),
+          },
+          body: chunk,
+        });
+
+        const etag = uploadRes.headers.get('etag') || uploadRes.headers.get('ETag');
+        if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
+
+        if (!uploadRes.ok) {
+          uploadFailed = true;
+          uploadError = await uploadRes.text().catch(() => 'upload error');
+          break;
+        }
+      }
+
+      if (uploadFailed) {
+        return Response.json({ error: 'Video binary upload failed', details: uploadError.slice(0, 500) }, { status: 500 });
+      }
+
+      // Step 4: Finalize upload
+      await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          finalizeUploadRequest: {
+            video: videoUrn,
+            uploadToken: uploadToken || '',
+            uploadedPartIds,
+          },
+        }),
+      });
+
+      // Step 5: Poll until AVAILABLE (max 60s)
+      let videoReady = false;
+      let pollStatus = 'unknown';
+      for (let attempt = 0; attempt < 12; attempt++) {
+        await new Promise(r => setTimeout(r, 5000));
+        const statusRes = await fetch(`https://api.linkedin.com/rest/videos/${encodeURIComponent(videoUrn)}`, {
+          headers,
+        });
+        const statusData = await statusRes.json().catch(() => ({}));
+        pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
+        if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') {
+          videoReady = true;
+          break;
+        }
+        if (pollStatus === 'FAILED' || pollStatus === 'ERROR') break;
+      }
+
+      // Step 6: Create the post with the video via ugcPosts API
+      const mediaUrn = videoUrn.replace(':video:', ':digitalmediaAsset:');
+      const postBody = {
+        author: authorUrn,
+        lifecycleState: 'PUBLISHED',
+        specificContent: {
+          'com.linkedin.ugc.ShareContent': {
+            media: [{
+              media: mediaUrn,
+              status: 'READY',
+              title: { text: title || '' },
+            }],
+            shareCommentary: { text },
+            shareMediaCategory: 'VIDEO',
+          },
+        },
+        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+      };
+
+      const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify(postBody),
+      });
+
+      const result = await postRes.json().catch(() => ({}));
+      const postId = postRes.headers.get('x-restli-id') || result.id;
+
+      if (!postRes.ok) {
+        return Response.json({ error: result.message || 'LinkedIn video post failed', details: result, status: postRes.status }, { status: 500 });
+      }
+
+      return Response.json({ success: true, post_id: postId, video_urn: videoUrn, type: 'video', video_ready: videoReady, video_status: pollStatus });
+    }
+
+    // --- IMAGE FALLBACK ---
+    if (!imageUrl) {
+      return Response.json({ error: 'Missing imageUrl' }, { status: 400 });
+    }
+
+    // Download the image
     const imgRes = await fetch(imageUrl);
     const imgBuffer = await imgRes.arrayBuffer();
 
-    // Step 2: Register an image upload via the media API
+    // Register image upload
     const registerBody = {
       registerUploadRequest: {
         owner: authorUrn,
@@ -69,7 +207,7 @@ Deno.serve(async (req) => {
     const uploadUrl = registerData.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl;
     const assetUrn = registerData.value.asset;
 
-    // Step 3: Upload the image binary
+    // Upload image binary
     const uploadRes = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
@@ -84,10 +222,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Image upload failed', details: uploadErr }, { status: 500 });
     }
 
-    // Step 4: Wait for LinkedIn to process the image
     await new Promise(r => setTimeout(r, 3000));
 
-    // Step 5: Create the post using the newer Posts API (rest/posts)
+    // Create post via Posts API
     const postBody = {
       author: authorUrn,
       commentary: text,
