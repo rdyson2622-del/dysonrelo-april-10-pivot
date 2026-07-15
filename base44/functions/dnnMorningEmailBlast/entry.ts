@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       general: 'GENERAL',
     }[article.trigger_type] || 'INTELLIGENCE BRIEF';
 
-    const appUrl = 'https://app.base44.com/apps/683966cc2de4e2c5e7699c47/dnn-news';
+    const appUrl = 'https://1dnn.com/dnn-news';
 
     const emailBody = `
 <!DOCTYPE html>
