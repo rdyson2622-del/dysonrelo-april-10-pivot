@@ -2,6 +2,9 @@
   "type": "linkedin",
   "scopes": [
     "w_member_social",
+    "r_organization_admin",
+    "w_organization_social",
+    "r_organization_social",
     "openid",
     "profile",
     "email"
