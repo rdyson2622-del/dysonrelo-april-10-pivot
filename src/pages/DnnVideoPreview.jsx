@@ -5,7 +5,7 @@ import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } f
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-const DNN_STUDIO_IMAGE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a6b3b6cc5_Screenshot2026-07-14at95823PM.png";
+const DNN_STUDIO_IMAGE = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
 
 const TRIGGER_LABELS = {
   tax_policy: 'TAX POLICY', housing_market: 'HOUSING MARKET', job_market: 'JOB MARKET',

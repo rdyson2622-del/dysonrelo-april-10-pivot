@@ -6,7 +6,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 
 export default function Subscribe() {
   return (
-    <div className="min-h-screen flex flex-col items-center px-6 py-14" style={{ background: '#ede0cc' }}>
+    <div className="min-h-full flex flex-col items-center px-6 py-10 pb-20" style={{ background: '#ede0cc' }}>
       <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto mb-6" />
       <p className="text-xs font-black tracking-[0.3em] uppercase mb-3 text-center" style={{ color: GOLD }}>
         DYSON &amp; DYSON · FREE SUBSCRIPTION

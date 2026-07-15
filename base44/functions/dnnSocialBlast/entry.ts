@@ -96,7 +96,7 @@ Dyson & Dyson Real Estate Concierge — the only news network that reports what 
     const videoBuffer = null;
 
     // Studio image for the broadcast show link preview
-    const studioImage = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
+    const studioImage = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png';
 
     const results = {
       article_headline: article.headline,
