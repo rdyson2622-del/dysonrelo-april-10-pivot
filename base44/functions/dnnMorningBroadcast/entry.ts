@@ -108,7 +108,10 @@ ${digest}`,
         await Broadcasts.update(existing[0].id, payload);
         record = { ...existing[0], ...payload };
       } else {
-        record = await Broadcasts.create({ broadcast_date: today, ...payload });
+        // Auto-assign the next sequential show name/number
+        const all = await Broadcasts.list('broadcast_date', 200);
+        const nextNum = all.length + 1;
+        record = await Broadcasts.create({ broadcast_date: today, show_name: `Show ${nextNum}`, show_number: nextNum, ...payload });
       }
       return { record };
     };
