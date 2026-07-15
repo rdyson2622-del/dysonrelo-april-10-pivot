@@ -177,6 +177,16 @@ function VideoPreviewCard({ article, onBlast }) {
 export default function DnnVideoPreview() {
   const queryClient = useQueryClient();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['dnnVideoPreview'] }),
+      queryClient.invalidateQueries({ queryKey: ['dnnVideoPreviewBlasted'] }),
+    ]);
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -219,10 +229,10 @@ export default function DnnVideoPreview() {
             <p className="text-[10px] text-slate-500">Review & approve before social blast</p>
           </div>
         </div>
-        <button onClick={() => queryClient.invalidateQueries({ queryKey: ['dnnVideoPreview'] })}
-          className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black"
+        <button onClick={handleRefresh} disabled={refreshing}
+          className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
           style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} /> {refreshing ? 'Refreshing…' : 'Refresh'}
         </button>
       </div>
 
