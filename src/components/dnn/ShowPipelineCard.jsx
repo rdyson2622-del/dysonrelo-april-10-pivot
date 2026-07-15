@@ -9,6 +9,16 @@ import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 import DistributionTracker from '@/components/dnn/DistributionTracker';
 import SocialAnalyticsPanel from '@/components/dnn/SocialAnalyticsPanel';
+import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
+
+function extractBullets(script) {
+  if (!script) return [];
+  const sentences = script.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [script];
+  const cleaned = sentences
+    .map(s => s.trim())
+    .filter(s => s.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(s));
+  return cleaned.slice(0, 5).map(s => s.replace(/[.!?]+$/, ''));
+}
 
 const GOLD = '#D4AF37';
 
@@ -44,6 +54,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [result, setResult] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
+  const [showStudioPreview, setShowStudioPreview] = useState(false);
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
@@ -240,7 +251,14 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {/* Video preview */}
           {show.videoUrl && (
             <div className="mb-4">
-              <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-2">Composited Video:</p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Composited Video:</p>
+                <button onClick={() => setShowStudioPreview(true)}
+                  className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
+                  style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                  <Play className="w-3 h-3" /> Preview Studio Show
+                </button>
+              </div>
               <div className="rounded-xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)' }}>
                 {playing ? (
                   <video src={show.videoUrl} controls autoPlay playsInline className="w-full" />
@@ -302,6 +320,34 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               onRefresh={onRefresh}
             />
           )}
+
+          {/* Studio preview — full broadcast with DNN background + whiteboard bullets */}
+          {showStudioPreview && (() => {
+            const clips = show.clips || [];
+            const segments = [];
+            for (const clip of clips) {
+              if (!clip.videoUrl) continue;
+              if (clip.role === 'bob') {
+                segments.push({
+                  src: clip.videoUrl,
+                  speaker: 'bob',
+                  title: clip.question || show.headlines?.[clips.indexOf(clip)] || null,
+                  bullets: extractBullets(clip.script),
+                });
+              } else {
+                segments.push({ src: clip.videoUrl, speaker: 'charlie' });
+              }
+            }
+            if (segments.length === 0) return null;
+            return (
+              <div className="fixed inset-0 z-[200]">
+                <DnnNewsBroadcastPlayer
+                  segments={segments}
+                  onClose={() => setShowStudioPreview(false)}
+                />
+              </div>
+            );
+          })()}
 
           {/* Error message */}
           {show.errorMessage && (
