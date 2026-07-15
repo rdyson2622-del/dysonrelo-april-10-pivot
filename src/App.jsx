@@ -87,6 +87,7 @@ import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
 import RoleSelector from './pages/RoleSelector';
 import BroadcastPreview from './pages/BroadcastPreview';
+import BroadcastShow from './pages/BroadcastShow';
 import AgentInvitedClients from './pages/AgentInvitedClients';
 import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
@@ -145,6 +146,7 @@ const AuthenticatedApp = () => {
       {/* Role Selector — standalone, no sidebar */}
       <Route path="/portal" element={<RoleSelector />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
+      <Route path="/broadcast-show" element={<BroadcastShow />} />
 
       {/* Front door — qualifying landing page, no portal chrome */}
       <Route path="/" element={<RoleSelector />} />
