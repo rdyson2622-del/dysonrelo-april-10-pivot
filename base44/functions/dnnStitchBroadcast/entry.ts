@@ -25,6 +25,10 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
+// Studio backdrop — applied to EVERY clip so the final stitched video
+// has the DNN studio background instead of flat black.
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+
 Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') {
@@ -89,19 +93,20 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Build video_inputs — one per clip, preserving each clip's character/voice/background
+      // Build video_inputs — one per clip, ALL using the studio backdrop image
+      // so the final stitched video has the DNN studio background throughout.
       const videoInputs = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
         return isCharlie
           ? {
               character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
               voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
-              background: { type: 'color', value: '#000000' },
+              background: { type: 'image', url: STUDIO_BG_URL },
             }
           : {
               character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
               voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
-              background: { type: 'color', value: '#0d0d0d' },
+              background: { type: 'image', url: STUDIO_BG_URL },
             };
       });
 
