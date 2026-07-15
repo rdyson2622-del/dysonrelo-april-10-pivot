@@ -4,8 +4,9 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, Zap, AlertTriangle, ChevronDown, ChevronRight,
   FileText, Clapperboard, Film, CheckCircle, XCircle, Clock, Edit3,
-  Sparkles, Layers
+  Sparkles, Layers, Library
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ShowPipelineCard from '@/components/dnn/ShowPipelineCard';
 import ScriptEditorModal from '@/components/dnn/ScriptEditorModal';
 
@@ -101,12 +102,20 @@ export default function AdminShowPipeline() {
           {refreshMsg && (
             <span className="text-[10px] text-slate-400 max-w-xs truncate">{refreshMsg}</span>
           )}
-          <button onClick={handleRefresh} disabled={refreshing}
-            className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Refreshing…' : 'Refresh'}
-          </button>
+          <div className="flex items-center gap-2">
+            <Link to="/admin/dnn/broadcast-library"
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-white transition-opacity hover:opacity-80"
+              style={{ border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Library className="w-3.5 h-3.5" style={{ color: GOLD }} />
+              Library
+            </Link>
+            <button onClick={handleRefresh} disabled={refreshing}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing…' : 'Refresh'}
+            </button>
+          </div>
         </div>
       </div>
 
