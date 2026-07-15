@@ -93,18 +93,20 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Build video_inputs — one per clip, ALL using the studio backdrop image
-      // so the final stitched video has the DNN studio background throughout.
+      // Build video_inputs — one per clip. Each clip uses the studio backdrop
+      // as the full-screen background, with the presenter positioned in their
+      // corner (Charlie bottom-left, Bob bottom-right) via scale + offset.
+      // This produces ONE composited video with the studio set throughout.
       const videoInputs = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
         return isCharlie
           ? {
-              character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
+              character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 0.55, offset: { x: -0.28, y: -0.12 } },
               voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
               background: { type: 'image', url: STUDIO_BG_URL },
             }
           : {
-              character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
+              character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 0.55, offset: { x: 0.28, y: -0.12 } },
               voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
               background: { type: 'image', url: STUDIO_BG_URL },
             };
