@@ -6,8 +6,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * When videoUrl is provided, uploads and posts the video.
  * Otherwise, falls back to the imageUrl.
  *
+ * When organizationName is provided, posts to that company page (must be admin).
+ * Otherwise, posts to the user's personal profile.
+ *
  * Body:
- *   { text: string, videoUrl?: string, imageUrl?: string, title?: string, description?: string }
+ *   { text: string, videoUrl?: string, imageUrl?: string, title?: string, description?: string, organizationName?: string }
  */
 Deno.serve(async (req) => {
   try {
@@ -17,7 +20,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { text, videoUrl, imageUrl, title, description } = await req.json();
+    const { text, videoUrl, imageUrl, title, description, organizationName } = await req.json();
     if (!text) {
       return Response.json({ error: 'Missing text' }, { status: 400 });
     }
@@ -27,21 +30,81 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
 
-    // Fetch Bob's personal profile URN
-    const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const profile = await profileRes.json();
-    if (!profile.sub) {
-      return Response.json({ error: 'Could not fetch LinkedIn profile' }, { status: 500 });
-    }
-    const authorUrn = `urn:li:person:${profile.sub}`;
-
     const headers = {
       Authorization: `Bearer ${accessToken}`,
       'X-Restli-Protocol-Version': '2.0.0',
       'Linkedin-Version': '202603',
     };
+
+    let authorUrn;
+    let postedAs = 'personal';
+
+    if (organizationName) {
+      // Step 1: List organization ACLs where the user is an APPROVED ADMINISTRATOR
+      const aclsRes = await fetch(
+        'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&state=APPROVED&projection=(elements*(organization,role,state))',
+        { headers }
+      );
+      const aclsData = await aclsRes.json().catch(() => ({}));
+      const aclElements = aclsData?.elements || [];
+
+      if (!aclElements.length) {
+        return Response.json({
+          error: 'No administered organization pages found for your LinkedIn account',
+          hint: 'Make sure your LinkedIn account is an ADMINISTRATOR of the DNN page, not just a follower.',
+        }, { status: 400 });
+      }
+
+      // Step 2: Extract organization URNs and look up each org's name
+      const orgUrns = [...new Set(aclElements.map(e => e.organization))];
+      const orgs = [];
+
+      for (const orgUrn of orgUrns) {
+        const orgId = orgUrn.split(':').pop();
+        const orgRes = await fetch(
+          `https://api.linkedin.com/v2/organizations/${orgId}?projection=(id,localizedName,vanityName)`,
+          { headers }
+        );
+        const orgData = await orgRes.json().catch(() => ({}));
+        if (orgData.localizedName) {
+          orgs.push(orgData);
+        }
+      }
+
+      if (!orgs.length) {
+        return Response.json({
+          error: 'Could not fetch organization details for your administered pages',
+          org_urns_found: orgUrns,
+        }, { status: 400 });
+      }
+
+      // Step 3: Find the matching organization by name (case-insensitive)
+      const org = orgs.find(o =>
+        o.localizedName?.toLowerCase().includes(organizationName.toLowerCase()) ||
+        o.vanityName?.toLowerCase().includes(organizationName.toLowerCase())
+      );
+
+      if (!org) {
+        return Response.json({
+          error: `Could not find organization matching "${organizationName}"`,
+          available_pages: orgs.map(o => o.localizedName),
+        }, { status: 400 });
+      }
+
+      authorUrn = `urn:li:organization:${org.id}`;
+      postedAs = org.localizedName;
+      console.log(`Posting to LinkedIn organization: ${org.localizedName} (${authorUrn})`);
+    } else {
+      // Post to the user's personal profile
+      const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const profile = await profileRes.json();
+      if (!profile.sub) {
+        return Response.json({ error: 'Could not fetch LinkedIn profile' }, { status: 500 });
+      }
+      authorUrn = `urn:li:person:${profile.sub}`;
+    }
 
     if (videoUrl) {
       // --- VIDEO UPLOAD via LinkedIn Videos API ---
@@ -169,7 +232,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: result.message || 'LinkedIn video post failed', details: result, status: postRes.status }, { status: 500 });
       }
 
-      return Response.json({ success: true, post_id: postId, video_urn: videoUrn, type: 'video', video_ready: videoReady, video_status: pollStatus });
+      return Response.json({ success: true, post_id: postId, video_urn: videoUrn, type: 'video', posted_as: postedAs, video_ready: videoReady, video_status: pollStatus });
     }
 
     // --- IMAGE FALLBACK ---
@@ -258,7 +321,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: result.message || 'LinkedIn API error', details: result, status: postRes.status }, { status: 500 });
     }
 
-    return Response.json({ success: true, post_id: postId, asset_urn: assetUrn, type: 'image' });
+    return Response.json({ success: true, post_id: postId, asset_urn: assetUrn, type: 'image', posted_as: postedAs });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

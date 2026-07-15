@@ -44,11 +44,14 @@ function VideoPreviewCard({ article, onBlast }) {
     setLiPosting(true);
     setLiResult(null);
     try {
+      const firstPara = article.body?.split('\n').filter(p => p.trim())[0] || '';
       const res = await base44.functions.invoke('postToLinkedInV2', {
-        text: `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${article.body?.split('\n').filter(p => p.trim())[0] || ''}\n\n🔔 Subscribe for free daily intelligence: https://1dnn.com/subscribe`,
+        text: `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${firstPara}\n\n🔔 Watch the full broadcast: https://1dnn.com/dnn-news?autoplay=1\nSubscribe for free daily intelligence: https://1dnn.com/subscribe`,
+        videoUrl: article.video_url,
         imageUrl: DNN_STUDIO_IMAGE,
         title: article.headline,
         description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
+        organizationName: 'DNN',
       });
       setLiResult({ success: true, data: res.data });
     } catch (e) {
@@ -142,7 +145,7 @@ function VideoPreviewCard({ article, onBlast }) {
             border: `1px solid ${liResult.success ? 'rgba(10,102,194,0.3)' : 'rgba(239,68,68,0.3)'}`,
           }}>
             {liResult.success ? (
-              <p className="font-bold text-blue-400">✓ Posted to LinkedIn ({liResult.data?.type})</p>
+              <p className="font-bold text-blue-400">✓ Posted to {liResult.data?.posted_as || 'LinkedIn'} ({liResult.data?.type})</p>
             ) : (
               <p className="text-red-400">✗ {liResult.error}</p>
             )}
