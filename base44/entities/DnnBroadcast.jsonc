@@ -2,6 +2,14 @@
   "name": "DnnBroadcast",
   "type": "object",
   "properties": {
+    "show_name": {
+      "type": "string",
+      "description": "Display name for this broadcast e.g. 'Show 1', 'Show 2'"
+    },
+    "show_number": {
+      "type": "number",
+      "description": "Sequential show number for ordering"
+    },
     "broadcast_date": {
       "type": "string",
       "format": "date",
