@@ -390,7 +390,7 @@ export default function FinancialServices() {
 
           {/* Subscribe CTA */}
           <div className="mt-8 max-w-3xl mx-auto">
-            <SubscribeCTA variant="banner" />
+            <SubscribeCTA variant="features" />
           </div>
 
           </div>

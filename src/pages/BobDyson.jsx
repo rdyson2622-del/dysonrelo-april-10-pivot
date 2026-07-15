@@ -75,8 +75,8 @@ export default function BobDyson() {
       <BobDysonCharlieCircle />
 
       {/* Subscribe CTA */}
-      <div className="max-w-2xl mx-auto mt-12">
-        <SubscribeCTA variant="banner" />
+      <div className="max-w-3xl mx-auto mt-12">
+        <SubscribeCTA variant="features" />
       </div>
     </div>
   );

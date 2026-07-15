@@ -272,7 +272,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       {/* Subscribe CTA — shown when broadcast ends */}
       {ended && (
         <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(0,0,0,0.85)' }}>
-          <div className="w-full max-w-lg">
+          <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto">
             <SubscribeCTA variant="endcard" />
             <button onClick={replay} className="mx-auto mt-4 flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full"
               style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'transparent' }}>

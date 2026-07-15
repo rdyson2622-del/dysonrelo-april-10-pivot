@@ -361,7 +361,7 @@ export default function NationalVettedDirectory() {
 
         {/* Subscribe CTA */}
         <div className="mt-6">
-          <SubscribeCTA variant="banner" />
+          <SubscribeCTA variant="features" />
         </div>
       </div>
     </div>

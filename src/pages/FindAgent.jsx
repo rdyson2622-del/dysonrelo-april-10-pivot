@@ -210,7 +210,7 @@ export default function FindAgent() {
 
       {/* Subscribe CTA */}
       <div className="max-w-4xl mx-auto px-6 pb-12">
-        <SubscribeCTA variant="banner" />
+        <SubscribeCTA variant="features" />
       </div>
     </div>
   );
