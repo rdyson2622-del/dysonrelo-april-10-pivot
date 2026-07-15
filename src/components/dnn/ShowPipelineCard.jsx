@@ -27,7 +27,7 @@ const STAGES = [
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close' },
   { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen renders each clip' },
   { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4' },
-  { key: 'ready', label: 'Preview & Test', icon: Layers, desc: 'Composited video ready to test' },
+  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets' },
   { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents' },
 ];
 
@@ -35,7 +35,8 @@ function getShowStage(show) {
   // If any distribution has been done, we're in distribution stage
   const dists = show.distribution || [];
   if (dists.length > 0 && dists.some(d => d.status === 'sent')) return 'distribution';
-  if (show.videoUrl) return 'distribution';
+  // Stitched video exists but nothing distributed yet → Studio Preview step
+  if (show.videoUrl) return 'ready';
   if (show.heygenId && show.status === 'completed') return 'stitch';
   if (show.status === 'completed') return 'stitch';
   if (show.status === 'rendering') return 'render';
@@ -212,11 +213,18 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             )}
 
             {currentStage === 'ready' && (
-              <a href="/admin/dnn/video-preview"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all"
-                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                <Layers className="w-3.5 h-3.5" /> Go to Video Preview Studio
-              </a>
+              <>
+                <button onClick={() => setShowStudioPreview(true)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all"
+                  style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                  <Play className="w-3.5 h-3.5" /> Preview Studio Show
+                </button>
+                <a href="/admin/dnn/video-preview"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
+                  style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <Layers className="w-3.5 h-3.5" /> Video Preview Studio
+                </a>
+              </>
             )}
 
             {currentStage === 'distribution' && (
