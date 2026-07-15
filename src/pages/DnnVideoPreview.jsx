@@ -5,7 +5,7 @@ import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } f
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-const DNN_STUDIO_IMAGE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/3aacf007e_generated_image.png";
+const DNN_STUDIO_IMAGE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a6b3b6cc5_Screenshot2026-07-14at95823PM.png";
 
 const TRIGGER_LABELS = {
   tax_policy: 'TAX POLICY', housing_market: 'HOUSING MARKET', job_market: 'JOB MARKET',
@@ -46,7 +46,7 @@ function VideoPreviewCard({ article, onBlast }) {
     try {
       const res = await base44.functions.invoke('postToLinkedInV2', {
         text: `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${article.body?.split('\n').filter(p => p.trim())[0] || ''}\n\n🔔 Subscribe for free daily intelligence: https://dysonrelo.com/subscribe`,
-        videoUrl: article.video_url,
+        imageUrl: DNN_STUDIO_IMAGE,
         title: article.headline,
         description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
       });
