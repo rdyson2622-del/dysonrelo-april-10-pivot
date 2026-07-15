@@ -7,6 +7,7 @@ import {
   Mic, Volume2
 } from 'lucide-react';
 import LenderDuo from '@/components/charlie/LenderDuo';
+import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -385,6 +386,11 @@ export default function FinancialServices() {
              <LenderEnrollmentForm onRequestVetting={() => setRequestingVetting(true)} />
            </div>
           </div>
+          </div>
+
+          {/* Subscribe CTA */}
+          <div className="mt-8 max-w-3xl mx-auto">
+            <SubscribeCTA variant="banner" />
           </div>
 
           </div>

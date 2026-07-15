@@ -6,6 +6,7 @@ import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -117,6 +118,11 @@ export default function CorporateRelo() {
 
       <CharliePagePresenter pageKey="corporate-relo" />
       <FloatingCharlie />
+
+      {/* Subscribe CTA */}
+      <div className="max-w-3xl mx-auto px-6 pb-12">
+        <SubscribeCTA variant="compact" />
+      </div>
     </div>
   );
 }
