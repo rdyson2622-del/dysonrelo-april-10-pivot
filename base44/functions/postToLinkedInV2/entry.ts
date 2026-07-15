@@ -26,12 +26,9 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
 
-    // Get the authenticated user's LinkedIn profile URN
-    const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    const profile = await profileRes.json();
-    const authorUrn = `urn:li:person:${profile.sub}`;
+    // Post as the DNN Dyson News Networks organization page (not Bob's personal profile)
+    const DNN_ORG_URN = 'urn:li:organization:90431809';
+    const authorUrn = DNN_ORG_URN;
 
     const headers = {
       Authorization: `Bearer ${accessToken}`,
@@ -85,53 +82,26 @@ Deno.serve(async (req) => {
     // Step 3: Wait a moment for LinkedIn to process the image
     await new Promise(r => setTimeout(r, 2000));
 
-    // Step 4: Create the post with the uploaded image
-    let postBody;
-
-    if (url) {
-      // Link preview post with uploaded image as thumbnail
-      postBody = {
-        author: authorUrn,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: { text },
-            shareMediaCategory: 'ARTICLE',
-            media: [{
-              status: 'READY',
-              originalUrl: url,
-              title: { text: title || '' },
-              description: { text: description || '' },
-              media: assetUrn,
-            }],
-          },
+    // Step 4: Create the post with the uploaded image (IMAGE category for organization posts)
+    const postBody = {
+      author: authorUrn,
+      lifecycleState: 'PUBLISHED',
+      specificContent: {
+        'com.linkedin.ugc.ShareContent': {
+          shareCommentary: { text: url ? `${text}\n\n${url}` : text },
+          shareMediaCategory: 'IMAGE',
+          media: [{
+            status: 'READY',
+            description: { text: description || '' },
+            media: assetUrn,
+            title: { text: title || '' },
+          }],
         },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-        },
-      };
-    } else {
-      // Image post
-      postBody = {
-        author: authorUrn,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: { text },
-            shareMediaCategory: 'IMAGE',
-            media: [{
-              status: 'READY',
-              description: { text: description || '' },
-              media: assetUrn,
-              title: { text: title || '' },
-            }],
-          },
-        },
-        visibility: {
-          'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-        },
-      };
-    }
+      },
+      visibility: {
+        'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
+      },
+    };
 
     const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
       method: 'POST',
