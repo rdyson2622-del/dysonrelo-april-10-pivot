@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       general: 'GENERAL',
     }[article.trigger_type] || 'INTELLIGENCE BRIEF';
 
-    const appUrl = 'https://1dnn.com/dnn-news';
+    const appUrl = 'https://1dnn.com/api/functions/broadcastShowMeta';
 
     const emailBody = `
 <!DOCTYPE html>
