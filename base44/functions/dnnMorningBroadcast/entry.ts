@@ -212,6 +212,20 @@ ${digest}`,
           if (changed || allDone) {
             await Broadcasts.update(rec.id, { clips, ...(allDone ? { status: 'completed' } : {}) });
           }
+
+          // Auto-trigger stitching: combine all clips into a single composited video
+          if (allDone && !rec.videoUrl) {
+            try {
+              await base44.asServiceRole.functions.invoke('dnnStitchBroadcast', {
+                action: 'start',
+                broadcastId: rec.id,
+              });
+              console.log(`Auto-triggered stitching for broadcast ${rec.id}`);
+            } catch (e) {
+              console.log(`Stitching trigger failed for ${rec.id}: ${e.message}`);
+            }
+          }
+
           results.push({ id: rec.id, status: allDone ? 'completed' : 'processing', clips: clips.map(c => c.status) });
           continue;
         }
