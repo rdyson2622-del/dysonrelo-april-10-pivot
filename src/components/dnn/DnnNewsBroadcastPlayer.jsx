@@ -209,6 +209,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             borderRadius: '10px',
             border: `2px solid ${GOLD}`,
             boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+            background: '#000',
             zIndex: 10,
           }}
         />
