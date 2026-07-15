@@ -78,6 +78,13 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'No completed broadcast with un-stitched clips found' }, { status: 404 });
       }
 
+      // If force=true, clear old composited video so a fresh stitch can start
+      if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
+        await Broadcasts.update(broadcast.id, { videoUrl: '', heygenId: '', errorMessage: '' });
+        broadcast.videoUrl = '';
+        broadcast.heygenId = '';
+      }
+
       // Already has a composited video
       if (broadcast.videoUrl) {
         return Response.json({ success: true, message: 'Broadcast already has a composited video', videoUrl: broadcast.videoUrl });
