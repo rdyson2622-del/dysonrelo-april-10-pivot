@@ -1,16 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnSocialBlast — Daily social media distribution
+ * dnnSocialBlast — Posts the latest DNN broadcast to the Dyson Facebook Page.
  *
- * Posts the latest DNN Intelligence Brief as a VIDEO to:
- *   1. LinkedIn (personal profile video post)
- *   2. Facebook Pages (video post)
- *
- * If no finished video is available, falls back to a text post.
- *
- * Scheduled daily at 6:00 AM PT — the video pipeline runs at 5:10 AM
- * and the poller ensures videos are ready before this fires.
+ * LinkedIn posting is handled separately by postToLinkedInV2 from the Video Preview Studio.
+ * This function handles Facebook only.
  */
 
 Deno.serve(async (req) => {
@@ -26,344 +20,87 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 1. Get the most recent published article with a COMPLETED video (not yet blasted)
-    // Only blast articles whose video render is complete — prevents posting
-    // text-only or linking to stale weekend test videos
+    // 1. Get the most recent published article with a completed video
     const candidates = await base44.asServiceRole.entities.DnnArticle.filter(
       { status: 'published' }, '-generated_date', 50
     );
 
-    // Filter to only articles with a real, completed video URL
     const videoReady = candidates.filter(a =>
       a.video_url && !a.video_url.startsWith('heygen:pending:') && a.production_status === 'complete'
     );
 
     if (!videoReady.length) {
-      return Response.json({ error: 'No published articles with completed video found — skipping blast until videos are ready', status: 'no_video_ready', candidates_checked: candidates.length }, { status: 404 });
+      return Response.json({
+        error: 'No published articles with completed video found',
+        status: 'no_video_ready',
+        candidates_checked: candidates.length,
+      }, { status: 404 });
     }
 
     const article = videoReady[0];
 
-    // 2. Build social copy — link to the broadcast show, not the raw explainer clip
-    const appUrl = 'https://1dnn.com/api/functions/broadcastShowMeta';
+    // 2. Build social copy
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
     const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
 
     const triggerLabel = {
-      tax_policy: 'TAX POLICY',
-      housing_market: 'HOUSING MARKET',
-      job_market: 'JOB MARKET',
-      interest_rates: 'INTEREST RATES',
-      migration_data: 'MIGRATION DATA',
-      employer_news: 'EMPLOYER NEWS',
-      general: 'INTELLIGENCE BRIEF',
-      federal_reserve: 'FEDERAL RESERVE',
-      mortgage_lending: 'MORTGAGE LENDING',
-      federal_legislation: 'FEDERAL LEGISLATION',
-      national_housing_data: 'NATIONAL HOUSING DATA',
-      economic_indicators: 'ECONOMIC INDICATORS',
-      demographics_migration: 'DEMOGRAPHICS & MIGRATION',
-      insurance_climate: 'INSURANCE & CLIMATE',
-      regulatory_compliance: 'REGULATORY COMPLIANCE',
-      construction_supply: 'CONSTRUCTION & SUPPLY',
-      consumer_protection: 'CONSUMER PROTECTION',
+      tax_policy: 'TAX POLICY', housing_market: 'HOUSING MARKET', job_market: 'JOB MARKET',
+      interest_rates: 'INTEREST RATES', migration_data: 'MIGRATION DATA', employer_news: 'EMPLOYER NEWS',
+      general: 'INTELLIGENCE BRIEF', federal_reserve: 'FEDERAL RESERVE', mortgage_lending: 'MORTGAGE LENDING',
+      federal_legislation: 'FEDERAL LEGISLATION', national_housing_data: 'NATIONAL HOUSING DATA',
+      economic_indicators: 'ECONOMIC INDICATORS', demographics_migration: 'DEMOGRAPHICS & MIGRATION',
+      insurance_climate: 'INSURANCE & CLIMATE', regulatory_compliance: 'REGULATORY COMPLIANCE',
+      construction_supply: 'CONSTRUCTION & SUPPLY', consumer_protection: 'CONSUMER PROTECTION',
     }[article.trigger_type] || 'INTELLIGENCE BRIEF';
 
-    let solutionSection = '';
-    if (article.client_solution) solutionSection += `\n\n🔵 FOR CLIENTS: ${article.client_solution}`;
-    if (article.agent_solution) solutionSection += `\n🟡 FOR AGENTS: ${article.agent_solution}`;
-    if (article.vendor_solution) solutionSection += `\n🟢 FOR VENDORS: ${article.vendor_solution}`;
-
     const subscribeUrl = 'https://1dnn.com/subscribe';
-
-    const ogDescription = `Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence. Watch the full broadcast.`;
+    const showUrl = 'https://1dnn.com/dnn-news?autoplay=1';
 
     const socialText = `${article.headline}
 
 ${teaser}
-${solutionSection}
 
 📡 DNN Intelligence Bureau — ${triggerLabel}
 Dyson & Dyson Real Estate Concierge — the only news network that reports what happened AND tells you exactly what to do about it.
 
-🔔 Subscribe for free daily intelligence: ${subscribeUrl}
+🔔 Watch the full broadcast: ${showUrl}
+Subscribe for free daily intelligence: ${subscribeUrl}
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
-    // 3. No raw video upload — we post the broadcast show link with a studio image instead
-    //    This prevents posting singular HeyGen explainer clips (Bob/Charlie talking head) to LinkedIn.
-    const hasVideo = false;
-    const videoBuffer = null;
-
-    // Studio image for the broadcast show link preview
-    const studioImage = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png';
-
     const results = {
       article_headline: article.headline,
-      has_video: hasVideo,
-      linkedin: null,
       facebook: null,
     };
 
-    // --- 4. Post to LinkedIn (new Videos API + Posts API) ---
-    try {
-      const { accessToken: linkedinToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
-
-      const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
-        headers: { Authorization: `Bearer ${linkedinToken}` },
-      });
-      const profileText = await profileRes.text().catch(() => '');
-      let profile = {};
-      try { profile = profileText ? JSON.parse(profileText) : {}; } catch (_) {}
-      if (!profileRes.ok || !profile.sub) {
-        // Fallback to v2/me endpoint
-        const meRes = await fetch('https://api.linkedin.com/v2/me', {
-          headers: { Authorization: `Bearer ${linkedinToken}` },
-        });
-        const meText = await meRes.text().catch(() => '');
-        try { profile = meText ? JSON.parse(meText) : profile; } catch (_) {}
-        if (!meRes.ok || !profile.id) {
-          results.linkedin = { success: false, error: `LinkedIn profile fetch failed (userinfo: ${profileRes.status} "${profileText.slice(0, 100)}", me: ${meRes.status} "${meText.slice(0, 100)}")` };
-          throw new Error('LinkedIn profile fetch failed — cannot determine author URN');
-        }
-        profile.sub = profile.id;
-      }
-      const authorUrn = `urn:li:person:${profile.sub}`;
-
-      const linkedinHeaders = {
-        Authorization: `Bearer ${linkedinToken}`,
-        'Content-Type': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0',
-        'Linkedin-Version': '202603',
-      };
-
-      if (hasVideo && videoBuffer) {
-        // Step 1: Initialize upload via new Videos API
-        const initRes = await fetch('https://api.linkedin.com/rest/videos?action=initializeUpload', {
-          method: 'POST',
-          headers: linkedinHeaders,
-          body: JSON.stringify({
-            initializeUploadRequest: {
-              owner: authorUrn,
-              fileSizeBytes: videoBuffer.byteLength,
-              uploadCaptions: false,
-              uploadThumbnail: false,
-            },
-          }),
-        });
-
-        const initData = await initRes.json();
-        const uploadToken = initData?.value?.uploadToken;
-        const videoUrn = initData?.value?.video;
-        const uploadUrl = initData?.value?.uploadInstructions?.[0]?.uploadUrl;
-
-        if (videoUrn && uploadUrl) {
-          // Step 2: Upload video binary — handle multi-part chunked uploads
-          const instructions = initData?.value?.uploadInstructions || [{ uploadUrl, firstByte: 0, lastByte: videoBuffer.byteLength - 1 }];
-          const videoBytes = new Uint8Array(videoBuffer);
-          let allUploadsOk = true;
-          let uploadErrorDetail = '';
-          const uploadedPartIds = [];
-
-          for (const instr of instructions) {
-            const start = instr.firstByte || 0;
-            const end = (instr.lastByte ?? videoBuffer.byteLength - 1) + 1;
-            const chunkSize = end - start;
-            const chunk = new Blob([videoBytes.slice(start, end)], { type: 'application/octet-stream' });
-
-            const uploadRes = await fetch(instr.uploadUrl, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/octet-stream',
-                'Content-Length': String(chunkSize),
-              },
-              body: chunk,
-            });
-
-            // LinkedIn returns an ETag header for each uploaded part
-            const etag = uploadRes.headers.get('etag') || uploadRes.headers.get('ETag');
-            if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
-
-            if (!uploadRes.ok) {
-              allUploadsOk = false;
-              try { uploadErrorDetail = await uploadRes.text(); } catch (_) {}
-              break;
-            }
-          }
-
-          if (allUploadsOk) {
-            // Step 2b: Finalize the upload — uploadToken is always "" (empty string per LinkedIn docs)
-            const finalizeBody = {
-              finalizeUploadRequest: {
-                video: videoUrn,
-                uploadToken: uploadToken || '',
-                uploadedPartIds,
-              },
-            };
-            const finalizeRes = await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
-              method: 'POST',
-              headers: linkedinHeaders,
-              body: JSON.stringify(finalizeBody),
-            });
-            const finalizeData = await finalizeRes.json().catch(() => ({}));
-
-            // Step 2c: Poll video status until AVAILABLE (max 30s)
-            let videoReady = false;
-            let pollStatus = 'unknown';
-            for (let attempt = 0; attempt < 6; attempt++) {
-              await new Promise(r => setTimeout(r, 5000));
-              const statusRes = await fetch(`https://api.linkedin.com/rest/videos/${encodeURIComponent(videoUrn)}`, {
-                headers: linkedinHeaders,
-              });
-              const statusData = await statusRes.json().catch(() => ({}));
-              pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
-              if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') {
-                videoReady = true;
-                break;
-              }
-              if (pollStatus === 'FAILED' || pollStatus === 'ERROR') {
-                break;
-              }
-            }
-
-            // Step 3: Create video post via ugcPosts API (rest/posts has a known bug with video)
-            // Convert urn:li:video: → urn:li:digitalmediaAsset: for the ugcPosts API
-            const mediaUrn = videoUrn.replace(':video:', ':digitalmediaAsset:');
-            const ugcPostBody = {
-              author: authorUrn,
-              lifecycleState: 'PUBLISHED',
-              specificContent: {
-                'com.linkedin.ugc.ShareContent': {
-                  media: [
-                    {
-                      media: mediaUrn,
-                      status: 'READY',
-                      title: {
-                        attributes: [],
-                        text: article.headline,
-                      },
-                    },
-                  ],
-                  shareCommentary: {
-                    attributes: [],
-                    text: socialText,
-                  },
-                  shareMediaCategory: 'VIDEO',
-                },
-              },
-              visibility: {
-                'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-              },
-            };
-            const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-              method: 'POST',
-              headers: linkedinHeaders,
-              body: JSON.stringify(ugcPostBody),
-            });
-
-            let postResult = {};
-            try { postResult = await postRes.json(); } catch (_) {}
-            const postId = postRes.headers.get('x-restli-id') || postResult.id || 'created';
-            if (!postRes.ok) {
-              results.linkedin = { success: false, error: postResult.message || `LinkedIn video post failed (status ${postRes.status})`, details: postResult };
-            } else {
-              results.linkedin = { success: true, post_id: postId, type: 'video', video_ready: videoReady, video_status: pollStatus };
-            }
-          } else {
-            results.linkedin = { success: false, error: 'LinkedIn video binary upload failed', details: uploadErrorDetail.slice(0, 500) };
-          }
-        } else {
-          results.linkedin = { success: false, error: 'LinkedIn upload initialization failed', details: initData };
-        }
-      } else {
-        // --- Text-only fallback via new Posts API ---
-        const postRes = await fetch('https://api.linkedin.com/rest/posts', {
-          method: 'POST',
-          headers: linkedinHeaders,
-          body: JSON.stringify({
-            author: authorUrn,
-            commentary: socialText,
-            visibility: 'PUBLIC',
-            distribution: {
-              feedDistribution: 'MAIN_FEED',
-              targetEntities: [],
-              thirdPartyDistributionChannels: [],
-            },
-            lifecycleState: 'PUBLISHED',
-            isReshareDisabledByAuthor: false,
-          }),
-        });
-
-        let postResult = {};
-        try { postResult = await postRes.json(); } catch (_) {}
-        const postId = postRes.headers.get('x-restli-id') || postResult.id;
-        if (!postRes.ok) {
-          results.linkedin = { success: false, error: postResult.message || `LinkedIn API error (status ${postRes.status})`, details: postResult };
-        } else {
-          results.linkedin = { success: true, post_id: postId || 'created', type: 'text', note: 'No video available — posted text only' };
-        }
-      }
-    } catch (e) {
-      results.linkedin = { success: false, error: e.message };
-    }
-
-    // --- 4b. LinkedIn posting is DISABLED ---
-    // LinkedIn is now posted separately via postToLinkedInV2 (broadcast show link + studio image).
-    // This prevents random HeyGen explainer clips from being posted to LinkedIn.
-    results.linkedin = { success: false, skipped: true, note: 'LinkedIn posting disabled — use postToLinkedInV2 for broadcast show posts' };
-
-    // --- 5. Post to Facebook Pages ---
+    // 3. Post to Facebook Pages
     try {
       const { accessToken: fbToken } = await base44.asServiceRole.connectors.getConnection('facebook_pages');
 
       const accountsRes = await fetch(
         `https://graph.facebook.com/v25.0/me/accounts?fields=id,name,access_token&access_token=${fbToken}`
       );
-      const accountsText = await accountsRes.text().catch(() => '');
-      let accountsData = {};
-      try { accountsData = accountsText ? JSON.parse(accountsText) : {}; } catch (_) {}
+      const accountsData = await accountsRes.json().catch(() => ({}));
 
       if (!accountsData.data || accountsData.data.length === 0) {
-        results.facebook = { success: false, error: `No Facebook Pages found (status ${accountsRes.status}): ${accountsText.slice(0, 200)}` };
+        results.facebook = { success: false, error: 'No Facebook Pages found' };
       } else {
         const page = accountsData.data[0];
 
-        if (hasVideo && videoBuffer) {
-          // --- Video post: upload via multipart form data ---
-          const formData = new FormData();
-          formData.append('description', socialText);
-          formData.append('title', article.headline);
-          const videoFile = new File([videoBuffer], 'dnn_brief.mp4', { type: 'video/mp4' });
-          formData.append('source', videoFile);
-
-          const fbPostRes = await fetch(
-            `https://graph.facebook.com/v25.0/${page.id}/videos?access_token=${page.access_token}`,
-            { method: 'POST', body: formData }
-          );
-
-          const fbResult = await fbPostRes.json();
-          if (!fbPostRes.ok) {
-            results.facebook = { success: false, error: fbResult.error?.message || 'Facebook video API error', details: fbResult };
-          } else {
-            results.facebook = { success: true, post_id: fbResult.id, page_name: page.name, type: 'video' };
+        const fbPostRes = await fetch(
+          `https://graph.facebook.com/v25.0/${page.id}/feed?access_token=${page.access_token}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: socialText, link: showUrl }),
           }
+        );
+
+        const fbResult = await fbPostRes.json();
+        if (!fbPostRes.ok) {
+          results.facebook = { success: false, error: fbResult.error?.message || 'Facebook API error', details: fbResult };
         } else {
-          // --- Text-only fallback ---
-          const fbPostRes = await fetch(
-            `https://graph.facebook.com/v25.0/${page.id}/feed?access_token=${page.access_token}`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: socialText, link: appUrl }),
-            }
-          );
-
-          const fbResult = await fbPostRes.json();
-          if (!fbPostRes.ok) {
-            results.facebook = { success: false, error: fbResult.error?.message || 'Facebook API error', details: fbResult };
-          } else {
-            results.facebook = { success: true, post_id: fbResult.id, page_name: page.name, type: 'text', note: 'No video available — posted text only' };
-          }
+          results.facebook = { success: true, post_id: fbResult.id, page_name: page.name, type: 'text' };
         }
       }
     } catch (e) {
@@ -372,9 +109,8 @@ Dyson & Dyson Real Estate Concierge — the only news network that reports what 
 
     console.log('DNN Social Blast results:', JSON.stringify(results));
 
-    // Mark article as blasted only if at least one platform succeeded
-    const anySuccess = results.linkedin?.success || results.facebook?.success;
-    if (anySuccess && article.status === 'published') {
+    // Mark article as blasted if Facebook succeeded
+    if (results.facebook?.success && article.status === 'published') {
       await base44.asServiceRole.entities.DnnArticle.update(article.id, { status: 'blasted' });
     }
 
