@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
+import DistributionTracker from '@/components/dnn/DistributionTracker';
 
 const GOLD = '#D4AF37';
 
@@ -94,6 +95,8 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Distribution tracker */}
+          {show.videoUrl && <DistributionTracker show={show} />}
           {/* Stage badge */}
           <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
             style={{

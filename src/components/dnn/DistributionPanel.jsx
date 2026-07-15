@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Linkedin, Facebook, Mail, Users, CheckCircle, XCircle, Clock,
+  Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
   RefreshCw, Send, DollarSign, ChevronRight
 } from 'lucide-react';
 
@@ -124,6 +124,16 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
       dist: getDist('facebook'),
       action: handleFacebook,
       busy: posting === 'facebook',
+    },
+    {
+      key: 'instagram',
+      label: 'Instagram',
+      icon: Instagram,
+      color: '#E1306C',
+      bgColor: 'rgba(225,48,108,0.1)',
+      dist: getDist('instagram'),
+      action: () => setResult({ success: false, msg: 'Instagram not connected — connect the Instagram Business connector to enable posting' }),
+      busy: posting === 'instagram',
     },
     {
       key: 'subscriber_email',

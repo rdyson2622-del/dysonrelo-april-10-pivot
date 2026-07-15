@@ -106,6 +106,7 @@
             "enum": [
               "linkedin",
               "facebook",
+              "instagram",
               "subscriber_email",
               "agent_private_label"
             ],
