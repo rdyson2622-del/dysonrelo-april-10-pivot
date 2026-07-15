@@ -1,3 +1,4 @@
+// BroadcastShow — public broadcast player page (no auth required)
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';

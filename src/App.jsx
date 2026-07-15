@@ -124,7 +124,7 @@ import TermsOfService from './pages/TermsOfService';
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  // Public routes — accessible without authentication (for LinkedIn/social media scraping)
+  // Public routes — accessible without authentication (for LinkedIn/social media scraping & link previews)
   const path = window.location.pathname;
   if (path === '/broadcast-show' || path === '/broadcast-preview') {
     return (
