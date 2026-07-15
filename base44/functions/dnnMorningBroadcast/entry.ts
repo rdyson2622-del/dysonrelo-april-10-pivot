@@ -69,6 +69,7 @@ Write THREE spoken segments:
 2. bob_answer (80-120 words):
 - Bob answers Charlie's question directly, in his warm, plain-spoken veteran voice.
 - Focuses on what it means for people relocating or buying/selling right now.
+- CRITICAL TONE RULE FOR BOB: Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that." Instead, Bob frames his expertise as suggestions and shared experience. He uses phrases like "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well...", "You might think about..." He speaks WITH the viewer, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders. He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives.
 - Ends by handing back, e.g. "...and that's the real story here, Charlie."
 
 3. charlie_close (40-60 words):
