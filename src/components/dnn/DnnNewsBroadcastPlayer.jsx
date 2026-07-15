@@ -112,44 +112,44 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      {/* Background layer */}
+      {/* Background layer — always studio backdrop (except sting) */}
       {isSting ? (
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
-      ) : hasBullets ? (
-        /* Off-white presentation background with bullet-point overlay */
-        <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
-          {/* Bullet-point content panel — left side, Bob is lower-right */}
-          <div className="absolute inset-0 flex flex-col justify-start px-[8vw] md:px-[10vw] pt-[6vh] md:pt-[8vh] pb-[20vh]">
-            {seg.title && (
-              <h2 className="display-heading text-xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
-                style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
-                {seg.title}
-              </h2>
-            )}
-            <ul className="space-y-3 md:space-y-5">
-              {seg.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-1.5 md:mt-2 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full flex-shrink-0"
-                    style={{ background: GOLD }} />
-                  <span className="text-sm md:text-lg lg:text-xl"
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
-                    {b}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* Subtle DNN watermark */}
-          <div className="absolute top-6 left-6 md:top-8 md:left-10">
-            <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ color: 'rgba(212,175,55,0.5)' }}>
-              DNN Intelligence Bureau
-            </span>
-          </div>
-        </div>
       ) : (
-        /* Studio backdrop for Charlie (and Bob without bullets) */
         <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      )}
+
+      {/* Whiteboard overlay on the center studio screen — shown when Bob presents bullet points */}
+      {!isSting && hasBullets && (
+        <div className="absolute" style={{
+          zIndex: 5,
+          left: '26%', top: '16%', width: '46%', height: '36%',
+          background: '#f5f0e8',
+          borderRadius: '6px',
+          border: `3px solid ${GOLD}`,
+          boxShadow: '0 6px 24px rgba(0,0,0,0.6)',
+          padding: '2vh 2vw',
+          overflow: 'hidden',
+        }}>
+          {seg.title && (
+            <h2 className="display-heading text-sm md:text-xl lg:text-2xl mb-2 md:mb-3"
+              style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
+              {seg.title}
+            </h2>
+          )}
+          <ul className="space-y-1.5 md:space-y-2.5">
+            {seg.bullets.map((b, i) => (
+              <li key={i} className="flex items-start gap-2 md:gap-2.5">
+                <span className="mt-1 md:mt-1.5 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
+                  style={{ background: GOLD }} />
+                <span className="text-[10px] md:text-sm lg:text-base"
+                  style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.4 }}>
+                  {b}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {/* Close button */}
@@ -159,8 +159,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <X className="w-6 h-6" />
       </button>
 
-      {/* Speaker label badge — only on studio background, not on the off-white bullet view */}
-      {!isSting && !hasBullets && (
+      {/* Speaker label badge */}
+      {!isSting && (
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
           style={{
             background: 'rgba(0,0,0,0.65)',
@@ -189,7 +189,35 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
           />
         </div>
+      ) : isBob ? (
+        /* Bob — right wall with black side panels to frame him */
+        <div style={{ position: 'absolute', top: '30%', right: '1.5%', zIndex: 10, display: 'flex', alignItems: 'center' }}>
+          {/* Left black panel */}
+          <div style={{ width: 'clamp(20px, 2.5vw, 40px)', height: 'clamp(200px, 28vh, 320px)', background: '#000', borderRadius: '6px 0 0 6px' }} />
+          <video
+            key={seg.src + idx}
+            ref={videoRef}
+            src={seg.src}
+            playsInline
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            className="cursor-pointer transition-all duration-300"
+            style={{
+              width: 'clamp(120px, 14vw, 180px)',
+              height: 'clamp(200px, 28vh, 320px)',
+              aspectRatio: '9/16',
+              objectFit: 'cover',
+              borderRadius: '0',
+              border: `2px solid ${GOLD}`,
+              boxShadow: '0 8px 28px rgba(0,0,0,0.7)',
+              background: '#000',
+            }}
+          />
+          {/* Right black panel */}
+          <div style={{ width: 'clamp(20px, 2.5vw, 40px)', height: 'clamp(200px, 28vh, 320px)', background: '#000', borderRadius: '0 6px 6px 0' }} />
+        </div>
       ) : (
+        /* Charlie — left brown wall alcove */
         <video
           key={seg.src + idx}
           ref={videoRef}
@@ -199,14 +227,13 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           onClick={togglePlay}
           className="cursor-pointer transition-all duration-300"
           style={{
-            width: 'clamp(120px, 14vw, 180px)',
-            height: 'clamp(200px, 28vh, 320px)',
+            width: 'clamp(100px, 12vw, 160px)',
+            height: 'clamp(180px, 25vh, 280px)',
             aspectRatio: '9/16',
             objectFit: 'cover',
             position: 'absolute',
-            top: '30%',
-            left: seg.speaker === 'charlie' ? '0' : 'auto',
-            right: seg.speaker === 'bob' ? '0' : 'auto',
+            top: '33%',
+            left: '1.5%',
             borderRadius: '8px',
             border: `2px solid ${GOLD}`,
             boxShadow: '0 8px 28px rgba(0,0,0,0.7)',
@@ -247,6 +274,18 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             </span>
           </span>
         </button>
+      )}
+
+      {/* News pills on the floor area */}
+      {!isSting && (
+        <div className="absolute left-1/2 -translate-x-1/2 flex gap-2 md:gap-3" style={{ bottom: '12%', zIndex: 8 }}>
+          {['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA', 'HOUSING SUPPLY'].map((label) => (
+            <span key={label} className="text-[8px] md:text-[10px] font-bold tracking-[0.15em] uppercase px-2.5 py-1 md:px-3 md:py-1.5 rounded-full whitespace-nowrap"
+              style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid rgba(212,175,55,0.3)`, color: 'rgba(212,175,55,0.7)' }}>
+              {label}
+            </span>
+          ))}
+        </div>
       )}
 
       {/* Bottom controls */}
