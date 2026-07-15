@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
+import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -267,6 +268,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           <RotateCcw className="w-6 h-6" />
         </button>
       </div>
+
+      {/* Subscribe CTA — shown when broadcast ends */}
+      {ended && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(0,0,0,0.85)' }}>
+          <div className="w-full max-w-lg">
+            <SubscribeCTA variant="endcard" />
+            <button onClick={replay} className="mx-auto mt-4 flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full"
+              style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'transparent' }}>
+              <RotateCcw className="w-3.5 h-3.5" /> Replay Broadcast
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
