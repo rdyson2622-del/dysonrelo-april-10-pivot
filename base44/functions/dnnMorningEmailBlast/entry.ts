@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       general: 'GENERAL',
     }[article.trigger_type] || 'INTELLIGENCE BRIEF';
 
-    const appUrl = 'https://1dnn.com/api/functions/broadcastShowMeta';
+    const appUrl = 'https://1dnn.com/dnn-news?autoplay=1';
 
     const emailBody = `
 <!DOCTYPE html>
@@ -113,11 +113,10 @@ Deno.serve(async (req) => {
       <div class="headline">${article.headline}</div>
       ${article.dateline ? `<div class="dateline">${article.dateline}</div>` : ''}
       <div class="teaser">${teaser}</div>
-      <a href="${appUrl}" class="cta-btn">▶ Read Full Brief + Watch Video</a>
+      <a href="${appUrl}" class="cta-btn">▶ Watch Today's Broadcast</a>
       <hr class="divider">
       <p style="font-size:12px; color:#475569; text-align:center; line-height:1.6;">
-        This is your free daily DNN Intelligence Brief from Dyson &amp; Dyson Real Estate Concierge.<br>
-        Market-moving news curated by AI — localized to the markets that matter to your move.
+        Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence in a full broadcast show.
       </p>
     </div>
     <div class="footer">
@@ -139,7 +138,7 @@ Deno.serve(async (req) => {
       try {
         await base44.asServiceRole.integrations.Core.SendEmail({
           to: email,
-          subject: `📡 DNN Morning Brief: ${article.headline}`,
+          subject: `📡 DNN Morning Broadcast: ${article.headline}`,
           body: emailBody,
           from_name: 'DNN Intelligence Bureau',
         });
