@@ -199,14 +199,14 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           onClick={togglePlay}
           className="cursor-pointer transition-all duration-300"
           style={{
-            width: 'clamp(160px, 22vw, 280px)',
+            width: 'clamp(150px, 19vw, 240px)',
             height: 'auto',
             aspectRatio: '16/9',
             objectFit: 'cover',
             position: 'absolute',
-            bottom: '-50px',
-            left: seg.speaker === 'charlie' ? '6px' : 'auto',
-            right: seg.speaker === 'bob' ? '6px' : 'auto',
+            top: '34%',
+            left: seg.speaker === 'charlie' ? '0' : 'auto',
+            right: seg.speaker === 'bob' ? '0' : 'auto',
             borderRadius: '8px',
             border: `2px solid ${GOLD}`,
             boxShadow: '0 8px 28px rgba(0,0,0,0.7)',
