@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     <span class="dot"></span>
     <span class="label" id="speaker-label">DNN</span>
   </div>
-  <button class="close-btn" onclick="window.location.href='https://dysonrelo.com/'">&times;</button>
+  <button class="close-btn" onclick="window.close()">&times;</button>
   <div class="controls">
     <button id="play-pause" onclick="togglePlay()">&#9658;</button>
     <button id="mute-btn" onclick="toggleMute()">&#128264;</button>
@@ -173,7 +173,6 @@ Deno.serve(async (req) => {
         loadSegment();
       } else {
         speakerLabel.textContent = 'DNN · BROADCAST COMPLETE';
-        setTimeout(() => window.location.href = 'https://dysonrelo.com/', 3000);
       }
     });
 
