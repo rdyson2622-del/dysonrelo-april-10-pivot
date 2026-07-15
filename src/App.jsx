@@ -104,6 +104,7 @@ import DnnStudioDashboard from './pages/DnnStudioDashboard';
 import AdminRecruitingBroadcast from './pages/AdminRecruitingBroadcast';
 import DnnScriptReview from './pages/DnnScriptReview';
 import DnnVideoPreview from './pages/DnnVideoPreview';
+import AdminShowPipeline from './pages/AdminShowPipeline';
 import HeygenCreditMonitor from './pages/HeygenCreditMonitor';
 import AdminProductionDashboard from './pages/AdminProductionDashboard';
 import AdminComplianceReview from './pages/AdminComplianceReview';
@@ -272,6 +273,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/recruiting" element={<AdminRecruitingBroadcast />} />
         <Route path="/admin/dnn/script-review" element={<DnnScriptReview />} />
         <Route path="/admin/dnn/video-preview" element={<DnnVideoPreview />} />
+        <Route path="/admin/dnn/show-pipeline" element={<AdminShowPipeline />} />
         <Route path="/admin/heygen-credits" element={<HeygenCreditMonitor />} />
         <Route path="/admin/production-dashboard" element={<AdminProductionDashboard />} />
         <Route path="/admin/compliance-review" element={<AdminComplianceReview />} />
