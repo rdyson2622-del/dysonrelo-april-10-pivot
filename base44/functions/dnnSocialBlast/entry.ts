@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     const article = videoReady[0];
 
     // 2. Build social copy — link to the broadcast show, not the raw explainer clip
-    const appUrl = 'https://dysonrelo.com/api/functions/broadcastShowMeta';
+    const appUrl = 'https://1dnn.com/api/functions/broadcastShowMeta';
     const firstPara = article.body?.split('\n').find(p => p.trim()) || '';
     const teaser = firstPara.length > 180 ? firstPara.slice(0, 180) + '...' : firstPara;
 
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     if (article.agent_solution) solutionSection += `\n🟡 FOR AGENTS: ${article.agent_solution}`;
     if (article.vendor_solution) solutionSection += `\n🟢 FOR VENDORS: ${article.vendor_solution}`;
 
-    const subscribeUrl = 'https://dysonrelo.com/subscribe';
+    const subscribeUrl = 'https://1dnn.com/subscribe';
 
     const ogDescription = `Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence. Watch the full broadcast.`;
 
