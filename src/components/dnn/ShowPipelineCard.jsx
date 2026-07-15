@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
-  Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight
+  Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
+  Send
 } from 'lucide-react';
+import DistributionPanel from '@/components/dnn/DistributionPanel';
+import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 
 const GOLD = '#D4AF37';
 
@@ -12,11 +15,15 @@ const STAGES = [
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close' },
   { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen renders each clip' },
   { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4' },
-  { key: 'ready', label: 'Preview & Post', icon: Layers, desc: 'Composited video ready to test' },
+  { key: 'ready', label: 'Preview & Test', icon: Layers, desc: 'Composited video ready to test' },
+  { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents' },
 ];
 
 function getShowStage(show) {
-  if (show.videoUrl) return 'ready';
+  // If any distribution has been done, we're in distribution stage
+  const dists = show.distribution || [];
+  if (dists.length > 0 && dists.some(d => d.status === 'sent')) return 'distribution';
+  if (show.videoUrl) return 'distribution';
   if (show.heygenId && show.status === 'completed') return 'stitch';
   if (show.status === 'completed') return 'stitch';
   if (show.status === 'rendering') return 'render';
@@ -34,6 +41,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [busy, setBusy] = useState(null);
   const [result, setResult] = useState(null);
   const [playing, setPlaying] = useState(false);
+  const [showAgentModal, setShowAgentModal] = useState(false);
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
@@ -195,6 +203,14 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 <Layers className="w-3.5 h-3.5" /> Go to Video Preview Studio
               </a>
             )}
+
+            {currentStage === 'distribution' && (
+              <a href="/admin/dnn/video-preview"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all"
+                style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                <Layers className="w-3.5 h-3.5" /> Go to Video Preview Studio
+              </a>
+            )}
           </div>
 
           {/* Clip status details */}
@@ -254,6 +270,26 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 <p className="text-[11px] text-slate-400 whitespace-pre-wrap line-clamp-6">{show.script}</p>
               </div>
             </div>
+          )}
+
+          {/* Distribution panel — shown when video is ready */}
+          {show.videoUrl && (
+            <div className="mb-4">
+              <DistributionPanel
+                show={show}
+                onRefresh={onRefresh}
+                onAgentDistribute={() => setShowAgentModal(true)}
+              />
+            </div>
+          )}
+
+          {/* Agent distribution modal */}
+          {showAgentModal && (
+            <AgentDistributionModal
+              show={show}
+              onClose={() => setShowAgentModal(false)}
+              onRefresh={onRefresh}
+            />
           )}
 
           {/* Error message */}

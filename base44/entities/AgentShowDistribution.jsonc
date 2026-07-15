@@ -1,0 +1,77 @@
+{
+  "name": "AgentShowDistribution",
+  "type": "object",
+  "properties": {
+    "broadcast_id": {
+      "type": "string",
+      "description": "DnnBroadcast ID this distribution belongs to"
+    },
+    "broadcast_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Denormalized broadcast date for easy filtering"
+    },
+    "show_name": {
+      "type": "string",
+      "description": "Denormalized show name e.g. 'Show 4'"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "PartnerAgent ID receiving this distribution"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Denormalized agent name"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Denormalized agent email for delivery"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "delivered",
+        "opened",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Delivery status to this agent"
+    },
+    "fee": {
+      "type": "number",
+      "default": 0,
+      "description": "Fee charged to agent for private-label distribution"
+    },
+    "fee_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the agent fee has been collected"
+    },
+    "recipient_count": {
+      "type": "number",
+      "description": "Number of contacts in the agent's list this was sent to"
+    },
+    "delivered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the distribution was delivered"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Denormalized broadcast video URL sent to the agent"
+    },
+    "private_label_name": {
+      "type": "string",
+      "description": "Agent's brand name as shown in the private-labeled content"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if delivery failed"
+    }
+  },
+  "required": [
+    "broadcast_id",
+    "agent_id"
+  ]
+}

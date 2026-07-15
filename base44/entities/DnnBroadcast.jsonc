@@ -95,6 +95,62 @@
     "errorMessage": {
       "type": "string",
       "description": "Last render error"
+    },
+    "distribution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": [
+              "linkedin",
+              "facebook",
+              "subscriber_email",
+              "agent_private_label"
+            ],
+            "description": "Distribution channel"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "failed"
+            ],
+            "default": "pending"
+          },
+          "recipient": {
+            "type": "string",
+            "description": "Who received it (e.g. 'DNN LinkedIn Page', 'All Subscribers', agent name)"
+          },
+          "post_id": {
+            "type": "string",
+            "description": "Social post ID or email message ID"
+          },
+          "posted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recipient_count": {
+            "type": "number",
+            "description": "Number of recipients (for email/agent blasts)"
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Affiliated agent ID (agent_private_label only)"
+          },
+          "fee": {
+            "type": "number",
+            "description": "Fee charged to agent for private-label distribution"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if failed"
+          }
+        }
+      },
+      "description": "Tracks distribution of this show to social media, subscribers, and agent private-label lists"
     }
   },
   "required": [
