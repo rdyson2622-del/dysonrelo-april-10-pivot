@@ -148,6 +148,49 @@
           "error": {
             "type": "string",
             "description": "Error message if failed"
+          },
+          "analytics": {
+            "type": "object",
+            "properties": {
+              "impressions": {
+                "type": "number",
+                "description": "Total views/impressions"
+              },
+              "unique_impressions": {
+                "type": "number",
+                "description": "Unique viewers"
+              },
+              "likes": {
+                "type": "number",
+                "description": "Total likes/reactions"
+              },
+              "comments": {
+                "type": "number",
+                "description": "Total comments"
+              },
+              "shares": {
+                "type": "number",
+                "description": "Total shares/reposts"
+              },
+              "video_views": {
+                "type": "number",
+                "description": "Video-specific views (for video posts)"
+              },
+              "engagement_rate": {
+                "type": "number",
+                "description": "Engagement rate as a percentage"
+              },
+              "previous_impressions": {
+                "type": "number",
+                "description": "Previous poll's impressions \u2014 for trend calculation"
+              },
+              "polled_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When analytics were last polled"
+              }
+            },
+            "description": "Social media analytics pulled from platform APIs"
           }
         }
       },

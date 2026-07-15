@@ -8,6 +8,7 @@ import {
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 import DistributionTracker from '@/components/dnn/DistributionTracker';
+import SocialAnalyticsPanel from '@/components/dnn/SocialAnalyticsPanel';
 
 const GOLD = '#D4AF37';
 
@@ -283,6 +284,13 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 onRefresh={onRefresh}
                 onAgentDistribute={() => setShowAgentModal(true)}
               />
+            </div>
+          )}
+
+          {/* Social analytics — shown when posts have been distributed */}
+          {show.videoUrl && (show.distribution || []).some(d => d.status === 'sent' && d.post_id) && (
+            <div className="mb-4">
+              <SocialAnalyticsPanel show={show} onRefresh={onRefresh} />
             </div>
           )}
 
