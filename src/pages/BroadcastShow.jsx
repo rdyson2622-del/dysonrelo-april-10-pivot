@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
-import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
 
@@ -50,11 +49,7 @@ export default function BroadcastShow() {
           }
         }
         if (contentSegs.length > 0) {
-          setSegments([
-            { src: DNN_STING_URL, speaker: 'sting' },
-            ...contentSegs,
-            { src: DNN_STING_URL, speaker: 'sting' },
-          ]);
+          setSegments(contentSegs);
         }
       })
       .catch(() => {})

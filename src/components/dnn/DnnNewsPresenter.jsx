@@ -81,9 +81,7 @@ export default function DnnNewsPresenter() {
         }
         // Only build the full segment list if there are actual content clips ready
         if (contentSegs.length > 0) {
-          segs.push({ src: DNN_STING_URL, speaker: 'sting' });
           segs.push(...contentSegs);
-          segs.push({ src: DNN_STING_URL, speaker: 'sting' });
           setSegments(segs);
         } else {
           setSegments([]);
