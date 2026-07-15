@@ -47,7 +47,6 @@ function VideoPreviewCard({ article, onBlast }) {
       const res = await base44.functions.invoke('postToLinkedInV2', {
         text: `📡 DNN Intelligence Bureau\n\n${article.headline}\n\n${article.body?.split('\n').filter(p => p.trim())[0] || ''}\n\nWatch the full broadcast: https://dysonrelo.com/broadcast-show`,
         imageUrl: DNN_STUDIO_IMAGE,
-        url: 'https://dysonrelo.com/broadcast-show',
         title: article.headline,
         description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
       });
