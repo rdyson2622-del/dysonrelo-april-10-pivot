@@ -57,6 +57,19 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    key: 'affiliate_recruiting',
+    label: 'AFFILIATE RECRUITING',
+    icon: Users,
+    color: '#34d399',
+    children: [
+      { label: 'Recruiting Pipeline', path: '/admin/affiliate-recruiting', icon: Users },
+      { label: '↳ Master Partner Roster', path: '/admin/roster', icon: List, indent: true },
+      { label: '↳ Exodus Pitch Page', path: '/admin/exodus-pitch', icon: ArrowRight, indent: true },
+      { label: '↳ Partner Benefits', path: '/admin/partner-benefits', icon: ArrowRight, indent: true },
+      { label: '↳ Agent Subscribe Page', path: '/agent-subscribe', icon: Globe, indent: true },
+    ],
+  },
+  {
     key: 'results',
     label: 'CLIENT MARKETING RESULTS',
     children: [

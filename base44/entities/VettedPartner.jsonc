@@ -78,6 +78,82 @@
       "default": "destination",
       "description": "Market role: destination (Receiver) or exodus (Sender market)"
     },
+    "dre_license_number": {
+      "type": "string",
+      "description": "Real estate license number (e.g. CA DRE #01987654)"
+    },
+    "dre_license_expiration": {
+      "type": "string",
+      "format": "date",
+      "description": "License expiration date \u2014 used for renewal alerts"
+    },
+    "dre_license_state": {
+      "type": "string",
+      "description": "State that issued the license (e.g. CA, TX, FL)"
+    },
+    "recruitment_source": {
+      "type": "string",
+      "enum": [
+        "csv_import",
+        "linkedin",
+        "referral",
+        "inbound_subscribe",
+        "exodus_roster",
+        "manual_entry",
+        "other"
+      ],
+      "default": "manual_entry",
+      "description": "How this recruit was sourced"
+    },
+    "daily_news_subscribed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this affiliate receives the DNN daily news broadcast"
+    },
+    "daily_news_subscribed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When daily news subscription started"
+    },
+    "affiliate_type": {
+      "type": "string",
+      "enum": [
+        "sender",
+        "receiver",
+        "both"
+      ],
+      "default": "receiver",
+      "description": "Affiliate role: sender (exodus market) or receiver (destination market)"
+    },
+    "campaigns_sent": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of recruitment campaigns this agent has received"
+    },
+    "last_campaign_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the last recruitment campaign was sent to this agent"
+    },
+    "marketing_assets_shared": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_name": {
+            "type": "string"
+          },
+          "asset_url": {
+            "type": "string"
+          },
+          "shared_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Marketing materials shared with this recruit (brochures, videos, pitch decks)"
+    },
     "outreach_notes": {
       "type": "string",
       "description": "Internal notes on outreach / rescue cases"

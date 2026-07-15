@@ -92,6 +92,7 @@ import AgentInvitedClients from './pages/AgentInvitedClients';
 import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
 import AdminRoster from './pages/AdminRoster';
+import AdminAffiliateRecruiting from './pages/AdminAffiliateRecruiting';
 import VettedAgentsCity from './pages/VettedAgentsCity';
 import SendingAgentDashboard from './pages/SendingAgentDashboard';
 import AdminExodusPitch from './pages/AdminExodusPitch';
@@ -264,6 +265,7 @@ const AuthenticatedApp = () => {
         <Route path="/solve-my-story" element={<SolveMyStory />} />
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
+        <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
         <Route path="/admin/exodus-pitch" element={<AdminExodusPitch />} />
         <Route path="/admin/partner-benefits" element={<AdminPartnerBenefits />} />
