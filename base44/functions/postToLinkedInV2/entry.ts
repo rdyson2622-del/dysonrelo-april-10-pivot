@@ -26,9 +26,15 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
 
-    // Post as the DNN Dyson News Networks organization page (not Bob's personal profile)
-    const DNN_ORG_URN = 'urn:li:organization:90431809';
-    const authorUrn = DNN_ORG_URN;
+    // Fetch Bob's personal profile URN
+    const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const profile = await profileRes.json();
+    if (!profile.sub) {
+      return Response.json({ error: 'Could not fetch LinkedIn profile' }, { status: 500 });
+    }
+    const authorUrn = `urn:li:person:${profile.sub}`;
 
     const headers = {
       Authorization: `Bearer ${accessToken}`,
