@@ -162,11 +162,32 @@ Deno.serve(async (req) => {
 
           await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
 
+          // Create a VideoLibrary record so the finished MP4 is available for YouTube, LinkedIn, and other venues
+          const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
+          const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
+          const libData = {
+            title: libTitle,
+            description: `Full DNN Intelligence Bureau broadcast for ${broadcast.broadcast_date}. Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.`,
+            category: 'broadcast',
+            source_type: 'upload',
+            file_url: up.file_url,
+            broadcast_date: broadcast.broadcast_date,
+            duration_seconds: data?.data?.duration || null,
+            tags: ['DNN', 'broadcast', 'real_estate', 'relocation'],
+            is_active: true,
+          };
+          if (existingLib && existingLib.length > 0) {
+            await base44.asServiceRole.entities.VideoLibrary.update(existingLib[0].id, libData);
+          } else {
+            await base44.asServiceRole.entities.VideoLibrary.create(libData);
+          }
+
           results.push({
             id: broadcast.id,
             date: broadcast.broadcast_date,
             status: 'stitched',
             videoUrl: up.file_url,
+            libraryEntry: libTitle,
           });
         } else if (status === 'failed') {
           const errMsg = data?.data?.error?.message || 'HeyGen stitching render failed';

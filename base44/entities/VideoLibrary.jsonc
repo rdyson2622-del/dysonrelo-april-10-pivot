@@ -18,6 +18,7 @@
         "testimonial",
         "market_update",
         "how_to",
+        "broadcast",
         "other"
       ],
       "default": "intro",
@@ -38,11 +39,20 @@
     },
     "file_url": {
       "type": "string",
-      "description": "URL for uploaded video files"
+      "description": "URL for uploaded video files (MP4 for YouTube, LinkedIn, etc.)"
     },
     "thumbnail_url": {
       "type": "string",
       "description": "Optional thumbnail image URL"
+    },
+    "broadcast_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the broadcast (for broadcast category)"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "description": "Video duration in seconds"
     },
     "tags": {
       "type": "array",
