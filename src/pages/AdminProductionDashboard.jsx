@@ -149,6 +149,8 @@ const creditsToUsdNum = (c) => c * USD_PER_CREDIT;
 export default function AdminProductionDashboard() {
   const queryClient = useQueryClient();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMsg, setRefreshMsg] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -159,6 +161,31 @@ export default function AdminProductionDashboard() {
       }
     }).catch(() => window.location.href = '/');
   }, []);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setRefreshMsg(null);
+    try {
+      let renderMsg = '';
+      try {
+        const r = await base44.functions.invoke('dnnMorningBroadcast', { action: 'check' });
+        renderMsg = r.data?.checked?.length ? `Renders: ${r.data.checked.length}` : '';
+      } catch (e) { renderMsg = `Render: ${e.message}`; }
+
+      let stitchMsg = '';
+      try {
+        const s = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
+        stitchMsg = s.data?.checked?.length ? `Stitch: ${s.data.checked.length}` : '';
+      } catch (e) { stitchMsg = `Stitch: ${e.message}`; }
+
+      queryClient.invalidateQueries({ queryKey: ['productionDashboard'] });
+
+      setRefreshMsg(`${renderMsg}${renderMsg && stitchMsg ? ' · ' : ''}${stitchMsg}`.trim() || 'Dashboard refreshed');
+    } catch (error) {
+      setRefreshMsg(`Error: ${error.message}`);
+    }
+    setRefreshing(false);
+  };
 
   // Fetch all clip entities in parallel
   const pipelineQueries = useQuery({
@@ -279,11 +306,15 @@ export default function AdminProductionDashboard() {
               <p className="text-[10px] text-slate-500">HeyGen render costs, pipeline status & LinkedIn readiness</p>
             </div>
           </div>
-          <button onClick={() => queryClient.invalidateQueries({ queryKey: ['productionDashboard'] })}
-            className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-all hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
-          </button>
+          <div className="flex items-center gap-3">
+            {refreshMsg && <span className="text-[10px] text-slate-400 max-w-xs truncate">{refreshMsg}</span>}
+            <button onClick={handleRefresh} disabled={refreshing}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing…' : 'Refresh'}
+            </button>
+          </div>
         </div>
 
         {/* Total HeyGen Investment Tracker */}
