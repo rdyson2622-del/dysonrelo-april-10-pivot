@@ -63,12 +63,18 @@ Write a complete DNN Intelligence Brief:
 
 1. HEADLINE: Under 12 words, factual and specific to ${market.city}.
 2. BODY: 3 paragraphs. Open with the single most important local data point for ${market.city}. Give relocation context and implications for someone considering moving to or from ${market.city}. End with a forward-looking insight. Total: 200–280 words.
-3. TAGS: 3–5 lowercase tags (include the city name as one tag).
+3. CLIENT_SOLUTION: 1-2 sentences. What a relocating client should do about this.
+4. AGENT_SOLUTION: 1-2 sentences. What a partner agent should do or say about this.
+5. VENDOR_SOLUTION: 1-2 sentences. What a vendor (lender, mover, title) should do about this.
+6. TAGS: 3–5 lowercase tags (include the city name as one tag).
 
 Return JSON:
 {
   "headline": "...",
   "body": "full article body with paragraphs separated by newlines",
+  "client_solution": "...",
+  "agent_solution": "...",
+  "vendor_solution": "...",
   "tags": ["tag1", "tag2", "tag3"]
 }`,
     add_context_from_internet: true,
@@ -77,6 +83,9 @@ Return JSON:
       properties: {
         headline: { type: 'string' },
         body: { type: 'string' },
+        client_solution: { type: 'string' },
+        agent_solution: { type: 'string' },
+        vendor_solution: { type: 'string' },
         tags: { type: 'array', items: { type: 'string' } },
       }
     }
@@ -135,6 +144,9 @@ Return JSON:
     headline: result.headline,
     dateline: market.dateline,
     body: result.body,
+    client_solution: result.client_solution || '',
+    agent_solution: result.agent_solution || '',
+    vendor_solution: result.vendor_solution || '',
     tags: result.tags || [market.city.toLowerCase()],
     trigger_type,
     interview_qa: qaResult?.qa || [],
