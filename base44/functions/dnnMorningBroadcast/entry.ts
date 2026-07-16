@@ -252,16 +252,16 @@ ${digest}`,
             await Broadcasts.update(rec.id, { clips, ...(allDone ? { status: 'completed' } : {}) });
           }
 
-          // Auto-trigger stitching: combine all clips into a single composited video
+          // Auto-trigger Creatomate compositing: combine all clips into a single studio video
           if (allDone && !rec.videoUrl) {
             try {
-              await base44.asServiceRole.functions.invoke('dnnStitchBroadcast', {
+              await base44.asServiceRole.functions.invoke('creatomateComposite', {
                 action: 'start',
                 broadcastId: rec.id,
               });
-              console.log(`Auto-triggered stitching for broadcast ${rec.id}`);
+              console.log(`Auto-triggered Creatomate compositing for broadcast ${rec.id}`);
             } catch (e) {
-              console.log(`Stitching trigger failed for ${rec.id}: ${e.message}`);
+              console.log(`Compositing trigger failed for ${rec.id}: ${e.message}`);
             }
           }
 
