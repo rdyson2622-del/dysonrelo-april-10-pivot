@@ -172,7 +172,6 @@ Deno.serve(async (req) => {
           trim_duration: 1.0,
           loop: true,
           volume: 0,
-          background_color: '#000',
         });
       }
 
@@ -195,7 +194,6 @@ Deno.serve(async (req) => {
           trim_duration: 1.0,
           loop: true,
           volume: 0,
-          background_color: '#000',
         });
       }
 
@@ -217,7 +215,6 @@ Deno.serve(async (req) => {
 
       // Presenter clips — directly on track 3, auto-sequenced after sting
       // No composition wrapper — clips render directly on the main timeline for reliability
-      // Volume boosted: Charlie 3.0, Bob 5.0 for clear audible delivery
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
         elements.push({
@@ -232,11 +229,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          volume: isCharlie ? 3.0 : 5.0,
-          background_color: '#000',
-          animations: [
-            { time: 0, duration: 0.3, type: 'fade', transition: true },
-          ],
+          volume: 3.0,
         });
       }
 
