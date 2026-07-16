@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       const probeUrl = body.url;
       if (!probeUrl) return Response.json({ error: 'url required' }, { status: 400 });
       const resolved = await resolveUrl(probeUrl);
-      const r = await fetch(`https://api.shotstack.io/stage/probe?url=${encodeURIComponent(resolved)}`, {
+      const r = await fetch(`https://api.shotstack.io/v1/probe/${encodeURIComponent(resolved)}`, {
         headers: { 'x-api-key': shotstackKey }
       });
       const data = await r.json();
@@ -168,8 +168,7 @@ Deno.serve(async (req) => {
             asset: { type: 'video', src: resolvedClipUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'none',
-            scale: 0.22,
+            scale: 0.3,
             position: 'bottomLeft',
             offset: { x: 0.04, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
@@ -179,8 +178,7 @@ Deno.serve(async (req) => {
             asset: { type: 'video', src: resolvedClipUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'none',
-            scale: 0.22,
+            scale: 0.3,
             position: 'bottomRight',
             offset: { x: -0.04, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
