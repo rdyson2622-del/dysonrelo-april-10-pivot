@@ -141,9 +141,10 @@ Deno.serve(async (req) => {
             asset: { type: 'video', src: clip.videoUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'none',
+            fit: 'contain',
+            scale: 0.32,
             position: 'bottomLeft',
-            offset: { x: 0.06, y: 0.04 },
+            offset: { x: 0.04, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
           });
         } else {
@@ -151,9 +152,10 @@ Deno.serve(async (req) => {
             asset: { type: 'video', src: clip.videoUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'none',
+            fit: 'contain',
+            scale: 0.32,
             position: 'bottomRight',
-            offset: { x: -0.06, y: 0.04 },
+            offset: { x: -0.04, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
           });
 
