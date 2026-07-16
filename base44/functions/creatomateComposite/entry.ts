@@ -171,11 +171,10 @@ Deno.serve(async (req) => {
         };
       });
 
-      // DNN opener sting — full screen, plays before presenters
+      // DNN opener sting — full screen, auto-sequences first on track 2
       elements.push({
         type: 'video',
         track: 2,
-        time: 0,
         source: DNN_STING_URL,
         width: '100%',
         height: '100%',
@@ -191,7 +190,6 @@ Deno.serve(async (req) => {
       elements.push({
         type: 'composition',
         track: 2,
-        time: 0,
         width: '100%',
         height: '100%',
         x: '50%',
@@ -203,11 +201,10 @@ Deno.serve(async (req) => {
         elements: clipElements,
       });
 
-      // DNN closer sting — full screen, plays after presenters
+      // DNN closer sting — auto-sequences after presenters
       elements.push({
         type: 'video',
         track: 2,
-        time: 0,
         source: DNN_STING_URL,
         width: '100%',
         height: '100%',
