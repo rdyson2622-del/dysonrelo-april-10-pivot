@@ -304,35 +304,6 @@ Deno.serve(async (req) => {
         });
       }
 
-      // News pills — bottom of screen, full duration
-      const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA', 'HOUSING SUPPLY'];
-      const pillSpacing = 100 / (pillLabels.length + 1); // evenly distributed
-      for (let i = 0; i < pillLabels.length; i++) {
-        const pillX = pillSpacing * (i + 1);
-        elements.push({
-          type: 'text',
-          track: 4,
-          time: 0,
-          text: pillLabels[i],
-          width: pct(lc.pillWidth),
-          height: '4%',
-          x: `${pillX}%`,
-          y: pct(lc.pillY),
-          x_anchor: '50%',
-          y_anchor: '50%',
-          x_alignment: '50%',
-          y_alignment: '50%',
-          fill_color: GOLD,
-          font_family: 'Inter',
-          font_weight: '700',
-          font_size: '2.2 vmin',
-          background_color: 'rgba(0,0,0,0.75)',
-          background_x_padding: '60%',
-          background_y_padding: '40%',
-          background_border_radius: '40%',
-        });
-      }
-
       // Show title text overlay (optional)
       if (lc.showText) {
         elements.push({
