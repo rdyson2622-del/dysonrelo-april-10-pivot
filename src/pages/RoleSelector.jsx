@@ -57,9 +57,16 @@ export default function RoleSelector() {
   const navigate = useNavigate();
   const [showPlayer, setShowPlayer] = useState(true);
 
-  // Subscribed visitors go straight to their portal — unless they explicitly
-  // asked for the landing page (logo click adds ?choose=1)
+  // Deep-link hash redirect — e.g. 1dnn.com/#news goes straight to the news page
+  // (social media teaser links). Takes priority over saved portal redirect.
   useEffect(() => {
+    const hash = window.location.hash.toLowerCase().replace('#', '');
+    const deepLinks = { news: '/dnn-news', relocation: '/home', intelligence: '/solve-my-story' };
+    if (deepLinks[hash]) {
+      navigate(deepLinks[hash], { replace: true });
+      return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     if (params.get('choose')) return;
     try {

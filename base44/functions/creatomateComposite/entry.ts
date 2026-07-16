@@ -517,7 +517,7 @@ Deno.serve(async (req) => {
             type: 'text',
             track: 2,
             time: 0,
-            text: 'WATCH THE FULL SHOW\n1dnn.com',
+            text: 'WATCH THE FULL SHOW\n1dnn.com/#news',
             x: '50%',
             y: '85%',
             x_anchor: '50%',
