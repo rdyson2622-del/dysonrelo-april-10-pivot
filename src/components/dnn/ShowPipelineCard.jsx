@@ -111,13 +111,21 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {/* Distribution tracker */}
           {show.videoUrl && <DistributionTracker show={show} />}
           {/* Stage badge */}
-          <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
-            style={{
-              background: show.status === 'failed' ? 'rgba(239,68,68,0.15)' : show.status === 'completed' ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)',
-              color: show.status === 'failed' ? '#ef4444' : show.status === 'completed' ? '#4ade80' : GOLD,
-            }}>
-            {show.status?.toUpperCase() || 'DRAFT'}
-          </span>
+          {show.heygenId && !show.videoUrl ? (
+            <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5"
+              style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
+              <RefreshCw className="w-2.5 h-2.5 animate-spin" />
+              COMPOSITING
+            </span>
+          ) : (
+            <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+              style={{
+                background: show.status === 'failed' ? 'rgba(239,68,68,0.15)' : show.status === 'completed' ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)',
+                color: show.status === 'failed' ? '#ef4444' : show.status === 'completed' ? '#4ade80' : GOLD,
+              }}>
+              {show.status?.toUpperCase() || 'DRAFT'}
+            </span>
+          )}
           {show.videoUrl && (
             <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
@@ -197,12 +205,20 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
 
             {currentStage === 'stitch' && (
               <>
-                <button onClick={() => handleAction('stitch', 'Stitch')} disabled={busy === 'stitch'}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                  style={{ background: busy === 'stitch' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                  {busy === 'stitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Film className="w-3.5 h-3.5" />}
-                  {busy === 'stitch' ? 'Stitching…' : 'Start Stitching'}
-                </button>
+                {show.heygenId ? (
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
+                    style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    Compositing in Creatomate…
+                  </div>
+                ) : (
+                  <button onClick={() => handleAction('stitch', 'Stitch')} disabled={busy === 'stitch'}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
+                    style={{ background: busy === 'stitch' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                    {busy === 'stitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Film className="w-3.5 h-3.5" />}
+                    {busy === 'stitch' ? 'Stitching…' : 'Start Stitching'}
+                  </button>
+                )}
                 <button onClick={() => handleAction('checkStitch', 'CheckStitch')} disabled={busy === 'checkStitch'}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
                   style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
