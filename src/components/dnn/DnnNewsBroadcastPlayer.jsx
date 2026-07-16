@@ -185,11 +185,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
       {/* Charlie box — always visible (except during sting), inset 4% from left */}
       {!isSting && charlieStaticUrl && (
-        <div className="absolute" style={{
+        <div className="absolute overflow-hidden" style={{
           left: '4%',
           bottom: '8%',
           width: 'clamp(110px, 13vw, 170px)',
           zIndex: 10,
+          border: `2px solid ${GOLD}`,
+          borderRadius: '8px',
+          boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+          background: '#000',
         }}>
           {isCharlie ? (
             <video
@@ -199,35 +203,29 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               playsInline
               onEnded={handleEnded}
               onClick={togglePlay}
-              className="cursor-pointer w-full object-cover"
+              className="cursor-pointer w-full object-cover block"
               style={{
                 aspectRatio: '9/16',
-                borderRadius: '0 8px 8px 0',
-                border: `2px solid ${GOLD}`,
-                borderLeft: 'none',
-                boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
                 background: '#000',
               }}
             />
           ) : (
-            <div className="relative" style={{ background: '#000', borderRadius: '0 8px 8px 0', overflow: 'hidden', border: `2px solid ${GOLD}`, borderLeft: 'none', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }}>
-              <video
-                src={charlieStaticUrl}
-                playsInline
-                muted
-                preload="metadata"
-                onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
-                className="w-full object-cover"
-                style={{
-                  aspectRatio: '9/16',
-                  background: '#000',
-                }}
-              />
-            </div>
+            <video
+              src={charlieStaticUrl}
+              playsInline
+              muted
+              preload="metadata"
+              onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+              className="w-full object-cover block"
+              style={{
+                aspectRatio: '9/16',
+                background: '#000',
+              }}
+            />
           )}
           {/* Name/title overlay */}
-          <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 text-center"
-            style={{ background: 'rgba(0,0,0,0.85)', borderRadius: '0 0 8px 0' }}>
+          <div className="px-1.5 py-1 text-center"
+            style={{ background: 'rgba(0,0,0,0.92)' }}>
             <p className="text-[8px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>CHARLIE SIMMONS</p>
             <p className="text-[7px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)' }}>DNN Anchor</p>
           </div>
@@ -236,11 +234,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
       {/* Bob box — always visible (except during sting), inset 4% from right */}
       {!isSting && bobStaticUrl && (
-        <div className="absolute" style={{
+        <div className="absolute overflow-hidden" style={{
           right: '4%',
           bottom: '8%',
           width: 'clamp(110px, 13vw, 170px)',
           zIndex: 10,
+          border: `2px solid ${GOLD}`,
+          borderRadius: '8px',
+          boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+          background: '#000',
         }}>
           {isBob ? (
             <video
@@ -250,35 +252,29 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               playsInline
               onEnded={handleEnded}
               onClick={togglePlay}
-              className="cursor-pointer w-full object-cover"
+              className="cursor-pointer w-full object-cover block"
               style={{
                 aspectRatio: '9/16',
-                borderRadius: '8px 0 0 8px',
-                border: `2px solid ${GOLD}`,
-                borderRight: 'none',
-                boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
                 background: '#000',
               }}
             />
           ) : (
-            <div className="relative" style={{ background: '#000', borderRadius: '8px 0 0 8px', overflow: 'hidden', border: `2px solid ${GOLD}`, borderRight: 'none', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }}>
-              <video
-                src={bobStaticUrl}
-                playsInline
-                muted
-                preload="metadata"
-                onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
-                className="w-full object-cover"
-                style={{
-                  aspectRatio: '9/16',
-                  background: '#000',
-                }}
-              />
-            </div>
+            <video
+              src={bobStaticUrl}
+              playsInline
+              muted
+              preload="metadata"
+              onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+              className="w-full object-cover block"
+              style={{
+                aspectRatio: '9/16',
+                background: '#000',
+              }}
+            />
           )}
           {/* Name/title overlay */}
-          <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 text-center"
-            style={{ background: 'rgba(0,0,0,0.85)', borderRadius: '0 0 0 8px' }}>
+          <div className="px-1.5 py-1 text-center"
+            style={{ background: 'rgba(0,0,0,0.92)' }}>
             <p className="text-[8px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>BOB DYSON</p>
             <p className="text-[7px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)' }}>Founder</p>
           </div>
