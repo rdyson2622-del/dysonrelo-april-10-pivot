@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const broadcastId = body?.broadcastId;
     const channels = body?.channels || ['linkedin', 'facebook']; // default both
+    const customCaption = body?.caption; // optional override from admin edit
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
     // Find the target broadcast
@@ -62,17 +63,17 @@ Deno.serve(async (req) => {
     });
     const headline = broadcast.headlines?.[0] || `DNN Real Estate News with Solutions — ${dateSpoken}`;
 
-    const teaserCaption = `🎬 ${headline}
+    const defaultCaption = `${headline}
 
-📡 DNN Intelligence Bureau — ${dateSpoken}
+DNN Intelligence Bureau — ${dateSpoken}
 Real estate news WITH solutions. We don't just report — we tell you exactly what to do about it.
 
-🔔 Watch the full show: ${SHOW_URL}
-Subscribe free: ${SHOW_URL}
+Watch the full show: ${SHOW_URL}
 
-#RealEstateNews #RelocationIntelligence #DNN`;
+#RealEstateNews #Relocation #DNN`;
 
-    const linkCommentText = `📺 Watch the full broadcast here: ${SHOW_URL}`;
+    const teaserCaption = customCaption || defaultCaption;
+    const linkCommentText = `Watch the full broadcast here: ${SHOW_URL}`;
 
     const distribution = broadcast.distribution || [];
     const results = { broadcastId: broadcast.id, showName: broadcast.show_name, linkedin: null, facebook: null };
@@ -181,7 +182,7 @@ Subscribe free: ${SHOW_URL}
             lifecycleState: 'PUBLISHED',
             specificContent: {
               'com.linkedin.ugc.ShareContent': {
-                media: [{ media: mediaUrn, status: 'READY', title: { text: broadcast.show_name || 'DNN Broadcast' } }],
+                media: [{ media: mediaUrn, status: 'READY', title: { text: headline } }],
                 shareCommentary: { text: teaserCaption },
                 shareMediaCategory: 'VIDEO',
               },
@@ -237,7 +238,7 @@ Subscribe free: ${SHOW_URL}
           const formData = new FormData();
           formData.append('source', new Blob([videoBuf], { type: 'video/mp4' }), 'dnn_teaser.mp4');
           formData.append('description', teaserCaption);
-          formData.append('title', broadcast.show_name || 'DNN Broadcast');
+          formData.append('title', headline);
 
           const fbPostRes = await fetch(`https://graph.facebook.com/v25.0/${page.id}/videos?access_token=${page.access_token}`, {
             method: 'POST',

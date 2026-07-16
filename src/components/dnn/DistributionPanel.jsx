@@ -15,14 +15,30 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
   const [result, setResult] = useState(null);
   const [confirmChannel, setConfirmChannel] = useState(null);
   const [generatingTeaser, setGeneratingTeaser] = useState(false);
+  const [editableCaption, setEditableCaption] = useState('');
 
   const getPostPreview = (channelKey) => {
     const headline = show.headlines?.[0] || 'Daily Real Estate News Broadcast';
+    const dateSpoken = new Date(show.broadcast_date).toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric',
+    });
     if (channelKey === 'linkedin') {
-      return `🎬 ${headline}\n\n📡 DNN Intelligence Bureau\nReal estate news WITH solutions.\n\n🔔 Watch the full show: https://1dnn.com/dnn-news\nSubscribe free: https://1dnn.com\n\n#RealEstateNews #DNN`;
+      return `${headline}
+
+DNN Intelligence Bureau — ${dateSpoken}
+Real estate news WITH solutions. We don't just report — we tell you exactly what to do about it.
+
+Watch the full show: https://1dnn.com/dnn-news
+
+#RealEstateNews #Relocation #DNN`;
     }
     if (channelKey === 'facebook') {
-      return `🎬 ${headline}\n\n📡 DNN Intelligence Bureau — Real estate news WITH solutions.\n\nWatch the full show: https://1dnn.com/dnn-news`;
+      return `${headline}
+
+DNN Intelligence Bureau — ${dateSpoken}
+Real estate news WITH solutions.
+
+Watch the full show: https://1dnn.com/dnn-news`;
     }
     if (channelKey === 'subscriber_email') {
       return `DNN Daily Broadcast — ${show.show_name || 'Show'} for ${show.broadcast_date}\n\nHeadline: ${headline}\n\nAll subscribers will receive the broadcast video link.`;
@@ -30,11 +46,17 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     return `Post to ${channelKey}`;
   };
 
+  const openConfirm = (channel) => {
+    setEditableCaption(getPostPreview(channel.key));
+    setConfirmChannel(channel);
+  };
+
   const handleConfirmPost = () => {
     if (!confirmChannel) return;
     const action = confirmChannel.action;
+    const caption = editableCaption;
     setConfirmChannel(null);
-    action();
+    action(caption);
   };
 
   const distribution = show.distribution || [];
@@ -72,13 +94,14 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setGeneratingTeaser(false);
   };
 
-  const handleTeaserPost = async (channelKey) => {
+  const handleTeaserPost = async (channelKey, caption) => {
     setPosting(channelKey);
     setResult(null);
     try {
       const res = await base44.functions.invoke('dnnPostTeaserWithComment', {
         broadcastId: show.id,
         channels: [channelKey],
+        caption: caption || undefined,
       });
       const chResult = res.data?.results?.[channelKey];
       if (chResult?.success) {
@@ -101,9 +124,9 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting(null);
   };
 
-  const handleLinkedIn = () => handleTeaserPost('linkedin');
+  const handleLinkedIn = (caption) => handleTeaserPost('linkedin', caption);
 
-  const handleFacebook = () => handleTeaserPost('facebook');
+  const handleFacebook = (caption) => handleTeaserPost('facebook', caption);
 
   const handleEmailBlast = async () => {
     setPosting('email');
@@ -249,7 +272,7 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
                   <ChevronRight className="w-3 h-3" />
                 </button>
               ) : (
-                <button onClick={() => setConfirmChannel(ch)} disabled={ch.busy || isSent}
+                <button onClick={() => openConfirm(ch)} disabled={ch.busy || isSent}
                   className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[10px] font-bold text-black transition-all disabled:opacity-50"
                   style={{ background: ch.busy ? '#666' : isSent ? 'rgba(74,222,128,0.2)' : GOLD }}>
                   {ch.busy ? <RefreshCw className="w-3 h-3 animate-spin" /> : isSent ? <CheckCircle className="w-3 h-3" /> : <Send className="w-3 h-3" />}
@@ -343,12 +366,23 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
                 </div>
               )}
 
-              {/* Post text preview */}
+              {/* Editable post caption */}
               <div className="mb-3">
-                <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1.5">Post Caption / Content:</p>
-                <div className="rounded-lg p-3 max-h-40 overflow-y-auto" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <p className="text-[11px] text-slate-300 whitespace-pre-wrap">{getPostPreview(confirmChannel.key)}</p>
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500">Post Caption (editable):</p>
+                  <button onClick={() => setEditableCaption(getPostPreview(confirmChannel.key))}
+                    className="text-[9px] font-bold text-slate-400 hover:text-white flex items-center gap-1">
+                    <RotateCcw className="w-2.5 h-2.5" /> Reset
+                  </button>
                 </div>
+                <textarea
+                  value={editableCaption}
+                  onChange={e => setEditableCaption(e.target.value)}
+                  rows={8}
+                  className="w-full rounded-lg p-3 text-[11px] text-slate-200 resize-y focus:outline-none focus:ring-1 focus:ring-yellow-500/30"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontFamily: 'inherit' }}
+                />
+                <p className="text-[8px] text-slate-600 mt-1">{editableCaption.length} characters</p>
               </div>
 
               {/* Show info */}

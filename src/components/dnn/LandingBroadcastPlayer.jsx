@@ -1,24 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { VolumeX, Volume2, Play, Pause, ChevronDown } from 'lucide-react';
+import { VolumeX, Volume2, Play, Pause } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 /**
  * LandingBroadcastPlayer — embeds the latest composited DNN broadcast MP4
- * directly into the landing page hero. Handles Safari/Firefox autoplay
- * policies by starting muted and showing a "tap for sound" overlay.
+ * directly into the landing page hero.
  *
- * The composited MP4 already has both presenter boxes, studio backdrop,
- * nameplates, news pills, intro/outro stings, and new font logos baked in.
+ * - Autoplays muted (browser policy compliant)
+ * - Small mute/unmute button in corner (not a full-screen overlay)
+ * - No pill button — viewer scrolls down to see path selection
  */
 export default function LandingBroadcastPlayer({ onEnter }) {
   const videoRef = useRef(null);
   const [broadcast, setBroadcast] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
-  const [showControls, setShowControls] = useState(true);
 
   useEffect(() => {
     base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 5)
@@ -29,7 +28,7 @@ export default function LandingBroadcastPlayer({ onEnter }) {
       .catch(() => {});
   }, []);
 
-  // Autoplay muted (Safari/Firefox compliant), then show tap-for-sound
+  // Autoplay muted (browser policy compliant)
   useEffect(() => {
     if (!broadcast) return;
     const v = videoRef.current;
@@ -43,12 +42,10 @@ export default function LandingBroadcastPlayer({ onEnter }) {
         setPlaying(true);
         setMuted(true);
       }).catch(() => {
-        // If muted autoplay fails, try again after user interaction
         setPlaying(false);
       });
     };
 
-    // Small delay to ensure video element is ready
     const timer = setTimeout(tryPlay, 100);
     return () => clearTimeout(timer);
   }, [broadcast]);
@@ -75,13 +72,12 @@ export default function LandingBroadcastPlayer({ onEnter }) {
   };
 
   if (!broadcast) {
-    // Fallback: no broadcast available — show static studio background
     return null;
   }
 
   return (
     <section className="relative h-screen w-full overflow-hidden" style={{ background: '#000' }}>
-      {/* Composited broadcast MP4 — both boxes, stings, logos all baked in */}
+      {/* Composited broadcast MP4 */}
       <video
         ref={videoRef}
         src={broadcast.videoUrl}
@@ -119,50 +115,29 @@ export default function LandingBroadcastPlayer({ onEnter }) {
         </p>
       </div>
 
-      {/* Tap for sound overlay — Safari/Firefox autoplay compliance */}
-      {muted && playing && (
-        <button
-          onClick={toggleMute}
-          className="absolute inset-0 flex items-center justify-center z-20 transition-all"
-          style={{ background: 'rgba(0,0,0,0.3)' }}
-        >
-          <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.75)', border: `1px solid ${GOLD}` }}>
-            <VolumeX className="w-8 h-8" style={{ color: GOLD }} />
-            <span className="text-xs font-bold tracking-wider uppercase" style={{ color: GOLD }}>
-              Tap for Sound
-            </span>
-          </span>
-        </button>
-      )}
+      {/* Mute/unmute button — bottom right, small, non-blocking */}
+      <button
+        onClick={toggleMute}
+        aria-label={muted ? 'Unmute' : 'Mute'}
+        className="absolute bottom-6 right-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, backdropFilter: 'blur(4px)' }}
+      >
+        {muted
+          ? <VolumeX className="w-5 h-5" style={{ color: GOLD }} />
+          : <Volume2 className="w-5 h-5" style={{ color: GOLD }} />}
+      </button>
 
-      {/* Play/pause toggle when not muted */}
-      {!muted && (
-        <button
-          onClick={togglePlay}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}` }}
-        >
-          {playing
-            ? <Pause className="w-5 h-5" style={{ color: GOLD }} />
-            : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} fill={GOLD} />}
-        </button>
-      )}
-
-      {/* Enter Site button — bottom center */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center gap-3 pb-8">
-        <button
-          onClick={onEnter}
-          className="flex items-center gap-2 px-8 py-3 rounded-full text-sm font-black tracking-widest uppercase text-black transition-all hover:scale-105"
-          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', boxShadow: '0 4px 24px rgba(212,175,55,0.4)' }}
-        >
-          Enter Dyson Relocation
-          <ChevronDown className="w-4 h-4 animate-bounce" />
-        </button>
-        <p className="text-[10px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Real Estate News with Solutions
-        </p>
-      </div>
+      {/* Play/pause button — bottom left, small, non-blocking */}
+      <button
+        onClick={togglePlay}
+        aria-label={playing ? 'Pause' : 'Play'}
+        className="absolute bottom-6 left-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}`, backdropFilter: 'blur(4px)' }}
+      >
+        {playing
+          ? <Pause className="w-5 h-5" style={{ color: GOLD }} />
+          : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} fill={GOLD} />}
+      </button>
     </section>
   );
 }
