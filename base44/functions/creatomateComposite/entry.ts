@@ -172,6 +172,7 @@ Deno.serve(async (req) => {
           trim_duration: 1.0,
           loop: true,
           volume: 0,
+          fill_mode: 'cover',
         });
       }
 
@@ -194,6 +195,7 @@ Deno.serve(async (req) => {
           trim_duration: 1.0,
           loop: true,
           volume: 0,
+          fill_mode: 'cover',
         });
       }
 
@@ -230,6 +232,7 @@ Deno.serve(async (req) => {
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
           volume: 3.0,
+          fill_mode: 'cover',
         });
       }
 
