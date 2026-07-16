@@ -135,12 +135,12 @@ ${digest}`,
         ? {
             character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
             voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
-            background: { type: 'color', value: '#000000' },
+            background: { type: 'transparent' },
           }
         : {
             character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
             voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
-            background: { type: 'color', value: '#0d0d0d' },
+            background: { type: 'transparent' },
           };
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
