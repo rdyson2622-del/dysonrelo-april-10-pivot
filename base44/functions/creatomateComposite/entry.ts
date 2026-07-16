@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
       const charlieClip = clips.find(c => c.role === 'charlie');
       const bobClip = clips.find(c => c.role === 'bob');
 
-      // Static Charlie headshot — always visible on left, frozen first frame, muted
+      // Static Charlie headshot — always visible on left, frozen frame from 0.3s, muted
       if (charlieClip) {
         elements.push({
           type: 'video',
@@ -168,14 +168,15 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '0%',
           y_alignment: '100%',
-          trim_start: 0,
-          trim_duration: 0.5,
+          trim_start: 0.3,
+          trim_duration: 1.0,
           loop: true,
           volume: 0,
+          background_color: '#000',
         });
       }
 
-      // Static Bob headshot — always visible on right, frozen first frame, muted
+      // Static Bob headshot — always visible on right, frozen frame from 0.3s, muted
       if (bobClip) {
         elements.push({
           type: 'video',
@@ -190,35 +191,13 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '100%',
           y_alignment: '100%',
-          trim_start: 0,
-          trim_duration: 0.5,
+          trim_start: 0.3,
+          trim_duration: 1.0,
           loop: true,
           volume: 0,
+          background_color: '#000',
         });
       }
-
-      // Presenter clips — active video on track 3, positioned over static headshots
-      // Audio normalized to volume: 1.0 for consistent levels between presenters
-      const clipElements = clips.map(clip => {
-        const isCharlie = clip.role === 'charlie';
-        return {
-          type: 'video',
-          track: 1,
-          source: clip.videoUrl,
-          width: pct(lc.presenterWidth),
-          height: pct(lc.presenterHeight),
-          x: pct(isCharlie ? lc.charlieX : lc.bobX),
-          y: pct(isCharlie ? lc.charlieY : lc.bobY),
-          x_anchor: isCharlie ? '0%' : '100%',
-          y_anchor: '100%',
-          x_alignment: isCharlie ? '0%' : '100%',
-          y_alignment: '100%',
-          volume: isCharlie ? 1.0 : 2.5,
-          animations: [
-            { time: 0, duration: 0.5, type: 'fade', transition: true },
-          ],
-        };
-      });
 
       // DNN opener sting — full screen, auto-sequences first on track 3
       elements.push({
@@ -233,23 +212,33 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: 1.0,
+        volume: 2.0,
       });
 
-      // Presenter composition — auto-sequences after the opener sting
-      elements.push({
-        type: 'composition',
-        track: 3,
-        width: '100%',
-        height: '100%',
-        x: '50%',
-        y: '50%',
-        x_anchor: '50%',
-        y_anchor: '50%',
-        x_alignment: '50%',
-        y_alignment: '50%',
-        elements: clipElements,
-      });
+      // Presenter clips — directly on track 3, auto-sequenced after sting
+      // No composition wrapper — clips render directly on the main timeline for reliability
+      // Volume boosted: Charlie 3.0, Bob 5.0 for clear audible delivery
+      for (const clip of clips) {
+        const isCharlie = clip.role === 'charlie';
+        elements.push({
+          type: 'video',
+          track: 3,
+          source: clip.videoUrl,
+          width: pct(lc.presenterWidth),
+          height: pct(lc.presenterHeight),
+          x: pct(isCharlie ? lc.charlieX : lc.bobX),
+          y: pct(isCharlie ? lc.charlieY : lc.bobY),
+          x_anchor: isCharlie ? '0%' : '100%',
+          y_anchor: '100%',
+          x_alignment: isCharlie ? '0%' : '100%',
+          y_alignment: '100%',
+          volume: isCharlie ? 3.0 : 5.0,
+          background_color: '#000',
+          animations: [
+            { time: 0, duration: 0.3, type: 'fade', transition: true },
+          ],
+        });
+      }
 
       // DNN closer sting — auto-sequences after presenters
       elements.push({
@@ -264,7 +253,7 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: 1.0,
+        volume: 2.0,
       });
 
       // Name/title overlay — Charlie (below box)
