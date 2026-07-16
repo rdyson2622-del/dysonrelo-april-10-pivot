@@ -69,148 +69,123 @@ Subscribe for free daily intelligence: ${SUBSCRIBE_URL}
     const distribution = broadcast.distribution || [];
     const results = { broadcastId: broadcast.id, showName: broadcast.show_name, linkedin: null, instagram: null, facebook: null };
 
-    // ── LinkedIn: post video to organization page ──
+    // ── LinkedIn: post video via Videos API (same as postToLinkedInV2) ──
     try {
       const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'X-Restli-Protocol-Version': '2.0.0',
+        'Linkedin-Version': '202603',
+      };
 
-      // Get user's authorized organizations
-      const orgsRes = await fetch(
-        'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*~(organization~(id,localizedName,vanityName,logoV2)))',
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+      // Resolve author URN — try organization first, fall back to personal
+      let authorUrn;
+      let postedAs = 'personal';
+
+      const aclsRes = await fetch(
+        'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&state=APPROVED&projection=(elements*(organization,role,state))',
+        { headers }
       );
-      const orgsData = await orgsRes.json();
-      const orgElement = orgsData?.elements?.find(e => e?.organization?.['~']?.localizedName?.includes('Dyson'));
-      const orgInfo = orgElement?.organization?.['~'];
+      const aclsData = await aclsRes.json().catch(() => ({}));
+      const orgUrns = [...new Set((aclsData?.elements || []).map(e => e.organization))];
 
-      if (!orgInfo) {
-        // Fall back to personal profile
-        const profileRes = await fetch('https://api.linkedin.com/v2/me', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const profileData = await profileRes.json();
-        const authorUrn = `urn:li:person:${profileData.id}`;
-
-        // Upload video to LinkedIn
-        const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            registerUploadRequest: {
-              recipes: ['urn:li:digitalmediaRecipe:feedshare-video'],
-              owner: authorUrn,
-              serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
-            },
-          }),
-        });
-        const registerData = await registerRes.json();
-        const uploadUrl = registerData?.value?.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
-        const assetUrn = registerData?.value?.asset;
-
-        if (!uploadUrl || !assetUrn) throw new Error('LinkedIn register failed');
-
-        // Download and upload the video
-        const vidRes = await fetch(broadcast.videoUrl);
-        const videoBuf = await vidRes.arrayBuffer();
-        const uploadResp = await fetch(uploadUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/octet-stream' },
-          body: videoBuf,
-        });
-        if (!uploadResp.ok) throw new Error('LinkedIn video upload failed');
-
-        // Poll for READY status (max 60s)
-        let assetReady = false;
-        for (let i = 0; i < 12; i++) {
-          await new Promise(r => setTimeout(r, 5000));
-          const statusRes = await fetch(`https://api.linkedin.com/v2/assets/${assetUrn.split(':').pop()}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
-          const statusData = await statusRes.json();
-          if (statusData?.recipes?.[0]?.status === 'READY') { assetReady = true; break; }
-        }
-        if (!assetReady) throw new Error('LinkedIn video not ready after 60s');
-
-        // Create post
-        const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            author: authorUrn,
-            lifecycleState: 'PUBLISHED',
-            specificContent: {
-              'com.linkedin.ugc.ShareContent': {
-                shareCommentary: { text: socialText },
-                shareMediaCategory: 'VIDEO',
-                media: [{ status: 'READY', description: { text: headline }, media: assetUrn, title: { text: broadcast.show_name || 'DNN Broadcast' } }],
-              },
-            },
-            visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
-          }),
-        });
-        const postData = await postRes.json();
-        if (!postRes.ok) throw new Error(postData.message || 'LinkedIn post failed');
-        results.linkedin = { success: true, post_id: postData.id, type: 'video' };
-      } else {
-        // Organization post
-        const authorUrn = `urn:li:organization:${orgInfo.id}`;
-
-        const registerRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            registerUploadRequest: {
-              recipes: ['urn:li:digitalmediaRecipe:feedshare-video'],
-              owner: authorUrn,
-              serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
-            },
-          }),
-        });
-        const registerData = await registerRes.json();
-        const uploadUrl = registerData?.value?.uploadMechanism?.['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']?.uploadUrl;
-        const assetUrn = registerData?.value?.asset;
-
-        if (!uploadUrl || !assetUrn) throw new Error('LinkedIn register failed');
-
-        const vidRes = await fetch(broadcast.videoUrl);
-        const videoBuf = await vidRes.arrayBuffer();
-        const uploadResp = await fetch(uploadUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/octet-stream' },
-          body: videoBuf,
-        });
-        if (!uploadResp.ok) throw new Error('LinkedIn video upload failed');
-
-        let assetReady = false;
-        for (let i = 0; i < 12; i++) {
-          await new Promise(r => setTimeout(r, 5000));
-          const statusRes = await fetch(`https://api.linkedin.com/v2/assets/${assetUrn.split(':').pop()}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
-          const statusData = await statusRes.json();
-          if (statusData?.recipes?.[0]?.status === 'READY') { assetReady = true; break; }
-        }
-        if (!assetReady) throw new Error('LinkedIn video not ready after 60s');
-
-        const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            author: authorUrn,
-            lifecycleState: 'PUBLISHED',
-            specificContent: {
-              'com.linkedin.ugc.ShareContent': {
-                shareCommentary: { text: socialText },
-                shareMediaCategory: 'VIDEO',
-                media: [{ status: 'READY', description: { text: headline }, media: assetUrn, title: { text: broadcast.show_name || 'DNN Broadcast' } }],
-              },
-            },
-            visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
-          }),
-        });
-        const postData = await postRes.json();
-        if (!postRes.ok) throw new Error(postData.message || 'LinkedIn post failed');
-        results.linkedin = { success: true, post_id: postData.id, type: 'video', org: orgInfo.localizedName };
+      let orgFound = null;
+      for (const orgUrn of orgUrns) {
+        const orgId = orgUrn.split(':').pop();
+        const orgRes = await fetch(`https://api.linkedin.com/v2/organizations/${orgId}?projection=(id,localizedName,vanityName)`, { headers });
+        const orgData = await orgRes.json().catch(() => ({}));
+        if (orgData.localizedName?.toLowerCase().includes('dyson')) { orgFound = orgData; break; }
       }
+
+      if (orgFound) {
+        authorUrn = `urn:li:organization:${orgFound.id}`;
+        postedAs = orgFound.localizedName;
+      } else {
+        const profileRes = await fetch('https://api.linkedin.com/v2/userinfo', { headers: { Authorization: `Bearer ${accessToken}` } });
+        const profile = await profileRes.json();
+        if (!profile.sub) throw new Error('Could not fetch LinkedIn profile');
+        authorUrn = `urn:li:person:${profile.sub}`;
+      }
+
+      // Download video
+      const vidRes = await fetch(broadcast.videoUrl);
+      const vidBuffer = await vidRes.arrayBuffer();
+      const fileSize = vidBuffer.byteLength;
+
+      // Initialize upload via Videos API
+      const initRes = await fetch('https://api.linkedin.com/rest/videos?action=initializeUpload', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          initializeUploadRequest: { owner: authorUrn, fileSizeBytes: fileSize, uploadCaptions: false, uploadThumbnail: false },
+        }),
+      });
+      const initData = await initRes.json();
+      const uploadToken = initData?.value?.uploadToken;
+      const videoUrn = initData?.value?.video;
+      const instructions = initData?.value?.uploadInstructions;
+
+      if (!videoUrn || !instructions || instructions.length === 0) throw new Error('LinkedIn video init failed');
+
+      // Upload video binary (chunked)
+      const vidBytes = new Uint8Array(vidBuffer);
+      const uploadedPartIds = [];
+      for (const instr of instructions) {
+        const start = instr.firstByte || 0;
+        const end = (instr.lastByte ?? fileSize - 1) + 1;
+        const chunk = new Blob([vidBytes.slice(start, end)], { type: 'application/octet-stream' });
+        const uploadResp = await fetch(instr.uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/octet-stream', 'Content-Length': String(end - start) },
+          body: chunk,
+        });
+        const etag = uploadResp.headers.get('etag') || uploadResp.headers.get('ETag');
+        if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
+        if (!uploadResp.ok) throw new Error('LinkedIn video upload failed');
+      }
+
+      // Finalize upload
+      await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ finalizeUploadRequest: { video: videoUrn, uploadToken: uploadToken || '', uploadedPartIds } }),
+      });
+
+      // Poll for READY (max 90s)
+      let videoReady = false;
+      let pollStatus = 'unknown';
+      for (let i = 0; i < 18; i++) {
+        await new Promise(r => setTimeout(r, 5000));
+        const statusRes = await fetch(`https://api.linkedin.com/rest/videos/${encodeURIComponent(videoUrn)}`, { headers });
+        const statusData = await statusRes.json().catch(() => ({}));
+        pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
+        if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') { videoReady = true; break; }
+        if (pollStatus === 'FAILED' || pollStatus === 'ERROR') break;
+      }
+
+      // Create post
+      const mediaUrn = videoUrn.replace(':video:', ':digitalmediaAsset:');
+      const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          author: authorUrn,
+          lifecycleState: 'PUBLISHED',
+          specificContent: {
+            'com.linkedin.ugc.ShareContent': {
+              media: [{ media: mediaUrn, status: 'READY', title: { text: broadcast.show_name || 'DNN Broadcast' } }],
+              shareCommentary: { text: socialText },
+              shareMediaCategory: 'VIDEO',
+            },
+          },
+          visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+        }),
+      });
+      const postData = await postRes.json().catch(() => ({}));
+      const postId = postRes.headers.get('x-restli-id') || postData.id;
+      if (!postRes.ok) throw new Error(postData.message || 'LinkedIn post failed');
+
+      results.linkedin = { success: true, post_id: postId, type: 'video', posted_as: postedAs, video_ready: videoReady };
     } catch (e) {
       results.linkedin = { success: false, error: e.message };
     }
