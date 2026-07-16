@@ -44,7 +44,7 @@ export default function AdminShowPipeline() {
       // 2. Poll HeyGen for stitching completions
       let stitchMsg = '';
       try {
-        const stitchRes = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
+        const stitchRes = await base44.functions.invoke('creatomateComposite', { action: 'check' });
         stitchMsg = stitchRes.data?.checked?.length ? `Stitch: ${stitchRes.data.checked.length} checked` : '';
       } catch (e) { stitchMsg = `Stitch check: ${e.message}`; }
 

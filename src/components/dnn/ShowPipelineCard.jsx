@@ -72,9 +72,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
       } else if (action === 'check') {
         res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'check' });
       } else if (action === 'stitch') {
-        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'start', broadcastId: show.id });
+        res = await base44.functions.invoke('creatomateComposite', { action: 'start', broadcastId: show.id });
       } else if (action === 'checkStitch') {
-        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
+        res = await base44.functions.invoke('creatomateComposite', { action: 'check' });
       }
       setResult({ success: !res?.data?.error, data: res?.data });
       onRefresh();
