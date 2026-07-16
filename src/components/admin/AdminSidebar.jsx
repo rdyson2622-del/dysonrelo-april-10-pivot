@@ -138,7 +138,7 @@ const NAV_SECTIONS = [
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
       { label: '🎬 Show Production Pipeline', path: '/admin/dnn/show-pipeline', icon: Clapperboard },
-      { label: '🎧 Broadcast Audio Library', path: '/admin/dnn/library', icon: Headphones },
+      { label: '🎧 Broadcast Audio Library', path: '/admin/dnn/broadcast-library', icon: Headphones },
       { label: '⚡ HeyGen Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
       { label: '📊 Production Cost Dashboard', path: '/admin/production-dashboard', icon: BarChart3 },
     ],
