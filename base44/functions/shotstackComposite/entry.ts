@@ -111,13 +111,13 @@ Deno.serve(async (req) => {
       // ── Build the Shotstack timeline ──
       // Track 0 (bottom): Studio background image (full duration)
       // Track 1: Charlie clips (left wall, sequential)
-      // Track 2: Bob clips (right wall, sequential, with black side panels)
-      // Track 3: Whiteboard overlay (HTML asset, shown during Bob clips with bullets)
+      // Track 2: Bob clips (right wall, sequential)
+      // Track 3: Whiteboard overlay (HTML asset, shown during Bob clips with bullets) — only if bullets exist
       // Track 4: News pills + DNN logo (full duration overlays)
 
-      const totalDuration = clips.reduce((sum, c) => sum + (DEFAULT_CLIP_LENGTH), 0);
+      const totalDuration = clips.reduce((sum, c) => sum + DEFAULT_CLIP_LENGTH, 0);
 
-      // Studio background — spans the entire timeline
+      // Studio background — full-screen, spans the entire timeline
       const bgClips = [{
         asset: { type: 'image', src: STUDIO_BG_URL },
         start: 0,
@@ -126,6 +126,7 @@ Deno.serve(async (req) => {
       }];
 
       // Charlie and Bob clips — positioned on their respective walls
+      // fit:'none' keeps the video at its natural pixel size within the 1080p frame
       const charlieClips = [];
       const bobClips = [];
       const whiteboardClips = [];
@@ -137,68 +138,54 @@ Deno.serve(async (req) => {
 
         if (isCharlie) {
           charlieClips.push({
-            asset: {
-              type: 'video',
-              src: clip.videoUrl,
-            },
+            asset: { type: 'video', src: clip.videoUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'contain',
-            transform: {
-              position: { x: CHARLIE_POS.x, y: CHARLIE_POS.y },
-              scale: { x: PRESENTER_SCALE, y: PRESENTER_SCALE },
-            },
+            fit: 'none',
+            position: 'bottomLeft',
+            offset: { x: 0.06, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
           });
         } else {
-          // Bob — video on right wall
           bobClips.push({
-            asset: {
-              type: 'video',
-              src: clip.videoUrl,
-            },
+            asset: { type: 'video', src: clip.videoUrl },
             start: currentTime,
             length: clipLen,
-            fit: 'contain',
-            transform: {
-              position: { x: BOB_POS.x, y: BOB_POS.y },
-              scale: { x: PRESENTER_SCALE, y: PRESENTER_SCALE },
-            },
+            fit: 'none',
+            position: 'bottomRight',
+            offset: { x: -0.06, y: 0.04 },
             transition: { in: 'fade', out: 'fade' },
           });
 
-          // Whiteboard overlay — HTML asset with bullet points
-          // Extract bullets from the clip script (split by newlines, filter short lines)
+          // Whiteboard overlay — HTML asset with bullet points from Bob's script
           const bullets = (clip.script || '')
-            .split('\n')
+            .split(/(?:\.|\n)/)
             .map(l => l.trim())
-            .filter(l => l.length > 10 && l.length < 200)
+            .filter(l => l.length > 15 && l.length < 200)
             .slice(0, 4);
 
           if (bullets.length > 0) {
             const bulletHtml = bullets.map(b =>
-              `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-                <div style="width:8px;height:8px;border-radius:50%;background:${GOLD};margin-top:6px;flex-shrink:0;"></div>
-                <span style="color:#2a2a2a;font-size:22px;font-family:Inter,sans-serif;">${b.replace(/</g, '&lt;')}</span>
+              `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:${GOLD};margin-top:8px;flex-shrink:0;"></div>
+                <span style="color:#2a2a2a;font-size:24px;font-family:Inter,sans-serif;line-height:1.4;">${b.replace(/</g, '&lt;')}</span>
               </div>`
             ).join('');
 
             whiteboardClips.push({
               asset: {
                 type: 'html',
-                html: `<div style="background:#f5f0e8;border:3px solid ${GOLD};border-radius:6px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,0.4);width:100%;height:100%;box-sizing:border-box;">
+                html: `<div style="background:#f5f0e8;border:3px solid ${GOLD};border-radius:6px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,0.4);width:100%;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
                   ${bulletHtml}
                 </div>`,
-                width: 460,
-                height: 280,
+                width: 500,
+                height: 300,
                 background: 'transparent',
               },
               start: currentTime,
               length: clipLen,
-              transform: {
-                position: { x: 0, y: 0.12 },
-                scale: { x: 0.95, y: 0.95 },
-              },
+              position: 'center',
+              offset: { x: 0, y: 0.1 },
               transition: { in: 'fade', out: 'fade' },
             });
           }
@@ -209,23 +196,20 @@ Deno.serve(async (req) => {
 
       // News pills — small HTML badges along the bottom of the frame
       const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA', 'HOUSING SUPPLY'];
-      const pillWidth = 120;
-      const pillGap = 10;
-      const pillStartX = -((pillLabels.length * (pillWidth + pillGap)) / 2) + pillWidth / 2;
+      const pillSpacing = 0.22;
 
       const newsPillClips = pillLabels.map((label, i) => ({
         asset: {
           type: 'html',
-          html: `<div style="background:rgba(0,0,0,0.7);border:1px solid rgba(212,175,55,0.4);border-radius:20px;padding:6px 14px;color:${GOLD};font-size:11px;font-weight:700;letter-spacing:1.5px;font-family:Inter,sans-serif;white-space:nowrap;">${label}</div>`,
-          width: pillWidth,
-          height: 32,
+          html: `<div style="background:rgba(0,0,0,0.75);border:1px solid rgba(212,175,55,0.5);border-radius:20px;padding:8px 16px;color:${GOLD};font-size:12px;font-weight:700;letter-spacing:1.5px;font-family:Inter,sans-serif;white-space:nowrap;">${label}</div>`,
+          width: 140,
+          height: 36,
           background: 'transparent',
         },
         start: 0,
         length: totalDuration,
-        transform: {
-          position: { x: pillStartX + i * (pillWidth + pillGap), y: -0.42 },
-        },
+        position: 'bottom',
+        offset: { x: (i - 1.5) * pillSpacing, y: -0.05 },
       }));
 
       // DNN logo badge — top left corner
@@ -233,22 +217,25 @@ Deno.serve(async (req) => {
         asset: { type: 'image', src: DNN_LOGO_URL },
         start: 0,
         length: totalDuration,
-        fit: 'contain',
-        transform: {
-          position: { x: -0.72, y: 0.42 },
-          scale: { x: 0.12, y: 0.12 },
-        },
+        fit: 'none',
+        position: 'topLeft',
+        offset: { x: 0.04, y: -0.04 },
       };
+
+      // Build tracks array — only include whiteboard track if it has clips
+      const tracks = [
+        { clips: bgClips },
+        { clips: charlieClips },
+        { clips: bobClips },
+      ];
+      if (whiteboardClips.length > 0) {
+        tracks.push({ clips: whiteboardClips });
+      }
+      tracks.push({ clips: newsPillClips });
 
       const timeline = {
         background: '#000000',
-        tracks: [
-          { clips: bgClips },                           // Track 0: studio background
-          { clips: charlieClips },                       // Track 1: Charlie (left wall)
-          { clips: bobClips },                           // Track 2: Bob (right wall)
-          { clips: whiteboardClips },                    // Track 3: whiteboard overlay
-          { clips: [...newsPillClips, logoClip] },      // Track 4: news pills + logo
-        ],
+        tracks,
       };
 
       // Submit to Shotstack
