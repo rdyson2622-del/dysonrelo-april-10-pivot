@@ -190,34 +190,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           />
         </div>
       ) : isBob ? (
-        /* Bob — right wall with black side panels to frame him */
-        <div style={{ position: 'absolute', top: '30%', right: '1.5%', zIndex: 10, display: 'flex', alignItems: 'center' }}>
-          {/* Left black panel */}
-          <div style={{ width: 'clamp(20px, 2.5vw, 40px)', height: 'clamp(200px, 28vh, 320px)', background: '#000', borderRadius: '6px 0 0 6px' }} />
-          <video
-            key={seg.src + idx}
-            ref={videoRef}
-            src={seg.src}
-            playsInline
-            onEnded={handleEnded}
-            onClick={togglePlay}
-            className="cursor-pointer transition-all duration-300"
-            style={{
-              width: 'clamp(120px, 14vw, 180px)',
-              height: 'clamp(200px, 28vh, 320px)',
-              aspectRatio: '9/16',
-              objectFit: 'cover',
-              borderRadius: '0',
-              border: `2px solid ${GOLD}`,
-              boxShadow: '0 8px 28px rgba(0,0,0,0.7)',
-              background: '#000',
-            }}
-          />
-          {/* Right black panel */}
-          <div style={{ width: 'clamp(20px, 2.5vw, 40px)', height: 'clamp(200px, 28vh, 320px)', background: '#000', borderRadius: '0 6px 6px 0' }} />
-        </div>
-      ) : (
-        /* Charlie — left brown wall alcove */
+        /* Bob — lower right, flush against right border with black backdrop */
         <video
           key={seg.src + idx}
           ref={videoRef}
@@ -227,16 +200,43 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           onClick={togglePlay}
           className="cursor-pointer transition-all duration-300"
           style={{
-            width: 'clamp(100px, 12vw, 160px)',
-            height: 'clamp(180px, 25vh, 280px)',
+            position: 'absolute',
+            bottom: '8%',
+            right: 0,
+            width: 'clamp(110px, 13vw, 170px)',
+            height: 'clamp(195px, 27vh, 310px)',
             aspectRatio: '9/16',
             objectFit: 'cover',
-            position: 'absolute',
-            top: '33%',
-            left: '1.5%',
-            borderRadius: '8px',
+            borderRadius: '8px 0 0 8px',
             border: `2px solid ${GOLD}`,
-            boxShadow: '0 8px 28px rgba(0,0,0,0.7)',
+            borderRight: 'none',
+            boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+            background: '#000',
+            zIndex: 10,
+          }}
+        />
+      ) : (
+        /* Charlie — lower left, flush against left border with black backdrop */
+        <video
+          key={seg.src + idx}
+          ref={videoRef}
+          src={seg.src}
+          playsInline
+          onEnded={handleEnded}
+          onClick={togglePlay}
+          className="cursor-pointer transition-all duration-300"
+          style={{
+            position: 'absolute',
+            bottom: '8%',
+            left: 0,
+            width: 'clamp(110px, 13vw, 170px)',
+            height: 'clamp(195px, 27vh, 310px)',
+            aspectRatio: '9/16',
+            objectFit: 'cover',
+            borderRadius: '0 8px 8px 0',
+            border: `2px solid ${GOLD}`,
+            borderLeft: 'none',
+            boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
             background: '#000',
             zIndex: 10,
           }}
