@@ -291,8 +291,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onClick={togglePlay}
-            className="cursor-pointer w-full h-full"
-            style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
+            className="cursor-pointer h-full"
+            style={{ objectFit: 'contain' }}
           />
         </div>
       )}
