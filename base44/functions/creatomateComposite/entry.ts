@@ -33,14 +33,22 @@ const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5e
 const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
 const GOLD = '#D4AF37';
 
-// Presenter box dimensions (as % of 1920x1080 frame)
-// 9:16 vertical clips, flush against left/right borders and bottom
-const PRESENTER_WIDTH = '15%';
-const PRESENTER_HEIGHT = '50%';
-const CHARLIE_X = '0%';
-const CHARLIE_Y = '100%';
-const BOB_X = '100%';
-const BOB_Y = '100%';
+// Presenter box dimensions (as % of 1920x1080 frame) — defaults
+// Overridable per-broadcast via DnnBroadcast.layoutConfig
+const DEFAULTS = {
+  presenterWidth: 15,
+  presenterHeight: 50,
+  charlieX: 0,
+  charlieY: 100,
+  bobX: 100,
+  bobY: 100,
+  pillY: 93,
+  pillWidth: 14,
+  showText: '',
+  showTextX: 50,
+  showTextY: 8,
+  showTextSize: 3,
+};
 
 Deno.serve(async (req) => {
   try {
@@ -111,6 +119,10 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips with video URLs' }, { status: 400 });
       }
 
+      // Merge broadcast-specific layout overrides with defaults
+      const lc = { ...DEFAULTS, ...(broadcast.layoutConfig || {}) };
+      const pct = (v) => `${v}%`;
+
       // ── Build the RenderScript ──
       // Creatomate RenderScript: elements array, tracks layered bottom→top.
       // Track 1 (bottom): Studio background image (full screen, full duration)
@@ -144,10 +156,10 @@ Deno.serve(async (req) => {
           type: 'video',
           track: 1,
           source: clip.videoUrl,
-          width: PRESENTER_WIDTH,
-          height: PRESENTER_HEIGHT,
-          x: isCharlie ? CHARLIE_X : BOB_X,
-          y: isCharlie ? CHARLIE_Y : BOB_Y,
+          width: pct(lc.presenterWidth),
+          height: pct(lc.presenterHeight),
+          x: pct(isCharlie ? lc.charlieX : lc.bobX),
+          y: pct(isCharlie ? lc.charlieY : lc.bobY),
           x_anchor: isCharlie ? '0%' : '100%',
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
@@ -183,10 +195,10 @@ Deno.serve(async (req) => {
           track: 3,
           time: 0,
           text: pillLabels[i],
-          width: '14%',
+          width: pct(lc.pillWidth),
           height: '4%',
           x: `${pillX}%`,
-          y: '93%',
+          y: pct(lc.pillY),
           x_anchor: '50%',
           y_anchor: '50%',
           x_alignment: '50%',
@@ -199,6 +211,26 @@ Deno.serve(async (req) => {
           background_x_padding: '60%',
           background_y_padding: '40%',
           background_border_radius: '40%',
+        });
+      }
+
+      // Show title text overlay (optional)
+      if (lc.showText) {
+        elements.push({
+          type: 'text',
+          track: 3,
+          time: 0,
+          text: lc.showText,
+          x: pct(lc.showTextX),
+          y: pct(lc.showTextY),
+          x_anchor: '50%',
+          y_anchor: '50%',
+          x_alignment: '50%',
+          y_alignment: '50%',
+          fill_color: GOLD,
+          font_family: 'Inter',
+          font_weight: '900',
+          font_size: `${lc.showTextSize} vmin`,
         });
       }
 

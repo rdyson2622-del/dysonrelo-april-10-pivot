@@ -3,13 +3,14 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
   Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
-  Send
+  Send, Sliders
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 import DistributionTracker from '@/components/dnn/DistributionTracker';
 import SocialAnalyticsPanel from '@/components/dnn/SocialAnalyticsPanel';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
+import VisualLayoutController from '@/components/dnn/VisualLayoutController';
 
 function extractBullets(script) {
   if (!script) return [];
@@ -56,6 +57,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [playing, setPlaying] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showStudioPreview, setShowStudioPreview] = useState(false);
+  const [showLayoutController, setShowLayoutController] = useState(false);
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
@@ -110,6 +112,12 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Visual layout controller button */}
+          <button onClick={() => setShowLayoutController(true)}
+            className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full transition-all hover:scale-105"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+            <Sliders className="w-2.5 h-2.5" /> Layout
+          </button>
           {/* Distribution tracker */}
           {show.videoUrl && <DistributionTracker show={show} />}
           {/* Stage badge */}
@@ -344,6 +352,14 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               show={show}
               onClose={() => setShowAgentModal(false)}
               onRefresh={onRefresh}
+            />
+          )}
+
+          {/* Visual layout controller */}
+          {showLayoutController && (
+            <VisualLayoutController
+              show={show}
+              onClose={() => setShowLayoutController(false)}
             />
           )}
 
