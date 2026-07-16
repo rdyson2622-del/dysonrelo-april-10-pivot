@@ -492,7 +492,139 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, checked: results });
     }
 
-    return Response.json({ error: 'action must be "start" or "check"' }, { status: 400 });
+    // ── GENERATE TEASER: create a 5-second teaser clip from composited video ──
+    if (action === 'generateTeaser') {
+      const broadcastId = body.broadcastId;
+      let broadcast;
+
+      if (broadcastId) {
+        const arr = await Broadcasts.filter({ id: broadcastId });
+        broadcast = arr?.[0];
+      } else {
+        const completed = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 20);
+        broadcast = completed.find(b => b.videoUrl && !b.teaserUrl);
+      }
+
+      if (!broadcast) {
+        return Response.json({ error: 'No completed broadcast with composited video but no teaser found' }, { status: 404 });
+      }
+
+      if (!broadcast.videoUrl) {
+        return Response.json({ error: 'Broadcast has no composited video URL' }, { status: 400 });
+      }
+
+      if (broadcast.teaserUrl) {
+        return Response.json({ success: true, message: 'Teaser already generated', teaserUrl: broadcast.teaserUrl });
+      }
+
+      // If teaser render already in progress, return the render ID
+      if (broadcast.teaserRenderId) {
+        return Response.json({ success: true, message: 'Teaser render in progress', renderId: broadcast.teaserRenderId });
+      }
+
+      // Build a simple trim render — first 5 seconds of the composited video
+      const teaserScript = {
+        output_format: 'mp4',
+        width: 1920,
+        height: 1080,
+        frame_rate: 30,
+        elements: [
+          {
+            type: 'video',
+            track: 1,
+            source: broadcast.videoUrl,
+            width: '100%',
+            height: '100%',
+            x: '50%',
+            y: '50%',
+            x_anchor: '50%',
+            y_anchor: '50%',
+            x_alignment: '50%',
+            y_alignment: '50%',
+            trim_start: 0,
+            trim_duration: 5,
+            volume: 1.5,
+          },
+        ],
+      };
+
+      const cmRes = await fetch(CREATOMATE_BASE, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(teaserScript),
+      });
+
+      const cmData = await cmRes.json();
+      const renderId = cmData?.id;
+
+      if (!cmRes.ok || !renderId) {
+        return Response.json({ error: 'Creatomate teaser render failed', details: cmData }, { status: 502 });
+      }
+
+      await Broadcasts.update(broadcast.id, { teaserRenderId: renderId });
+
+      return Response.json({
+        success: true,
+        message: 'Teaser render started',
+        broadcastId: broadcast.id,
+        renderId,
+      });
+    }
+
+    // ── CHECK TEASER: poll in-progress teaser renders ──
+    if (action === 'checkTeaser') {
+      const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
+      const pending = all.filter(b => b.teaserRenderId && !b.teaserUrl);
+
+      if (pending.length === 0) {
+        return Response.json({ success: true, message: 'No pending teaser renders', pending: 0 });
+      }
+
+      const results = [];
+      for (const broadcast of pending) {
+        const cmRes = await fetch(
+          `${CREATOMATE_BASE}/${encodeURIComponent(broadcast.teaserRenderId)}`,
+          { headers: { 'Authorization': `Bearer ${apiKey}` } }
+        );
+        const cmData = await cmRes.json();
+        const status = cmData?.status;
+
+        if (status === 'succeeded') {
+          const teaserUrl = cmData?.url;
+          if (!teaserUrl) {
+            results.push({ id: broadcast.id, status: 'succeeded_but_no_url' });
+            continue;
+          }
+
+          // Download and re-upload to Base44 storage
+          const vidRes = await fetch(teaserUrl);
+          if (!vidRes.ok) {
+            results.push({ id: broadcast.id, status: 'download_failed' });
+            continue;
+          }
+          const buf = await vidRes.arrayBuffer();
+          const file = new File([buf], `dnn_teaser_${broadcast.broadcast_date}.mp4`, { type: 'video/mp4' });
+          const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+
+          await Broadcasts.update(broadcast.id, { teaserUrl: up.file_url, teaserRenderId: '' });
+
+          results.push({ id: broadcast.id, status: 'teaser_ready', teaserUrl: up.file_url });
+        } else if (status === 'failed') {
+          const errMsg = cmData?.error_message || 'Teaser render failed';
+          await Broadcasts.update(broadcast.id, { teaserRenderId: '' });
+          results.push({ id: broadcast.id, status: 'failed', error: errMsg });
+        } else {
+          results.push({ id: broadcast.id, status: status || 'processing' });
+        }
+      }
+
+      return Response.json({ success: true, checked: results });
+    }
+
+    return Response.json({ error: 'action must be "start", "check", "generateTeaser", or "checkTeaser"' }, { status: 400 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

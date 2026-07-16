@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
-  RefreshCw, Send, DollarSign, ChevronRight, RotateCcw, X, AlertTriangle
+  RefreshCw, Send, DollarSign, ChevronRight, RotateCcw, X, AlertTriangle, Scissors
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -14,14 +14,15 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
   const [posting, setPosting] = useState(null);
   const [result, setResult] = useState(null);
   const [confirmChannel, setConfirmChannel] = useState(null);
+  const [generatingTeaser, setGeneratingTeaser] = useState(false);
 
   const getPostPreview = (channelKey) => {
     const headline = show.headlines?.[0] || 'Daily Real Estate News Broadcast';
     if (channelKey === 'linkedin') {
-      return `📡 DNN Intelligence Bureau\n\n${headline}\n\nCharlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.\n\n🔔 Watch the full broadcast: https://1dnn.com/dnn-news?autoplay=1\nSubscribe for free: https://1dnn.com/subscribe`;
+      return `🎬 ${headline}\n\n📡 DNN Intelligence Bureau\nReal estate news WITH solutions.\n\n🔔 Watch the full show: https://1dnn.com/dnn-news\nSubscribe free: https://1dnn.com\n\n#RealEstateNews #DNN`;
     }
     if (channelKey === 'facebook') {
-      return `📡 DNN Intelligence Bureau — ${headline}\n\nWatch the full broadcast and subscribe at 1dnn.com`;
+      return `🎬 ${headline}\n\n📡 DNN Intelligence Bureau — Real estate news WITH solutions.\n\nWatch the full show: https://1dnn.com/dnn-news`;
     }
     if (channelKey === 'subscriber_email') {
       return `DNN Daily Broadcast — ${show.show_name || 'Show'} for ${show.broadcast_date}\n\nHeadline: ${headline}\n\nAll subscribers will receive the broadcast video link.`;
@@ -52,30 +53,47 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     onRefresh();
   };
 
-  const handleLinkedIn = async () => {
-    setPosting('linkedin');
+  const handleGenerateTeaser = async () => {
+    setGeneratingTeaser(true);
     setResult(null);
     try {
-      const res = await base44.functions.invoke('postToLinkedInV2', {
-        text: `📡 DNN Intelligence Bureau\n\n${show.headlines?.[0] || 'Daily Real Estate News Broadcast'}\n\nCharlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.\n\n🔔 Watch the full broadcast: https://1dnn.com/dnn-news?autoplay=1\nSubscribe for free: https://1dnn.com/subscribe`,
-        videoUrl: show.videoUrl,
-        imageUrl: DNN_STUDIO_IMAGE,
-        title: show.headlines?.[0] || 'DNN Broadcast',
-        description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
-        organizationName: 'DNN',
+      const res = await base44.functions.invoke('creatomateComposite', {
+        action: 'generateTeaser',
+        broadcastId: show.id,
       });
       if (res.data?.success) {
+        setResult({ success: true, msg: 'Teaser render started — check back in ~1 min' });
+      } else {
+        setResult({ success: false, msg: res.data?.error || 'Teaser generation failed' });
+      }
+    } catch (e) {
+      setResult({ success: false, msg: e.message });
+    }
+    setGeneratingTeaser(false);
+  };
+
+  const handleTeaserPost = async (channelKey) => {
+    setPosting(channelKey);
+    setResult(null);
+    try {
+      const res = await base44.functions.invoke('dnnPostTeaserWithComment', {
+        broadcastId: show.id,
+        channels: [channelKey],
+      });
+      const chResult = res.data?.results?.[channelKey];
+      if (chResult?.success) {
         await updateDistribution({
-          channel: 'linkedin',
+          channel: channelKey,
           status: 'sent',
-          recipient: res.data.posted_as || 'DNN LinkedIn Page',
-          post_id: res.data.post_id || '',
+          recipient: chResult.posted_as || chResult.page_name || `DNN ${channelKey}`,
+          post_id: chResult.post_id || '',
+          comment_id: chResult.comment_id || '',
           posted_at: new Date().toISOString(),
         });
-        setResult({ success: true, msg: `Posted to ${res.data.posted_as}` });
+        setResult({ success: true, msg: `Teaser posted to ${channelKey} with link comment` });
       } else {
-        await updateDistribution({ channel: 'linkedin', status: 'failed', error: res.data?.error || 'Unknown error' });
-        setResult({ success: false, msg: res.data?.error || 'LinkedIn post failed' });
+        await updateDistribution({ channel: channelKey, status: 'failed', error: chResult?.error || 'Unknown error' });
+        setResult({ success: false, msg: chResult?.error || `${channelKey} post failed` });
       }
     } catch (e) {
       setResult({ success: false, msg: e.message });
@@ -83,29 +101,9 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting(null);
   };
 
-  const handleFacebook = async () => {
-    setPosting('facebook');
-    setResult(null);
-    try {
-      const res = await base44.functions.invoke('dnnSocialBlast', {});
-      if (res.data?.facebook?.success || res.data?.success) {
-        await updateDistribution({
-          channel: 'facebook',
-          status: 'sent',
-          recipient: 'DNN Facebook Page',
-          post_id: res.data?.facebook?.post_id || res.data?.post_id || '',
-          posted_at: new Date().toISOString(),
-        });
-        setResult({ success: true, msg: 'Posted to Facebook' });
-      } else {
-        await updateDistribution({ channel: 'facebook', status: 'failed', error: res.data?.error || 'Facebook post failed' });
-        setResult({ success: false, msg: res.data?.error || 'Facebook post failed' });
-      }
-    } catch (e) {
-      setResult({ success: false, msg: e.message });
-    }
-    setPosting(null);
-  };
+  const handleLinkedIn = () => handleTeaserPost('linkedin');
+
+  const handleFacebook = () => handleTeaserPost('facebook');
 
   const handleEmailBlast = async () => {
     setPosting('email');
@@ -191,6 +189,32 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
 
   return (
     <div>
+      {/* Teaser Generation Bar */}
+      <div className="mb-3 rounded-lg p-3" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Scissors className="w-3.5 h-3.5" style={{ color: GOLD }} />
+            <div>
+              <p className="text-[10px] font-bold tracking-widest uppercase text-white">Teaser Clip</p>
+              <p className="text-[9px] text-slate-500">5-second clip for algorithm-friendly native posting</p>
+            </div>
+          </div>
+          {show.teaserUrl ? (
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] text-green-400 font-bold">✓ Ready</span>
+              <a href={show.teaserUrl} target="_blank" className="text-[9px] text-slate-400 hover:text-white underline">Preview</a>
+            </div>
+          ) : (
+            <button onClick={handleGenerateTeaser} disabled={generatingTeaser || !show.videoUrl}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-bold text-black transition-all disabled:opacity-50"
+              style={{ background: generatingTeaser ? '#666' : GOLD }}>
+              {generatingTeaser ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Scissors className="w-3 h-3" />}
+              {generatingTeaser ? 'Generating…' : 'Generate Teaser'}
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="flex items-center justify-between mb-3">
         <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Distribution & Posting Progress:</p>
         {hasDistribution && (

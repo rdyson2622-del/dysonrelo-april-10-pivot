@@ -80,6 +80,14 @@
       "type": "string",
       "description": "Permanent URL of the rendered broadcast video (solo format)"
     },
+    "teaserUrl": {
+      "type": "string",
+      "description": "5-second teaser clip URL for social media posting (algorithm-friendly native video)"
+    },
+    "teaserRenderId": {
+      "type": "string",
+      "description": "Creatomate render ID for the teaser clip"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -182,6 +190,10 @@
           "post_id": {
             "type": "string",
             "description": "Social post ID or email message ID"
+          },
+          "comment_id": {
+            "type": "string",
+            "description": "Comment post ID (teaser + comment strategy)"
           },
           "posted_at": {
             "type": "string",
