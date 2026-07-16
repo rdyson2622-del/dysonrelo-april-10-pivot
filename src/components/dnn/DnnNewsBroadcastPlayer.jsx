@@ -210,25 +210,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               }}
             />
           ) : (
-            <div className="relative" style={{ background: '#000', borderRadius: '0 8px 8px 0', overflow: 'hidden' }}>
+            <div className="relative" style={{ background: '#000', borderRadius: '0 8px 8px 0', overflow: 'hidden', border: `2px solid ${GOLD}`, borderLeft: 'none', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }}>
               <video
                 src={charlieStaticUrl}
                 playsInline
                 muted
                 preload="metadata"
                 onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
-                className="w-full object-cover relative z-0"
+                className="w-full object-cover"
                 style={{
                   aspectRatio: '9/16',
                   background: '#000',
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10" style={{ background: 'rgba(0,0,0,0.35)' }}>
-                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.7)' }}>
-                  ● STANDBY
-                </span>
-              </div>
-              <div className="absolute inset-0 pointer-events-none" style={{ border: `2px solid ${GOLD}`, borderLeft: 'none', borderRadius: '0 8px 8px 0', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }} />
             </div>
           )}
           {/* Name/title overlay */}
@@ -267,25 +261,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               }}
             />
           ) : (
-            <div className="relative" style={{ background: '#000', borderRadius: '8px 0 0 8px', overflow: 'hidden' }}>
+            <div className="relative" style={{ background: '#000', borderRadius: '8px 0 0 8px', overflow: 'hidden', border: `2px solid ${GOLD}`, borderRight: 'none', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }}>
               <video
                 src={bobStaticUrl}
                 playsInline
                 muted
                 preload="metadata"
                 onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
-                className="w-full object-cover relative z-0"
+                className="w-full object-cover"
                 style={{
                   aspectRatio: '9/16',
                   background: '#000',
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10" style={{ background: 'rgba(0,0,0,0.35)' }}>
-                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.7)' }}>
-                  ● STANDBY
-                </span>
-              </div>
-              <div className="absolute inset-0 pointer-events-none" style={{ border: `2px solid ${GOLD}`, borderRight: 'none', borderRadius: '8px 0 0 8px', boxShadow: '0 8px 28px rgba(0,0,0,0.8)' }} />
             </div>
           )}
           {/* Name/title overlay */}
