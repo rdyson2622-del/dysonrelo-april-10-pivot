@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
+import LandingBroadcastPlayer from '@/components/dnn/LandingBroadcastPlayer';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -54,6 +55,7 @@ const PATHS = [
 
 export default function RoleSelector() {
   const navigate = useNavigate();
+  const [showPlayer, setShowPlayer] = useState(true);
 
   // Subscribed visitors go straight to their portal — unless they explicitly
   // asked for the landing page (logo click adds ?choose=1)
@@ -70,6 +72,14 @@ export default function RoleSelector() {
     } catch {}
   }, [navigate]);
 
+  const handleEnter = () => {
+    setShowPlayer(false);
+    // Scroll to path selection
+    setTimeout(() => {
+      document.getElementById('path-selection')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   const handleSelect = (path) => {
     sessionStorage.setItem('dyson_role', path.roleKey);
     window.dispatchEvent(new Event('dyson_role_change'));
@@ -78,69 +88,11 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
-      {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
-      <section
-        className="relative h-screen"
-        style={{
-          backgroundImage: `url('${STUDIO_BG}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
-
-        {/* Three pills — direct routing to News / Relocation / Intelligence */}
-        <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
-          style={{ bottom: '18%' }}>
-          {[
-            { word: 'News', dest: '/dnn-news?autoplay=1', sub: "Today's Clips" },
-            { word: 'Relocation', dest: '/relo-management', sub: 'Free Access' },
-            { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' },
-          ].map((pill) => (
-            <button
-              key={pill.word}
-              onClick={() => navigate(pill.dest)}
-              className="flex flex-col items-center justify-center px-6 md:px-8 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group"
-              style={{
-                background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
-                border: '1px solid rgba(212,180,106,0.45)',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                minWidth: '7rem',
-                maxWidth: '12rem',
-                height: '3.25rem',
-              }}
-            >
-              <span
-                className="uppercase whitespace-nowrap"
-                style={{
-                  color: '#d4b46a',
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontWeight: 500,
-                  letterSpacing: '0.25em',
-                  fontSize: pill.word.length > 6 ? '1.15rem' : '1.5rem',
-                }}
-              >
-                {pill.word}
-              </span>
-              <span
-                className="text-[8px] tracking-[0.2em] uppercase mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity"
-                style={{ color: '#d4b46a' }}
-              >
-                {pill.sub}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        <div className="absolute left-0 right-0 flex flex-col items-center px-6" style={{ bottom: '6%' }}>
-          <p className="text-xl md:text-2xl text-center whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
-            Select your path below and your experience will be tailored exclusively to your needs.
-          </p>
-        </div>
-      </section>
+      {/* ── Hero: Live DNN Broadcast Player (both boxes, stings, logos baked in) ── */}
+      {showPlayer && <LandingBroadcastPlayer onEnter={handleEnter} />}
 
       {/* ── Path Selection ── */}
-      <section className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
+      <section id="path-selection" className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
 
         <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {PATHS.map((path, i) => {
