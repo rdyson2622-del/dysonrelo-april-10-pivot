@@ -28,7 +28,7 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
 DNN Intelligence Bureau — ${dateSpoken}
 Real estate news WITH solutions. We don't just report — we tell you exactly what to do about it.
 
-Watch the full show: https://1dnn.com/dnn-news
+Watch the full show: https://1dnn.com
 
 #RealEstateNews #Relocation #DNN`;
     }
@@ -38,7 +38,7 @@ Watch the full show: https://1dnn.com/dnn-news
 DNN Intelligence Bureau — ${dateSpoken}
 Real estate news WITH solutions.
 
-Watch the full show: https://1dnn.com/dnn-news`;
+Watch the full show: https://1dnn.com`;
     }
     if (channelKey === 'subscriber_email') {
       return `DNN Daily Broadcast — ${show.show_name || 'Show'} for ${show.broadcast_date}\n\nHeadline: ${headline}\n\nAll subscribers will receive the broadcast video link.`;

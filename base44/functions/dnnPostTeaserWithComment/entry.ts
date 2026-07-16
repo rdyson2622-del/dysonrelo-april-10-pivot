@@ -11,7 +11,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  *
  * Auth: admin session (manual trigger) or x-pipeline-secret (scheduled automation).
  */
-const SHOW_URL = 'https://1dnn.com/dnn-news';
+const SHOW_URL = 'https://1dnn.com';
 
 Deno.serve(async (req) => {
   try {
