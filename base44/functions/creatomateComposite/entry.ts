@@ -490,6 +490,7 @@ Deno.serve(async (req) => {
       }
 
       // Build a simple trim render — first 5 seconds of the composited video
+      // with an on-screen text overlay directing viewers to 1dnn.com
       const teaserScript = {
         output_format: 'mp4',
         width: 1920,
@@ -511,6 +512,27 @@ Deno.serve(async (req) => {
             trim_start: 0,
             trim_duration: 5,
             volume: 1.5,
+          },
+          {
+            type: 'text',
+            track: 2,
+            time: 0,
+            text: 'WATCH THE FULL SHOW\n1dnn.com',
+            x: '50%',
+            y: '85%',
+            x_anchor: '50%',
+            y_anchor: '50%',
+            x_alignment: '50%',
+            y_alignment: '50%',
+            fill_color: GOLD,
+            font_family: 'Inter',
+            font_weight: '900',
+            font_size: '5 vmin',
+            text_align: 'center',
+            background_color: 'rgba(0,0,0,0.85)',
+            background_x_padding: '40%',
+            background_y_padding: '30%',
+            background_border_radius: '8%',
           },
         ],
       };

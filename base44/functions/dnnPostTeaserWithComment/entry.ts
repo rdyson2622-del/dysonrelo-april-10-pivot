@@ -63,12 +63,12 @@ Deno.serve(async (req) => {
     });
     const headline = broadcast.headlines?.[0] || `DNN Real Estate News with Solutions — ${dateSpoken}`;
 
-    const defaultCaption = `${headline}
+    const defaultCaption = `${SHOW_URL}
+
+${headline}
 
 DNN Intelligence Bureau — ${dateSpoken}
-Real estate news WITH solutions. We don't just report — we tell you exactly what to do about it.
-
-Watch the full show: ${SHOW_URL}
+Real estate news WITH solutions.
 
 #RealEstateNews #Relocation #DNN`;
 
