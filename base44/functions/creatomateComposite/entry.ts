@@ -297,17 +297,16 @@ Deno.serve(async (req) => {
         });
       }
 
-      // News pills — headline ticker along the floor
-      const headlines = broadcast.headlines || [];
-      const pillCount = Math.min(headlines.length, 5);
-      for (let i = 0; i < pillCount; i++) {
-        const pillSpacing = 100 / (pillCount + 1);
+      // News pills — fixed labels along the floor (HOUSING SUPPLY intentionally removed)
+      const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA'];
+      for (let i = 0; i < pillLabels.length; i++) {
+        const pillSpacing = 100 / (pillLabels.length + 1);
         const pillX = pillSpacing * (i + 1);
         elements.push({
           type: 'text',
           track: 4,
           time: 0,
-          text: headlines[i].length > 40 ? headlines[i].substring(0, 37) + '...' : headlines[i],
+          text: pillLabels[i],
           width: pct(lc.pillWidth),
           x: pct(pillX),
           y: pct(lc.pillY),
