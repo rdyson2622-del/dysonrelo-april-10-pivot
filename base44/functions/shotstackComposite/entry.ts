@@ -77,6 +77,30 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
+    // ── TEST: minimal single-clip render to isolate visibility issue ──
+    if (action === 'test') {
+      const clipUrl = body.url;
+      if (!clipUrl) return Response.json({ error: 'url required' }, { status: 400 });
+      const resolved = await resolveUrl(clipUrl);
+      const timeline = {
+        background: '#000000',
+        tracks: [{
+          clips: [{
+            asset: { type: 'video', src: resolved },
+            start: 0,
+            length: 10,
+          }]
+        }]
+      };
+      const ssRes = await fetch(`${SHOTSTACK_BASE}/render`, {
+        method: 'POST',
+        headers: { 'x-api-key': shotstackKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ timeline, output: { format: 'mp4', resolution: '1080', aspectRatio: '16:9' } }),
+      });
+      const ssData = await ssRes.json();
+      return Response.json({ renderId: ssData?.response?.id, details: ssData });
+    }
+
     // ── PROBE: inspect a media URL via Shotstack's probe endpoint ──
     if (action === 'probe') {
       const probeUrl = body.url;
@@ -313,6 +337,14 @@ Deno.serve(async (req) => {
 
     // ── CHECK: poll in-progress Shotstack renders ──
     if (action === 'check') {
+      if (body.renderId) {
+        const ssRes = await fetch(
+          `${SHOTSTACK_BASE}/render/${encodeURIComponent(body.renderId)}`,
+          { headers: { 'x-api-key': shotstackKey } }
+        );
+        const ssData = await ssRes.json();
+        return Response.json({ render: ssData });
+      }
       const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
       const pending = all.filter(b => b.heygenId && !b.videoUrl);
 
