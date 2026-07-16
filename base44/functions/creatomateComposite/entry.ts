@@ -33,13 +33,14 @@ const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5e
 const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
 const GOLD = '#D4AF37';
 
-// Presenter box dimensions (as % of 1920x1080 frame — 16:9 clips on 16:9 frame)
-const PRESENTER_WIDTH = '25%';
-const PRESENTER_HEIGHT = '25%';
-const CHARLIE_X = '16%';
-const CHARLIE_Y = '68%';
-const BOB_X = '84%';
-const BOB_Y = '68%';
+// Presenter box dimensions (as % of 1920x1080 frame)
+// 9:16 vertical clips, flush against left/right borders
+const PRESENTER_WIDTH = '14%';
+const PRESENTER_HEIGHT = '45%';
+const CHARLIE_X = '7%';
+const CHARLIE_Y = '72%';
+const BOB_X = '93%';
+const BOB_Y = '72%';
 
 Deno.serve(async (req) => {
   try {
@@ -82,7 +83,7 @@ Deno.serve(async (req) => {
         broadcast = completed.find(b =>
           b.clips?.length > 0 &&
           b.clips.every(c => c.videoUrl) &&
-          !b.videoUrl
+          (body.force || !b.videoUrl)
         );
       }
 
@@ -151,6 +152,13 @@ Deno.serve(async (req) => {
           y_anchor: '50%',
           x_alignment: '50%',
           y_alignment: '50%',
+          // Chroma key — remove green screen background from HeyGen clips
+          chroma_key: true,
+          chroma_key_color: '#00b000',
+          chroma_key_similarity: '60%',
+          chroma_key_blend: '15%',
+          // Black backdrop behind clip (shows if chroma key doesn't fully remove green)
+          fill_color: '#000000',
           animations: [
             { time: 0, duration: 0.5, type: 'fade', transition: true },
           ],
