@@ -4,7 +4,7 @@ import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
-const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
+const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',

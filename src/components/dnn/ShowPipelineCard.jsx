@@ -366,7 +366,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {/* Studio preview — full broadcast with DNN background + whiteboard bullets */}
           {showStudioPreview && (() => {
             const clips = show.clips || [];
-            const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
+            const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
             const segments = [{ src: DNN_STING_URL, speaker: 'sting' }];
             for (const clip of clips) {
               if (!clip.videoUrl) continue;
@@ -382,7 +382,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               }
             }
             if (segments.length <= 1) return null;
-            segments.push({ src: 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4', speaker: 'sting' });
+            segments.push({ src: DNN_STING_URL, speaker: 'sting' });
             return (
               <div className="fixed inset-0 z-[200]">
                 <DnnNewsBroadcastPlayer

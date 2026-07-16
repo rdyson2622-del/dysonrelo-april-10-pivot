@@ -31,7 +31,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 const CREATOMATE_BASE = 'https://api.creatomate.com/v2/renders';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
-const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
+const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
 const GOLD = '#D4AF37';
 
 // Presenter box dimensions (as % of 1920x1080 frame) — defaults
