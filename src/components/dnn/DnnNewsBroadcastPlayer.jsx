@@ -215,7 +215,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               playsInline
               muted
               preload="metadata"
-              onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+              onLoadedMetadata={(e) => { e.target.currentTime = 0.4; }}
               className="w-full object-cover block"
               style={{
                 aspectRatio: '9/16',
@@ -264,7 +264,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               playsInline
               muted
               preload="metadata"
-              onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+              onLoadedMetadata={(e) => { e.target.currentTime = 0.4; }}
               className="w-full object-cover block"
               style={{
                 aspectRatio: '9/16',
