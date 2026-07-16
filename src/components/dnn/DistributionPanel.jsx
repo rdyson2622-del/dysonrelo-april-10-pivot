@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
-  RefreshCw, Send, DollarSign, ChevronRight
+  RefreshCw, Send, DollarSign, ChevronRight, RotateCcw
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -158,9 +158,27 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     },
   ];
 
+  const resetDistribution = async () => {
+    if (!confirm('Clear ALL distribution records for this show? This removes LinkedIn/Facebook post tracking so you can re-post.')) return;
+    await base44.entities.DnnBroadcast.update(show.id, { distribution: [] });
+    setResult({ success: true, msg: 'Distribution records cleared — ready to re-post' });
+    onRefresh();
+  };
+
+  const hasDistribution = distribution.length > 0;
+
   return (
     <div>
-      <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">Distribution & Posting Progress:</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Distribution & Posting Progress:</p>
+        {hasDistribution && (
+          <button onClick={resetDistribution}
+            className="flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded text-red-400 transition-all hover:bg-red-500/10"
+            style={{ border: '1px solid rgba(239,68,68,0.2)' }}>
+            <RotateCcw className="w-2.5 h-2.5" /> Reset
+          </button>
+        )}
+      </div>
       <div className="grid grid-cols-2 gap-2">
         {channels.map(ch => {
           const Icon = ch.icon;
