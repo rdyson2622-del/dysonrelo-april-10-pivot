@@ -4,7 +4,7 @@ import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
-
+const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
@@ -14,12 +14,14 @@ const SPEAKER_LABELS = {
 /**
  * DnnNewsBroadcastPlayer — a FULL-SCREEN broadcast player.
  *
- * Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
+ * Plays: DNN sting → Charlie/Bob news clips → DNN sting (outro).
  *
- * Background logic:
- *   - Sting: full-screen black (DNN logo video)
- *   - Charlie: studio backdrop (lower-left box)
- *   - Bob: off-white background with bullet-point overlay (lower-right box)
+ * Dual-box layout:
+ *   - Both Charlie and Bob video boxes are always visible during the newscast.
+ *   - The active speaker's video plays; the inactive speaker shows a frozen
+ *     first frame with a "STANDBY" overlay.
+ *   - Name/title overlays appear at the bottom of each box.
+ *   - Boxes are inset 4% from screen edges.
  *
  * Props:
  *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
@@ -67,6 +69,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       setMuted(true);
       v.play().then(() => setPlaying(true)).catch(() => {});
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx]);
 
   const seg = segments[idx];
@@ -107,8 +110,13 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
+  const isCharlie = seg.speaker === 'charlie';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
+
+  // Find static frame URLs (first clip per presenter)
+  const charlieStaticUrl = segments.find(s => s.speaker === 'charlie')?.src;
+  const bobStaticUrl = segments.find(s => s.speaker === 'bob')?.src;
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
@@ -175,9 +183,131 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       )}
 
-      {/* Video element */}
-      {isSting ? (
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
+      {/* Charlie box — always visible (except during sting), inset 4% from left */}
+      {!isSting && charlieStaticUrl && (
+        <div className="absolute" style={{
+          left: '4%',
+          bottom: '8%',
+          width: 'clamp(110px, 13vw, 170px)',
+          zIndex: 10,
+        }}>
+          {isCharlie ? (
+            <video
+              key={seg.src + idx}
+              ref={videoRef}
+              src={seg.src}
+              playsInline
+              onEnded={handleEnded}
+              onClick={togglePlay}
+              className="cursor-pointer w-full object-cover"
+              style={{
+                aspectRatio: '9/16',
+                borderRadius: '0 8px 8px 0',
+                border: `2px solid ${GOLD}`,
+                borderLeft: 'none',
+                boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+                background: '#000',
+              }}
+            />
+          ) : (
+            <div className="relative">
+              <video
+                src={charlieStaticUrl}
+                playsInline
+                muted
+                preload="metadata"
+                onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+                className="w-full object-cover"
+                style={{
+                  aspectRatio: '9/16',
+                  borderRadius: '0 8px 8px 0',
+                  border: `2px solid ${GOLD}`,
+                  borderLeft: 'none',
+                  boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+                  background: '#000',
+                  opacity: 0.5,
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.5)' }}>
+                  ● STANDBY
+                </span>
+              </div>
+            </div>
+          )}
+          {/* Name/title overlay */}
+          <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 text-center"
+            style={{ background: 'rgba(0,0,0,0.85)', borderRadius: '0 0 8px 0' }}>
+            <p className="text-[8px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>CHARLIE SIMMONS</p>
+            <p className="text-[7px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)' }}>DNN Anchor</p>
+          </div>
+        </div>
+      )}
+
+      {/* Bob box — always visible (except during sting), inset 4% from right */}
+      {!isSting && bobStaticUrl && (
+        <div className="absolute" style={{
+          right: '4%',
+          bottom: '8%',
+          width: 'clamp(110px, 13vw, 170px)',
+          zIndex: 10,
+        }}>
+          {isBob ? (
+            <video
+              key={seg.src + idx}
+              ref={videoRef}
+              src={seg.src}
+              playsInline
+              onEnded={handleEnded}
+              onClick={togglePlay}
+              className="cursor-pointer w-full object-cover"
+              style={{
+                aspectRatio: '9/16',
+                borderRadius: '8px 0 0 8px',
+                border: `2px solid ${GOLD}`,
+                borderRight: 'none',
+                boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+                background: '#000',
+              }}
+            />
+          ) : (
+            <div className="relative">
+              <video
+                src={bobStaticUrl}
+                playsInline
+                muted
+                preload="metadata"
+                onLoadedMetadata={(e) => { e.target.currentTime = 0; }}
+                className="w-full object-cover"
+                style={{
+                  aspectRatio: '9/16',
+                  borderRadius: '8px 0 0 8px',
+                  border: `2px solid ${GOLD}`,
+                  borderRight: 'none',
+                  boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
+                  background: '#000',
+                  opacity: 0.5,
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.5)' }}>
+                  ● STANDBY
+                </span>
+              </div>
+            </div>
+          )}
+          {/* Name/title overlay */}
+          <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 text-center"
+            style={{ background: 'rgba(0,0,0,0.85)', borderRadius: '0 0 0 8px' }}>
+            <p className="text-[8px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>BOB DYSON</p>
+            <p className="text-[7px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.6)' }}>Founder</p>
+          </div>
+        </div>
+      )}
+
+      {/* Sting — full screen */}
+      {isSting && (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 20, background: '#000' }}>
           <video
             key={seg.src + idx}
             ref={videoRef}
@@ -189,66 +319,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
           />
         </div>
-      ) : isBob ? (
-        /* Bob — lower right, flush against right border with black backdrop */
-        <video
-          key={seg.src + idx}
-          ref={videoRef}
-          src={seg.src}
-          playsInline
-          onEnded={handleEnded}
-          onClick={togglePlay}
-          className="cursor-pointer transition-all duration-300"
-          style={{
-            position: 'absolute',
-            bottom: '8%',
-            right: 0,
-            width: 'clamp(110px, 13vw, 170px)',
-            height: 'clamp(195px, 27vh, 310px)',
-            aspectRatio: '9/16',
-            objectFit: 'cover',
-            borderRadius: '8px 0 0 8px',
-            border: `2px solid ${GOLD}`,
-            borderRight: 'none',
-            boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        />
-      ) : (
-        /* Charlie — lower left, flush against left border with black backdrop */
-        <video
-          key={seg.src + idx}
-          ref={videoRef}
-          src={seg.src}
-          playsInline
-          onEnded={handleEnded}
-          onClick={togglePlay}
-          className="cursor-pointer transition-all duration-300"
-          style={{
-            position: 'absolute',
-            bottom: '8%',
-            left: 0,
-            width: 'clamp(110px, 13vw, 170px)',
-            height: 'clamp(195px, 27vh, 310px)',
-            aspectRatio: '9/16',
-            objectFit: 'cover',
-            borderRadius: '0 8px 8px 0',
-            border: `2px solid ${GOLD}`,
-            borderLeft: 'none',
-            boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        />
       )}
 
       {/* Play overlay when paused/ended */}
-      {!playing && (
+      {!playing && !isSting && (
         <button
           onClick={ended ? replay : togglePlay}
           aria-label={ended ? 'Replay' : 'Play'}
           className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
+          style={{ zIndex: 15 }}
         >
           <span className="w-20 h-20 rounded-full flex items-center justify-center"
             style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
@@ -265,6 +344,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           onClick={toggleMute}
           aria-label="Tap for sound"
           className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
+          style={{ zIndex: 15 }}
         >
           <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
             style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
@@ -290,7 +370,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
-        style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
+        style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))', zIndex: 12 }}>
         <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
           className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
           style={{ color: GOLD }}>

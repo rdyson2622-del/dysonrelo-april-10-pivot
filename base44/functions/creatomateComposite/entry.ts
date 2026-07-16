@@ -127,8 +127,9 @@ Deno.serve(async (req) => {
       // ── Build the RenderScript ──
       // Creatomate RenderScript: elements array, tracks layered bottom→top.
       // Track 1 (bottom): Studio background image (full screen, full duration)
-      // Track 2: Composition containing all presenter clips (auto-sequenced by Creatomate)
-      // Track 3 (top): News pills + DNN logo (full duration overlays)
+      // Track 2: Static presenter headshots (always visible, frozen first frame, muted)
+      // Track 3: Opener sting → presenter clips → closer sting (auto-sequenced)
+      // Track 4 (top): Name/title overlays + news pills + show text (full duration)
 
       const elements = [];
 
@@ -148,9 +149,56 @@ Deno.serve(async (req) => {
         y_alignment: '50%',
       });
 
-      // Presenter clips — inside a composition on track 2.
-      // Clips on the same track within a composition auto-sequence (play one after another).
-      // Each clip positioned based on role: Charlie on left wall, Bob on right wall.
+      // Identify first clip per presenter for static headshot
+      const charlieClip = clips.find(c => c.role === 'charlie');
+      const bobClip = clips.find(c => c.role === 'bob');
+
+      // Static Charlie headshot — always visible on left, frozen first frame, muted
+      if (charlieClip) {
+        elements.push({
+          type: 'video',
+          track: 2,
+          time: 0,
+          source: charlieClip.videoUrl,
+          width: pct(lc.presenterWidth),
+          height: pct(lc.presenterHeight),
+          x: pct(lc.charlieX),
+          y: pct(lc.charlieY),
+          x_anchor: '0%',
+          y_anchor: '100%',
+          x_alignment: '0%',
+          y_alignment: '100%',
+          trim_start: 0,
+          trim_duration: 0.5,
+          loop: true,
+          volume: 0,
+        });
+      }
+
+      // Static Bob headshot — always visible on right, frozen first frame, muted
+      if (bobClip) {
+        elements.push({
+          type: 'video',
+          track: 2,
+          time: 0,
+          source: bobClip.videoUrl,
+          width: pct(lc.presenterWidth),
+          height: pct(lc.presenterHeight),
+          x: pct(lc.bobX),
+          y: pct(lc.bobY),
+          x_anchor: '100%',
+          y_anchor: '100%',
+          x_alignment: '100%',
+          y_alignment: '100%',
+          trim_start: 0,
+          trim_duration: 0.5,
+          loop: true,
+          volume: 0,
+        });
+      }
+
+      // Presenter clips — active video on track 3, positioned over static headshots
+      // Audio normalized to volume: 1.0 for consistent levels between presenters
       const clipElements = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
         return {
@@ -165,16 +213,17 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
+          volume: 1.0,
           animations: [
             { time: 0, duration: 0.5, type: 'fade', transition: true },
           ],
         };
       });
 
-      // DNN opener sting — full screen, auto-sequences first on track 2
+      // DNN opener sting — full screen, auto-sequences first on track 3
       elements.push({
         type: 'video',
-        track: 2,
+        track: 3,
         source: DNN_STING_URL,
         width: '100%',
         height: '100%',
@@ -184,12 +233,13 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
+        volume: 1.0,
       });
 
       // Presenter composition — auto-sequences after the opener sting
       elements.push({
         type: 'composition',
-        track: 2,
+        track: 3,
         width: '100%',
         height: '100%',
         x: '50%',
@@ -204,7 +254,7 @@ Deno.serve(async (req) => {
       // DNN closer sting — auto-sequences after presenters
       elements.push({
         type: 'video',
-        track: 2,
+        track: 3,
         source: DNN_STING_URL,
         width: '100%',
         height: '100%',
@@ -214,7 +264,60 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
+        volume: 1.0,
       });
+
+      // Name/title overlay — Charlie (below box)
+      if (charlieClip) {
+        elements.push({
+          type: 'text',
+          track: 4,
+          time: 0,
+          text: 'CHARLIE SIMMONS\nDNN ANCHOR',
+          width: pct(lc.presenterWidth + 2),
+          x: pct(lc.charlieX),
+          y: pct(lc.charlieY + 2),
+          x_anchor: '0%',
+          y_anchor: '100%',
+          x_alignment: '0%',
+          y_alignment: '100%',
+          fill_color: GOLD,
+          font_family: 'Inter',
+          font_weight: '700',
+          font_size: '1.4 vmin',
+          text_align: 'center',
+          background_color: 'rgba(0,0,0,0.85)',
+          background_x_padding: '30%',
+          background_y_padding: '25%',
+          background_border_radius: '10%',
+        });
+      }
+
+      // Name/title overlay — Bob (below box)
+      if (bobClip) {
+        elements.push({
+          type: 'text',
+          track: 4,
+          time: 0,
+          text: 'BOB DYSON\nFOUNDER',
+          width: pct(lc.presenterWidth + 2),
+          x: pct(lc.bobX),
+          y: pct(lc.bobY + 2),
+          x_anchor: '100%',
+          y_anchor: '100%',
+          x_alignment: '100%',
+          y_alignment: '100%',
+          fill_color: GOLD,
+          font_family: 'Inter',
+          font_weight: '700',
+          font_size: '1.4 vmin',
+          text_align: 'center',
+          background_color: 'rgba(0,0,0,0.85)',
+          background_x_padding: '30%',
+          background_y_padding: '25%',
+          background_border_radius: '10%',
+        });
+      }
 
       // News pills — bottom of screen, full duration
       const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA', 'HOUSING SUPPLY'];
@@ -223,7 +326,7 @@ Deno.serve(async (req) => {
         const pillX = pillSpacing * (i + 1);
         elements.push({
           type: 'text',
-          track: 3,
+          track: 4,
           time: 0,
           text: pillLabels[i],
           width: pct(lc.pillWidth),
@@ -249,7 +352,7 @@ Deno.serve(async (req) => {
       if (lc.showText) {
         elements.push({
           type: 'text',
-          track: 3,
+          track: 4,
           time: 0,
           text: lc.showText,
           x: pct(lc.showTextX),
