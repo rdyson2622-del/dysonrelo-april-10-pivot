@@ -65,12 +65,7 @@ Deno.serve(async (req) => {
 
     const defaultCaption = `${SHOW_URL}
 
-${headline}
-
-DNN Intelligence Bureau — ${dateSpoken}
-Real estate news WITH solutions.
-
-#RealEstateNews #Relocation #DNN`;
+${headline}`;
 
     const teaserCaption = customCaption || defaultCaption;
     const linkCommentText = `Watch the full broadcast here: ${SHOW_URL}`;
