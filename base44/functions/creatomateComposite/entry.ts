@@ -152,13 +152,6 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          // Chroma key — remove green screen background from HeyGen clips
-          chroma_key: true,
-          chroma_key_color: '#00b000',
-          chroma_key_similarity: '60%',
-          chroma_key_blend: '15%',
-          // Black backdrop behind clip (shows if chroma key doesn't fully remove green)
-          fill_color: '#000000',
           animations: [
             { time: 0, duration: 0.5, type: 'fade', transition: true },
           ],
