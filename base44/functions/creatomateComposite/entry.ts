@@ -168,11 +168,8 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '0%',
           y_alignment: '100%',
-          trim_start: 0.3,
-          trim_duration: 1.0,
           loop: true,
-          volume: 0,
-          fill_mode: 'cover',
+          volume: '0%',
         });
       }
 
@@ -191,11 +188,8 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '100%',
           y_alignment: '100%',
-          trim_start: 0.3,
-          trim_duration: 1.0,
           loop: true,
-          volume: 0,
-          fill_mode: 'cover',
+          volume: '0%',
         });
       }
 
@@ -212,7 +206,7 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: 2.0,
+        volume: '100%',
       });
 
       // Presenter clips — directly on track 3, auto-sequenced after sting
@@ -231,8 +225,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          volume: 3.0,
-          fill_mode: 'cover',
+          volume: '100%',
         });
       }
 
@@ -249,7 +242,7 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: 2.0,
+        volume: '100%',
       });
 
       // Name/title overlay — Charlie (below box)
@@ -301,6 +294,36 @@ Deno.serve(async (req) => {
           background_x_padding: '30%',
           background_y_padding: '25%',
           background_border_radius: '10%',
+        });
+      }
+
+      // News pills — headline ticker along the floor
+      const headlines = broadcast.headlines || [];
+      const pillCount = Math.min(headlines.length, 5);
+      for (let i = 0; i < pillCount; i++) {
+        const pillSpacing = 100 / (pillCount + 1);
+        const pillX = pillSpacing * (i + 1);
+        elements.push({
+          type: 'text',
+          track: 4,
+          time: 0,
+          text: headlines[i].length > 40 ? headlines[i].substring(0, 37) + '...' : headlines[i],
+          width: pct(lc.pillWidth),
+          x: pct(pillX),
+          y: pct(lc.pillY),
+          x_anchor: '50%',
+          y_anchor: '50%',
+          x_alignment: '50%',
+          y_alignment: '50%',
+          fill_color: GOLD,
+          font_family: 'Inter',
+          font_weight: '700',
+          font_size: '1.2 vmin',
+          text_align: 'center',
+          background_color: 'rgba(0,0,0,0.85)',
+          background_x_padding: '30%',
+          background_y_padding: '20%',
+          background_border_radius: '50%',
         });
       }
 
@@ -511,7 +534,7 @@ Deno.serve(async (req) => {
             y_alignment: '50%',
             trim_start: 0,
             trim_duration: 5,
-            volume: 1.5,
+            volume: '100%',
           },
           {
             type: 'text',
