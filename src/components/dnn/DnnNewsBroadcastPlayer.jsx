@@ -334,7 +334,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
       {/* News pills on the floor area */}
       {!isSting && (
-        <div className="absolute left-1/2 -translate-x-1/2 flex gap-2 md:gap-3" style={{ bottom: '40%', zIndex: 8 }}>
+        <div className="absolute left-1/2 -translate-x-1/2 flex gap-2 md:gap-3" style={{ bottom: '20%', zIndex: 8 }}>
           {['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA', 'HOUSING SUPPLY'].map((label) => (
             <span key={label} className="text-[8px] md:text-[10px] font-bold tracking-[0.15em] uppercase px-2.5 py-1 md:px-3 md:py-1.5 rounded-full whitespace-nowrap"
               style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid rgba(212,175,55,0.3)`, color: 'rgba(212,175,55,0.7)' }}>
