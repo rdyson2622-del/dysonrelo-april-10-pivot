@@ -98,11 +98,13 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
         <div className="flex items-center gap-3">
           {expanded ? <ChevronDown className="w-4 h-4" style={{ color: GOLD }} /> : <ChevronRight className="w-4 h-4" style={{ color: GOLD }} />}
           <div>
-            <p className="text-sm font-black text-white">
-              {show.show_name || `Show ${show.show_number || '?'}`}
-              <span className="ml-2 text-xs font-normal text-slate-500">{show.broadcast_date}</span>
-            </p>
-            <p className="text-[10px] text-slate-500">
+            <div className="flex items-baseline gap-3">
+              <p className="text-xl font-black text-white tracking-wide">
+                {show.show_name || `Show ${show.show_number || '?'}`}
+              </p>
+              <span className="text-xs font-medium text-slate-400">{show.broadcast_date}</span>
+            </div>
+            <p className="text-[10px] text-slate-500 mt-0.5">
               {clips.length} clips · {show.headlines?.length || 0} headlines · {show.format || 'solo'}
             </p>
           </div>
