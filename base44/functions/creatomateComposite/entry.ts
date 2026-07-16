@@ -34,13 +34,13 @@ const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object
 const GOLD = '#D4AF37';
 
 // Presenter box dimensions (as % of 1920x1080 frame)
-// 9:16 vertical clips, flush against left/right borders
-const PRESENTER_WIDTH = '14%';
-const PRESENTER_HEIGHT = '45%';
-const CHARLIE_X = '7%';
-const CHARLIE_Y = '72%';
-const BOB_X = '93%';
-const BOB_Y = '72%';
+// 9:16 vertical clips, flush against left/right borders and bottom
+const PRESENTER_WIDTH = '15%';
+const PRESENTER_HEIGHT = '50%';
+const CHARLIE_X = '0%';
+const CHARLIE_Y = '100%';
+const BOB_X = '100%';
+const BOB_Y = '100%';
 
 Deno.serve(async (req) => {
   try {
@@ -148,10 +148,10 @@ Deno.serve(async (req) => {
           height: PRESENTER_HEIGHT,
           x: isCharlie ? CHARLIE_X : BOB_X,
           y: isCharlie ? CHARLIE_Y : BOB_Y,
-          x_anchor: '50%',
-          y_anchor: '50%',
-          x_alignment: '50%',
-          y_alignment: '50%',
+          x_anchor: isCharlie ? '0%' : '100%',
+          y_anchor: '100%',
+          x_alignment: isCharlie ? '0%' : '100%',
+          y_alignment: '100%',
           // Chroma key — remove green screen background from HeyGen clips
           chroma_key: true,
           chroma_key_color: '#00b000',
