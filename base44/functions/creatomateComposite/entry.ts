@@ -38,9 +38,9 @@ const GOLD = '#D4AF37';
 const DEFAULTS = {
   presenterWidth: 15,
   presenterHeight: 50,
-  charlieX: 0,
+  charlieX: 4,
   charlieY: 100,
-  bobX: 100,
+  bobX: 96,
   bobY: 100,
   pillY: 93,
   pillWidth: 14,
