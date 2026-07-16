@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          volume: 1.0,
+          volume: isCharlie ? 1.0 : 1.6,
           animations: [
             { time: 0, duration: 0.5, type: 'fade', transition: true },
           ],
