@@ -39,6 +39,16 @@ const PRESENTER_SCALE = 0.32;
 const CHARLIE_POS = { x: -0.62, y: -0.25 };
 const BOB_POS = { x: 0.62, y: -0.25 };
 
+// Resolve redirects — Base44 file URLs redirect from base44.app to media.base44.com
+// Shotstack may not follow redirects, so we resolve the final URL ourselves.
+async function resolveUrl(url) {
+  try {
+    const r = await fetch(url, { method: 'HEAD', redirect: 'follow' });
+    if (r.ok && r.url && r.url !== url) return r.url;
+  } catch (_) { /* ignore — fall through with original */ }
+  return url;
+}
+
 Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') {
@@ -66,6 +76,18 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
+
+    // ── PROBE: inspect a media URL via Shotstack's probe endpoint ──
+    if (action === 'probe') {
+      const probeUrl = body.url;
+      if (!probeUrl) return Response.json({ error: 'url required' }, { status: 400 });
+      const resolved = await resolveUrl(probeUrl);
+      const r = await fetch(`https://api.shotstack.io/stage/probe?url=${encodeURIComponent(resolved)}`, {
+        headers: { 'x-api-key': shotstackKey }
+      });
+      const data = await r.json();
+      return Response.json({ originalUrl: probeUrl, resolvedUrl: resolved, probe: data });
+    }
 
     // ── START: build timeline and submit to Shotstack ──
     if (action === 'start') {
@@ -117,9 +139,13 @@ Deno.serve(async (req) => {
 
       const totalDuration = clips.reduce((sum, c) => sum + DEFAULT_CLIP_LENGTH, 0);
 
+      // Resolve redirect URLs (base44.app → media.base44.com)
+      const resolvedBgUrl = await resolveUrl(STUDIO_BG_URL);
+      const resolvedDnnLogo = await resolveUrl(DNN_LOGO_URL);
+
       // Studio background — full-screen, spans the entire timeline
       const bgClips = [{
-        asset: { type: 'image', src: STUDIO_BG_URL },
+        asset: { type: 'image', src: resolvedBgUrl },
         start: 0,
         length: totalDuration,
         fit: 'crop',
@@ -135,10 +161,11 @@ Deno.serve(async (req) => {
       for (const clip of clips) {
         const clipLen = DEFAULT_CLIP_LENGTH;
         const isCharlie = clip.role === 'charlie';
+        const resolvedClipUrl = await resolveUrl(clip.videoUrl);
 
         if (isCharlie) {
           charlieClips.push({
-            asset: { type: 'video', src: clip.videoUrl },
+            asset: { type: 'video', src: resolvedClipUrl },
             start: currentTime,
             length: clipLen,
             fit: 'none',
@@ -149,7 +176,7 @@ Deno.serve(async (req) => {
           });
         } else {
           bobClips.push({
-            asset: { type: 'video', src: clip.videoUrl },
+            asset: { type: 'video', src: resolvedClipUrl },
             start: currentTime,
             length: clipLen,
             fit: 'none',
@@ -216,7 +243,7 @@ Deno.serve(async (req) => {
 
       // DNN logo badge — top left corner
       const logoClip = {
-        asset: { type: 'image', src: DNN_LOGO_URL },
+        asset: { type: 'image', src: resolvedDnnLogo },
         start: 0,
         length: totalDuration,
         fit: 'none',
