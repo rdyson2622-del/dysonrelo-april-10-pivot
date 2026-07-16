@@ -19,6 +19,8 @@ export default function AdminShowPipeline() {
   const [editingShow, setEditingShow] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMsg, setRefreshMsg] = useState(null);
+  const [filter, setFilter] = useState('all'); // all | in_progress | completed
+  const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -83,6 +85,28 @@ export default function AdminShowPipeline() {
   const totalCredits = apiCredits + planCredits;
   const avgCostPerVideo = 30;
   const isLow = apiCredits < 200;
+
+  // Filter logic
+  const inProgressShows = broadcasts.filter(b => !b.videoUrl);
+  const completedShows = broadcasts.filter(b => !!b.videoUrl);
+  const stuckShows = broadcasts.filter(b => b.errorMessage && !b.videoUrl);
+  const filteredShows = filter === 'in_progress' ? inProgressShows
+    : filter === 'completed' ? completedShows
+    : broadcasts;
+
+  const handleClearStuck = async () => {
+    setClearing(true);
+    try {
+      for (const show of stuckShows) {
+        await base44.entities.DnnBroadcast.update(show.id, { heygenId: '', errorMessage: '' });
+      }
+      queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] });
+      setRefreshMsg(`Cleared ${stuckShows.length} stuck show(s)`);
+    } catch (e) {
+      setRefreshMsg(`Clear failed: ${e.message}`);
+    }
+    setClearing(false);
+  };
 
   if (!isAdmin) return null;
 
@@ -152,17 +176,45 @@ export default function AdminShowPipeline() {
 
       {/* Pipeline shows */}
       <div className="px-6 py-6">
+        {/* Filter bar */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1 p-1 rounded-lg" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.06)' }}>
+            {[
+              { key: 'all', label: `All (${broadcasts.length})` },
+              { key: 'in_progress', label: `In Progress (${inProgressShows.length})` },
+              { key: 'completed', label: `Completed (${completedShows.length})` },
+            ].map(tab => (
+              <button key={tab.key} onClick={() => setFilter(tab.key)}
+                className="px-3 py-1.5 rounded-md text-xs font-bold transition-all"
+                style={{
+                  background: filter === tab.key ? 'linear-gradient(135deg, #e8c84a, #D4AF37)' : 'transparent',
+                  color: filter === tab.key ? '#000' : '#888',
+                }}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          {stuckShows.length > 0 && (
+            <button onClick={handleClearStuck} disabled={clearing}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-white transition-opacity disabled:opacity-50"
+              style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}>
+              {clearing ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <AlertTriangle className="w-3.5 h-3.5" />}
+              {clearing ? 'Clearing…' : `Clear ${stuckShows.length} Stuck`}
+            </button>
+          )}
+        </div>
+
         {isLoading ? (
           <div className="flex justify-center py-20">
             <div className="w-8 h-8 border-4 border-slate-700 border-t-yellow-500 rounded-full animate-spin" />
           </div>
-        ) : broadcasts.length === 0 ? (
+        ) : filteredShows.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-slate-500 text-sm">No shows yet. Run the morning broadcast to create one.</p>
+            <p className="text-slate-500 text-sm">No {filter === 'in_progress' ? 'shows in progress' : filter === 'completed' ? 'completed shows' : 'shows'} yet.</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {broadcasts.map(show => (
+            {filteredShows.map(show => (
               <ShowPipelineCard
                 key={show.id}
                 show={show}

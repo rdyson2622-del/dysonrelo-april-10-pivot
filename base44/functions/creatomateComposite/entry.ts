@@ -201,21 +201,14 @@ Deno.serve(async (req) => {
         });
       }
 
-      // DNN logo — top left corner
-      elements.push({
-        type: 'image',
-        track: 3,
-        time: 0,
-        source: DNN_LOGO_URL,
-        width: '12%',
-        height: '6.75%',
-        x: '8%',
-        y: '6%',
-        x_anchor: '50%',
-        y_anchor: '50%',
-        x_alignment: '50%',
-        y_alignment: '50%',
-      });
+      // DNN logo — top left corner (skip if URL is unreachable; non-critical)
+      // Note: Supabase URLs may 404 for Creatomate's downloader; we skip the logo
+      // rather than fail the entire render. Add a hosted public URL here to re-enable.
+      // elements.push({
+      //   type: 'image', track: 3, time: 0, source: DNN_LOGO_URL,
+      //   width: '12%', height: '6.75%', x: '8%', y: '6%',
+      //   x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
+      // });
 
       const renderScript = {
         output_format: 'mp4',
