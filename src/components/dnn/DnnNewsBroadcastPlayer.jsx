@@ -225,11 +225,10 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                   borderLeft: 'none',
                   boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
                   background: '#000',
-                  opacity: 0.5,
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.5)' }}>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ background: 'rgba(0,0,0,0.35)' }}>
+                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.7)' }}>
                   ● STANDBY
                 </span>
               </div>
@@ -286,11 +285,10 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                   borderRight: 'none',
                   boxShadow: '0 8px 28px rgba(0,0,0,0.8)',
                   background: '#000',
-                  opacity: 0.5,
                 }}
               />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.5)' }}>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ background: 'rgba(0,0,0,0.35)' }}>
+                <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: 'rgba(212,175,55,0.7)' }}>
                   ● STANDBY
                 </span>
               </div>
