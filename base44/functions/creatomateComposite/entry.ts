@@ -31,6 +31,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 const CREATOMATE_BASE = 'https://api.creatomate.com/v2/renders';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
+const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
 const GOLD = '#D4AF37';
 
 // Presenter box dimensions (as % of 1920x1080 frame) — defaults
@@ -170,6 +171,23 @@ Deno.serve(async (req) => {
         };
       });
 
+      // DNN opener sting — full screen, plays before presenters
+      elements.push({
+        type: 'video',
+        track: 2,
+        time: 0,
+        source: DNN_STING_URL,
+        width: '100%',
+        height: '100%',
+        x: '50%',
+        y: '50%',
+        x_anchor: '50%',
+        y_anchor: '50%',
+        x_alignment: '50%',
+        y_alignment: '50%',
+      });
+
+      // Presenter composition — auto-sequences after the opener sting
       elements.push({
         type: 'composition',
         track: 2,
@@ -183,6 +201,22 @@ Deno.serve(async (req) => {
         x_alignment: '50%',
         y_alignment: '50%',
         elements: clipElements,
+      });
+
+      // DNN closer sting — full screen, plays after presenters
+      elements.push({
+        type: 'video',
+        track: 2,
+        time: 0,
+        source: DNN_STING_URL,
+        width: '100%',
+        height: '100%',
+        x: '50%',
+        y: '50%',
+        x_anchor: '50%',
+        y_anchor: '50%',
+        x_alignment: '50%',
+        y_alignment: '50%',
       });
 
       // News pills — bottom of screen, full duration
