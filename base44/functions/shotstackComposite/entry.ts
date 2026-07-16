@@ -277,16 +277,20 @@ Deno.serve(async (req) => {
         offset: { x: 0.04, y: -0.04 },
       };
 
-      // Build tracks array — only include whiteboard track if it has clips
-      const tracks = [
-        { clips: bgClips },
-        { clips: charlieClips },
-        { clips: bobClips },
-      ];
+      // Shotstack track order is INVERTED: tracks[0] = top layer, last track = bottom.
+      // So presenters go first (top), overlays in the middle, background last (bottom).
+      const tracks = [];
+      // Top layers: presenters
+      tracks.push({ clips: charlieClips });
+      tracks.push({ clips: bobClips });
+      // Middle: whiteboard overlays
       if (whiteboardClips.length > 0) {
         tracks.push({ clips: whiteboardClips });
       }
+      // Lower: news pills + logo
       tracks.push({ clips: newsPillClips });
+      // Bottom: studio background
+      tracks.push({ clips: bgClips });
 
       const timeline = {
         background: '#000000',
