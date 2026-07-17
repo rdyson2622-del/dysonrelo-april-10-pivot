@@ -11,7 +11,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  *
  * Auth: admin session (manual trigger) or x-pipeline-secret (scheduled automation).
  */
-const SHOW_URL = 'https://1dnn.com/#news';
+const SHOW_URL_BASE = 'https://1dnn.com/broadcast-show';
 
 Deno.serve(async (req) => {
   try {
@@ -63,12 +63,13 @@ Deno.serve(async (req) => {
     });
     const headline = broadcast.headlines?.[0] || `DNN Real Estate News with Solutions — ${dateSpoken}`;
 
-    const defaultCaption = `${SHOW_URL}
+    const showUrl = `${SHOW_URL_BASE}?b=${broadcast.id}`;
+    const defaultCaption = `${showUrl}
 
 ${headline}`;
 
     const teaserCaption = customCaption || defaultCaption;
-    const linkCommentText = `Watch the full broadcast here: ${SHOW_URL}`;
+    const linkCommentText = `Watch the full broadcast here: ${showUrl}`;
 
     const distribution = broadcast.distribution || [];
     const results = { broadcastId: broadcast.id, showName: broadcast.show_name, linkedin: null, facebook: null };

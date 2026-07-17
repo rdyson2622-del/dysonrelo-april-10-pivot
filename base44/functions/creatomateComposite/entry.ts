@@ -153,7 +153,7 @@ Deno.serve(async (req) => {
       const charlieClip = clips.find(c => c.role === 'charlie');
       const bobClip = clips.find(c => c.role === 'bob');
 
-      // Static Charlie headshot — always visible on left, frozen frame from 0.3s, muted
+      // Static Charlie headshot — always visible on left, muted
       if (charlieClip) {
         elements.push({
           type: 'video',
@@ -168,12 +168,12 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '0%',
           y_alignment: '100%',
-          loop: true,
+          fit: 'cover',
           volume: '0%',
         });
       }
 
-      // Static Bob headshot — always visible on right, frozen frame from 0.3s, muted
+      // Static Bob headshot — always visible on right, muted
       if (bobClip) {
         elements.push({
           type: 'video',
@@ -188,7 +188,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: '100%',
           y_alignment: '100%',
-          loop: true,
+          fit: 'cover',
           volume: '0%',
         });
       }
@@ -210,7 +210,6 @@ Deno.serve(async (req) => {
       });
 
       // Presenter clips — directly on track 3, auto-sequenced after sting
-      // No composition wrapper — clips render directly on the main timeline for reliability
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
         elements.push({
@@ -225,6 +224,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
+          fit: 'cover',
           volume: '100%',
         });
       }
