@@ -12,18 +12,27 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session.
  */
 
-// Rewrite the domain so the TTS engine spells it out naturally.
-// Visual scripts keep "1DNN.COM"; only the spoken input_text is phonetic.
+// ── PHONETIC DOMAIN NORMALIZATION (SPOKEN AUDIO ONLY) ──
+// Visual scripts keep "1DNN.COM"; only the spoken input_text sent to HeyGen
+// TTS is rewritten so the engine pronounces each letter distinctly.
+// "One D N N dot com" — spaces between D, N, N force letter-by-letter speech.
+// This NEVER touches "Bob Dyson" (the person) — only domain references.
 function phoneticSpoken(text) {
   if (!text) return text;
   return text
+    // 1DNN.COM — already correct brand, just phoneticize
     .replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/1\s*d\s*n\s*n\s+dot\s+com/gi, 'One D N N dot com')
+    // Legacy "Dyson & Dyson .com" domain variants → 1DNN.COM
     .replace(/dyson\s*\/\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
     .replace(/dyson\s*&\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
     .replace(/dyson\s*and\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
     .replace(/dysonanddyson\s*\.\s*com/gi, 'One D N N dot com')
     .replace(/dyson\s*\/\s*dyson\s+dot\s+com/gi, 'One D N N dot com')
-    .replace(/dyson\s*and\s*dyson\s+dot\s+com/gi, 'One D N N dot com');
+    .replace(/dyson\s*and\s*dyson\s+dot\s+com/gi, 'One D N N dot com')
+    // Standalone legacy domain "dyson.com" / "dyson dot com" → 1DNN.COM
+    .replace(/\bdyson\s*\.\s*com\b/gi, 'One D N N dot com')
+    .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
 }
 
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
