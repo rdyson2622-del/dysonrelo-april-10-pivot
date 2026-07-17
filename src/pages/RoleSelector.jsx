@@ -105,9 +105,11 @@ export default function RoleSelector() {
                 background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
                 border: '1px solid rgba(212,180,106,0.45)',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                minWidth: '7rem',
-                maxWidth: '12rem',
-                height: '3.25rem',
+                minWidth: '9rem',
+                maxWidth: '14rem',
+                height: '3.5rem',
+                paddingLeft: '1.5rem',
+                paddingRight: '1.5rem',
               }}
             >
               <span
@@ -116,8 +118,8 @@ export default function RoleSelector() {
                   color: '#d4b46a',
                   fontFamily: 'Cormorant Garamond, serif',
                   fontWeight: 500,
-                  letterSpacing: '0.25em',
-                  fontSize: pill.word.length > 6 ? '1.15rem' : '1.5rem',
+                  letterSpacing: pill.word.length > 10 ? '0.12em' : '0.2em',
+                  fontSize: pill.word.length > 10 ? 'clamp(0.85rem, 2.2vw, 1rem)' : pill.word.length > 6 ? 'clamp(1rem, 2.6vw, 1.2rem)' : 'clamp(1.2rem, 3.2vw, 1.5rem)',
                 }}
               >
                 {pill.word}

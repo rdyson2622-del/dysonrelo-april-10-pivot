@@ -325,9 +325,11 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                   background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
                   border: '1px solid rgba(212,180,106,0.45)',
                   boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  minWidth: '5.5rem',
-                  maxWidth: '9rem',
-                  height: '2.75rem',
+                  minWidth: '7rem',
+                  maxWidth: '11rem',
+                  height: '3rem',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
                 }}
               >
                 <span
@@ -336,8 +338,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                     color: '#d4b46a',
                     fontFamily: 'Cormorant Garamond, serif',
                     fontWeight: 500,
-                    letterSpacing: '0.25em',
-                    fontSize: pill.word.length > 6 ? '0.95rem' : '1.25rem',
+                    letterSpacing: pill.word.length > 10 ? '0.1em' : '0.2em',
+                    fontSize: pill.word.length > 10 ? 'clamp(0.75rem, 1.8vw, 0.9rem)' : pill.word.length > 6 ? 'clamp(0.9rem, 2.2vw, 1.05rem)' : 'clamp(1.1rem, 2.6vw, 1.25rem)',
                   }}
                 >
                   {pill.word}
