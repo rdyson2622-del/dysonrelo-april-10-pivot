@@ -94,6 +94,21 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     return;
   };
 
+  // ── RUNTIME DURATION TRACKER + DEFENSIVE ESCAPE HATCH ──
+  // Logs currentTime/duration on every tick. The split second currentTime crosses
+  // 99.5% of duration (or within 0.3s of the end), fires the hard redirect —
+  // bypassing any broken onEnded event loop that might be swallowing the exit.
+  const handleTimeUpdate = (e) => {
+    const v = e.currentTarget;
+    if (!v || !v.duration || isNaN(v.duration) || terminatedRef.current) return;
+    console.log(`[DNN PLAYER] clip ${idx} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${((v.currentTime / v.duration) * 100).toFixed(1)}%`);
+    if (v.currentTime >= v.duration - 0.3) {
+      console.log("Defensive duration escape hatch triggered. Executing hard exit.");
+      terminatedRef.current = true;
+      window.location.replace('/?choose=1');
+    }
+  };
+
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -196,6 +211,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             src={seg.src}
             playsInline
             onEnded={handleEnded}
+            onTimeUpdate={handleTimeUpdate}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
             style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
@@ -227,6 +243,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 src={seg.src}
                 playsInline
                 onEnded={handleEnded}
+                onTimeUpdate={handleTimeUpdate}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
@@ -277,6 +294,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 src={seg.src}
                 playsInline
                 onEnded={handleEnded}
+                onTimeUpdate={handleTimeUpdate}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
