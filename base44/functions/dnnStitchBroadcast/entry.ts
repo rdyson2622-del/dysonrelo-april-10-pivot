@@ -1,55 +1,45 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — composites individual broadcast clips into a single
- * MP4 with BOTH presenters visible simultaneously, using Creatomate.
+ * dnnStitchBroadcast — "The Dyson Studio Composite" framework.
  *
- * Layout:
- *   - Studio backdrop fills the full frame continuously.
- *   - Charlie's video box is permanently locked in the lower-left corner (55% scale).
- *   - Bob's video box is permanently locked in the lower-right corner (55% scale).
- *   - When a presenter is not speaking, their track shows a muted loop
- *     of their clip (never black, never disappears).
- *   - blend_mode "screen" makes each clip's black background transparent,
- *     so only the presenter is composited over the studio backdrop.
- *   - When Bob speaks, a bordered white "Solution Panel" appears in the
- *     studio backdrop's screen area, displaying concise bullet points
- *     extracted from Bob's script.
+ * Generates the entire 3-minute broadcast as a single, multi-scene MP4
+ * directly from HeyGen's native /v2/video/generate API.
+ *
+ * Layout (native HeyGen positioning):
+ *   - Studio backdrop fills the full frame (background type: 'image').
+ *   - Charlie (avatar, 55% scale, bottom-left offset) and Bob (talking photo,
+ *     55% scale, bottom-right offset) are positioned natively via HeyGen's
+ *     scale/offset parameters.
+ *   - When the script transitions to Bob's solution segments, a composed
+ *     background image (studio backdrop + white-bordered Solution Panel with
+ *     bullet points) is used as the scene background so the panel appears
+ *     inside the studio screen area.
+ *   - All scenes are passed as video_inputs in a single HeyGen API call,
+ *     producing one multi-scene MP4.
  *
  * Actions (POST body):
  *   { action: "start", broadcastId?: "...", force?: true }
- *     → Creates a Creatomate render compositing all clips with both
- *       presenters visible simultaneously over the studio backdrop.
+ *     → Generates the full multi-scene video via HeyGen.
  *
  *   { action: "check" }
- *     → Polls Creatomate for render completion. Downloads and stores
- *       the composited MP4 when ready.
+ *     → Polls HeyGen for render completion. Downloads and stores the MP4.
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 
+const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
+const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
-// Presenter box positions — 55% scale, locked to lower-left and lower-right corners
-const CHARLIE_BOX = { x: "20%", y: "72%", width: "55%", height: "55%" };
-const BOB_BOX     = { x: "80%", y: "72%", width: "55%", height: "55%" };
+const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
+const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
+const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
+const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
-// Solution Panel — bordered white box inside the studio backdrop's screen area
-const PANEL = {
-  x: "50%",
-  y: "25%",
-  width: "42%",
-  height: "32%",
-  // Inner text area (with padding inside the panel)
-  titleY: "14%",
-  titleHeight: "6%",
-  bulletsY: "29%",
-  bulletsWidth: "36%",
-  bulletsHeight: "22%",
-};
-
-const GOLD = "#D4AF37";
-const DARK_TEXT = "#0a0a0a";
+// Presenter positions — 55% scale, locked to bottom-left and bottom-right
+const CHARLIE_POS = { scale: 0.55, offset: { x: -0.25, y: 0.2 } };
+const BOB_POS     = { scale: 0.55, offset: { x:  0.25, y: 0.2 } };
 
 /**
  * Extract concise bullet points from Bob's script using the LLM.
@@ -71,10 +61,7 @@ ${script}`,
       response_json_schema: {
         type: 'object',
         properties: {
-          bullets: {
-            type: 'array',
-            items: { type: 'string' }
-          }
+          bullets: { type: 'array', items: { type: 'string' } }
         },
         required: ['bullets']
       }
@@ -85,11 +72,27 @@ ${script}`,
     console.log(`LLM bullet extraction failed, falling back to sentence split: ${e.message}`);
   }
 
-  // Fallback: split into sentences and take the first 3-4
   const sentences = script.split(/(?<=[.!?])\s+/)
     .map(s => s.trim())
     .filter(s => s.length > 15 && s.length < 120);
   return sentences.slice(0, 4);
+}
+
+/**
+ * Compose a background image for Bob's solution segments.
+ * Uses the studio backdrop as a reference and overlays a white-bordered
+ * Solution Panel with bullet points in the upper-center screen area.
+ * Returns the URL of the generated image.
+ */
+async function composeSolutionBackground(bullets, base44) {
+  const bulletText = bullets.map(b => `• ${b}`).join('\n');
+
+  const result = await base44.asServiceRole.integrations.Core.GenerateImage({
+    prompt: `A professional news broadcast studio backdrop image. In the upper-center area of the image, there is a white-bordered panel with a gold (#D4AF37) border and rounded corners, positioned to look like it fits inside a display screen. Inside the panel, at the top, there is a gold title bar with white text that reads "THE DYSON SOLUTION". Below the title, there are the following bullet points in dark text:\n${bulletText}\n\nThe panel should be clean and professional, with a subtle drop shadow. The rest of the image is the dark studio backdrop.`,
+    existing_image_urls: [STUDIO_BG_URL],
+  });
+
+  return result.url;
 }
 
 Deno.serve(async (req) => {
@@ -111,16 +114,16 @@ Deno.serve(async (req) => {
       }
     }
 
-    const creatomateKey = Deno.env.get('CREATOMATE');
-    if (!creatomateKey) {
-      return Response.json({ error: 'CREATOMATE not configured' }, { status: 500 });
+    const heygenKey = Deno.env.get('HEYGEN_API_KEY');
+    if (!heygenKey) {
+      return Response.json({ error: 'HEYGEN_API_KEY not configured' }, { status: 500 });
     }
 
     const body = await req.json().catch(() => ({}));
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: create a Creatomate composited render ──
+    // ── START: generate the full multi-scene video via HeyGen ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -130,15 +133,11 @@ Deno.serve(async (req) => {
         broadcast = arr?.[0];
       } else {
         const completed = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 20);
-        broadcast = completed.find(b =>
-          b.clips?.length > 0 &&
-          b.clips.every(c => c.videoUrl) &&
-          !b.videoUrl
-        );
+        broadcast = completed.find(b => b.clips?.length > 0 && !b.videoUrl);
       }
 
       if (!broadcast) {
-        return Response.json({ error: 'No completed broadcast with un-stitched clips found' }, { status: 404 });
+        return Response.json({ error: 'No completed broadcast found' }, { status: 404 });
       }
 
       if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
@@ -148,267 +147,135 @@ Deno.serve(async (req) => {
       }
 
       if (broadcast.videoUrl) {
-        return Response.json({ success: true, message: 'Broadcast already has a composited video', videoUrl: broadcast.videoUrl });
+        return Response.json({ success: true, message: 'Already has composited video', videoUrl: broadcast.videoUrl });
       }
 
       if (broadcast.heygenId) {
-        return Response.json({ success: true, message: 'Stitching render already in progress', renderId: broadcast.heygenId });
+        return Response.json({ success: true, message: 'Render already in progress', heygenId: broadcast.heygenId });
       }
 
       const clips = broadcast.clips || [];
       if (clips.length === 0) {
-        return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
+        return Response.json({ error: 'No clips' }, { status: 400 });
       }
 
-      const missingClips = clips.filter(c => !c.videoUrl);
-      if (missingClips.length > 0) {
-        return Response.json({ error: `${missingClips.length} clips missing videoUrl` }, { status: 400 });
-      }
+      // Build video_inputs — one scene per clip, all with the studio backdrop
+      const videoInputs = [];
+      const panelBackgrounds = []; // track which scenes got solution panels
 
-      // ── Build the Creatomate RenderScript ──
-      const elements = [];
-
-      // 1. Studio backdrop — full frame, continuous, behind everything
-      elements.push({
-        type: "image",
-        source: STUDIO_BG_URL,
-        width: "100%",
-        height: "100%",
-        x: "50%",
-        y: "50%",
-        fit: "cover",
-        z_index: 0
-      });
-
-      // 2. For each clip, create a composition with both presenters visible
-      for (let index = 0; index < clips.length; index++) {
-        const clip = clips[index];
+      for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
-        const isBob = !isCharlie;
-        const speakingBox = isCharlie ? CHARLIE_BOX : BOB_BOX;
-        const idleBox     = isCharlie ? BOB_BOX     : CHARLIE_BOX;
+        const pos = isCharlie ? CHARLIE_POS : BOB_POS;
 
-        // Find an idle clip for the OTHER presenter
-        let idleClip = null;
-        for (let i = index - 1; i >= 0; i--) {
-          if (clips[i].role !== clip.role) { idleClip = clips[i]; break; }
-        }
-        if (!idleClip) {
-          for (let i = index + 1; i < clips.length; i++) {
-            if (clips[i].role !== clip.role) { idleClip = clips[i]; break; }
-          }
-        }
+        // Determine the background for this scene
+        let bgUrl = STUDIO_BG_URL;
+        let hasPanel = false;
 
-        const compElements = [];
-
-        // Speaking video — 55% scale, positioned in presenter's corner
-        compElements.push({
-          type: "video",
-          track: 1,
-          source: clip.videoUrl,
-          x: speakingBox.x,
-          y: speakingBox.y,
-          width: speakingBox.width,
-          height: speakingBox.height,
-          fit: "contain",
-          blend_mode: "screen",
-          volume: "100%",
-          z_index: 10
-        });
-
-        // Idle video — muted loop of the other presenter's clip (never black)
-        if (idleClip) {
-          compElements.push({
-            type: "video",
-            track: 2,
-            source: idleClip.videoUrl,
-            x: idleBox.x,
-            y: idleBox.y,
-            width: idleBox.width,
-            height: idleBox.height,
-            fit: "contain",
-            blend_mode: "screen",
-            loop: true,
-            volume: "0%",
-            z_index: 9
-          });
-        }
-
-        // ── Solution Panel (Bob's segments only) ──
-        // When Bob speaks, a bordered white panel appears in the studio
-        // backdrop's screen area, displaying concise solution bullet points.
-        if (isBob) {
-          // Extract bullet points from Bob's script
+        if (!isCharlie) {
+          // Bob's solution segment — compose a background with the Solution Panel
           const bullets = await extractBullets(clip.script, base44);
-
           if (bullets.length > 0) {
-            // Panel background — white bordered box with gold border and shadow
-            compElements.push({
-              type: "shape",
-              track: 1,
-              x: PANEL.x,
-              y: PANEL.y,
-              width: PANEL.width,
-              height: PANEL.height,
-              fill_color: "#ffffff",
-              stroke_color: GOLD,
-              stroke_width: "0.25vmin",
-              border_radius: "0.8vmin",
-              shadow_color: "#000000",
-              shadow_blur: "1.5vmin",
-              shadow_y: "0.3vmin",
-              shadow_opacity: "40%",
-              z_index: 5,
-              // Fade in/out animation
-              animations: [
-                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
-                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
-              ]
-            });
-
-            // Title bar — gold background with white text
-            compElements.push({
-              type: "text",
-              track: 1,
-              x: PANEL.x,
-              y: PANEL.titleY,
-              width: PANEL.width,
-              height: PANEL.titleHeight,
-              text: "THE DYSON SOLUTION",
-              fill_color: "#ffffff",
-              font_family: "Inter",
-              font_weight: 700,
-              font_size: null,
-              font_size_minimum: "1.5vmin",
-              font_size_maximum: "2.5vmin",
-              x_alignment: "50%",
-              y_alignment: "50%",
-              text_transform: "uppercase",
-              letter_spacing: "8%",
-              background_color: GOLD,
-              background_x_padding: "8%",
-              background_y_padding: "15%",
-              background_border_radius: "10%",
-              z_index: 6,
-              animations: [
-                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
-                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
-              ]
-            });
-
-            // Bullet points — dark text on white panel
-            const bulletText = bullets.map(b => `• ${b}`).join('\n');
-            compElements.push({
-              type: "text",
-              track: 1,
-              x: PANEL.x,
-              y: PANEL.bulletsY,
-              width: PANEL.bulletsWidth,
-              height: PANEL.bulletsHeight,
-              text: bulletText,
-              fill_color: DARK_TEXT,
-              font_family: "Inter",
-              font_weight: 500,
-              font_size: null,
-              font_size_minimum: "1.5vmin",
-              font_size_maximum: "2.8vmin",
-              x_alignment: "0%",
-              y_alignment: "0%",
-              text_wrap: true,
-              line_height: "160%",
-              z_index: 6,
-              animations: [
-                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
-                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
-              ]
-            });
+            try {
+              bgUrl = await composeSolutionBackground(bullets, base44);
+              hasPanel = true;
+            } catch (e) {
+              console.log(`Solution panel composition failed, using studio backdrop: ${e.message}`);
+            }
           }
         }
 
-        // Composition auto-detects its duration from track 1 (the speaking clip)
-        elements.push({
-          type: "composition",
-          track: 1,
-          elements: compElements
+        panelBackgrounds.push(hasPanel);
+
+        // Character — positioned natively via HeyGen scale/offset
+        const character = isCharlie
+          ? {
+              type: 'avatar',
+              avatar_id: CHARLIE_AVATAR_ID,
+              avatar_style: 'normal',
+              scale: pos.scale,
+              offset: pos.offset,
+            }
+          : {
+              type: 'talking_photo',
+              talking_photo_id: BOB_TALKING_PHOTO_ID,
+              scale: pos.scale,
+              offset: pos.offset,
+            };
+
+        // Voice
+        const voice = isCharlie
+          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 }
+          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 };
+
+        videoInputs.push({
+          character,
+          voice,
+          background: { type: 'image', url: bgUrl },
         });
       }
 
-      const renderScript = {
-        output_format: "mp4",
-        width: 1280,
-        height: 720,
-        frame_rate: 30,
-        elements: elements
-      };
-
-      // Submit to Creatomate
-      const res = await fetch('https://api.creatomate.com/v2/renders', {
+      // Submit the entire multi-scene video to HeyGen in a single call
+      const res = await fetch(HEYGEN_API, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${creatomateKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(renderScript)
+        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          video_inputs: videoInputs,
+          dimension: { width: 1280, height: 720 },
+        }),
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        return Response.json({ error: 'Creatomate render failed', details: data }, { status: 502 });
+      const videoId = data?.data?.video_id;
+      if (!res.ok || !videoId) {
+        return Response.json({ error: 'HeyGen render failed', details: data }, { status: 502 });
       }
 
-      const renderId = data.id;
-      if (!renderId) {
-        return Response.json({ error: 'No render ID returned from Creatomate', details: data }, { status: 502 });
-      }
-
-      await Broadcasts.update(broadcast.id, { heygenId: renderId });
+      await Broadcasts.update(broadcast.id, { heygenId: videoId });
 
       return Response.json({
         success: true,
-        message: 'Creatomate render started — dual avatars + solution panel over studio backdrop',
+        message: 'HeyGen multi-scene render started — dual avatars + solution panel over studio backdrop',
         broadcastId: broadcast.id,
-        renderId: renderId,
+        renderId: videoId,
         clipCount: clips.length,
-        provider: 'creatomate'
+        scenesWithPanel: panelBackgrounds.filter(Boolean).length,
+        provider: 'heygen'
       });
     }
 
-    // ── CHECK: poll Creatomate for render status ──
+    // ── CHECK: poll HeyGen for render status ──
     if (action === 'check') {
       const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
       const pending = all.filter(b => b.heygenId && !b.videoUrl);
 
       if (pending.length === 0) {
-        return Response.json({ success: true, message: 'No pending stitching renders', pending: 0 });
+        return Response.json({ success: true, message: 'No pending renders', pending: 0 });
       }
 
       const results = [];
       for (const broadcast of pending) {
         const res = await fetch(
-          `https://api.creatomate.com/v2/renders/${encodeURIComponent(broadcast.heygenId)}`,
-          { headers: { 'Authorization': `Bearer ${creatomateKey}` } }
+          `${HEYGEN_STATUS_API}?video_id=${encodeURIComponent(broadcast.heygenId)}`,
+          { headers: { 'X-Api-Key': heygenKey } }
         );
         const data = await res.json();
-        const status = data.status;
+        const status = data?.data?.status;
 
-        if (status === 'succeeded') {
-          const videoUrl = data.url;
+        if (status === 'completed') {
+          const videoUrl = data?.data?.video_url;
           if (!videoUrl) {
             results.push({ id: broadcast.id, status: 'no_url' });
             continue;
           }
 
           const vidRes = await fetch(videoUrl);
-          if (!vidRes.ok) {
-            results.push({ id: broadcast.id, status: 'download_failed' });
-            continue;
-          }
           const buf = await vidRes.arrayBuffer();
           const file = new File([buf], `dnn_broadcast_${broadcast.broadcast_date}_stitched.mp4`, { type: 'video/mp4' });
           const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
           await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
 
+          // Create VideoLibrary entry
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
           const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
           const libData = {
@@ -418,7 +285,7 @@ Deno.serve(async (req) => {
             source_type: 'upload',
             file_url: up.file_url,
             broadcast_date: broadcast.broadcast_date,
-            duration_seconds: data.duration || null,
+            duration_seconds: data?.data?.duration || null,
             tags: ['DNN', 'broadcast', 'real_estate', 'relocation'],
             is_active: true,
           };
@@ -434,10 +301,10 @@ Deno.serve(async (req) => {
             status: 'stitched',
             videoUrl: up.file_url,
             libraryEntry: libTitle,
-            provider: 'creatomate'
+            provider: 'heygen'
           });
         } else if (status === 'failed') {
-          const errMsg = data.error_message || 'Creatomate render failed';
+          const errMsg = data?.data?.error?.message || 'HeyGen render failed';
           await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
