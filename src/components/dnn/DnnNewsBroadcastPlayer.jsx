@@ -95,15 +95,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   };
 
   // ── RUNTIME DURATION TRACKER + DEFENSIVE ESCAPE HATCH ──
-  // Logs currentTime/duration on every tick. The split second currentTime crosses
-  // 99.5% of duration (or within 0.3s of the end), fires the hard redirect —
-  // bypassing any broken onEnded event loop that might be swallowing the exit.
+  // Logs currentTime/duration on every tick. The escape hatch fires ONLY on the
+  // absolute final segment — middle clips advance to the next index naturally.
   const handleTimeUpdate = (e) => {
     const v = e.currentTarget;
     if (!v || !v.duration || isNaN(v.duration) || terminatedRef.current) return;
-    console.log(`[DNN PLAYER] clip ${idx} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${((v.currentTime / v.duration) * 100).toFixed(1)}%`);
-    if (v.currentTime >= v.duration - 0.3) {
-      console.log("Defensive duration escape hatch triggered. Executing hard exit.");
+    const isLastSegment = idx === segments.length - 1;
+    console.log(`[DNN PLAYER] clip ${idx}/${segments.length - 1} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${((v.currentTime / v.duration) * 100).toFixed(1)}%${isLastSegment ? ' [FINAL]' : ''}`);
+    if (isLastSegment && v.currentTime >= v.duration - 0.3) {
+      console.log("Defensive duration escape hatch triggered on FINAL clip. Executing hard exit.");
       terminatedRef.current = true;
       window.location.replace('/?choose=1');
     }
