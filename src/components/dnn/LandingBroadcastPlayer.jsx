@@ -37,26 +37,13 @@ export default function LandingBroadcastPlayer({ onEnter }) {
       .catch(() => {});
   }, []);
 
-  // Autoplay muted (browser policy compliant)
+  // Video starts paused — user must manually click play
   useEffect(() => {
     if (!broadcast) return;
     const v = videoRef.current;
     if (!v) return;
-
-    v.muted = true;
-    v.volume = 1.0;
-
-    const tryPlay = () => {
-      v.play().then(() => {
-        setPlaying(true);
-        setMuted(true);
-      }).catch(() => {
-        setPlaying(false);
-      });
-    };
-
-    const timer = setTimeout(tryPlay, 100);
-    return () => clearTimeout(timer);
+    v.pause();
+    setPlaying(false);
   }, [broadcast]);
 
   const toggleMute = () => {
@@ -90,8 +77,6 @@ export default function LandingBroadcastPlayer({ onEnter }) {
       <video
         ref={videoRef}
         src={broadcast.videoUrl}
-        autoPlay
-        muted
         playsInline
         loop
         preload="auto"
