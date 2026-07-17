@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { VolumeX, Volume2, Play, Pause } from 'lucide-react';
+
+// Floor pill navigation targets — these match the deep-link routes
+const PILL_ROUTES = [
+  { label: 'MARKET PULSE', dest: '/dnn-news' },      // News
+  { label: 'RATE WATCH', dest: '/home' },             // Relocation
+  { label: 'MIGRATION DATA', dest: '/solve-my-story' }, // Intelligence
+];
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -14,6 +22,7 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
  * - No pill button — viewer scrolls down to see path selection
  */
 export default function LandingBroadcastPlayer({ onEnter }) {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [broadcast, setBroadcast] = useState(null);
   const [playing, setPlaying] = useState(false);
@@ -119,6 +128,31 @@ export default function LandingBroadcastPlayer({ onEnter }) {
           ? <Pause className="w-5 h-5" style={{ color: GOLD }} />
           : <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} fill={GOLD} />}
       </button>
+
+      {/* Clickable floor pill overlays — aligned to Creatomate pill positions */}
+      {PILL_ROUTES.map((pill, i) => {
+        const pillSpacing = 100 / (PILL_ROUTES.length + 1);
+        const pillX = pillSpacing * (i + 1);
+        return (
+          <button
+            key={i}
+            onClick={() => navigate(pill.dest)}
+            aria-label={pill.label}
+            className="absolute z-10 rounded-full transition-all hover:scale-105 hover:brightness-125"
+            style={{
+              left: `calc(${pillX}% - 7%)`,
+              bottom: '5%',
+              width: '14%',
+              height: '5%',
+              background: 'transparent',
+              border: `1px solid rgba(212,175,55,0.4)`,
+              cursor: 'pointer',
+            }}
+          >
+            <span className="sr-only">{pill.label}</span>
+          </button>
+        );
+      })}
     </section>
   );
 }
