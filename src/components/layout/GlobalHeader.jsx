@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Home, Users, Building2, Handshake, Briefcase, Shield } from 'lucide-react';
-import DnDLogo from '@/components/brand/DnDLogo';
 
 const GOLD = '#D4AF37';
 
@@ -56,24 +55,15 @@ export default function GlobalHeader({ portalLabel }) {
 
   return (
     <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
-      {/* D&D Logo mark + Studio Home link */}
-      <div className="flex items-center gap-3">
-        <div
-          className="flex items-center cursor-pointer select-none"
-          onClick={goStudioHome}
-          title="Dyson & Dyson Relocation"
-        >
-          <DnDLogo size="sm" onClick={goStudioHome} />
-        </div>
-        <button
-          onClick={goStudioHome}
-          className="hidden sm:flex items-center gap-1.5 text-xs font-bold tracking-[0.15em] uppercase px-3 py-1.5 rounded-full transition-all hover:scale-[1.03]"
-          style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'rgba(212,175,55,0.08)' }}
-        >
-          <Home className="w-3.5 h-3.5" />
-          Studio Home
-        </button>
-      </div>
+      {/* Studio Home pill — far left */}
+      <button
+        onClick={goStudioHome}
+        className="flex items-center gap-1.5 text-xs font-bold tracking-[0.15em] uppercase px-3 py-1.5 rounded-full transition-all hover:scale-[1.03]"
+        style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'rgba(212,175,55,0.08)' }}
+      >
+        <Home className="w-3.5 h-3.5" />
+        Studio Home
+      </button>
 
       {/* Current portal label (desktop) */}
       {portalLabel && (
