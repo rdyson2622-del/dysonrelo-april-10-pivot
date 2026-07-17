@@ -213,7 +213,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
-              opacity: seg.speaker === 'charlie' ? 1 : 0.45,
+              opacity: 1,
             }}
           >
             {seg.speaker === 'charlie' ? (
@@ -262,7 +262,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
-              opacity: seg.speaker === 'bob' ? 1 : 0.45,
+              opacity: 1,
             }}
           >
             {seg.speaker === 'bob' ? (
