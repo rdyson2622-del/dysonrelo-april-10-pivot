@@ -126,7 +126,7 @@ export default function LandingBroadcastPlayer({ onEnter }) {
             className="absolute z-10 rounded-full transition-all hover:scale-105 hover:brightness-125"
             style={{
               left: `calc(${pillX}% - 7%)`,
-              bottom: '5%',
+              bottom: '22%',
               width: '14%',
               height: '5%',
               background: 'transparent',

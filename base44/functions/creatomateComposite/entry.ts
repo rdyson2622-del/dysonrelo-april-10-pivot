@@ -26,7 +26,7 @@ const DEFAULTS = {
   charlieY: 100,
   bobX: 96,
   bobY: 100,
-  pillY: 93,
+  pillY: 78,
   pillWidth: 14,
   showText: '',
   showTextX: 50,
