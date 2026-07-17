@@ -122,7 +122,8 @@ Deno.serve(async (req) => {
         y_alignment: '50%',
       });
 
-      // Presenter clips — Charlie left, Bob right
+      // Presenter clips — sequential on track 2 (each vanishes when its segment ends)
+      // No fit:cover, no background fill — transparent bounding box so no black rectangle
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
         elements.push({
@@ -137,7 +138,7 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          fit: 'cover',
+          background_color: 'transparent',
         });
       }
 
