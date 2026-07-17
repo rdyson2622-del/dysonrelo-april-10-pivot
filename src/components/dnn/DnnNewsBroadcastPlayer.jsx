@@ -190,30 +190,101 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           />
         </div>
       ) : (
-        <video
-          key={seg.src + idx}
-          ref={videoRef}
-          src={seg.src}
-          playsInline
-          onEnded={handleEnded}
-          onClick={togglePlay}
-          className="cursor-pointer transition-all duration-300"
-          style={{
-            width: 'clamp(200px, 28vw, 360px)',
-            height: 'auto',
-            aspectRatio: '16/9',
-            objectFit: 'cover',
-            position: 'absolute',
-            bottom: '8px',
-            left: seg.speaker === 'charlie' ? '4px' : 'auto',
-            right: seg.speaker === 'bob' ? '4px' : 'auto',
-            borderRadius: '10px',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        />
+        <>
+          {/* Charlie — bottom-left, always structurally visible */}
+          <div
+            className="absolute transition-all duration-300"
+            style={{
+              bottom: '8px',
+              left: '4px',
+              width: 'clamp(200px, 28vw, 360px)',
+              aspectRatio: '16/9',
+              borderRadius: '10px',
+              border: `2px solid ${GOLD}`,
+              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+              background: '#000',
+              overflow: 'hidden',
+              zIndex: 10,
+              opacity: seg.speaker === 'charlie' ? 1 : 0.35,
+            }}
+          >
+            {seg.speaker === 'charlie' ? (
+              <video
+                key={seg.src + idx}
+                ref={videoRef}
+                src={seg.src}
+                playsInline
+                onEnded={handleEnded}
+                onClick={togglePlay}
+                className="cursor-pointer w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center gap-1.5"
+                style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)' }}>
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
+                <span className="text-[9px] md:text-[11px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+                  Charlie · Standby
+                </span>
+              </div>
+            )}
+            {/* Charlie label bar */}
+            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
+              style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
+                CHARLIE · DYSON AI CONCIERGE
+              </span>
+            </div>
+          </div>
+
+          {/* Bob — bottom-right, always structurally visible */}
+          <div
+            className="absolute transition-all duration-300"
+            style={{
+              bottom: '8px',
+              right: '4px',
+              width: 'clamp(200px, 28vw, 360px)',
+              aspectRatio: '16/9',
+              borderRadius: '10px',
+              border: `2px solid ${GOLD}`,
+              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+              background: '#000',
+              overflow: 'hidden',
+              zIndex: 10,
+              opacity: seg.speaker === 'bob' ? 1 : 0.35,
+            }}
+          >
+            {seg.speaker === 'bob' ? (
+              <video
+                key={seg.src + idx}
+                ref={videoRef}
+                src={seg.src}
+                playsInline
+                onEnded={handleEnded}
+                onClick={togglePlay}
+                className="cursor-pointer w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center gap-1.5"
+                style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)' }}>
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
+                <span className="text-[9px] md:text-[11px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+                  Bob · Standby
+                </span>
+              </div>
+            )}
+            {/* Bob label bar */}
+            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
+              style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
+                BOB DYSON · FOUNDER
+              </span>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Play overlay when paused/ended */}
