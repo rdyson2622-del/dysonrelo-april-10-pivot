@@ -137,15 +137,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           <div
             className="absolute flex flex-col overflow-hidden"
             style={{
-              top: '14%',
+              top: '8%',
               left: '50%',
               transform: 'translateX(-50%)',
               width: 'min(52vw, 640px)',
-              maxHeight: '58vh',
+              minHeight: '78vh',
+              maxHeight: '82vh',
               zIndex: 5,
               background: '#ffffff',
-              border: `2px solid #1a1a1a`,
-              borderRadius: '8px',
+              border: `2px solid ${GOLD}`,
+              borderRadius: '14px',
               boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
               padding: 'clamp(12px, 2.2vh, 22px) clamp(14px, 2.2vw, 28px)',
             }}
