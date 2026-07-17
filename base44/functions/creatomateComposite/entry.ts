@@ -154,6 +154,7 @@ Deno.serve(async (req) => {
       const bobClip = clips.find(c => c.role === 'bob');
 
       // Static Charlie headshot — always visible on left, muted
+      // trim_start skips past HeyGen intro fade so we don't get a black frame
       if (charlieClip) {
         elements.push({
           type: 'video',
@@ -169,11 +170,13 @@ Deno.serve(async (req) => {
           x_alignment: '0%',
           y_alignment: '100%',
           fit: 'cover',
-          volume: '0%',
+          trim_start: 2,
+          volume: 0,
         });
       }
 
       // Static Bob headshot — always visible on right, muted
+      // trim_start skips past HeyGen intro fade so we don't get a black frame
       if (bobClip) {
         elements.push({
           type: 'video',
@@ -189,7 +192,8 @@ Deno.serve(async (req) => {
           x_alignment: '100%',
           y_alignment: '100%',
           fit: 'cover',
-          volume: '0%',
+          trim_start: 2,
+          volume: 0,
         });
       }
 
@@ -206,7 +210,7 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: '100%',
+        volume: 1,
       });
 
       // Presenter clips — directly on track 3, auto-sequenced after sting
@@ -225,7 +229,7 @@ Deno.serve(async (req) => {
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
           fit: 'cover',
-          volume: '100%',
+          volume: 1,
         });
       }
 
@@ -242,7 +246,7 @@ Deno.serve(async (req) => {
         y_anchor: '50%',
         x_alignment: '50%',
         y_alignment: '50%',
-        volume: '100%',
+        volume: 1,
       });
 
       // Name/title overlay — Charlie (below box)
@@ -397,12 +401,56 @@ Deno.serve(async (req) => {
 
     // ── CHECK: poll in-progress Creatomate renders ──
     if (action === 'check') {
+      // If a specific renderId is provided, fetch its status and persist if succeeded
       if (body.renderId) {
         const cmRes = await fetch(
           `${CREATOMATE_BASE}/${encodeURIComponent(body.renderId)}`,
           { headers: { 'Authorization': `Bearer ${apiKey}` } }
         );
         const cmData = await cmRes.json();
+
+        // If succeeded and broadcastId provided, download and persist
+        if (cmData.status === 'succeeded' && cmData.url && body.broadcastId) {
+          const vidRes = await fetch(cmData.url);
+          if (vidRes.ok) {
+            const buf = await vidRes.arrayBuffer();
+            const file = new File([buf], `dnn_broadcast_persisted.mp4`, { type: 'video/mp4' });
+            const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+            await Broadcasts.update(body.broadcastId, { videoUrl: up.file_url, heygenId: '' });
+
+            // Also update VideoLibrary entry
+            const bData = await Broadcasts.filter({ id: body.broadcastId });
+            const broadcast = bData?.[0];
+            if (broadcast) {
+              const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
+              const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
+              const libData = {
+                title: libTitle,
+                description: `Full DNN Intelligence Bureau broadcast for ${broadcast.broadcast_date}.`,
+                category: 'broadcast',
+                source_type: 'upload',
+                file_url: up.file_url,
+                broadcast_date: broadcast.broadcast_date,
+                duration_seconds: cmData?.duration || null,
+                tags: ['DNN', 'broadcast', 'real_estate', 'relocation', 'creatomate'],
+                is_active: true,
+              };
+              if (existingLib && existingLib.length > 0) {
+                await base44.asServiceRole.entities.VideoLibrary.update(existingLib[0].id, libData);
+              } else {
+                await base44.asServiceRole.entities.VideoLibrary.create(libData);
+              }
+            }
+
+            return Response.json({
+              success: true,
+              message: 'Composite downloaded and persisted',
+              videoUrl: up.file_url,
+              duration: cmData?.duration,
+            });
+          }
+        }
+
         return Response.json({ render: cmData });
       }
 
@@ -533,7 +581,7 @@ Deno.serve(async (req) => {
             y_alignment: '50%',
             trim_start: 0,
             trim_duration: 5,
-            volume: '100%',
+            volume: 1,
           },
           {
             type: 'text',
