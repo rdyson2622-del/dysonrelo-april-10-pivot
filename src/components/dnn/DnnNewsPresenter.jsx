@@ -136,7 +136,7 @@ export default function DnnNewsPresenter() {
       )}
 
       {open && createPortal(
-        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { setOpen(false); window.location.href = '/?choose=1'; }} />,
+        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { window.location.replace('/?choose=1'); }} />,
         document.body
       )}
     </>
