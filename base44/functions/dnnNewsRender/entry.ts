@@ -16,7 +16,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 // Visual scripts keep "1DNN.COM"; only the spoken input_text is phonetic.
 function phoneticSpoken(text) {
   if (!text) return text;
-  return text.replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com');
+  return text
+    .replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/dyson\s*\/\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/dyson\s*&\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/dyson\s*and\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/dysonanddyson\s*\.\s*com/gi, 'One D N N dot com')
+    .replace(/dyson\s*\/\s*dyson\s+dot\s+com/gi, 'One D N N dot com')
+    .replace(/dyson\s*and\s*dyson\s+dot\s+com/gi, 'One D N N dot com');
 }
 
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
