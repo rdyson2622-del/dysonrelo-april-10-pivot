@@ -1,33 +1,36 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — stitches individual broadcast clips into a single
- * composited MP4 using HeyGen's multi-input rendering.
+ * dnnStitchBroadcast — composites individual broadcast clips into a single
+ * MP4 with BOTH presenters visible simultaneously, using Creatomate.
  *
- * After all clips for a DnnBroadcast are rendered, this function creates a
- * SINGLE HeyGen render with multiple video_inputs (one per clip), producing
- * one composited video file stored on the DnnBroadcast.videoUrl field.
+ * Layout:
+ *   - Studio backdrop fills the full frame continuously.
+ *   - Charlie's video box is permanently locked in the lower-left corner.
+ *   - Bob's video box is permanently locked in the lower-right corner.
+ *   - When a presenter is not speaking, their track shows a muted loop
+ *     of their clip (never black, never disappears).
+ *   - blend_mode "screen" makes each clip's black background transparent,
+ *     so only the presenter is composited over the studio backdrop.
  *
  * Actions (POST body):
- *   { action: "start", broadcastId?: "..." }
- *     → Finds a completed broadcast with clips but no composited video.
- *       Creates a multi-input HeyGen render and stores the job ID.
- *       If broadcastId is omitted, uses the most recent completed broadcast.
+ *   { action: "start", broadcastId?: "...", force?: true }
+ *     → Creates a Creatomate render compositing all clips with both
+ *       presenters visible simultaneously over the studio backdrop.
  *
  *   { action: "check" }
- *     → Polls in-progress stitching renders. When completed, downloads and
- *       stores the composited video URL on the DnnBroadcast record.
+ *     → Polls Creatomate for render completion. Downloads and stores
+ *       the composited MP4 when ready.
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
-const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
-const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
-const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
-const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
-// Studio backdrop — applied to EVERY clip so the final stitched video
-// has the DNN studio background instead of flat black.
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+
+// Presenter box positions (percentages of 1280×720 canvas)
+// Charlie: lower-left, Bob: lower-right
+const CHARLIE_BOX = { x: "28%", y: "72%", width: "34%", height: "46%" };
+const BOB_BOX     = { x: "72%", y: "72%", width: "34%", height: "46%" };
 
 Deno.serve(async (req) => {
   try {
@@ -37,6 +40,7 @@ Deno.serve(async (req) => {
 
     const base44 = createClientFromRequest(req);
 
+    // Auth: admin session or M2M pipeline secret
     const providedSecret = req.headers.get('x-pipeline-secret');
     const expectedSecret = Deno.env.get('N8N_PIPELINE_SECRET');
     const isM2M = providedSecret && expectedSecret && providedSecret === expectedSecret;
@@ -47,16 +51,16 @@ Deno.serve(async (req) => {
       }
     }
 
-    const heygenKey = Deno.env.get('HEYGEN_API_KEY');
-    if (!heygenKey) {
-      return Response.json({ error: 'HEYGEN_API_KEY not configured' }, { status: 500 });
+    const creatomateKey = Deno.env.get('CREATOMATE');
+    if (!creatomateKey) {
+      return Response.json({ error: 'CREATOMATE not configured' }, { status: 500 });
     }
 
     const body = await req.json().catch(() => ({}));
-    const action = body?.action || 'check'; // scheduled automations call with no body → default to check
+    const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: create a multi-input HeyGen render ──
+    // ── START: create a Creatomate composited render ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -92,7 +96,7 @@ Deno.serve(async (req) => {
 
       // Already has a stitching render in progress
       if (broadcast.heygenId) {
-        return Response.json({ success: true, message: 'Stitching render already in progress', heygenId: broadcast.heygenId });
+        return Response.json({ success: true, message: 'Stitching render already in progress', renderId: broadcast.heygenId });
       }
 
       const clips = broadcast.clips || [];
@@ -100,54 +104,143 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Build video_inputs — one per clip. Each clip uses the studio backdrop
-      // as the full-screen background, with the presenter positioned in their
-      // corner (Charlie bottom-left, Bob bottom-right) via scale + offset.
-      // This produces ONE composited video with the studio set throughout.
-      const videoInputs = clips.map(clip => {
-        const isCharlie = clip.role === 'charlie';
-        return isCharlie
-          ? {
-              character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 0.55, offset: { x: -0.28, y: -0.12 } },
-              voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
-              background: { type: 'image', url: STUDIO_BG_URL },
-            }
-          : {
-              character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 0.55, offset: { x: 0.28, y: -0.12 } },
-              voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
-              background: { type: 'image', url: STUDIO_BG_URL },
-            };
+      // Verify all clips have rendered video URLs
+      const missingClips = clips.filter(c => !c.videoUrl);
+      if (missingClips.length > 0) {
+        return Response.json({ error: `${missingClips.length} clips missing videoUrl` }, { status: 400 });
+      }
+
+      // ── Build the Creatomate RenderScript ──
+      // The studio background is a full-frame image rendered first (behind everything).
+      // Each clip becomes a composition containing:
+      //   Track 1: the speaking presenter's video (with audio)
+      //   Track 2: the idle presenter's video (muted loop, never black)
+      // Compositions are on the same outer track so they play sequentially.
+      // Both presenter boxes are visible simultaneously within each composition.
+
+      const elements = [];
+
+      // 1. Studio backdrop — full frame, continuous, behind everything
+      elements.push({
+        type: "image",
+        source: STUDIO_BG_URL,
+        width: "100%",
+        height: "100%",
+        x: "50%",
+        y: "50%",
+        fit: "cover",
+        z_index: 0
       });
 
-      const res = await fetch('https://api.heygen.com/v2/video/generate', {
+      // 2. For each clip, create a composition with both presenters visible
+      clips.forEach((clip, index) => {
+        const isCharlie = clip.role === 'charlie';
+        const speakingBox = isCharlie ? CHARLIE_BOX : BOB_BOX;
+        const idleBox     = isCharlie ? BOB_BOX     : CHARLIE_BOX;
+
+        // Find an idle clip for the OTHER presenter.
+        // Prefer the most recent clip of the opposite role before this one;
+        // fall back to the first clip of the opposite role after this one.
+        let idleClip = null;
+        for (let i = index - 1; i >= 0; i--) {
+          if (clips[i].role !== clip.role) { idleClip = clips[i]; break; }
+        }
+        if (!idleClip) {
+          for (let i = index + 1; i < clips.length; i++) {
+            if (clips[i].role !== clip.role) { idleClip = clips[i]; break; }
+          }
+        }
+
+        const compElements = [];
+
+        // Speaking video — positioned in presenter's corner, with audio
+        // blend_mode "screen" makes the clip's black background transparent
+        // so only the presenter is composited over the studio backdrop.
+        compElements.push({
+          type: "video",
+          track: 1,
+          source: clip.videoUrl,
+          x: speakingBox.x,
+          y: speakingBox.y,
+          width: speakingBox.width,
+          height: speakingBox.height,
+          fit: "contain",
+          blend_mode: "screen",
+          volume: "100%"
+        });
+
+        // Idle video — muted loop of the other presenter's clip
+        // Never black, never disappears — the idle presenter remains visible
+        // in their corner throughout the segment as a clean loop.
+        if (idleClip) {
+          compElements.push({
+            type: "video",
+            track: 2,
+            source: idleClip.videoUrl,
+            x: idleBox.x,
+            y: idleBox.y,
+            width: idleBox.width,
+            height: idleBox.height,
+            fit: "contain",
+            blend_mode: "screen",
+            loop: true,
+            volume: "0%"
+          });
+        }
+
+        // Composition auto-detects its duration from track 1 (the speaking clip).
+        // Compositions are on the same outer track, so they play sequentially.
+        elements.push({
+          type: "composition",
+          track: 1,
+          elements: compElements
+        });
+      });
+
+      const renderScript = {
+        output_format: "mp4",
+        width: 1280,
+        height: 720,
+        frame_rate: 30,
+        elements: elements
+      };
+
+      // Submit to Creatomate
+      const res = await fetch('https://api.creatomate.com/v2/renders', {
         method: 'POST',
-        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          video_inputs: videoInputs,
-          dimension: { width: 1280, height: 720 },
-        }),
+        headers: {
+          'Authorization': `Bearer ${creatomateKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(renderScript)
       });
 
       const data = await res.json();
-      const videoId = data?.data?.video_id;
-      if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen multi-input render failed', details: data }, { status: 502 });
+      if (!res.ok) {
+        return Response.json({ error: 'Creatomate render failed', details: data }, { status: 502 });
       }
 
-      await Broadcasts.update(broadcast.id, { heygenId: videoId });
+      const renderId = data.id;
+      if (!renderId) {
+        return Response.json({ error: 'No render ID returned from Creatomate', details: data }, { status: 502 });
+      }
+
+      // Store the Creatomate render ID (using heygenId field for backward compat)
+      await Broadcasts.update(broadcast.id, { heygenId: renderId });
 
       return Response.json({
         success: true,
-        message: 'Stitching render started — all clips combined into a single HeyGen render',
+        message: 'Creatomate render started — both presenters visible simultaneously with studio backdrop',
         broadcastId: broadcast.id,
-        heygenId: videoId,
+        renderId: renderId,
         clipCount: clips.length,
+        provider: 'creatomate'
       });
     }
 
-    // ── CHECK: poll in-progress stitching renders ──
+    // ── CHECK: poll Creatomate for render status ──
     if (action === 'check') {
-      // Find broadcasts with a stitching heygenId but no composited video yet
+      // Find broadcasts with a render ID but no composited video yet
       const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
       const pending = all.filter(b => b.heygenId && !b.videoUrl);
 
@@ -158,14 +251,21 @@ Deno.serve(async (req) => {
       const results = [];
       for (const broadcast of pending) {
         const res = await fetch(
-          `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(broadcast.heygenId)}`,
-          { headers: { 'X-Api-Key': heygenKey } }
+          `https://api.creatomate.com/v2/renders/${encodeURIComponent(broadcast.heygenId)}`,
+          { headers: { 'Authorization': `Bearer ${creatomateKey}` } }
         );
         const data = await res.json();
-        const status = data?.data?.status;
+        const status = data.status;
 
-        if (status === 'completed') {
-          const vidRes = await fetch(data?.data?.video_url);
+        if (status === 'succeeded') {
+          const videoUrl = data.url;
+          if (!videoUrl) {
+            results.push({ id: broadcast.id, status: 'no_url' });
+            continue;
+          }
+
+          // Download and store the composited MP4
+          const vidRes = await fetch(videoUrl);
           if (!vidRes.ok) {
             results.push({ id: broadcast.id, status: 'download_failed' });
             continue;
@@ -176,7 +276,7 @@ Deno.serve(async (req) => {
 
           await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
 
-          // Create a VideoLibrary record so the finished MP4 is available for YouTube, LinkedIn, and other venues
+          // Create a VideoLibrary record so the finished MP4 is available for YouTube, LinkedIn, etc.
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
           const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
           const libData = {
@@ -186,7 +286,7 @@ Deno.serve(async (req) => {
             source_type: 'upload',
             file_url: up.file_url,
             broadcast_date: broadcast.broadcast_date,
-            duration_seconds: data?.data?.duration || null,
+            duration_seconds: data.duration || null,
             tags: ['DNN', 'broadcast', 'real_estate', 'relocation'],
             is_active: true,
           };
@@ -202,10 +302,11 @@ Deno.serve(async (req) => {
             status: 'stitched',
             videoUrl: up.file_url,
             libraryEntry: libTitle,
+            provider: 'creatomate'
           });
         } else if (status === 'failed') {
-          const errMsg = data?.data?.error?.message || 'HeyGen stitching render failed';
-          // Clear the heygenId so it can be retried
+          const errMsg = data.error_message || 'Creatomate render failed';
+          // Clear the render ID so it can be retried
           await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
