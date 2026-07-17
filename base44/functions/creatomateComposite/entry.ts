@@ -166,6 +166,7 @@ Deno.serve(async (req) => {
       });
 
       // Presenter clips — directly on track 3, auto-sequenced after sting
+      // No fit:cover (causes black box on certain HeyGen encodings); direct placement
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
         elements.push({
@@ -180,12 +181,11 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          fit: 'cover',
           volume: 1,
         });
       }
 
-      // News pills — fixed labels along the floor (HOUSING SUPPLY intentionally removed)
+      // News pills — fixed labels along the floor, full duration
       const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA'];
       for (let i = 0; i < pillLabels.length; i++) {
         const pillSpacing = 100 / (pillLabels.length + 1);
@@ -205,7 +205,7 @@ Deno.serve(async (req) => {
           fill_color: GOLD,
           font_family: 'Inter',
           font_weight: '700',
-          font_size: '1.2 vmin',
+          font_size: '2 vmin',
           text_align: 'center',
           background_color: 'rgba(0,0,0,0.85)',
           background_x_padding: '30%',
