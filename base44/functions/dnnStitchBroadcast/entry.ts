@@ -6,12 +6,15 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  *
  * Layout:
  *   - Studio backdrop fills the full frame continuously.
- *   - Charlie's video box is permanently locked in the lower-left corner.
- *   - Bob's video box is permanently locked in the lower-right corner.
+ *   - Charlie's video box is permanently locked in the lower-left corner (55% scale).
+ *   - Bob's video box is permanently locked in the lower-right corner (55% scale).
  *   - When a presenter is not speaking, their track shows a muted loop
  *     of their clip (never black, never disappears).
  *   - blend_mode "screen" makes each clip's black background transparent,
  *     so only the presenter is composited over the studio backdrop.
+ *   - When Bob speaks, a bordered white "Solution Panel" appears in the
+ *     studio backdrop's screen area, displaying concise bullet points
+ *     extracted from Bob's script.
  *
  * Actions (POST body):
  *   { action: "start", broadcastId?: "...", force?: true }
@@ -27,10 +30,67 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
-// Presenter box positions (percentages of 1280×720 canvas)
-// Charlie: lower-left, Bob: lower-right
-const CHARLIE_BOX = { x: "28%", y: "72%", width: "34%", height: "46%" };
-const BOB_BOX     = { x: "72%", y: "72%", width: "34%", height: "46%" };
+// Presenter box positions — 55% scale, locked to lower-left and lower-right corners
+const CHARLIE_BOX = { x: "20%", y: "72%", width: "55%", height: "55%" };
+const BOB_BOX     = { x: "80%", y: "72%", width: "55%", height: "55%" };
+
+// Solution Panel — bordered white box inside the studio backdrop's screen area
+const PANEL = {
+  x: "50%",
+  y: "25%",
+  width: "42%",
+  height: "32%",
+  // Inner text area (with padding inside the panel)
+  titleY: "14%",
+  titleHeight: "6%",
+  bulletsY: "29%",
+  bulletsWidth: "36%",
+  bulletsHeight: "22%",
+};
+
+const GOLD = "#D4AF37";
+const DARK_TEXT = "#0a0a0a";
+
+/**
+ * Extract concise bullet points from Bob's script using the LLM.
+ * Falls back to sentence splitting if the LLM call fails.
+ */
+async function extractBullets(script, base44) {
+  if (!script || script.trim().length === 0) return [];
+
+  try {
+    const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: `You are extracting key solution bullet points from a DNN broadcast script segment spoken by Bob Dyson (a 55-year real estate veteran).
+
+Extract 3-4 concise, punchy bullet points that capture the SOLUTION Bob is offering viewers. Each bullet should be a short action-oriented point (max 12 words). Do not include filler words or intros — just the core solution points.
+
+Return ONLY the bullet points as a JSON array of strings. Each string should NOT start with "•" — just the text.
+
+Script:
+${script}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          bullets: {
+            type: 'array',
+            items: { type: 'string' }
+          }
+        },
+        required: ['bullets']
+      }
+    });
+    const bullets = (result.bullets || []).filter(b => b && b.trim().length > 0).slice(0, 4);
+    if (bullets.length > 0) return bullets;
+  } catch (e) {
+    console.log(`LLM bullet extraction failed, falling back to sentence split: ${e.message}`);
+  }
+
+  // Fallback: split into sentences and take the first 3-4
+  const sentences = script.split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 15 && s.length < 120);
+  return sentences.slice(0, 4);
+}
 
 Deno.serve(async (req) => {
   try {
@@ -69,7 +129,6 @@ Deno.serve(async (req) => {
         const arr = await Broadcasts.filter({ id: broadcastId });
         broadcast = arr?.[0];
       } else {
-        // Find the most recent completed broadcast with clips but no composited video
         const completed = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 20);
         broadcast = completed.find(b =>
           b.clips?.length > 0 &&
@@ -82,19 +141,16 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'No completed broadcast with un-stitched clips found' }, { status: 404 });
       }
 
-      // If force=true, clear old composited video so a fresh stitch can start
       if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
         await Broadcasts.update(broadcast.id, { videoUrl: '', heygenId: '', errorMessage: '' });
         broadcast.videoUrl = '';
         broadcast.heygenId = '';
       }
 
-      // Already has a composited video
       if (broadcast.videoUrl) {
         return Response.json({ success: true, message: 'Broadcast already has a composited video', videoUrl: broadcast.videoUrl });
       }
 
-      // Already has a stitching render in progress
       if (broadcast.heygenId) {
         return Response.json({ success: true, message: 'Stitching render already in progress', renderId: broadcast.heygenId });
       }
@@ -104,20 +160,12 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Verify all clips have rendered video URLs
       const missingClips = clips.filter(c => !c.videoUrl);
       if (missingClips.length > 0) {
         return Response.json({ error: `${missingClips.length} clips missing videoUrl` }, { status: 400 });
       }
 
       // ── Build the Creatomate RenderScript ──
-      // The studio background is a full-frame image rendered first (behind everything).
-      // Each clip becomes a composition containing:
-      //   Track 1: the speaking presenter's video (with audio)
-      //   Track 2: the idle presenter's video (muted loop, never black)
-      // Compositions are on the same outer track so they play sequentially.
-      // Both presenter boxes are visible simultaneously within each composition.
-
       const elements = [];
 
       // 1. Studio backdrop — full frame, continuous, behind everything
@@ -133,14 +181,14 @@ Deno.serve(async (req) => {
       });
 
       // 2. For each clip, create a composition with both presenters visible
-      clips.forEach((clip, index) => {
+      for (let index = 0; index < clips.length; index++) {
+        const clip = clips[index];
         const isCharlie = clip.role === 'charlie';
+        const isBob = !isCharlie;
         const speakingBox = isCharlie ? CHARLIE_BOX : BOB_BOX;
         const idleBox     = isCharlie ? BOB_BOX     : CHARLIE_BOX;
 
-        // Find an idle clip for the OTHER presenter.
-        // Prefer the most recent clip of the opposite role before this one;
-        // fall back to the first clip of the opposite role after this one.
+        // Find an idle clip for the OTHER presenter
         let idleClip = null;
         for (let i = index - 1; i >= 0; i--) {
           if (clips[i].role !== clip.role) { idleClip = clips[i]; break; }
@@ -153,9 +201,7 @@ Deno.serve(async (req) => {
 
         const compElements = [];
 
-        // Speaking video — positioned in presenter's corner, with audio
-        // blend_mode "screen" makes the clip's black background transparent
-        // so only the presenter is composited over the studio backdrop.
+        // Speaking video — 55% scale, positioned in presenter's corner
         compElements.push({
           type: "video",
           track: 1,
@@ -166,12 +212,11 @@ Deno.serve(async (req) => {
           height: speakingBox.height,
           fit: "contain",
           blend_mode: "screen",
-          volume: "100%"
+          volume: "100%",
+          z_index: 10
         });
 
-        // Idle video — muted loop of the other presenter's clip
-        // Never black, never disappears — the idle presenter remains visible
-        // in their corner throughout the segment as a clean loop.
+        // Idle video — muted loop of the other presenter's clip (never black)
         if (idleClip) {
           compElements.push({
             type: "video",
@@ -184,18 +229,109 @@ Deno.serve(async (req) => {
             fit: "contain",
             blend_mode: "screen",
             loop: true,
-            volume: "0%"
+            volume: "0%",
+            z_index: 9
           });
         }
 
-        // Composition auto-detects its duration from track 1 (the speaking clip).
-        // Compositions are on the same outer track, so they play sequentially.
+        // ── Solution Panel (Bob's segments only) ──
+        // When Bob speaks, a bordered white panel appears in the studio
+        // backdrop's screen area, displaying concise solution bullet points.
+        if (isBob) {
+          // Extract bullet points from Bob's script
+          const bullets = await extractBullets(clip.script, base44);
+
+          if (bullets.length > 0) {
+            // Panel background — white bordered box with gold border and shadow
+            compElements.push({
+              type: "shape",
+              track: 1,
+              x: PANEL.x,
+              y: PANEL.y,
+              width: PANEL.width,
+              height: PANEL.height,
+              fill_color: "#ffffff",
+              stroke_color: GOLD,
+              stroke_width: "0.25vmin",
+              border_radius: "0.8vmin",
+              shadow_color: "#000000",
+              shadow_blur: "1.5vmin",
+              shadow_y: "0.3vmin",
+              shadow_opacity: "40%",
+              z_index: 5,
+              // Fade in/out animation
+              animations: [
+                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
+                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
+              ]
+            });
+
+            // Title bar — gold background with white text
+            compElements.push({
+              type: "text",
+              track: 1,
+              x: PANEL.x,
+              y: PANEL.titleY,
+              width: PANEL.width,
+              height: PANEL.titleHeight,
+              text: "THE DYSON SOLUTION",
+              fill_color: "#ffffff",
+              font_family: "Inter",
+              font_weight: 700,
+              font_size: null,
+              font_size_minimum: "1.5vmin",
+              font_size_maximum: "2.5vmin",
+              x_alignment: "50%",
+              y_alignment: "50%",
+              text_transform: "uppercase",
+              letter_spacing: "8%",
+              background_color: GOLD,
+              background_x_padding: "8%",
+              background_y_padding: "15%",
+              background_border_radius: "10%",
+              z_index: 6,
+              animations: [
+                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
+                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
+              ]
+            });
+
+            // Bullet points — dark text on white panel
+            const bulletText = bullets.map(b => `• ${b}`).join('\n');
+            compElements.push({
+              type: "text",
+              track: 1,
+              x: PANEL.x,
+              y: PANEL.bulletsY,
+              width: PANEL.bulletsWidth,
+              height: PANEL.bulletsHeight,
+              text: bulletText,
+              fill_color: DARK_TEXT,
+              font_family: "Inter",
+              font_weight: 500,
+              font_size: null,
+              font_size_minimum: "1.5vmin",
+              font_size_maximum: "2.8vmin",
+              x_alignment: "0%",
+              y_alignment: "0%",
+              text_wrap: true,
+              line_height: "160%",
+              z_index: 6,
+              animations: [
+                { time: 0, duration: 0.5, easing: "ease", type: "fade" },
+                { time: 0, duration: 0.5, offset: 1, easing: "ease", type: "fade" }
+              ]
+            });
+          }
+        }
+
+        // Composition auto-detects its duration from track 1 (the speaking clip)
         elements.push({
           type: "composition",
           track: 1,
           elements: compElements
         });
-      });
+      }
 
       const renderScript = {
         output_format: "mp4",
@@ -225,12 +361,11 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'No render ID returned from Creatomate', details: data }, { status: 502 });
       }
 
-      // Store the Creatomate render ID (using heygenId field for backward compat)
       await Broadcasts.update(broadcast.id, { heygenId: renderId });
 
       return Response.json({
         success: true,
-        message: 'Creatomate render started — both presenters visible simultaneously with studio backdrop',
+        message: 'Creatomate render started — dual avatars + solution panel over studio backdrop',
         broadcastId: broadcast.id,
         renderId: renderId,
         clipCount: clips.length,
@@ -240,7 +375,6 @@ Deno.serve(async (req) => {
 
     // ── CHECK: poll Creatomate for render status ──
     if (action === 'check') {
-      // Find broadcasts with a render ID but no composited video yet
       const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
       const pending = all.filter(b => b.heygenId && !b.videoUrl);
 
@@ -264,7 +398,6 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // Download and store the composited MP4
           const vidRes = await fetch(videoUrl);
           if (!vidRes.ok) {
             results.push({ id: broadcast.id, status: 'download_failed' });
@@ -276,7 +409,6 @@ Deno.serve(async (req) => {
 
           await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
 
-          // Create a VideoLibrary record so the finished MP4 is available for YouTube, LinkedIn, etc.
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
           const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
           const libData = {
@@ -306,7 +438,6 @@ Deno.serve(async (req) => {
           });
         } else if (status === 'failed') {
           const errMsg = data.error_message || 'Creatomate render failed';
-          // Clear the render ID so it can be retried
           await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
