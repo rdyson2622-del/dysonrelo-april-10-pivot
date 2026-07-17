@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
@@ -26,6 +27,13 @@ const SPEAKER_LABELS = {
  *   onClose: () => void
  */
 export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
+  const navigate = useNavigate();
+
+  const FLOOR_PILLS = [
+    { word: 'News', dest: '/dnn-news?autoplay=1', sub: "Today's Clips" },
+    { word: 'Relocation', dest: '/relo-management', sub: 'Free Access' },
+    { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' },
+  ];
   const videoRef = useRef(null);
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -203,7 +211,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             className="absolute transition-all duration-300"
             style={{
               bottom: '24px',
-              left: '24px',
+              left: '32px',
               width: 'clamp(104px, 14.3vw, 182px)',
               aspectRatio: '3 / 4',
               borderRadius: '10px',
@@ -252,7 +260,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             className="absolute transition-all duration-300"
             style={{
               bottom: '24px',
-              right: '24px',
+              right: '32px',
               width: 'clamp(104px, 14.3vw, 182px)',
               aspectRatio: '3 / 4',
               borderRadius: '10px',
@@ -294,6 +302,45 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 BOB DYSON · FOUNDER
               </span>
             </div>
+          </div>
+
+          {/* Center floor pills — same styling as the landing page */}
+          <div className="absolute left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-6"
+            style={{ bottom: '32%', zIndex: 9 }}>
+            {FLOOR_PILLS.map((pill) => (
+              <button
+                key={pill.word}
+                onClick={() => navigate(pill.dest)}
+                className="flex flex-col items-center justify-center px-4 md:px-6 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
+                  border: '1px solid rgba(212,180,106,0.45)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  minWidth: '5.5rem',
+                  maxWidth: '9rem',
+                  height: '2.75rem',
+                }}
+              >
+                <span
+                  className="uppercase whitespace-nowrap"
+                  style={{
+                    color: '#d4b46a',
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontWeight: 500,
+                    letterSpacing: '0.25em',
+                    fontSize: pill.word.length > 6 ? '0.95rem' : '1.25rem',
+                  }}
+                >
+                  {pill.word}
+                </span>
+                <span
+                  className="text-[7px] tracking-[0.2em] uppercase mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity"
+                  style={{ color: '#d4b46a' }}
+                >
+                  {pill.sub}
+                </span>
+              </button>
+            ))}
           </div>
         </>
       )}
