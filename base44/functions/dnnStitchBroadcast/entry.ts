@@ -28,6 +28,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 
+// Rewrite the domain so the TTS engine spells it out naturally.
+// Visual scripts keep "1DNN.COM"; only the spoken input_text is phonetic.
+function phoneticSpoken(text) {
+  if (!text) return text;
+  return text.replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com');
+}
+
 const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
 const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -203,9 +210,10 @@ Deno.serve(async (req) => {
             };
 
         // Voice — volume normalized so Bob matches Charlie's audible level
+        const spokenText = phoneticSpoken(clip.script);
         const voice = isCharlie
-          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05, volume: 1.0 }
-          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12, volume: 1.4 };
+          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: spokenText, speed: 1.05, volume: 1.0 }
+          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.4 };
 
         videoInputs.push({
           character,

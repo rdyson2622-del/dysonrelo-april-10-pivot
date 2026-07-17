@@ -12,6 +12,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session.
  */
 
+// Rewrite the domain so the TTS engine spells it out naturally.
+// Visual scripts keep "1DNN.COM"; only the spoken input_text is phonetic.
+function phoneticSpoken(text) {
+  if (!text) return text;
+  return text.replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com');
+}
+
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
@@ -47,9 +54,10 @@ Deno.serve(async (req) => {
         ? { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID }
         : { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' };
       const voiceId = role === 'bob' ? BOB_VOICE_ID : CHARLIE_VOICE_ID;
+      const spokenText = phoneticSpoken(script);
       const voice = role === 'bob'
-        ? { type: 'text', voice_id: voiceId, input_text: script, emotion: 'Excited', speed: 1.12, volume: 1.4 }
-        : { type: 'text', voice_id: voiceId, input_text: script, volume: 1.0 };
+        ? { type: 'text', voice_id: voiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.4 }
+        : { type: 'text', voice_id: voiceId, input_text: spokenText, volume: 1.0 };
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
