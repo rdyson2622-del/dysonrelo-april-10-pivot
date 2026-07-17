@@ -6,7 +6,6 @@ import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
-
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
   bob: 'BOB DYSON · FOUNDER',
@@ -15,12 +14,8 @@ const SPEAKER_LABELS = {
 /**
  * DnnNewsBroadcastPlayer — a FULL-SCREEN broadcast player.
  *
- * Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
- *
- * Background logic:
- *   - Sting: full-screen black (DNN logo video)
- *   - Charlie: studio backdrop (lower-left box)
- *   - Bob: off-white background with bullet-point overlay (lower-right box)
+ * Plays through the segment array EXACTLY ONCE, then hard-redirects to /?choose=1.
+ * No looping. No reset-to-zero. The terminal clip triggers a raw browser escape hatch.
  *
  * Props:
  *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
@@ -34,17 +29,18 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     { word: 'Relocation', dest: '/relo-management', sub: 'Free Access' },
     { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' },
   ];
+
   const videoRef = useRef(null);
   const terminatedRef = useRef(false);
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [ended, setEnded] = useState(false);
 
   const segmentsKey = segments.map(s => s.src).join('|');
+
+  // Initial playback kick — runs once per segment set. Does NOT reset on idx changes.
   useEffect(() => {
     setIdx(0);
-    setEnded(false);
     setPlaying(true);
     setMuted(false);
     const timer = setTimeout(() => {
@@ -65,6 +61,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentsKey]);
 
+  // Advance playback when idx changes (forward only — never wraps to 0).
   useEffect(() => {
     if (idx === 0) return;
     const v = videoRef.current;
@@ -76,13 +73,14 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       setMuted(true);
       v.play().then(() => setPlaying(true)).catch(() => {});
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx]);
 
   const seg = segments[idx];
   if (!seg) return null;
 
-  // HARD TERMINAL EXIT — no loop, no reset to zero, no state churn.
-  // The moment the final clip ends, the browser wipes the app and loads the landing page.
+  // ── HARD TERMINAL EXIT ──
+  // No complex state logic. No reset to zero. Raw, un-interceptable browser redirect.
   const handleEnded = () => {
     if (terminatedRef.current) return;
     const nextIndex = idx + 1;
@@ -90,14 +88,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       setIdx(nextIndex);
       return;
     }
+    console.log("Terminal clip reached. Executing hard exit.");
     terminatedRef.current = true;
     window.location.replace('/?choose=1');
+    return;
   };
 
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
-    if (v.paused) { v.play(); setPlaying(true); setEnded(false); }
+    if (v.paused) { v.play(); setPlaying(true); }
     else { v.pause(); setPlaying(false); }
   };
 
@@ -109,8 +109,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   };
 
   const replay = () => {
+    if (terminatedRef.current) return;
     setIdx(0);
-    setEnded(false);
     setTimeout(() => {
       const v = videoRef.current;
       if (v) { v.currentTime = 0; v.muted = false; setMuted(false); v.play().then(() => setPlaying(true)).catch(() => {}); }
@@ -128,7 +128,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
-  const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
@@ -347,18 +346,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </>
       )}
 
-      {/* Play overlay when paused/ended */}
+      {/* Play overlay when paused */}
       {!playing && (
         <button
-          onClick={ended ? replay : togglePlay}
-          aria-label={ended ? 'Replay' : 'Play'}
+          onClick={togglePlay}
+          aria-label="Play"
           className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
         >
           <span className="w-20 h-20 rounded-full flex items-center justify-center"
             style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-            {ended
-              ? <RotateCcw className="w-8 h-8" style={{ color: GOLD }} />
-              : <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />}
+            <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
           </span>
         </button>
       )}
@@ -384,7 +381,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       </div>
 
       {/* Subscribe CTA — shown when broadcast ends */}
-      {ended && (
+      {!playing && terminatedRef.current === false && segments.length === 0 && (
         <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(0,0,0,0.85)' }}>
           <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto">
             <SubscribeCTA variant="endcard" />
