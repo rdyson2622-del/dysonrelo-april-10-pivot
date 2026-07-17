@@ -35,6 +35,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No broadcast with a stitched video found' }, { status: 404 });
     }
 
+    // ── RENDER INVALIDATION GUARD ──
+    // Reject posting if the broadcast has pending changes that invalidate the MP4.
+    if (broadcast.needsReRender === true) {
+      return Response.json({
+        error: 'Broadcast has pending script/audio/slide changes. Re-render required before posting.',
+        needsReRender: true,
+      }, { status: 409 });
+    }
+
     // Build social copy
     const liveUrl = 'https://1dnn.com/broadcast-show';
     const summary = broadcast.headlines?.length

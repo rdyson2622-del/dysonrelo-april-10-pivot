@@ -80,6 +80,11 @@
       "type": "string",
       "description": "Permanent URL of the rendered broadcast video (solo format)"
     },
+    "needsReRender": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flagged true when script/clips/audio/slide changes invalidate the current stitched MP4. Distribution tools must trigger a fresh HeyGen render before posting or downloading."
+    },
     "status": {
       "type": "string",
       "enum": [

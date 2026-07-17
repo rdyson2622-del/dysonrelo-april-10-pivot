@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
-import { Download, Link2, Copy, Check, Share2, Linkedin, Facebook } from 'lucide-react';
+import { Download, Link2, Copy, Check, Share2, Linkedin, Facebook, RefreshCw } from 'lucide-react';
+import { ensureFreshRender, getRenderStatus, RENDER_STATUS_CONFIG } from '@/components/dnn/renderGuard';
 
 const GOLD = '#D4AF37';
-const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
 
 /**
  * BroadcastExportTools — raw MP4 export + social share-copy generator.
  *
- * Strict copy format:
- *   Line 1: absolute live-show URL
- *   Line 2+: compelling market-brief summary
+ * Render Invalidation Pipeline:
+ *   Download MP4 / Copy Video Link are guarded by ensureFreshRender().
+ *   If needsReRender is true, a fresh HeyGen render is triggered and polled
+ *   to completion before the asset is used.
  *
  * Props:
- *   show: { videoUrl, headlines, broadcast_date, show_name, script }
+ *   show: broadcast record
+ *   onRefresh: parent callback to re-fetch the show after a re-render
  */
-export default function BroadcastExportTools({ show }) {
+export default function BroadcastExportTools({ show, onRefresh }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedLi, setCopiedLi] = useState(false);
   const [copiedFb, setCopiedFb] = useState(false);
+  const [ensuring, setEnsuring] = useState(false);
+  const [error, setError] = useState(null);
 
   const liveUrl = `${window.location.origin}/broadcast-show`;
   const videoUrl = show?.videoUrl || '';
@@ -48,7 +52,6 @@ Watch Charlie Simmons and Bob Dyson deliver today's market intelligence with sol
       setter(true);
       setTimeout(() => setter(false), 2500);
     } catch (_) {
-      // fallback
       const ta = document.createElement('textarea');
       ta.value = text;
       document.body.appendChild(ta);
@@ -58,44 +61,90 @@ Watch Charlie Simmons and Bob Dyson deliver today's market intelligence with sol
     }
   };
 
-  const downloadMp4 = () => {
-    if (!videoUrl) return;
-    const a = document.createElement('a');
-    a.href = videoUrl;
-    a.download = `DNN_${show?.broadcast_date || 'broadcast'}.mp4`;
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  // ── GUARDED DOWNLOAD ──
+  const downloadMp4 = async () => {
+    setError(null);
+    if (!show) return;
+    setEnsuring(true);
+    try {
+      const freshShow = await ensureFreshRender(show);
+      if (onRefresh) onRefresh();
+      const url = freshShow.videoUrl || videoUrl;
+      if (!url) return;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `DNN_${show?.broadcast_date || 'broadcast'}.mp4`;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setEnsuring(false);
+    }
   };
+
+  // ── GUARDED COPY LINK ──
+  const copyVideoLink = async () => {
+    setError(null);
+    if (!show) return;
+    setEnsuring(true);
+    try {
+      const freshShow = await ensureFreshRender(show);
+      if (onRefresh) onRefresh();
+      const url = freshShow.videoUrl || videoUrl;
+      if (!url) return;
+      await copyToClipboard(url, setCopiedLink);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setEnsuring(false);
+    }
+  };
+
+  const renderStatus = ensuring ? 'rendering' : getRenderStatus(show);
+  const statusConfig = RENDER_STATUS_CONFIG[renderStatus];
 
   return (
     <div className="rounded-lg p-3" style={{ background: 'rgba(212,175,55,0.06)', border: `1px solid ${GOLD}30` }}>
-      <p className="text-[10px] font-bold tracking-widest uppercase mb-3" style={{ color: GOLD }}>
+      <p className="text-[10px] font-bold tracking-widest uppercase mb-2" style={{ color: GOLD }}>
         Source Export & Share Copy
       </p>
+
+      {/* Render status badge */}
+      <div className="flex items-center gap-1.5 mb-3 px-2.5 py-1.5 rounded-md"
+        style={{ background: statusConfig.bgColor, border: `1px solid ${statusConfig.color}30` }}>
+        {ensuring
+          ? <RefreshCw className="w-3 h-3 animate-spin" style={{ color: statusConfig.color }} />
+          : <span className="text-[11px]">{statusConfig.icon}</span>}
+        <span className="text-[10px] font-bold" style={{ color: statusConfig.color }}>
+          {statusConfig.label}
+        </span>
+      </div>
 
       {/* MP4 export row */}
       <div className="flex flex-wrap gap-2 mb-3">
         <button
           onClick={downloadMp4}
-          disabled={!videoUrl}
+          disabled={ensuring || (!videoUrl && renderStatus !== 'stale')}
           className="flex items-center gap-1.5 px-3 py-2 rounded-md text-[10px] font-bold text-black transition-all disabled:opacity-40"
           style={{ background: GOLD }}
         >
-          <Download className="w-3 h-3" /> Download MP4
+          {ensuring ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+          {ensuring ? 'Re-rendering...' : 'Download MP4'}
         </button>
         <button
-          onClick={() => copyToClipboard(videoUrl, setCopiedLink)}
-          disabled={!videoUrl}
+          onClick={copyVideoLink}
+          disabled={ensuring || (!videoUrl && renderStatus !== 'stale')}
           className="flex items-center gap-1.5 px-3 py-2 rounded-md text-[10px] font-bold text-white transition-all disabled:opacity-40"
           style={{ background: 'rgba(255,255,255,0.08)', border: `1px solid ${GOLD}40` }}
         >
-          {copiedLink ? <Check className="w-3 h-3 text-green-400" /> : <Link2 className="w-3 h-3" style={{ color: GOLD }} />}
-          {copiedLink ? 'Copied!' : 'Copy Video Link'}
+          {ensuring ? <RefreshCw className="w-3 h-3 animate-spin" style={{ color: GOLD }} /> : copiedLink ? <Check className="w-3 h-3 text-green-400" /> : <Link2 className="w-3 h-3" style={{ color: GOLD }} />}
+          {ensuring ? 'Re-rendering...' : copiedLink ? 'Copied!' : 'Copy Video Link'}
         </button>
       </div>
-      {videoUrl && (
+      {videoUrl && !ensuring && (
         <p className="text-[9px] text-slate-500 mb-3 truncate break-all" style={{ maxWidth: '100%' }}>
           {videoUrl}
         </p>
@@ -148,6 +197,10 @@ Watch Charlie Simmons and Bob Dyson deliver today's market intelligence with sol
           </pre>
         </div>
       </div>
+
+      {error && (
+        <p className="text-[9px] text-red-400 mt-2">{error}</p>
+      )}
 
       <p className="text-[9px] text-slate-600 mt-2 italic">
         Line 1 = live show URL · Line 2+ = market brief summary. Paste directly into LinkedIn or Facebook.

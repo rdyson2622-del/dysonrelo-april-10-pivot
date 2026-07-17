@@ -310,7 +310,7 @@ Deno.serve(async (req) => {
           const file = new File([buf], `dnn_broadcast_${broadcast.broadcast_date}_stitched.mp4`, { type: 'video/mp4' });
           const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
-          await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
+          await Broadcasts.update(broadcast.id, { videoUrl: up.file_url, needsReRender: false });
 
           // Create VideoLibrary entry
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
