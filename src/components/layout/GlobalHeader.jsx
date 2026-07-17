@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Home, Users, Building2, Handshake, Briefcase, Shield } from 'lucide-react';
+import DnDLogo from '@/components/brand/DnDLogo';
 
 const GOLD = '#D4AF37';
 
@@ -58,16 +59,11 @@ export default function GlobalHeader({ portalLabel }) {
       {/* D&D Logo mark + Studio Home link */}
       <div className="flex items-center gap-3">
         <div
-          className="flex items-center gap-2 cursor-pointer select-none"
+          className="flex items-center cursor-pointer select-none"
           onClick={goStudioHome}
           title="Dyson & Dyson Relocation"
         >
-          <span
-            className="text-lg font-black tracking-[0.2em]"
-            style={{ fontFamily: 'Cormorant Garamond, serif', color: GOLD }}
-          >
-            D<span style={{ color: '#fff' }}>&amp;</span>D
-          </span>
+          <DnDLogo size="sm" onClick={goStudioHome} />
         </div>
         <button
           onClick={goStudioHome}
