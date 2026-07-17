@@ -84,8 +84,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     if (idx < segments.length - 1) {
       setIdx(i => i + 1);
     } else {
-      setPlaying(false);
-      onClose();
+      // Atomic redirect — no state updates, no onClose, no React lifecycle.
+      // The browser drops the entire app stack and hard-loads the landing page.
+      window.location.replace('/?choose=1');
     }
   };
 
