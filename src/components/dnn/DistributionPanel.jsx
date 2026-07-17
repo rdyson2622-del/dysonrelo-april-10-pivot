@@ -5,6 +5,7 @@ import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
   RefreshCw, Send, DollarSign, ChevronRight
 } from 'lucide-react';
+import BroadcastExportTools from '@/components/dnn/BroadcastExportTools';
 
 const GOLD = '#D4AF37';
 const DNN_STUDIO_IMAGE = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
@@ -233,6 +234,11 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
           </div>
         </div>
       )}
+
+      {/* MP4 export + share copy generator */}
+      <div className="mt-3">
+        <BroadcastExportTools show={show} />
+      </div>
 
       {/* Result message */}
       {result && (

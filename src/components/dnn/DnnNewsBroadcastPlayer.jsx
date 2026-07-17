@@ -5,6 +5,7 @@ import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
@@ -198,6 +199,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             key={seg.src + idx}
             ref={videoRef}
             src={seg.src}
+            poster={DNN_POSTER}
             playsInline
             onEnded={handleEnded}
             onTimeUpdate={handleTimeUpdate}
@@ -231,6 +233,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}
+                poster={DNN_POSTER}
                 playsInline
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
@@ -283,6 +286,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}
+                poster={DNN_POSTER}
                 playsInline
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
@@ -356,17 +360,25 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </>
       )}
 
-      {/* Play overlay when paused */}
-      {!playing && (
+      {/* Poster + CTA overlay — shown before first play */}
+      {!playing && idx === 0 && (
         <button
           onClick={togglePlay}
-          aria-label="Play"
-          className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
+          aria-label="Click to watch the live show"
+          className="absolute inset-0 z-15 flex flex-col items-center justify-center transition-all"
+          style={{ background: '#000' }}
         >
-          <span className="w-20 h-20 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-            <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
-          </span>
+          <img src={DNN_POSTER} alt="DNN Intelligence Bureau" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+          <div className="relative z-10 flex flex-col items-center gap-4">
+            <span className="w-20 h-20 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
+              <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
+            </span>
+            <span className="text-sm md:text-base font-black tracking-[0.2em] uppercase px-5 py-2 rounded-full"
+              style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'rgba(0,0,0,0.6)' }}>
+              Click to the Live Show
+            </span>
+          </div>
         </button>
       )}
 
