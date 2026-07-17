@@ -35,6 +35,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' },
   ];
   const videoRef = useRef(null);
+  const terminatedRef = useRef(false);
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -80,14 +81,17 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const seg = segments[idx];
   if (!seg) return null;
 
+  // HARD TERMINAL EXIT — no loop, no reset to zero, no state churn.
+  // The moment the final clip ends, the browser wipes the app and loads the landing page.
   const handleEnded = () => {
-    if (idx < segments.length - 1) {
-      setIdx(i => i + 1);
-    } else {
-      // Atomic redirect — no state updates, no onClose, no React lifecycle.
-      // The browser drops the entire app stack and hard-loads the landing page.
-      window.location.replace('/?choose=1');
+    if (terminatedRef.current) return;
+    const nextIndex = idx + 1;
+    if (nextIndex < segments.length) {
+      setIdx(nextIndex);
+      return;
     }
+    terminatedRef.current = true;
+    window.location.replace('/?choose=1');
   };
 
   const togglePlay = () => {
