@@ -105,15 +105,26 @@ ${script}`,
 
 /**
  * Compose a background image for Bob's solution segments.
- * Uses the studio backdrop as a reference and overlays a white-bordered
- * Solution Panel with bullet points in the upper-center screen area.
+ * Matches the frontend DnnNewsBroadcastPlayer solution panel exactly:
+ *   - White panel (#ffffff) with gold border (#D4AF37), rounded corners
+ *   - Dark serif title text, centered (NOT a gold title bar)
+ *   - Gold dot bullets with dark text, all centered
+ *   - Panel positioned in upper-center of the studio screen area
  * Returns the URL of the generated image.
  */
-async function composeSolutionBackground(bullets, base44) {
+async function composeSolutionBackground(bullets, title, base44) {
   const bulletText = bullets.map(b => `• ${b}`).join('\n');
+  const panelTitle = title || 'THE DYSON SOLUTION';
 
   const result = await base44.asServiceRole.integrations.Core.GenerateImage({
-    prompt: `A professional news broadcast studio backdrop image. In the upper-center area of the image, there is a white-bordered panel with a gold (#D4AF37) border and rounded corners, positioned to look like it fits inside a display screen. Inside the panel, at the top, there is a gold title bar with white text that reads "THE DYSON SOLUTION". Below the title, there are the following bullet points in dark text:\n${bulletText}\n\nThe panel should be clean and professional, with a subtle drop shadow. The rest of the image is the dark studio backdrop.`,
+    prompt: `A professional news broadcast studio backdrop image (1280x720, dark studio set). In the UPPER-CENTER area of the image (starting about 8% from the top, centered horizontally), there is a clean white panel (#ffffff background) with a thin gold border (#D4AF37, 2px), rounded corners (14px radius), and a subtle drop shadow. The panel occupies roughly the center 50% of the width and is vertically positioned in the upper half of the image.
+
+INSIDE THE PANEL — everything is CENTERED:
+- At the top of the panel, a title in dark charcoal text (#1a1a1a), serif font, bold, reading: "${panelTitle}"
+- Below the title, the following bullet points, each on its own line, in dark text (#2a2a2a), with a small gold dot (•) before each point, all centered:
+${bulletText}
+
+The panel should look like a clean, modern presentation slide overlaid on the dark news studio backdrop. The rest of the image is the dark studio set with ambient lighting. Do NOT add any gold title bar — the title text itself is dark on the white panel. The bullets must be clearly readable and centered.`,
     existing_image_urls: [STUDIO_BG_URL],
   });
 
@@ -201,7 +212,7 @@ Deno.serve(async (req) => {
           const bullets = await extractBullets(clip.script, base44);
           if (bullets.length > 0) {
             try {
-              bgUrl = await composeSolutionBackground(bullets, base44);
+              bgUrl = await composeSolutionBackground(bullets, clip.question || clip.title, base44);
               hasPanel = true;
             } catch (e) {
               console.log(`Solution panel composition failed, using studio backdrop: ${e.message}`);
@@ -231,7 +242,7 @@ Deno.serve(async (req) => {
         const spokenText = phoneticSpoken(clip.script);
         const voice = isCharlie
           ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: spokenText, speed: 1.05, volume: 1.0 }
-          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.4 };
+          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 };
 
         videoInputs.push({
           character,
