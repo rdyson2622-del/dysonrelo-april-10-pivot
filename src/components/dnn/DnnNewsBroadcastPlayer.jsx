@@ -306,7 +306,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
           {/* Center floor pills — same styling as the landing page */}
           <div className="absolute left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-6"
-            style={{ bottom: '32%', zIndex: 9 }}>
+            style={{ top: '50%', transform: 'translateY(-50%)', zIndex: 9 }}>
             {FLOOR_PILLS.map((pill) => (
               <button
                 key={pill.word}
