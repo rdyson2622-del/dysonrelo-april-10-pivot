@@ -159,8 +159,6 @@ Deno.serve(async (req) => {
           y: pct(lc.pillY),
           x_anchor: '50%',
           y_anchor: '50%',
-          x_alignment: '50%',
-          y_alignment: '50%',
           fill_color: GOLD,
           font_family: 'Inter',
           font_weight: '700',
