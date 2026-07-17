@@ -149,54 +149,6 @@ Deno.serve(async (req) => {
         y_alignment: '50%',
       });
 
-      // Identify first clip per presenter for static headshot
-      const charlieClip = clips.find(c => c.role === 'charlie');
-      const bobClip = clips.find(c => c.role === 'bob');
-
-      // Static Charlie headshot — always visible on left, muted
-      // trim_start skips past HeyGen intro fade so we don't get a black frame
-      if (charlieClip) {
-        elements.push({
-          type: 'video',
-          track: 2,
-          time: 0,
-          source: charlieClip.videoUrl,
-          width: pct(lc.presenterWidth),
-          height: pct(lc.presenterHeight),
-          x: pct(lc.charlieX),
-          y: pct(lc.charlieY),
-          x_anchor: '0%',
-          y_anchor: '100%',
-          x_alignment: '0%',
-          y_alignment: '100%',
-          fit: 'cover',
-          trim_start: 2,
-          volume: 0,
-        });
-      }
-
-      // Static Bob headshot — always visible on right, muted
-      // trim_start skips past HeyGen intro fade so we don't get a black frame
-      if (bobClip) {
-        elements.push({
-          type: 'video',
-          track: 2,
-          time: 0,
-          source: bobClip.videoUrl,
-          width: pct(lc.presenterWidth),
-          height: pct(lc.presenterHeight),
-          x: pct(lc.bobX),
-          y: pct(lc.bobY),
-          x_anchor: '100%',
-          y_anchor: '100%',
-          x_alignment: '100%',
-          y_alignment: '100%',
-          fit: 'cover',
-          trim_start: 2,
-          volume: 0,
-        });
-      }
-
       // DNN opener sting — full screen, auto-sequences first on track 3
       elements.push({
         type: 'video',
@@ -230,74 +182,6 @@ Deno.serve(async (req) => {
           y_alignment: '100%',
           fit: 'cover',
           volume: 1,
-        });
-      }
-
-      // DNN closer sting — auto-sequences after presenters
-      elements.push({
-        type: 'video',
-        track: 3,
-        source: DNN_STING_URL,
-        width: '100%',
-        height: '100%',
-        x: '50%',
-        y: '50%',
-        x_anchor: '50%',
-        y_anchor: '50%',
-        x_alignment: '50%',
-        y_alignment: '50%',
-        volume: 1,
-      });
-
-      // Name/title overlay — Charlie (below box)
-      if (charlieClip) {
-        elements.push({
-          type: 'text',
-          track: 4,
-          time: 0,
-          text: 'CHARLIE SIMMONS\nDNN ANCHOR',
-          width: pct(lc.presenterWidth + 2),
-          x: pct(lc.charlieX),
-          y: pct(lc.charlieY + 2),
-          x_anchor: '0%',
-          y_anchor: '100%',
-          x_alignment: '0%',
-          y_alignment: '100%',
-          fill_color: GOLD,
-          font_family: 'Inter',
-          font_weight: '700',
-          font_size: '1.4 vmin',
-          text_align: 'center',
-          background_color: 'rgba(0,0,0,0.85)',
-          background_x_padding: '30%',
-          background_y_padding: '25%',
-          background_border_radius: '10%',
-        });
-      }
-
-      // Name/title overlay — Bob (below box)
-      if (bobClip) {
-        elements.push({
-          type: 'text',
-          track: 4,
-          time: 0,
-          text: 'BOB DYSON\nFOUNDER',
-          width: pct(lc.presenterWidth + 2),
-          x: pct(lc.bobX),
-          y: pct(lc.bobY + 2),
-          x_anchor: '100%',
-          y_anchor: '100%',
-          x_alignment: '100%',
-          y_alignment: '100%',
-          fill_color: GOLD,
-          font_family: 'Inter',
-          font_weight: '700',
-          font_size: '1.4 vmin',
-          text_align: 'center',
-          background_color: 'rgba(0,0,0,0.85)',
-          background_x_padding: '30%',
-          background_y_padding: '25%',
-          background_border_radius: '10%',
         });
       }
 

@@ -96,25 +96,6 @@ export default function LandingBroadcastPlayer({ onEnter }) {
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.7) 100%)' }} />
 
-      {/* DNN Logo — top left */}
-      <div className="absolute top-6 left-6 z-10 flex items-center gap-2 px-3 py-2 rounded-lg"
-        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid rgba(212,175,55,0.4)`, backdropFilter: 'blur(4px)' }}>
-        <img src={DNN_LOGO} alt="DNN" className="h-6 w-auto" />
-        <span className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>LIVE</span>
-        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
-      </div>
-
-      {/* Show title — top right */}
-      <div className="absolute top-6 right-6 z-10 px-3 py-2 rounded-lg"
-        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid rgba(212,175,55,0.3)`, backdropFilter: 'blur(4px)' }}>
-        <p className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-          {broadcast.show_name || 'DNN Broadcast'}
-        </p>
-        <p className="text-[8px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          {new Date(broadcast.broadcast_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-        </p>
-      </div>
-
       {/* Mute/unmute button — bottom right, small, non-blocking */}
       <button
         onClick={toggleMute}
