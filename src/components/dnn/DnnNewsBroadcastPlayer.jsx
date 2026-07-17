@@ -131,37 +131,45 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       {isSting ? (
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
       ) : hasBullets ? (
-        /* Off-white presentation background with bullet-point overlay */
-        <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
-          {/* Bullet-point content panel — left side, Bob is lower-right */}
-          <div className="absolute inset-0 flex flex-col justify-start px-[8vw] md:px-[10vw] pt-[6vh] md:pt-[8vh] pb-[20vh]">
+        /* Studio backdrop with bordered Solution Panel inside the monitor screen */
+        <>
+          <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+          <div
+            className="absolute flex flex-col overflow-hidden"
+            style={{
+              top: '14%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 'min(52vw, 640px)',
+              maxHeight: '58vh',
+              zIndex: 5,
+              background: '#ffffff',
+              border: `2px solid #1a1a1a`,
+              borderRadius: '8px',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
+              padding: 'clamp(12px, 2.2vh, 22px) clamp(14px, 2.2vw, 28px)',
+            }}
+          >
             {seg.title && (
-              <h2 className="display-heading text-xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
-                style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
+              <h2 className="serif-heading mb-2 md:mb-3"
+                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(0.95rem, 2.4vh, 1.4rem)' }}>
                 {seg.title}
               </h2>
             )}
-            <ul className="space-y-3 md:space-y-5">
+            <ul className="space-y-1.5 md:space-y-2.5 flex-1">
               {seg.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-1.5 md:mt-2 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full flex-shrink-0"
+                <li key={i} className="flex items-start gap-2 md:gap-2.5">
+                  <span className="mt-1.5 md:mt-2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
                     style={{ background: GOLD }} />
-                  <span className="text-sm md:text-lg lg:text-xl"
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
+                  <span
+                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.4, fontSize: 'clamp(0.7rem, 1.7vh, 1.05rem)' }}>
                     {b}
                   </span>
                 </li>
               ))}
             </ul>
           </div>
-          {/* Subtle DNN watermark */}
-          <div className="absolute top-6 left-6 md:top-8 md:left-10">
-            <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ color: 'rgba(212,175,55,0.5)' }}>
-              DNN Intelligence Bureau
-            </span>
-          </div>
-        </div>
+        </>
       ) : (
         /* Studio backdrop for Charlie (and Bob without bullets) */
         <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
