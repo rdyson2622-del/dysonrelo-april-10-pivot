@@ -136,7 +136,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <>
           <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
           <div
-            className="absolute flex flex-col overflow-hidden"
+            className="absolute flex flex-col items-center justify-center text-center overflow-hidden"
             style={{
               top: '8%',
               left: '50%',
@@ -154,17 +154,17 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           >
             {seg.title && (
               <h2 className="serif-heading mb-2 md:mb-3"
-                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)' }}>
+                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)', textAlign: 'center' }}>
                 {seg.title}
               </h2>
             )}
-            <ul className="space-y-2.5 md:space-y-4 flex-1">
+            <ul className="space-y-2.5 md:space-y-4 flex-1 flex flex-col items-center">
               {seg.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-2 md:gap-2.5">
+                <li key={i} className="flex items-start gap-2 md:gap-2.5 justify-center">
                   <span className="mt-1.5 md:mt-2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
                     style={{ background: GOLD }} />
                   <span
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)' }}>
+                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)', textAlign: 'center' }}>
                     {b}
                   </span>
                 </li>
