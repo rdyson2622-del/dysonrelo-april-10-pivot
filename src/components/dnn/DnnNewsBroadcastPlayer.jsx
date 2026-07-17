@@ -153,17 +153,17 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           >
             {seg.title && (
               <h2 className="serif-heading mb-2 md:mb-3"
-                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(0.95rem, 2.4vh, 1.4rem)' }}>
+                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)' }}>
                 {seg.title}
               </h2>
             )}
-            <ul className="space-y-1.5 md:space-y-2.5 flex-1">
+            <ul className="space-y-2.5 md:space-y-4 flex-1">
               {seg.bullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-2 md:gap-2.5">
                   <span className="mt-1.5 md:mt-2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
                     style={{ background: GOLD }} />
                   <span
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.4, fontSize: 'clamp(0.7rem, 1.7vh, 1.05rem)' }}>
+                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)' }}>
                     {b}
                   </span>
                 </li>
