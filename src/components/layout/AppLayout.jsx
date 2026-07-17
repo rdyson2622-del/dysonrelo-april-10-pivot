@@ -8,6 +8,7 @@ import PageNumberBadge from '../PageNumberBadge';
 import { ArrowLeft, PanelLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
+import GlobalHeader from './GlobalHeader';
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -57,21 +58,23 @@ export default function AppLayout() {
   
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>
-      {/* Top bar spanning full width */}
-      <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#A9A9A9' }}>
-        {/* Client Portal box — far left, toggles the sidebar */}
+      {/* Global header — Studio Home + 5-portal hamburger directory */}
+      <GlobalHeader portalLabel={location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')} />
+
+      {/* Sub-bar: sidebar toggle + back + admin pills */}
+      <div className="px-4 py-2 flex items-center gap-3" style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <button
           onClick={toggleSidebar}
-          className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
-          style={{ background: '#0d0d0d', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)' }}
+          className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-3 py-1.5 rounded-lg transition-all hover:opacity-90"
+          style={{ color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)', background: 'rgba(212,175,55,0.08)' }}
         >
           <PanelLeft className="w-4 h-4" />
-          {location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')}
+          {location.pathname === '/corporate-relo' ? 'CORPORATE HR' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')}
         </button>
 
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
           style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
         >
           <ArrowLeft className="w-4 h-4" /> Back
