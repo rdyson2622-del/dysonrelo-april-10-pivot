@@ -61,20 +61,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentsKey]);
 
-  // Advance playback when idx changes (forward only — never wraps to 0).
-  useEffect(() => {
-    if (idx === 0) return;
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = muted;
-    v.currentTime = 0;
-    v.play().then(() => setPlaying(true)).catch(() => {
-      v.muted = true;
-      setMuted(true);
-      v.play().then(() => setPlaying(true)).catch(() => {});
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx]);
+  // NOTE: No useEffect on [idx]. Segment advancement is driven solely by the
+  // native onEnded handler below + onCanPlay auto-play. This eliminates the
+  // state race where an effect re-triggered play() after onEnded bumped idx.
 
   const seg = segments[idx];
   if (!seg) return null;
@@ -212,6 +201,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onTimeUpdate={handleTimeUpdate}
+            onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
             style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
@@ -244,6 +234,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 playsInline
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
+                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
@@ -295,6 +286,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 playsInline
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
+                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
