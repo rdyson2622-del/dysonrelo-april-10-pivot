@@ -233,10 +233,11 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 src={lastSrcFor('charlie')}
                 muted
                 playsInline
-                preload="metadata"
-                onLoadedMetadata={(e) => { e.target.currentTime = 1; e.target.pause(); }}
+                preload="auto"
+                onLoadedMetadata={(e) => { try { e.target.currentTime = 0.5; e.target.pause(); } catch (_) {} }}
+                onError={(e) => { e.target.style.display = 'none'; }}
                 className="w-full h-full"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover', background: '#111' }}
               />
             )}
             {/* Charlie label bar */}
@@ -282,10 +283,11 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 src={lastSrcFor('bob')}
                 muted
                 playsInline
-                preload="metadata"
-                onLoadedMetadata={(e) => { e.target.currentTime = 1; e.target.pause(); }}
+                preload="auto"
+                onLoadedMetadata={(e) => { try { e.target.currentTime = 0.5; e.target.pause(); } catch (_) {} }}
+                onError={(e) => { e.target.style.display = 'none'; }}
                 className="w-full h-full"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover', background: '#111' }}
               />
             )}
             {/* Bob label bar */}
@@ -353,23 +355,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             {ended
               ? <RotateCcw className="w-8 h-8" style={{ color: GOLD }} />
               : <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />}
-          </span>
-        </button>
-      )}
-
-      {/* Tap for sound overlay when muted but playing */}
-      {playing && muted && (
-        <button
-          onClick={toggleMute}
-          aria-label="Tap for sound"
-          className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
-        >
-          <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
-            <VolumeX className="w-8 h-8" style={{ color: GOLD }} />
-            <span className="text-xs font-bold tracking-wider uppercase" style={{ color: GOLD }}>
-              Tap for Sound
-            </span>
           </span>
         </button>
       )}
