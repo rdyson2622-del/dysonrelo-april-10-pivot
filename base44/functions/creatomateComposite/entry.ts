@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
       }
 
       // News pills — floor labels (track 4, on top of everything)
-      const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA'];
+      const pillLabels = ['NEWS', 'RELOCATION', 'INTELLIGENCE'];
       for (let i = 0; i < pillLabels.length; i++) {
         const pillSpacing = 100 / (pillLabels.length + 1);
         const pillX = pillSpacing * (i + 1);

@@ -5,9 +5,9 @@ import { VolumeX, Volume2, Play, Pause } from 'lucide-react';
 
 // Floor pill navigation targets — these match the deep-link routes
 const PILL_ROUTES = [
-  { label: 'MARKET PULSE', dest: '/dnn-news' },      // News
-  { label: 'RATE WATCH', dest: '/home' },             // Relocation
-  { label: 'MIGRATION DATA', dest: '/solve-my-story' }, // Intelligence
+  { label: 'NEWS', dest: '/dnn-news' },
+  { label: 'RELOCATION', dest: '/', useEnter: true },
+  { label: 'INTELLIGENCE', dest: '/solve-my-story' },
 ];
 
 const GOLD = '#D4AF37';
@@ -121,7 +121,7 @@ export default function LandingBroadcastPlayer({ onEnter }) {
         return (
           <button
             key={i}
-            onClick={() => navigate(pill.dest)}
+            onClick={() => pill.useEnter && onEnter ? onEnter() : navigate(pill.dest)}
             aria-label={pill.label}
             className="absolute z-10 rounded-full transition-all hover:scale-105 hover:brightness-125"
             style={{
