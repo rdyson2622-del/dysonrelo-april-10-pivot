@@ -6,7 +6,7 @@ import { VolumeX, Volume2, Play, Pause } from 'lucide-react';
 // Floor pill navigation targets — these match the deep-link routes
 const PILL_ROUTES = [
   { label: 'NEWS', dest: '/dnn-news' },
-  { label: 'RELOCATION', dest: '/', useEnter: true },
+  { label: 'RELOCATION', dest: '/relo-management' },
   { label: 'INTELLIGENCE', dest: '/solve-my-story' },
 ];
 
