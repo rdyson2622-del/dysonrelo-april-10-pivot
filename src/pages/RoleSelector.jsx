@@ -67,16 +67,8 @@ export default function RoleSelector() {
       return;
     }
 
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('choose')) return;
-    try {
-      const saved = JSON.parse(localStorage.getItem('dyson_portal'));
-      if (saved?.dest) {
-        sessionStorage.setItem('dyson_role', saved.roleKey || 'client');
-        window.dispatchEvent(new Event('dyson_role_change'));
-        navigate(saved.dest, { replace: true });
-      }
-    } catch {}
+    // No auto-redirect: every user lands on the studio floor first.
+    // Deep-link hash redirect still works (e.g. 1dnn.com/#news → /dnn-news).
   }, [navigate]);
 
   const handleEnter = () => {
