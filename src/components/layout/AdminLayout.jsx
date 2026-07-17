@@ -8,6 +8,7 @@ import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import CommandPills from './CommandPills';
+import AdminPortalSwitcher from './AdminPortalSwitcher';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -64,6 +65,7 @@ export default function AdminLayout() {
         </div>
         <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
           <CommandPills />
+          <AdminPortalSwitcher />
           <LayoutToggleButton />
         </div>
         <div className={`mx-auto ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`}>
