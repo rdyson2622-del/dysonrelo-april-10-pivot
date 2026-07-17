@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import AdminPortalBar from '@/components/layout/AdminPortalBar';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -54,6 +56,11 @@ const PATHS = [
 
 export default function RoleSelector() {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+  }, []);
 
   // Subscribed visitors go straight to their portal — unless they explicitly
   // asked for the landing page (logo click adds ?choose=1)
@@ -78,6 +85,14 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
+      {/* ── Admin-only portal bar across the top ── */}
+      {isAdmin && (
+        <div className="fixed top-0 left-0 right-0 z-[10000] flex items-center justify-center py-2"
+          style={{ background: 'rgba(0,0,0,0.9)', borderBottom: '1px solid rgba(212,175,55,0.3)' }}>
+          <AdminPortalBar />
+        </div>
+      )}
+
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
         className="relative h-screen"
