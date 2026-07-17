@@ -202,10 +202,10 @@ Deno.serve(async (req) => {
               offset: pos.offset,
             };
 
-        // Voice
+        // Voice — volume normalized so Bob matches Charlie's audible level
         const voice = isCharlie
-          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 }
-          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 };
+          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05, volume: 1.0 }
+          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12, volume: 1.4 };
 
         videoInputs.push({
           character,
