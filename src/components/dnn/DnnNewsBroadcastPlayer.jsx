@@ -205,7 +205,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             style={{
               bottom: '24px',
               left: '24px',
-              width: 'clamp(160px, 22vw, 280px)',
+              width: 'clamp(104px, 14.3vw, 182px)',
               aspectRatio: '3 / 4',
               borderRadius: '10px',
               border: `2px solid ${GOLD}`,
@@ -254,7 +254,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             style={{
               bottom: '24px',
               right: '24px',
-              width: 'clamp(160px, 22vw, 280px)',
+              width: 'clamp(104px, 14.3vw, 182px)',
               aspectRatio: '3 / 4',
               borderRadius: '10px',
               border: `2px solid ${GOLD}`,
