@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
-import LandingBroadcastPlayer from '@/components/dnn/LandingBroadcastPlayer';
+
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -55,7 +55,7 @@ const PATHS = [
 
 export default function RoleSelector() {
   const navigate = useNavigate();
-  const [showPlayer, setShowPlayer] = useState(true);
+  const [showPlayer, setShowPlayer] = useState(false);
 
   // Deep-link hash redirect — e.g. 1dnn.com/#news goes straight to the news page
   // (social media teaser links). Takes priority over saved portal redirect.
@@ -95,9 +95,6 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
-      {/* ── Hero: Live DNN Broadcast Player (both boxes, stings, logos baked in) ── */}
-      {showPlayer && <LandingBroadcastPlayer onEnter={handleEnter} />}
-
       {/* ── Path Selection ── */}
       <section id="path-selection" className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
 
