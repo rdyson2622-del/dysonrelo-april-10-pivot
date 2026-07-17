@@ -136,7 +136,7 @@ export default function DnnNewsPresenter() {
       )}
 
       {open && createPortal(
-        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { setOpen(false); navigate('/'); }} />,
+        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { setOpen(false); navigate('/home'); }} />,
         document.body
       )}
     </>

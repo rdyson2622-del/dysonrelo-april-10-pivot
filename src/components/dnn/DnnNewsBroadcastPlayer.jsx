@@ -76,9 +76,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     if (idx < segments.length - 1) {
       setIdx(i => i + 1);
     } else {
-      setEnded(true);
       setPlaying(false);
-      setTimeout(() => onClose(), 2500);
+      onClose();
     }
   };
 
