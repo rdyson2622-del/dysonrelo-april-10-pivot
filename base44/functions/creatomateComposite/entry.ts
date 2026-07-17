@@ -123,8 +123,10 @@ Deno.serve(async (req) => {
       });
 
       // Presenter clips — sequential on track 2 (each vanishes when its segment ends)
+      // Charlie's track is intentionally skipped — only Bob (and other non-charlie roles) render.
       // No fit:cover, no background fill — transparent bounding box so no black rectangle
       for (const clip of clips) {
+        if (clip.role === 'charlie') continue; // Charlie removed from landing page render
         const isCharlie = clip.role === 'charlie';
         elements.push({
           type: 'video',
