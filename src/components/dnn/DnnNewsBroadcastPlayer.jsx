@@ -105,6 +105,14 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     }, 50);
   };
 
+  // Find the last video src for a given speaker (for still-shot display when not active)
+  const lastSrcFor = (speaker) => {
+    for (let i = idx; i >= 0; i--) {
+      if (segments[i]?.speaker === speaker) return segments[i].src;
+    }
+    return segments.find(s => s?.speaker === speaker)?.src;
+  };
+
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
@@ -191,21 +199,21 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       ) : (
         <>
-          {/* Charlie — bottom-left, always structurally visible */}
+          {/* Charlie — bottom-left, always structurally visible (vertical) */}
           <div
             className="absolute transition-all duration-300"
             style={{
-              bottom: '8px',
-              left: '4px',
-              width: 'clamp(200px, 28vw, 360px)',
-              aspectRatio: '16/9',
+              bottom: '24px',
+              left: '24px',
+              width: 'clamp(160px, 22vw, 280px)',
+              aspectRatio: '3 / 4',
               borderRadius: '10px',
               border: `2px solid ${GOLD}`,
               boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
-              opacity: seg.speaker === 'charlie' ? 1 : 0.35,
+              opacity: seg.speaker === 'charlie' ? 1 : 0.45,
             }}
           >
             {seg.speaker === 'charlie' ? (
@@ -220,13 +228,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 style={{ objectFit: 'cover' }}
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center gap-1.5"
-                style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)' }}>
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
-                <span className="text-[9px] md:text-[11px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-                  Charlie · Standby
-                </span>
-              </div>
+              <video
+                src={lastSrcFor('charlie')}
+                muted
+                playsInline
+                preload="metadata"
+                onLoadedMetadata={(e) => { e.target.currentTime = 1; e.target.pause(); }}
+                className="w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
             )}
             {/* Charlie label bar */}
             <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
@@ -238,21 +248,21 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             </div>
           </div>
 
-          {/* Bob — bottom-right, always structurally visible */}
+          {/* Bob — bottom-right, always structurally visible (vertical) */}
           <div
             className="absolute transition-all duration-300"
             style={{
-              bottom: '8px',
-              right: '4px',
-              width: 'clamp(200px, 28vw, 360px)',
-              aspectRatio: '16/9',
+              bottom: '24px',
+              right: '24px',
+              width: 'clamp(160px, 22vw, 280px)',
+              aspectRatio: '3 / 4',
               borderRadius: '10px',
               border: `2px solid ${GOLD}`,
               boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
-              opacity: seg.speaker === 'bob' ? 1 : 0.35,
+              opacity: seg.speaker === 'bob' ? 1 : 0.45,
             }}
           >
             {seg.speaker === 'bob' ? (
@@ -267,13 +277,15 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 style={{ objectFit: 'cover' }}
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center gap-1.5"
-                style={{ background: 'linear-gradient(135deg, #1a1a1a, #000)' }}>
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
-                <span className="text-[9px] md:text-[11px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-                  Bob · Standby
-                </span>
-              </div>
+              <video
+                src={lastSrcFor('bob')}
+                muted
+                playsInline
+                preload="metadata"
+                onLoadedMetadata={(e) => { e.target.currentTime = 1; e.target.pause(); }}
+                className="w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
             )}
             {/* Bob label bar */}
             <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
