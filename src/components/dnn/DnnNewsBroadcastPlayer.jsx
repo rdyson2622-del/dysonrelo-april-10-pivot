@@ -183,22 +183,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <X className="w-6 h-6" />
       </button>
 
-      {/* Speaker label badge — only on studio background, not on the off-white bullet view */}
-      {!isSting && !hasBullets && (
-        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
-          style={{
-            background: 'rgba(0,0,0,0.65)',
-            border: '1px solid rgba(212,175,55,0.4)',
-            backdropFilter: 'blur(4px)'
-          }}>
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
-          <span className="text-[10px] font-bold tracking-[0.15em] uppercase"
-            style={{ color: GOLD }}>
-            {headerLabel}
-          </span>
-        </div>
-      )}
-
       {/* Video element */}
       {isSting ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
@@ -258,8 +242,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
               style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
-                CHARLIE · DYSON AI CONCIERGE
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+                CHARLIE
               </span>
             </div>
           </div>
@@ -307,8 +291,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
               style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase truncate" style={{ color: GOLD }}>
-                BOB DYSON · FOUNDER
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+                BOB DYSON
               </span>
             </div>
           </div>
