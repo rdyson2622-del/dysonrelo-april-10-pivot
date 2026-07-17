@@ -2,8 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
  * creatomateComposite — composites HeyGen-rendered broadcast clips into a
- * studio MP4 using the Creatomate API (RenderScript / JSON-only, no template
- * editor needed).
+ * studio MP4 using the Creatomate API (RenderScript / JSON-only).
  *
  * Takes individual clip videoUrls from a DnnBroadcast record and layers them
  * onto the DNN studio background with:
@@ -13,29 +12,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  *   - News pills along the floor
  *   - DNN logo in the top-left corner
  *
- * Uses Creatomate's RenderScript format (pure JSON) — no template design
- * required in the Creatomate editor.
- *
- * Actions (POST body):
- *   { action: "start", broadcastId?: "..." }
- *     → Finds a completed broadcast with clips but no composited video.
- *       Builds a RenderScript and submits to Creatomate. Stores the render ID.
- *       If broadcastId is omitted, uses the most recent completed broadcast.
- *
- *   { action: "check" }
- *     → Polls in-progress Creatomate renders. When complete, downloads the
- *       final MP4 and stores it on DnnBroadcast.videoUrl + VideoLibrary.
- *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 const CREATOMATE_BASE = 'https://api.creatomate.com/v2/renders';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
-const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
-const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
+const DNN_LOGO_URL = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
 const GOLD = '#D4AF37';
 
-// Presenter box dimensions (as % of 1920x1080 frame) — defaults
-// Overridable per-broadcast via DnnBroadcast.layoutConfig
 const DEFAULTS = {
   presenterWidth: 15,
   presenterHeight: 50,
@@ -59,7 +42,6 @@ Deno.serve(async (req) => {
 
     const base44 = createClientFromRequest(req);
 
-    // Auth: admin or M2M pipeline secret
     const providedSecret = req.headers.get('x-pipeline-secret');
     const expectedSecret = Deno.env.get('N8N_PIPELINE_SECRET');
     const isM2M = providedSecret && expectedSecret && providedSecret === expectedSecret;
@@ -79,7 +61,7 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: build RenderScript and submit to Creatomate ──
+    // ── START ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -100,7 +82,6 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'No completed broadcast with un-composited clips found' }, { status: 404 });
       }
 
-      // If force=true, clear old composited video
       if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
         await Broadcasts.update(broadcast.id, { videoUrl: '', heygenId: '', errorMessage: '' });
         broadcast.videoUrl = '';
@@ -120,16 +101,8 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips with video URLs' }, { status: 400 });
       }
 
-      // Merge broadcast-specific layout overrides with defaults
       const lc = { ...DEFAULTS, ...(broadcast.layoutConfig || {}) };
       const pct = (v) => `${v}%`;
-
-      // ── Build the RenderScript ──
-      // Creatomate RenderScript: elements array, tracks layered bottom→top.
-      // Track 1 (bottom): Studio background image (full screen, full duration)
-      // Track 2: Static presenter headshots (always visible, frozen first frame, muted)
-      // Track 3: Opener sting → presenter clips → closer sting (auto-sequenced)
-      // Track 4 (top): Name/title overlays + news pills + show text (full duration)
 
       const elements = [];
 
@@ -149,29 +122,12 @@ Deno.serve(async (req) => {
         y_alignment: '50%',
       });
 
-      // DNN opener sting — full screen, auto-sequences first on track 3
-      elements.push({
-        type: 'video',
-        track: 3,
-        source: DNN_STING_URL,
-        width: '100%',
-        height: '100%',
-        x: '50%',
-        y: '50%',
-        x_anchor: '50%',
-        y_anchor: '50%',
-        x_alignment: '50%',
-        y_alignment: '50%',
-        volume: 1,
-      });
-
-      // Presenter clips — directly on track 3, auto-sequenced after sting
-      // No fit:cover (causes black box on certain HeyGen encodings); direct placement
+      // Presenter clips — Charlie left, Bob right
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
         elements.push({
           type: 'video',
-          track: 3,
+          track: 2,
           source: clip.videoUrl,
           width: pct(lc.presenterWidth),
           height: pct(lc.presenterHeight),
@@ -181,11 +137,11 @@ Deno.serve(async (req) => {
           y_anchor: '100%',
           x_alignment: isCharlie ? '0%' : '100%',
           y_alignment: '100%',
-          volume: 1,
+          fit: 'cover',
         });
       }
 
-      // News pills — fixed labels along the floor, full duration
+      // News pills — floor labels (track 4, on top of everything)
       const pillLabels = ['MARKET PULSE', 'RATE WATCH', 'MIGRATION DATA'];
       for (let i = 0; i < pillLabels.length; i++) {
         const pillSpacing = 100 / (pillLabels.length + 1);
@@ -205,7 +161,7 @@ Deno.serve(async (req) => {
           fill_color: GOLD,
           font_family: 'Inter',
           font_weight: '700',
-          font_size: '2 vmin',
+          font_size: '2.5 vmin',
           text_align: 'center',
           background_color: 'rgba(0,0,0,0.85)',
           background_x_padding: '30%',
@@ -218,7 +174,7 @@ Deno.serve(async (req) => {
       if (lc.showText) {
         elements.push({
           type: 'text',
-          track: 4,
+          track: 3,
           time: 0,
           text: lc.showText,
           x: pct(lc.showTextX),
@@ -234,14 +190,21 @@ Deno.serve(async (req) => {
         });
       }
 
-      // DNN logo — top left corner (skip if URL is unreachable; non-critical)
-      // Note: Supabase URLs may 404 for Creatomate's downloader; we skip the logo
-      // rather than fail the entire render. Add a hosted public URL here to re-enable.
-      // elements.push({
-      //   type: 'image', track: 3, time: 0, source: DNN_LOGO_URL,
-      //   width: '12%', height: '6.75%', x: '8%', y: '6%',
-      //   x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
-      // });
+      // DNN logo — top left corner
+      elements.push({
+        type: 'image',
+        track: 3,
+        time: 0,
+        source: DNN_LOGO_URL,
+        width: '12%',
+        height: '6.75%',
+        x: '8%',
+        y: '6%',
+        x_anchor: '50%',
+        y_anchor: '50%',
+        x_alignment: '50%',
+        y_alignment: '50%',
+      });
 
       const renderScript = {
         output_format: 'mp4',
@@ -251,7 +214,6 @@ Deno.serve(async (req) => {
         elements,
       };
 
-      // Submit to Creatomate
       const cmRes = await fetch(CREATOMATE_BASE, {
         method: 'POST',
         headers: {
@@ -271,7 +233,6 @@ Deno.serve(async (req) => {
         }, { status: 502 });
       }
 
-      // Store the Creatomate render ID in the heygenId field (reusing the field)
       await Broadcasts.update(broadcast.id, { heygenId: renderId });
 
       return Response.json({
@@ -283,9 +244,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── CHECK: poll in-progress Creatomate renders ──
+    // ── CHECK ──
     if (action === 'check') {
-      // If a specific renderId is provided, fetch its status and persist if succeeded
       if (body.renderId) {
         const cmRes = await fetch(
           `${CREATOMATE_BASE}/${encodeURIComponent(body.renderId)}`,
@@ -293,7 +253,6 @@ Deno.serve(async (req) => {
         );
         const cmData = await cmRes.json();
 
-        // If succeeded and broadcastId provided, download and persist
         if (cmData.status === 'succeeded' && cmData.url && body.broadcastId) {
           const vidRes = await fetch(cmData.url);
           if (vidRes.ok) {
@@ -302,7 +261,6 @@ Deno.serve(async (req) => {
             const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
             await Broadcasts.update(body.broadcastId, { videoUrl: up.file_url, heygenId: '' });
 
-            // Also update VideoLibrary entry
             const bData = await Broadcasts.filter({ id: body.broadcastId });
             const broadcast = bData?.[0];
             if (broadcast) {
@@ -361,7 +319,6 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // Download and re-upload to Base44 storage
           const vidRes = await fetch(videoUrl);
           if (!vidRes.ok) {
             results.push({ id: broadcast.id, status: 'download_failed' });
@@ -373,7 +330,6 @@ Deno.serve(async (req) => {
 
           await Broadcasts.update(broadcast.id, { videoUrl: up.file_url });
 
-          // Create/update VideoLibrary entry
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;
           const existingLib = await base44.asServiceRole.entities.VideoLibrary.filter({ title: libTitle });
           const libData = {
@@ -413,7 +369,7 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, checked: results });
     }
 
-    // ── GENERATE TEASER: create a 5-second teaser clip from composited video ──
+    // ── GENERATE TEASER ──
     if (action === 'generateTeaser') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -438,13 +394,10 @@ Deno.serve(async (req) => {
         return Response.json({ success: true, message: 'Teaser already generated', teaserUrl: broadcast.teaserUrl });
       }
 
-      // If teaser render already in progress, return the render ID
       if (broadcast.teaserRenderId) {
         return Response.json({ success: true, message: 'Teaser render in progress', renderId: broadcast.teaserRenderId });
       }
 
-      // Build a simple trim render — first 5 seconds of the composited video
-      // with an on-screen text overlay directing viewers to 1dnn.com
       const teaserScript = {
         output_format: 'mp4',
         width: 1920,
@@ -465,7 +418,6 @@ Deno.serve(async (req) => {
             y_alignment: '50%',
             trim_start: 0,
             trim_duration: 5,
-            volume: 1,
           },
           {
             type: 'text',
@@ -517,7 +469,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── CHECK TEASER: poll in-progress teaser renders ──
+    // ── CHECK TEASER ──
     if (action === 'checkTeaser') {
       const all = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 50);
       const pending = all.filter(b => b.teaserRenderId && !b.teaserUrl);
@@ -542,7 +494,6 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // Download and re-upload to Base44 storage
           const vidRes = await fetch(teaserUrl);
           if (!vidRes.ok) {
             results.push({ id: broadcast.id, status: 'download_failed' });
