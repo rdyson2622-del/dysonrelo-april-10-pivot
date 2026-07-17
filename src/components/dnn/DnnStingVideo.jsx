@@ -3,7 +3,7 @@ import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-export const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
+export const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/22d54186e_DNN_Sting_v3.mp4';
 
 /**
  * DnnStingVideo — plays the DNN logo sting before and after a main video.

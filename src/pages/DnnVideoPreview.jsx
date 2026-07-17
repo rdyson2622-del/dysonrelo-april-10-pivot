@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Linkedin, Film, Clapperboard } from 'lucide-react';
-import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
+import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Linkedin, Film } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -14,7 +13,6 @@ function BroadcastCard({ show, onPosted }) {
   const [liResult, setLiResult] = useState(null);
   const [fbPosting, setFbPosting] = useState(false);
   const [fbResult, setFbResult] = useState(null);
-  const [showStudioPreview, setShowStudioPreview] = useState(false);
 
   const hasVideo = !!show.videoUrl;
   const isStitched = hasVideo;
@@ -116,12 +114,6 @@ function BroadcastCard({ show, onPosted }) {
                   <Play className="w-6 h-6 ml-1 text-black" fill="black" />
                 </div>
               </div>
-              {/* Studio preview badge */}
-              <div className="absolute top-2 left-2 px-2 py-1 rounded-lg flex items-center gap-1.5"
-                style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}40` }}>
-                <Clapperboard className="w-3 h-3" style={{ color: GOLD }} />
-                <span className="text-[9px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>Studio</span>
-              </div>
             </button>
           )
         ) : (
@@ -146,12 +138,6 @@ function BroadcastCard({ show, onPosted }) {
       <div className="p-3">
         {hasVideo ? (
           <>
-            {/* Studio Preview */}
-            <button onClick={() => setShowStudioPreview(true)}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold text-black transition-all mb-2"
-              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-              <Clapperboard className="w-3.5 h-3.5" /> Preview Studio Show
-            </button>
             {/* LinkedIn */}
             <button onClick={handleLinkedIn} disabled={liPosting || liDist?.status === 'sent'}
               className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-50"
@@ -192,16 +178,6 @@ function BroadcastCard({ show, onPosted }) {
           </p>
         )}
       </div>
-
-      {/* Studio Preview overlay */}
-      {showStudioPreview && (
-        <div className="fixed inset-0 z-[200]">
-          <DnnNewsBroadcastPlayer
-            segments={[{ src: show.videoUrl, speaker: 'charlie' }]}
-            onClose={() => setShowStudioPreview(false)}
-          />
-        </div>
-      )}
     </div>
   );
 }
@@ -297,7 +273,7 @@ export default function DnnVideoPreview() {
             <p className="text-xs text-slate-600">Complete the stitching step in the Show Pipeline first.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {stitched.map(show => (
               <BroadcastCard key={show.id} show={show} onPosted={handleRefresh} />
             ))}

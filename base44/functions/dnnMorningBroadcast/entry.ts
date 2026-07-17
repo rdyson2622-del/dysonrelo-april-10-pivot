@@ -131,37 +131,18 @@ ${digest}`,
 
     const renderClip = async (clip) => {
       const isCharlie = clip.role === 'charlie';
+      const videoInput = isCharlie
+        ? {
+            character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
+            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
+            background: { type: 'color', value: '#000000' },
+          }
+        : {
+            character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
+            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
+            background: { type: 'color', value: '#0d0d0d' },
+          };
 
-      if (isCharlie) {
-        // v3 API with remove_background for transparent output (WebM alpha channel)
-        const v3Body = {
-          type: 'avatar',
-          avatar_id: CHARLIE_AVATAR_ID,
-          script: clip.script,
-          voice_id: CHARLIE_VOICE_ID,
-          remove_background: true,
-          output_format: 'webm',
-          resolution: '720p',
-          aspect_ratio: '16:9',
-          voice_settings: { speed: 1.05 },
-        };
-        const res = await fetch('https://api.heygen.com/v3/videos', {
-          method: 'POST',
-          headers: { 'x-api-key': heygenKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify(v3Body),
-        });
-        const data = await res.json();
-        const videoId = data?.data?.video_id;
-        if (!res.ok || !videoId) return { error: JSON.stringify(data?.error || data) };
-        return { videoId, apiVersion: 'v3' };
-      }
-
-      // Bob — v2 API with black background
-      const videoInput = {
-        character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
-        voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
-        background: { type: 'color', value: '#000000' },
-      };
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
@@ -170,7 +151,7 @@ ${digest}`,
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) return { error: JSON.stringify(data?.error || data) };
-      return { videoId, apiVersion: 'v2' };
+      return { videoId };
     };
 
     const startRender = async (record) => {
@@ -184,7 +165,7 @@ ${digest}`,
           clips[i] = { ...clips[i], status: 'failed' };
           errors.push(r.error);
         } else {
-          clips[i] = { ...clips[i], heygenId: r.videoId, status: 'rendering', apiVersion: r.apiVersion || 'v2' };
+          clips[i] = { ...clips[i], heygenId: r.videoId, status: 'rendering' };
         }
       }
       if (errors.length > 0) {
@@ -225,26 +206,23 @@ ${digest}`,
           for (let i = 0; i < clips.length; i++) {
             const clip = clips[i];
             if (clip.videoUrl || !clip.heygenId) continue;
-            const useV3 = clip.apiVersion === 'v3';
-            const statusUrl = useV3
-              ? `https://api.heygen.com/v3/videos/${encodeURIComponent(clip.heygenId)}`
-              : `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(clip.heygenId)}`;
-            const res = await fetch(statusUrl, { headers: { 'X-Api-Key': heygenKey } });
+            const res = await fetch(
+              `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(clip.heygenId)}`,
+              { headers: { 'X-Api-Key': heygenKey } }
+            );
             const data = await res.json();
             const status = data?.data?.status;
             if (status === 'completed') {
               const vidRes = await fetch(data?.data?.video_url);
               const buf = await vidRes.arrayBuffer();
-              const ext = useV3 ? 'webm' : 'mp4';
-              const mimeType = useV3 ? 'video/webm' : 'video/mp4';
-              const file = new File([buf], `dnn_broadcast_${rec.broadcast_date}_clip${i}.${ext}`, { type: mimeType });
+              const file = new File([buf], `dnn_broadcast_${rec.broadcast_date}_clip${i}.mp4`, { type: 'video/mp4' });
               const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
               clips[i] = { ...clip, videoUrl: up.file_url, status: 'completed' };
               changed = true;
             } else if (status === 'failed') {
               clips[i] = { ...clip, status: 'failed' };
               changed = true;
-              await Broadcasts.update(rec.id, { clips, status: 'failed', errorMessage: data?.data?.error?.message || data?.data?.failure_message || 'HeyGen render failed' });
+              await Broadcasts.update(rec.id, { clips, status: 'failed', errorMessage: data?.data?.error?.message || 'HeyGen render failed' });
             }
           }
           const allDone = clips.every(c => c.videoUrl);
@@ -252,16 +230,16 @@ ${digest}`,
             await Broadcasts.update(rec.id, { clips, ...(allDone ? { status: 'completed' } : {}) });
           }
 
-          // Auto-trigger Creatomate compositing: combine all clips into a single studio video
+          // Auto-trigger stitching: combine all clips into a single composited video
           if (allDone && !rec.videoUrl) {
             try {
-              await base44.asServiceRole.functions.invoke('creatomateComposite', {
+              await base44.asServiceRole.functions.invoke('dnnStitchBroadcast', {
                 action: 'start',
                 broadcastId: rec.id,
               });
-              console.log(`Auto-triggered Creatomate compositing for broadcast ${rec.id}`);
+              console.log(`Auto-triggered stitching for broadcast ${rec.id}`);
             } catch (e) {
-              console.log(`Compositing trigger failed for ${rec.id}: ${e.message}`);
+              console.log(`Stitching trigger failed for ${rec.id}: ${e.message}`);
             }
           }
 

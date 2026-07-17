@@ -74,19 +74,11 @@
     },
     "heygenId": {
       "type": "string",
-      "description": "HeyGen render job id (solo format) or Creatomate render id (composited)"
+      "description": "HeyGen render job id (solo format)"
     },
     "videoUrl": {
       "type": "string",
       "description": "Permanent URL of the rendered broadcast video (solo format)"
-    },
-    "teaserUrl": {
-      "type": "string",
-      "description": "5-second teaser clip URL for social media posting (algorithm-friendly native video)"
-    },
-    "teaserRenderId": {
-      "type": "string",
-      "description": "Creatomate render ID for the teaser clip"
     },
     "status": {
       "type": "string",
@@ -103,60 +95,6 @@
     "errorMessage": {
       "type": "string",
       "description": "Last render error"
-    },
-    "layoutConfig": {
-      "type": "object",
-      "description": "Visual layout overrides for the Creatomate composite \u2014 scale and position of video elements",
-      "properties": {
-        "presenterWidth": {
-          "type": "number",
-          "description": "Presenter clip width as % of frame (5-40)"
-        },
-        "presenterHeight": {
-          "type": "number",
-          "description": "Presenter clip height as % of frame (10-80)"
-        },
-        "charlieX": {
-          "type": "number",
-          "description": "Charlie clip X position as % (0-100, anchor left)"
-        },
-        "charlieY": {
-          "type": "number",
-          "description": "Charlie clip Y position as % (0-100, anchor bottom)"
-        },
-        "bobX": {
-          "type": "number",
-          "description": "Bob clip X position as % (0-100, anchor right)"
-        },
-        "bobY": {
-          "type": "number",
-          "description": "Bob clip Y position as % (0-100, anchor bottom)"
-        },
-        "pillY": {
-          "type": "number",
-          "description": "News pills Y position as % (0-100)"
-        },
-        "pillWidth": {
-          "type": "number",
-          "description": "News pill width as % (5-30)"
-        },
-        "showText": {
-          "type": "string",
-          "description": "Optional show title text overlay"
-        },
-        "showTextX": {
-          "type": "number",
-          "description": "Show text X position as % (0-100)"
-        },
-        "showTextY": {
-          "type": "number",
-          "description": "Show text Y position as % (0-100)"
-        },
-        "showTextSize": {
-          "type": "number",
-          "description": "Show text font size in vmin (1-10)"
-        }
-      }
     },
     "distribution": {
       "type": "array",
@@ -190,10 +128,6 @@
           "post_id": {
             "type": "string",
             "description": "Social post ID or email message ID"
-          },
-          "comment_id": {
-            "type": "string",
-            "description": "Comment post ID (teaser + comment strategy)"
           },
           "posted_at": {
             "type": "string",

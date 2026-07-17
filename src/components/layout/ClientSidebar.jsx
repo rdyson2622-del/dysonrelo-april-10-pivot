@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, DollarSign, Shield, Fingerprint,
@@ -52,7 +52,6 @@ function NavLink({ to, icon: Icon, label, badge, location }) {
 
 export default function ClientSidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showRelocationModal, setShowRelocationModal] = useState(false);
   const [showSendingModal, setShowSendingModal] = useState(false);
@@ -110,17 +109,9 @@ export default function ClientSidebar() {
 
       {/* Logo */}
       <div className="shrink-0 px-5 py-5 border-b flex flex-col items-center text-center" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
-        <button
-          onClick={() => {
-            localStorage.removeItem('dyson_portal');
-            sessionStorage.setItem('dyson_sidebar_expanded', 'false');
-            navigate('/');
-          }}
-          title="Back to landing page"
-          className="block mx-auto"
-        >
+        <Link to="/?choose=1" title="Back to landing page">
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 w-auto mx-auto" />
-        </button>
+        </Link>
         <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
           {portalLabel}
         </p>

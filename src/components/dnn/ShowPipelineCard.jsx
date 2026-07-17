@@ -3,14 +3,13 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
   Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
-  Send, Sliders
+  Send
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 import DistributionTracker from '@/components/dnn/DistributionTracker';
 import SocialAnalyticsPanel from '@/components/dnn/SocialAnalyticsPanel';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
-import VisualLayoutController from '@/components/dnn/VisualLayoutController';
 
 function extractBullets(script) {
   if (!script) return [];
@@ -57,7 +56,6 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [playing, setPlaying] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showStudioPreview, setShowStudioPreview] = useState(false);
-  const [showLayoutController, setShowLayoutController] = useState(false);
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
@@ -74,9 +72,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
       } else if (action === 'check') {
         res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'check' });
       } else if (action === 'stitch') {
-        res = await base44.functions.invoke('creatomateComposite', { action: 'start', broadcastId: show.id });
+        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'start', broadcastId: show.id });
       } else if (action === 'checkStitch') {
-        res = await base44.functions.invoke('creatomateComposite', { action: 'check' });
+        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
       }
       setResult({ success: !res?.data?.error, data: res?.data });
       onRefresh();
@@ -100,42 +98,26 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
         <div className="flex items-center gap-3">
           {expanded ? <ChevronDown className="w-4 h-4" style={{ color: GOLD }} /> : <ChevronRight className="w-4 h-4" style={{ color: GOLD }} />}
           <div>
-            <div className="flex items-baseline gap-3">
-              <p className="text-xl font-black text-white tracking-wide">
-                {show.show_name || `Show ${show.show_number || '?'}`}
-              </p>
-              <span className="text-xs font-medium text-slate-400">{show.broadcast_date}</span>
-            </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">
+            <p className="text-sm font-black text-white">
+              {show.show_name || `Show ${show.show_number || '?'}`}
+              <span className="ml-2 text-xs font-normal text-slate-500">{show.broadcast_date}</span>
+            </p>
+            <p className="text-[10px] text-slate-500">
               {clips.length} clips · {show.headlines?.length || 0} headlines · {show.format || 'solo'}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* Visual layout controller button */}
-          <button onClick={() => setShowLayoutController(true)}
-            className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full transition-all hover:scale-105"
-            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
-            <Sliders className="w-2.5 h-2.5" /> Layout
-          </button>
           {/* Distribution tracker */}
           {show.videoUrl && <DistributionTracker show={show} />}
           {/* Stage badge */}
-          {show.heygenId && !show.videoUrl ? (
-            <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5"
-              style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
-              <RefreshCw className="w-2.5 h-2.5 animate-spin" />
-              COMPOSITING
-            </span>
-          ) : (
-            <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
-              style={{
-                background: show.status === 'failed' ? 'rgba(239,68,68,0.15)' : show.status === 'completed' ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)',
-                color: show.status === 'failed' ? '#ef4444' : show.status === 'completed' ? '#4ade80' : GOLD,
-              }}>
-              {show.status?.toUpperCase() || 'DRAFT'}
-            </span>
-          )}
+          <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+            style={{
+              background: show.status === 'failed' ? 'rgba(239,68,68,0.15)' : show.status === 'completed' ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)',
+              color: show.status === 'failed' ? '#ef4444' : show.status === 'completed' ? '#4ade80' : GOLD,
+            }}>
+            {show.status?.toUpperCase() || 'DRAFT'}
+          </span>
           {show.videoUrl && (
             <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
@@ -215,20 +197,12 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
 
             {currentStage === 'stitch' && (
               <>
-                {show.heygenId ? (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
-                    style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    Compositing in Creatomate…
-                  </div>
-                ) : (
-                  <button onClick={() => handleAction('stitch', 'Stitch')} disabled={busy === 'stitch'}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                    style={{ background: busy === 'stitch' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                    {busy === 'stitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Film className="w-3.5 h-3.5" />}
-                    {busy === 'stitch' ? 'Stitching…' : 'Start Stitching'}
-                  </button>
-                )}
+                <button onClick={() => handleAction('stitch', 'Stitch')} disabled={busy === 'stitch'}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
+                  style={{ background: busy === 'stitch' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                  {busy === 'stitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Film className="w-3.5 h-3.5" />}
+                  {busy === 'stitch' ? 'Stitching…' : 'Start Stitching'}
+                </button>
                 <button onClick={() => handleAction('checkStitch', 'CheckStitch')} disabled={busy === 'checkStitch'}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
                   style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
@@ -355,19 +329,10 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             />
           )}
 
-          {/* Visual layout controller */}
-          {showLayoutController && (
-            <VisualLayoutController
-              show={show}
-              onClose={() => setShowLayoutController(false)}
-            />
-          )}
-
           {/* Studio preview — full broadcast with DNN background + whiteboard bullets */}
           {showStudioPreview && (() => {
             const clips = show.clips || [];
-            const DNN_STING_URL = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/6272d3513_DNN_Sting_v4.mp4';
-            const segments = [{ src: DNN_STING_URL, speaker: 'sting' }];
+            const segments = [];
             for (const clip of clips) {
               if (!clip.videoUrl) continue;
               if (clip.role === 'bob') {
@@ -381,8 +346,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 segments.push({ src: clip.videoUrl, speaker: 'charlie' });
               }
             }
-            if (segments.length <= 1) return null;
-            segments.push({ src: DNN_STING_URL, speaker: 'sting' });
+            if (segments.length === 0) return null;
             return (
               <div className="fixed inset-0 z-[200]">
                 <DnnNewsBroadcastPlayer
