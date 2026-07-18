@@ -1,4 +1,5 @@
 import { base44 } from '@/api/base44Client';
+import { generateLayoutHash } from '@/utils/hash';
 
 /**
  * Render Invalidation Pipeline — frontend guard utilities.
@@ -70,24 +71,34 @@ export const RENDER_STATUS_CONFIG = {
 export async function ensureFreshRender(show, onStatus) {
   if (!show) return show;
 
-  // Already fresh — no re-render flagged and video exists
+  // ── CLIENT-SIDE HASH CHECK ──
+  // Compute the content signature and compare against the stored hash.
+  // If they match and a video exists, the content is fresh — no backend
+  // call needed, no HeyGen credit consumed.
+  const currentHash = await generateLayoutHash(show);
+  if (show.layoutHash === currentHash && show.videoUrl) {
+    return show;
+  }
+
+  // Defensive fallback: if not flagged for re-render and video exists
   if (!show.needsReRender && show.videoUrl) return show;
 
   const broadcastId = show.id;
   if (onStatus) onStatus('rendering');
 
-  // ── CONTENT HASH CHECK (backend decides) ──
-  // The backend computes a SHA-256 hash of the broadcast content (scripts,
-  // clips, layout constants). If the hash matches an existing render, the
-  // cached MP4 is served instantly — NO HeyGen call, NO credit consumed.
+  // ── BACKEND HASH CHECK (authoritative) ──
+  // The backend computes the same hash and searches:
+  //   1. This broadcast's stored layoutHash
+  //   2. All broadcasts' current layoutHash
+  //   3. All broadcasts' renderHistory (immutable ledger)
+  // If any match, the cached MP4 is served instantly — NO HeyGen call.
   // Only genuinely new content triggers a HeyGen render.
   const startRes = await base44.functions.invoke('dnnStitchBroadcast', {
     action: 'start',
     broadcastId,
-    // No force — let the hash check run
   });
 
-  // Backend served a cached video (hash matched an existing render)
+  // Backend served a cached video (hash matched an existing or historical render)
   if (startRes.data?.cached && startRes.data?.videoUrl) {
     if (onStatus) onStatus('ready');
     const broadcasts = await base44.entities.DnnBroadcast.filter({ id: broadcastId });

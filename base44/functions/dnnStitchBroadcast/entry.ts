@@ -208,25 +208,42 @@ Deno.serve(async (req) => {
       }
 
       // ── CONTENT HASH: deduplicate renders to stop burning HeyGen credits ──
+      // Compute the hash but DO NOT persist it yet — check the cache first.
+      // This preserves old hash→videoUrl mappings immutably (never overwrite
+      // a stored hash until a cached match is found or a new render completes).
       const layoutHash = await computeLayoutHash(broadcast);
-      if (broadcast.layoutHash !== layoutHash) {
-        await Broadcasts.update(broadcast.id, { layoutHash });
-        broadcast.layoutHash = layoutHash;
-      }
 
-      // Hash-based cache check — skip only when explicitly forcing a re-render
       if (!body.force) {
-        // This broadcast already has a video matching the current hash
+        // 1. This broadcast's content matches its own stored hash → serve existing video
         if (broadcast.videoUrl && broadcast.layoutHash === layoutHash) {
           return Response.json({ success: true, message: 'Cached video (hash match)', videoUrl: broadcast.videoUrl, cached: true });
         }
-        // Search ALL broadcasts for a render with the same content hash
+
+        // 2. Search ALL broadcasts' current layoutHash for a matching render
         const allWithHash = await Broadcasts.filter({ layoutHash }, '-broadcast_date', 50);
         const cached = allWithHash.find(b => b.videoUrl && b.id !== broadcast.id);
         if (cached) {
-          await Broadcasts.update(broadcast.id, { videoUrl: cached.videoUrl, needsReRender: false });
+          await Broadcasts.update(broadcast.id, { videoUrl: cached.videoUrl, layoutHash, needsReRender: false });
           return Response.json({ success: true, message: 'Served cached render from matching hash', videoUrl: cached.videoUrl, cached: true, sourceBroadcast: cached.id });
         }
+
+        // 3. Deep search: check renderHistory arrays across all broadcasts
+        //    for a historical hash match (content reverted to a previous state)
+        const allBroadcasts = await Broadcasts.filter({}, '-broadcast_date', 50);
+        for (const b of allBroadcasts) {
+          if (b.id === broadcast.id) continue;
+          const histEntry = (b.renderHistory || []).find(h => h.layoutHash === layoutHash && h.videoUrl);
+          if (histEntry) {
+            await Broadcasts.update(broadcast.id, { videoUrl: histEntry.videoUrl, layoutHash, needsReRender: false });
+            return Response.json({ success: true, message: 'Served cached render from historical hash', videoUrl: histEntry.videoUrl, cached: true, sourceBroadcast: b.id });
+          }
+        }
+      }
+
+      // Content has genuinely changed — persist the new hash for the upcoming render
+      if (broadcast.layoutHash !== layoutHash) {
+        await Broadcasts.update(broadcast.id, { layoutHash });
+        broadcast.layoutHash = layoutHash;
       }
 
       if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
@@ -363,7 +380,11 @@ Deno.serve(async (req) => {
           const file = new File([buf], `dnn_broadcast_${broadcast.broadcast_date}_stitched.mp4`, { type: 'video/mp4' });
           const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
-          await Broadcasts.update(broadcast.id, { videoUrl: up.file_url, needsReRender: false });
+          // Append to immutable renderHistory ledger (never clear old entries)
+          const history = broadcast.renderHistory || [];
+          const newEntry = { layoutHash: broadcast.layoutHash || '', videoUrl: up.file_url, renderedAt: new Date().toISOString() };
+          const filteredHistory = history.filter(h => h.layoutHash !== newEntry.layoutHash);
+          await Broadcasts.update(broadcast.id, { videoUrl: up.file_url, needsReRender: false, renderHistory: [...filteredHistory, newEntry] });
 
           // Create VideoLibrary entry
           const libTitle = `DNN Broadcast — ${broadcast.broadcast_date}`;

@@ -82,7 +82,29 @@
     },
     "layoutHash": {
       "type": "string",
-      "description": "SHA-256 content hash of scripts + clips + layout constants. Used to deduplicate HeyGen renders \u2014 if the hash matches an existing render, the cached MP4 is served instantly without consuming a credit."
+      "description": "SHA-256 content hash of scripts + clips + layout constants. Represents the CURRENT content signature. Used to deduplicate HeyGen renders \u2014 if the hash matches an existing render, the cached MP4 is served instantly without consuming a credit."
+    },
+    "renderHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "layoutHash": {
+            "type": "string",
+            "description": "Content hash at time of render"
+          },
+          "videoUrl": {
+            "type": "string",
+            "description": "Finalized MP4 URL for this content signature"
+          },
+          "renderedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this render completed"
+          }
+        }
+      },
+      "description": "Immutable ledger of content-hash \u2192 videoUrl mappings. Append-only \u2014 never cleared. When content reverts to a previous state, the pipeline finds the original hash here and serves the original MP4 without burning a new credit."
     },
     "needsReRender": {
       "type": "boolean",
