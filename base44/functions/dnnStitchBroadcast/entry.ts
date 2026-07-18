@@ -53,16 +53,57 @@ function phoneticSpoken(text) {
 
 const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
 const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
-const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
-const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
-const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
-const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
+// Master Layout ID — the "DNN Master Base Layout" golden master captured from Show #4.
+// dnnStitchBroadcast reads avatar positions, background, and panel config from this record
+// so every render is forced through the approved layout, NOT HeyGen defaults.
+const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
-// Presenter positions — 55% scale, locked to bottom-left and bottom-right
-const CHARLIE_POS = { scale: 0.55, offset: { x: -0.25, y: 0.2 } };
-const BOB_POS     = { scale: 0.55, offset: { x:  0.25, y: 0.2 } };
+/**
+ * Load the approved master layout from the LayoutTemplate entity.
+ * Falls back to hardcoded Show #4 constants only if the database record is missing.
+ */
+async function loadMasterLayout(base44) {
+  try {
+    const templates = await base44.asServiceRole.entities.LayoutTemplate.filter({ id: MASTER_LAYOUT_ID });
+    const t = templates?.[0];
+    if (t && t.status === 'approved') {
+      return {
+        studioBgUrl: t.background?.url || 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png',
+        charlieAvatarId: t.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
+        charlieVoiceId: t.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
+        bobPhotoId: t.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
+        bobVoiceId: t.presenter_2?.voice_id || '147b8f5713024fb9afc106f266e47482',
+        charliePos: {
+          scale: t.presenter_1?.scale || 0.55,
+          offset: { x: t.presenter_1?.offset_x ?? -0.25, y: t.presenter_1?.offset_y ?? 0.2 }
+        },
+        bobPos: {
+          scale: t.presenter_2?.scale || 0.55,
+          offset: { x: t.presenter_2?.offset_x ?? 0.25, y: t.presenter_2?.offset_y ?? 0.2 }
+        },
+        solutionPanel: t.solution_panel || null,
+        videoDims: t.video_dimensions || { width: 1280, height: 720 },
+        templateName: t.template_name,
+      };
+    }
+  } catch (e) {
+    console.log(`Master layout load failed, using hardcoded fallback: ${e.message}`);
+  }
+  // Hardcoded fallback — matches Show #4 golden master exactly
+  return {
+    studioBgUrl: 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png',
+    charlieAvatarId: '41f40b894f6944188c7908253b12e921',
+    charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
+    bobPhotoId: '31b79a86784e495090472af2e7b9407c',
+    bobVoiceId: '147b8f5713024fb9afc106f266e47482',
+    charliePos: { scale: 0.55, offset: { x: -0.25, y: 0.2 } },
+    bobPos: { scale: 0.55, offset: { x: 0.25, y: 0.2 } },
+    solutionPanel: null,
+    videoDims: { width: 1280, height: 720 },
+    templateName: 'DNN Master Base Layout (fallback)',
+  };
+}
 
 /**
  * Extract concise bullet points from Bob's script using the LLM.
@@ -112,7 +153,7 @@ ${script}`,
  *   - Panel positioned in upper-center of the studio screen area
  * Returns the URL of the generated image.
  */
-async function composeSolutionBackground(bullets, title, base44) {
+async function composeSolutionBackground(bullets, title, base44, studioBgUrl) {
   const bulletText = bullets.map(b => `• ${b}`).join('\n');
   const panelTitle = title || 'THE DYSON SOLUTION';
 
@@ -125,7 +166,7 @@ INSIDE THE PANEL — everything is CENTERED:
 ${bulletText}
 
 The panel should look like a clean, modern presentation slide overlaid on the dark news studio backdrop. The rest of the image is the dark studio set with ambient lighting. Do NOT add any gold title bar — the title text itself is dark on the white panel. The bullets must be clearly readable and centered.`,
-    existing_image_urls: [STUDIO_BG_URL],
+    existing_image_urls: [studioBgUrl],
   });
 
   return result.url;
@@ -137,7 +178,7 @@ The panel should look like a clean, modern presentation slide overlaid on the da
  * Two broadcasts with identical content produce the same hash, so the
  * pipeline can serve a cached MP4 instead of burning a new HeyGen credit.
  */
-async function computeLayoutHash(broadcast) {
+async function computeLayoutHash(broadcast, layout) {
   const clips = (broadcast.clips || []).map(c => ({
     role: c.role || '',
     script: c.script || '',
@@ -147,13 +188,13 @@ async function computeLayoutHash(broadcast) {
     clips,
     format: broadcast.format || 'solo',
     script: broadcast.script || '',
-    studioBg: STUDIO_BG_URL,
-    charlieAvatar: CHARLIE_AVATAR_ID,
-    charlieVoice: CHARLIE_VOICE_ID,
-    bobPhoto: BOB_TALKING_PHOTO_ID,
-    bobVoice: BOB_VOICE_ID,
-    charliePos: CHARLIE_POS,
-    bobPos: BOB_POS,
+    studioBg: layout.studioBgUrl,
+    charlieAvatar: layout.charlieAvatarId,
+    charlieVoice: layout.charlieVoiceId,
+    bobPhoto: layout.bobPhotoId,
+    bobVoice: layout.bobVoiceId,
+    charliePos: layout.charliePos,
+    bobPos: layout.bobPos,
   };
   const serialized = JSON.stringify(content);
   const data = new TextEncoder().encode(serialized);
@@ -207,11 +248,17 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'No completed broadcast found' }, { status: 404 });
       }
 
+      // ── LOAD MASTER LAYOUT ──
+      // Every render is forced through the approved "DNN Master Base Layout" record.
+      // This ensures HeyGen receives the correct avatar positions, background, and
+      // panel config — NOT HeyGen defaults or stale hardcoded constants.
+      const layout = await loadMasterLayout(base44);
+
       // ── CONTENT HASH: deduplicate renders to stop burning HeyGen credits ──
       // Compute the hash but DO NOT persist it yet — check the cache first.
       // This preserves old hash→videoUrl mappings immutably (never overwrite
       // a stored hash until a cached match is found or a new render completes).
-      const layoutHash = await computeLayoutHash(broadcast);
+      const layoutHash = await computeLayoutHash(broadcast, layout);
 
       if (!body.force) {
         // 1. This broadcast's content matches its own stored hash → serve existing video
@@ -271,10 +318,10 @@ Deno.serve(async (req) => {
 
       for (const clip of clips) {
         const isCharlie = clip.role === 'charlie';
-        const pos = isCharlie ? CHARLIE_POS : BOB_POS;
+        const pos = isCharlie ? layout.charliePos : layout.bobPos;
 
         // Determine the background for this scene
-        let bgUrl = STUDIO_BG_URL;
+        let bgUrl = layout.studioBgUrl;
         let hasPanel = false;
 
         if (!isCharlie) {
@@ -282,7 +329,7 @@ Deno.serve(async (req) => {
           const bullets = await extractBullets(clip.script, base44);
           if (bullets.length > 0) {
             try {
-              bgUrl = await composeSolutionBackground(bullets, clip.question || clip.title, base44);
+              bgUrl = await composeSolutionBackground(bullets, clip.question || clip.title, base44, layout.studioBgUrl);
               hasPanel = true;
             } catch (e) {
               console.log(`Solution panel composition failed, using studio backdrop: ${e.message}`);
@@ -292,18 +339,18 @@ Deno.serve(async (req) => {
 
         panelBackgrounds.push(hasPanel);
 
-        // Character — positioned natively via HeyGen scale/offset
+        // Character — positioned natively via HeyGen scale/offset (from master layout)
         const character = isCharlie
           ? {
               type: 'avatar',
-              avatar_id: CHARLIE_AVATAR_ID,
+              avatar_id: layout.charlieAvatarId,
               avatar_style: 'normal',
               scale: pos.scale,
               offset: pos.offset,
             }
           : {
               type: 'talking_photo',
-              talking_photo_id: BOB_TALKING_PHOTO_ID,
+              talking_photo_id: layout.bobPhotoId,
               scale: pos.scale,
               offset: pos.offset,
             };
@@ -311,8 +358,8 @@ Deno.serve(async (req) => {
         // Voice — volume normalized so Bob matches Charlie's audible level
         const spokenText = phoneticSpoken(clip.script);
         const voice = isCharlie
-          ? { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: spokenText, speed: 1.05, volume: 1.0 }
-          : { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 };
+          ? { type: 'text', voice_id: layout.charlieVoiceId, input_text: spokenText, speed: 1.05, volume: 1.0 }
+          : { type: 'text', voice_id: layout.bobVoiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 };
 
         videoInputs.push({
           character,
@@ -327,7 +374,7 @@ Deno.serve(async (req) => {
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           video_inputs: videoInputs,
-          dimension: { width: 1280, height: 720 },
+          dimension: layout.videoDims,
         }),
       });
 
@@ -341,11 +388,12 @@ Deno.serve(async (req) => {
 
       return Response.json({
         success: true,
-        message: 'HeyGen multi-scene render started — dual avatars + solution panel over studio backdrop',
+        message: 'HeyGen multi-scene render started — forced through approved master layout',
         broadcastId: broadcast.id,
         renderId: videoId,
         clipCount: clips.length,
         scenesWithPanel: panelBackgrounds.filter(Boolean).length,
+        layoutTemplate: layout.templateName,
         provider: 'heygen'
       });
     }
