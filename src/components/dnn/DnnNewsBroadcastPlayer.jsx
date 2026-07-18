@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
+import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
@@ -113,14 +113,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     setMuted(v.muted);
   };
 
-  const replay = () => {
-    if (terminatedRef.current) return;
-    setIdx(0);
-    setTimeout(() => {
-      const v = videoRef.current;
-      if (v) { v.currentTime = 0; v.muted = false; setMuted(false); v.play().then(() => setPlaying(true)).catch(() => {}); }
-    }, 50);
-  };
+
 
   // Find the last video src for a given speaker (for still-shot display when not active)
   const lastSrcFor = (speaker) => {
@@ -395,11 +388,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           style={{ color: GOLD }}>
           {muted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
         </button>
-        <button onClick={replay} aria-label="Replay"
-          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ color: GOLD }}>
-          <RotateCcw className="w-6 h-6" />
-        </button>
       </div>
 
       {/* Subscribe CTA — shown when broadcast ends */}
@@ -407,10 +395,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(0,0,0,0.85)' }}>
           <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto">
             <SubscribeCTA variant="endcard" />
-            <button onClick={replay} className="mx-auto mt-4 flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full"
-              style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'transparent' }}>
-              <RotateCcw className="w-3.5 h-3.5" /> Replay Broadcast
-            </button>
           </div>
         </div>
       )}
