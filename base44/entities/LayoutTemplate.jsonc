@@ -1,0 +1,238 @@
+{
+  "name": "LayoutTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "Display name for this layout template"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "synced_to_heygen",
+        "archived"
+      ],
+      "default": "approved",
+      "description": "Lifecycle status \u2014 only 'approved' templates are used by the render pipeline"
+    },
+    "reference_video_url": {
+      "type": "string",
+      "description": "Permanent MP4 URL of the broadcast that demonstrates this layout (the golden master reference file)"
+    },
+    "reference_broadcast_id": {
+      "type": "string",
+      "description": "ID of the DnnBroadcast record this layout was captured from"
+    },
+    "background": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video"
+          ],
+          "default": "image"
+        },
+        "url": {
+          "type": "string",
+          "description": "Studio backdrop image/video URL"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human description of the backdrop"
+        }
+      },
+      "description": "Background matrix configuration"
+    },
+    "presenter_1": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "default": "Charlie"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "avatar",
+            "talking_photo"
+          ],
+          "default": "avatar"
+        },
+        "heygen_id": {
+          "type": "string",
+          "description": "HeyGen avatar_id or talking_photo_id"
+        },
+        "voice_id": {
+          "type": "string"
+        },
+        "scale": {
+          "type": "number",
+          "description": "Presenter scale factor (0-1)"
+        },
+        "offset_x": {
+          "type": "number",
+          "description": "Horizontal offset (-1 to 1)"
+        },
+        "offset_y": {
+          "type": "number",
+          "description": "Vertical offset (-1 to 1)"
+        },
+        "alignment": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right",
+            "center"
+          ],
+          "default": "left"
+        }
+      },
+      "description": "Presenter 1 (Charlie) positioning and avatar configuration"
+    },
+    "presenter_2": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "default": "Bob"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "avatar",
+            "talking_photo"
+          ],
+          "default": "talking_photo"
+        },
+        "heygen_id": {
+          "type": "string",
+          "description": "HeyGen avatar_id or talking_photo_id"
+        },
+        "voice_id": {
+          "type": "string"
+        },
+        "scale": {
+          "type": "number",
+          "description": "Presenter scale factor (0-1)"
+        },
+        "offset_x": {
+          "type": "number",
+          "description": "Horizontal offset (-1 to 1)"
+        },
+        "offset_y": {
+          "type": "number",
+          "description": "Vertical offset (-1 to 1)"
+        },
+        "alignment": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right",
+            "center"
+          ],
+          "default": "right"
+        }
+      },
+      "description": "Presenter 2 (Bob Dyson) positioning and talking photo configuration"
+    },
+    "dual_presenter_mode": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, both presenters are visible on screen simultaneously throughout the broadcast"
+    },
+    "solution_panel": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "background_color": {
+          "type": "string",
+          "description": "Panel background hex color"
+        },
+        "border_color": {
+          "type": "string",
+          "description": "Panel border hex color"
+        },
+        "border_width_px": {
+          "type": "number",
+          "description": "Border width in pixels"
+        },
+        "border_radius_px": {
+          "type": "number",
+          "description": "Corner radius in pixels"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "upper_center",
+            "upper_left",
+            "upper_right",
+            "lower_center"
+          ],
+          "default": "upper_center"
+        },
+        "width_percent": {
+          "type": "number",
+          "description": "Panel width as percentage of frame"
+        },
+        "title_color": {
+          "type": "string",
+          "description": "Title text hex color"
+        },
+        "title_font_family": {
+          "type": "string",
+          "description": "Title font family"
+        },
+        "title_font_weight": {
+          "type": "string",
+          "description": "Title font weight"
+        },
+        "bullet_color": {
+          "type": "string",
+          "description": "Bullet text hex color"
+        },
+        "bullet_marker_color": {
+          "type": "string",
+          "description": "Bullet dot hex color"
+        },
+        "text_alignment": {
+          "type": "string",
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "default": "center"
+        }
+      },
+      "description": "Solution panel overlay \u2014 the white presentation card with bullet points"
+    },
+    "video_dimensions": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "description": "Output video resolution"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this layout template"
+    }
+  },
+  "required": [
+    "template_name",
+    "status",
+    "reference_video_url"
+  ]
+}
