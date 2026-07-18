@@ -46,17 +46,13 @@ export default function DnnNewsPresenter() {
       setOpen(true);
     }
 
-    // ── ASSEMBLY LINE: Fetch latest completed DnnBroadcast ──
+    // ── ASSEMBLY LINE: Dynamically fetch the latest completed DnnBroadcast ──
     // The template is secured first (LayoutTemplate golden master), then clips
-    // are layered on. Here we pull the latest completed broadcast and map its
-    // clips array into segments for DnnNewsBroadcastPlayer.
-    // ── ASSET MAPPING: Show #5 (the brand-new render we just finished) ──
-    // Hardcoded to Show #5's broadcast ID so the correct clips always take
-    // the stage on the News pill. Swap this ID when a new show is ready.
-    const SHOW_5_ID = '6a5bc3f68c59018e59d35a69';
-    base44.entities.DnnBroadcast.filter({ id: SHOW_5_ID })
+    // are layered on. Here we pull the latest completed broadcast sorted by
+    // broadcast_date descending so fresh daily content loads automatically.
+    base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 5)
       .then((broadcasts) => {
-        const show = broadcasts?.[0];
+        const show = broadcasts?.find(b => b.clips?.length > 0);
         if (!show || !show.clips?.length) {
           setSegments([]);
           return;
