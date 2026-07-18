@@ -58,8 +58,11 @@ export default function AppLayout() {
   
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>
-      {/* Global header — Studio Home + 5-portal hamburger directory */}
-      <GlobalHeader portalLabel={location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')} />
+      {/* Global header — Studio Home + admin portal pills on same row */}
+      <GlobalHeader
+        portalLabel={location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')}
+        isAdmin={isAdmin}
+      />
 
       {/* Sub-bar: sidebar toggle + back + admin pills */}
       <div className="px-4 py-2 flex items-center gap-3" style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
@@ -81,9 +84,6 @@ export default function AppLayout() {
         </button>
 
         <div className="flex-1" />
-
-        {/* ── ADMIN-ONLY COMMAND PILLS ── */}
-        {isAdmin && <CommandPills />}
       </div>
       {/* Content area with sidebar */}
       <div className="flex flex-1 overflow-hidden">

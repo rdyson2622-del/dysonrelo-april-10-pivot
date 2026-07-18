@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home } from 'lucide-react';
+import CommandPills from './CommandPills';
 
 const GOLD = '#D4AF37';
 
@@ -11,7 +12,7 @@ const GOLD = '#D4AF37';
  * NEVER expose links to the Admin dashboard or other restricted portals — that
  * multi-portal switcher lives exclusively in AdminLayout (admin-only).
  */
-export default function GlobalHeader({ portalLabel }) {
+export default function GlobalHeader({ portalLabel, isAdmin }) {
   const goStudioHome = () => { window.location.href = '/?choose=1'; };
 
   return (
@@ -37,6 +38,9 @@ export default function GlobalHeader({ portalLabel }) {
       )}
 
       <div className="flex-1" />
+
+      {/* Admin-only portal pills — aligned to the right of Studio Home row */}
+      {isAdmin && <CommandPills />}
     </div>
   );
 }
