@@ -304,6 +304,152 @@ export default function LayoutTemplateCard({ template, onSave, onStatusChange })
           </Field>
         </Section>
 
+        {/* Affiliate Variable Placeholders */}
+        <div className="rounded-lg p-3" style={{ background: 'rgba(167,139,250,0.04)', border: '1px solid rgba(167,139,250,0.15)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#A78BFA' }} />
+            <p className="text-[9px] font-black tracking-widest uppercase" style={{ color: '#A78BFA' }}>Affiliate Variable Placeholders</p>
+          </div>
+          <p className="text-[8px] text-slate-500 mb-3">Dynamic hooks for per-affiliate localization. Position/styling locked here; content (logo, name, city) injected at render time. Excluded from layoutHash — swapping branding never re-renders the golden master.</p>
+
+          {/* Logo Watermark */}
+          <div className="rounded p-2.5 mb-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <p className="text-[8px] font-bold uppercase text-slate-500 mb-1.5">Logo Watermark</p>
+            <div className="flex flex-wrap gap-3">
+              <Field label="Enabled">
+                <input type="checkbox" checked={draft.affiliate_overlays?.logo_watermark?.enabled ?? false} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.enabled', e.target.checked)} />
+              </Field>
+              <Field label="Position">
+                <select value={draft.affiliate_overlays?.logo_watermark?.position || 'bottom_right'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.position', e.target.value)}
+                  className="bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none">
+                  <option value="top_left">Top Left</option>
+                  <option value="top_right">Top Right</option>
+                  <option value="bottom_left">Bottom Left</option>
+                  <option value="bottom_right">Bottom Right</option>
+                </select>
+              </Field>
+              <Field label="Opacity">
+                <input type="number" step="0.05" value={draft.affiliate_overlays?.logo_watermark?.opacity ?? 0.8} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.opacity', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Scale %">
+                <input type="number" value={draft.affiliate_overlays?.logo_watermark?.scale_percent ?? 12} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.scale_percent', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Padding px">
+                <input type="number" value={draft.affiliate_overlays?.logo_watermark?.padding_px ?? 24} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.padding_px', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Logo URL (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.logo_watermark?.logo_url || ''} disabled={!editing} placeholder="Leave blank — injected per-affiliate"
+                  onChange={e => handleField('affiliate_overlays.logo_watermark.logo_url', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+            </div>
+          </div>
+
+          {/* Agent Name Card */}
+          <div className="rounded p-2.5 mb-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <p className="text-[8px] font-bold uppercase text-slate-500 mb-1.5">Bottom-Third Agent Name Card</p>
+            <div className="flex flex-wrap gap-3">
+              <Field label="Enabled">
+                <input type="checkbox" checked={draft.affiliate_overlays?.agent_name_card?.enabled ?? false} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.enabled', e.target.checked)} />
+              </Field>
+              <Field label="Position">
+                <select value={draft.affiliate_overlays?.agent_name_card?.position || 'bottom_left'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.position', e.target.value)}
+                  className="bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none">
+                  <option value="bottom_left">Bottom Left</option>
+                  <option value="bottom_right">Bottom Right</option>
+                  <option value="bottom_center">Bottom Center</option>
+                </select>
+              </Field>
+              <Field label="BG Color">
+                <input type="text" value={draft.affiliate_overlays?.agent_name_card?.background_color || '#0a0a0a'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.background_color', e.target.value)}
+                  className="w-20 bg-transparent text-[10px] text-slate-400 border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Text Color">
+                <input type="text" value={draft.affiliate_overlays?.agent_name_card?.text_color || '#D4AF37'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.text_color', e.target.value)}
+                  className="w-20 bg-transparent text-[10px] text-slate-400 border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Font Size px">
+                <input type="number" value={draft.affiliate_overlays?.agent_name_card?.font_size_px ?? 18} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.font_size_px', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Border Radius px">
+                <input type="number" value={draft.affiliate_overlays?.agent_name_card?.border_radius_px ?? 8} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.border_radius_px', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Agent Name (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.agent_name_card?.agent_name || ''} disabled={!editing} placeholder="Leave blank — injected per-affiliate"
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.agent_name', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Agent Title (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.agent_name_card?.agent_title || ''} disabled={!editing} placeholder="e.g. Realtor® | Dyson & Dyson"
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.agent_title', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Brokerage (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.agent_name_card?.brokerage_name || ''} disabled={!editing} placeholder="Leave blank — injected per-affiliate"
+                  onChange={e => handleField('affiliate_overlays.agent_name_card.brokerage_name', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+            </div>
+          </div>
+
+          {/* Localization Footer */}
+          <div className="rounded p-2.5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <p className="text-[8px] font-bold uppercase text-slate-500 mb-1.5">Localization Footer Bar</p>
+            <div className="flex flex-wrap gap-3">
+              <Field label="Enabled">
+                <input type="checkbox" checked={draft.affiliate_overlays?.localization_footer?.enabled ?? false} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.localization_footer.enabled', e.target.checked)} />
+              </Field>
+              <Field label="BG Color">
+                <input type="text" value={draft.affiliate_overlays?.localization_footer?.background_color || '#0a0a0a'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.localization_footer.background_color', e.target.value)}
+                  className="w-20 bg-transparent text-[10px] text-slate-400 border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Text Color">
+                <input type="text" value={draft.affiliate_overlays?.localization_footer?.text_color || '#D4AF37'} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.localization_footer.text_color', e.target.value)}
+                  className="w-20 bg-transparent text-[10px] text-slate-400 border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Font Size px">
+                <input type="number" value={draft.affiliate_overlays?.localization_footer?.font_size_px ?? 14} disabled={!editing}
+                  onChange={e => handleField('affiliate_overlays.localization_footer.font_size_px', parseFloat(e.target.value))}
+                  className="w-16 bg-transparent text-xs text-white border border-white/10 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Market City (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.localization_footer?.market_city || ''} disabled={!editing} placeholder="e.g. Greater Los Angeles"
+                  onChange={e => handleField('affiliate_overlays.localization_footer.market_city', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Market State (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.localization_footer?.market_state || ''} disabled={!editing} placeholder="e.g. CA"
+                  onChange={e => handleField('affiliate_overlays.localization_footer.market_state', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+              <Field label="Custom Tagline (DYNAMIC)" wide>
+                <input value={draft.affiliate_overlays?.localization_footer?.custom_tagline || ''} disabled={!editing} placeholder="e.g. Your Local Real Estate Authority"
+                  onChange={e => handleField('affiliate_overlays.localization_footer.custom_tagline', e.target.value)}
+                  className="w-full bg-transparent text-[10px] text-purple-300 border border-purple-500/20 rounded px-2 py-1 outline-none" />
+              </Field>
+            </div>
+          </div>
+        </div>
+
         {/* Error */}
         {error && (
           <div className="rounded-lg p-2.5 flex items-start gap-2" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }}>

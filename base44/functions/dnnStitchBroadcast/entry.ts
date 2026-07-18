@@ -184,6 +184,10 @@ async function computeLayoutHash(broadcast, layout) {
     script: c.script || '',
     question: c.question || '',
   }));
+  // NOTE: affiliate_overlays are intentionally EXCLUDED from the hash.
+  // Swapping an affiliate's logo, agent name, or market city must never
+  // invalidate the golden master render — those are variable placeholders
+  // injected at render time, not structural layout changes.
   const content = {
     clips,
     format: broadcast.format || 'solo',
