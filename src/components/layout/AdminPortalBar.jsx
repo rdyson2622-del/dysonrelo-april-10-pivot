@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Users, Building2, Handshake, Briefcase, Shield } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
@@ -22,6 +23,21 @@ const PORTALS = [
  */
 export default function AdminPortalBar() {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // ── HARD SECURITY GUARD ──
+  // This component renders cross-portal navigation including the Admin link.
+  // It must NEVER be visible to non-admins, subscribers, visitors, or
+  // unauthenticated users. Even though callers also guard, this internal
+  // check ensures defense-in-depth — if someone accidentally renders
+  // <AdminPortalBar /> in a public layout, it returns null.
+  useEffect(() => {
+    base44.auth.me()
+      .then(u => { if (u?.role === 'admin') setIsAdmin(true); })
+      .catch(() => setIsAdmin(false));
+  }, []);
+
+  if (!isAdmin) return null;
 
   const go = (item) => {
     if (item.external) {
