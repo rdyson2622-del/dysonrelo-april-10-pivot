@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { text, videoUrl, imageUrl, title, description, organizationName, broadcastId, thumbnailUrl } = await req.json();
+    const { text, videoUrl, imageUrl, title, description, organizationName, broadcastId } = await req.json();
     if (!text) {
       return Response.json({ error: 'Missing text' }, { status: 400 });
     }
@@ -156,19 +156,6 @@ Deno.serve(async (req) => {
       const videoUrn = initData?.value?.video;
       const instructions = initData?.value?.uploadInstructions;
 
-      // Capture init response keys for diagnostics
-      const initKeys = initData?.value ? Object.keys(initData.value) : [];
-      const initSample = {};
-      for (const k of initKeys) {
-        if (k === 'uploadInstructions') {
-          initSample[k] = `[${instructions?.length || 0} instructions]`;
-        } else if (k === 'thumbnails') {
-          initSample[k] = JSON.stringify(initData.value[k]).slice(0, 200);
-        } else {
-          initSample[k] = JSON.stringify(initData.value[k]).slice(0, 200);
-        }
-      }
-
       if (!videoUrn || !instructions || instructions.length === 0) {
         return Response.json({ error: 'Video upload initialization failed', details: initData }, { status: 500 });
       }
@@ -179,49 +166,26 @@ Deno.serve(async (req) => {
       let uploadFailed = false;
       let uploadError = '';
 
-      const uploadDiagnostics = [];
-      const tokenPresent = !!uploadToken;
-
-      for (let idx = 0; idx < instructions.length; idx++) {
-        const instr = instructions[idx];
+      for (const instr of instructions) {
         const start = instr.firstByte || 0;
         const end = (instr.lastByte ?? fileSize - 1) + 1;
-        const chunkSize = end - start;
         const chunk = new Blob([vidBytes.slice(start, end)], { type: 'application/octet-stream' });
 
         const uploadRes = await fetch(instr.uploadUrl, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/octet-stream',
-            'Content-Length': String(chunkSize),
+            'Content-Length': String(end - start),
           },
           body: chunk,
         });
 
         const etag = uploadRes.headers.get('etag') || uploadRes.headers.get('ETag');
-        const bodyText = uploadRes.ok ? '' : await uploadRes.text().catch(() => '');
-
-        // Extract just the signed ID from the ambry path: /ambry-video/signedId/<ID>.bin → <ID>.bin
-        let partId = '';
-        if (etag) {
-          partId = etag.replace(/"/g, '');
-          const match = partId.match(/\/ambry-video\/signedId\/(.+)$/);
-          if (match) partId = match[1];
-        }
-
-        uploadDiagnostics.push({
-          part: idx, start, end: end - 1, chunkSize,
-          httpStatus: uploadRes.status,
-          etag: etag || 'none',
-          partId,
-          bodyPreview: bodyText.slice(0, 200)
-        });
-
-        if (partId) uploadedPartIds.push(partId);
+        if (etag) uploadedPartIds.push(etag.replace(/"/g, ''));
 
         if (!uploadRes.ok) {
           uploadFailed = true;
-          uploadError = `Part ${idx}: HTTP ${uploadRes.status} — ${bodyText.slice(0, 300)}`;
+          uploadError = await uploadRes.text().catch(() => 'upload error');
           break;
         }
       }
@@ -230,57 +194,29 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Video binary upload failed', details: uploadError.slice(0, 500) }, { status: 500 });
       }
 
-      // Step 3b: Upload custom thumbnail if provided
-      let thumbnailUploaded = false;
-      if (thumbnailUrl) {
-        try {
-          const thumbUploadUrl = initData?.value?.thumbnailUploadUrl;
-          if (thumbUploadUrl) {
-            const thumbRes = await fetch(thumbnailUrl);
-            const thumbBuffer = await thumbRes.arrayBuffer();
-            const thumbUploadRes = await fetch(thumbUploadUrl, {
-              method: 'PUT',
-              headers: { 'Content-Type': thumbRes.headers.get('content-type') || 'image/png' },
-              body: thumbBuffer,
-            });
-            thumbnailUploaded = thumbUploadRes.ok;
-          }
-        } catch (thumbErr) {
-          console.log(`Thumbnail upload failed (video will still post): ${thumbErr.message}`);
-        }
-      }
-
-      // Step 4: Finalize upload (uploadToken alone is sufficient — uploadedPartIds
-      // from LinkedIn's ambry-video storage are non-standard and may cause mismatch)
-      const finalizePayload = {
-        finalizeUploadRequest: {
-          video: videoUrn,
-          uploadToken: uploadToken || '',
-          uploadedPartIds,
-        },
-      };
-      const finalizeRes = await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
+      // Step 4: Finalize upload
+      await fetch('https://api.linkedin.com/rest/videos?action=finalizeUpload', {
         method: 'POST',
         headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify(finalizePayload),
+        body: JSON.stringify({
+          finalizeUploadRequest: {
+            video: videoUrn,
+            uploadToken: uploadToken || '',
+            uploadedPartIds,
+          },
+        }),
       });
-      const finalizeStatus = finalizeRes.status;
-      const finalizeBody = finalizeRes.ok ? '' : await finalizeRes.text().catch(() => '');
 
-      // Step 5: Poll until AVAILABLE (max 120s)
+      // Step 5: Poll until AVAILABLE (max 60s)
       let videoReady = false;
       let pollStatus = 'unknown';
-      let pollRawResponse = null;
-      for (let attempt = 0; attempt < 24; attempt++) {
+      for (let attempt = 0; attempt < 12; attempt++) {
         await new Promise(r => setTimeout(r, 5000));
         const statusRes = await fetch(`https://api.linkedin.com/rest/videos/${encodeURIComponent(videoUrn)}`, {
           headers,
         });
         const statusData = await statusRes.json().catch(() => ({}));
         pollStatus = statusData?.status || statusData?.processingStatus || `http_${statusRes.status}`;
-        if (attempt < 3 || attempt % 4 === 0) {
-          pollRawResponse = statusData;
-        }
         if (pollStatus === 'READY' || pollStatus === 'AVAILABLE') {
           videoReady = true;
           break;
@@ -320,7 +256,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: result.message || 'LinkedIn video post failed', details: result, status: postRes.status }, { status: 500 });
       }
 
-      return Response.json({ success: true, post_id: postId, video_urn: videoUrn, type: 'video', posted_as: postedAs, video_ready: videoReady, video_status: pollStatus, diagnostics: { fileSize, tokenPresent, initKeys, initSample, instructionCount: instructions.length, uploadDiagnostics, uploadedPartIds, finalizeStatus, finalizeBody: finalizeBody.slice(0, 300), pollRawResponse } });
+      return Response.json({ success: true, post_id: postId, video_urn: videoUrn, type: 'video', posted_as: postedAs, video_ready: videoReady, video_status: pollStatus });
     }
 
     // --- IMAGE FALLBACK ---
