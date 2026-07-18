@@ -52,15 +52,21 @@ export default function DnnNewsPresenter() {
     // clips array into segments for DnnNewsBroadcastPlayer.
     base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 20)
       .then((broadcasts) => {
-        // Find the most recent broadcast with all clips rendered
-        const ready = broadcasts.find(b =>
+        // Find completed broadcasts with all clips rendered
+        const ready = broadcasts.filter(b =>
           b.clips?.length > 0 && b.clips.every(c => c.videoUrl)
         );
-        if (!ready) {
+        if (ready.length === 0) {
           setSegments([]);
           return;
         }
-        const segs = ready.clips
+        // Prefer broadcasts with permanent (base44.app) clip URLs over
+        // expiring HeyGen CDN URLs — those are the production renders
+        const withPermanentUrls = ready.filter(b =>
+          b.clips.every(c => c.videoUrl && c.videoUrl.includes('base44.app'))
+        );
+        const chosen = (withPermanentUrls[0] || ready[0]);
+        const segs = chosen.clips
           .filter(c => c.videoUrl)
           .map(c => ({
             src: c.videoUrl,
