@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
-  Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
+  Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
   Send
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
@@ -25,20 +25,18 @@ const GOLD = '#D4AF37';
 const STAGES = [
   { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected' },
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen renders each clip' },
-  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4' },
-  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen renders raw transparent clips' },
+  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Frontend staging: clips injected into layout slots' },
   { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents' },
 ];
 
 function getShowStage(show) {
-  // If any distribution has been done, we're in distribution stage
   const dists = show.distribution || [];
   if (dists.length > 0 && dists.some(d => d.status === 'sent')) return 'distribution';
-  // Stitched video exists but nothing distributed yet → Studio Preview step
-  if (show.videoUrl) return 'ready';
-  if (show.heygenId && show.status === 'completed') return 'stitch';
-  if (show.status === 'completed') return 'stitch';
+  // All clips have videoUrl → ready for Studio Preview (frontend staging)
+  const clips = show.clips || [];
+  if (clips.length > 0 && clips.every(c => c.videoUrl)) return 'ready';
+  if (show.status === 'completed') return 'ready';
   if (show.status === 'rendering') return 'render';
   if (show.status === 'script_ready') return 'script';
   if (show.status === 'failed') return 'render';
@@ -53,7 +51,6 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [expanded, setExpanded] = useState(true);
   const [busy, setBusy] = useState(null);
   const [result, setResult] = useState(null);
-  const [playing, setPlaying] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showStudioPreview, setShowStudioPreview] = useState(false);
 
@@ -68,11 +65,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
       if (action === 'generate') {
         res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'generate' });
       } else if (action === 'render') {
-        res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'render' });
+        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'start', broadcastId: show.id });
       } else if (action === 'check') {
         res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'check' });
-      } else if (action === 'stitch') {
-        res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'start', broadcastId: show.id });
       } else if (action === 'checkStitch') {
         res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
       }
@@ -88,6 +83,16 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const allClipsRendered = clips.length > 0 && clips.every(c => c.videoUrl);
   const someClipsRendering = clips.some(c => c.status === 'rendering');
   const someClipsFailed = clips.some(c => c.status === 'failed');
+
+  // Build segments for DnnNewsBroadcastPlayer from rendered clips
+  const segments = clips
+    .filter(c => c.videoUrl)
+    .map(c => ({
+      src: c.videoUrl,
+      speaker: c.role,
+      title: c.question,
+      bullets: c.role === 'bob' ? extractBullets(c.script) : undefined,
+    }));
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
@@ -109,7 +114,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
         </div>
         <div className="flex items-center gap-2">
           {/* Distribution tracker */}
-          {show.videoUrl && <DistributionTracker show={show} />}
+          {allClipsRendered && <DistributionTracker show={show} />}
           {/* Stage badge */}
           <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
             style={{
@@ -118,10 +123,10 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             }}>
             {show.status?.toUpperCase() || 'DRAFT'}
           </span>
-          {show.videoUrl && (
+          {allClipsRendered && (
             <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
-              ✓ STITCHED
+              ✓ CLIPS READY
             </span>
           )}
         </div>
@@ -195,21 +200,13 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               </button>
             )}
 
-            {currentStage === 'stitch' && (
-              <>
-                <button onClick={() => handleAction('stitch', 'Stitch')} disabled={busy === 'stitch'}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                  style={{ background: busy === 'stitch' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                  {busy === 'stitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Film className="w-3.5 h-3.5" />}
-                  {busy === 'stitch' ? 'Stitching…' : 'Start Stitching'}
-                </button>
-                <button onClick={() => handleAction('checkStitch', 'CheckStitch')} disabled={busy === 'checkStitch'}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
-                  style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
-                  {busy === 'checkStitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                  Check Stitch Status
-                </button>
-              </>
+            {currentStage === 'render' && someClipsRendering && (
+              <button onClick={() => handleAction('checkStitch', 'CheckStitch')} disabled={busy === 'checkStitch'}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
+                style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                {busy === 'checkStitch' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                Check Render Status
+              </button>
             )}
 
             {currentStage === 'ready' && (
@@ -256,39 +253,33 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             </div>
           )}
 
-          {/* Video preview */}
-          {show.videoUrl && (
+          {/* Studio Preview launcher — shown when all clips are rendered */}
+          {allClipsRendered && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Composited Video:</p>
+                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Studio Preview (Frontend Staging):</p>
                 <button onClick={() => setShowStudioPreview(true)}
                   className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
                   style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
                   <Play className="w-3 h-3" /> Preview Studio Show
                 </button>
               </div>
-              <div className="rounded-xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)' }}>
-                {playing ? (
-                  <video src={show.videoUrl} controls autoPlay playsInline className="w-full" />
-                ) : (
-                  <button onClick={() => setPlaying(true)} className="w-full aspect-video relative flex items-center justify-center group">
-                    <video src={show.videoUrl} muted playsInline preload="metadata"
-                      onLoadedMetadata={(e) => { e.target.currentTime = 1; }}
-                      className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-                        style={{ background: GOLD }}>
-                        <Play className="w-6 h-6 ml-1 text-black" fill="black" />
-                      </div>
+              <div className="rounded-xl overflow-hidden flex items-center justify-center" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)', minHeight: '120px' }}>
+                <div className="flex items-center gap-2 py-3">
+                  {clips.map((clip, i) => (
+                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
+                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                      <CheckCircle className="w-3 h-3 text-green-400" />
+                      <span className="text-[10px] font-bold uppercase text-slate-300">{clip.role}</span>
                     </div>
-                  </button>
-                )}
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {/* Script preview */}
-          {show.script && !show.videoUrl && (
+          {show.script && !allClipsRendered && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Script Preview:</p>
@@ -302,8 +293,8 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             </div>
           )}
 
-          {/* Distribution panel — shown when video is ready */}
-          {show.videoUrl && (
+          {/* Distribution panel — shown when all clips are rendered */}
+          {allClipsRendered && (
             <div className="mb-4">
               <DistributionPanel
                 show={show}
@@ -314,7 +305,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           )}
 
           {/* Social analytics — shown when posts have been distributed */}
-          {show.videoUrl && (show.distribution || []).some(d => d.status === 'sent' && d.post_id) && (
+          {allClipsRendered && (show.distribution || []).some(d => d.status === 'sent' && d.post_id) && (
             <div className="mb-4">
               <SocialAnalyticsPanel show={show} onRefresh={onRefresh} />
             </div>
@@ -329,14 +320,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             />
           )}
 
-          {/* Studio preview — plays the composited MP4 from dnnStitchBroadcast */}
-          {showStudioPreview && show.videoUrl && (
-            <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
-              <button onClick={() => setShowStudioPreview(false)} className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
-                ✕
-              </button>
-              <video src={show.videoUrl} controls autoPlay playsInline className="max-w-full max-h-full" />
-            </div>
+          {/* Studio preview — DnnNewsBroadcastPlayer with frontend staging */}
+          {showStudioPreview && segments.length > 0 && (
+            <DnnNewsBroadcastPlayer segments={segments} onClose={() => setShowStudioPreview(false)} />
           )}
 
           {/* Error message */}

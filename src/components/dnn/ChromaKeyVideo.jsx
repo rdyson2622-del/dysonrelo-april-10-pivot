@@ -1,26 +1,41 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
-// Plays a green-screen video and keys out the green so only the subject shows.
-const ChromaKeyVideo = forwardRef(function ChromaKeyVideo({ src, onEnded, onPlayBlocked, className, style }, ref) {
+/**
+ * ChromaKeyVideo — plays a green-screen video and keys out the green
+ * so only the subject shows (transparent canvas where green was).
+ *
+ * Extended to support the event handlers needed by DnnNewsBroadcastPlayer:
+ *   onEnded, onTimeUpdate, onCanPlay, onClick, muted, playsInline, poster
+ */
+const ChromaKeyVideo = forwardRef(function ChromaKeyVideo({
+  src, onEnded, onTimeUpdate, onCanPlay, onClick, onPlayBlocked,
+  muted, playsInline, poster, className, style
+}, ref) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
     play: () => videoRef.current?.play(),
+    pause: () => videoRef.current?.pause(),
+    get currentTime() { return videoRef.current?.currentTime || 0; },
+    get duration() { return videoRef.current?.duration || 0; },
+    get paused() { return videoRef.current?.paused ?? true; },
+    set muted(v) { if (videoRef.current) videoRef.current.muted = v; },
+    get muted() { return videoRef.current?.muted ?? false; },
+    set currentTime(v) { if (videoRef.current) videoRef.current.currentTime = v; },
+    videoElement: videoRef.current,
   }));
 
   useEffect(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    if (!video || !canvas) return;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let raf;
-
-    // Browsers block unmuted autoplay without a user gesture — surface it so
-    // the player can show a tap-to-start overlay instead of a black box.
-    const p = video.play();
-    if (p?.catch) p.catch(() => onPlayBlocked?.());
+    let stopped = false;
 
     const draw = () => {
+      if (stopped) return;
       if (video.videoWidth) {
         if (canvas.width !== video.videoWidth) {
           canvas.width = video.videoWidth;
@@ -38,13 +53,35 @@ const ChromaKeyVideo = forwardRef(function ChromaKeyVideo({ src, onEnded, onPlay
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(raf);
+
+    return () => {
+      stopped = true;
+      cancelAnimationFrame(raf);
+    };
   }, [src]);
 
   return (
     <>
-      <video ref={videoRef} key={src} src={src} autoPlay playsInline crossOrigin="anonymous" className="hidden" onEnded={onEnded} />
-      <canvas ref={canvasRef} className={className} style={style} />
+      <video
+        ref={videoRef}
+        key={src}
+        src={src}
+        muted={muted}
+        playsInline={playsInline}
+        poster={poster}
+        preload="auto"
+        crossOrigin="anonymous"
+        className="hidden"
+        onEnded={onEnded}
+        onTimeUpdate={onTimeUpdate}
+        onCanPlay={onCanPlay}
+      />
+      <canvas
+        ref={canvasRef}
+        onClick={onClick}
+        className={className}
+        style={style}
+      />
     </>
   );
 });

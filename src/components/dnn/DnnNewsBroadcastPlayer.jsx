@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
+import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -57,7 +58,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         setMuted(true);
         v.play().then(() => setPlaying(true)).catch(() => {});
       });
-    }, 50);
+    }, 150);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentsKey]);
@@ -89,10 +90,13 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   // absolute final segment — middle clips advance to the next index naturally.
   const handleTimeUpdate = (e) => {
     const v = e.currentTarget;
-    if (!v || !v.duration || isNaN(v.duration) || terminatedRef.current) return;
+    if (!v) return;
+    const duration = v.duration;
+    const currentTime = v.currentTime;
+    if (!duration || isNaN(duration) || terminatedRef.current) return;
     const isLastSegment = idx === segments.length - 1;
-    console.log(`[DNN PLAYER] clip ${idx}/${segments.length - 1} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${((v.currentTime / v.duration) * 100).toFixed(1)}%${isLastSegment ? ' [FINAL]' : ''}`);
-    if (isLastSegment && v.currentTime >= v.duration - 0.3) {
+    console.log(`[DNN PLAYER] clip ${idx}/${segments.length - 1} | currentTime=${currentTime.toFixed(2)}s duration=${duration.toFixed(2)}s | ${((currentTime / duration) * 100).toFixed(1)}%${isLastSegment ? ' [FINAL]' : ''}`);
+    if (isLastSegment && currentTime >= duration - 0.3) {
       console.log("Defensive duration escape hatch triggered on FINAL clip. Executing hard exit.");
       terminatedRef.current = true;
       window.location.replace('/?choose=1');
@@ -109,8 +113,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
-    v.muted = !v.muted;
-    setMuted(v.muted);
+    const newMuted = !v.muted;
+    v.muted = newMuted;
+    setMuted(newMuted);
   };
 
 
@@ -222,15 +227,25 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             }}
           >
             {seg.speaker === 'charlie' ? (
-              <video
+              <ChromaKeyVideo
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}
                 poster={DNN_POSTER}
                 playsInline
+                muted={muted}
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
-                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
+                onCanPlay={() => {
+                  const v = videoRef.current;
+                  if (!v) return;
+                  v.muted = muted;
+                  v.play().then(() => setPlaying(true)).catch(() => {
+                    v.muted = true;
+                    setMuted(true);
+                    v.play().then(() => setPlaying(true)).catch(() => {});
+                  });
+                }}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
@@ -275,15 +290,25 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             }}
           >
             {seg.speaker === 'bob' ? (
-              <video
+              <ChromaKeyVideo
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}
                 poster={DNN_POSTER}
                 playsInline
+                muted={muted}
                 onEnded={handleEnded}
                 onTimeUpdate={handleTimeUpdate}
-                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
+                onCanPlay={() => {
+                  const v = videoRef.current;
+                  if (!v) return;
+                  v.muted = muted;
+                  v.play().then(() => setPlaying(true)).catch(() => {
+                    v.muted = true;
+                    setMuted(true);
+                    v.play().then(() => setPlaying(true)).catch(() => {});
+                  });
+                }}
                 onClick={togglePlay}
                 className="cursor-pointer w-full h-full"
                 style={{ objectFit: 'cover' }}
