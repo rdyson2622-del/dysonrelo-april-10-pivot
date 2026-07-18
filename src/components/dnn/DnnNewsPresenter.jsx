@@ -45,49 +45,32 @@ export default function DnnNewsPresenter() {
     if (params.get('autoplay') === '1') {
       setOpen(true);
     }
-    base44.entities.DnnNewsClip.list(undefined, 200)
-      .then((clips) => {
-        // Group by article headline, sort each group by faqIndex
-        const byArticle = {};
-        for (const c of clips) {
-          const key = c.question || 'Other';
-          if (!byArticle[key]) byArticle[key] = [];
-          byArticle[key].push(c);
-        }
-        // Only keep articles where all clips have BOTH expected video URLs present
-        const segs = [];
-        const contentSegs = [];
-        for (const headline of Object.keys(byArticle)) {
-          const articleClips = byArticle[headline].sort((a, b) => (a.faqIndex || 0) - (b.faqIndex || 0));
-          // Every clip must have Charlie's video; Q&A clips must also have Bob's video
-          const allReady = articleClips.every(c =>
-            c.charlieVideoUrl && (!c.bobScript || c.bobVideoUrl)
-          );
-          if (!allReady) continue;
-          for (const c of articleClips) {
-            if (c.kind === 'qa') {
-              if (c.bobVideoUrl) {
-                contentSegs.push({
-                  src: c.bobVideoUrl,
-                  speaker: 'bob',
-                  title: c.question,
-                  bullets: extractBullets(c.bobScript),
-                });
-              }
-            } else {
-              contentSegs.push({ src: c.charlieVideoUrl, speaker: 'charlie' });
-            }
-          }
-        }
-        // Only build the full segment list if there are actual content clips ready
-        if (contentSegs.length > 0) {
-          segs.push(...contentSegs);
-          setSegments(segs);
-        } else {
+
+    // ── ASSEMBLY LINE: Fetch latest completed DnnBroadcast ──
+    // The template is secured first (LayoutTemplate golden master), then clips
+    // are layered on. Here we pull the latest completed broadcast and map its
+    // clips array into segments for DnnNewsBroadcastPlayer.
+    base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 20)
+      .then((broadcasts) => {
+        // Find the most recent broadcast with all clips rendered
+        const ready = broadcasts.find(b =>
+          b.clips?.length > 0 && b.clips.every(c => c.videoUrl)
+        );
+        if (!ready) {
           setSegments([]);
+          return;
         }
+        const segs = ready.clips
+          .filter(c => c.videoUrl)
+          .map(c => ({
+            src: c.videoUrl,
+            speaker: c.role,
+            title: c.question,
+            bullets: c.role === 'bob' ? extractBullets(c.script) : undefined,
+          }));
+        setSegments(segs);
       })
-      .catch(() => {})
+      .catch(() => setSegments([]))
       .finally(() => setLoaded(true));
   }, []);
 
