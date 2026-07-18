@@ -329,33 +329,15 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             />
           )}
 
-          {/* Studio preview — full broadcast with DNN background + whiteboard bullets */}
-          {showStudioPreview && (() => {
-            const clips = show.clips || [];
-            const segments = [];
-            for (const clip of clips) {
-              if (!clip.videoUrl) continue;
-              if (clip.role === 'bob') {
-                segments.push({
-                  src: clip.videoUrl,
-                  speaker: 'bob',
-                  title: clip.question || show.headlines?.[clips.indexOf(clip)] || null,
-                  bullets: extractBullets(clip.script),
-                });
-              } else {
-                segments.push({ src: clip.videoUrl, speaker: 'charlie' });
-              }
-            }
-            if (segments.length === 0) return null;
-            return (
-              <div className="fixed inset-0 z-[200]">
-                <DnnNewsBroadcastPlayer
-                  segments={segments}
-                  onClose={() => setShowStudioPreview(false)}
-                />
-              </div>
-            );
-          })()}
+          {/* Studio preview — plays the composited MP4 from dnnStitchBroadcast */}
+          {showStudioPreview && show.videoUrl && (
+            <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000' }}>
+              <button onClick={() => setShowStudioPreview(false)} className="absolute top-4 right-4 z-10 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+                ✕
+              </button>
+              <video src={show.videoUrl} controls autoPlay playsInline className="max-w-full max-h-full" />
+            </div>
+          )}
 
           {/* Error message */}
           {show.errorMessage && (
