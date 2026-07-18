@@ -80,6 +80,10 @@
       "type": "string",
       "description": "Permanent URL of the rendered broadcast video (solo format)"
     },
+    "layoutHash": {
+      "type": "string",
+      "description": "SHA-256 content hash of scripts + clips + layout constants. Used to deduplicate HeyGen renders \u2014 if the hash matches an existing render, the cached MP4 is served instantly without consuming a credit."
+    },
     "needsReRender": {
       "type": "boolean",
       "default": false,

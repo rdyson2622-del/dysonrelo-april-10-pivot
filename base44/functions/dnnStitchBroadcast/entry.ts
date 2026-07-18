@@ -131,6 +131,37 @@ The panel should look like a clean, modern presentation slide overlaid on the da
   return result.url;
 }
 
+/**
+ * Compute a SHA-256 content hash from the broadcast's scripts, clips, and
+ * the fixed layout constants (avatar IDs, voice IDs, positions, studio bg).
+ * Two broadcasts with identical content produce the same hash, so the
+ * pipeline can serve a cached MP4 instead of burning a new HeyGen credit.
+ */
+async function computeLayoutHash(broadcast) {
+  const clips = (broadcast.clips || []).map(c => ({
+    role: c.role || '',
+    script: c.script || '',
+    question: c.question || '',
+  }));
+  const content = {
+    clips,
+    format: broadcast.format || 'solo',
+    script: broadcast.script || '',
+    studioBg: STUDIO_BG_URL,
+    charlieAvatar: CHARLIE_AVATAR_ID,
+    charlieVoice: CHARLIE_VOICE_ID,
+    bobPhoto: BOB_TALKING_PHOTO_ID,
+    bobVoice: BOB_VOICE_ID,
+    charliePos: CHARLIE_POS,
+    bobPos: BOB_POS,
+  };
+  const serialized = JSON.stringify(content);
+  const data = new TextEncoder().encode(serialized);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return 'hash_' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 Deno.serve(async (req) => {
   try {
     if (req.method !== 'POST') {
@@ -174,6 +205,28 @@ Deno.serve(async (req) => {
 
       if (!broadcast) {
         return Response.json({ error: 'No completed broadcast found' }, { status: 404 });
+      }
+
+      // ── CONTENT HASH: deduplicate renders to stop burning HeyGen credits ──
+      const layoutHash = await computeLayoutHash(broadcast);
+      if (broadcast.layoutHash !== layoutHash) {
+        await Broadcasts.update(broadcast.id, { layoutHash });
+        broadcast.layoutHash = layoutHash;
+      }
+
+      // Hash-based cache check — skip only when explicitly forcing a re-render
+      if (!body.force) {
+        // This broadcast already has a video matching the current hash
+        if (broadcast.videoUrl && broadcast.layoutHash === layoutHash) {
+          return Response.json({ success: true, message: 'Cached video (hash match)', videoUrl: broadcast.videoUrl, cached: true });
+        }
+        // Search ALL broadcasts for a render with the same content hash
+        const allWithHash = await Broadcasts.filter({ layoutHash }, '-broadcast_date', 50);
+        const cached = allWithHash.find(b => b.videoUrl && b.id !== broadcast.id);
+        if (cached) {
+          await Broadcasts.update(broadcast.id, { videoUrl: cached.videoUrl, needsReRender: false });
+          return Response.json({ success: true, message: 'Served cached render from matching hash', videoUrl: cached.videoUrl, cached: true, sourceBroadcast: cached.id });
+        }
       }
 
       if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {

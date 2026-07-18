@@ -68,27 +68,45 @@ export const RENDER_STATUS_CONFIG = {
  * @returns {Promise<object>} — the fresh show with an up-to-date videoUrl
  */
 export async function ensureFreshRender(show, onStatus) {
-  if (!show?.needsReRender) return show;
+  if (!show) return show;
+
+  // Already fresh — no re-render flagged and video exists
+  if (!show.needsReRender && show.videoUrl) return show;
 
   const broadcastId = show.id;
   if (onStatus) onStatus('rendering');
 
-  // Kick off a forced re-render
-  await base44.functions.invoke('dnnStitchBroadcast', {
+  // ── CONTENT HASH CHECK (backend decides) ──
+  // The backend computes a SHA-256 hash of the broadcast content (scripts,
+  // clips, layout constants). If the hash matches an existing render, the
+  // cached MP4 is served instantly — NO HeyGen call, NO credit consumed.
+  // Only genuinely new content triggers a HeyGen render.
+  const startRes = await base44.functions.invoke('dnnStitchBroadcast', {
     action: 'start',
     broadcastId,
-    force: true,
+    // No force — let the hash check run
   });
 
-  // Poll until HeyGen finishes and the fresh MP4 is stored
+  // Backend served a cached video (hash matched an existing render)
+  if (startRes.data?.cached && startRes.data?.videoUrl) {
+    if (onStatus) onStatus('ready');
+    const broadcasts = await base44.entities.DnnBroadcast.filter({ id: broadcastId });
+    return broadcasts?.[0] || { ...show, videoUrl: startRes.data.videoUrl, needsReRender: false };
+  }
+
+  // Backend already had a composited video
+  if (startRes.data?.videoUrl) {
+    if (onStatus) onStatus('ready');
+    return { ...show, videoUrl: startRes.data.videoUrl, needsReRender: false };
+  }
+
+  // A new HeyGen render was started — poll until the fresh MP4 is stored
   for (let i = 0; i < RENDER_MAX_POLLS; i++) {
     await new Promise((r) => setTimeout(r, RENDER_POLL_INTERVAL_MS));
     if (onStatus) onStatus('rendering');
 
-    // Trigger the check action (downloads & stores completed renders)
     await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
 
-    // Fetch the broadcast to see if it has a fresh MP4
     const broadcasts = await base44.entities.DnnBroadcast.filter({ id: broadcastId });
     const updated = broadcasts?.[0];
     if (updated?.videoUrl && updated.needsReRender === false) {
