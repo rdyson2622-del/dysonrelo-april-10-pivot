@@ -50,23 +50,18 @@ export default function DnnNewsPresenter() {
     // The template is secured first (LayoutTemplate golden master), then clips
     // are layered on. Here we pull the latest completed broadcast and map its
     // clips array into segments for DnnNewsBroadcastPlayer.
-    base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-broadcast_date', 20)
+    // ── ASSET MAPPING: Show #5 (the brand-new render we just finished) ──
+    // Hardcoded to Show #5's broadcast ID so the correct clips always take
+    // the stage on the News pill. Swap this ID when a new show is ready.
+    const SHOW_5_ID = '6a5bc3f68c59018e59d35a69';
+    base44.entities.DnnBroadcast.filter({ id: SHOW_5_ID })
       .then((broadcasts) => {
-        // Find completed broadcasts with all clips rendered
-        const ready = broadcasts.filter(b =>
-          b.clips?.length > 0 && b.clips.every(c => c.videoUrl)
-        );
-        if (ready.length === 0) {
+        const show = broadcasts?.[0];
+        if (!show || !show.clips?.length) {
           setSegments([]);
           return;
         }
-        // Prefer broadcasts with permanent (base44.app) clip URLs over
-        // expiring HeyGen CDN URLs — those are the production renders
-        const withPermanentUrls = ready.filter(b =>
-          b.clips.every(c => c.videoUrl && c.videoUrl.includes('base44.app'))
-        );
-        const chosen = (withPermanentUrls[0] || ready[0]);
-        const segs = chosen.clips
+        const segs = show.clips
           .filter(c => c.videoUrl)
           .map(c => ({
             src: c.videoUrl,
