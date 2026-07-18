@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
-import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
+
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -227,7 +227,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             }}
           >
             {seg.speaker === 'charlie' ? (
-              <ChromaKeyVideo
+              <video
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}
@@ -290,7 +290,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             }}
           >
             {seg.speaker === 'bob' ? (
-              <ChromaKeyVideo
+              <video
                 key={seg.src + idx}
                 ref={videoRef}
                 src={seg.src}

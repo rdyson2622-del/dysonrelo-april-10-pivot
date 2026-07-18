@@ -145,12 +145,12 @@ Deno.serve(async (req) => {
           ? { type: 'text', voice_id: layout.charlieVoiceId, input_text: spokenText, speed: 1.05, volume: 1.0 }
           : { type: 'text', voice_id: layout.bobVoiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 };
 
-        // Green screen background — raw talking-head only, frontend chroma-keys it
+        // Black background — raw talking-head only, blends with dark studio backdrop
         const payload = {
           video_inputs: [{
             character,
             voice,
-            background: { type: 'color', value: '#00FF00' }
+            background: { type: 'color', value: '#000000' }
           }],
           dimension: layout.videoDims
         };
@@ -227,8 +227,9 @@ Deno.serve(async (req) => {
             }
           } else if (status === 'failed') {
             anyFailed = true;
-            const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error || data) || 'HeyGen render failed';
-            console.log(`[CLIP ${i}] FAILED — Full HeyGen response: ${JSON.stringify(data)}`);
+            const errObj = data?.data?.error || data?.data;
+            const errMsg = errObj?.message || errObj?.detail || JSON.stringify(errObj) || 'HeyGen render failed';
+            console.log(`[CLIP ${i}] FAILED — Error: ${errMsg}`);
             updatedClips[i] = { ...clip, status: 'failed', errorMessage: errMsg };
           } else {
             allDone = false;
