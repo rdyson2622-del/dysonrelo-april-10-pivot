@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { text, videoUrl, imageUrl, title, description, organizationName, broadcastId } = await req.json();
+    const { text, videoUrl, imageUrl, title, description, organizationName, broadcastId, thumbnailUrl } = await req.json();
     if (!text) {
       return Response.json({ error: 'Missing text' }, { status: 400 });
     }
@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
             owner: authorUrn,
             fileSizeBytes: fileSize,
             uploadCaptions: false,
-            uploadThumbnail: false,
+            uploadThumbnail: !!thumbnailUrl,
           },
         }),
       });
@@ -192,6 +192,31 @@ Deno.serve(async (req) => {
 
       if (uploadFailed) {
         return Response.json({ error: 'Video binary upload failed', details: uploadError.slice(0, 500) }, { status: 500 });
+      }
+
+      // Step 3b: Upload custom thumbnail if provided
+      let thumbnailUploaded = false;
+      if (thumbnailUrl) {
+        try {
+          const thumbUrls = initData?.value?.thumbnails || (initData?.value?.thumbnail ? [initData.value.thumbnail] : []);
+          if (thumbUrls.length > 0 && thumbUrls[0].url) {
+            const thumbRes = await fetch(thumbnailUrl);
+            const thumbBuffer = await thumbRes.arrayBuffer();
+            const thumbUploadRes = await fetch(thumbUrls[0].url, {
+              method: 'PUT',
+              headers: { 'Content-Type': thumbRes.headers.get('content-type') || 'image/png' },
+              body: thumbBuffer,
+            });
+            thumbnailUploaded = thumbUploadRes.ok;
+            if (!thumbnailUploaded) {
+              console.log(`Thumbnail upload returned ${thumbUploadRes.status}`);
+            }
+          } else {
+            console.log('No thumbnail upload URL in initialize response');
+          }
+        } catch (thumbErr) {
+          console.log(`Thumbnail upload failed (video will still post): ${thumbErr.message}`);
+        }
       }
 
       // Step 4: Finalize upload
