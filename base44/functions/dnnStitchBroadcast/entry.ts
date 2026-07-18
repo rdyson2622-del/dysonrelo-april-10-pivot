@@ -291,24 +291,44 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Content has genuinely changed — persist the new hash for the upcoming render
-      if (broadcast.layoutHash !== layoutHash) {
-        await Broadcasts.update(broadcast.id, { layoutHash });
-        broadcast.layoutHash = layoutHash;
-      }
-
-      if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
-        await Broadcasts.update(broadcast.id, { videoUrl: '', heygenId: '', errorMessage: '' });
+      // ── PURGE CACHE: completely wipe hash + renderHistory to break false-positive loops ──
+      // When purgeCache: true, we clear ALL cached state so no stale asset can be served.
+      // The hash is recomputed fresh and a genuinely new render is forced through HeyGen.
+      if (body.purgeCache) {
+        await Broadcasts.update(broadcast.id, {
+          videoUrl: '',
+          heygenId: '',
+          layoutHash: '',
+          errorMessage: '',
+          renderHistory: [],
+          needsReRender: true,
+        });
         broadcast.videoUrl = '';
         broadcast.heygenId = '';
-      }
+        broadcast.layoutHash = '';
+        broadcast.renderHistory = [];
+        broadcast.needsReRender = true;
+        console.log(`[PURGE] Show ${broadcast.show_number}: cache purged (videoUrl, heygenId, layoutHash, renderHistory all cleared)`);
+      } else {
+        // Content has genuinely changed — persist the new hash for the upcoming render
+        if (broadcast.layoutHash !== layoutHash) {
+          await Broadcasts.update(broadcast.id, { layoutHash });
+          broadcast.layoutHash = layoutHash;
+        }
 
-      if (broadcast.videoUrl) {
-        return Response.json({ success: true, message: 'Already has composited video', videoUrl: broadcast.videoUrl });
-      }
+        if (body.force && (broadcast.videoUrl || broadcast.heygenId)) {
+          await Broadcasts.update(broadcast.id, { videoUrl: '', heygenId: '', errorMessage: '' });
+          broadcast.videoUrl = '';
+          broadcast.heygenId = '';
+        }
 
-      if (broadcast.heygenId) {
-        return Response.json({ success: true, message: 'Render already in progress', heygenId: broadcast.heygenId });
+        if (broadcast.videoUrl) {
+          return Response.json({ success: true, message: 'Already has composited video', videoUrl: broadcast.videoUrl });
+        }
+
+        if (broadcast.heygenId) {
+          return Response.json({ success: true, message: 'Render already in progress', heygenId: broadcast.heygenId });
+        }
       }
 
       const clips = broadcast.clips || [];
@@ -372,6 +392,41 @@ Deno.serve(async (req) => {
         });
       }
 
+      // ── PAYLOAD AUDIT: print exact coordinates, background URL, avatar scales ──
+      // This verifies we're sending the fresh master layout coordinates, NOT defaults.
+      const payloadAudit = {
+        layoutTemplate: layout.templateName,
+        studioBackgroundUrl: layout.studioBgUrl,
+        videoDimensions: layout.videoDims,
+        charlie: {
+          type: 'avatar',
+          avatarId: layout.charlieAvatarId,
+          voiceId: layout.charlieVoiceId,
+          scale: layout.charliePos.scale,
+          offsetX: layout.charliePos.offset.x,
+          offsetY: layout.charliePos.offset.y,
+        },
+        bob: {
+          type: 'talking_photo',
+          photoId: layout.bobPhotoId,
+          voiceId: layout.bobVoiceId,
+          scale: layout.bobPos.scale,
+          offsetX: layout.bobPos.offset.x,
+          offsetY: layout.bobPos.offset.y,
+        },
+        scenes: videoInputs.map((vi, i) => ({
+          index: i,
+          role: clips[i].role,
+          backgroundUrl: vi.background.url,
+          characterType: vi.character.type,
+          characterScale: vi.character.scale,
+          characterOffset: vi.character.offset,
+          hasPanel: panelBackgrounds[i],
+          scriptPreview: (clips[i].script || '').substring(0, 100),
+        })),
+      };
+      console.log(`[AUDIT] Payload being sent to HeyGen:\n${JSON.stringify(payloadAudit, null, 2)}`);
+
       // Submit the entire multi-scene video to HeyGen in a single call
       const res = await fetch(HEYGEN_API, {
         method: 'POST',
@@ -385,19 +440,28 @@ Deno.serve(async (req) => {
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen render failed', details: data, payloadAudit }, { status: 502 });
       }
 
-      await Broadcasts.update(broadcast.id, { heygenId: videoId });
+      // After purge, persist the fresh hash so the new render maps to a clean ledger entry
+      if (body.purgeCache) {
+        await Broadcasts.update(broadcast.id, { heygenId: videoId, layoutHash, needsReRender: false });
+      } else {
+        await Broadcasts.update(broadcast.id, { heygenId: videoId });
+      }
 
       return Response.json({
         success: true,
-        message: 'HeyGen multi-scene render started — forced through approved master layout',
+        message: body.purgeCache
+          ? 'FRESH render pushed to HeyGen — cache fully purged, no historical assets can be served'
+          : 'HeyGen multi-scene render started — forced through approved master layout',
         broadcastId: broadcast.id,
         renderId: videoId,
         clipCount: clips.length,
         scenesWithPanel: panelBackgrounds.filter(Boolean).length,
         layoutTemplate: layout.templateName,
+        layoutHash,
+        payloadAudit,
         provider: 'heygen'
       });
     }
