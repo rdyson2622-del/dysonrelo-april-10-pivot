@@ -28,21 +28,42 @@ Deno.serve(async (req) => {
     }
 
     const templates = data?.data?.templates || [];
-    return Response.json({
-      success: true,
-      count: templates.length,
-      raw_keys: templates.length > 0 ? Object.keys(templates[0]) : [],
-      templates: templates.map(t => ({
-        id: t.template_id || t.id || t._id,
+
+    // Fetch full template details (including variables) for each template
+    const detailedTemplates = [];
+    for (const t of templates) {
+      const tplId = t.template_id || t.id || t._id;
+      let variables = [];
+      try {
+        const detailRes = await fetch(`https://api.heygen.com/v2/template/${tplId}`, {
+          headers: { 'X-Api-Key': heygenKey },
+        });
+        const detailData = await detailRes.json();
+        const rawVars = detailData?.data?.variables || [];
+        variables = rawVars.map(v => ({
+          name: v.name,
+          type: v.type,
+          properties: v.properties ? Object.keys(v.properties) : [],
+        }));
+      } catch (e) {
+        console.log(`Failed to fetch details for template ${tplId}: ${e.message}`);
+      }
+      detailedTemplates.push({
+        id: tplId,
         name: t.name,
         status: t.status,
         created_at: t.created_at,
         thumbnail_image_url: t.thumbnail_image_url || t.thumbnail_url || t.preview_url || null,
         preview_image_url: t.preview_image_url || null,
         aspect_ratio: t.aspect_ratio || null,
-        variables: (t.variables || []).map(v => v.name),
-      })),
-      raw_first: templates[0] || null,
+        variables,
+      });
+    }
+
+    return Response.json({
+      success: true,
+      count: detailedTemplates.length,
+      templates: detailedTemplates,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

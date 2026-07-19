@@ -214,11 +214,38 @@ Deno.serve(async (req) => {
         }, { status: 400 });
       }
 
-      const variables = buildTemplateVariables(broadcast);
-      const variableCount = Object.keys(variables).length;
-      if (variableCount === 0) {
-        return Response.json({ error: 'No variables could be built from this broadcast' }, { status: 400 });
+      // Fetch the template's actual variable definitions from HeyGen
+      let templateVariableNames = [];
+      try {
+        const detailRes = await fetch(`${HEYGEN_TEMPLATE_API}/${layout.templateId}`, {
+          headers: { 'X-Api-Key': heygenKey },
+        });
+        const detailData = await detailRes.json();
+        const rawVars = detailData?.data?.variables || [];
+        templateVariableNames = rawVars.map(v => v.name);
+        console.log(`[TEMPLATE RENDER] Template ${layout.templateId} supports ${templateVariableNames.length} variables: ${templateVariableNames.join(', ') || '(none)'}`);
+      } catch (e) {
+        console.log(`[TEMPLATE RENDER] Failed to fetch template variables: ${e.message}`);
       }
+
+      // Build all possible variables from broadcast, then filter to only those the template supports
+      const allVariables = buildTemplateVariables(broadcast);
+      let variables;
+      if (templateVariableNames.length > 0) {
+        // Only send variables that exist in the template
+        variables = {};
+        for (const [name, val] of Object.entries(allVariables)) {
+          if (templateVariableNames.includes(name)) {
+            variables[name] = val;
+          }
+        }
+      } else {
+        // Template has no variables — render as-is
+        variables = {};
+      }
+
+      const variableCount = Object.keys(variables).length;
+      console.log(`[TEMPLATE RENDER] Sending ${variableCount} variables (of ${Object.keys(allVariables).length} built)`);
 
       const payload = {
         title: `${broadcast.show_name || 'DNN Broadcast'} — ${broadcast.broadcast_date || ''}`,

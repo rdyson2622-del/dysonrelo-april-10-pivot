@@ -145,7 +145,16 @@ export default function TemplatePicker() {
                     <p className="text-xs font-bold text-white truncate">{tpl.name}</p>
                     {isActive && <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />}
                   </div>
-                  <p className="text-[9px] font-mono text-slate-500 mb-2 truncate">{tpl.id}</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-[9px] font-mono text-slate-500 truncate">{tpl.id}</p>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ml-2"
+                      style={{
+                        background: tpl.variables?.length > 0 ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
+                        color: tpl.variables?.length > 0 ? '#4ade80' : '#666',
+                      }}>
+                      {tpl.variables?.length || 0} vars
+                    </span>
+                  </div>
                   <div className="aspect-video rounded overflow-hidden mb-2 bg-black flex items-center justify-center">
                     {tpl.thumbnail_image_url || tpl.preview_image_url ? (
                       <img src={tpl.thumbnail_image_url || tpl.preview_image_url} alt={tpl.name} className="w-full h-full object-cover" />
