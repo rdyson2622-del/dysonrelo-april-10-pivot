@@ -6,7 +6,7 @@ const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
-const DEFAULT_BOB = { x: 4, y: 40, w: 20.9, h: 57, label: 'Bob', sub: 'Transparent · Lower Left' };
+const DEFAULT_BOB = { x: 2, y: 35, w: 20.9, h: 57, label: 'Bob', sub: 'Transparent · Lower Left' };
 const DEFAULT_PANEL = { x: 18, y: 13, w: 46, h: 40 };
 const BOB_IMG = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/b41f00909_bob_dyson_preview.webp';
 const DEFAULT_PILLS = [
