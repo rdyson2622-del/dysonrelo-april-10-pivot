@@ -16,9 +16,10 @@ const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/m
  *   videoUrl: string  — permanent URL of the master broadcast MP4
  *   presenter?: 'charlie' | 'bob'  — label for the active presenter
  *   title?: string    — optional show title for overlay
+ *   headlines?: string[]  — daily headlines mapped onto the studio wall board
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie', title, onClose }) {
+export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie', title, headlines, onClose }) {
   const videoRef = useRef(null);
   const terminatedRef = useRef(false);
   const [playing, setPlaying] = useState(false);
@@ -144,6 +145,43 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie'
           </span>
         </div>
       </div>
+
+      {/* Studio wall board — right-side headline text layer */}
+      {headlines && headlines.length > 0 && (
+        <div
+          className="absolute flex flex-col justify-center overflow-hidden"
+          style={{
+            top: '10%',
+            right: '32px',
+            width: 'clamp(200px, 22vw, 320px)',
+            maxHeight: '72vh',
+            zIndex: 8,
+            background: 'rgba(10,10,10,0.78)',
+            border: `1px solid rgba(212,175,55,0.35)`,
+            borderRadius: '12px',
+            boxShadow: '0 8px 28px rgba(0,0,0,0.5)',
+            padding: 'clamp(14px, 2vw, 22px)',
+          }}
+        >
+          <p className="text-[10px] md:text-xs font-black tracking-[0.25em] uppercase mb-3"
+            style={{ color: GOLD }}>
+            Today's Headlines
+          </p>
+          <ul className="space-y-3">
+            {headlines.map((h, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: GOLD }} />
+                <span
+                  className="font-medium leading-snug"
+                  style={{ color: '#f5f5f5', fontSize: 'clamp(0.78rem, 1.6vw, 0.95rem)' }}
+                >
+                  {h}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"

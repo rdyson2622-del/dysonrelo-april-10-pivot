@@ -84,6 +84,7 @@ export default function DnnNewsPresenter() {
           videoUrl={broadcast.videoUrl}
           presenter={broadcast.presenter}
           title={broadcast.show_name}
+          headlines={broadcast.headlines}
           onClose={() => { window.location.replace('/?choose=1'); }}
         />,
         document.body
