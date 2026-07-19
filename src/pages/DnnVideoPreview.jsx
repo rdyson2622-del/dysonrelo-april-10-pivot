@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Linkedin, Film, X } from 'lucide-react';
+import DualBoxLayoutMockup from '@/components/dnn/DualBoxLayoutMockup';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -278,6 +279,9 @@ export default function DnnVideoPreview() {
           <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>July 15 Broadcasts Only — No Individual Clips</span>
         </div>
       </div>
+
+      {/* Dual-Box Layout Mockup — visual positioning reference */}
+      <DualBoxLayoutMockup />
 
       {/* Golden Master Reference — Candidate Selection */}
       <div className="px-6 py-5" style={{ background: 'rgba(212,175,55,0.06)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
