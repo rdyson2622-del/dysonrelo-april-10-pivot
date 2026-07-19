@@ -1,33 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — HEYGEN TEMPLATE API EDITION
+ * dnnStitchBroadcast — SOLO PRESENTER EDITION
  *
- * Fires ONE authenticated POST to the HeyGen Template generation endpoint,
- * passing the daily dual-host dialogue as text variables into a static
- * Master Template. The template locks all visual layout (studio background,
- * dual-avatar framing, lower thirds) in HeyGen. No raw avatar clips.
- * No stitching. One API call → one fully compiled master MP4.
+ * Fires ONE authenticated POST to the HeyGen video/generate endpoint.
+ * Charlie (or Bob) stands full-screen and reads the broadcast script.
+ * No HeyGen Master Template, no dual-box text variables, no template ID lock.
  *
- * Script parsing — FINALIZED TEXT VARIABLE SCHEMA (locked):
- *   charlie_line_1 .. charlie_line_8  → lower-LEFT box (Charlie Simmons)
- *   bob_line_1    .. bob_line_8       → lower-RIGHT box (Bob Dyson)
- *   studio_wall_headline              → upper-center wall text frame (primary headline)
- *   studio_wall_bullet_1              → wall text frame bullet 1
- *   studio_wall_bullet_2              → wall text frame bullet 2
- *   studio_wall_bullet_3              → wall text frame bullet 3
+ * Presenter selection:
+ *   - broadcast.presenter === 'bob'   → Bob (talking_photo)
+ *   - default (including 'charlie')  → Charlie (avatar)
  *
- *   If no speaker markers are found, the entire script goes into charlie_line_1.
- *   Headlines from broadcast.headlines[] feed the wall text frame slots.
+ * Avatar/voice IDs are loaded from the LayoutTemplate golden master if present,
+ * otherwise fall back to hardcoded defaults.
  *
- * SINGLE MP4 DELIVERY: Exactly ONE HeyGen Template API call produces ONE
- * compiled master MP4 with all elements (avatars, backdrop, text) baked in.
- * No stitching, no browser-side overlays, no multi-clip assembly.
+ * SINGLE MP4 DELIVERY: One API call → one MP4 → uploaded to permanent storage.
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 
-const HEYGEN_TEMPLATE_API = 'https://api.heygen.com/v2/template';
+const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
 const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
@@ -47,99 +39,30 @@ function phoneticSpoken(text) {
     .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
 }
 
-// ── LOAD MASTER LAYOUT ──
-async function loadMasterLayout(base44) {
+// ── LOAD PRESENTER CONFIG FROM MASTER LAYOUT (no template ID required) ──
+async function loadPresenterConfig(base44) {
   try {
     const templates = await base44.asServiceRole.entities.LayoutTemplate.filter({ id: MASTER_LAYOUT_ID });
     const t = templates?.[0];
-    if (t && (t.status === 'approved' || t.status === 'synced_to_heygen')) {
+    if (t) {
       return {
-        heygenTemplateId: t.heygen_template_id || '',
-        templateName: t.template_name,
-        videoDims: t.video_dimensions || { width: 1280, height: 720 },
+        charlieAvatarId: t?.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
+        charlieVoiceId: t?.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
+        bobPhotoId: t?.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
+        bobVoiceId: t?.presenter_2?.voice_id || '147b8f5713024fb9afc106f266e47482',
+        videoDims: t?.video_dimensions || { width: 1280, height: 720 },
       };
     }
   } catch (e) {
     console.log(`Master layout load failed, using fallback: ${e.message}`);
   }
   return {
-    heygenTemplateId: '',
-    templateName: 'DNN Master Base Layout (fallback)',
+    charlieAvatarId: '41f40b894f6944188c7908253b12e921',
+    charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
+    bobPhotoId: '31b79a86784e495090472af2e7b9407c',
+    bobVoiceId: '147b8f5713024fb9afc106f266e47482',
     videoDims: { width: 1280, height: 720 },
   };
-}
-
-// ── DUAL-BOX LAYOUT VARIABLE MAP ──
-// The HeyGen Master Template bakes in the EXACT layout from TagTeamBroadcastPlayer.jsx:
-//   • Studio background with 3-pill lower-center backdrop (baked into template, not overlaid)
-//   • Charlie locked in lower-LEFT box (presenter_1)
-//   • Bob locked in lower-RIGHT box (presenter_2)
-//
-// Script lines are parsed for speaker turns and mapped to text variables:
-//   charlie_line_1, charlie_line_2, ...  → lower-left box
-//   bob_line_1, bob_line_2, ...          → lower-right box
-//
-// The template alternates visibility based on who is speaking; both presenters
-// remain on screen throughout (dual_presenter_mode = true in LayoutTemplate).
-const MAX_LINES_PER_SPEAKER = 8;
-
-function parseScriptToVariables(script) {
-  if (!script) return {};
-
-  const variables = {};
-  let charlieCount = 0;
-  let bobCount = 0;
-  let currentSpeaker = null;
-  let currentText = '';
-
-  const lines = script.split('\n');
-
-  const flush = () => {
-    const text = phoneticSpoken(currentText.trim());
-    if (!text) return;
-    if (currentSpeaker === 'charlie' && charlieCount < MAX_LINES_PER_SPEAKER) {
-      charlieCount++;
-      const key = `charlie_line_${charlieCount}`;
-      variables[key] = { name: key, type: 'text', properties: { content: text } };
-    } else if (currentSpeaker === 'bob' && bobCount < MAX_LINES_PER_SPEAKER) {
-      bobCount++;
-      const key = `bob_line_${bobCount}`;
-      variables[key] = { name: key, type: 'text', properties: { content: text } };
-    }
-  };
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-
-    const charlieMatch = trimmed.match(/^(?:Charlie|Speaker 1|CHARLIE)\s*:\s*(.*)/i);
-    const bobMatch = trimmed.match(/^(?:Bob|Speaker 2|BOB)\s*:\s*(.*)/i);
-
-    if (charlieMatch) {
-      flush();
-      currentSpeaker = 'charlie';
-      currentText = charlieMatch[1];
-    } else if (bobMatch) {
-      flush();
-      currentSpeaker = 'bob';
-      currentText = bobMatch[1];
-    } else if (currentSpeaker) {
-      currentText += ' ' + trimmed;
-    }
-  }
-  flush();
-
-  // Fallback: no speaker markers found — entire script goes to Charlie (solo mode)
-  if (Object.keys(variables).length === 0) {
-    const fullText = phoneticSpoken(script.trim());
-    variables['charlie_line_1'] = {
-      name: 'charlie_line_1',
-      type: 'text',
-      properties: { content: fullText },
-    };
-  }
-
-  return variables;
 }
 
 Deno.serve(async (req) => {
@@ -169,7 +92,7 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: Single Template API call ──
+    // ── START: Solo presenter render ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -193,64 +116,43 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no script' }, { status: 400 });
       }
 
-      const layout = await loadMasterLayout(base44);
-      if (!layout.heygenTemplateId) {
-        return Response.json({
-          error: 'No heygen_template_id configured on the master LayoutTemplate. Set it in Admin → Layout Library.',
-        }, { status: 400 });
-      }
+      const config = await loadPresenterConfig(base44);
+      const isBob = broadcast.presenter === 'bob';
 
-      // Parse the dual-host script into text variables mapped to the dual-box layout
-      const variables = parseScriptToVariables(broadcast.script);
-      const varCount = Object.keys(variables).length;
-      const charlieLines = Object.keys(variables).filter(k => k.startsWith('charlie_line_')).length;
-      const bobLines = Object.keys(variables).filter(k => k.startsWith('bob_line_')).length;
+      const spokenText = phoneticSpoken(broadcast.script.trim());
 
-      // ── WALL TEXT FRAME SLOTS (upper-center) ──
-      // Map broadcast headlines to the studio wall overlay variables.
-      const headlines = broadcast.headlines || [];
-      if (headlines.length > 0) {
-        variables['studio_wall_headline'] = {
-          name: 'studio_wall_headline', type: 'text',
-          properties: { content: headlines[0] },
-        };
-        const MAX_BULLETS = 3;
-        for (let i = 1; i <= MAX_BULLETS && i < headlines.length; i++) {
-          const key = `studio_wall_bullet_${i}`;
-          variables[key] = { name: key, type: 'text', properties: { content: headlines[i] } };
-        }
-      }
-      const wallVars = Object.keys(variables).filter(k => k.startsWith('studio_wall_'));
+      const character = isBob
+        ? { type: 'talking_photo', talking_photo_id: config.bobPhotoId }
+        : { type: 'avatar', avatar_id: config.charlieAvatarId, avatar_style: 'normal' };
 
-      // Payload structure for HeyGen Master Template (dual-box layout baked in)
-      // Template variables expected:
-      //   charlie_line_1 .. charlie_line_8  → lower-LEFT box (Charlie Simmons)
-      //   bob_line_1    .. bob_line_8        → lower-RIGHT box (Bob Dyson)
-      //   studio_wall_headline               → upper-center wall text frame
-      //   studio_wall_bullet_1..3            → wall text frame bullet points
-      // Studio background + 3-pill backdrop are baked into the template itself.
+      const voice = isBob
+        ? { type: 'text', voice_id: config.bobVoiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 }
+        : { type: 'text', voice_id: config.charlieVoiceId, input_text: spokenText, speed: 1.05, volume: 1.0 };
+
       const payload = {
-        variables,
-        title: broadcast.show_name || `DNN Broadcast ${broadcast.broadcast_date}`,
+        video_inputs: [{
+          character,
+          voice,
+          background: { type: 'color', value: '#000000' },
+        }],
+        dimension: config.videoDims,
         test: false,
       };
 
-      console.log(`[TEMPLATE API] Firing dual-box render for broadcast ${broadcast.id} | ${varCount + wallVars.length} text variables (Charlie: ${charlieLines}, Bob: ${bobLines}, Wall: ${wallVars.length}) | template: ${layout.heygenTemplateId}`);
-      console.log(`[TEMPLATE API] Variable map: ${JSON.stringify(Object.keys(variables))}`);
+      const presenterLabel = isBob ? 'Bob (talking photo)' : 'Charlie (avatar)';
 
-      const res = await fetch(
-        `${HEYGEN_TEMPLATE_API}/${layout.heygenTemplateId}/generate`,
-        {
-          method: 'POST',
-          headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }
-      );
+      console.log(`[SOLO RENDER] Firing solo render for broadcast ${broadcast.id} | presenter: ${presenterLabel}`);
+
+      const res = await fetch(HEYGEN_API, {
+        method: 'POST',
+        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen Template API render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen solo render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
@@ -263,25 +165,14 @@ Deno.serve(async (req) => {
 
       return Response.json({
         success: true,
-        message: 'Template API render submitted — dual-box master (Charlie lower-left, Bob lower-right, 3-pill backdrop baked in)',
+        message: `Solo render submitted — ${presenterLabel} reading full script`,
         broadcastId: broadcast.id,
         heygenId: videoId,
-        templateId: layout.heygenTemplateId,
-        variableCount: varCount,
-        layoutMapping: {
-          charlie_box: 'lower-left',
-          bob_box: 'lower-right',
-          wall_text_frame: 'upper-center',
-          backdrop: '3-pill studio (baked into template — static asset lock)',
-          charlie_variables: Object.keys(variables).filter(k => k.startsWith('charlie_line_')),
-          bob_variables: Object.keys(variables).filter(k => k.startsWith('bob_line_')),
-          wall_variables: wallVars,
-          delivery: 'single compiled MP4 (all elements baked in)',
-        },
+        presenter: isBob ? 'bob' : 'charlie',
       });
     }
 
-    // ── CHECK: Poll the template render, download, upload to permanent storage ──
+    // ── CHECK: Poll the render, download, upload to permanent storage ──
     if (action === 'check') {
       const rendering = await Broadcasts.filter({ status: 'rendering' }, '-broadcast_date', 50);
       const results = [];
@@ -305,7 +196,7 @@ Deno.serve(async (req) => {
           }
 
           // Download from HeyGen CDN
-          console.log(`[TEMPLATE API] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
+          console.log(`[SOLO RENDER] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
           const videoRes = await fetch(heygenUrl);
           const videoBlob = await videoRes.blob();
 
@@ -313,7 +204,7 @@ Deno.serve(async (req) => {
           const file = new File([videoBlob], `dnn_broadcast_${broadcast.broadcast_date}.mp4`, { type: 'video/mp4' });
           const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
           const permanentUrl = uploadRes.file_url;
-          console.log(`[TEMPLATE API] Uploaded to permanent storage: ${permanentUrl}`);
+          console.log(`[SOLO RENDER] Uploaded to permanent storage: ${permanentUrl}`);
 
           await Broadcasts.update(broadcast.id, {
             videoUrl: permanentUrl,
@@ -325,7 +216,7 @@ Deno.serve(async (req) => {
           results.push({ id: broadcast.id, status: 'completed', videoUrl: permanentUrl });
         } else if (status === 'failed') {
           const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error) || 'HeyGen render failed';
-          console.log(`[TEMPLATE API] FAILED — Error: ${errMsg}`);
+          console.log(`[SOLO RENDER] FAILED — Error: ${errMsg}`);
           await Broadcasts.update(broadcast.id, { status: 'failed', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
