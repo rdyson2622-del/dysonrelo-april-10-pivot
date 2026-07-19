@@ -7,11 +7,12 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
 const DEFAULT_BOB = { x: 4, y: 35, w: 22, h: 60, label: 'Bob', sub: 'Transparent · Lower Left' };
-const DEFAULT_PANEL = { x: 19, y: 3, w: 46, h: 40 };
+const DEFAULT_PANEL = { x: 18, y: 3, w: 46, h: 40 };
+const BOB_IMG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/06058d1f1_generated_image.png';
 const DEFAULT_PILLS = [
-  { x: 15, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
-  { x: 43, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
-  { x: 71, y: 78, w: 14, h: 6, label: 'INTELLIGENCE', sub: 'Tell Your Story' },
+  { x: 30, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
+  { x: 46, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
+  { x: 62, y: 78, w: 14, h: 6, label: 'INTELLIGENCE', sub: 'Tell Your Story' },
 ];
 
 const DEFAULT_STATE = { bob: DEFAULT_BOB, panel: DEFAULT_PANEL, pills: DEFAULT_PILLS };
@@ -75,14 +76,12 @@ export default function StudioLayoutPreview() {
           }}
         >
           <div className="w-full h-full flex items-end justify-center">
-            <div className="w-[60%] h-[90%] rounded-t-full flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(180deg, rgba(100,120,140,0.3) 0%, rgba(40,50,60,0.5) 100%)',
-                border: '1px solid rgba(212,175,55,0.4)',
-                borderTop: '2px solid rgba(212,175,55,0.5)',
-              }}>
-              <div className="w-[70%] h-[25%] rounded-full mb-1" style={{ background: 'rgba(180,160,140,0.5)' }} />
-            </div>
+            <img
+              src={BOB_IMG}
+              alt="Bob — presenter"
+              className="w-full h-full object-contain object-bottom"
+              style={{ mixBlendMode: 'multiply' }}
+            />
           </div>
         </div>
 
