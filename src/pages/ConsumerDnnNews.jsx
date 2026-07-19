@@ -11,6 +11,7 @@ import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
 import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
+import StudioLayoutPreview from '@/components/dnn/StudioLayoutPreview';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -588,6 +589,11 @@ export default function ConsumerDnnNews() {
       {/* Charlie circle — fixed below header; z-[300] so the full-screen player covers edit/trash buttons */}
       <div className="fixed top-36 right-4 md:top-40 md:right-6 z-[300]">
         <DnnNewsPresenter />
+      </div>
+
+      {/* Studio Layout Preview — large placeholder while content & positioning are finalized */}
+      <div className="w-full px-6 md:px-12 lg:px-20 py-8 max-w-7xl mx-auto">
+        <StudioLayoutPreview />
       </div>
 
       {/* Articles Feed */}
