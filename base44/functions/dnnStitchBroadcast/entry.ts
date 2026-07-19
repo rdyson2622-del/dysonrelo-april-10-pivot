@@ -1,19 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — SINGLE-SCENE broadcast pipeline.
+ * dnnStitchBroadcast — HEYGEN TEMPLATE API EDITION
  *
- * One presenter (Charlie Simmons) reads the entire unified broadcast.script
- * from start to finish in a single static studio setup. HeyGen produces ONE
- * master MP4. We download it, drop it into permanent storage, and store the
- * URL on broadcast.videoUrl. The DnnNewsBroadcastPlayer plays that single asset.
+ * Fires ONE authenticated POST to the HeyGen Template generation endpoint,
+ * passing the daily dual-host dialogue as text variables into a static
+ * Master Template. The template locks all visual layout (studio background,
+ * dual-avatar framing, lower thirds) in HeyGen. No raw avatar clips.
+ * No stitching. One API call → one fully compiled master MP4.
  *
- * No clips. No sequencing. No tag-team. One scene in, one video out.
+ * Script parsing:
+ *   The broadcast.script is parsed for speaker turns. Lines prefixed with
+ *   "Charlie:" or "Bob:" (case-insensitive) are mapped to:
+ *     speaker_1_line_1, speaker_2_line_1, speaker_1_line_2, ...
+ *   If no speaker markers are found, the entire script goes into
+ *   speaker_1_line_1 (backward compatible with single-host monologues).
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 
-const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
+const HEYGEN_TEMPLATE_API = 'https://api.heygen.com/v2/template';
 const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
@@ -33,28 +39,88 @@ function phoneticSpoken(text) {
     .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
 }
 
-// ── LOAD MASTER LAYOUT (Charlie avatar + voice IDs only) ──
+// ── LOAD MASTER LAYOUT ──
 async function loadMasterLayout(base44) {
   try {
     const templates = await base44.asServiceRole.entities.LayoutTemplate.filter({ id: MASTER_LAYOUT_ID });
     const t = templates?.[0];
-    if (t && t.status === 'approved') {
+    if (t && (t.status === 'approved' || t.status === 'synced_to_heygen')) {
       return {
-        charlieAvatarId: t.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
-        charlieVoiceId: t.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
-        videoDims: t.video_dimensions || { width: 1280, height: 720 },
+        heygenTemplateId: t.heygen_template_id || '',
         templateName: t.template_name,
+        videoDims: t.video_dimensions || { width: 1280, height: 720 },
       };
     }
   } catch (e) {
     console.log(`Master layout load failed, using fallback: ${e.message}`);
   }
   return {
-    charlieAvatarId: '41f40b894f6944188c7908253b12e921',
-    charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
-    videoDims: { width: 1280, height: 720 },
+    heygenTemplateId: '',
     templateName: 'DNN Master Base Layout (fallback)',
+    videoDims: { width: 1280, height: 720 },
   };
+}
+
+// ── SCRIPT-TO-VARIABLE PARSER ──
+// Parses a dual-host script into speaker turn variables.
+// Returns a variables object keyed by speaker_1_line_N / speaker_2_line_N.
+function parseScriptToVariables(script) {
+  if (!script) return {};
+
+  const variables = {};
+  let speaker1Count = 0;
+  let speaker2Count = 0;
+  let currentSpeaker = null;
+  let currentText = '';
+
+  const lines = script.split('\n');
+
+  const flush = () => {
+    const text = phoneticSpoken(currentText.trim());
+    if (!text) return;
+    if (currentSpeaker === 'charlie') {
+      speaker1Count++;
+      const key = `speaker_1_line_${speaker1Count}`;
+      variables[key] = { name: key, type: 'text', properties: { content: text } };
+    } else if (currentSpeaker === 'bob') {
+      speaker2Count++;
+      const key = `speaker_2_line_${speaker2Count}`;
+      variables[key] = { name: key, type: 'text', properties: { content: text } };
+    }
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const charlieMatch = trimmed.match(/^(?:Charlie|Speaker 1|CHARLIE)\s*:\s*(.*)/i);
+    const bobMatch = trimmed.match(/^(?:Bob|Speaker 2|BOB)\s*:\s*(.*)/i);
+
+    if (charlieMatch) {
+      flush();
+      currentSpeaker = 'charlie';
+      currentText = charlieMatch[1];
+    } else if (bobMatch) {
+      flush();
+      currentSpeaker = 'bob';
+      currentText = bobMatch[1];
+    } else if (currentSpeaker) {
+      currentText += ' ' + trimmed;
+    }
+  }
+  flush();
+
+  // Fallback: no speaker markers found — put entire script in speaker_1_line_1
+  if (Object.keys(variables).length === 0) {
+    const fullText = phoneticSpoken(script.trim());
+    variables['speaker_1_line_1'] = {
+      name: 'speaker_1_line_1',
+      type: 'text',
+      properties: { content: fullText },
+    };
+  }
+
+  return variables;
 }
 
 Deno.serve(async (req) => {
@@ -84,7 +150,7 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: Single Charlie render of the entire unified script ──
+    // ── START: Single Template API call ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -93,7 +159,6 @@ Deno.serve(async (req) => {
         const arr = await Broadcasts.filter({ id: broadcastId });
         broadcast = arr?.[0];
       } else {
-        // Find the latest broadcast with a script but no completed videoUrl
         const ready = await Broadcasts.filter({ status: 'script_ready' }, '-broadcast_date', 20);
         broadcast = ready.find(b => b.script && !b.videoUrl);
         if (!broadcast) {
@@ -105,45 +170,42 @@ Deno.serve(async (req) => {
       if (!broadcast) {
         return Response.json({ error: 'No broadcast with a script found' }, { status: 404 });
       }
-
       if (!broadcast.script) {
-        return Response.json({ error: 'Broadcast has no unified script' }, { status: 400 });
+        return Response.json({ error: 'Broadcast has no script' }, { status: 400 });
       }
 
       const layout = await loadMasterLayout(base44);
-      const spokenText = phoneticSpoken(broadcast.script);
+      if (!layout.heygenTemplateId) {
+        return Response.json({
+          error: 'No heygen_template_id configured on the master LayoutTemplate. Set it in Admin → Layout Library.',
+        }, { status: 400 });
+      }
+
+      // Parse the dual-host script into text variables
+      const variables = parseScriptToVariables(broadcast.script);
+      const varCount = Object.keys(variables).length;
 
       const payload = {
-        video_inputs: [{
-          character: {
-            type: 'avatar',
-            avatar_id: layout.charlieAvatarId,
-            avatar_style: 'normal',
-          },
-          voice: {
-            type: 'text',
-            voice_id: layout.charlieVoiceId,
-            input_text: spokenText,
-            speed: 1.05,
-            volume: 1.0,
-          },
-          background: { type: 'color', value: '#000000' },
-        }],
-        dimension: layout.videoDims,
+        variables,
+        title: broadcast.show_name || `DNN Broadcast ${broadcast.broadcast_date}`,
+        test: false,
       };
 
-      console.log(`[SINGLE-SCENE] Submitting Charlie render for broadcast ${broadcast.id} | script length: ${spokenText.length} chars`);
+      console.log(`[TEMPLATE API] Firing single render for broadcast ${broadcast.id} | ${varCount} text variables | template: ${layout.heygenTemplateId}`);
 
-      const res = await fetch(HEYGEN_API, {
-        method: 'POST',
-        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `${HEYGEN_TEMPLATE_API}/${layout.heygenTemplateId}/generate`,
+        {
+          method: 'POST',
+          headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen single-scene render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen Template API render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
@@ -156,15 +218,15 @@ Deno.serve(async (req) => {
 
       return Response.json({
         success: true,
-        message: 'Single-scene Charlie render submitted to HeyGen',
+        message: 'Template API render submitted — single call, dual-avatar master',
         broadcastId: broadcast.id,
         heygenId: videoId,
-        layout: layout.templateName,
-        presenter: 'charlie',
+        templateId: layout.heygenTemplateId,
+        variableCount: varCount,
       });
     }
 
-    // ── CHECK: Poll the single render, download, upload to permanent storage ──
+    // ── CHECK: Poll the template render, download, upload to permanent storage ──
     if (action === 'check') {
       const rendering = await Broadcasts.filter({ status: 'rendering' }, '-broadcast_date', 50);
       const results = [];
@@ -188,7 +250,7 @@ Deno.serve(async (req) => {
           }
 
           // Download from HeyGen CDN
-          console.log(`[SINGLE-SCENE] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
+          console.log(`[TEMPLATE API] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
           const videoRes = await fetch(heygenUrl);
           const videoBlob = await videoRes.blob();
 
@@ -196,7 +258,7 @@ Deno.serve(async (req) => {
           const file = new File([videoBlob], `dnn_broadcast_${broadcast.broadcast_date}.mp4`, { type: 'video/mp4' });
           const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
           const permanentUrl = uploadRes.file_url;
-          console.log(`[SINGLE-SCENE] Uploaded to permanent storage: ${permanentUrl}`);
+          console.log(`[TEMPLATE API] Uploaded to permanent storage: ${permanentUrl}`);
 
           await Broadcasts.update(broadcast.id, {
             videoUrl: permanentUrl,
@@ -208,7 +270,7 @@ Deno.serve(async (req) => {
           results.push({ id: broadcast.id, status: 'completed', videoUrl: permanentUrl });
         } else if (status === 'failed') {
           const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error) || 'HeyGen render failed';
-          console.log(`[SINGLE-SCENE] FAILED — Error: ${errMsg}`);
+          console.log(`[TEMPLATE API] FAILED — Error: ${errMsg}`);
           await Broadcasts.update(broadcast.id, { status: 'failed', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {

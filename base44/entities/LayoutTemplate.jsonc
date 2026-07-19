@@ -17,6 +17,10 @@
       "default": "approved",
       "description": "Lifecycle status \u2014 only 'approved' templates are used by the render pipeline"
     },
+    "heygen_template_id": {
+      "type": "string",
+      "description": "HeyGen Master Template ID for the Template API (POST /v2/template/{template_id}/generate). When set, the render pipeline passes daily dialogue as text variables into this static template instead of generating raw avatar clips. The template locks all visual layout (studio background, dual-avatar framing, lower thirds) in HeyGen."
+    },
     "reference_video_url": {
       "type": "string",
       "description": "Permanent MP4 URL of the broadcast that demonstrates this layout (the golden master reference file)"
