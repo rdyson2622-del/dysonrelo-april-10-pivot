@@ -73,6 +73,7 @@ export default function StudioLayoutPreview() {
             top: `${layout.bob.y}%`,
             width: `${layout.bob.w}%`,
             height: `${layout.bob.h}%`,
+            zIndex: 50,
           }}
         >
           <div className="w-full h-full flex items-end justify-center">
@@ -96,6 +97,7 @@ export default function StudioLayoutPreview() {
             border: '2px solid #D4AF37',
             borderRadius: '10px',
             boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+            zIndex: 10,
           }}
         >
           <div className="w-full h-full flex flex-col items-center justify-center gap-1.5 p-3">
@@ -124,6 +126,7 @@ export default function StudioLayoutPreview() {
               border: '1px solid rgba(212,180,106,0.45)',
               borderRadius: '9999px',
               boxShadow: '0 2px 12px rgba(0,0,0,0.35)',
+              zIndex: 20,
             }}
           >
             <span className="uppercase whitespace-nowrap leading-none" style={{ color: '#d4b46a', fontFamily: 'Cormorant Garamond, serif', fontWeight: 500, letterSpacing: '0.15em', fontSize: 'clamp(0.5rem, 1vw, 0.75rem)' }}>{pill.label}</span>
