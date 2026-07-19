@@ -146,11 +146,16 @@ export default function TemplatePicker() {
                     {isActive && <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />}
                   </div>
                   <p className="text-[9px] font-mono text-slate-500 mb-2 truncate">{tpl.id}</p>
-                  {tpl.thumbnail_image_url && (
-                    <div className="aspect-video rounded overflow-hidden mb-2 bg-black">
-                      <img src={tpl.thumbnail_image_url} alt={tpl.name} className="w-full h-full object-cover" />
-                    </div>
-                  )}
+                  <div className="aspect-video rounded overflow-hidden mb-2 bg-black flex items-center justify-center">
+                    {tpl.thumbnail_image_url || tpl.preview_image_url ? (
+                      <img src={tpl.thumbnail_image_url || tpl.preview_image_url} alt={tpl.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="flex flex-col items-center gap-1">
+                        <ImageIcon className="w-6 h-6 text-slate-600" />
+                        <p className="text-[9px] text-slate-600">No preview</p>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleAssign(tpl.id, tpl.name)}
