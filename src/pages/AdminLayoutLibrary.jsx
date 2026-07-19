@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Layers, Plus, RefreshCw, Lock, AlertTriangle, Film, Zap } from 'lucide-react';
 import LayoutTemplateCard from '@/components/dnn/LayoutTemplateCard';
+import LayoutEditor from '@/components/dnn/LayoutEditor';
 
 const GOLD = '#D4AF37';
 
@@ -159,6 +160,9 @@ export default function AdminLayoutLibrary() {
           <span className="flex items-center gap-1.5"><Layers className="w-3 h-3" style={{ color: GOLD }} /> Changes here update all future shows</span>
         </div>
       </div>
+
+      {/* Visual Layout Editor — drag & drop positioning for Jay Chavez */}
+      <LayoutEditor />
 
       {/* Template cards */}
       <div className="px-6 py-6">

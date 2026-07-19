@@ -392,6 +392,78 @@
       },
       "description": "Output video resolution"
     },
+    "layout_coordinates": {
+      "type": "object",
+      "description": "Visual layout editor coordinates for Jay Chavez \u2014 exact pixel percentages for Bob (transparent, lower-left), the white solution panel, and the 3 floor pills (NEWS / RELOCATION / INTELLIGENCE). Saved from the drag-and-drop LayoutEditor.",
+      "properties": {
+        "bob": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "w": {
+              "type": "number"
+            },
+            "h": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string"
+            },
+            "sub": {
+              "type": "string"
+            }
+          }
+        },
+        "panel": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "w": {
+              "type": "number"
+            },
+            "h": {
+              "type": "number"
+            }
+          }
+        },
+        "pills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "w": {
+                "type": "number"
+              },
+              "h": {
+                "type": "number"
+              },
+              "label": {
+                "type": "string"
+              },
+              "sub": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "notes": {
       "type": "string",
       "description": "Internal notes about this layout template"
