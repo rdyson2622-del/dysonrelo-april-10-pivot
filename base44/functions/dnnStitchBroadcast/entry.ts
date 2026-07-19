@@ -47,6 +47,7 @@ async function loadMasterLayout(base44) {
     if (t) {
       return {
         templateId: t?.heygen_template_id,
+        studioBgUrl: t?.background?.url || null,
         charlieAvatarId: t?.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
         charlieVoiceId: t?.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
         bobPhotoId: t?.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
@@ -59,6 +60,7 @@ async function loadMasterLayout(base44) {
   }
   return {
     templateId: null,
+    studioBgUrl: null,
     charlieAvatarId: '41f40b894f6944188c7908253b12e921',
     charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
     bobPhotoId: '31b79a86784e495090472af2e7b9407c',
@@ -184,11 +186,55 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'templateId is required for testPreview' }, { status: 400 });
       }
 
-      console.log(`[TEST PREVIEW] Firing template ${templateId} with empty variables (layout preview only)`);
+      // Load the studio background URL from the golden master layout
+      const layout = await loadMasterLayout(base44);
+      const studioBgUrl = layout.studioBgUrl;
+      // Allow per-call override for testing
+      if (body.templateId) {
+        layout.templateId = body.templateId;
+      }
+
+      console.log(`[TEST PREVIEW] Firing template ${templateId} with studio background: ${studioBgUrl || 'NONE'}`);
+
+      // Fetch the template's actual variable definitions from HeyGen
+      let templateVariableNames = [];
+      try {
+        const detailRes = await fetch(`${HEYGEN_TEMPLATE_API}/${templateId}`, {
+          headers: { 'X-Api-Key': heygenKey },
+        });
+        const detailData = await detailRes.json();
+        const rawVars = detailData?.data?.variables;
+        if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
+          templateVariableNames = Object.keys(rawVars);
+        } else if (Array.isArray(rawVars)) {
+          templateVariableNames = rawVars.map(v => v.name);
+        }
+        console.log(`[TEST PREVIEW] Template ${templateId} supports ${templateVariableNames.length} variables: ${templateVariableNames.join(', ') || '(none)'}`);
+      } catch (e) {
+        console.log(`[TEST PREVIEW] Failed to fetch template variables: ${e.message}`);
+      }
+
+      // Build variables: inject studio background into page_screenshot if the template supports it
+      const variables = {};
+      if (templateVariableNames.includes('page_screenshot') && studioBgUrl) {
+        variables['page_screenshot'] = {
+          name: 'page_screenshot',
+          type: 'image',
+          properties: { url: studioBgUrl },
+        };
+        console.log(`[TEST PREVIEW] Injected studio background into page_screenshot variable`);
+      }
+      if (templateVariableNames.includes('script')) {
+        variables['script'] = {
+          name: 'script',
+          type: 'text',
+          properties: { content: 'This is a layout preview test.' },
+        };
+      }
 
       const payload = {
         title: `Layout Preview — ${templateId}`,
-        variables: {},
+        variables,
         test: false,
       };
 
@@ -257,8 +303,13 @@ Deno.serve(async (req) => {
           headers: { 'X-Api-Key': heygenKey },
         });
         const detailData = await detailRes.json();
-        const rawVars = detailData?.data?.variables || [];
-        templateVariableNames = rawVars.map(v => v.name);
+        const rawVars = detailData?.data?.variables;
+        // HeyGen returns variables as an object keyed by name, NOT an array
+        if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
+          templateVariableNames = Object.keys(rawVars);
+        } else if (Array.isArray(rawVars)) {
+          templateVariableNames = rawVars.map(v => v.name);
+        }
         console.log(`[TEMPLATE RENDER] Template ${layout.templateId} supports ${templateVariableNames.length} variables: ${templateVariableNames.join(', ') || '(none)'}`);
       } catch (e) {
         console.log(`[TEMPLATE RENDER] Failed to fetch template variables: ${e.message}`);
@@ -274,6 +325,15 @@ Deno.serve(async (req) => {
           if (templateVariableNames.includes(name)) {
             variables[name] = val;
           }
+        }
+        // Inject studio background into page_screenshot if the template supports it
+        if (templateVariableNames.includes('page_screenshot') && layout.studioBgUrl) {
+          variables['page_screenshot'] = {
+            name: 'page_screenshot',
+            type: 'image',
+            properties: { url: layout.studioBgUrl },
+          };
+          console.log(`[TEMPLATE RENDER] Injected studio background into page_screenshot variable`);
         }
       } else {
         // Template has no variables — render as-is

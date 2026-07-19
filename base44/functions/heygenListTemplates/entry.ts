@@ -59,12 +59,21 @@ Deno.serve(async (req) => {
           headers: { 'X-Api-Key': heygenKey },
         });
         const detailData = await detailRes.json();
-        const rawVars = detailData?.data?.variables || [];
-        variables = rawVars.map(v => ({
-          name: v.name,
-          type: v.type,
-          properties: v.properties ? Object.keys(v.properties) : [],
-        }));
+        const rawVars = detailData?.data?.variables;
+        // HeyGen returns variables as an object keyed by name, NOT an array
+        if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
+          variables = Object.entries(rawVars).map(([name, v]: [string, any]) => ({
+            name,
+            type: v?.type || 'unknown',
+            properties: v?.properties ? Object.keys(v.properties) : [],
+          }));
+        } else if (Array.isArray(rawVars)) {
+          variables = rawVars.map(v => ({
+            name: v.name,
+            type: v.type,
+            properties: v.properties ? Object.keys(v.properties) : [],
+          }));
+        }
       } catch (e) {
         console.log(`Failed to fetch details for template ${tplId}: ${e.message}`);
       }
@@ -92,12 +101,21 @@ Deno.serve(async (req) => {
         const detailData = await detailRes.json();
         if (detailRes.ok && detailData?.data) {
           const d = detailData.data;
-          const rawVars = d.variables || [];
-          const variables = rawVars.map(v => ({
-            name: v.name,
-            type: v.type,
-            properties: v.properties ? Object.keys(v.properties) : [],
-          }));
+          const rawVars = d.variables;
+          let variables = [];
+          if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
+            variables = Object.entries(rawVars).map(([name, v]: [string, any]) => ({
+              name,
+              type: v?.type || 'unknown',
+              properties: v?.properties ? Object.keys(v.properties) : [],
+            }));
+          } else if (Array.isArray(rawVars)) {
+            variables = rawVars.map(v => ({
+              name: v.name,
+              type: v.type,
+              properties: v.properties ? Object.keys(v.properties) : [],
+            }));
+          }
           detailedTemplates.unshift({
             id: activeTemplateId,
             name: d.name || 'Golden Master (not listed)',
