@@ -2,20 +2,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
 
 /**
  * DnnNewsBroadcastPlayer — SINGLE-SCENE broadcast player.
  *
- * Plays exactly ONE master MP4 from start to finish, then hard-redirects to /?choose=1.
- * No segments. No handoffs. No multi-presenter layering. One video in, one video out.
+ * Plays exactly ONE master MP4 layered over the permanent studio backdrop.
+ * One presenter (Charlie or Bob) rendered dynamically from the daily asset.
+ * No dual boxes. No handoffs. The studio template stays untouched.
  *
  * Props:
  *   videoUrl: string  — permanent URL of the master broadcast MP4
+ *   presenter?: 'charlie' | 'bob'  — label for the active presenter
  *   title?: string    — optional show title for overlay
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ videoUrl, title, onClose }) {
+export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie', title, onClose }) {
   const videoRef = useRef(null);
   const terminatedRef = useRef(false);
   const [playing, setPlaying] = useState(false);
@@ -81,8 +84,13 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, title, onClose }) {
     setMuted(newMuted);
   };
 
+  const presenterLabel = presenter === 'bob' ? 'BOB DYSON' : 'CHARLIE';
+
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+      {/* Permanent studio backdrop — master template, do not modify */}
+      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
         className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -100,18 +108,42 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, title, onClose }) {
         </div>
       )}
 
-      {/* Single master video — fills the frame */}
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        poster={DNN_POSTER}
-        playsInline
-        onEnded={handleEnded}
-        onTimeUpdate={handleTimeUpdate}
-        onClick={togglePlay}
-        className="w-full h-full cursor-pointer"
-        style={{ objectFit: 'contain' }}
-      />
+      {/* Single presenter video slot — layered over studio backdrop */}
+      <div
+        className="absolute transition-all duration-300"
+        style={{
+          bottom: '24px',
+          left: '32px',
+          width: 'clamp(104px, 14.3vw, 182px)',
+          aspectRatio: '3 / 4',
+          borderRadius: '10px',
+          border: `2px solid ${GOLD}`,
+          boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+          background: '#000',
+          overflow: 'hidden',
+          zIndex: 10,
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          poster={DNN_POSTER}
+          playsInline
+          onEnded={handleEnded}
+          onTimeUpdate={handleTimeUpdate}
+          onClick={togglePlay}
+          className="cursor-pointer w-full h-full"
+          style={{ objectFit: 'cover' }}
+        />
+        {/* Presenter label bar */}
+        <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
+          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+          <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
+            {presenterLabel}
+          </span>
+        </div>
+      </div>
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"

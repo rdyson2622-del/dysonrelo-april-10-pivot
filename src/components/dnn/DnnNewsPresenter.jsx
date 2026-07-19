@@ -82,6 +82,7 @@ export default function DnnNewsPresenter() {
       {open && createPortal(
         <DnnNewsBroadcastPlayer
           videoUrl={broadcast.videoUrl}
+          presenter={broadcast.presenter}
           title={broadcast.show_name}
           onClose={() => { window.location.replace('/?choose=1'); }}
         />,
