@@ -1,21 +1,14 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — Frontend Staging Model (Assembly Line)
+ * dnnStitchBroadcast — SINGLE-SCENE broadcast pipeline.
  *
- * HEYGEN'S ONLY JOB: Generate raw talking-head clips on transparent background.
- * No studio backdrop, no composition, no background baking.
+ * One presenter (Charlie Simmons) reads the entire unified broadcast.script
+ * from start to finish in a single static studio setup. HeyGen produces ONE
+ * master MP4. We download it, drop it into permanent storage, and store the
+ * URL on broadcast.videoUrl. The DnnNewsBroadcastPlayer plays that single asset.
  *
- * The DnnNewsBroadcastPlayer.jsx frontend layout handles ALL visual positioning:
- *   - Studio backdrop (HTML/CSS)
- *   - Charlie slot (bottom-left)
- *   - Bob slot (bottom-right)
- *   - Solution panels (HTML overlay)
- *   - Navigation pills (HTML)
- *
- * This function:
- *   1. start  → Sends raw scripts to HeyGen, one clip per call, transparent background
- *   2. check  → Polls each clip's status, stores URLs in clips[].videoUrl
+ * No clips. No sequencing. No tag-team. One scene in, one video out.
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
@@ -40,7 +33,7 @@ function phoneticSpoken(text) {
     .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
 }
 
-// ── LOAD MASTER LAYOUT (avatar IDs + voice IDs only) ──
+// ── LOAD MASTER LAYOUT (Charlie avatar + voice IDs only) ──
 async function loadMasterLayout(base44) {
   try {
     const templates = await base44.asServiceRole.entities.LayoutTemplate.filter({ id: MASTER_LAYOUT_ID });
@@ -49,8 +42,6 @@ async function loadMasterLayout(base44) {
       return {
         charlieAvatarId: t.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
         charlieVoiceId: t.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
-        bobPhotoId: t.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
-        bobVoiceId: t.presenter_2?.voice_id || '147b8f5713024fb9afc106f266e47482',
         videoDims: t.video_dimensions || { width: 1280, height: 720 },
         templateName: t.template_name,
       };
@@ -61,8 +52,6 @@ async function loadMasterLayout(base44) {
   return {
     charlieAvatarId: '41f40b894f6944188c7908253b12e921',
     charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
-    bobPhotoId: '31b79a86784e495090472af2e7b9407c',
-    bobVoiceId: '147b8f5713024fb9afc106f266e47482',
     videoDims: { width: 1280, height: 720 },
     templateName: 'DNN Master Base Layout (fallback)',
   };
@@ -95,7 +84,7 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: Generate raw talking-head clips (transparent background) ──
+    // ── START: Single Charlie render of the entire unified script ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -104,156 +93,127 @@ Deno.serve(async (req) => {
         const arr = await Broadcasts.filter({ id: broadcastId });
         broadcast = arr?.[0];
       } else {
-        const ready = await Broadcasts.filter({ status: 'completed' }, '-broadcast_date', 20);
-        broadcast = ready.find(b => b.clips?.length > 0 && b.clips.some(c => !c.videoUrl));
+        // Find the latest broadcast with a script but no completed videoUrl
+        const ready = await Broadcasts.filter({ status: 'script_ready' }, '-broadcast_date', 20);
+        broadcast = ready.find(b => b.script && !b.videoUrl);
+        if (!broadcast) {
+          const drafts = await Broadcasts.filter({ status: 'draft' }, '-broadcast_date', 20);
+          broadcast = drafts.find(b => b.script && !b.videoUrl);
+        }
       }
 
       if (!broadcast) {
-        return Response.json({ error: 'No broadcast found' }, { status: 404 });
+        return Response.json({ error: 'No broadcast with a script found' }, { status: 404 });
+      }
+
+      if (!broadcast.script) {
+        return Response.json({ error: 'Broadcast has no unified script' }, { status: 400 });
       }
 
       const layout = await loadMasterLayout(base44);
-      const clips = broadcast.clips || [];
-      if (clips.length === 0) {
-        return Response.json({ error: 'No clips' }, { status: 400 });
-      }
+      const spokenText = phoneticSpoken(broadcast.script);
 
-      // Purge cache if requested
-      if (body.purgeCache) {
-        const purgedClips = clips.map(c => ({ ...c, heygenId: '', videoUrl: '', status: 'not_started', errorMessage: '' }));
-        await Broadcasts.update(broadcast.id, {
-          clips: purgedClips, status: 'rendering', needsReRender: true,
-          videoUrl: '', heygenId: '', errorMessage: '',
-        });
-        broadcast.clips = purgedClips;
-      }
+      const payload = {
+        video_inputs: [{
+          character: {
+            type: 'avatar',
+            avatar_id: layout.charlieAvatarId,
+            avatar_style: 'normal',
+          },
+          voice: {
+            type: 'text',
+            voice_id: layout.charlieVoiceId,
+            input_text: spokenText,
+            speed: 1.05,
+            volume: 1.0,
+          },
+          background: { type: 'color', value: '#000000' },
+        }],
+        dimension: layout.videoDims,
+      };
 
-      const updatedClips = [...broadcast.clips];
-      const renderIds = [];
+      console.log(`[SINGLE-SCENE] Submitting Charlie render for broadcast ${broadcast.id} | script length: ${spokenText.length} chars`);
 
-      for (let i = 0; i < updatedClips.length; i++) {
-        const clip = updatedClips[i];
-        if (clip.videoUrl && !body.force && !body.purgeCache) continue;
+      const res = await fetch(HEYGEN_API, {
+        method: 'POST',
+        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-        const isCharlie = clip.role === 'charlie';
-        const character = isCharlie
-          ? { type: 'avatar', avatar_id: layout.charlieAvatarId, avatar_style: 'normal' }
-          : { type: 'talking_photo', talking_photo_id: layout.bobPhotoId };
-
-        const spokenText = phoneticSpoken(clip.script);
-        const voice = isCharlie
-          ? { type: 'text', voice_id: layout.charlieVoiceId, input_text: spokenText, speed: 1.05, volume: 1.0 }
-          : { type: 'text', voice_id: layout.bobVoiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 };
-
-        // Black background — raw talking-head only, blends with dark studio backdrop
-        const payload = {
-          video_inputs: [{
-            character,
-            voice,
-            background: { type: 'color', value: '#000000' }
-          }],
-          dimension: layout.videoDims
-        };
-
-        console.log(`[CLIP ${i}] Role: ${clip.role} | Script preview: ${(clip.script || '').substring(0, 80)}...`);
-
-        const res = await fetch(HEYGEN_API, {
-          method: 'POST',
-          headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-        const videoId = data?.data?.video_id;
-        if (!res.ok || !videoId) {
-          return Response.json({ error: `HeyGen render failed for clip ${i} (${clip.role})`, details: data }, { status: 502 });
-        }
-
-        updatedClips[i] = { ...clip, heygenId: videoId, videoUrl: '', status: 'rendering', errorMessage: '' };
-        renderIds.push({ index: i, role: clip.role, heygenId: videoId });
+      const data = await res.json();
+      const videoId = data?.data?.video_id;
+      if (!res.ok || !videoId) {
+        return Response.json({ error: 'HeyGen single-scene render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
-        clips: updatedClips,
+        heygenId: videoId,
         status: 'rendering',
         needsReRender: false,
-        errorMessage: ''
+        errorMessage: '',
+        videoUrl: '',
       });
 
       return Response.json({
         success: true,
-        message: 'Raw talking-head clips pushed to HeyGen (transparent background)',
+        message: 'Single-scene Charlie render submitted to HeyGen',
         broadcastId: broadcast.id,
-        clipCount: updatedClips.length,
-        renderIds,
+        heygenId: videoId,
         layout: layout.templateName,
-        provider: 'heygen'
+        presenter: 'charlie',
       });
     }
 
-    // ── CHECK: Poll each clip's status ──
+    // ── CHECK: Poll the single render, download, upload to permanent storage ──
     if (action === 'check') {
       const rendering = await Broadcasts.filter({ status: 'rendering' }, '-broadcast_date', 50);
       const results = [];
 
       for (const broadcast of rendering) {
-        const clips = broadcast.clips || [];
-        const pending = clips.filter(c => c.heygenId && !c.videoUrl);
-        if (pending.length === 0) continue;
+        if (!broadcast.heygenId || broadcast.videoUrl) continue;
 
-        const updatedClips = [...clips];
-        let allDone = true;
-        let anyFailed = false;
+        const res = await fetch(
+          `${HEYGEN_STATUS_API}?video_id=${encodeURIComponent(broadcast.heygenId)}`,
+          { headers: { 'X-Api-Key': heygenKey } }
+        );
+        const data = await res.json();
+        const status = data?.data?.status;
 
-        for (let i = 0; i < clips.length; i++) {
-          const clip = clips[i];
-          if (!clip.heygenId || clip.videoUrl) continue;
-
-          const res = await fetch(
-            `${HEYGEN_STATUS_API}?video_id=${encodeURIComponent(clip.heygenId)}`,
-            { headers: { 'X-Api-Key': heygenKey } }
-          );
-          const data = await res.json();
-          const status = data?.data?.status;
-
-          if (status === 'completed') {
-            const videoUrl = data?.data?.video_url;
-            if (videoUrl) {
-              updatedClips[i] = { ...clip, videoUrl, status: 'completed' };
-              console.log(`[CLIP ${i}] Completed: ${videoUrl}`);
-            } else {
-              allDone = false;
-              updatedClips[i] = { ...clip, status: 'no_url' };
-            }
-          } else if (status === 'failed') {
-            anyFailed = true;
-            const errObj = data?.data?.error || data?.data;
-            const errMsg = errObj?.message || errObj?.detail || JSON.stringify(errObj) || 'HeyGen render failed';
-            console.log(`[CLIP ${i}] FAILED — Error: ${errMsg}`);
-            updatedClips[i] = { ...clip, status: 'failed', errorMessage: errMsg };
-          } else {
-            allDone = false;
+        if (status === 'completed') {
+          const heygenUrl = data?.data?.video_url;
+          if (!heygenUrl) {
+            await Broadcasts.update(broadcast.id, { errorMessage: 'Completed but no video_url returned' });
+            results.push({ id: broadcast.id, status: 'no_url' });
+            continue;
           }
-        }
 
-        const completedCount = updatedClips.filter(c => c.videoUrl).length;
-        const totalCount = updatedClips.length;
+          // Download from HeyGen CDN
+          console.log(`[SINGLE-SCENE] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
+          const videoRes = await fetch(heygenUrl);
+          const videoBlob = await videoRes.blob();
 
-        if (allDone && completedCount === totalCount) {
-          await Broadcasts.update(broadcast.id, { clips: updatedClips, status: 'completed', needsReRender: false });
-        } else if (anyFailed) {
-          await Broadcasts.update(broadcast.id, { clips: updatedClips, status: 'failed' });
+          // Upload to Base44 permanent storage
+          const file = new File([videoBlob], `dnn_broadcast_${broadcast.broadcast_date}.mp4`, { type: 'video/mp4' });
+          const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+          const permanentUrl = uploadRes.file_url;
+          console.log(`[SINGLE-SCENE] Uploaded to permanent storage: ${permanentUrl}`);
+
+          await Broadcasts.update(broadcast.id, {
+            videoUrl: permanentUrl,
+            status: 'completed',
+            needsReRender: false,
+            errorMessage: '',
+          });
+
+          results.push({ id: broadcast.id, status: 'completed', videoUrl: permanentUrl });
+        } else if (status === 'failed') {
+          const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error) || 'HeyGen render failed';
+          console.log(`[SINGLE-SCENE] FAILED — Error: ${errMsg}`);
+          await Broadcasts.update(broadcast.id, { status: 'failed', errorMessage: errMsg });
+          results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
-          await Broadcasts.update(broadcast.id, { clips: updatedClips });
+          results.push({ id: broadcast.id, status: status || 'processing' });
         }
-
-        results.push({
-          id: broadcast.id,
-          date: broadcast.broadcast_date,
-          clipsTotal: totalCount,
-          clipsCompleted: completedCount,
-          status: allDone && completedCount === totalCount ? 'completed' : (anyFailed ? 'failed' : 'processing')
-        });
       }
 
       return Response.json({ success: true, checked: results });
