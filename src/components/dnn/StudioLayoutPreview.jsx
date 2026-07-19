@@ -7,7 +7,7 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
 const DEFAULT_BOB = { x: 4, y: 35, w: 22, h: 60, label: 'Bob', sub: 'Transparent · Lower Left' };
-const DEFAULT_PANEL = { x: 12, y: 6, w: 46, h: 40 };
+const DEFAULT_PANEL = { x: 16, y: 3, w: 46, h: 40 };
 const DEFAULT_PILLS = [
   { x: 15, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
   { x: 43, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
