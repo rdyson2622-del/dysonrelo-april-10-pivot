@@ -266,7 +266,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               </div>
               <div className="relative rounded-xl overflow-hidden cursor-pointer group" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)' }}
                 onClick={() => setShowStudioPreview(true)}>
-                <video src={show.videoUrl} preload="metadata" className="w-full h-auto max-h-[240px] object-contain" />
+                <video src={show.videoUrl} preload="metadata" className="w-full h-auto" />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-all">
                   <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
                     <Play className="w-5 h-5 text-black ml-0.5" fill="black" />
