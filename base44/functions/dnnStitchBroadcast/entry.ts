@@ -61,15 +61,26 @@ async function loadMasterLayout(base44) {
   };
 }
 
-// ── SCRIPT-TO-VARIABLE PARSER ──
-// Parses a dual-host script into speaker turn variables.
-// Returns a variables object keyed by speaker_1_line_N / speaker_2_line_N.
+// ── DUAL-BOX LAYOUT VARIABLE MAP ──
+// The HeyGen Master Template bakes in the EXACT layout from TagTeamBroadcastPlayer.jsx:
+//   • Studio background with 3-pill lower-center backdrop (baked into template, not overlaid)
+//   • Charlie locked in lower-LEFT box (presenter_1)
+//   • Bob locked in lower-RIGHT box (presenter_2)
+//
+// Script lines are parsed for speaker turns and mapped to text variables:
+//   charlie_line_1, charlie_line_2, ...  → lower-left box
+//   bob_line_1, bob_line_2, ...          → lower-right box
+//
+// The template alternates visibility based on who is speaking; both presenters
+// remain on screen throughout (dual_presenter_mode = true in LayoutTemplate).
+const MAX_LINES_PER_SPEAKER = 8;
+
 function parseScriptToVariables(script) {
   if (!script) return {};
 
   const variables = {};
-  let speaker1Count = 0;
-  let speaker2Count = 0;
+  let charlieCount = 0;
+  let bobCount = 0;
   let currentSpeaker = null;
   let currentText = '';
 
@@ -78,13 +89,13 @@ function parseScriptToVariables(script) {
   const flush = () => {
     const text = phoneticSpoken(currentText.trim());
     if (!text) return;
-    if (currentSpeaker === 'charlie') {
-      speaker1Count++;
-      const key = `speaker_1_line_${speaker1Count}`;
+    if (currentSpeaker === 'charlie' && charlieCount < MAX_LINES_PER_SPEAKER) {
+      charlieCount++;
+      const key = `charlie_line_${charlieCount}`;
       variables[key] = { name: key, type: 'text', properties: { content: text } };
-    } else if (currentSpeaker === 'bob') {
-      speaker2Count++;
-      const key = `speaker_2_line_${speaker2Count}`;
+    } else if (currentSpeaker === 'bob' && bobCount < MAX_LINES_PER_SPEAKER) {
+      bobCount++;
+      const key = `bob_line_${bobCount}`;
       variables[key] = { name: key, type: 'text', properties: { content: text } };
     }
   };
@@ -110,11 +121,11 @@ function parseScriptToVariables(script) {
   }
   flush();
 
-  // Fallback: no speaker markers found — put entire script in speaker_1_line_1
+  // Fallback: no speaker markers found — entire script goes to Charlie (solo mode)
   if (Object.keys(variables).length === 0) {
     const fullText = phoneticSpoken(script.trim());
-    variables['speaker_1_line_1'] = {
-      name: 'speaker_1_line_1',
+    variables['charlie_line_1'] = {
+      name: 'charlie_line_1',
       type: 'text',
       properties: { content: fullText },
     };
@@ -181,17 +192,25 @@ Deno.serve(async (req) => {
         }, { status: 400 });
       }
 
-      // Parse the dual-host script into text variables
+      // Parse the dual-host script into text variables mapped to the dual-box layout
       const variables = parseScriptToVariables(broadcast.script);
       const varCount = Object.keys(variables).length;
+      const charlieLines = Object.keys(variables).filter(k => k.startsWith('charlie_line_')).length;
+      const bobLines = Object.keys(variables).filter(k => k.startsWith('bob_line_')).length;
 
+      // Payload structure for HeyGen Master Template (dual-box layout baked in)
+      // Template variables expected:
+      //   charlie_line_1 .. charlie_line_N  → lower-LEFT box (Charlie Simmons)
+      //   bob_line_1    .. bob_line_N       → lower-RIGHT box (Bob Dyson)
+      // Studio background + 3-pill backdrop are baked into the template itself.
       const payload = {
         variables,
         title: broadcast.show_name || `DNN Broadcast ${broadcast.broadcast_date}`,
         test: false,
       };
 
-      console.log(`[TEMPLATE API] Firing single render for broadcast ${broadcast.id} | ${varCount} text variables | template: ${layout.heygenTemplateId}`);
+      console.log(`[TEMPLATE API] Firing dual-box render for broadcast ${broadcast.id} | ${varCount} text variables (Charlie: ${charlieLines}, Bob: ${bobLines}) | template: ${layout.heygenTemplateId}`);
+      console.log(`[TEMPLATE API] Variable map: ${JSON.stringify(Object.keys(variables))}`);
 
       const res = await fetch(
         `${HEYGEN_TEMPLATE_API}/${layout.heygenTemplateId}/generate`,
@@ -218,11 +237,18 @@ Deno.serve(async (req) => {
 
       return Response.json({
         success: true,
-        message: 'Template API render submitted — single call, dual-avatar master',
+        message: 'Template API render submitted — dual-box master (Charlie lower-left, Bob lower-right, 3-pill backdrop baked in)',
         broadcastId: broadcast.id,
         heygenId: videoId,
         templateId: layout.heygenTemplateId,
         variableCount: varCount,
+        layoutMapping: {
+          charlie_box: 'lower-left',
+          bob_box: 'lower-right',
+          backdrop: '3-pill studio (baked into template)',
+          charlie_variables: Object.keys(variables).filter(k => k.startsWith('charlie_line_')),
+          bob_variables: Object.keys(variables).filter(k => k.startsWith('bob_line_')),
+        },
       });
     }
 
