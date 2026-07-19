@@ -9,12 +9,20 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * dual-avatar framing, lower thirds) in HeyGen. No raw avatar clips.
  * No stitching. One API call → one fully compiled master MP4.
  *
- * Script parsing:
- *   The broadcast.script is parsed for speaker turns. Lines prefixed with
- *   "Charlie:" or "Bob:" (case-insensitive) are mapped to:
- *     speaker_1_line_1, speaker_2_line_1, speaker_1_line_2, ...
- *   If no speaker markers are found, the entire script goes into
- *   speaker_1_line_1 (backward compatible with single-host monologues).
+ * Script parsing — FINALIZED TEXT VARIABLE SCHEMA (locked):
+ *   charlie_line_1 .. charlie_line_8  → lower-LEFT box (Charlie Simmons)
+ *   bob_line_1    .. bob_line_8       → lower-RIGHT box (Bob Dyson)
+ *   studio_wall_headline              → upper-center wall text frame (primary headline)
+ *   studio_wall_bullet_1              → wall text frame bullet 1
+ *   studio_wall_bullet_2              → wall text frame bullet 2
+ *   studio_wall_bullet_3              → wall text frame bullet 3
+ *
+ *   If no speaker markers are found, the entire script goes into charlie_line_1.
+ *   Headlines from broadcast.headlines[] feed the wall text frame slots.
+ *
+ * SINGLE MP4 DELIVERY: Exactly ONE HeyGen Template API call produces ONE
+ * compiled master MP4 with all elements (avatars, backdrop, text) baked in.
+ * No stitching, no browser-side overlays, no multi-clip assembly.
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
@@ -198,10 +206,28 @@ Deno.serve(async (req) => {
       const charlieLines = Object.keys(variables).filter(k => k.startsWith('charlie_line_')).length;
       const bobLines = Object.keys(variables).filter(k => k.startsWith('bob_line_')).length;
 
+      // ── WALL TEXT FRAME SLOTS (upper-center) ──
+      // Map broadcast headlines to the studio wall overlay variables.
+      const headlines = broadcast.headlines || [];
+      if (headlines.length > 0) {
+        variables['studio_wall_headline'] = {
+          name: 'studio_wall_headline', type: 'text',
+          properties: { content: headlines[0] },
+        };
+        const MAX_BULLETS = 3;
+        for (let i = 1; i <= MAX_BULLETS && i < headlines.length; i++) {
+          const key = `studio_wall_bullet_${i}`;
+          variables[key] = { name: key, type: 'text', properties: { content: headlines[i] } };
+        }
+      }
+      const wallVars = Object.keys(variables).filter(k => k.startsWith('studio_wall_'));
+
       // Payload structure for HeyGen Master Template (dual-box layout baked in)
       // Template variables expected:
-      //   charlie_line_1 .. charlie_line_N  → lower-LEFT box (Charlie Simmons)
-      //   bob_line_1    .. bob_line_N       → lower-RIGHT box (Bob Dyson)
+      //   charlie_line_1 .. charlie_line_8  → lower-LEFT box (Charlie Simmons)
+      //   bob_line_1    .. bob_line_8        → lower-RIGHT box (Bob Dyson)
+      //   studio_wall_headline               → upper-center wall text frame
+      //   studio_wall_bullet_1..3            → wall text frame bullet points
       // Studio background + 3-pill backdrop are baked into the template itself.
       const payload = {
         variables,
@@ -209,7 +235,7 @@ Deno.serve(async (req) => {
         test: false,
       };
 
-      console.log(`[TEMPLATE API] Firing dual-box render for broadcast ${broadcast.id} | ${varCount} text variables (Charlie: ${charlieLines}, Bob: ${bobLines}) | template: ${layout.heygenTemplateId}`);
+      console.log(`[TEMPLATE API] Firing dual-box render for broadcast ${broadcast.id} | ${varCount + wallVars.length} text variables (Charlie: ${charlieLines}, Bob: ${bobLines}, Wall: ${wallVars.length}) | template: ${layout.heygenTemplateId}`);
       console.log(`[TEMPLATE API] Variable map: ${JSON.stringify(Object.keys(variables))}`);
 
       const res = await fetch(
@@ -245,9 +271,12 @@ Deno.serve(async (req) => {
         layoutMapping: {
           charlie_box: 'lower-left',
           bob_box: 'lower-right',
-          backdrop: '3-pill studio (baked into template)',
+          wall_text_frame: 'upper-center',
+          backdrop: '3-pill studio (baked into template — static asset lock)',
           charlie_variables: Object.keys(variables).filter(k => k.startsWith('charlie_line_')),
           bob_variables: Object.keys(variables).filter(k => k.startsWith('bob_line_')),
+          wall_variables: wallVars,
+          delivery: 'single compiled MP4 (all elements baked in)',
         },
       });
     }
