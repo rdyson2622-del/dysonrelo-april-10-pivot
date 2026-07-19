@@ -82,6 +82,11 @@ export default function StudioLayoutPreview() {
               src={BOB_IMG}
               alt="Bob — presenter"
               className="w-full h-full object-contain object-bottom"
+              style={{
+                filter: 'contrast(1.8) brightness(1.15)',
+                WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 50% 80%, #000 55%, transparent 85%)',
+                maskImage: 'radial-gradient(ellipse 80% 90% at 50% 80%, #000 55%, transparent 85%)',
+              }}
             />
           </div>
         </div>
