@@ -259,6 +259,49 @@ Deno.serve(async (req) => {
       });
     }
 
+    // ── CHECK PREVIEW: Poll a test render, download, return MP4 URL ──
+    if (action === 'checkPreview') {
+      const videoId = body.videoId;
+      if (!videoId) {
+        return Response.json({ error: 'videoId is required for checkPreview' }, { status: 400 });
+      }
+
+      const res = await fetch(
+        `${HEYGEN_STATUS_API}?video_id=${encodeURIComponent(videoId)}`,
+        { headers: { 'X-Api-Key': heygenKey } }
+      );
+      const data = await res.json();
+      const status = data?.data?.status;
+
+      if (status === 'completed') {
+        const heygenUrl = data?.data?.video_url;
+        if (!heygenUrl) {
+          return Response.json({ status: 'completed', error: 'No video_url returned' }, { status: 500 });
+        }
+
+        // Download from HeyGen CDN and upload to permanent storage
+        console.log(`[CHECK PREVIEW] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
+        const videoRes = await fetch(heygenUrl);
+        const videoBlob = await videoRes.blob();
+        const file = new File([videoBlob], `layout_preview_${videoId}.mp4`, { type: 'video/mp4' });
+        const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+        const permanentUrl = uploadRes.file_url;
+        console.log(`[CHECK PREVIEW] Uploaded to permanent storage: ${permanentUrl}`);
+
+        return Response.json({
+          success: true,
+          status: 'completed',
+          videoUrl: permanentUrl,
+          heygenUrl,
+        });
+      } else if (status === 'failed') {
+        const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error) || 'Render failed';
+        return Response.json({ success: false, status: 'failed', error: errMsg });
+      } else {
+        return Response.json({ success: true, status: status || 'processing' });
+      }
+    }
+
     // ── START: Template-based render ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
