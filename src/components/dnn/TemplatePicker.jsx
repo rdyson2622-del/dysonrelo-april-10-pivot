@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { CheckCircle, AlertTriangle, RefreshCw, Image as ImageIcon, LayoutTemplate, Play } from 'lucide-react';
+import { CheckCircle, AlertTriangle, RefreshCw, Image as ImageIcon, LayoutTemplate, Play, EyeOff, Eye } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
@@ -12,8 +12,9 @@ export default function TemplatePicker() {
   const [assignMsg, setAssignMsg] = useState(null);
   const [testing, setTesting] = useState(null);
   const [testResults, setTestResults] = useState({});
+  const [showHidden, setShowHidden] = useState(false);
 
-  // Fetch available HeyGen templates
+  // Fetch available HeyGen templates (now includes golden master direct fetch + hidden list)
   const { data: templateList, isLoading: templatesLoading } = useQuery({
     queryKey: ['heygenTemplates'],
     queryFn: async () => {
@@ -33,14 +34,17 @@ export default function TemplatePicker() {
   const currentTemplateId = golden?.heygen_template_id;
   const bgUrl = golden?.background?.url;
 
-  const templates = templateList?.templates || [];
-  const currentMatch = templates.find(t => t.id === currentTemplateId);
+  const allTemplates = templateList?.templates || [];
+  const hiddenIds = templateList?.hidden_templates || golden?.hidden_templates || [];
+  const templates = showHidden
+    ? allTemplates
+    : allTemplates.filter(t => !hiddenIds.includes(t.id));
+  const currentMatch = allTemplates.find(t => t.id === currentTemplateId);
 
   const handleTestRender = async (templateId, templateName) => {
     setTesting(templateId);
     setTestResults(prev => ({ ...prev, [templateId]: null }));
     try {
-      // Find the most recent broadcast with a script
       const broadcasts = await base44.entities.DnnBroadcast.list('-broadcast_date', 20);
       const target = broadcasts.find(b => b.script);
       if (!target) {
@@ -74,12 +78,30 @@ export default function TemplatePicker() {
         heygen_template_id: templateId,
       });
       await queryClient.invalidateQueries({ queryKey: ['goldenMasterLayout'] });
+      await queryClient.invalidateQueries({ queryKey: ['heygenTemplates'] });
       setAssignMsg({ success: true, msg: `Assigned "${templateName}" as golden master` });
     } catch (e) {
       setAssignMsg({ success: false, msg: e.message });
     }
     setAssigning(null);
   };
+
+  const handleHide = async (templateId) => {
+    const currentHidden = golden?.hidden_templates || [];
+    if (currentHidden.includes(templateId)) {
+      // Unhide
+      const updated = currentHidden.filter(id => id !== templateId);
+      await base44.entities.LayoutTemplate.update(MASTER_LAYOUT_ID, { hidden_templates: updated });
+    } else {
+      // Hide
+      const updated = [...currentHidden, templateId];
+      await base44.entities.LayoutTemplate.update(MASTER_LAYOUT_ID, { hidden_templates: updated });
+    }
+    await queryClient.invalidateQueries({ queryKey: ['goldenMasterLayout'] });
+    await queryClient.invalidateQueries({ queryKey: ['heygenTemplates'] });
+  };
+
+  const hiddenCount = allTemplates.filter(t => hiddenIds.includes(t.id)).length;
 
   return (
     <div className="px-6 py-4" style={{ background: 'rgba(212,175,55,0.04)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
@@ -101,6 +123,9 @@ export default function TemplatePicker() {
         {currentMatch && (
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <p className="text-[10px] text-slate-400">Name: <span className="font-bold text-white">{currentMatch.name}</span></p>
+            {currentMatch.source === 'direct_fetch' && (
+              <span className="text-[8px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>DIRECT FETCH</span>
+            )}
           </div>
         )}
         {bgUrl && (
@@ -108,6 +133,15 @@ export default function TemplatePicker() {
             <ImageIcon className="w-3 h-3" style={{ color: GOLD }} />
             <p className="text-[10px] text-slate-400">BG: <span className="text-slate-300">3-pillar studio</span></p>
           </div>
+        )}
+        {hiddenCount > 0 && (
+          <button
+            onClick={() => setShowHidden(!showHidden)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold text-slate-400 transition-all hover:text-white"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            {showHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+            {showHidden ? `Show all (${allTemplates.length})` : `${hiddenCount} hidden`}
+          </button>
         )}
       </div>
 
@@ -134,16 +168,28 @@ export default function TemplatePicker() {
         <div className="flex flex-col gap-3">
           {templates.map((tpl) => {
             const isActive = tpl.id === currentTemplateId;
+            const isHidden = hiddenIds.includes(tpl.id);
             return (
               <div key={tpl.id} className="rounded-lg overflow-hidden transition-all"
                 style={{
                   background: isActive ? 'rgba(74,222,128,0.06)' : '#1a1a1a',
-                  border: `1.5px solid ${isActive ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                  border: `1.5px solid ${isActive ? 'rgba(74,222,128,0.4)' : isHidden ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.08)'}`,
+                  opacity: isHidden ? 0.5 : 1,
                 }}>
                 <div className="p-3">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-xs font-bold text-white truncate">{tpl.name}</p>
-                    {isActive && <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />}
+                    <div className="flex items-center gap-1 shrink-0">
+                      {isActive && <CheckCircle className="w-4 h-4 text-green-400" />}
+                      <button
+                        onClick={() => handleHide(tpl.id)}
+                        disabled={isActive}
+                        title={isHidden ? 'Unhide template' : 'Hide template'}
+                        className="p-1 rounded text-slate-500 hover:text-white transition-colors disabled:opacity-30"
+                        style={{ background: 'transparent' }}>
+                        {isHidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-[9px] font-mono text-slate-500 truncate">{tpl.id}</p>

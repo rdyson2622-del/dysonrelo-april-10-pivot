@@ -21,6 +21,13 @@
       "type": "string",
       "description": "HeyGen Master Template ID for the Template API (POST /v2/template/{template_id}/generate). When set, the render pipeline passes daily dialogue as text variables into this static template instead of generating raw avatar clips. The template locks all visual layout (studio background, dual-avatar framing, lower thirds) in HeyGen."
     },
+    "hidden_templates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "HeyGen template IDs hidden from the TemplatePicker by the admin. These are old test templates that should not clutter the pipeline view."
+    },
     "reference_video_url": {
       "type": "string",
       "description": "Permanent MP4 URL of the broadcast that demonstrates this layout (the golden master reference file)"
