@@ -8,7 +8,10 @@ const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
 // Default positions — percentages of canvas (x=left, y=top, w=width, h=height)
 const DEFAULT_BOB = { x: 4, y: 35, w: 22, h: 60, label: 'Bob', sub: 'Transparent · Lower Left' };
-const DEFAULT_PANEL = { x: 30, y: 8, w: 40, h: 28 };
+// Wall map billboard — positioned over the back-wall US map screen as a laid-in display
+const DEFAULT_PANEL = { x: 27, y: 12, w: 46, h: 33 };
+// Wall map zone guide — the visible screen area on the back wall (for reference only)
+const WALL_MAP_ZONE = { x: 24, y: 9, w: 52, h: 38 };
 const DEFAULT_PILLS = [
   { x: 15, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
   { x: 43, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
@@ -160,6 +163,20 @@ export default function LayoutEditor() {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
+            {/* Wall map zone guide — shows the back-wall screen area for reference */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                left: `${WALL_MAP_ZONE.x}%`,
+                top: `${WALL_MAP_ZONE.y}%`,
+                width: `${WALL_MAP_ZONE.w}%`,
+                height: `${WALL_MAP_ZONE.h}%`,
+                border: '1px dashed rgba(212,175,55,0.25)',
+                borderRadius: '4px',
+              }}
+            >
+              <span className="absolute -top-4 left-0 text-[7px] font-black tracking-widest uppercase" style={{ color: 'rgba(212,175,55,0.4)' }}>Wall Map Zone</span>
+            </div>
             {/* Bob — transparent lower-left presenter */}
             <div
               onMouseDown={(e) => handleMouseDown(e, 'bob')}
@@ -213,7 +230,7 @@ export default function LayoutEditor() {
                 <div className="w-[75%] h-[2px] rounded-full" style={{ background: '#2a2a2a' }} />
               </div>
               {selected === 'panel' && (
-                <div className="absolute -top-5 left-0 text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded" style={{ background: GOLD, color: '#000' }}>Solution Panel</div>
+                <div className="absolute -top-5 left-0 text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded" style={{ background: GOLD, color: '#000' }}>Wall Map Billboard</div>
               )}
             </div>
 
@@ -263,7 +280,7 @@ export default function LayoutEditor() {
             <p className="text-[9px] font-black tracking-widest uppercase text-slate-500 mb-2">Select Element</p>
             <div className="grid grid-cols-2 gap-1.5">
               <button onClick={() => setSelected('bob')} className="px-2 py-1.5 rounded text-[10px] font-bold transition-all" style={{ background: selected === 'bob' ? 'rgba(212,175,55,0.2)' : '#1a1a1a', border: `1px solid ${selected === 'bob' ? GOLD : 'rgba(255,255,255,0.1)'}`, color: selected === 'bob' ? GOLD : '#999' }}>Bob</button>
-              <button onClick={() => setSelected('panel')} className="px-2 py-1.5 rounded text-[10px] font-bold transition-all" style={{ background: selected === 'panel' ? 'rgba(212,175,55,0.2)' : '#1a1a1a', border: `1px solid ${selected === 'panel' ? GOLD : 'rgba(255,255,255,0.1)'}`, color: selected === 'panel' ? GOLD : '#999' }}>Solution Panel</button>
+              <button onClick={() => setSelected('panel')} className="px-2 py-1.5 rounded text-[10px] font-bold transition-all" style={{ background: selected === 'panel' ? 'rgba(212,175,55,0.2)' : '#1a1a1a', border: `1px solid ${selected === 'panel' ? GOLD : 'rgba(255,255,255,0.1)'}`, color: selected === 'panel' ? GOLD : '#999' }}>Map Billboard</button>
               {layout.pills.map((pill, i) => (
                 <button key={i} onClick={() => setSelected(`pill-${i}`)} className="px-2 py-1.5 rounded text-[10px] font-bold transition-all" style={{ background: selected === `pill-${i}` ? 'rgba(212,175,55,0.2)' : '#1a1a1a', border: `1px solid ${selected === `pill-${i}` ? GOLD : 'rgba(255,255,255,0.1)'}`, color: selected === `pill-${i}` ? GOLD : '#999' }}>{pill.label}</button>
               ))}
@@ -274,7 +291,7 @@ export default function LayoutEditor() {
           {selectedItem && (
             <div className="rounded-lg p-3" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)' }}>
               <p className="text-[9px] font-black tracking-widest uppercase text-slate-500 mb-3">
-                Position & Size — <span style={{ color: GOLD }}>{selected === 'bob' ? 'Bob' : selected === 'panel' ? 'Solution Panel' : layout.pills[parseInt(selected.split('-')[1])].label}</span>
+                Position & Size — <span style={{ color: GOLD }}>{selected === 'bob' ? 'Bob' : selected === 'panel' ? 'Wall Map Billboard' : layout.pills[parseInt(selected.split('-')[1])].label}</span>
               </p>
               <div className="space-y-2.5">
                 <div>
@@ -307,7 +324,7 @@ export default function LayoutEditor() {
           {/* Reference note */}
           <div className="mt-3 rounded-lg p-2.5" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
             <p className="text-[9px] text-slate-400 leading-relaxed">
-              <span className="font-bold" style={{ color: GOLD }}>For Jay Chavez:</span> These are exact pixel percentages for Bob's transparent position, the white solution panel, and the 3 floor pills (NEWS / RELOCATION / INTELLIGENCE). Save and export the JSON to hardwire into the HeyGen template.
+              <span className="font-bold" style={{ color: GOLD }}>For Jay Chavez:</span> The white billboard is positioned over the back-wall US map screen as a laid-in display — it should look like a screen mounted on the wall. Also includes Bob's transparent position and the 3 floor pills (NEWS / RELOCATION / INTELLIGENCE). Save and export the JSON to hardwire into the HeyGen template.
             </p>
           </div>
         </div>
