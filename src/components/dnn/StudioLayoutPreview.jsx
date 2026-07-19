@@ -82,7 +82,7 @@ export default function StudioLayoutPreview() {
           <img
             src={BOB_IMG}
             alt="Bob — presenter"
-            className="w-full h-full object-contain object-bottom"
+            className="w-full h-full object-cover object-top"
           />
         </div>
 
