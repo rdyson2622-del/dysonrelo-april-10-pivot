@@ -236,8 +236,8 @@ export default function DnnVideoPreview() {
     refetchInterval: 60000,
   });
 
-  // FILTER: July 16 shows only — remove all others
-  const TARGET_DATE = '2026-07-16';
+  // FILTER: July 15 shows only — remove all others
+  const TARGET_DATE = '2026-07-15';
   const stitched = broadcasts.filter(b => b.videoUrl && b.broadcast_date === TARGET_DATE);
   const notStitched = broadcasts.filter(b => !b.videoUrl && b.status === 'completed' && b.broadcast_date === TARGET_DATE);
 
@@ -252,7 +252,7 @@ export default function DnnVideoPreview() {
           <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
           <div>
             <p className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>Video Preview Studio</p>
-            <p className="text-[10px] text-slate-500">July 16 broadcasts only — review & post</p>
+            <p className="text-[10px] text-slate-500">July 15 broadcasts only — review & post</p>
           </div>
         </div>
         <button onClick={handleRefresh} disabled={refreshing}
@@ -275,7 +275,7 @@ export default function DnnVideoPreview() {
           </div>
         )}
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg ml-auto" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
-          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>July 16 Broadcasts Only — No Individual Clips</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>July 15 Broadcasts Only — No Individual Clips</span>
         </div>
       </div>
 
@@ -327,7 +327,7 @@ export default function DnnVideoPreview() {
               </div>
             );
           })}
-          {/* Video Library broadcasts — July 16 only */}
+          {/* Video Library broadcasts — July 15 only */}
           {videoLibrary.filter(v => v.broadcast_date === TARGET_DATE).map(vid => {
             const playUrl = vid.video_url || vid.file_url;
             if (!playUrl) return null;
