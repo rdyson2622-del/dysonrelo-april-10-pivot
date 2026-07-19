@@ -6,7 +6,7 @@ const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
-const DEFAULT_BOB = { x: 2, y: 35, w: 20.9, h: 57, label: 'Bob', sub: 'Transparent · Lower Left' };
+const DEFAULT_BOB = { x: 2, y: 40, w: 18.8, h: 51.3, label: 'Bob', sub: 'Black Background · Lower Left' };
 const DEFAULT_PANEL = { x: 18, y: 13, w: 46, h: 40 };
 const BOB_IMG = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/b41f00909_bob_dyson_preview.webp';
 const DEFAULT_PILLS = [
@@ -65,7 +65,7 @@ export default function StudioLayoutPreview() {
           boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
         }}
       >
-        {/* Bob — transparent lower-left presenter */}
+        {/* Bob — black background presenter (Jay Chavez project) */}
         <div
           className="absolute"
           style={{
@@ -74,21 +74,14 @@ export default function StudioLayoutPreview() {
             width: `${layout.bob.w}%`,
             height: `${layout.bob.h}%`,
             zIndex: 50,
-            mixBlendMode: 'screen',
+            background: '#000',
           }}
         >
-          <div className="w-full h-full flex items-end justify-center">
-            <img
-              src={BOB_IMG}
-              alt="Bob — presenter"
-              className="w-full h-full object-contain object-bottom"
-              style={{
-                filter: 'contrast(1.8) brightness(1.15)',
-                WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 50% 80%, #000 55%, transparent 85%)',
-                maskImage: 'radial-gradient(ellipse 80% 90% at 50% 80%, #000 55%, transparent 85%)',
-              }}
-            />
-          </div>
+          <img
+            src={BOB_IMG}
+            alt="Bob — presenter"
+            className="w-full h-full object-contain object-bottom"
+          />
         </div>
 
         {/* White wall map billboard — laid-in screen over the back-wall map */}
