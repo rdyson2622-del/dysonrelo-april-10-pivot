@@ -19,7 +19,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 
-const HEYGEN_API = 'https://api.heygen.com/v2/video/generate';
+const HEYGEN_TEMPLATE_API = 'https://api.heygen.com/v2/template';
 const HEYGEN_STATUS_API = 'https://api.heygen.com/v1/video_status.get';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
@@ -39,13 +39,14 @@ function phoneticSpoken(text) {
     .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
 }
 
-// ── LOAD PRESENTER CONFIG FROM MASTER LAYOUT (no template ID required) ──
-async function loadPresenterConfig(base44) {
+// ── LOAD MASTER LAYOUT CONFIG (template ID + presenter IDs + dims) ──
+async function loadMasterLayout(base44) {
   try {
     const templates = await base44.asServiceRole.entities.LayoutTemplate.filter({ id: MASTER_LAYOUT_ID });
     const t = templates?.[0];
     if (t) {
       return {
+        templateId: t?.heygen_template_id,
         charlieAvatarId: t?.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
         charlieVoiceId: t?.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
         bobPhotoId: t?.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
@@ -57,12 +58,96 @@ async function loadPresenterConfig(base44) {
     console.log(`Master layout load failed, using fallback: ${e.message}`);
   }
   return {
+    templateId: null,
     charlieAvatarId: '41f40b894f6944188c7908253b12e921',
     charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
     bobPhotoId: '31b79a86784e495090472af2e7b9407c',
     bobVoiceId: '147b8f5713024fb9afc106f266e47482',
     videoDims: { width: 1280, height: 720 },
   };
+}
+
+// ── SPLIT A SCRIPT INTO UP TO N SPOKEN LINES ──
+function splitScriptIntoLines(script, maxLines = 8) {
+  if (!script) return [];
+  const sentences = script.match(/[^.!?]+[.!?]+["']?/g) || [script];
+  if (sentences.length <= maxLines) return sentences.map(s => s.trim()).filter(Boolean);
+  const lines = [];
+  const perLine = Math.ceil(sentences.length / maxLines);
+  for (let i = 0; i < sentences.length; i += perLine) {
+    const chunk = sentences.slice(i, i + perLine).join(' ').trim();
+    if (chunk) lines.push(chunk);
+  }
+  return lines.slice(0, maxLines);
+}
+
+// ── BUILD TEMPLATE VARIABLES FROM BROADCAST ──
+function buildTemplateVariables(broadcast) {
+  const variables = {};
+  const isTagTeam = broadcast.format === 'tag_team';
+
+  // Studio wall: headline + 3 bullets from headlines array
+  const headlines = broadcast.headlines || [];
+  if (headlines[0]) {
+    variables['studio_wall_headline'] = {
+      name: 'studio_wall_headline', type: 'text',
+      properties: { content: headlines[0] },
+    };
+  }
+  if (headlines[1]) {
+    variables['studio_wall_bullet_1'] = {
+      name: 'studio_wall_bullet_1', type: 'text',
+      properties: { content: headlines[1] },
+    };
+  }
+  if (headlines[2]) {
+    variables['studio_wall_bullet_2'] = {
+      name: 'studio_wall_bullet_2', type: 'text',
+      properties: { content: headlines[2] },
+    };
+  }
+  if (headlines[3]) {
+    variables['studio_wall_bullet_3'] = {
+      name: 'studio_wall_bullet_3', type: 'text',
+      properties: { content: headlines[3] },
+    };
+  }
+
+  if (isTagTeam && broadcast.clips?.length) {
+    // Tag-team: split clips by role
+    const charlieClips = broadcast.clips.filter(c => c.role === 'charlie' && c.script);
+    const bobClips = broadcast.clips.filter(c => c.role === 'bob' && c.script);
+
+    const charlieScript = charlieClips.map(c => c.script).join(' ');
+    const bobScript = bobClips.map(c => c.script).join(' ');
+
+    const charlieLines = splitScriptIntoLines(charlieScript, 8);
+    const bobLines = splitScriptIntoLines(bobScript, 8);
+
+    charlieLines.forEach((line, i) => {
+      variables[`charlie_line_${i + 1}`] = {
+        name: `charlie_line_${i + 1}`, type: 'text',
+        properties: { content: phoneticSpoken(line) },
+      };
+    });
+    bobLines.forEach((line, i) => {
+      variables[`bob_line_${i + 1}`] = {
+        name: `bob_line_${i + 1}`, type: 'text',
+        properties: { content: phoneticSpoken(line) },
+      };
+    });
+  } else {
+    // Solo: all script goes to Charlie's 8 lines
+    const lines = splitScriptIntoLines(broadcast.script, 8);
+    lines.forEach((line, i) => {
+      variables[`charlie_line_${i + 1}`] = {
+        name: `charlie_line_${i + 1}`, type: 'text',
+        properties: { content: phoneticSpoken(line) },
+      };
+    });
+  }
+
+  return variables;
 }
 
 Deno.serve(async (req) => {
@@ -92,7 +177,7 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
-    // ── START: Solo presenter render ──
+    // ── START: Template-based render ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -116,34 +201,31 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no script' }, { status: 400 });
       }
 
-      const config = await loadPresenterConfig(base44);
-      const isBob = broadcast.presenter === 'bob';
+      const layout = await loadMasterLayout(base44);
 
-      const spokenText = phoneticSpoken(broadcast.script.trim());
+      if (!layout.templateId) {
+        return Response.json({
+          error: 'No heygen_template_id set on the master LayoutTemplate. Configure it in Admin Layout Library first.',
+        }, { status: 400 });
+      }
 
-      const character = isBob
-        ? { type: 'talking_photo', talking_photo_id: config.bobPhotoId }
-        : { type: 'avatar', avatar_id: config.charlieAvatarId, avatar_style: 'normal' };
-
-      const voice = isBob
-        ? { type: 'text', voice_id: config.bobVoiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 }
-        : { type: 'text', voice_id: config.charlieVoiceId, input_text: spokenText, speed: 1.05, volume: 1.0 };
+      const variables = buildTemplateVariables(broadcast);
+      const variableCount = Object.keys(variables).length;
+      if (variableCount === 0) {
+        return Response.json({ error: 'No variables could be built from this broadcast' }, { status: 400 });
+      }
 
       const payload = {
-        video_inputs: [{
-          character,
-          voice,
-          background: { type: 'color', value: '#000000' },
-        }],
-        dimension: config.videoDims,
+        title: `${broadcast.show_name || 'DNN Broadcast'} — ${broadcast.broadcast_date || ''}`,
+        variables,
         test: false,
       };
 
-      const presenterLabel = isBob ? 'Bob (talking photo)' : 'Charlie (avatar)';
+      const presenterLabel = broadcast.format === 'tag_team' ? 'Tag-team (Charlie + Bob)' : 'Solo (Charlie)';
 
-      console.log(`[SOLO RENDER] Firing solo render for broadcast ${broadcast.id} | presenter: ${presenterLabel}`);
+      console.log(`[TEMPLATE RENDER] Firing template render for broadcast ${broadcast.id} | template: ${layout.templateId} | presenter: ${presenterLabel} | variables: ${variableCount}`);
 
-      const res = await fetch(HEYGEN_API, {
+      const res = await fetch(`${HEYGEN_TEMPLATE_API}/${layout.templateId}/generate`, {
         method: 'POST',
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -152,7 +234,7 @@ Deno.serve(async (req) => {
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen solo render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen template render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
@@ -165,10 +247,10 @@ Deno.serve(async (req) => {
 
       return Response.json({
         success: true,
-        message: `Solo render submitted — ${presenterLabel} reading full script`,
+        message: `Template render submitted — ${presenterLabel} | ${variableCount} variables injected`,
         broadcastId: broadcast.id,
         heygenId: videoId,
-        presenter: isBob ? 'bob' : 'charlie',
+        templateId: layout.templateId,
       });
     }
 
@@ -196,7 +278,7 @@ Deno.serve(async (req) => {
           }
 
           // Download from HeyGen CDN
-          console.log(`[SOLO RENDER] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
+          console.log(`[TEMPLATE RENDER] Downloading from HeyGen: ${heygenUrl.substring(0, 80)}...`);
           const videoRes = await fetch(heygenUrl);
           const videoBlob = await videoRes.blob();
 
@@ -204,7 +286,7 @@ Deno.serve(async (req) => {
           const file = new File([videoBlob], `dnn_broadcast_${broadcast.broadcast_date}.mp4`, { type: 'video/mp4' });
           const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
           const permanentUrl = uploadRes.file_url;
-          console.log(`[SOLO RENDER] Uploaded to permanent storage: ${permanentUrl}`);
+          console.log(`[TEMPLATE RENDER] Uploaded to permanent storage: ${permanentUrl}`);
 
           await Broadcasts.update(broadcast.id, {
             videoUrl: permanentUrl,
@@ -216,7 +298,7 @@ Deno.serve(async (req) => {
           results.push({ id: broadcast.id, status: 'completed', videoUrl: permanentUrl });
         } else if (status === 'failed') {
           const errMsg = data?.data?.error?.message || JSON.stringify(data?.data?.error) || 'HeyGen render failed';
-          console.log(`[SOLO RENDER] FAILED — Error: ${errMsg}`);
+          console.log(`[TEMPLATE RENDER] FAILED — Error: ${errMsg}`);
           await Broadcasts.update(broadcast.id, { status: 'failed', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });
         } else {
