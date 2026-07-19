@@ -4,10 +4,11 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, Zap, AlertTriangle, ChevronDown, ChevronRight,
   FileText, Clapperboard, Film, CheckCircle, XCircle, Clock, Edit3,
-  Sparkles, Layers
+  Sparkles, Layers, LayoutTemplate
 } from 'lucide-react';
 import ShowPipelineCard from '@/components/dnn/ShowPipelineCard';
 import ScriptEditorModal from '@/components/dnn/ScriptEditorModal';
+import TemplatePicker from '@/components/dnn/TemplatePicker';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -140,6 +141,9 @@ export default function AdminShowPipeline() {
           </div>
         )}
       </div>
+
+      {/* HeyGen Template Manager */}
+      <TemplatePicker />
 
       {/* Pipeline shows */}
       <div className="px-6 py-6">
