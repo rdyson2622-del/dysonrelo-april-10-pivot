@@ -378,27 +378,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </>
       )}
 
-      {/* Poster + CTA overlay — shown before first play */}
-      {!playing && idx === 0 && (
-        <button
-          onClick={togglePlay}
-          aria-label="Click to watch the live show"
-          className="absolute inset-0 z-15 flex flex-col items-center justify-center transition-all"
-          style={{ background: '#000' }}
-        >
-          <img src={DNN_POSTER} alt="DNN Intelligence Bureau" className="absolute inset-0 w-full h-full object-cover opacity-60" />
-          <div className="relative z-10 flex flex-col items-center gap-4">
-            <span className="w-20 h-20 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-              <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
-            </span>
-            <span className="text-sm md:text-base font-black tracking-[0.2em] uppercase px-5 py-2 rounded-full"
-              style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'rgba(0,0,0,0.6)' }}>
-              Click to the Live Show
-            </span>
-          </div>
-        </button>
-      )}
+
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
