@@ -81,7 +81,7 @@ export default function StudioLayoutPreview() {
               src={BOB_IMG}
               alt="Bob — presenter"
               className="w-full h-full object-contain object-bottom"
-              style={{ mixBlendMode: 'lighten' }}
+
             />
           </div>
         </div>
