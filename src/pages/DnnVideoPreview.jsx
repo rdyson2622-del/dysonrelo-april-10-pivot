@@ -192,11 +192,13 @@ export default function DnnVideoPreview() {
   const queryClient = useQueryClient();
   const [isAdmin, setIsAdmin] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [goldenPlaying, setGoldenPlaying] = useState(false);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['dnnVideoPreviewBroadcasts'] }),
+      queryClient.invalidateQueries({ queryKey: ['goldenMasterLayout'] }),
     ]);
     setRefreshing(false);
   };
@@ -216,6 +218,16 @@ export default function DnnVideoPreview() {
     queryFn: () => base44.entities.DnnBroadcast.list('-broadcast_date', 50),
     refetchInterval: 30000,
   });
+
+  const { data: goldenMaster } = useQuery({
+    queryKey: ['goldenMasterLayout'],
+    queryFn: () => base44.entities.LayoutTemplate.filter({ id: '6a5bc2a88cc89dc9b84ec199' }),
+    refetchInterval: 60000,
+  });
+  const goldenLayout = goldenMaster?.[0];
+  const goldenVideoUrl = goldenLayout?.reference_video_url;
+  const goldenTemplateName = goldenLayout?.template_name || 'DNN Master Base Layout';
+  const goldenHeygenTemplateId = goldenLayout?.heygen_template_id;
 
   const stitched = broadcasts.filter(b => b.videoUrl);
   const notStitched = broadcasts.filter(b => !b.videoUrl && b.status === 'completed');
@@ -257,6 +269,61 @@ export default function DnnVideoPreview() {
           <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>Posting Full Shows Only — No Individual Clips</span>
         </div>
       </div>
+
+      {/* Golden Master Reference Banner */}
+      {goldenVideoUrl && (
+        <div className="px-6 py-5" style={{ background: 'rgba(212,175,55,0.06)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase"
+              style={{ background: GOLD, color: '#000' }}>
+              ★ Golden Master
+            </span>
+            <p className="text-sm font-black text-white">{goldenTemplateName}</p>
+            <span className="text-[10px] text-slate-500">— Reference video for HeyGen Template API</span>
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:w-[480px] md:flex-shrink-0">
+              <div className="relative aspect-video bg-black rounded-lg overflow-hidden" style={{ border: `2px solid ${GOLD}` }}>
+                {goldenPlaying ? (
+                  <video src={goldenVideoUrl} controls autoPlay playsInline className="w-full h-full" />
+                ) : (
+                  <button onClick={() => setGoldenPlaying(true)} className="w-full h-full flex items-center justify-center group relative">
+                    <video src={goldenVideoUrl} muted playsInline preload="metadata"
+                      onLoadedMetadata={(e) => { e.target.currentTime = 2; }}
+                      className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                      <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                        style={{ background: GOLD }}>
+                        <Play className="w-7 h-7 ml-1 text-black" fill="black" />
+                      </div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-2">
+              <p className="text-xs text-slate-300 leading-relaxed">
+                This is the reference video that defines the visual layout (studio backdrop, dual-avatar framing, lower thirds)
+                for all future HeyGen Template API renders. Daily dialogue will be injected as text variables into a static
+                HeyGen Master Template that mirrors this exact composition.
+              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-slate-500">HeyGen Template ID:</span>
+                {goldenHeygenTemplateId ? (
+                  <span className="text-xs font-mono font-bold text-green-400">{goldenHeygenTemplateId}</span>
+                ) : (
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}>
+                    ⚠ NOT CONFIGURED
+                  </span>
+                )}
+              </div>
+              {goldenLayout?.reference_broadcast_id && (
+                <p className="text-[10px] text-slate-600">Reference Broadcast: {goldenLayout.reference_broadcast_id}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Warning banner */}
       <div className="px-6 py-3" style={{ background: 'rgba(251,191,36,0.06)' }}>
