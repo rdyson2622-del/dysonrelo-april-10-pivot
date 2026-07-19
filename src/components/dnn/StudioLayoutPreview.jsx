@@ -74,6 +74,7 @@ export default function StudioLayoutPreview() {
             width: `${layout.bob.w}%`,
             height: `${layout.bob.h}%`,
             zIndex: 50,
+            mixBlendMode: 'screen',
           }}
         >
           <div className="w-full h-full flex items-end justify-center">
@@ -81,8 +82,7 @@ export default function StudioLayoutPreview() {
               src={BOB_IMG}
               alt="Bob — presenter"
               className="w-full h-full object-contain object-bottom"
-              style={{ mixBlendMode: 'screen' }}
-              />
+            />
           </div>
         </div>
 
