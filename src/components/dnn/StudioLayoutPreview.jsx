@@ -8,7 +8,7 @@ const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
 const DEFAULT_BOB = { x: 4, y: 40, w: 20.9, h: 57, label: 'Bob', sub: 'Transparent · Lower Left' };
 const DEFAULT_PANEL = { x: 18, y: 3, w: 46, h: 40 };
-const BOB_IMG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/ab833d97d_generated_image.png';
+const BOB_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/4dc241948_bob_dyson_transparent.webm';
 const DEFAULT_PILLS = [
   { x: 30, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
   { x: 46, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
@@ -77,11 +77,13 @@ export default function StudioLayoutPreview() {
           }}
         >
           <div className="w-full h-full flex items-end justify-center">
-            <img
-              src={BOB_IMG}
-              alt="Bob — presenter"
+            <video
+              src={BOB_VIDEO}
+              autoPlay
+              loop
+              muted
+              playsInline
               className="w-full h-full object-contain object-bottom"
-              style={{ mixBlendMode: 'lighten' }}
             />
           </div>
         </div>
