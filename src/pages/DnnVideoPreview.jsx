@@ -236,8 +236,10 @@ export default function DnnVideoPreview() {
     refetchInterval: 60000,
   });
 
-  const stitched = broadcasts.filter(b => b.videoUrl);
-  const notStitched = broadcasts.filter(b => !b.videoUrl && b.status === 'completed');
+  // FILTER: July 16 shows only — remove all others
+  const TARGET_DATE = '2026-07-16';
+  const stitched = broadcasts.filter(b => b.videoUrl && b.broadcast_date === TARGET_DATE);
+  const notStitched = broadcasts.filter(b => !b.videoUrl && b.status === 'completed' && b.broadcast_date === TARGET_DATE);
 
   if (!isAdmin) return null;
 
@@ -250,7 +252,7 @@ export default function DnnVideoPreview() {
           <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
           <div>
             <p className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>Video Preview Studio</p>
-            <p className="text-[10px] text-slate-500">Full stitched shows — review & post</p>
+            <p className="text-[10px] text-slate-500">July 16 broadcasts only — review & post</p>
           </div>
         </div>
         <button onClick={handleRefresh} disabled={refreshing}
@@ -273,7 +275,7 @@ export default function DnnVideoPreview() {
           </div>
         )}
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg ml-auto" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}>
-          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>Posting Full Shows Only — No Individual Clips</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: GOLD }}>July 16 Broadcasts Only — No Individual Clips</span>
         </div>
       </div>
 
@@ -292,7 +294,7 @@ export default function DnnVideoPreview() {
           and 3 pills across the lower center background. Once you identify it, tell me which show number it is.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {broadcasts.filter(b => b.videoUrl || (b.clips || []).some(c => c.videoUrl)).map(show => {
+          {broadcasts.filter(b => b.broadcast_date === TARGET_DATE && (b.videoUrl || (b.clips || []).some(c => c.videoUrl))).map(show => {
             const playUrl = show.videoUrl || (show.clips || []).find(c => c.videoUrl)?.videoUrl;
             const isCurrentGolden = goldenLayout?.reference_broadcast_id === show.id;
             return (
@@ -325,8 +327,8 @@ export default function DnnVideoPreview() {
               </div>
             );
           })}
-          {/* Video Library broadcasts — older archived MP4s */}
-          {videoLibrary.map(vid => {
+          {/* Video Library broadcasts — July 16 only */}
+          {videoLibrary.filter(v => v.broadcast_date === TARGET_DATE).map(vid => {
             const playUrl = vid.video_url || vid.file_url;
             if (!playUrl) return null;
             return (
