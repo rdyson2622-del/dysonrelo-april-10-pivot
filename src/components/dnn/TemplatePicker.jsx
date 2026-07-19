@@ -131,7 +131,7 @@ export default function TemplatePicker() {
       ) : templates.length === 0 ? (
         <p className="text-xs text-slate-500 py-3">No templates found in your HeyGen account.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="flex flex-col gap-3">
           {templates.map((tpl) => {
             const isActive = tpl.id === currentTemplateId;
             return (
@@ -155,11 +155,11 @@ export default function TemplatePicker() {
                       {tpl.variables?.length || 0} vars
                     </span>
                   </div>
-                  <div className="aspect-video rounded overflow-hidden mb-2 bg-black flex items-center justify-center">
+                  <div className="rounded overflow-hidden mb-2 bg-black flex items-center justify-center" style={{ width: '100%' }}>
                     {tpl.thumbnail_image_url || tpl.preview_image_url ? (
-                      <img src={tpl.thumbnail_image_url || tpl.preview_image_url} alt={tpl.name} className="w-full h-full object-cover" />
+                      <img src={tpl.thumbnail_image_url || tpl.preview_image_url} alt={tpl.name} className="w-full h-auto block" />
                     ) : (
-                      <div className="flex flex-col items-center gap-1">
+                      <div className="flex flex-col items-center gap-1 py-8">
                         <ImageIcon className="w-6 h-6 text-slate-600" />
                         <p className="text-[9px] text-slate-600">No preview</p>
                       </div>
