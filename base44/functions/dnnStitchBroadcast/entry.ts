@@ -177,6 +177,42 @@ Deno.serve(async (req) => {
     const action = body?.action || 'check';
     const Broadcasts = base44.asServiceRole.entities.DnnBroadcast;
 
+    // ── TEST PREVIEW: Fire template render directly without a broadcast ──
+    if (action === 'testPreview') {
+      const templateId = body.templateId;
+      if (!templateId) {
+        return Response.json({ error: 'templateId is required for testPreview' }, { status: 400 });
+      }
+
+      console.log(`[TEST PREVIEW] Firing template ${templateId} with empty variables (layout preview only)`);
+
+      const payload = {
+        title: `Layout Preview — ${templateId}`,
+        variables: {},
+        test: false,
+      };
+
+      const res = await fetch(`${HEYGEN_TEMPLATE_API}/${templateId}/generate`, {
+        method: 'POST',
+        headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      const videoId = data?.data?.video_id;
+      if (!res.ok || !videoId) {
+        return Response.json({ error: 'HeyGen template render failed', details: data }, { status: 502 });
+      }
+
+      return Response.json({
+        success: true,
+        message: `Layout preview render started for template ${templateId}`,
+        heygenId: videoId,
+        templateId,
+        note: 'This is a layout-only preview with no script content. Check HeyGen for the rendered video.',
+      });
+    }
+
     // ── START: Template-based render ──
     if (action === 'start') {
       const broadcastId = body.broadcastId;

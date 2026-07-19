@@ -45,22 +45,13 @@ export default function TemplatePicker() {
     setTesting(templateId);
     setTestResults(prev => ({ ...prev, [templateId]: null }));
     try {
-      const broadcasts = await base44.entities.DnnBroadcast.list('-broadcast_date', 20);
-      const target = broadcasts.find(b => b.script);
-      if (!target) {
-        setTestResults(prev => ({ ...prev, [templateId]: { success: false, msg: 'No broadcast with a script found' } }));
-        setTesting(null);
-        return;
-      }
-
       const res = await base44.functions.invoke('dnnStitchBroadcast', {
-        action: 'start',
-        broadcastId: target.id,
+        action: 'testPreview',
         templateId,
       });
 
       if (res.data?.success) {
-        setTestResults(prev => ({ ...prev, [templateId]: { success: true, msg: `Render started — check pipeline for video` } }));
+        setTestResults(prev => ({ ...prev, [templateId]: { success: true, msg: `Layout preview started — check HeyGen for video` } }));
       } else {
         setTestResults(prev => ({ ...prev, [templateId]: { success: false, msg: res.data?.error || 'Render failed' } }));
       }
