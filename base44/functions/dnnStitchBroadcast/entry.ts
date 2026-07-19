@@ -378,6 +378,15 @@ Deno.serve(async (req) => {
           };
           console.log(`[TEMPLATE RENDER] Injected studio background into page_screenshot variable`);
         }
+        // Inject full broadcast script into the script variable if the template supports it
+        if (templateVariableNames.includes('script')) {
+          variables['script'] = {
+            name: 'script',
+            type: 'text',
+            properties: { content: phoneticSpoken(broadcast.script) },
+          };
+          console.log(`[TEMPLATE RENDER] Injected full broadcast script (${broadcast.script.length} chars) into script variable`);
+        }
       } else {
         // Template has no variables — render as-is
         variables = {};
