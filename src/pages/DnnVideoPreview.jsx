@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Linkedin, Film } from 'lucide-react';
+import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Linkedin, Film, X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -193,6 +193,7 @@ export default function DnnVideoPreview() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [goldenPlaying, setGoldenPlaying] = useState(false);
+  const [goldenVideoUrl, setGoldenVideoUrl] = useState(null);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -225,7 +226,6 @@ export default function DnnVideoPreview() {
     refetchInterval: 60000,
   });
   const goldenLayout = goldenMaster?.[0];
-  const goldenVideoUrl = goldenLayout?.reference_video_url;
   const goldenTemplateName = goldenLayout?.template_name || 'DNN Master Base Layout';
   const goldenHeygenTemplateId = goldenLayout?.heygen_template_id;
 
@@ -270,60 +270,55 @@ export default function DnnVideoPreview() {
         </div>
       </div>
 
-      {/* Golden Master Reference Banner */}
-      {goldenVideoUrl && (
-        <div className="px-6 py-5" style={{ background: 'rgba(212,175,55,0.06)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase"
-              style={{ background: GOLD, color: '#000' }}>
-              ★ Golden Master
-            </span>
-            <p className="text-sm font-black text-white">{goldenTemplateName}</p>
-            <span className="text-[10px] text-slate-500">— Reference video for HeyGen Template API</span>
-          </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="md:w-[480px] md:flex-shrink-0">
-              <div className="relative aspect-video bg-black rounded-lg overflow-hidden" style={{ border: `2px solid ${GOLD}` }}>
-                {goldenPlaying ? (
-                  <video src={goldenVideoUrl} controls autoPlay playsInline className="w-full h-full" />
-                ) : (
-                  <button onClick={() => setGoldenPlaying(true)} className="w-full h-full flex items-center justify-center group relative">
-                    <video src={goldenVideoUrl} muted playsInline preload="metadata"
+      {/* Golden Master Reference — Candidate Selection */}
+      <div className="px-6 py-5" style={{ background: 'rgba(212,175,55,0.06)', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase"
+            style={{ background: GOLD, color: '#000' }}>
+            ★ Golden Master Candidates
+          </span>
+          <p className="text-sm font-black text-white">Find the show with the dual-box layout</p>
+          <span className="text-[10px] text-slate-500">— Charlie lower-left · Bob lower-right · 3 pills lower center</span>
+        </div>
+        <p className="text-xs text-slate-400 mb-4">
+          Play each video below to find the one showing Charlie in the lower-left box, Bob in the lower-right box,
+          and 3 pills across the lower center background. Once you identify it, tell me which show number it is.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {broadcasts.filter(b => b.videoUrl).map(show => {
+            const isCurrentGolden = goldenLayout?.reference_broadcast_id === show.id;
+            return (
+              <div key={show.id} className="rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: isCurrentGolden ? `2px solid ${GOLD}` : '1px solid rgba(255,255,255,0.08)' }}>
+                <div className="relative aspect-video bg-black">
+                  <button onClick={() => { setGoldenVideoUrl(show.videoUrl); setGoldenPlaying(true); }}
+                    className="w-full h-full flex items-center justify-center group relative">
+                    <video src={show.videoUrl} muted playsInline preload="metadata"
                       onLoadedMetadata={(e) => { e.target.currentTime = 2; }}
                       className="w-full h-full object-cover" />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
                         style={{ background: GOLD }}>
-                        <Play className="w-7 h-7 ml-1 text-black" fill="black" />
+                        <Play className="w-5 h-5 ml-0.5 text-black" fill="black" />
                       </div>
                     </div>
                   </button>
-                )}
+                  {isCurrentGolden && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase"
+                      style={{ background: GOLD, color: '#000' }}>
+                      ★ Current Reference
+                    </span>
+                  )}
+                </div>
+                <div className="px-3 py-2">
+                  <p className="text-xs font-black text-white">{show.show_name || `Show ${show.show_number}`}</p>
+                  <p className="text-[10px] text-slate-500">{show.broadcast_date} · {show.format}</p>
+                  <p className="text-[9px] text-slate-600 mt-1">Clips: {(show.clips || []).map(c => c.role).join(' → ')}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex-1 flex flex-col gap-2">
-              <p className="text-xs text-slate-300 leading-relaxed">
-                This is the reference video that defines the visual layout (studio backdrop, dual-avatar framing, lower thirds)
-                for all future HeyGen Template API renders. Daily dialogue will be injected as text variables into a static
-                HeyGen Master Template that mirrors this exact composition.
-              </p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-slate-500">HeyGen Template ID:</span>
-                {goldenHeygenTemplateId ? (
-                  <span className="text-xs font-mono font-bold text-green-400">{goldenHeygenTemplateId}</span>
-                ) : (
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}>
-                    ⚠ NOT CONFIGURED
-                  </span>
-                )}
-              </div>
-              {goldenLayout?.reference_broadcast_id && (
-                <p className="text-[10px] text-slate-600">Reference Broadcast: {goldenLayout.reference_broadcast_id}</p>
-              )}
-            </div>
-          </div>
+            );
+          })}
         </div>
-      )}
+      </div>
 
       {/* Warning banner */}
       <div className="px-6 py-3" style={{ background: 'rgba(251,191,36,0.06)' }}>
@@ -353,6 +348,18 @@ export default function DnnVideoPreview() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
+
+      {/* Golden Master candidate fullscreen player */}
+      {goldenPlaying && goldenVideoUrl && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center" style={{ background: '#000' }}>
+          <video src={goldenVideoUrl} controls autoPlay playsInline className="max-w-full max-h-full" />
+          <button onClick={() => { setGoldenPlaying(false); setGoldenVideoUrl(null); }} aria-label="Close"
+            className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+      )}
+      </div>
+      );
+      }
