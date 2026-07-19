@@ -74,6 +74,9 @@ export default function StudioLayoutPreview() {
             width: `${layout.bob.w}%`,
             height: `${layout.bob.h}%`,
             zIndex: 50,
+            border: '1px solid #D4AF37',
+            borderRadius: '4px',
+            overflow: 'hidden',
           }}
         >
           <img
