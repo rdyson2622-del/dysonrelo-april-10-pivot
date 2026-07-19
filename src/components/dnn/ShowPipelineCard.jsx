@@ -253,26 +253,24 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             </div>
           )}
 
-          {/* Studio Preview launcher — shown when all clips are rendered */}
-          {allClipsRendered && (
+          {/* Video thumbnail — shown when broadcast has a completed render */}
+          {show.videoUrl && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Studio Preview (Frontend Staging):</p>
+                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Rendered Broadcast:</p>
                 <button onClick={() => setShowStudioPreview(true)}
                   className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
                   style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                  <Play className="w-3 h-3" /> Preview Studio Show
+                  <Play className="w-3 h-3" /> Play Full Show
                 </button>
               </div>
-              <div className="rounded-xl overflow-hidden flex items-center justify-center" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)', minHeight: '120px' }}>
-                <div className="flex items-center gap-2 py-3">
-                  {clips.map((clip, i) => (
-                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(212,175,55,0.2)' }}>
-                      <CheckCircle className="w-3 h-3 text-green-400" />
-                      <span className="text-[10px] font-bold uppercase text-slate-300">{clip.role}</span>
-                    </div>
-                  ))}
+              <div className="relative rounded-xl overflow-hidden cursor-pointer group" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)' }}
+                onClick={() => setShowStudioPreview(true)}>
+                <video src={show.videoUrl} preload="metadata" className="w-full h-auto max-h-[240px] object-contain" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-all">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                    <Play className="w-5 h-5 text-black ml-0.5" fill="black" />
+                  </div>
                 </div>
               </div>
             </div>
