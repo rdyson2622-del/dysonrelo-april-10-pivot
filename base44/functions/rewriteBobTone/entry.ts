@@ -27,15 +27,19 @@ const CLIP_ENTITIES = [
   'BobAnswerClip',
 ];
 
-const TONE_INSTRUCTION = `Rewrite the following spoken script in the SAME VOICE and with the SAME INFORMATION, but change the tone from directive/telling to suggestive and discussion-based.
+const TONE_INSTRUCTION = `Rewrite the following spoken script in the SAME VOICE and with the SAME INFORMATION, but change the tone to match Bob Dyson's updated voice.
 
-CRITICAL TONE RULES:
+CRITICAL VOICE & TONE RULES:
+- VOICE: Sped up from the original slow/boring delivery. Energetic but not hyper. A livelier pace.
+- PERSONALITY: Warm, seasoned, dry wit — a little humor, a little charm. Like talking to friends.
+- TONE: Conversational, NOT an instructor or lecturer. Like you're sitting across the table from a friend.
+- APPROACH: Use phrases like "What we do in these situations is...", "Here's how we handle that...", "Honestly...", "So here's the thing..."
+- Speak WITH the listener, not AT them — share experiences, tell quick stories, use "we" and "I" naturally.
 - NEVER use "you need to", "you should", "you must", "do this", "don't do that", or any imperative commands.
-- Instead, frame guidance as suggestions and shared experience. Use phrases like: "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well...", "You might think about...", "I'd recommend looking at..."
-- Speak WITH the listener, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders.
-- Respect that the listener may have their own knowledge and situation — offer options and considerations rather than directives.
+- Instead, frame guidance as shared experience and suggestions: "What we do in these situations is...", "One approach that's worked well...", "You might think about..."
+- Respect that the listener may have their own knowledge and situation — offer perspective, not directives.
 - Keep the warm, seasoned, dry-wit personality. Keep all facts, numbers, and specific details exactly the same.
-- Keep it conversational and natural spoken language.
+- Keep it conversational and natural spoken language — not stiff, not corporate.
 - Keep it approximately the same length as the original.
 - Do NOT add any preamble, labels, or explanation — return ONLY the rewritten script text.
 
