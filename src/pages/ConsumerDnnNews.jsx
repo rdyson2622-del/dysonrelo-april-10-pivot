@@ -545,6 +545,15 @@ export default function ConsumerDnnNews() {
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
+      {/* Studio Layout Preview — standalone full-screen section before the news landing page */}
+      <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-12 lg:px-20 py-12" style={{ background: '#0a0a0a' }}>
+        <StudioLayoutPreview />
+        <div className="flex items-center gap-2 mt-6 animate-bounce">
+          <p className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Scroll for Today's News</p>
+          <ChevronDown className="w-4 h-4" style={{ color: '#D4AF37' }} />
+        </div>
+      </div>
+
       {/* Header */}
       <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between"
         style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
@@ -589,11 +598,6 @@ export default function ConsumerDnnNews() {
       {/* Charlie circle — fixed below header; z-[300] so the full-screen player covers edit/trash buttons */}
       <div className="fixed top-36 right-4 md:top-40 md:right-6 z-[300]">
         <DnnNewsPresenter />
-      </div>
-
-      {/* Studio Layout Preview — large placeholder while content & positioning are finalized */}
-      <div className="w-full px-6 md:px-12 lg:px-20 py-8 max-w-7xl mx-auto">
-        <StudioLayoutPreview />
       </div>
 
       {/* Articles Feed */}
