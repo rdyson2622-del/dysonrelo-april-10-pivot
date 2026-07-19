@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { CheckCircle, AlertTriangle, RefreshCw, Image as ImageIcon, LayoutTemplate } from 'lucide-react';
+import { CheckCircle, AlertTriangle, RefreshCw, Image as ImageIcon, LayoutTemplate, Play } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
@@ -10,6 +10,8 @@ export default function TemplatePicker() {
   const queryClient = useQueryClient();
   const [assigning, setAssigning] = useState(null);
   const [assignMsg, setAssignMsg] = useState(null);
+  const [testing, setTesting] = useState(null);
+  const [testResults, setTestResults] = useState({});
 
   // Fetch available HeyGen templates
   const { data: templateList, isLoading: templatesLoading } = useQuery({
@@ -33,6 +35,36 @@ export default function TemplatePicker() {
 
   const templates = templateList?.templates || [];
   const currentMatch = templates.find(t => t.id === currentTemplateId);
+
+  const handleTestRender = async (templateId, templateName) => {
+    setTesting(templateId);
+    setTestResults(prev => ({ ...prev, [templateId]: null }));
+    try {
+      // Find the most recent broadcast with a script
+      const broadcasts = await base44.entities.DnnBroadcast.list('-broadcast_date', 20);
+      const target = broadcasts.find(b => b.script);
+      if (!target) {
+        setTestResults(prev => ({ ...prev, [templateId]: { success: false, msg: 'No broadcast with a script found' } }));
+        setTesting(null);
+        return;
+      }
+
+      const res = await base44.functions.invoke('dnnStitchBroadcast', {
+        action: 'start',
+        broadcastId: target.id,
+        templateId,
+      });
+
+      if (res.data?.success) {
+        setTestResults(prev => ({ ...prev, [templateId]: { success: true, msg: `Render started — check pipeline for video` } }));
+      } else {
+        setTestResults(prev => ({ ...prev, [templateId]: { success: false, msg: res.data?.error || 'Render failed' } }));
+      }
+    } catch (e) {
+      setTestResults(prev => ({ ...prev, [templateId]: { success: false, msg: e.message } }));
+    }
+    setTesting(null);
+  };
 
   const handleAssign = async (templateId, templateName) => {
     setAssigning(templateId);
@@ -119,17 +151,32 @@ export default function TemplatePicker() {
                       <img src={tpl.thumbnail_image_url} alt={tpl.name} className="w-full h-full object-cover" />
                     </div>
                   )}
-                  <button
-                    onClick={() => handleAssign(tpl.id, tpl.name)}
-                    disabled={isActive || assigning === tpl.id}
-                    className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold transition-all disabled:opacity-40"
-                    style={{
-                      background: isActive ? 'rgba(74,222,128,0.15)' : 'linear-gradient(135deg, #e8c84a, #D4AF37)',
-                      color: isActive ? '#4ade80' : '#000',
-                    }}>
-                    {assigning === tpl.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : null}
-                    {isActive ? '✓ ACTIVE' : 'Set as Golden Master'}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleAssign(tpl.id, tpl.name)}
+                      disabled={isActive || assigning === tpl.id}
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold transition-all disabled:opacity-40"
+                      style={{
+                        background: isActive ? 'rgba(74,222,128,0.15)' : 'linear-gradient(135deg, #e8c84a, #D4AF37)',
+                        color: isActive ? '#4ade80' : '#000',
+                      }}>
+                      {assigning === tpl.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : null}
+                      {isActive ? '✓ ACTIVE' : 'Set as Master'}
+                    </button>
+                    <button
+                      onClick={() => handleTestRender(tpl.id, tpl.name)}
+                      disabled={testing === tpl.id}
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold text-white transition-all disabled:opacity-40"
+                      style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                      {testing === tpl.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
+                      Test Render
+                    </button>
+                  </div>
+                  {testResults[tpl.id] && (
+                    <p className={`text-[9px] mt-1.5 ${testResults[tpl.id].success ? 'text-green-400' : 'text-red-400'}`}>
+                      {testResults[tpl.id].success ? '✓' : '✗'} {testResults[tpl.id].msg}
+                    </p>
+                  )}
                 </div>
               </div>
             );

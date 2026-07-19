@@ -203,6 +203,11 @@ Deno.serve(async (req) => {
 
       const layout = await loadMasterLayout(base44);
 
+      // Allow per-call template override for testing
+      if (body.templateId) {
+        layout.templateId = body.templateId;
+      }
+
       if (!layout.templateId) {
         return Response.json({
           error: 'No heygen_template_id set on the master LayoutTemplate. Configure it in Admin Layout Library first.',
