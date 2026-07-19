@@ -6,9 +6,9 @@ const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
-const DEFAULT_BOB = { x: 4, y: 35, w: 22, h: 60, label: 'Bob', sub: 'Transparent · Lower Left' };
+const DEFAULT_BOB = { x: 4, y: 38, w: 22, h: 60, label: 'Bob', sub: 'Transparent · Lower Left' };
 const DEFAULT_PANEL = { x: 18, y: 3, w: 46, h: 40 };
-const BOB_IMG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/06058d1f1_generated_image.png';
+const BOB_IMG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/b4dfc1fe3_generated_image.png';
 const DEFAULT_PILLS = [
   { x: 30, y: 78, w: 14, h: 6, label: 'NEWS', sub: "Today's Clips" },
   { x: 46, y: 78, w: 14, h: 6, label: 'RELOCATION', sub: 'Free Access' },
@@ -80,7 +80,7 @@ export default function StudioLayoutPreview() {
               src={BOB_IMG}
               alt="Bob — presenter"
               className="w-full h-full object-contain object-bottom"
-              style={{ mixBlendMode: 'multiply' }}
+              style={{ mixBlendMode: 'lighten' }}
             />
           </div>
         </div>
