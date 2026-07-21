@@ -109,43 +109,6 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie'
         </div>
       )}
 
-      {/* Single presenter video slot — layered over studio backdrop */}
-      <div
-        className="absolute transition-all duration-300"
-        style={{
-          bottom: '24px',
-          left: '32px',
-          width: 'clamp(104px, 14.3vw, 182px)',
-          aspectRatio: '3 / 4',
-          borderRadius: '10px',
-          border: `2px solid ${GOLD}`,
-          boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
-          background: '#000',
-          overflow: 'hidden',
-          zIndex: 10,
-        }}
-      >
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          poster={DNN_POSTER}
-          playsInline
-          onEnded={handleEnded}
-          onTimeUpdate={handleTimeUpdate}
-          onClick={togglePlay}
-          className="cursor-pointer w-full h-full"
-          style={{ objectFit: 'cover' }}
-        />
-        {/* Presenter label bar */}
-        <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
-          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-          <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>
-            {presenterLabel}
-          </span>
-        </div>
-      </div>
-
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
         style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
