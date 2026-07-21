@@ -1,18 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
 
 /**
- * dnnStitchBroadcast — SOLO PRESENTER EDITION
+ * dnnStitchBroadcast — BOB PRESENTER EDITION
  *
- * Fires ONE authenticated POST to the HeyGen video/generate endpoint.
- * Charlie (or Bob) stands full-screen and reads the broadcast script.
- * No HeyGen Master Template, no dual-box text variables, no template ID lock.
- *
- * Presenter selection:
- *   - broadcast.presenter === 'bob'   → Bob (talking_photo)
- *   - default (including 'charlie')  → Charlie (avatar)
- *
- * Avatar/voice IDs are loaded from the LayoutTemplate golden master if present,
- * otherwise fall back to hardcoded defaults.
+ * Fires ONE authenticated POST to the HeyGen video/generate endpoint using
+ * Bob's avatar character ID (5b51943b55f44deea61ce73c4849bb1c) + Bob's voice.
+ * The Template API is not used — it locks the avatar into the template (Charlie).
+ * The frontend DnnNewsBroadcastPlayer composites the studio backdrop, headline
+ * board, and presenter box around this raw Bob avatar MP4.
  *
  * SINGLE MP4 DELIVERY: One API call → one MP4 → uploaded to permanent storage.
  *
@@ -50,7 +45,7 @@ async function loadMasterLayout(base44) {
         studioBgUrl: t?.background?.url || null,
         charlieAvatarId: t?.presenter_1?.heygen_id || '41f40b894f6944188c7908253b12e921',
         charlieVoiceId: t?.presenter_1?.voice_id || 'cc5fb6c924064712ba9f690852aa4646',
-        bobPhotoId: t?.presenter_2?.heygen_id || '31b79a86784e495090472af2e7b9407c',
+        bobPhotoId: t?.presenter_2?.heygen_id || '5b51943b55f44deea61ce73c4849bb1c',
         bobVoiceId: t?.presenter_2?.voice_id || '147b8f5713024fb9afc106f266e47482',
         videoDims: t?.video_dimensions || { width: 1280, height: 720 },
       };
@@ -63,7 +58,7 @@ async function loadMasterLayout(base44) {
     studioBgUrl: null,
     charlieAvatarId: '41f40b894f6944188c7908253b12e921',
     charlieVoiceId: 'cc5fb6c924064712ba9f690852aa4646',
-    bobPhotoId: '31b79a86784e495090472af2e7b9407c',
+    bobPhotoId: '5b51943b55f44deea61ce73c4849bb1c',
     bobVoiceId: '147b8f5713024fb9afc106f266e47482',
     videoDims: { width: 1280, height: 720 },
   };
@@ -302,7 +297,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── START: Template-based render ──
+    // ── START: Avatar-based render (Bob character + Bob voice) ──
+    // The Template API locks the avatar into the template (Charlie). To deliver
+    // Bob with his own face and voice, we use the video/generate endpoint with
+    // Bob's avatar character ID. The frontend player composites the studio
+    // backdrop, headline board, and presenter box around this raw avatar MP4.
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -328,93 +327,33 @@ Deno.serve(async (req) => {
 
       const layout = await loadMasterLayout(base44);
 
-      // Allow per-call template override for testing
-      if (body.templateId) {
-        layout.templateId = body.templateId;
-      }
+      // Bob's avatar character ID — the presenter of the broadcast.
+      // Per-call override via body.characterId; otherwise the Bob character.
+      const BOB_AVATAR_ID = body.characterId || '5b51943b55f44deea61ce73c4849bb1c';
+      const BOB_VOICE_ID = body.voiceId || layout.bobVoiceId || '147b8f5713024fb9afc106f266e47482';
+      const dims = layout.videoDims || { width: 1280, height: 720 };
 
-      if (!layout.templateId) {
-        return Response.json({
-          error: 'No heygen_template_id set on the master LayoutTemplate. Configure it in Admin Layout Library first.',
-        }, { status: 400 });
-      }
+      const spokenScript = phoneticSpoken(broadcast.script);
 
-      // Fetch the template's actual variable definitions from HeyGen
-      let templateVariableNames = [];
-      try {
-        const detailRes = await fetch(`${HEYGEN_TEMPLATE_API}/${layout.templateId}`, {
-          headers: { 'X-Api-Key': heygenKey },
-        });
-        const detailData = await detailRes.json();
-        const rawVars = detailData?.data?.variables;
-        // HeyGen returns variables as an object keyed by name, NOT an array
-        if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
-          templateVariableNames = Object.keys(rawVars);
-        } else if (Array.isArray(rawVars)) {
-          templateVariableNames = rawVars.map(v => v.name);
-        }
-        console.log(`[TEMPLATE RENDER] Template ${layout.templateId} supports ${templateVariableNames.length} variables: ${templateVariableNames.join(', ') || '(none)'}`);
-      } catch (e) {
-        console.log(`[TEMPLATE RENDER] Failed to fetch template variables: ${e.message}`);
-      }
+      console.log(`[AVATAR RENDER] Firing Bob avatar render for broadcast ${broadcast.id} | avatar: ${BOB_AVATAR_ID} | voice: ${BOB_VOICE_ID} | script: ${spokenScript.length} chars`);
 
-      // Build all possible variables from broadcast, then filter to only those the template supports
-      const allVariables = buildTemplateVariables(broadcast);
-      let variables;
-      if (templateVariableNames.length > 0) {
-        // Only send variables that exist in the template
-        variables = {};
-        for (const [name, val] of Object.entries(allVariables)) {
-          if (templateVariableNames.includes(name)) {
-            variables[name] = val;
-          }
-        }
-        // Inject studio background into page_screenshot if the template supports it
-        if (templateVariableNames.includes('page_screenshot') && layout.studioBgUrl) {
-          variables['page_screenshot'] = {
-            name: 'page_screenshot',
-            type: 'image',
-            properties: { url: layout.studioBgUrl },
-          };
-          console.log(`[TEMPLATE RENDER] Injected studio background into page_screenshot variable`);
-        }
-        // Inject full broadcast script into the script variable if the template supports it
-        if (templateVariableNames.includes('script')) {
-          variables['script'] = {
-            name: 'script',
-            type: 'text',
-            properties: { content: phoneticSpoken(broadcast.script) },
-          };
-          console.log(`[TEMPLATE RENDER] Injected full broadcast script (${broadcast.script.length} chars) into script variable`);
-        }
-      } else {
-        // Template has no variables — render as-is
-        variables = {};
-      }
-
-      const variableCount = Object.keys(variables).length;
-      console.log(`[TEMPLATE RENDER] Sending ${variableCount} variables (of ${Object.keys(allVariables).length} built)`);
-
-      const payload = {
-        title: `${broadcast.show_name || 'DNN Broadcast'} — ${broadcast.broadcast_date || ''}`,
-        variables,
-        test: false,
-      };
-
-      const presenterLabel = broadcast.format === 'tag_team' ? 'Tag-team (Charlie + Bob)' : 'Solo (Charlie)';
-
-      console.log(`[TEMPLATE RENDER] Firing template render for broadcast ${broadcast.id} | template: ${layout.templateId} | presenter: ${presenterLabel} | variables: ${variableCount}`);
-
-      const res = await fetch(`${HEYGEN_TEMPLATE_API}/${layout.templateId}/generate`, {
+      const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          video_inputs: [{
+            character: { type: 'avatar', avatar_id: BOB_AVATAR_ID, avatar_style: 'normal' },
+            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenScript },
+            background: { type: 'color', value: '#0d0d0d' },
+          }],
+          dimension: { width: dims.width, height: dims.height },
+        }),
       });
 
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen template render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen avatar render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
@@ -423,14 +362,15 @@ Deno.serve(async (req) => {
         needsReRender: false,
         errorMessage: '',
         videoUrl: '',
+        presenter: 'bob',
       });
 
       return Response.json({
         success: true,
-        message: `Template render submitted — ${presenterLabel} | ${variableCount} variables injected`,
+        message: `Bob avatar render submitted | character: ${BOB_AVATAR_ID}`,
         broadcastId: broadcast.id,
         heygenId: videoId,
-        templateId: layout.templateId,
+        characterId: BOB_AVATAR_ID,
       });
     }
 
