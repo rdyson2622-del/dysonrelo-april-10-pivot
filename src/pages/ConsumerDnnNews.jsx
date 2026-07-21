@@ -12,6 +12,7 @@ import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import StudioLayoutPreview from '@/components/dnn/StudioLayoutPreview';
+import TagTeamStudioSample from '@/components/dnn/TagTeamStudioSample';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -547,7 +548,9 @@ export default function ConsumerDnnNews() {
 
       {/* Studio Layout Preview — standalone full-screen section before the news landing page */}
       <div className="w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-12 lg:px-20 py-12" style={{ background: '#0a0a0a' }}>
-        <StudioLayoutPreview />
+        <div className="w-full max-w-5xl">
+          <TagTeamStudioSample />
+        </div>
         <div className="flex items-center gap-2 mt-6 animate-bounce">
           <p className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Scroll for Today's News</p>
           <ChevronDown className="w-4 h-4" style={{ color: '#D4AF37' }} />

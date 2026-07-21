@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Move } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2dc0b99dd_DNN.png';
 const MASTER_LAYOUT_ID = '6a5bc2a88cc89dc9b84ec199';
 
 const DEFAULT_BOB = { x: 0, y: 45, w: 18.8, h: 51.3, label: 'Bob', sub: 'Transparent · Left Wall' };
