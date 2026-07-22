@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
-import ChromaKeyVideo from '@/components/dnn/ChromaKeyVideo';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/027a3b3fc_DNN.png';
@@ -206,35 +205,40 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       ) : (
         <>
-          {/* Active presenter keyed directly into the studio — no card, frame, or box */}
+          {/* The clip is cropped to the face and blended into the matching photo placeholder. */}
           <div
-            className="absolute pointer-events-none"
+            className="absolute overflow-hidden"
             style={seg.speaker === 'charlie' ? {
-              left: '15.5%',
-              bottom: '25%',
-              width: '20%',
-              height: '48%',
+              left: '11.1%',
+              top: '35.7%',
+              width: '6.4%',
+              height: '12.5%',
               zIndex: 10,
-              filter: 'drop-shadow(0 10px 12px rgba(0,0,0,0.5))',
+              clipPath: 'ellipse(46% 49% at 50% 50%)',
             } : {
-              right: '22%',
-              bottom: '16%',
-              width: '15%',
-              height: '58%',
+              left: '80.7%',
+              top: '28.8%',
+              width: '5.7%',
+              height: '11.5%',
               zIndex: 10,
-              filter: 'drop-shadow(0 12px 14px rgba(0,0,0,0.55))',
+              clipPath: 'ellipse(46% 49% at 50% 50%)',
             }}
           >
-            <ChromaKeyVideo
+            <video
               key={seg.src + idx}
               ref={videoRef}
               src={seg.src}
+              playsInline
               onEnded={handleEnded}
               onTimeUpdate={handleTimeUpdate}
               onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
               onClick={togglePlay}
-              className="pointer-events-auto cursor-pointer w-full h-full"
-              style={{ objectFit: 'contain' }}
+              className="cursor-pointer w-full h-full"
+              style={{
+                objectFit: 'cover',
+                objectPosition: seg.speaker === 'charlie' ? '50% 25%' : '34% 24%',
+                transform: 'scale(1.45)',
+              }}
             />
           </div>
 
