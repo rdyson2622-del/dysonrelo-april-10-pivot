@@ -205,42 +205,100 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div> :
 
       <>
-          {/* The clip is cropped to the face and blended into the matching photo placeholder. */}
+          {/* Charlie — full video frame */}
           <div
-          className="absolute overflow-hidden"
-          style={seg.speaker === 'charlie' ? {
-            left: '11.2%',
-            top: '32%',
-            width: '5.8%',
-            height: '10.8%',
-            zIndex: 10,
-            clipPath: 'ellipse(43% 48% at 50% 50%)'
-          } : {
-            left: '77.2%',
-            top: '26.8%',
-            width: '5.5%',
-            height: '10.5%',
-            zIndex: 10,
-            clipPath: 'ellipse(43% 48% at 50% 50%)'
-          }}>
-          
-            <video
-            key={seg.src + idx}
-            ref={videoRef}
-            src={seg.src}
-            playsInline
-            onEnded={handleEnded}
-            onTimeUpdate={handleTimeUpdate}
-            onCanPlay={(e) => {e.currentTarget.muted = muted;e.currentTarget.play().then(() => setPlaying(true)).catch(() => {e.currentTarget.muted = true;setMuted(true);e.currentTarget.play().then(() => setPlaying(true)).catch(() => {});});}}
-            onClick={togglePlay}
-            className="cursor-pointer w-full h-full rounded-[10px_4px_4px_12px]"
+            className="absolute transition-all duration-300"
             style={{
-              objectFit: 'cover',
-              objectPosition: seg.speaker === 'charlie' ? '50% 18%' : '72% 20%',
-              transform: 'scale(3)',
-              transformOrigin: seg.speaker === 'charlie' ? '50% 20%' : '72% 20%'
-            }} />
-          
+              bottom: 'clamp(40px, 7vh, 80px)',
+              left: 'clamp(40px, 18vw, 240px)',
+              width: 'clamp(150px, 20vw, 280px)',
+              aspectRatio: '3 / 4',
+              borderRadius: '8px',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
+              background: '#000',
+              overflow: 'hidden',
+              zIndex: 10,
+            }}
+          >
+            {seg.speaker === 'charlie' ? (
+              <video
+                key={seg.src + idx}
+                ref={videoRef}
+                src={seg.src}
+                poster={DNN_POSTER}
+                playsInline
+                onEnded={handleEnded}
+                onTimeUpdate={handleTimeUpdate}
+                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
+                onClick={togglePlay}
+                className="cursor-pointer w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              <video
+                src={lastSrcFor('charlie')}
+                muted
+                playsInline
+                preload="auto"
+                onLoadedMetadata={(e) => { try { e.target.currentTime = 0.5; e.target.pause(); } catch (_) {} }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+                className="w-full h-full"
+                style={{ objectFit: 'cover', background: '#111' }}
+              />
+            )}
+            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
+              style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>CHARLIE</span>
+            </div>
+          </div>
+
+          {/* Bob — full video frame */}
+          <div
+            className="absolute transition-all duration-300"
+            style={{
+              bottom: 'clamp(24px, 4vh, 48px)',
+              right: 'clamp(32px, 9vw, 130px)',
+              width: 'clamp(130px, 17vw, 230px)',
+              aspectRatio: '3 / 4',
+              borderRadius: '8px',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
+              background: '#000',
+              overflow: 'hidden',
+              zIndex: 10,
+            }}
+          >
+            {seg.speaker === 'bob' ? (
+              <video
+                key={seg.src + idx}
+                ref={videoRef}
+                src={seg.src}
+                poster={DNN_POSTER}
+                playsInline
+                onEnded={handleEnded}
+                onTimeUpdate={handleTimeUpdate}
+                onCanPlay={(e) => { e.currentTarget.muted = muted; e.currentTarget.play().then(() => setPlaying(true)).catch(() => { e.currentTarget.muted = true; setMuted(true); e.currentTarget.play().then(() => setPlaying(true)).catch(() => {}); }); }}
+                onClick={togglePlay}
+                className="cursor-pointer w-full h-full"
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              <video
+                src={lastSrcFor('bob')}
+                muted
+                playsInline
+                preload="auto"
+                onLoadedMetadata={(e) => { try { e.target.currentTime = 0.5; e.target.pause(); } catch (_) {} }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+                className="w-full h-full"
+                style={{ objectFit: 'cover', background: '#111' }}
+              />
+            )}
+            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
+              style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
+              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>BOB DYSON</span>
+            </div>
           </div>
 
           {/* Center floor pills — same styling as the landing page */}
