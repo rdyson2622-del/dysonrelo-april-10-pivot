@@ -209,19 +209,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           <div
             className="absolute overflow-hidden"
             style={seg.speaker === 'charlie' ? {
-              left: '11.1%',
-              top: '35.7%',
-              width: '6.4%',
-              height: '12.5%',
+              left: '11.2%',
+              top: '32%',
+              width: '5.8%',
+              height: '10.8%',
               zIndex: 10,
-              clipPath: 'ellipse(46% 49% at 50% 50%)',
+              clipPath: 'ellipse(43% 48% at 50% 50%)',
             } : {
-              left: '80.7%',
-              top: '28.8%',
-              width: '5.7%',
-              height: '11.5%',
+              left: '77.2%',
+              top: '26.8%',
+              width: '5.5%',
+              height: '10.5%',
               zIndex: 10,
-              clipPath: 'ellipse(46% 49% at 50% 50%)',
+              clipPath: 'ellipse(43% 48% at 50% 50%)',
             }}
           >
             <video
@@ -236,8 +236,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               className="cursor-pointer w-full h-full"
               style={{
                 objectFit: 'cover',
-                objectPosition: seg.speaker === 'charlie' ? '50% 25%' : '34% 24%',
-                transform: 'scale(1.45)',
+                objectPosition: seg.speaker === 'charlie' ? '50% 18%' : '24% 20%',
+                transform: 'scale(3)',
+                transformOrigin: seg.speaker === 'charlie' ? '50% 20%' : '25% 20%',
               }}
             />
           </div>
