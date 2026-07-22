@@ -233,7 +233,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             onTimeUpdate={handleTimeUpdate}
             onCanPlay={(e) => {e.currentTarget.muted = muted;e.currentTarget.play().then(() => setPlaying(true)).catch(() => {e.currentTarget.muted = true;setMuted(true);e.currentTarget.play().then(() => setPlaying(true)).catch(() => {});});}}
             onClick={togglePlay}
-            className="cursor-pointer w-full h-full rounded-[4px_4px_4px_8px]"
+            className="cursor-pointer w-full h-full rounded-[10px_4px_4px_12px]"
             style={{
               objectFit: 'cover',
               objectPosition: seg.speaker === 'charlie' ? '50% 18%' : '72% 20%',
