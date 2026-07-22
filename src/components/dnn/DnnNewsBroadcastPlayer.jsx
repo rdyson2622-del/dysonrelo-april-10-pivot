@@ -180,11 +180,11 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       }
 
       {/* Close button */}
-      <button onClick={onClose} aria-label="Close"
-      className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110 hidden"
-      style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
-        <X className="w-6 h-6" />
-      </button>
+      
+
+
+
+      
 
       {/* Video element */}
       {isSting ?
