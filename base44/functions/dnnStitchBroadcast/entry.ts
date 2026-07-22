@@ -368,13 +368,12 @@ Deno.serve(async (req) => {
         };
         console.log(`[TEMPLATE RENDER] Injected full script (${fullScript.length} chars) into 'script' variable`);
       }
-      if (templateVariableNames.includes('page_screenshot') && studioBgUrl) {
-        variables['page_screenshot'] = {
-          name: 'page_screenshot', type: 'image',
-          properties: { url: studioBgUrl },
-        };
-        console.log(`[TEMPLATE RENDER] Injected studio background into 'page_screenshot' variable`);
-      }
+      // NOTE: We deliberately do NOT inject page_screenshot. The full DNN studio
+      // (map wall, desk, signage) is baked into the template's scene. Show 142
+      // proved this — it rendered the studio by leaving page_screenshot at its
+      // default. Overriding it with an external URL breaks the scene and falls
+      // back to the avatar's raw environment (patio). Inject ONLY the script.
+      console.log(`[TEMPLATE RENDER] Leaving page_screenshot at template default (studio baked in). Injecting only script.`);
       console.log(`[TEMPLATE RENDER] Injecting ${Object.keys(variables).length} variables into template ${templateId} for broadcast ${broadcast.id}`);
 
       const payload = {
