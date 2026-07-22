@@ -236,9 +236,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               className="cursor-pointer w-full h-full"
               style={{
                 objectFit: 'cover',
-                objectPosition: seg.speaker === 'charlie' ? '50% 18%' : '24% 20%',
+                objectPosition: seg.speaker === 'charlie' ? '50% 18%' : '72% 20%',
                 transform: 'scale(3)',
-                transformOrigin: seg.speaker === 'charlie' ? '50% 20%' : '25% 20%',
+                transformOrigin: seg.speaker === 'charlie' ? '50% 20%' : '72% 20%',
               }}
             />
           </div>
