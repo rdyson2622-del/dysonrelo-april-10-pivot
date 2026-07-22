@@ -308,7 +308,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           <button
             key={pill.word}
             onClick={() => navigate(pill.dest)}
-            className="flex flex-col items-center justify-center px-4 md:px-6 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group"
+            className="flex flex-col items-center justify-center px-4 md:px-6 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group hidden"
             style={{
               background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
               border: '1px solid rgba(212,180,106,0.45)',
