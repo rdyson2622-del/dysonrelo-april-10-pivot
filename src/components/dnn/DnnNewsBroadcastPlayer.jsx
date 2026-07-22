@@ -4,7 +4,7 @@ import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/027a3b3fc_DNN.png';
 const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
 
 const SPEAKER_LABELS = {
@@ -205,17 +205,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       ) : (
         <>
-          {/* Charlie — bottom-left, always structurally visible (vertical) */}
+          {/* Charlie — seated behind the anchor desk, left-center foreground */}
           <div
             className="absolute transition-all duration-300"
             style={{
-              bottom: '24px',
-              left: '32px',
-              width: 'clamp(104px, 14.3vw, 182px)',
+              bottom: 'clamp(40px, 7vh, 80px)',
+              left: 'clamp(40px, 18vw, 240px)',
+              width: 'clamp(150px, 20vw, 280px)',
               aspectRatio: '3 / 4',
-              borderRadius: '10px',
-              border: `2px solid ${GOLD}`,
-              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+              borderRadius: '8px',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
@@ -258,17 +257,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             </div>
           </div>
 
-          {/* Bob — bottom-right, always structurally visible (vertical) */}
+          {/* Bob — standing on the studio floor, right side */}
           <div
             className="absolute transition-all duration-300"
             style={{
-              bottom: '24px',
-              right: '32px',
-              width: 'clamp(104px, 14.3vw, 182px)',
+              bottom: 'clamp(24px, 4vh, 48px)',
+              right: 'clamp(32px, 9vw, 130px)',
+              width: 'clamp(130px, 17vw, 230px)',
               aspectRatio: '3 / 4',
-              borderRadius: '10px',
-              border: `2px solid ${GOLD}`,
-              boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+              borderRadius: '8px',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
               background: '#000',
               overflow: 'hidden',
               zIndex: 10,
