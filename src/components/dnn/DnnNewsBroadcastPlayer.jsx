@@ -92,6 +92,19 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie'
       {/* Permanent studio backdrop — master template, do not modify */}
       <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
 
+      {/* The broadcast MP4 — full-frame composite from the HeyGen master template */}
+      <video
+        ref={videoRef}
+        src={videoUrl}
+        autoPlay
+        playsInline
+        crossOrigin="anonymous"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 1 }}
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={handleEnded}
+      />
+
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
         className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -110,7 +123,7 @@ export default function DnnNewsBroadcastPlayer({ videoUrl, presenter = 'charlie'
       )}
 
       {/* Bottom controls */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4 z-10"
         style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
         <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
           className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
