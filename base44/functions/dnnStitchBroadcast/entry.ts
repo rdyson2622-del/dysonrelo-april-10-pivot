@@ -297,11 +297,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // ── START: Avatar-based render (Bob character + Bob voice) ──
-    // The Template API locks the avatar into the template (Charlie). To deliver
-    // Bob with his own face and voice, we use the video/generate endpoint with
-    // Bob's avatar character ID. The frontend player composites the studio
-    // backdrop, headline board, and presenter box around this raw avatar MP4.
+    // ── START: HeyGen master studio template render (Charlie + Bob, locked layout) ──
+    // Uses the Template API with the master layout's heygen_template_id.
+    // The template has BOTH Charlie and Bob avatars + the studio background
+    // locked in inside HeyGen Studio. We inject the daily script as text
+    // variables (charlie_line_1..8, bob_line_1..8, studio_wall_*).
     if (action === 'start') {
       const broadcastId = body.broadcastId;
       let broadcast;
@@ -326,34 +326,73 @@ Deno.serve(async (req) => {
       }
 
       const layout = await loadMasterLayout(base44);
+      const templateId = layout.templateId;
+      if (!templateId) {
+        return Response.json({ error: 'No heygen_template_id set on the master layout. Build the studio template in HeyGen and save its ID first.' }, { status: 400 });
+      }
 
-      // Bob's avatar character ID — the presenter of the broadcast.
-      // Per-call override via body.characterId; otherwise the Bob character.
-      const BOB_AVATAR_ID = body.characterId || layout.bobPhotoId || '5b51943b55f44deea61ce73c4849bb1c';
-      const BOB_VOICE_ID = body.voiceId || layout.bobVoiceId || '147b8f5713024fb9afc106f266e47482';
-      const dims = layout.videoDims || { width: 1280, height: 720 };
+      // Fetch the template's actual variable definitions from HeyGen
+      let templateVariableNames = [];
+      try {
+        const detailRes = await fetch(`${HEYGEN_TEMPLATE_API}/${templateId}`, {
+          headers: { 'X-Api-Key': heygenKey },
+        });
+        const detailData = await detailRes.json();
+        const rawVars = detailData?.data?.variables;
+        if (rawVars && typeof rawVars === 'object' && !Array.isArray(rawVars)) {
+          templateVariableNames = Object.keys(rawVars);
+        } else if (Array.isArray(rawVars)) {
+          templateVariableNames = rawVars.map(v => v.name);
+        }
+        console.log(`[TEMPLATE RENDER] Template ${templateId} supports ${templateVariableNames.length} variables: ${templateVariableNames.join(', ') || '(none)'}`);
+      } catch (e) {
+        console.log(`[TEMPLATE RENDER] Failed to fetch template variables: ${e.message}`);
+      }
 
-      const spokenScript = phoneticSpoken(broadcast.script);
+      // The master studio template exposes a single `script` text variable
+      // + a `page_screenshot` image variable (the studio backdrop). Inject the
+      // full combined spoken script into `script` and the studio background
+      // URL into `page_screenshot`.
+      const variables = {};
+      const studioBgUrl = layout.studioBgUrl;
+      if (templateVariableNames.includes('script') || templateVariableNames.length === 0) {
+        let fullScript = '';
+        if (broadcast.format === 'tag_team' && broadcast.clips?.length) {
+          fullScript = broadcast.clips.filter(c => c.script).map(c => c.script).join(' ');
+        } else {
+          fullScript = broadcast.script || '';
+        }
+        variables['script'] = {
+          name: 'script', type: 'text',
+          properties: { content: phoneticSpoken(fullScript) },
+        };
+        console.log(`[TEMPLATE RENDER] Injected full script (${fullScript.length} chars) into 'script' variable`);
+      }
+      if (templateVariableNames.includes('page_screenshot') && studioBgUrl) {
+        variables['page_screenshot'] = {
+          name: 'page_screenshot', type: 'image',
+          properties: { url: studioBgUrl },
+        };
+        console.log(`[TEMPLATE RENDER] Injected studio background into 'page_screenshot' variable`);
+      }
+      console.log(`[TEMPLATE RENDER] Injecting ${Object.keys(variables).length} variables into template ${templateId} for broadcast ${broadcast.id}`);
 
-      console.log(`[AVATAR RENDER] Firing Bob avatar render for broadcast ${broadcast.id} | avatar: ${BOB_AVATAR_ID} | voice: ${BOB_VOICE_ID} | script: ${spokenScript.length} chars`);
+      const payload = {
+        title: broadcast.show_name || `DNN ${broadcast.broadcast_date}`,
+        variables,
+        test: false,
+      };
 
-      const res = await fetch('https://api.heygen.com/v2/video/generate', {
+      const res = await fetch(`${HEYGEN_TEMPLATE_API}/${templateId}/generate`, {
         method: 'POST',
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          video_inputs: [{
-            character: { type: 'avatar', avatar_id: BOB_AVATAR_ID, avatar_style: 'normal' },
-            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: spokenScript },
-            background: { type: 'color', value: '#0d0d0d' },
-          }],
-          dimension: { width: dims.width, height: dims.height },
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
-        return Response.json({ error: 'HeyGen avatar render failed', details: data }, { status: 502 });
+        return Response.json({ error: 'HeyGen template render failed', details: data }, { status: 502 });
       }
 
       await Broadcasts.update(broadcast.id, {
@@ -362,15 +401,15 @@ Deno.serve(async (req) => {
         needsReRender: false,
         errorMessage: '',
         videoUrl: '',
-        presenter: 'bob',
       });
 
       return Response.json({
         success: true,
-        message: `Bob avatar render submitted | character: ${BOB_AVATAR_ID}`,
+        message: `HeyGen studio template render submitted | template: ${templateId}`,
         broadcastId: broadcast.id,
         heygenId: videoId,
-        characterId: BOB_AVATAR_ID,
+        templateId,
+        injectedVariables: Object.keys(variables),
       });
     }
 
