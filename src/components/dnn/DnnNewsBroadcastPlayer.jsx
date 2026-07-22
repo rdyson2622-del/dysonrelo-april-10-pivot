@@ -144,25 +144,19 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <>
           <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
           <div
-            className="absolute flex flex-col items-center justify-center text-center overflow-hidden"
+            className="absolute flex flex-col items-center justify-center text-center"
             style={{
               top: '8%',
               left: '50%',
               transform: 'translateX(-50%)',
               width: 'min(52vw, 640px)',
-              minHeight: '52vh',
-              maxHeight: '60vh',
               zIndex: 5,
-              background: '#ffffff',
-              border: `2px solid ${GOLD}`,
-              borderRadius: '14px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
               padding: 'clamp(12px, 2.2vh, 22px) clamp(14px, 2.2vw, 28px)',
             }}
           >
             {seg.title && (
               <h2 className="serif-heading mb-2 md:mb-3"
-                style={{ color: '#1a1a1a', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)', textAlign: 'center' }}>
+                style={{ color: '#ffffff', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)', textAlign: 'center', WebkitTextStroke: '1.5px #ffffff', textShadow: '0 0 6px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.9)' }}>
                 {seg.title}
               </h2>
             )}
@@ -170,9 +164,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
               {seg.bullets.map((b, i) => (
                 <li key={i} className="flex items-start gap-2 md:gap-2.5 justify-center">
                   <span className="mt-1.5 md:mt-2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
-                    style={{ background: GOLD }} />
+                    style={{ background: '#ffffff', boxShadow: '0 0 4px rgba(0,0,0,0.9)' }} />
                   <span
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)', textAlign: 'center' }}>
+                    style={{ color: '#ffffff', fontWeight: 500, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)', textAlign: 'center', WebkitTextStroke: '1px #ffffff', textShadow: '0 0 6px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.9)' }}>
                     {b}
                   </span>
                 </li>
