@@ -329,7 +329,7 @@ Deno.serve(async (req) => {
 
       // Bob's avatar character ID — the presenter of the broadcast.
       // Per-call override via body.characterId; otherwise the Bob character.
-      const BOB_AVATAR_ID = body.characterId || '5b51943b55f44deea61ce73c4849bb1c';
+      const BOB_AVATAR_ID = body.characterId || layout.bobPhotoId || '5b51943b55f44deea61ce73c4849bb1c';
       const BOB_VOICE_ID = body.voiceId || layout.bobVoiceId || '147b8f5713024fb9afc106f266e47482';
       const dims = layout.videoDims || { width: 1280, height: 720 };
 
