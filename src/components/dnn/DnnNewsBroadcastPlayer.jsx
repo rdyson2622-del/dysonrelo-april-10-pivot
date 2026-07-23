@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
+import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -77,7 +77,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     } else {
       setEnded(true);
       setPlaying(false);
-      setTimeout(() => onClose(), 2500);
+      onClose();
     }
   };
 
@@ -95,15 +95,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     setMuted(v.muted);
   };
 
-  const replay = () => {
-    setIdx(0);
-    setEnded(false);
-    setTimeout(() => {
-      const v = videoRef.current;
-      if (v) { v.currentTime = 0; v.muted = false; setMuted(false); v.play().then(() => setPlaying(true)).catch(() => {}); }
-    }, 50);
-  };
-
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
@@ -114,41 +105,35 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       {/* Background layer */}
       {isSting ? (
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
-      ) : hasBullets ? (
-        /* Off-white presentation background with bullet-point overlay */
-        <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
-          {/* Bullet-point content panel — left side, Bob is lower-right */}
-          <div className="absolute inset-0 flex flex-col justify-start px-[8vw] md:px-[10vw] pt-[6vh] md:pt-[8vh] pb-[20vh]">
-            {seg.title && (
-              <h2 className="display-heading text-xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
-                style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
-                {seg.title}
-              </h2>
-            )}
-            <ul className="space-y-3 md:space-y-5">
-              {seg.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-1.5 md:mt-2 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full flex-shrink-0"
-                    style={{ background: GOLD }} />
-                  <span className="text-sm md:text-lg lg:text-xl"
-                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
-                    {b}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* Subtle DNN watermark */}
-          <div className="absolute top-6 left-6 md:top-8 md:left-10">
-            <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase"
-              style={{ color: 'rgba(212,175,55,0.5)' }}>
-              DNN Intelligence Bureau
-            </span>
-          </div>
-        </div>
       ) : (
-        /* Studio backdrop for Charlie (and Bob without bullets) */
-        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+        <>
+          <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+          {hasBullets && (
+            <div className="absolute left-[3vw] top-[12vh] z-[5] w-[58vw] max-w-2xl max-h-[58vh] overflow-y-auto rounded-xl p-4 md:p-6"
+              style={{ background: '#f5f0e8', border: `3px solid ${GOLD}`, boxShadow: '0 14px 40px rgba(0,0,0,0.55)' }}>
+              <p className="mb-2 text-[9px] md:text-[11px] font-bold tracking-[0.25em] uppercase"
+                style={{ color: GOLD }}>DNN Intelligence Bureau</p>
+              {seg.title && (
+                <h2 className="display-heading text-sm md:text-xl lg:text-2xl mb-3 md:mb-4"
+                  style={{ color: '#1a1a1a', lineHeight: 1.15 }}>
+                  {seg.title}
+                </h2>
+              )}
+              <ul className="space-y-2 md:space-y-3">
+                {seg.bullets.map((b, i) => (
+                  <li key={i} className="flex items-start gap-2 md:gap-3">
+                    <span className="mt-1.5 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
+                      style={{ background: GOLD }} />
+                    <span className="text-[10px] md:text-sm lg:text-base"
+                      style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.4 }}>
+                      {b}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
       )}
 
       {/* Close button */}
@@ -215,18 +200,16 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         />
       )}
 
-      {/* Play overlay when paused/ended */}
-      {!playing && (
+      {/* Play overlay when paused */}
+      {!playing && !ended && (
         <button
-          onClick={ended ? replay : togglePlay}
-          aria-label={ended ? 'Replay' : 'Play'}
+          onClick={togglePlay}
+          aria-label="Play"
           className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
         >
           <span className="w-20 h-20 rounded-full flex items-center justify-center"
             style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-            {ended
-              ? <RotateCcw className="w-8 h-8" style={{ color: GOLD }} />
-              : <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />}
+            <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
           </span>
         </button>
       )}
@@ -260,11 +243,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
           style={{ color: GOLD }}>
           {muted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-        </button>
-        <button onClick={replay} aria-label="Replay"
-          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ color: GOLD }}>
-          <RotateCcw className="w-6 h-6" />
         </button>
       </div>
     </div>
