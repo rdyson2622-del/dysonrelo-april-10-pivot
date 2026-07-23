@@ -9,7 +9,7 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
-import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
+import LatestDnnBroadcastVideo from '@/components/dnn/LatestDnnBroadcastVideo';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
@@ -544,9 +544,9 @@ export default function ConsumerDnnNews() {
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
-      {/* Broadcast — inline above the Real Estate News section */}
+      {/* Latest completed broadcast MP4 — no custom player or overlays */}
       <div className="w-full bg-black">
-        <DnnNewsPresenter embedded />
+        <LatestDnnBroadcastVideo />
       </div>
 
       {/* Hero */}
