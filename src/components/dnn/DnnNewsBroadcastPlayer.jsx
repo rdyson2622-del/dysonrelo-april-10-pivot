@@ -174,20 +174,11 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           />
         </div>
       ) : (
-        <video
-          key={seg.src + idx}
-          ref={videoRef}
-          src={seg.src}
-          playsInline
-          onEnded={handleEnded}
-          onClick={togglePlay}
-          className="cursor-pointer transition-all duration-300"
+        <div
+          className="absolute overflow-hidden cursor-pointer"
           style={{
             width: 'clamp(200px, 28vw, 360px)',
-            height: 'auto',
             aspectRatio: '16/9',
-            objectFit: 'cover',
-            position: 'absolute',
             bottom: '8px',
             left: seg.speaker === 'charlie' ? '4px' : 'auto',
             right: seg.speaker === 'bob' ? '4px' : 'auto',
@@ -197,7 +188,18 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             background: '#000',
             zIndex: 10,
           }}
-        />
+        >
+          <video
+            key={seg.src + idx}
+            ref={videoRef}
+            src={seg.src}
+            playsInline
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            className="w-full h-full object-cover transition-all duration-300"
+            style={{ transform: 'scale(1.24)', transformOrigin: 'center' }}
+          />
+        </div>
       )}
 
       {/* Play overlay when paused */}
