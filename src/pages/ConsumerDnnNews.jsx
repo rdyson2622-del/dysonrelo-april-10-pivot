@@ -544,19 +544,6 @@ export default function ConsumerDnnNews() {
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
-      {/* Header */}
-      <div className="sticky top-0 z-20 px-8 py-4 flex items-center justify-between"
-        style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.15)', backdropFilter: 'blur(10px)' }}>
-        <div className="flex items-center gap-4">
-          <img src={DNN_LOGO} alt="DNN" className="h-10 w-auto" />
-          <div>
-            <p className="text-sm font-black tracking-[0.35em] uppercase" style={{ color: '#D4AF37' }}>DNN</p>
-            <p className="text-xs tracking-widest uppercase" style={{ color: '#ffffff' }}>Real Estate Intelligence</p>
-          </div>
-        </div>
-
-      </div>
-
       {/* Broadcast — inline above the Real Estate News section */}
       <div className="w-full bg-black">
         <DnnNewsPresenter embedded />
