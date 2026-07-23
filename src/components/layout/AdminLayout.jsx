@@ -8,8 +8,6 @@ import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import CommandPills from './CommandPills';
-import AdminPortalBar from './AdminPortalBar';
-import AdminPortalSwitcher from './AdminPortalSwitcher';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -54,10 +52,8 @@ export default function AdminLayout() {
       )}
 
       <main className="flex-1 overflow-auto relative" style={{ background: '#ede0cc' }}>
-        {/* Top header bar — portal pills + controls aligned in one row */}
-        <div className="sticky top-0 z-[10000] flex items-center gap-2 px-4 py-2.5"
-          style={{ background: '#0d0d0d', borderBottom: '1px solid rgba(212,175,55,0.25)' }}>
-          {/* Mobile menu button */}
+        {/* Top Controls */}
+        <div className="fixed top-3 left-3 z-50">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
@@ -65,10 +61,9 @@ export default function AdminLayout() {
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
-          <div className="flex-1" />
-          <AdminPortalBar />
+        </div>
+        <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
           <CommandPills />
-          <AdminPortalSwitcher />
           <LayoutToggleButton />
         </div>
         <div className={`mx-auto ${landscape ? 'max-w-5xl' : 'max-w-2xl'}`}>

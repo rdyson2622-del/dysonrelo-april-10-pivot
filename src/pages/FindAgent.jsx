@@ -5,7 +5,6 @@ import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lu
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import AgentRecruitCharlieCircle from '@/components/charlie/AgentRecruitCharlieCircle';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -207,11 +206,6 @@ export default function FindAgent() {
 
       {/* Charlie & Bob tag-team — agent recruitment pitch */}
       <AgentRecruitCharlieCircle />
-
-      {/* Subscribe CTA */}
-      <div className="max-w-4xl mx-auto px-6 pb-12">
-        <SubscribeCTA variant="features" />
-      </div>
     </div>
   );
 }

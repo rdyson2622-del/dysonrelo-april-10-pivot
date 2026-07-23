@@ -32,11 +32,10 @@ function extractBullets(script) {
  * Charlie opens by introducing the national real estate news service,
  * then hands off to Bob who explains the unique "News + Solution" model.
  */
-export default function DnnNewsPresenter({ embedded = false }) {
+export default function DnnNewsPresenter() {
   const [segments, setSegments] = useState([]);
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [clipsVersion, setClipsVersion] = useState(0);
   const previewRef = useRef(null);
   const navigate = useNavigate();
 
@@ -90,13 +89,6 @@ export default function DnnNewsPresenter({ embedded = false }) {
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
-  }, [clipsVersion]);
-
-  useEffect(() => {
-    const unsubscribe = base44.entities.DnnNewsClip.subscribe(() => {
-      setClipsVersion((version) => version + 1);
-    });
-    return unsubscribe;
   }, []);
 
   // Pause & mute the preview video whenever the full-screen player is open
@@ -114,10 +106,6 @@ export default function DnnNewsPresenter({ embedded = false }) {
 
   if (!loaded) return null;
   if (segments.length === 0) return null;
-
-  if (embedded) {
-    return <DnnNewsBroadcastPlayer segments={segments} embedded />;
-  }
 
   return (
     <>
@@ -148,7 +136,7 @@ export default function DnnNewsPresenter({ embedded = false }) {
       )}
 
       {open && createPortal(
-        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { window.location.replace('/?choose=1'); }} />,
+        <DnnNewsBroadcastPlayer segments={segments} onClose={() => { setOpen(false); navigate('/'); }} />,
         document.body
       )}
     </>

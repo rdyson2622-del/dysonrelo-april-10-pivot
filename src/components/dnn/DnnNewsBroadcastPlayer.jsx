@@ -1,53 +1,42 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { X, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-react';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1ac80c120_generated_image.png';
-const DNN_POSTER = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+
 
 const SPEAKER_LABELS = {
   charlie: 'CHARLIE · DYSON AI CONCIERGE',
-  bob: 'BOB DYSON · FOUNDER'
+  bob: 'BOB DYSON · FOUNDER',
 };
 
 /**
  * DnnNewsBroadcastPlayer — a FULL-SCREEN broadcast player.
  *
- * Plays through the segment array EXACTLY ONCE, then hard-redirects to /?choose=1.
- * No looping. No reset-to-zero. The terminal clip triggers a raw browser escape hatch.
+ * Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
+ *
+ * Background logic:
+ *   - Sting: full-screen black (DNN logo video)
+ *   - Charlie: studio backdrop (lower-left box)
+ *   - Bob: off-white background with bullet-point overlay (lower-right box)
  *
  * Props:
  *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ segments, onClose, embedded = false }) {
-  const navigate = useNavigate();
-
-  const FLOOR_PILLS = [
-  { word: 'News', dest: '/dnn-news?autoplay=1', sub: "Today's Clips" },
-  { word: 'Relocation', dest: '/relo-management', sub: 'Free Access' },
-  { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' }];
-
-
+export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const videoRef = useRef(null);
-  const terminatedRef = useRef(false);
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [ended, setEnded] = useState(false);
 
-  const segmentsKey = segments.map((s) => s.src).join('|');
-
-  // Initial playback kick — runs once per segment set. Does NOT reset on idx changes.
+  const segmentsKey = segments.map(s => s.src).join('|');
   useEffect(() => {
     setIdx(0);
-    setMuted(false);
-    if (embedded) {
-      setPlaying(false);
-      return;
-    }
+    setEnded(false);
     setPlaying(true);
+    setMuted(false);
     const timer = setTimeout(() => {
       const v = videoRef.current;
       if (!v) return;
@@ -64,65 +53,39 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, embedded = f
     }, 50);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segmentsKey, embedded]);
+  }, [segmentsKey]);
 
-  // NOTE: No useEffect on [idx]. Segment advancement is driven solely by the
-  // native onEnded handler below + onCanPlay auto-play. This eliminates the
-  // state race where an effect re-triggered play() after onEnded bumped idx.
-
-  const seg = segments[idx];
-  if (!seg) return null;
-
-  // ── HARD TERMINAL EXIT ──
-  // No complex state logic. No reset to zero. Raw, un-interceptable browser redirect.
-  const handleEnded = () => {
-    if (terminatedRef.current) return;
-    const nextIndex = idx + 1;
-    if (nextIndex < segments.length) {
-      setIdx(nextIndex);
-      return;
-    }
-    if (embedded) {
-      setPlaying(false);
-      return;
-    }
-    console.log("Terminal clip reached. Executing hard exit.");
-    terminatedRef.current = true;
-    window.location.replace('/?choose=1');
-    return;
-  };
-
-  // ── RUNTIME DURATION TRACKER + DEFENSIVE ESCAPE HATCH ──
-  // Logs currentTime/duration on every tick. The escape hatch fires ONLY on the
-  // absolute final segment — middle clips advance to the next index naturally.
-  const handleTimeUpdate = (e) => {
-    const v = e.currentTarget;
-    if (!v || !v.duration || isNaN(v.duration) || terminatedRef.current) return;
-    const isLastSegment = idx === segments.length - 1;
-    console.log(`[DNN PLAYER] clip ${idx}/${segments.length - 1} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${(v.currentTime / v.duration * 100).toFixed(1)}%${isLastSegment ? ' [FINAL]' : ''}`);
-    if (!embedded && isLastSegment && v.currentTime >= v.duration - 0.3) {
-      console.log("Defensive duration escape hatch triggered on FINAL clip. Executing hard exit.");
-      terminatedRef.current = true;
-      window.location.replace('/?choose=1');
-    }
-  };
-
-  const handleCanPlay = (e) => {
-    if (embedded && !playing) return;
-    const v = e.currentTarget;
+  useEffect(() => {
+    if (idx === 0) return;
+    const v = videoRef.current;
+    if (!v) return;
     v.muted = muted;
+    v.currentTime = 0;
     v.play().then(() => setPlaying(true)).catch(() => {
       v.muted = true;
       setMuted(true);
       v.play().then(() => setPlaying(true)).catch(() => {});
     });
+  }, [idx]);
+
+  const seg = segments[idx];
+  if (!seg) return null;
+
+  const handleEnded = () => {
+    if (idx < segments.length - 1) {
+      setIdx(i => i + 1);
+    } else {
+      setEnded(true);
+      setPlaying(false);
+      setTimeout(() => onClose(), 2500);
+    }
   };
 
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
-    if (v.paused) {v.play();setPlaying(true);} else
-    {v.pause();setPlaying(false);}
+    if (v.paused) { v.play(); setPlaying(true); setEnded(false); }
+    else { v.pause(); setPlaying(false); }
   };
 
   const toggleMute = () => {
@@ -133,290 +96,177 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, embedded = f
   };
 
   const replay = () => {
-    if (terminatedRef.current) return;
     setIdx(0);
+    setEnded(false);
     setTimeout(() => {
       const v = videoRef.current;
-      if (v) {v.currentTime = 0;v.muted = false;setMuted(false);v.play().then(() => setPlaying(true)).catch(() => {});}
+      if (v) { v.currentTime = 0; v.muted = false; setMuted(false); v.play().then(() => setPlaying(true)).catch(() => {}); }
     }, 50);
-  };
-
-  // Find the last video src for a given speaker (for still-shot display when not active)
-  const lastSrcFor = (speaker) => {
-    for (let i = idx; i >= 0; i--) {
-      if (segments[i]?.speaker === speaker) return segments[i].src;
-    }
-    return segments.find((s) => s?.speaker === speaker)?.src;
   };
 
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
+  const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   return (
-    <div className={embedded ? "relative w-full aspect-video flex items-center justify-center" : "fixed inset-0 z-[200] flex items-center justify-center"} style={{ background: '#000', overflow: 'hidden' }}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
       {/* Background layer */}
-      {isSting ?
-      <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} /> :
-      hasBullets ? (
-      /* Studio backdrop with bordered Solution Panel inside the monitor screen */
-      <>
-          <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
-          <div
-          className="absolute flex flex-col items-center justify-center text-center"
-          style={{
-            top: '8%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 'min(52vw, 640px)',
-            zIndex: 5,
-            padding: 'clamp(12px, 2.2vh, 22px) clamp(14px, 2.2vw, 28px)'
-          }}>
-          
-            {seg.title &&
-          <h2 className="serif-heading mb-2 md:mb-3"
-          style={{ color: '#ffffff', lineHeight: '1.15', fontSize: 'clamp(1.3rem, 3.2vh, 2rem)', textAlign: 'center', WebkitTextStroke: '1.5px #ffffff', textShadow: '0 0 6px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.9)' }}>
+      {isSting ? (
+        <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
+      ) : hasBullets ? (
+        /* Off-white presentation background with bullet-point overlay */
+        <div className="absolute inset-0" style={{ zIndex: 0, background: '#f5f0e8' }}>
+          {/* Bullet-point content panel — left side, Bob is lower-right */}
+          <div className="absolute inset-0 flex flex-col justify-start px-[8vw] md:px-[10vw] pt-[6vh] md:pt-[8vh] pb-[20vh]">
+            {seg.title && (
+              <h2 className="display-heading text-xl md:text-3xl lg:text-4xl mb-4 md:mb-6"
+                style={{ color: '#1a1a1a', lineHeight: '1.2' }}>
                 {seg.title}
               </h2>
-          }
-            <ul className="space-y-2.5 md:space-y-4 flex-1 flex flex-col items-center">
-              {seg.bullets.map((b, i) =>
-            <li key={i} className="flex items-start gap-2 md:gap-2.5 justify-center">
-                  <span className="mt-1.5 md:mt-2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
-              style={{ background: '#ffffff', boxShadow: '0 0 4px rgba(0,0,0,0.9)' }} />
-                  <span
-                style={{ color: '#ffffff', fontWeight: 500, lineHeight: 1.45, fontSize: 'clamp(1rem, 2.4vh, 1.5rem)', textAlign: 'center', WebkitTextStroke: '1px #ffffff', textShadow: '0 0 6px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.9), 1px 1px 2px rgba(0,0,0,0.9)' }}>
+            )}
+            <ul className="space-y-3 md:space-y-5">
+              {seg.bullets.map((b, i) => (
+                <li key={i} className="flex items-start gap-3 md:gap-4">
+                  <span className="mt-1.5 md:mt-2 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full flex-shrink-0"
+                    style={{ background: GOLD }} />
+                  <span className="text-sm md:text-lg lg:text-xl"
+                    style={{ color: '#2a2a2a', fontWeight: 400, lineHeight: 1.5 }}>
                     {b}
                   </span>
                 </li>
-            )}
+              ))}
             </ul>
           </div>
-        </>) : (
-
-      /* Studio backdrop for Charlie (and Bob without bullets) */
-      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />)
-      }
+          {/* Subtle DNN watermark */}
+          <div className="absolute top-6 left-6 md:top-8 md:left-10">
+            <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase"
+              style={{ color: 'rgba(212,175,55,0.5)' }}>
+              DNN Intelligence Bureau
+            </span>
+          </div>
+        </div>
+      ) : (
+        /* Studio backdrop for Charlie (and Bob without bullets) */
+        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      )}
 
       {/* Close button */}
-      
+      <button onClick={onClose} aria-label="Close"
+        className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+        <X className="w-6 h-6" />
+      </button>
 
-
-
-      
+      {/* Speaker label badge — only on studio background, not on the off-white bullet view */}
+      {!isSting && !hasBullets && (
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+          style={{
+            background: 'rgba(0,0,0,0.65)',
+            border: '1px solid rgba(212,175,55,0.4)',
+            backdropFilter: 'blur(4px)'
+          }}>
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
+          <span className="text-[10px] font-bold tracking-[0.15em] uppercase"
+            style={{ color: GOLD }}>
+            {headerLabel}
+          </span>
+        </div>
+      )}
 
       {/* Video element */}
-      {isSting ?
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
+      {isSting ? (
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
+            key={seg.src + idx}
+            ref={videoRef}
+            src={seg.src}
+            playsInline
+            onEnded={handleEnded}
+            onClick={togglePlay}
+            className="cursor-pointer w-full h-full"
+            style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }}
+          />
+        </div>
+      ) : (
+        <video
           key={seg.src + idx}
           ref={videoRef}
           src={seg.src}
-          poster={DNN_POSTER}
           playsInline
           onEnded={handleEnded}
-          onTimeUpdate={handleTimeUpdate}
-          onCanPlay={handleCanPlay}
           onClick={togglePlay}
-          className="cursor-pointer w-full h-full"
-          style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }} />
-        
-        </div> :
-
-      <>
-          {/* Charlie — full video frame */}
-          <div
-          className="absolute transition-all duration-300"
+          className="cursor-pointer transition-all duration-300"
           style={{
-            bottom: 'clamp(40px, 7vh, 80px)',
-            left: 'clamp(40px, 18vw, 240px)',
-            width: 'clamp(150px, 20vw, 280px)',
-            aspectRatio: '3 / 4',
-            borderRadius: '8px',
-            boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
+            width: 'clamp(200px, 28vw, 360px)',
+            height: 'auto',
+            aspectRatio: '16/9',
+            objectFit: 'cover',
+            position: 'absolute',
+            bottom: '8px',
+            left: seg.speaker === 'charlie' ? '4px' : 'auto',
+            right: seg.speaker === 'bob' ? '4px' : 'auto',
+            borderRadius: '10px',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
             background: '#000',
-            overflow: 'hidden',
-            zIndex: 10
-          }}>
-          
-            {seg.speaker === 'charlie' ?
-          <video
-            key={seg.src + idx}
-            ref={videoRef}
-            src={seg.src}
-            poster={DNN_POSTER}
-            playsInline
-            onEnded={handleEnded}
-            onTimeUpdate={handleTimeUpdate}
-            onCanPlay={handleCanPlay}
-            onClick={togglePlay}
-            className="cursor-pointer w-full h-full"
-            style={{ objectFit: 'cover' }} /> :
+            zIndex: 10,
+          }}
+        />
+      )}
 
-
-          <video
-            src={lastSrcFor('charlie')}
-            muted
-            playsInline
-            preload="auto"
-            onLoadedMetadata={(e) => {try {e.target.currentTime = 0.5;e.target.pause();} catch (_) {}}}
-            onError={(e) => {e.target.style.display = 'none';}}
-            className="w-full h-full py-1"
-            style={{ objectFit: 'cover', background: '#111' }} />
-
-          }
-            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
-          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>CHARLIE</span>
-            </div>
-          </div>
-
-          {/* Bob — full video frame */}
-          <div
-          className="absolute transition-all duration-300"
-          style={{
-            bottom: 'clamp(24px, 4vh, 48px)',
-            right: 'clamp(32px, 9vw, 130px)',
-            width: 'clamp(130px, 17vw, 230px)',
-            aspectRatio: '3 / 4',
-            borderRadius: '8px',
-            boxShadow: '0 18px 40px rgba(0,0,0,0.65), 0 4px 12px rgba(0,0,0,0.5)',
-            background: '#000',
-            overflow: 'hidden',
-            zIndex: 10
-          }}>
-          
-            {seg.speaker === 'bob' ?
-          <video
-            key={seg.src + idx}
-            ref={videoRef}
-            src={seg.src}
-            poster={DNN_POSTER}
-            playsInline
-            onEnded={handleEnded}
-            onTimeUpdate={handleTimeUpdate}
-            onCanPlay={handleCanPlay}
-            onClick={togglePlay}
-            className="cursor-pointer w-full h-full"
-            style={{ objectFit: 'cover' }} /> :
-
-
-          <video
-            src={lastSrcFor('bob')}
-            muted
-            playsInline
-            preload="auto"
-            onLoadedMetadata={(e) => {try {e.target.currentTime = 0.5;e.target.pause();} catch (_) {}}}
-            onError={(e) => {e.target.style.display = 'none';}}
-            className="w-full h-full"
-            style={{ objectFit: 'cover', background: '#111' }} />
-
-          }
-            <div className="absolute bottom-0 left-0 right-0 px-2 py-1 flex items-center gap-1.5"
-          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.9))' }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0" style={{ background: '#ef4444' }} />
-              <span className="text-[9px] md:text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>BOB DYSON</span>
-            </div>
-          </div>
-
-          {/* Center floor pills — same styling as the landing page */}
-          <div className="absolute left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-6"
-        style={{ bottom: '120px', zIndex: 9 }}>
-            {FLOOR_PILLS.map((pill) =>
-          <button
-            key={pill.word}
-            onClick={() => navigate(pill.dest)}
-            className="flex flex-col items-center justify-center px-4 md:px-6 py-2 rounded-full transition-all duration-300 ease-out hover:-translate-y-1 hover:opacity-90 cursor-pointer group hidden"
-            style={{
-              background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
-              border: '1px solid rgba(212,180,106,0.45)',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-              minWidth: '7rem',
-              maxWidth: '11rem',
-              height: '3rem',
-              paddingLeft: '1rem',
-              paddingRight: '1rem'
-            }}>
-            
-                <span
-              className="uppercase whitespace-nowrap"
-              style={{
-                color: '#d4b46a',
-                fontFamily: 'Cormorant Garamond, serif',
-                fontWeight: 500,
-                letterSpacing: pill.word.length > 10 ? '0.1em' : '0.2em',
-                fontSize: pill.word.length > 10 ? 'clamp(0.75rem, 1.8vw, 0.9rem)' : pill.word.length > 6 ? 'clamp(0.9rem, 2.2vw, 1.05rem)' : 'clamp(1.1rem, 2.6vw, 1.25rem)'
-              }}>
-              
-                  {pill.word}
-                </span>
-                <span
-              className="text-[7px] tracking-[0.2em] uppercase mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity"
-              style={{ color: '#d4b46a' }}>
-              
-                  {pill.sub}
-                </span>
-              </button>
-          )}
-          </div>
-        </>
-      }
-
-      {/* Poster + CTA overlay — shown before first play */}
-      {!playing && idx === 0 &&
-      <button
-        onClick={togglePlay}
-        aria-label="Click to watch the live show"
-        className="absolute inset-0 z-15 flex flex-col items-center justify-center transition-all"
-        style={{ background: '#000' }}>
-        
-          <img src={DNN_POSTER} alt="DNN Intelligence Bureau" className="absolute inset-0 w-full h-full object-cover opacity-60" />
-          <div className="relative z-10 flex flex-col items-center gap-4">
-            <span className="w-20 h-20 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
-              <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />
-            </span>
-            <span className="text-sm md:text-base font-black tracking-[0.2em] uppercase px-5 py-2 rounded-full"
-          style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'rgba(0,0,0,0.6)' }}>
-              Click to the Live Show
-            </span>
-          </div>
+      {/* Play overlay when paused/ended */}
+      {!playing && (
+        <button
+          onClick={ended ? replay : togglePlay}
+          aria-label={ended ? 'Replay' : 'Play'}
+          className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20"
+        >
+          <span className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}>
+            {ended
+              ? <RotateCcw className="w-8 h-8" style={{ color: GOLD }} />
+              : <Play className="w-8 h-8 ml-1" style={{ color: GOLD }} fill={GOLD} />}
+          </span>
         </button>
-      }
+      )}
+
+      {/* Tap for sound overlay when muted but playing */}
+      {playing && muted && (
+        <button
+          onClick={toggleMute}
+          aria-label="Tap for sound"
+          className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
+        >
+          <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
+            style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
+            <VolumeX className="w-8 h-8" style={{ color: GOLD }} />
+            <span className="text-xs font-bold tracking-wider uppercase" style={{ color: GOLD }}>
+              Tap for Sound
+            </span>
+          </span>
+        </button>
+      )}
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4"
-      style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
+        style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
         <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
-        className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        style={{ color: GOLD }}>
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ color: GOLD }}>
           {playing ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
         </button>
         <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
-        className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        style={{ color: GOLD }}>
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ color: GOLD }}>
           {muted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
         </button>
         <button onClick={replay} aria-label="Replay"
-        className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        style={{ color: GOLD }}>
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ color: GOLD }}>
           <RotateCcw className="w-6 h-6" />
         </button>
       </div>
-
-      {/* Subscribe CTA — shown when broadcast ends */}
-      {!playing && terminatedRef.current === false && segments.length === 0 &&
-      <div className="absolute inset-0 z-30 flex items-center justify-center px-6" style={{ background: 'rgba(0,0,0,0.85)' }}>
-          <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto">
-            <SubscribeCTA variant="endcard" />
-            <button onClick={replay} className="mx-auto mt-4 flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full"
-          style={{ color: GOLD, border: `1px solid ${GOLD}`, background: 'transparent' }}>
-              <RotateCcw className="w-3.5 h-3.5" /> Replay Broadcast
-            </button>
-          </div>
-        </div>
-      }
-    </div>);
-
+    </div>
+  );
 }

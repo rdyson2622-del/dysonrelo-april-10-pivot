@@ -8,7 +8,6 @@ import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -653,11 +652,6 @@ export default function CityGuide() {
             )}
           </div>
         )}
-
-        {/* Subscribe CTA */}
-        <div className="mt-8">
-          <SubscribeCTA variant="compact" />
-        </div>
     </div>
     </div>
   );

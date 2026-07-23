@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Star, Clock, Shield, ChevronDown, ChevronUp, X, ArrowRight } from 'lucide-react';
 import SendingAgentModal from '@/components/directory/SendingAgentModal';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -357,11 +356,6 @@ export default function NationalVettedDirectory() {
           <p className="text-xs leading-relaxed" style={{ color: '#6b5c45', fontFamily: 'Georgia, serif' }}>
             All agents listed as "Pending Final Approval" are currently under review by the Dyson vetting team. Performance data is sourced from public MLS records and third-party analytics. Contact inquiries are routed through Dyson & Dyson prior to agent introduction.
           </p>
-        </div>
-
-        {/* Subscribe CTA */}
-        <div className="mt-6">
-          <SubscribeCTA variant="features" />
         </div>
       </div>
     </div>

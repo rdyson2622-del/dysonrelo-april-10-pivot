@@ -166,7 +166,6 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<RoleSelector />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Home" element={<Home />} />
-      <Route path="/dnn-news" element={<ConsumerDnnNews />} />
 
       {/* Consumer Routes with Sidebar Layout */}
       {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
@@ -193,6 +192,7 @@ const AuthenticatedApp = () => {
         <Route path="/FindAgent" element={<FindAgent />} />
         <Route path="/find-agent" element={<FindAgent />} />
         <Route path="/media" element={<MediaRoom />} />
+        <Route path="/dnn-news" element={<ConsumerDnnNews />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
         <Route path="/relo-management" element={<ReloManagement />} />

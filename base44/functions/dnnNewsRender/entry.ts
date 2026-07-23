@@ -12,33 +12,10 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session.
  */
 
-// ── PHONETIC DOMAIN NORMALIZATION (SPOKEN AUDIO ONLY) ──
-// Visual scripts keep "1DNN.COM"; only the spoken input_text sent to HeyGen
-// TTS is rewritten so the engine pronounces each letter distinctly.
-// "One D N N dot com" — spaces between D, N, N force letter-by-letter speech.
-// This NEVER touches "Bob Dyson" (the person) — only domain references.
-function phoneticSpoken(text) {
-  if (!text) return text;
-  return text
-    // 1DNN.COM — already correct brand, just phoneticize
-    .replace(/1\s*d\s*n\s*n\s*\.\s*com/gi, 'One D N N dot com')
-    .replace(/1\s*d\s*n\s*n\s+dot\s+com/gi, 'One D N N dot com')
-    // Legacy "Dyson & Dyson .com" domain variants → 1DNN.COM
-    .replace(/dyson\s*\/\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
-    .replace(/dyson\s*&\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
-    .replace(/dyson\s*and\s*dyson\s*\.\s*com/gi, 'One D N N dot com')
-    .replace(/dysonanddyson\s*\.\s*com/gi, 'One D N N dot com')
-    .replace(/dyson\s*\/\s*dyson\s+dot\s+com/gi, 'One D N N dot com')
-    .replace(/dyson\s*and\s*dyson\s+dot\s+com/gi, 'One D N N dot com')
-    // Standalone legacy domain "dyson.com" / "dyson dot com" → 1DNN.COM
-    .replace(/\bdyson\s*\.\s*com\b/gi, 'One D N N dot com')
-    .replace(/\bdyson\s+dot\s+com\b/gi, 'One D N N dot com');
-}
-
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
-const BOB_VOICE_ID = '2e2785a64da54895b2cd3b744bf7ca26';
+const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 // No studio background — render avatars on solid black so they blend
 // seamlessly with the full-screen broadcast player's black canvas.
@@ -70,10 +47,9 @@ Deno.serve(async (req) => {
         ? { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID }
         : { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' };
       const voiceId = role === 'bob' ? BOB_VOICE_ID : CHARLIE_VOICE_ID;
-      const spokenText = phoneticSpoken(script);
       const voice = role === 'bob'
-        ? { type: 'text', voice_id: voiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 }
-        : { type: 'text', voice_id: voiceId, input_text: spokenText, volume: 1.0 };
+        ? { type: 'text', voice_id: voiceId, input_text: script, emotion: 'Excited', speed: 1.12 }
+        : { type: 'text', voice_id: voiceId, input_text: script };
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
@@ -124,13 +100,6 @@ Deno.serve(async (req) => {
       return { status: status || 'processing' };
     };
 
-    if (action === 'startOne') {
-      const clip = await Clips.get(body.clipId);
-      const role = body.role === 'charlie' ? 'charlie' : 'bob';
-      const result = await startRender(clip, role);
-      return Response.json({ success: !result.error, clipId: clip.id, role, ...result });
-    }
-
     if (action === 'startAll') {
       const clips = await Clips.list();
       const results = [];
@@ -145,20 +114,6 @@ Deno.serve(async (req) => {
         }
       }
       return Response.json({ success: true, started: results });
-    }
-
-    if (action === 'checkOne') {
-      let clip = await Clips.get(body.clipId);
-      const role = body.role === 'charlie' ? 'charlie' : 'bob';
-      let result = await checkRender(clip, role);
-      if (body.wait === true) {
-        for (let attempt = 0; attempt < 10 && result.status === 'processing'; attempt += 1) {
-          await new Promise((resolve) => setTimeout(resolve, 10000));
-          clip = await Clips.get(body.clipId);
-          result = await checkRender(clip, role);
-        }
-      }
-      return Response.json({ success: !result.error, clipId: clip.id, role, ...result });
     }
 
     if (action === 'checkAll') {

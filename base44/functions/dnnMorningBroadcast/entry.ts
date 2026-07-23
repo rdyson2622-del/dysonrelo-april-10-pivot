@@ -53,40 +53,27 @@ Deno.serve(async (req) => {
       const dateSpoken = new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'long', month: 'long', day: 'numeric' });
 
       const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News with Solutions" broadcast for ${dateSpoken}.
+        prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News Broadcast" for ${dateSpoken}.
 
 CAST:
 - Charlie Simmons: the anchor, at the DNN studio news desk.
 - Bob Dyson: 55-year real estate veteran, appearing remotely in a correspondent box.
 
-CORE MISSION — REAL ESTATE NEWS WITH SOLUTIONS:
-This is NOT ordinary news. DNN is "Real Estate News WITH SOLUTIONS." Every story must include a SOLUTION, not just a headline. The solution is what DNN and Dyson & Dyson DO FOR our subscribers using our AI-powered concierge — we get the answers, so they don't have to.
-
-CRITICAL SOLUTION RULE — NEVER HAND IT BACK AS A TASK:
-Bob and Charlie must NEVER tell viewers to "go find" answers themselves — no "reach out to a tax attorney," no "consult a financial advisor," no "you should talk to a CPA," no "check with your local agent." That is handing the work back to the viewer, which is exactly what DNN exists to eliminate.
-Instead, frame it as: "Our team at Dyson & Dyson can get you those answers directly," or "That's exactly the kind of question our AI concierge handles for our subscribers," or "We can connect you with the right specialist through our network — no legwork on your end."
-The message is always: WE get the answers FOR you. Subscribers don't do the sweat equity — we do.
-
-SUBSCRIBER VALUE EMPHASIS:
-Sprinkle natural reminders that subscribing means getting immediate answers to real estate questions and issues without the sweat equity. Phrases like "If you're a subscriber, just ask and we'll get you the answer," or "That's the kind of thing our concierge handles before lunch," or "For our subscribers, that answer is one message away."
-
 Write THREE spoken segments:
 
 1. charlie_open (180-240 words):
-- Begins exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News with Solutions for ${dateSpoken}."
+- Begins exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}."
 - Covers 3-4 of the most market-moving stories from the digest in punchy anchor style, each rewritten conversationally with smooth transitions.
-- For at least one story, tease the SOLUTION: "And if you're wondering what that means for your move — we've got the answer for our subscribers."
 - ENDS by tossing to Bob about the single most relocation-relevant remaining story, e.g. "For what this really means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question about that story]?"
 
 2. bob_answer (80-120 words):
 - Bob answers Charlie's question directly, in his warm, plain-spoken veteran voice.
 - Focuses on what it means for people relocating or buying/selling right now.
-- MUST include at least one SOLUTION reference — how DNN or Dyson & Dyson gets this answer FOR subscribers (not "go talk to a professional"). Example: "If this is on your radar, our team at Dyson & Dyson can pull the specifics for your situation — that's what we do for our subscribers."
-- CRITICAL TONE RULE FOR BOB: Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that." Instead, Bob frames his expertise as suggestions and shared experience. He uses phrases like "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well...", "You might think about..." He speaks WITH the viewer, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders.
+- CRITICAL TONE RULE FOR BOB: Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that." Instead, Bob frames his expertise as suggestions and shared experience. He uses phrases like "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well...", "You might think about..." He speaks WITH the viewer, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders. He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives.
 - Ends by handing back, e.g. "...and that's the real story here, Charlie."
 
 3. charlie_close (40-60 words):
-- Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast — and if any of them affect your move, our concierge has the answers for our subscribers. I'm Charlie Simmons. We'll see you next time."
+- Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast — and if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you next time."
 
 Plain spoken text only. No stage directions, no markdown, no scene labels.
 
@@ -135,7 +122,7 @@ ${digest}`,
         ? {
             character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
             voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
-            background: { type: 'color', value: '#000000' },
+            background: { type: 'color', value: '#00FF00' },
           }
         : {
             character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },

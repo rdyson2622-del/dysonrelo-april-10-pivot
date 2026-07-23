@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-import AdminPortalBar from '@/components/layout/AdminPortalBar';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -56,11 +54,6 @@ const PATHS = [
 
 export default function RoleSelector() {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
-  }, []);
 
   // Subscribed visitors go straight to their portal — unless they explicitly
   // asked for the landing page (logo click adds ?choose=1)
@@ -85,14 +78,6 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
-      {/* ── Admin-only portal bar across the top ── */}
-      {isAdmin && (
-        <div className="fixed top-0 left-0 right-0 z-[10000] flex items-center justify-center py-2"
-          style={{ background: 'rgba(0,0,0,0.9)', borderBottom: '1px solid rgba(212,175,55,0.3)' }}>
-          <AdminPortalBar />
-        </div>
-      )}
-
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
         className="relative h-screen"
@@ -120,11 +105,9 @@ export default function RoleSelector() {
                 background: 'linear-gradient(135deg, rgba(212,180,106,0.12) 0%, rgba(212,180,106,0.04) 100%)',
                 border: '1px solid rgba(212,180,106,0.45)',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                minWidth: '9rem',
-                maxWidth: '14rem',
-                height: '3.5rem',
-                paddingLeft: '1.5rem',
-                paddingRight: '1.5rem',
+                minWidth: '7rem',
+                maxWidth: '12rem',
+                height: '3.25rem',
               }}
             >
               <span
@@ -133,8 +116,8 @@ export default function RoleSelector() {
                   color: '#d4b46a',
                   fontFamily: 'Cormorant Garamond, serif',
                   fontWeight: 500,
-                  letterSpacing: pill.word.length > 10 ? '0.12em' : '0.2em',
-                  fontSize: pill.word.length > 10 ? 'clamp(0.85rem, 2.2vw, 1rem)' : pill.word.length > 6 ? 'clamp(1rem, 2.6vw, 1.2rem)' : 'clamp(1.2rem, 3.2vw, 1.5rem)',
+                  letterSpacing: '0.25em',
+                  fontSize: pill.word.length > 6 ? '1.15rem' : '1.5rem',
                 }}
               >
                 {pill.word}

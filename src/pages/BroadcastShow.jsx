@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -68,14 +67,11 @@ export default function BroadcastShow() {
 
   if (segments.length === 0) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center gap-6 px-6" style={{ background: '#000' }}>
+      <div className="fixed inset-0 flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
         <p className="text-sm font-bold tracking-[0.2em] uppercase" style={{ color: GOLD }}>
           DNN Intelligence Bureau
         </p>
         <p className="text-xs text-slate-500">No broadcast available at this time.</p>
-        <div className="w-full max-w-md">
-          <SubscribeCTA variant="endcard" />
-        </div>
         <button onClick={() => window.location.href = '/'} className="text-xs underline" style={{ color: GOLD }}>
           Return Home
         </button>

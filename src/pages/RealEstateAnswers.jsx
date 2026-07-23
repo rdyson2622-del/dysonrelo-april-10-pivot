@@ -4,7 +4,6 @@ import { MessageCircle, ChevronDown, ChevronUp, Zap, Home, ArrowRight, Play } fr
 import { base44 } from '@/api/base44Client';
 import FloatingCharlie from '@/components/charlie/FloatingCharlie';
 import QADuoPresenter from '@/components/charlie/QADuoPresenter';
-import SubscribeCTA from '@/components/dnn/SubscribeCTA';
 
 const GOLD = '#D4AF37';
 
@@ -203,11 +202,6 @@ export default function RealEstateAnswers() {
       </div>
 
       <FloatingCharlie />
-
-      {/* Subscribe CTA */}
-      <div className="max-w-3xl mx-auto px-6 pb-8">
-        <SubscribeCTA variant="compact" />
-      </div>
     </div>
   );
 }

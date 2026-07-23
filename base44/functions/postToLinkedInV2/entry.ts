@@ -20,35 +20,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { text, videoUrl, imageUrl, title, description, organizationName, broadcastId } = await req.json();
+    const { text, videoUrl, imageUrl, title, description, organizationName } = await req.json();
     if (!text) {
       return Response.json({ error: 'Missing text' }, { status: 400 });
     }
-
-    // ── RENDER INVALIDATION GUARD ──
-    // If broadcastId is provided, verify the broadcast is not stale.
-    // If stale, reject so the frontend can trigger a re-render first.
-    // If fresh, use the broadcast's stored videoUrl (guaranteed up-to-date).
-    let effectiveVideoUrl = videoUrl;
-    if (broadcastId) {
-      try {
-        const broadcasts = await base44.asServiceRole.entities.DnnBroadcast.filter({ id: broadcastId });
-        const broadcast = broadcasts?.[0];
-        if (broadcast) {
-          if (broadcast.needsReRender === true) {
-            return Response.json({
-              error: 'Broadcast has pending script/audio/slide changes. Re-render required before posting.',
-              needsReRender: true,
-            }, { status: 409 });
-          }
-          if (broadcast.videoUrl) effectiveVideoUrl = broadcast.videoUrl;
-        }
-      } catch (e) {
-        console.log(`Render guard check failed (continuing with provided URL): ${e.message}`);
-      }
-    }
-
-    if (!effectiveVideoUrl && !imageUrl) {
+    if (!videoUrl && !imageUrl) {
       return Response.json({ error: 'Missing videoUrl or imageUrl' }, { status: 400 });
     }
 
@@ -130,10 +106,10 @@ Deno.serve(async (req) => {
       authorUrn = `urn:li:person:${profile.sub}`;
     }
 
-    if (effectiveVideoUrl) {
+    if (videoUrl) {
       // --- VIDEO UPLOAD via LinkedIn Videos API ---
       // Step 1: Download the video
-      const vidRes = await fetch(effectiveVideoUrl);
+      const vidRes = await fetch(videoUrl);
       const vidBuffer = await vidRes.arrayBuffer();
       const fileSize = vidBuffer.byteLength;
 

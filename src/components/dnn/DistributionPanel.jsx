@@ -5,8 +5,6 @@ import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
   RefreshCw, Send, DollarSign, ChevronRight
 } from 'lucide-react';
-import BroadcastExportTools from '@/components/dnn/BroadcastExportTools';
-import { ensureFreshRender, getRenderStatus, RENDER_STATUS_CONFIG } from '@/components/dnn/renderGuard';
 
 const GOLD = '#D4AF37';
 const DNN_STUDIO_IMAGE = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
@@ -15,7 +13,6 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
   const queryClient = useQueryClient();
   const [posting, setPosting] = useState(null);
   const [result, setResult] = useState(null);
-  const [renderStatus, setRenderStatus] = useState(getRenderStatus(show));
 
   const distribution = show.distribution || [];
 
@@ -37,24 +34,14 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting('linkedin');
     setResult(null);
     try {
-      // ── RENDER INVALIDATION GUARD ──
-      const freshShow = await ensureFreshRender(show, setRenderStatus);
-      if (onRefresh) onRefresh();
-
       const res = await base44.functions.invoke('postToLinkedInV2', {
         text: `📡 DNN Intelligence Bureau\n\n${show.headlines?.[0] || 'Daily Real Estate News Broadcast'}\n\nCharlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.\n\n🔔 Watch the full broadcast: https://1dnn.com/dnn-news?autoplay=1\nSubscribe for free: https://1dnn.com/subscribe`,
-        videoUrl: freshShow.videoUrl || show.videoUrl,
-        broadcastId: show.id,
+        videoUrl: show.videoUrl,
         imageUrl: DNN_STUDIO_IMAGE,
         title: show.headlines?.[0] || 'DNN Broadcast',
         description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
         organizationName: 'DNN',
       });
-      if (res.data?.needsReRender) {
-        setResult({ success: false, msg: 'Re-render required. Please try again after the fresh MP4 is ready.' });
-        setPosting(null);
-        return;
-      }
       if (res.data?.success) {
         await updateDistribution({
           channel: 'linkedin',
@@ -78,24 +65,13 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting('facebook');
     setResult(null);
     try {
-      // ── RENDER INVALIDATION GUARD ──
-      const freshShow = await ensureFreshRender(show, setRenderStatus);
-      if (onRefresh) onRefresh();
-
-      const res = await base44.functions.invoke('postBroadcastToFacebook', {
-        broadcastId: show.id,
-      });
-      if (res.data?.needsReRender) {
-        setResult({ success: false, msg: 'Re-render required. Please try again after the fresh MP4 is ready.' });
-        setPosting(null);
-        return;
-      }
-      if (res.data?.success) {
+      const res = await base44.functions.invoke('dnnSocialBlast', {});
+      if (res.data?.facebook?.success || res.data?.success) {
         await updateDistribution({
           channel: 'facebook',
           status: 'sent',
           recipient: 'DNN Facebook Page',
-          post_id: res.data?.post_id || '',
+          post_id: res.data?.facebook?.post_id || res.data?.post_id || '',
           posted_at: new Date().toISOString(),
         });
         setResult({ success: true, msg: 'Posted to Facebook' });
@@ -113,10 +89,6 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting('email');
     setResult(null);
     try {
-      // ── RENDER INVALIDATION GUARD ──
-      const freshShow = await ensureFreshRender(show, setRenderStatus);
-      if (onRefresh) onRefresh();
-
       const res = await base44.functions.invoke('dnnMorningEmailBlast', {});
       await updateDistribution({
         channel: 'subscriber_email',
@@ -186,20 +158,8 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     },
   ];
 
-  const currentStatus = posting ? 'rendering' : getRenderStatus(show);
-  const statusConfig = RENDER_STATUS_CONFIG[currentStatus];
-
   return (
     <div>
-      {/* Render Invalidation Pipeline — status badge */}
-      <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg"
-        style={{ background: statusConfig.bgColor, border: `1px solid ${statusConfig.color}30` }}>
-        <span className="text-sm">{statusConfig.icon}</span>
-        <span className="text-xs font-bold" style={{ color: statusConfig.color }}>
-          {statusConfig.label}
-        </span>
-      </div>
-
       <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">Distribution & Posting Progress:</p>
       <div className="grid grid-cols-2 gap-2">
         {channels.map(ch => {
@@ -273,11 +233,6 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
           </div>
         </div>
       )}
-
-      {/* MP4 export + share copy generator */}
-      <div className="mt-3">
-        <BroadcastExportTools show={show} onRefresh={onRefresh} />
-      </div>
 
       {/* Result message */}
       {result && (
