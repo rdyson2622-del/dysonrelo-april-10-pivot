@@ -9,7 +9,6 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
-import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
@@ -554,18 +553,7 @@ export default function ConsumerDnnNews() {
             <p className="text-xs tracking-widest uppercase" style={{ color: '#ffffff' }}>Real Estate Intelligence</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              const el = document.querySelector('[data-dnn-news-trigger]');
-              if (el) el.click();
-            }}
-            className="flex items-center gap-2 text-sm font-black tracking-widest px-4 py-2 rounded-full transition-all hover:scale-105"
-            style={{ color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', boxShadow: '0 0 20px rgba(212,175,55,0.35)' }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
-            LIVE BROADCAST
-          </button>
-        </div>
+
       </div>
 
       {/* Hero */}
@@ -583,11 +571,6 @@ export default function ConsumerDnnNews() {
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
 
-      </div>
-
-      {/* Charlie circle — fixed below header; z-[300] so the full-screen player covers edit/trash buttons */}
-      <div className="fixed top-36 right-4 md:top-40 md:right-6 z-[300]">
-        <DnnNewsPresenter />
       </div>
 
       {/* Articles Feed */}
