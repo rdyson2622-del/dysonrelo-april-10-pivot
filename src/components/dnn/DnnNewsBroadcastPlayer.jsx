@@ -22,7 +22,7 @@ const SPEAKER_LABELS = {
  *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
+export default function DnnNewsBroadcastPlayer({ segments, onClose, embedded = false }) {
   const navigate = useNavigate();
 
   const FLOOR_PILLS = [
@@ -42,8 +42,12 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   // Initial playback kick — runs once per segment set. Does NOT reset on idx changes.
   useEffect(() => {
     setIdx(0);
-    setPlaying(true);
     setMuted(false);
+    if (embedded) {
+      setPlaying(false);
+      return;
+    }
+    setPlaying(true);
     const timer = setTimeout(() => {
       const v = videoRef.current;
       if (!v) return;
@@ -60,7 +64,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     }, 50);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segmentsKey]);
+  }, [segmentsKey, embedded]);
 
   // NOTE: No useEffect on [idx]. Segment advancement is driven solely by the
   // native onEnded handler below + onCanPlay auto-play. This eliminates the
@@ -78,6 +82,10 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       setIdx(nextIndex);
       return;
     }
+    if (embedded) {
+      setPlaying(false);
+      return;
+    }
     console.log("Terminal clip reached. Executing hard exit.");
     terminatedRef.current = true;
     window.location.replace('/?choose=1');
@@ -92,11 +100,22 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     if (!v || !v.duration || isNaN(v.duration) || terminatedRef.current) return;
     const isLastSegment = idx === segments.length - 1;
     console.log(`[DNN PLAYER] clip ${idx}/${segments.length - 1} | currentTime=${v.currentTime.toFixed(2)}s duration=${v.duration.toFixed(2)}s | ${(v.currentTime / v.duration * 100).toFixed(1)}%${isLastSegment ? ' [FINAL]' : ''}`);
-    if (isLastSegment && v.currentTime >= v.duration - 0.3) {
+    if (!embedded && isLastSegment && v.currentTime >= v.duration - 0.3) {
       console.log("Defensive duration escape hatch triggered on FINAL clip. Executing hard exit.");
       terminatedRef.current = true;
       window.location.replace('/?choose=1');
     }
+  };
+
+  const handleCanPlay = (e) => {
+    if (embedded && !playing) return;
+    const v = e.currentTarget;
+    v.muted = muted;
+    v.play().then(() => setPlaying(true)).catch(() => {
+      v.muted = true;
+      setMuted(true);
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    });
   };
 
   const togglePlay = () => {
@@ -135,7 +154,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+    <div className={embedded ? "relative w-full aspect-video flex items-center justify-center" : "fixed inset-0 z-[200] flex items-center justify-center"} style={{ background: '#000', overflow: 'hidden' }}>
       {/* Background layer */}
       {isSting ?
       <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} /> :
@@ -197,7 +216,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
           playsInline
           onEnded={handleEnded}
           onTimeUpdate={handleTimeUpdate}
-          onCanPlay={(e) => {e.currentTarget.muted = muted;e.currentTarget.play().then(() => setPlaying(true)).catch(() => {e.currentTarget.muted = true;setMuted(true);e.currentTarget.play().then(() => setPlaying(true)).catch(() => {});});}}
+          onCanPlay={handleCanPlay}
           onClick={togglePlay}
           className="cursor-pointer w-full h-full"
           style={{ objectFit: 'cover', transform: 'translate(-0.5%, 10%)' }} />
@@ -229,7 +248,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onTimeUpdate={handleTimeUpdate}
-            onCanPlay={(e) => {e.currentTarget.muted = muted;e.currentTarget.play().then(() => setPlaying(true)).catch(() => {e.currentTarget.muted = true;setMuted(true);e.currentTarget.play().then(() => setPlaying(true)).catch(() => {});});}}
+            onCanPlay={handleCanPlay}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
             style={{ objectFit: 'cover' }} /> :
@@ -277,7 +296,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onTimeUpdate={handleTimeUpdate}
-            onCanPlay={(e) => {e.currentTarget.muted = muted;e.currentTarget.play().then(() => setPlaying(true)).catch(() => {e.currentTarget.muted = true;setMuted(true);e.currentTarget.play().then(() => setPlaying(true)).catch(() => {});});}}
+            onCanPlay={handleCanPlay}
             onClick={togglePlay}
             className="cursor-pointer w-full h-full"
             style={{ objectFit: 'cover' }} /> :

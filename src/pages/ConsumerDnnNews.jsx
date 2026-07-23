@@ -9,6 +9,7 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
+import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
@@ -554,6 +555,11 @@ export default function ConsumerDnnNews() {
           </div>
         </div>
 
+      </div>
+
+      {/* Broadcast — inline above the Real Estate News section */}
+      <div className="w-full bg-black">
+        <DnnNewsPresenter embedded />
       </div>
 
       {/* Hero */}

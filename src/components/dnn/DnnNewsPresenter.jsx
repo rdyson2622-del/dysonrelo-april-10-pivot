@@ -32,7 +32,7 @@ function extractBullets(script) {
  * Charlie opens by introducing the national real estate news service,
  * then hands off to Bob who explains the unique "News + Solution" model.
  */
-export default function DnnNewsPresenter() {
+export default function DnnNewsPresenter({ embedded = false }) {
   const [segments, setSegments] = useState([]);
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -114,6 +114,10 @@ export default function DnnNewsPresenter() {
 
   if (!loaded) return null;
   if (segments.length === 0) return null;
+
+  if (embedded) {
+    return <DnnNewsBroadcastPlayer segments={segments} embedded />;
+  }
 
   return (
     <>
