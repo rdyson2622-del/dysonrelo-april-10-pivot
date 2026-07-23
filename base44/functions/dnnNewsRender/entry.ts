@@ -38,7 +38,7 @@ function phoneticSpoken(text) {
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
-const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
+const BOB_VOICE_ID = '2e2785a64da54895b2cd3b744bf7ca26';
 
 // No studio background — render avatars on solid black so they blend
 // seamlessly with the full-screen broadcast player's black canvas.
@@ -123,6 +123,13 @@ Deno.serve(async (req) => {
       }
       return { status: status || 'processing' };
     };
+
+    if (action === 'startOne') {
+      const clip = await Clips.get(body.clipId);
+      const role = body.role === 'charlie' ? 'charlie' : 'bob';
+      const result = await startRender(clip, role);
+      return Response.json({ success: !result.error, clipId: clip.id, role, ...result });
+    }
 
     if (action === 'startAll') {
       const clips = await Clips.list();
