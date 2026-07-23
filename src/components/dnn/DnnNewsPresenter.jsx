@@ -36,6 +36,7 @@ export default function DnnNewsPresenter() {
   const [segments, setSegments] = useState([]);
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [clipsVersion, setClipsVersion] = useState(0);
   const previewRef = useRef(null);
   const navigate = useNavigate();
 
@@ -89,6 +90,13 @@ export default function DnnNewsPresenter() {
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
+  }, [clipsVersion]);
+
+  useEffect(() => {
+    const unsubscribe = base44.entities.DnnNewsClip.subscribe(() => {
+      setClipsVersion((version) => version + 1);
+    });
+    return unsubscribe;
   }, []);
 
   // Pause & mute the preview video whenever the full-screen player is open
