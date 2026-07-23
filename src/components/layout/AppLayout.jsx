@@ -8,6 +8,7 @@ import PageNumberBadge from '../PageNumberBadge';
 import { ArrowLeft, PanelLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
+import PortalHomeButton from './PortalHomeButton';
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -27,7 +28,24 @@ export default function AppLayout() {
     agent: 'RELOCATION AGENT PORTAL',
     referral_agent: 'REFERRAL AGENT PORTAL',
     vendor: 'VENDOR PORTAL',
+    hr: 'CORPORATE HR PORTAL',
   };
+
+  const PORTAL_HOMES = {
+    client: '/home',
+    agent: '/find-agent',
+    referral_agent: '/partner-benefits',
+    vendor: '/search',
+    hr: '/corporate-relo',
+  };
+
+  const routePortalRole = {
+    '/find-agent': 'agent',
+    '/partner-benefits': 'referral_agent',
+    '/search': 'vendor',
+    '/corporate-relo': 'hr',
+  }[location.pathname];
+  const currentPortalRole = routePortalRole || portalRole;
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
@@ -58,15 +76,20 @@ export default function AppLayout() {
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#A9A9A9' }}>
       {/* Top bar spanning full width */}
-      <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#A9A9A9' }}>
-        {/* Client Portal box — far left, toggles the sidebar */}
+      <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
+        <PortalHomeButton
+          onClick={() => navigate(PORTAL_HOMES[currentPortalRole] || '/home')}
+          label={PORTAL_LABELS[currentPortalRole] || 'CLIENT PORTAL'}
+        />
+
+        {/* Portal box toggles the sidebar */}
         <button
           onClick={toggleSidebar}
           className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
           style={{ background: '#0d0d0d', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)' }}
         >
           <PanelLeft className="w-4 h-4" />
-          {location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL')}
+          {PORTAL_LABELS[currentPortalRole] || 'CLIENT PORTAL'}
         </button>
 
         <button

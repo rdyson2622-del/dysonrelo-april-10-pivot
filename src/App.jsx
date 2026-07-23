@@ -206,7 +206,8 @@ const AuthenticatedApp = () => {
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
         <Route path="/subscribe" element={<Subscribe />} />
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
-        <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
+      <Route path="/partner-benefits" element={<SendingAgentLanding />} />
+      <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -290,7 +291,6 @@ const AuthenticatedApp = () => {
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
-      <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/agent-landing" element={<AgentLanding />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
