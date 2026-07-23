@@ -9,7 +9,6 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
-import LatestDnnBroadcastVideo from '@/components/dnn/LatestDnnBroadcastVideo';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
@@ -543,11 +542,6 @@ export default function ConsumerDnnNews() {
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
-
-      {/* Latest completed broadcast MP4 — no custom player or overlays */}
-      <div className="w-full bg-black">
-        <LatestDnnBroadcastVideo />
-      </div>
 
       {/* Hero */}
       <div className="w-full px-8 md:px-16 py-14 text-center"
