@@ -14,6 +14,7 @@ import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const DNN_STUDIO_PLACEHOLDER = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/027a3b3fc_DNN.png";
 
 const TRIGGER_LABELS = {
   tax_policy: 'TAX POLICY',
@@ -582,6 +583,14 @@ export default function ConsumerDnnNews() {
         <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
+
+        <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(212,175,55,0.45)', boxShadow: '0 18px 45px rgba(0,0,0,0.2)' }}>
+          <img
+            src={DNN_STUDIO_PLACEHOLDER}
+            alt="DNN news studio with Bob Dyson seated at the anchor desk"
+            className="block w-full h-auto"
+          />
+        </div>
 
       </div>
 
