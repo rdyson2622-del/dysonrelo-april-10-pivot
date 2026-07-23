@@ -4,9 +4,9 @@ import { base44 } from '@/api/base44Client';
 
 export default function LatestDnnBroadcastVideo() {
   const { data: broadcasts = [] } = useQuery({
-    queryKey: ['latestCompletedDnnBroadcast'],
+    queryKey: ['latestCompletedBobSoloDnnBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter(
-      { status: 'completed' },
+      { status: 'completed', presenter: 'bob', format: 'solo' },
       '-broadcast_date',
       10
     ),
