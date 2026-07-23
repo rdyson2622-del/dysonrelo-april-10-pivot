@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       const voiceId = role === 'bob' ? BOB_VOICE_ID : CHARLIE_VOICE_ID;
       const spokenText = phoneticSpoken(script);
       const voice = role === 'bob'
-        ? { type: 'text', voice_id: voiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.4 }
+        ? { type: 'text', voice_id: voiceId, input_text: spokenText, emotion: 'Excited', speed: 1.12, volume: 1.0 }
         : { type: 'text', voice_id: voiceId, input_text: spokenText, volume: 1.0 };
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
@@ -145,6 +145,20 @@ Deno.serve(async (req) => {
         }
       }
       return Response.json({ success: true, started: results });
+    }
+
+    if (action === 'checkOne') {
+      let clip = await Clips.get(body.clipId);
+      const role = body.role === 'charlie' ? 'charlie' : 'bob';
+      let result = await checkRender(clip, role);
+      if (body.wait === true) {
+        for (let attempt = 0; attempt < 10 && result.status === 'processing'; attempt += 1) {
+          await new Promise((resolve) => setTimeout(resolve, 10000));
+          clip = await Clips.get(body.clipId);
+          result = await checkRender(clip, role);
+        }
+      }
+      return Response.json({ success: !result.error, clipId: clip.id, role, ...result });
     }
 
     if (action === 'checkAll') {
