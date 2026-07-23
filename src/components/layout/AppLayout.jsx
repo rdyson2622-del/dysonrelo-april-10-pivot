@@ -82,14 +82,15 @@ export default function AppLayout() {
           label={PORTAL_LABELS[currentPortalRole] || 'CLIENT PORTAL'}
         />
 
-        {/* Portal box toggles the sidebar */}
+        {/* Sidebar toggle */}
         <button
           onClick={toggleSidebar}
-          className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
-          style={{ background: '#0d0d0d', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.5)' }}
+          aria-label="Toggle portal menu"
+          title="Toggle portal menu"
+          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
+          style={{ color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
         >
           <PanelLeft className="w-4 h-4" />
-          {PORTAL_LABELS[currentPortalRole] || 'CLIENT PORTAL'}
         </button>
 
         <button
