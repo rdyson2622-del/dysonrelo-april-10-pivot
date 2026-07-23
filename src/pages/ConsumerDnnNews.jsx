@@ -14,7 +14,7 @@ import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
-const DNN_STUDIO_PLACEHOLDER = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/027a3b3fc_DNN.png";
+const DNN_STUDIO_PLACEHOLDER = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0c35c9fc3_generated_image.png";
 
 const TRIGGER_LABELS = {
   tax_policy: 'TAX POLICY',
