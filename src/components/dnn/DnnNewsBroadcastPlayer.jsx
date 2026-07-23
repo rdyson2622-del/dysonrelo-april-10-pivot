@@ -175,7 +175,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       ) : (
         <div
-          className="absolute overflow-hidden cursor-pointer"
+          className="absolute cursor-pointer overflow-hidden"
+          onClick={togglePlay}
           style={{
             width: 'clamp(200px, 28vw, 360px)',
             aspectRatio: '16/9',
@@ -195,9 +196,8 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             src={seg.src}
             playsInline
             onEnded={handleEnded}
-            onClick={togglePlay}
             className="w-full h-full object-cover transition-all duration-300"
-            style={{ transform: 'scale(1.24)', transformOrigin: 'center' }}
+            style={{ transform: 'scale(1.18)' }}
           />
         </div>
       )}
