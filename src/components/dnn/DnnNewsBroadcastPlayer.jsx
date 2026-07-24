@@ -98,6 +98,9 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
+  const previousCharlie = isBob
+    ? [...segments.slice(0, idx)].reverse().find(segment => segment.speaker === 'charlie')
+    : null;
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   return (
@@ -159,7 +162,34 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         </div>
       )}
 
-      {/* Video element */}
+      {/* Keep Charlie visible while Bob is speaking */}
+      {previousCharlie && (
+        <div
+          className="absolute overflow-hidden"
+          style={{
+            width: 'clamp(200px, 28vw, 360px)',
+            aspectRatio: '16/9',
+            bottom: '8px',
+            left: '4px',
+            borderRadius: '10px',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
+            background: '#000',
+            zIndex: 10,
+          }}
+        >
+          <video
+            src={previousCharlie.src}
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.18)' }}
+          />
+        </div>
+      )}
+
+      {/* Active video element */}
       {isSting ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
