@@ -41,7 +41,7 @@ function bobScene(clip, index, charlieSource) {
   const bullets = extractBulletPoints(clip.bobScript);
   const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
   const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
-  const bulletFontSize = totalCharacters > 500 ? '2.05 vmin' : totalCharacters > 350 ? '2.3 vmin' : '2.6 vmin';
+  const bulletFontSize = totalCharacters > 500 ? '5.2 vmin' : totalCharacters > 350 ? '5.8 vmin' : '6.4 vmin';
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
