@@ -10,7 +10,7 @@ function extractBulletPoints(script) {
   return sentences
     .map(sentence => sentence.trim())
     .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence))
-    .slice(0, 5)
+    .slice(0, 3)
     .map(sentence => sentence.replace(/[.!?]+$/, ''));
 }
 
@@ -41,11 +41,11 @@ function bobScene(clip, index, charlieSource) {
   const bullets = extractBulletPoints(clip.bobScript);
   const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
   const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
-  const bulletFontSize = totalCharacters > 500 ? '5.2 vmin' : totalCharacters > 350 ? '5.8 vmin' : '6.4 vmin';
+  const bulletFontSize = totalCharacters > 300 ? '2.2 vmin' : totalCharacters > 200 ? '2.5 vmin' : '2.8 vmin';
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
-      type: 'composition', track: 2, x: '47.5%', y: '42%', width: '58%', height: '56%',
+      type: 'composition', track: 2, x: '47.5%', y: '33%', width: '58%', height: '48%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
         {
@@ -59,7 +59,7 @@ function bobScene(clip, index, charlieSource) {
           fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.2 vmin', line_height: '112%', letter_spacing: '8%',
         },
         {
-          type: 'text', track: 1, text: bulletText, x: '50%', y: '62%', width: '82%', height: '58%',
+          type: 'text', track: 1, text: bulletText, x: '50%', y: '64%', width: '82%', height: '54%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
           fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '500', font_size: bulletFontSize, line_height: '138%',
         },
