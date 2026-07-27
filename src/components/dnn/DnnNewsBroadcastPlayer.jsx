@@ -112,7 +112,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
         <>
           <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
           {hasBullets && (
-            <div className="absolute left-[3vw] top-[12vh] z-[5] w-[58vw] max-w-2xl max-h-[58vh] overflow-y-auto rounded-xl p-4 md:p-6"
+            <div className="absolute left-[3vw] top-[12vh] z-[5] w-[58vw] max-w-2xl max-h-[58vh] translate-x-1/4 overflow-y-auto rounded-xl p-4 md:p-6"
               style={{ background: '#f5f0e8', border: `3px solid ${GOLD}`, boxShadow: '0 14px 40px rgba(0,0,0,0.55)' }}>
               <p className="mb-2 text-[9px] md:text-[11px] font-bold tracking-[0.25em] uppercase"
                 style={{ color: GOLD }}>DNN Intelligence Bureau</p>
