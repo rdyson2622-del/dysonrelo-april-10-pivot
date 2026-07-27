@@ -15,37 +15,6 @@ export default function AppLayout() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
-  const [portalRole, setPortalRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
-
-  useEffect(() => {
-    const onRoleChange = () => setPortalRole(sessionStorage.getItem('dyson_role') || 'client');
-    window.addEventListener('dyson_role_change', onRoleChange);
-    return () => window.removeEventListener('dyson_role_change', onRoleChange);
-  }, []);
-
-  const PORTAL_LABELS = {
-    client: 'CLIENT PORTAL',
-    agent: 'RELOCATION AGENT PORTAL',
-    referral_agent: 'REFERRAL AGENT PORTAL',
-    vendor: 'VENDOR PORTAL',
-    hr: 'CORPORATE HR PORTAL',
-  };
-
-  const PORTAL_HOMES = {
-    client: '/home',
-    agent: '/find-agent',
-    referral_agent: '/partner-benefits',
-    vendor: '/search',
-    hr: '/corporate-relo',
-  };
-
-  const routePortalRole = {
-    '/find-agent': 'agent',
-    '/partner-benefits': 'referral_agent',
-    '/search': 'vendor',
-    '/corporate-relo': 'hr',
-  }[location.pathname];
-  const currentPortalRole = routePortalRole || portalRole;
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
@@ -78,8 +47,8 @@ export default function AppLayout() {
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
         <PortalHomeButton
-          onClick={() => navigate(PORTAL_HOMES[currentPortalRole] || '/home')}
-          label={PORTAL_LABELS[currentPortalRole] || 'CLIENT PORTAL'}
+          onClick={() => navigate('/?choose=1')}
+          label="STUDIO"
         />
 
         {/* Sidebar toggle */}

@@ -8,6 +8,7 @@ import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import CommandPills from './CommandPills';
+import PortalHomeButton from './PortalHomeButton';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -53,7 +54,8 @@ export default function AdminLayout() {
 
       <main className="flex-1 overflow-auto relative" style={{ background: '#ede0cc' }}>
         {/* Top Controls */}
-        <div className="fixed top-3 left-3 z-50">
+        <div className="fixed top-3 left-3 z-50 flex items-center gap-2">
+          <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
