@@ -7,11 +7,11 @@ const GOLD = '#D4AF37';
 
 function extractBullets(script) {
   if (!script) return [];
-  const sentences = script.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+/g) || [script];
-  const cleaned = sentences
+  const sentences = script.replace(/\n+/g, ' ').match(/[^.!?]+(?:[.!?]+|$)/g) || [script];
+  return sentences
     .map(s => s.trim())
-    .filter(s => s.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(s));
-  return cleaned.slice(0, 5).map(s => s.replace(/[.!?]+$/, ''));
+    .filter(s => s.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(s))
+    .map(s => s.replace(/[.!?]+$/, ''));
 }
 
 export default function BroadcastShow() {

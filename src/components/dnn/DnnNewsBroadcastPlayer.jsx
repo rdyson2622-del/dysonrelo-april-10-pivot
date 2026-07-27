@@ -30,11 +30,13 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [bulletPage, setBulletPage] = useState(0);
 
   const segmentsKey = segments.map(s => s.src).join('|');
   useEffect(() => {
     setIdx(0);
     setEnded(false);
+    setBulletPage(0);
     setPlaying(true);
     setMuted(false);
     const timer = setTimeout(() => {
@@ -57,6 +59,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
 
   useEffect(() => {
     if (idx === 0) return;
+    setBulletPage(0);
     const v = videoRef.current;
     if (!v) return;
     v.muted = muted;
@@ -95,9 +98,21 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     setMuted(v.muted);
   };
 
+  const handleTimeUpdate = (event) => {
+    if (!hasBullets || bulletPageCount <= 1) return;
+    const { currentTime, duration } = event.currentTarget;
+    if (!duration) return;
+    setBulletPage(Math.min(bulletPageCount - 1, Math.floor((currentTime / duration) * bulletPageCount)));
+  };
+
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
+  const bulletsPerPage = 5;
+  const bulletPageCount = hasBullets ? Math.ceil(seg.bullets.length / bulletsPerPage) : 1;
+  const visibleBullets = hasBullets
+    ? seg.bullets.slice(bulletPage * bulletsPerPage, (bulletPage + 1) * bulletsPerPage)
+    : [];
   const previousCharlie = isBob
     ? [...segments.slice(0, idx)].reverse().find(segment => segment.speaker === 'charlie')
     : null;
@@ -123,7 +138,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
                 </h2>
               )}
               <ul className="space-y-2 md:space-y-3">
-                {seg.bullets.map((b, i) => (
+                {visibleBullets.map((b, i) => (
                   <li key={i} className="flex items-start gap-2 md:gap-3">
                     <span className="mt-1.5 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0"
                       style={{ background: GOLD }} />
@@ -226,6 +241,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
             src={seg.src}
             playsInline
             onEnded={handleEnded}
+            onTimeUpdate={handleTimeUpdate}
             className="w-full h-full object-cover transition-all duration-300"
             style={{ transform: 'scale(1.18)' }}
           />
