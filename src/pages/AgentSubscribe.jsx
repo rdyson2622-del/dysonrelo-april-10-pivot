@@ -56,6 +56,11 @@ export default function AgentSubscribe() {
         source: 'Agent Campaign',
       });
 
+      const user = await base44.auth.me();
+      if (!user?.portal_role) await base44.auth.updateMe({ portal_role: 'agent' });
+      localStorage.setItem('dyson_portal', JSON.stringify({ roleKey: 'agent', dest: '/find-agent' }));
+      sessionStorage.setItem('dyson_role', 'agent');
+      window.dispatchEvent(new Event('dyson_role_change'));
       setDone(true);
     } catch (err) {
       console.error('Subscribe error:', err);

@@ -22,8 +22,15 @@ export default function PortalSubscribeForm({ portalName, source, roleKey, dest 
       phone: form.phone,
       source,
     });
-    localStorage.setItem('dyson_portal', JSON.stringify({ roleKey, dest }));
-    sessionStorage.setItem('dyson_role', roleKey);
+    const user = await base44.auth.me();
+    const assignedRole = user?.portal_role || roleKey;
+    const assignedDest = {
+      client: '/home', agent: '/find-agent', referral_agent: '/partner-benefits',
+      vendor: '/search', hr: '/corporate-relo',
+    }[assignedRole] || dest;
+    if (!user?.portal_role) await base44.auth.updateMe({ portal_role: roleKey });
+    localStorage.setItem('dyson_portal', JSON.stringify({ roleKey: assignedRole, dest: assignedDest }));
+    sessionStorage.setItem('dyson_role', assignedRole);
     window.dispatchEvent(new Event('dyson_role_change'));
     setDone(true);
     setSubmitting(false);

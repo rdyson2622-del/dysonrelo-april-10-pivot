@@ -9,6 +9,7 @@ import { ArrowLeft, PanelLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
+import PortalAccessGuard from './PortalAccessGuard';
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -85,7 +86,9 @@ export default function AppLayout() {
         )}
         {/* Main content */}
         <div className="flex-1 overflow-auto pb-16 md:pb-0">
-          <Outlet />
+          <PortalAccessGuard>
+            <Outlet />
+          </PortalAccessGuard>
         </div>
       </div>
       <MobileBottomNav />

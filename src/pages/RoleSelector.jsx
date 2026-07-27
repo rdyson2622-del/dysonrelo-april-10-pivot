@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -52,29 +53,54 @@ const PATHS = [
   },
 ];
 
+const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.dest]));
+
 export default function RoleSelector() {
   const navigate = useNavigate();
+  const [assignedRole, setAssignedRole] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [accessReady, setAccessReady] = useState(false);
 
-  // Subscribed visitors go straight to their portal — unless they explicitly
-  // asked for the landing page (logo click adds ?choose=1)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('choose')) return;
-    try {
-      const saved = JSON.parse(localStorage.getItem('dyson_portal'));
-      if (saved?.dest) {
-        sessionStorage.setItem('dyson_role', saved.roleKey || 'client');
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('dyson_portal')); } catch {}
+
+    base44.auth.me().then(user => {
+      const admin = user?.role === 'admin';
+      const assigned = admin ? null : (user?.portal_role || saved?.roleKey || null);
+      setIsAdmin(admin);
+      setAssignedRole(assigned);
+      if (assigned) {
+        sessionStorage.setItem('dyson_role', assigned);
         window.dispatchEvent(new Event('dyson_role_change'));
-        navigate(saved.dest, { replace: true });
       }
-    } catch {}
+      setAccessReady(true);
+      if (!params.get('choose') && assigned) {
+        navigate(PORTAL_DESTS[assigned] || saved?.dest || '/home', { replace: true });
+      }
+    }).catch(() => {
+      const assigned = saved?.roleKey || null;
+      setAssignedRole(assigned);
+      setAccessReady(true);
+      if (!params.get('choose') && assigned) navigate(PORTAL_DESTS[assigned], { replace: true });
+    });
   }, [navigate]);
 
   const handleSelect = (path) => {
-    sessionStorage.setItem('dyson_role', path.roleKey);
+    const selected = !isAdmin && assignedRole
+      ? PATHS.find(item => item.roleKey === assignedRole)
+      : path;
+    sessionStorage.setItem('dyson_role', selected.roleKey);
     window.dispatchEvent(new Event('dyson_role_change'));
-    navigate(path.dest);
+    navigate(selected.dest);
   };
+
+  const visiblePaths = isAdmin || !assignedRole
+    ? PATHS
+    : PATHS.filter(path => path.roleKey === assignedRole);
+
+  if (!accessReady) return <div className="min-h-screen bg-black" />;
 
   return (
     <div className="bg-black">
@@ -134,7 +160,9 @@ export default function RoleSelector() {
 
         <div className="absolute left-0 right-0 flex flex-col items-center px-6" style={{ bottom: '6%' }}>
           <p className="text-xl md:text-2xl text-center whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'Cormorant Garamond, serif' }}>
-            Select your path below and your experience will be tailored exclusively to your needs.
+            {assignedRole && !isAdmin
+              ? 'Return to your subscribed portal below.'
+              : 'Select your path below and your experience will be tailored exclusively to your needs.'}
           </p>
         </div>
       </section>
@@ -143,7 +171,7 @@ export default function RoleSelector() {
       <section className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
 
         <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {PATHS.map((path, i) => {
+          {visiblePaths.map((path, i) => {
             const Icon = path.icon;
             return (
               <button

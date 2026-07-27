@@ -44,7 +44,11 @@ export default function SendingAgentLanding() {
       referral_status: 'new',
       notes: `Sending Agent: ${form.agent_name} (${form.agent_email}) | Destination: ${form.destination_state} | Notes: ${form.notes}`,
     });
+    const user = await base44.auth.me();
+    if (!user?.portal_role) await base44.auth.updateMe({ portal_role: 'referral_agent' });
     localStorage.setItem('dyson_portal', JSON.stringify({ roleKey: 'referral_agent', dest: '/partner-benefits' }));
+    sessionStorage.setItem('dyson_role', 'referral_agent');
+    window.dispatchEvent(new Event('dyson_role_change'));
     setSubmitted(true);
     setSubmitting(false);
   };
