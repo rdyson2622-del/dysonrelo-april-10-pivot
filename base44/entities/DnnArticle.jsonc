@@ -235,6 +235,34 @@
     "social_copy_facebook": {
       "type": "string",
       "description": "Formatted Facebook post"
+    },
+    "placement": {
+      "type": "string",
+      "description": "Distribution placement slot (e.g. 'news' for the 6AM NEWS / TODAY'S CLIPS section)"
+    },
+    "section": {
+      "type": "string",
+      "description": "Website section this article targets (e.g. 'news')"
+    },
+    "target_live_time_local": {
+      "type": "string",
+      "description": "Local time-of-day the article should go live (e.g. '06:00')"
+    },
+    "publish_at_local": {
+      "type": "string",
+      "description": "Scheduled local publish time for the 6AM pipeline"
+    },
+    "timezone": {
+      "type": "string",
+      "description": "Timezone for target_live_time_local / publish_at_local (e.g. 'America/Los_Angeles')"
+    },
+    "render_profile": {
+      "type": "string",
+      "description": "External render profile identifier used by n8n (e.g. dnn_two_standing_ruben904_bob63_alpha_v2)"
+    },
+    "final_delivery_format": {
+      "type": "string",
+      "description": "Final delivery video format (e.g. 'mp4')"
     }
   },
   "required": [

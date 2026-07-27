@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
 /**
  * dnnPipelineUpdate
@@ -17,6 +17,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  *
  *  Mark failed (triggers admin SMS):
  *    { "articleId": "...", "status": "failed" }
+ *
+ *  6AM NEWS flow — save video but keep staged:
+ *    { "articleId": "...", "status": "complete", "videoUrl": "...", "thumbnail": "...",
+ *      "placement": "news", "publish_status": "staged" }
+ *
+ *  6AM NEWS flow — publish at 6AM into /dnn-news Featured Videos:
+ *    { "articleId": "...", "status": "complete", "videoUrl": "...", "thumbnail": "...",
+ *      "placement": "news", "publish_status": "published" }
  *
  * videoUrl is OPTIONAL (only required/used when status = "complete").
  */
@@ -78,6 +86,15 @@ Deno.serve(async (req) => {
       render_version,
       lastRenderError,
       last_render_error,
+      // New 6AM-flow fields
+      placement,
+      section,
+      publishStatus,
+      publish_status,
+      publish_at_local,
+      timezone,
+      final_delivery_format,
+      render_profile,
     } = body || {};
 
     if (!articleId) {
@@ -92,13 +109,25 @@ Deno.serve(async (req) => {
 
     const base44 = createClientFromRequest(req);
 
+    // Resolve publish_status (accept camelCase or snake_case)
+    const publishStatusValue = publishStatus || publish_status;
+
     // 3. Build update payload based on status
     const updates = { production_status: status };
+
+    // Store 6AM pipeline metadata (only when provided)
+    if (placement) updates.placement = placement;
+    if (section) updates.section = section;
+    if (publish_at_local) updates.publish_at_local = publish_at_local;
+    if (timezone) updates.timezone = timezone;
+    if (final_delivery_format) updates.final_delivery_format = final_delivery_format;
+    if (render_profile) updates.render_profile = render_profile;
 
     if (status === 'complete') {
       updates.video_url = videoUrl;
       updates.video_completed_at = new Date().toISOString();
       updates.render_requested = false;
+      updates.production_status = 'complete';
       const thumb = thumbnail || thumbnailUrl;
       if (thumb) updates.thumbnail_url = thumb;
     } else if (videoUrl) {
@@ -126,10 +155,19 @@ Deno.serve(async (req) => {
       if (errMsg) updates.last_render_error = String(errMsg);
     }
 
-    // 4. Update the article
+    // 4. Publish behavior
+    //    staged: do NOT make the article public — leave DnnArticle.status untouched (remains "staged").
+    //    published AND placement === "news": flip to published → appears in /dnn-news Featured Videos.
+    if (status === 'complete' && publishStatusValue === 'published' && placement === 'news') {
+      updates.status = 'published';
+      updates.published_date = new Date().toISOString();
+      // video_url + production_status complete already set above
+    }
+
+    // 5. Update the article
     await base44.asServiceRole.entities.DnnArticle.update(articleId, updates);
 
-    // 5. On failure, alert admin via SMS (n8n must not call notifyAdmin directly)
+    // 6. On failure, alert admin via SMS (n8n must not call notifyAdmin directly)
     if (status === 'failed') {
       let headline = articleId;
       try {
@@ -139,7 +177,15 @@ Deno.serve(async (req) => {
       await sendAdminSMS(`DNN pipeline: HeyGen video FAILED for article "${headline}" (${articleId}).`);
     }
 
-    return Response.json({ success: true, articleId, status });
+    // 7. Respond
+    const responsePublishStatus = publishStatusValue || (status === 'complete' ? 'staged' : null);
+    return Response.json({
+      success: true,
+      articleId,
+      status,
+      publish_status: responsePublishStatus,
+      placement: placement || null,
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
