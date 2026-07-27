@@ -11,7 +11,7 @@ function videoFrame(source, side, name, muted = false) {
     fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
     elements: [{
       name, type: 'video', track: 1, source, width: '100%', height: '100%',
-      fit: 'contain', fill_color: '#000000', volume: muted ? '0%' : '100%',
+      fit: 'cover', fill_color: '#000000', volume: muted ? '0%' : '100%',
     }],
   }];
 }
