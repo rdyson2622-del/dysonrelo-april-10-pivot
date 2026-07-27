@@ -6,16 +6,14 @@ const gold = '#D4AF37';
 
 function videoFrame(source, side, name, muted = false) {
   const x = side === 'left' ? '14.5%' : '85.5%';
-  return [
-    {
-      type: 'shape', track: 4, shape: 'rectangle', x, y: '85.5%', width: '29%', height: '30%',
-      fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
-    },
-    {
-      name, type: 'video', track: 5, source, x, y: '85.5%', width: '28%', height: '28%',
-      fit: 'cover', volume: muted ? '0%' : '100%', border_radius: '1 vmin',
-    },
-  ];
+  return [{
+    type: 'composition', track: 4, x, y: '85%', width: '29%', height: '29%',
+    fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
+    elements: [{
+      name, type: 'video', track: 1, source, width: '118%', height: '118%',
+      fit: 'cover', volume: muted ? '0%' : '100%',
+    }],
+  }];
 }
 
 function charlieScene(clip, index) {
@@ -33,25 +31,28 @@ function bobScene(clip, index, charlieSource) {
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
-      type: 'shape', track: 2, shape: 'rectangle', x: '47.5%', y: '42%', width: '58%', height: '56%',
+      type: 'composition', track: 2, x: '47.5%', y: '42%', width: '58%', height: '56%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
-    },
-    {
-      type: 'text', track: 3, text: 'DNN INTELLIGENCE BUREAU', x: '21%', y: '17%', width: '51%', height: '5%',
-      x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-      fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.6 vmin', letter_spacing: '18%',
-    },
-    {
-      type: 'text', track: 3, text: String(clip.question || '').toUpperCase(), x: '21%', y: '22%', width: '51%', height: '14%',
-      x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-      fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.1 vmin', line_height: '112%', letter_spacing: '8%',
-    },
-    {
-      type: 'text', track: 3, x: '21%', y: '37%', width: '51%', height: '29%',
-      x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-      fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '400', font_size: '2.25 vmin', line_height: '145%',
-      transcript_source: bobName, transcript_effect: 'highlight', transcript_maximum_length: 42,
-      transcript_color: '#2a2a2a', transcript_effect_color: gold,
+      elements: [
+        {
+          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '5%', y: '7%', width: '90%', height: '8%',
+          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
+          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.6 vmin', letter_spacing: '18%',
+        },
+        {
+          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '5%', y: '16%', width: '90%', height: '20%',
+          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
+          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.1 vmin', line_height: '112%', letter_spacing: '8%',
+        },
+        {
+          type: 'text', track: 1, x: '5%', y: '39%', width: '90%', height: '54%',
+          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
+          fill_color: '#2a2a2a', background_color: '#f5f0e8', background_x_padding: '2%', background_y_padding: '2%',
+          font_family: 'Inter', font_weight: '400', font_size: '2.25 vmin', line_height: '145%',
+          transcript_source: bobName, transcript_effect: 'highlight', transcript_maximum_length: 42,
+          transcript_color: '#2a2a2a', transcript_effect_color: gold,
+        },
+      ],
     },
     ...videoFrame(clip.bobVideoUrl, 'right', bobName),
   ];
