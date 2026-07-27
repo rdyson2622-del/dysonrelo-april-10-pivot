@@ -5,13 +5,13 @@ const studioBackground = 'https://media.base44.com/images/public/69d905d72ff7c93
 const gold = '#D4AF37';
 
 function videoFrame(source, side, name, muted = false) {
-  const x = side === 'left' ? '14.5%' : '85.5%';
+  const x = side === 'left' ? '19.6%' : '80.4%';
   return [{
-    type: 'composition', track: 4, x, y: '85%', width: '29%', height: '29%',
+    type: 'composition', track: 4, x, y: '80%', width: '39.15%', height: '39.15%',
     fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
     elements: [{
-      name, type: 'video', track: 1, source, width: '118%', height: '118%',
-      fit: 'cover', volume: muted ? '0%' : '100%',
+      name, type: 'video', track: 1, source, width: '100%', height: '100%',
+      fit: 'contain', fill_color: '#000000', volume: muted ? '0%' : '100%',
     }],
   }];
 }
