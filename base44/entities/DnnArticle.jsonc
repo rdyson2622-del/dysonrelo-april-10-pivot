@@ -263,6 +263,23 @@
     "final_delivery_format": {
       "type": "string",
       "description": "Final delivery video format (e.g. 'mp4')"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Primary source URL the article was generated from (n8n source-provided mode)"
+    },
+    "source_name": {
+      "type": "string",
+      "description": "Primary source name (e.g. NAR, Redfin, Freddie Mac)"
+    },
+    "source_published_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the primary source was published"
+    },
+    "source_summary": {
+      "type": "string",
+      "description": "Short summary of the primary source material"
     }
   },
   "required": [
