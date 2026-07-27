@@ -4,6 +4,16 @@ import { secrets } from 'base44:runtime';
 const studioBackground = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const gold = '#D4AF37';
 
+function extractBulletPoints(script) {
+  if (!script) return [];
+  const sentences = script.replace(/\n+/g, ' ').match(/[^.!?]+(?:[.!?]+|$)/g) || [script];
+  return sentences
+    .map(sentence => sentence.trim())
+    .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence))
+    .slice(0, 5)
+    .map(sentence => sentence.replace(/[.!?]+$/, ''));
+}
+
 function videoFrame(source, side, name, muted = false) {
   const x = side === 'left' ? '19.6%' : '80.4%';
   return [{
@@ -28,6 +38,10 @@ function charlieScene(clip, index) {
 
 function bobScene(clip, index, charlieSource) {
   const bobName = `Bob-${index}`;
+  const bullets = extractBulletPoints(clip.bobScript);
+  const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
+  const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
+  const bulletFontSize = totalCharacters > 500 ? '2.05 vmin' : totalCharacters > 350 ? '2.3 vmin' : '2.6 vmin';
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
@@ -35,22 +49,19 @@ function bobScene(clip, index, charlieSource) {
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
         {
-          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '5%', y: '7%', width: '90%', height: '8%',
-          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.6 vmin', letter_spacing: '18%',
+          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '8%', width: '86%', height: '7%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.8 vmin', letter_spacing: '18%',
         },
         {
-          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '5%', y: '16%', width: '90%', height: '20%',
-          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.1 vmin', line_height: '112%', letter_spacing: '8%',
+          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '22%', width: '86%', height: '18%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.2 vmin', line_height: '112%', letter_spacing: '8%',
         },
         {
-          type: 'text', track: 1, x: '5%', y: '39%', width: '90%', height: '54%',
-          x_anchor: '0%', y_anchor: '0%', x_alignment: '0%', y_alignment: '0%',
-          fill_color: '#2a2a2a', background_color: '#f5f0e8', background_x_padding: '2%', background_y_padding: '2%',
-          font_family: 'Inter', font_weight: '400', font_size: '2.25 vmin', line_height: '145%',
-          transcript_source: bobName, transcript_effect: 'highlight', transcript_maximum_length: 42,
-          transcript_color: '#2a2a2a', transcript_effect_color: gold,
+          type: 'text', track: 1, text: bulletText, x: '50%', y: '62%', width: '82%', height: '58%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+          fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '500', font_size: bulletFontSize, line_height: '138%',
         },
       ],
     },
