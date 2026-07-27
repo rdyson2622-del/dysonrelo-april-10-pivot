@@ -111,7 +111,7 @@ export default function AdminVideoLibrary() {
 
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
-      <div className="max-w-5xl mx-auto">
+      <div className="w-full mx-auto">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -243,7 +243,7 @@ export default function AdminVideoLibrary() {
             <p className="text-sm">No videos yet. Click "Add Video" to get started.</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-6">
             {filtered.map(v => {
               const url = getVideoUrl(v);
               const embedUrl = v.source_type === 'link' ? getEmbedUrl(url) : null;
