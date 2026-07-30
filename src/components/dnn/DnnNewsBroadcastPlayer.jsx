@@ -123,7 +123,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       {/* Background layer */}
       {isSting ? (
         <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
-      ) : seg.fullscreen ? null : (
+      ) : (
         <>
           <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
           {hasBullets && (
@@ -162,7 +162,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       </button>
 
       {/* Speaker label badge — only on studio background, not on the off-white bullet view */}
-      {!isSting && !seg.fullscreen && !hasBullets && (
+      {!isSting && !hasBullets && (
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
           style={{
             background: 'rgba(0,0,0,0.65)',
@@ -205,7 +205,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
       )}
 
       {/* Active video element */}
-      {(isSting || seg.fullscreen) ? (
+      {isSting ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
             key={seg.src + idx}

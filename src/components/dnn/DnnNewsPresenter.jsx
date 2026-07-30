@@ -7,7 +7,6 @@ import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
 import { DNN_STING_URL } from '@/components/dnn/DnnStingVideo';
 
 const GOLD = '#D4AF37';
-const FEATURE_VIDEO = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/45f9797fa_5068844470409113155.mov';
 
 /**
  * Extract 3-5 concise bullet points from Bob's spoken script.
@@ -83,8 +82,6 @@ export default function DnnNewsPresenter() {
         // Only build the full segment list if there are actual content clips ready
         if (contentSegs.length > 0) {
           segs.push(...contentSegs);
-          // Override the lead (Charlie) clip with today's featured upload
-          segs[0] = { ...segs[0], src: FEATURE_VIDEO, fullscreen: true };
           setSegments(segs);
         } else {
           setSegments([]);
