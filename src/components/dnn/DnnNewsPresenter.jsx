@@ -84,7 +84,7 @@ export default function DnnNewsPresenter() {
         if (contentSegs.length > 0) {
           segs.push(...contentSegs);
           // Override the lead (Charlie) clip with today's featured upload
-          segs[0] = { ...segs[0], src: FEATURE_VIDEO };
+          segs[0] = { ...segs[0], src: FEATURE_VIDEO, fullscreen: true };
           setSegments(segs);
         } else {
           setSegments([]);
