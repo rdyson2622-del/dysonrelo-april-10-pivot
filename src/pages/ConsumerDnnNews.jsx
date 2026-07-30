@@ -9,7 +9,7 @@ import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
-import DnnNewsPresenter from '@/components/dnn/DnnNewsPresenter';
+import DnnBroadcastPresenter from '@/components/dnn/DnnBroadcastPresenter';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 
 
@@ -587,7 +587,7 @@ export default function ConsumerDnnNews() {
 
       {/* Charlie circle — fixed below header; z-[300] so the full-screen player covers edit/trash buttons */}
       <div className="fixed top-36 right-4 md:top-40 md:right-6 z-[300]">
-        <DnnNewsPresenter />
+        <DnnBroadcastPresenter />
       </div>
 
       {/* Articles Feed */}
