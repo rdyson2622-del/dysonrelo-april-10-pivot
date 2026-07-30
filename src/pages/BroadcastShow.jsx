@@ -1,5 +1,6 @@
 // BroadcastShow — public full-screen broadcast player (no auth required)
 // Plays the latest completed DnnBroadcast.videoUrl as a full-screen 4K MP4.
+// Falls back to the latest published DnnArticle.video_url (production_status === 'complete').
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
@@ -8,17 +9,39 @@ const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 export default function BroadcastShow() {
-  const [broadcast, setBroadcast] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-created_date', 20)
-      .then((broadcasts) => {
-        const latest = broadcasts.find(b => b.videoUrl);
-        if (latest) setBroadcast(latest);
-      })
-      .catch(() => {})
-      .finally(() => setLoaded(true));
+    (async () => {
+      try {
+        // 1. Try latest completed DnnBroadcast with a valid videoUrl
+        const broadcasts = await base44.entities.DnnBroadcast.list('-updated_date', 20);
+        const latestBroadcast = broadcasts.find(b =>
+          b.status === 'completed' &&
+          b.videoUrl &&
+          !String(b.videoUrl).startsWith('heygen:pending:')
+        );
+        if (latestBroadcast?.videoUrl) {
+          setVideoUrl(latestBroadcast.videoUrl);
+          return;
+        }
+
+        // 2. Fallback: latest published DnnArticle with a completed video
+        const articles = await base44.entities.DnnArticle.filter({ status: 'published' }, '-generated_date', 50);
+        const latestArticle = articles.find(a =>
+          a.production_status === 'complete' &&
+          a.video_url &&
+          !String(a.video_url).startsWith('heygen:pending:')
+        );
+        if (latestArticle?.video_url) {
+          setVideoUrl(latestArticle.video_url);
+        }
+      } catch (_) {
+      } finally {
+        setLoaded(true);
+      }
+    })();
   }, []);
 
   if (!loaded) {
@@ -29,7 +52,7 @@ export default function BroadcastShow() {
     );
   }
 
-  if (!broadcast?.videoUrl) {
+  if (!videoUrl) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
         <img src={DNN_LOGO} alt="DNN" className="h-12 w-auto opacity-80" />
@@ -45,7 +68,7 @@ export default function BroadcastShow() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center">
+    <div className="fixed inset-0 bg-black">
       {/* Close button */}
       <button
         onClick={() => window.location.href = '/'}
@@ -66,12 +89,17 @@ export default function BroadcastShow() {
 
       {/* Full-screen 4K MP4 */}
       <video
-        src={broadcast.videoUrl}
+        src={videoUrl}
         autoPlay
         controls
         playsInline
         preload="auto"
-        className="w-full h-full object-contain bg-black"
+        style={{
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'cover',
+          background: '#000',
+        }}
       />
     </div>
   );
