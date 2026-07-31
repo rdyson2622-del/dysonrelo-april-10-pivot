@@ -21,8 +21,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  * (rendering, pending, and complete are excluded so n8n never double-processes.)
  */
 
+import { blockIfN8n } from '../../shared/n8nGuard.ts';
+
 Deno.serve(async (req) => {
   try {
+    const __n8nBlocked = blockIfN8n(req); if (__n8nBlocked) return __n8nBlocked;
     if (req.method !== 'POST') {
       return Response.json({ error: 'Method not allowed' }, { status: 405 });
     }

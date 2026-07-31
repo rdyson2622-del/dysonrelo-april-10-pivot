@@ -24,8 +24,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  * Sets production_status to "pending_review" so the admin team can review/edit.
  */
 
+import { blockIfN8n } from '../../shared/n8nGuard.ts';
+
 Deno.serve(async (req) => {
   try {
+    const __n8nBlocked = blockIfN8n(req); if (__n8nBlocked) return __n8nBlocked;
     if (req.method !== 'POST') {
       return Response.json({ error: 'Method not allowed' }, { status: 405 });
     }

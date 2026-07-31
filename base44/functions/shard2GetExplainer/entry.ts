@@ -8,8 +8,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  *
  * Body: { explainerId: string }
  */
+import { blockIfN8n } from '../../shared/n8nGuard.ts';
+
 Deno.serve(async (req) => {
   try {
+    const __n8nBlocked = blockIfN8n(req); if (__n8nBlocked) return __n8nBlocked;
     const expectedSecret = Deno.env.get('N8N_PIPELINE_SECRET');
     if (!expectedSecret) {
       return Response.json({ error: 'N8N_PIPELINE_SECRET not configured' }, { status: 500 });

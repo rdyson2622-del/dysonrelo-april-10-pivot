@@ -25,8 +25,11 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
+import { blockIfN8n } from '../../shared/n8nGuard.ts';
+
 Deno.serve(async (req) => {
   try {
+    const __n8nBlocked = blockIfN8n(req); if (__n8nBlocked) return __n8nBlocked;
     if (req.method !== 'POST') {
       return Response.json({ error: 'Method not allowed' }, { status: 405 });
     }
