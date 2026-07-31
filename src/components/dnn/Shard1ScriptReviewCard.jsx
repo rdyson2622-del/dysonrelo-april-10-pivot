@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play } from 'lucide-react';
+import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send } from 'lucide-react';
 
 const STATUS_STYLES = {
   new: { label: 'New', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)' },
@@ -52,7 +52,7 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   // Editable draft — falls back to generated values so admin starts from AI output
   const [draft, setDraft] = useState({
     edited_opening_script: article.edited_opening_script ?? article.generated_opening_script ?? '',
-    edited_body_script: article.edited_body_script ?? article.generated_body_script ?? '',
+    edited_body_script: article.edited_body_script ?? article.generated_body_script ?? article.body ?? '',
     edited_closing_script: article.edited_closing_script ?? article.generated_closing_script ?? '',
     edited_full_script: article.edited_full_script ?? article.generated_full_script ?? '',
     edited_lower_third_text: article.edited_lower_third_text ?? article.generated_lower_third_text ?? '',
@@ -93,6 +93,12 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
       'Re-render requested (version ' + ((article.render_version || 0) + 1) + ').'
     );
 
+  const handleRepublish = () =>
+    persist(
+      { status: 'published', published_date: new Date().toISOString() },
+      'Saved & republished to DNN News.'
+    );
+
   const handleNeedsRevision = () =>
     persist(
       { admin_approved: false, render_requested: false, production_status: 'needs_revision' },
@@ -125,36 +131,13 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
 
-          {/* Complete Broadcast Script — full read (opening + body + closing) */}
-          {(() => {
-            const opening = draft.edited_opening_script || article.generated_opening_script || '';
-            const bodyScript = draft.edited_body_script || article.generated_body_script || article.body || '';
-            const closing = draft.edited_closing_script || article.generated_closing_script || '';
-            if (!opening && !bodyScript && !closing) return null;
-            return (
-              <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
-                <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Complete Broadcast Script</p>
-                {opening && (
-                  <div>
-                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 1 — Opening</p>
-                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{opening}</p>
-                  </div>
-                )}
-                {bodyScript && (
-                  <div>
-                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 2 — News Story</p>
-                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{bodyScript}</p>
-                  </div>
-                )}
-                {closing && (
-                  <div>
-                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 3 — Closing</p>
-                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{closing}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+          {/* Complete Broadcast Script — editable (opening + body + closing) */}
+          <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Complete Broadcast Script — Editable</p>
+            <Field label="Scene 1 — Opening" value={draft.edited_opening_script} onChange={set('edited_opening_script')} rows={4} />
+            <Field label="Scene 2 — News Story" value={draft.edited_body_script} onChange={set('edited_body_script')} rows={6} />
+            <Field label="Scene 3 — Closing" value={draft.edited_closing_script} onChange={set('edited_closing_script')} rows={4} />
+          </div>
 
           {/* Source content */}
           <ReadOnly label="Source Article Body" value={article.body} />
@@ -186,9 +169,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
           {/* Editable fields */}
           <div className="space-y-3">
             <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Final Script — Editable (anchor: Charlie Simmons)</p>
-            <Field label="Opening Script (Scene 1)" value={draft.edited_opening_script} onChange={set('edited_opening_script')} />
-            <Field label="Body Script (Scene 2)" value={draft.edited_body_script} onChange={set('edited_body_script')} rows={5} />
-            <Field label="Closing Script (Scene 3)" value={draft.edited_closing_script} onChange={set('edited_closing_script')} />
             <Field label="Full Script (used for render if filled)" value={draft.edited_full_script} onChange={set('edited_full_script')} rows={6} placeholder="If filled, this overrides the generated full script for HeyGen." />
             <Field label="Lower-Third Text" value={draft.edited_lower_third_text} onChange={set('edited_lower_third_text')} rows={2} />
             <Field label="Pronunciation Notes" value={draft.pronunciation_notes} onChange={set('pronunciation_notes')} rows={2} placeholder="e.g. 'Dyson = DYE-son', 'Camas = KAM-us'" />
@@ -206,6 +186,11 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
               style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
               {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save Corrections
+            </button>
+            <button onClick={handleRepublish} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
+              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />} Save & Republish
             </button>
             <button onClick={handleApprove} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
