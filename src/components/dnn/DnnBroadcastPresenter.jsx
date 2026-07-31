@@ -18,6 +18,7 @@ export default function DnnBroadcastPresenter() {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const previewRef = useRef(null);
+  const fullRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,16 @@ export default function DnnBroadcastPresenter() {
       .finally(() => setLoaded(true));
   }, []);
 
+  // React's `muted` prop does NOT set the DOM muted property — force it via ref
+  // so the preview never emits audio (which would overlap the full-screen player).
+  useEffect(() => {
+    const v = previewRef.current;
+    if (!v) return;
+    v.defaultMuted = true;
+    v.muted = true;
+    v.pause();
+  }, [broadcast]);
+
   useEffect(() => {
     const v = previewRef.current;
     if (!v) return;
@@ -44,6 +55,14 @@ export default function DnnBroadcastPresenter() {
       v.muted = true;
       v.currentTime = 1.5;
     }
+  }, [open]);
+
+  // Pause the full-screen video when the overlay closes / component unmounts
+  // so its audio never lingers and overlaps a subsequent playback.
+  useEffect(() => {
+    if (!open) return;
+    const v = fullRef.current;
+    return () => { try { v?.pause(); } catch (_) {} };
   }, [open]);
 
   if (!loaded) return null;
@@ -96,6 +115,7 @@ export default function DnnBroadcastPresenter() {
           </div>
 
           <video
+            ref={fullRef}
             src={broadcast.videoUrl}
             autoPlay
             controls

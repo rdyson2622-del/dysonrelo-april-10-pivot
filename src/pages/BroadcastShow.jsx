@@ -1,7 +1,7 @@
 // BroadcastShow — public full-screen broadcast player (no auth required)
 // Plays the latest completed DnnBroadcast.videoUrl as a full-screen 4K MP4.
 // Falls back to the latest published DnnArticle.video_url (production_status === 'complete').
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
 
@@ -11,6 +11,12 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 export default function BroadcastShow() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const videoRef = useRef(null);
+
+  // Ensure the video stops when the page unmounts so audio never lingers.
+  useEffect(() => {
+    return () => { try { videoRef.current?.pause(); } catch (_) {} };
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -89,6 +95,7 @@ export default function BroadcastShow() {
 
       {/* Full-screen 4K MP4 */}
       <video
+        ref={videoRef}
         src={videoUrl}
         autoPlay
         controls
