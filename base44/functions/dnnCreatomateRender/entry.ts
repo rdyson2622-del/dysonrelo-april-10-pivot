@@ -45,22 +45,23 @@ function bobScene(clip, index, charlieSource) {
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
-      type: 'composition', track: 2, x: '47.5%', y: '33%', width: '58%', height: '48%',
+      type: 'composition', track: 2, x: '42%', y: '38%', width: '56%', height: '54%',
+      x_anchor: '50%', y_anchor: '50%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
         {
-          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '8%', width: '86%', height: '7%',
-          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '13%', width: '88%', height: '6%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
           fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.8 vmin', letter_spacing: '18%',
         },
         {
-          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '22%', width: '86%', height: '18%',
-          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
-          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.2 vmin', line_height: '112%', letter_spacing: '8%',
+          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '30%', width: '88%', height: '16%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
+          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.0 vmin', line_height: '112%', letter_spacing: '6%',
         },
         {
-          type: 'text', track: 1, text: bulletText, x: '50%', y: '64%', width: '82%', height: '54%',
-          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+          type: 'text', track: 1, text: bulletText, x: '50%', y: '66%', width: '84%', height: '46%',
+          x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
           fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '500', font_size: bulletFontSize, line_height: '138%',
         },
       ],
