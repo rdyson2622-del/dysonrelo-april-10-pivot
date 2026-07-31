@@ -18,7 +18,11 @@
     },
     "question": {
       "type": "string",
-      "description": "Segment title"
+      "description": "Segment title (grouping key \u2014 set to article headline for auto-rendered broadcasts)"
+    },
+    "article_id": {
+      "type": "string",
+      "description": "Reference to DnnArticle ID for auto-rendered broadcasts"
     },
     "charlieScript": {
       "type": "string",

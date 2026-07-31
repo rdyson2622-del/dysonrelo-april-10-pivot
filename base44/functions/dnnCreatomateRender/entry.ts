@@ -74,13 +74,15 @@ function bobScene(clip, index, charlieSource) {
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user || user.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
+    const body = await req.json().catch(() => ({}));
+    const action = body.action || 'start';
+    const user = await base44.auth.me().catch(() => null);
+    const pipelineSecret = Deno.env.get('N8N_PIPELINE_SECRET');
+    const isServiceCall = pipelineSecret && body.pipeline_secret === pipelineSecret;
+    if ((!user || user.role !== 'admin') && !isServiceCall) return Response.json({ error: 'Forbidden' }, { status: 403 });
 
     const apiKey = secrets.get('CREATOMATE');
     if (!apiKey) return Response.json({ error: 'CREATOMATE is not configured' }, { status: 500 });
-    const body = await req.json().catch(() => ({}));
-    const action = body.action || 'start';
 
     if (action === 'check') {
       if (!body.renderId) return Response.json({ error: 'renderId is required' }, { status: 400 });
@@ -112,7 +114,15 @@ export default async function(req) {
       };
       if (existing.length) await base44.asServiceRole.entities.VideoLibrary.update(existing[0].id, libraryData);
       else await base44.asServiceRole.entities.VideoLibrary.create(libraryData);
-      return Response.json({ status: 'succeeded', mp4Url: upload.file_url, creatomateUrl: render.url, duration: render.duration, headline: body.headline });
+      if (body.articleId) {
+        await base44.asServiceRole.entities.DnnArticle.update(body.articleId, {
+          video_url: upload.file_url,
+          production_status: 'complete',
+          video_completed_at: new Date().toISOString(),
+          heygen_video_id: null,
+        });
+      }
+      return Response.json({ status: 'succeeded', mp4Url: upload.file_url, creatomateUrl: render.url, duration: render.duration, headline: body.headline, articleId: body.articleId || null });
     }
 
     const clips = await base44.asServiceRole.entities.DnnNewsClip.list('-created_date', 200);
@@ -150,7 +160,7 @@ export default async function(req) {
       body: JSON.stringify({
         output_format: 'mp4', width: 1280, height: 720, frame_rate: 30,
         elements: scenes,
-        metadata: JSON.stringify({ type: 'dnn_studio_review', headline }),
+        metadata: JSON.stringify({ type: 'dnn_studio_review', headline, articleId: body.articleId || null }),
       }),
     });
     const created = await createRes.json();
