@@ -37,6 +37,47 @@ function buildScripts(article) {
   return { opening, body, closing };
 }
 
+async function ensureScripts(base44, article, body) {
+  const dateSpoken = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const updates = {};
+  let opening = article.edited_opening_script || article.generated_opening_script || '';
+  let closing = article.edited_closing_script || article.generated_closing_script || '';
+
+  if (!opening.trim() || !closing.trim()) {
+    const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: `You are writing a DNN Real Estate News broadcast script for ${dateSpoken}.
+
+ARTICLE HEADLINE: ${article.headline}
+ARTICLE BODY: ${body.slice(0, 1200)}
+
+Write TWO spoken segments in plain spoken text (no markdown, no stage directions):
+
+1. OPENING (120-180 words): Charlie Simmons opens the broadcast. Begin exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}." Then introduce this story naturally and toss to Bob Dyson, e.g. "For what this means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question]?"
+
+2. CLOSING (40-60 words): Charlie thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full story is right below this broadcast — and if it affects your move, just ask. I'm Charlie Simmons. We'll see you next time."
+
+Return JSON with exactly: { "opening": "...", "closing": "..." }`,
+      response_json_schema: {
+        type: 'object',
+        properties: { opening: { type: 'string' }, closing: { type: 'string' } },
+      },
+    });
+    if (!opening.trim() && result?.opening) {
+      opening = result.opening;
+      updates.generated_opening_script = result.opening;
+    }
+    if (!closing.trim() && result?.closing) {
+      closing = result.closing;
+      updates.generated_closing_script = result.closing;
+    }
+  }
+
+  if (Object.keys(updates).length) {
+    await base44.asServiceRole.entities.DnnArticle.update(article.id, updates);
+  }
+  return { opening, closing };
+}
+
 async function renderCharlie(heygenKey, script) {
   const res = await fetch(`${HEYGEN_API}/v2/video/generate`, {
     method: 'POST',
@@ -89,7 +130,9 @@ Deno.serve(async (req) => {
     const results = [];
     for (const article of articles) {
       try {
-        const { opening, body, closing } = buildScripts(article);
+        const built = buildScripts(article);
+        const { opening, closing } = await ensureScripts(base44, article, built.body);
+        const body = built.body;
         if (!opening || !body || !closing) {
           await base44.asServiceRole.entities.DnnArticle.update(article.id, {
             production_status: 'failed',
