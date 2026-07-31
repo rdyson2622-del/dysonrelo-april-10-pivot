@@ -86,7 +86,7 @@ async function renderCharlie(heygenKey, script) {
       video_inputs: [{
         character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
         voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: script, speed: 1.05 },
-        background: { type: 'color', value: '#00FF00' },
+        background: { type: 'color', value: '#0d0d0d' },
       }],
       dimension: { width: 1280, height: 720 },
     }),
