@@ -6,7 +6,7 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard
+  Clapperboard, Library
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -137,6 +137,7 @@ const NAV_SECTIONS = [
       { label: '📣 Agent Recruiting Broadcast', path: '/admin/dnn/recruiting', icon: Send },
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
+      { label: '📚 Daily News Library', path: '/admin/dnn/daily-library', icon: Library, highlight: true },
       { label: '🎬 Show Production Pipeline', path: '/admin/dnn/show-pipeline', icon: Clapperboard },
       { label: '⚡ HeyGen Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
       { label: '📊 Production Cost Dashboard', path: '/admin/production-dashboard', icon: BarChart3 },
