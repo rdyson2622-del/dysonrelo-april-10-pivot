@@ -125,6 +125,37 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
 
+          {/* Complete Broadcast Script — full read (opening + body + closing) */}
+          {(() => {
+            const opening = draft.edited_opening_script || article.generated_opening_script || '';
+            const bodyScript = draft.edited_body_script || article.generated_body_script || article.body || '';
+            const closing = draft.edited_closing_script || article.generated_closing_script || '';
+            if (!opening && !bodyScript && !closing) return null;
+            return (
+              <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
+                <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Complete Broadcast Script</p>
+                {opening && (
+                  <div>
+                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 1 — Opening</p>
+                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{opening}</p>
+                  </div>
+                )}
+                {bodyScript && (
+                  <div>
+                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 2 — News Story</p>
+                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{bodyScript}</p>
+                  </div>
+                )}
+                {closing && (
+                  <div>
+                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1">Scene 3 — Closing</p>
+                    <p className="text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">{closing}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Source content */}
           <ReadOnly label="Source Article Body" value={article.body} />
 
