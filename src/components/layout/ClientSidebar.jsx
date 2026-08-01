@@ -9,9 +9,8 @@ import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
 import SendingAgentModal from '@/components/directory/SendingAgentModal';
 import ReceivingAgentModal from '@/components/directory/ReceivingAgentModal';
-import DnDLogo from '@/components/brand/DnDLogo';
-
 const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const authorityLinks = [
   { label: '55-Year Legacy', to: '/bob-dyson' },
@@ -110,7 +109,7 @@ export default function ClientSidebar() {
       {/* Logo */}
       <div className="shrink-0 px-5 py-5 border-b flex flex-col items-center text-center" style={{ borderColor: 'rgba(212,175,55,0.15)' }}>
         <Link to="/?choose=1" title="Back to landing page" className="mx-auto">
-          <DnDLogo size="sm" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto" />
         </Link>
         <p className="text-xs mt-2 tracking-widest font-semibold" style={{ color: GOLD }}>
           {portalLabel}
