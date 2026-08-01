@@ -11,7 +11,17 @@ function extractBulletPoints(script) {
     .map(sentence => sentence.trim())
     .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence))
     .slice(0, 2)
-    .map(sentence => sentence.replace(/[.!?]+$/, '').slice(0, 120));
+    .map(sentence => {
+      let text = sentence.replace(/[.!?]+$/, '').slice(0, 110);
+      const lastSpace = text.lastIndexOf(' ');
+      if (lastSpace > 50) text = text.slice(0, lastSpace);
+      return text
+        .replace(/[\u2014\u2013]/g, ', ')
+        .replace(/[\u201c\u201d]/g, '"')
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u2022\u25CF\u00B7]/g, '')
+        .trim();
+    });
 }
 
 function videoFrame(source, side, name, muted = false) {
