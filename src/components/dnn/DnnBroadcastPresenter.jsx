@@ -7,6 +7,13 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
+// Downscale Cloudinary 4K videos so the preview frame and full-screen player
+// load instantly instead of buffering a 40MB file.
+function optimizeVideoUrl(url) {
+  if (!url || !url.includes('res.cloudinary.com/video/upload/')) return url;
+  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto/');
+}
+
 /**
  * DnnBroadcastPresenter
  *
@@ -21,6 +28,18 @@ export default function DnnBroadcastPresenter() {
   const fullRef = useRef(null);
   const navigate = useNavigate();
 
+  // Callback ref: runs the moment the <video> element is created, BEFORE the
+  // browser can auto-play it. This guarantees the preview is muted and paused
+  // so it never emits ghost voice over the static news page.
+  const setPreviewRef = (el) => {
+    previewRef.current = el;
+    if (el) {
+      el.defaultMuted = true;
+      el.muted = true;
+      try { el.pause(); } catch (_) {}
+    }
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('autoplay') === '1') {
@@ -29,7 +48,7 @@ export default function DnnBroadcastPresenter() {
     base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-created_date', 20)
       .then((broadcasts) => {
         const latest = broadcasts.find(b => b.videoUrl);
-        if (latest) setBroadcast(latest);
+        if (latest) setBroadcast({ ...latest, videoUrl: optimizeVideoUrl(latest.videoUrl) });
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
@@ -80,7 +99,7 @@ export default function DnnBroadcastPresenter() {
           <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
             style={{ background: '#0d0d0d', border: `2px solid ${GOLD}` }}>
             <video
-              ref={previewRef}
+              ref={setPreviewRef}
               src={broadcast.videoUrl}
               muted
               playsInline

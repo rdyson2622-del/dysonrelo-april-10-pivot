@@ -7,6 +7,15 @@ import { X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
+const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+
+// Cloudinary 4K broadcast videos are huge (40MB+) and the audio track buffers
+// long before the video frames can decode, so viewers hear voice over a black
+// screen. Downscale to 1280px on Cloudinary URLs so the video loads fast.
+function optimizeVideoUrl(url) {
+  if (!url || !url.includes('res.cloudinary.com/video/upload/')) return url;
+  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto/');
+}
 
 export default function BroadcastShow() {
   const [videoUrl, setVideoUrl] = useState(null);
@@ -29,7 +38,7 @@ export default function BroadcastShow() {
           !String(b.videoUrl).startsWith('heygen:pending:')
         );
         if (latestBroadcast?.videoUrl) {
-          setVideoUrl(latestBroadcast.videoUrl);
+          setVideoUrl(optimizeVideoUrl(latestBroadcast.videoUrl));
           return;
         }
 
@@ -41,7 +50,7 @@ export default function BroadcastShow() {
           !String(a.video_url).startsWith('heygen:pending:')
         );
         if (latestArticle?.video_url) {
-          setVideoUrl(latestArticle.video_url);
+          setVideoUrl(optimizeVideoUrl(latestArticle.video_url));
         }
       } catch (_) {
       } finally {
@@ -97,6 +106,7 @@ export default function BroadcastShow() {
       <video
         ref={videoRef}
         src={videoUrl}
+        poster={STUDIO_BG}
         autoPlay
         controls
         playsInline
