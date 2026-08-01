@@ -27,7 +27,16 @@ const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 const HEYGEN_API = 'https://api.heygen.com';
 
 function clean(s) {
-  return (s || '').replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim();
+  return (s || '')
+    .replace(/[*_#`]/g, '')
+    .replace(/[\u2014\u2013]/g, ', ')   // em-dash / en-dash → comma (HeyGen TTS goes silent on dashes)
+    .replace(/\u2026/g, '. ')          // ellipsis → period
+    .replace(/[\u201c\u201d]/g, '"')   // smart double quotes
+    .replace(/[\u2018\u2019]/g, "'")   // smart single quotes
+    .replace(/[\u2022\u25CF\u00B7]/g, '') // bullet / middot
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function buildScripts(article) {

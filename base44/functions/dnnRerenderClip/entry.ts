@@ -18,6 +18,19 @@ const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 const HEYGEN_API = 'https://api.heygen.com';
 
+function clean(s) {
+  return (s || '')
+    .replace(/[*_#`]/g, '')
+    .replace(/[\u2014\u2013]/g, ', ')   // em-dash / en-dash → comma (HeyGen TTS goes silent on dashes)
+    .replace(/\u2026/g, '. ')          // ellipsis → period
+    .replace(/[\u201c\u201d]/g, '"')   // smart double quotes
+    .replace(/[\u2018\u2019]/g, "'")   // smart single quotes
+    .replace(/[\u2022\u25CF\u00B7]/g, '') // bullet / middot
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -40,10 +53,11 @@ export default async function(req) {
     const clip = await base44.asServiceRole.entities.DnnNewsClip.get(clipId);
     if (!clip) return Response.json({ error: 'Clip not found' }, { status: 404 });
 
-    const script = role === 'charlie' ? clip.charlieScript : clip.bobScript;
-    if (!script || !script.trim()) {
+    const rawScript = role === 'charlie' ? clip.charlieScript : clip.bobScript;
+    if (!rawScript || !rawScript.trim()) {
       return Response.json({ error: `No ${role} script on this clip` }, { status: 400 });
     }
+    const script = clean(rawScript);
 
     let videoId = null;
     if (role === 'charlie') {
