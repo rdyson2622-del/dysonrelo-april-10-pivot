@@ -115,6 +115,21 @@
   50% { opacity: 0.5; }
 }
 
+/* Force-landscape mode — rotates the app 90deg so portrait-phone users
+   can view the site sideways. Only activates on narrow screens. */
+@media (max-width: 820px) {
+  .force-landscape {
+    position: fixed !important;
+    top: 0;
+    left: 100vw;
+    width: 100vh;
+    height: 100vw;
+    transform: rotate(90deg);
+    transform-origin: top left;
+    z-index: 9999;
+  }
+}
+
 /* Charlie chat input placeholder */
 .charlie-input::placeholder {
   color: #fff !important;
