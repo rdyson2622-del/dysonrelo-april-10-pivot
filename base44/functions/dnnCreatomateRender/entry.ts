@@ -140,7 +140,7 @@ export default async function(req) {
       });
       const render = await statusRes.json();
       if (!statusRes.ok) return Response.json({ error: 'Creatomate status check failed', details: render }, { status: 502 });
-      if (render.status !== 'succeeded') return Response.json({ status: render.status, renderId: body.renderId });
+      if (render.status !== 'succeeded') return Response.json({ status: render.status, renderId: body.renderId, details: render });
 
       const videoRes = await fetch(render.url);
       if (!videoRes.ok) return Response.json({ error: 'Could not download completed MP4' }, { status: 502 });
