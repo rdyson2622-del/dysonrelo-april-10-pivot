@@ -57,7 +57,7 @@ export default function CorporateRelo() {
       <PortalLeadInDuo />
 
       {/* ── Video Q&A Briefing ── */}
-      <section className="px-8 md:px-16 py-16" style={{ background: '#0d0d0d' }}>
+      <section className="px-8 md:px-16 pt-16 pb-44" style={{ background: '#0d0d0d' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-3 text-center" style={{ color: GOLD }}>THE HR BRIEFING</p>
         <h2 className="display-heading text-center mb-10"
           style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', letterSpacing: '0.12em', color: '#fff' }}>
