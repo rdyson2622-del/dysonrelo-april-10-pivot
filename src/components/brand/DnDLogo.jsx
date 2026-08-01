@@ -145,23 +145,23 @@ export default function DnDLogo({ size = 'md', speaking = false, onClick }) {
           fill="#0a0a0a"
         />
 
-        {/* Right D (mirrored) */}
+        {/* Right D (normal orientation) */}
         <path
-          d="M 78 42
-             L 78 96
-             L 66 96
-             C 48 96, 38 85, 38 69
-             C 38 53, 48 42, 66 42
+          d="M 38 42
+             L 38 96
+             L 50 96
+             C 68 96, 78 85, 78 69
+             C 78 53, 68 42, 50 42
              Z"
           fill="url(#ddGrad)"
         />
         {/* Right D inner cutout */}
         <path
-          d="M 70 51
-             L 70 87
-             L 65 87
-             C 52 87, 47 79, 47 69
-             C 47 59, 52 51, 65 51
+          d="M 46 51
+             L 46 87
+             L 51 87
+             C 64 87, 69 79, 69 69
+             C 69 59, 64 51, 51 51
              Z"
           fill="#0a0a0a"
         />
