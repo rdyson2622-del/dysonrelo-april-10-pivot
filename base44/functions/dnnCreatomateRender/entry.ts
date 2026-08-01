@@ -4,24 +4,30 @@ import { secrets } from 'base44:runtime';
 const studioBackground = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const gold = '#D4AF37';
 
+function truncateBullet(sentence) {
+  let text = sentence.replace(/[.!?]+$/, '').slice(0, 85);
+  const lastSpace = text.lastIndexOf(' ');
+  if (lastSpace > 35) text = text.slice(0, lastSpace);
+  return text
+    .replace(/[\u2014\u2013]/g, ', ')
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u2022\u25CF\u00B7]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function extractBulletPoints(script) {
   if (!script) return [];
   const sentences = script.replace(/\n+/g, ' ').match(/[^.!?]+(?:[.!?]+|$)/g) || [script];
-  return sentences
+  const valid = sentences
     .map(sentence => sentence.trim())
-    .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence))
-    .slice(0, 2)
-    .map(sentence => {
-      let text = sentence.replace(/[.!?]+$/, '').slice(0, 110);
-      const lastSpace = text.lastIndexOf(' ');
-      if (lastSpace > 50) text = text.slice(0, lastSpace);
-      return text
-        .replace(/[\u2014\u2013]/g, ', ')
-        .replace(/[\u201c\u201d]/g, '"')
-        .replace(/[\u2018\u2019]/g, "'")
-        .replace(/[\u2022\u25CF\u00B7]/g, '')
-        .trim();
-    });
+    .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence));
+  if (valid.length === 0) return [];
+  if (valid.length <= 3) return valid.slice(0, 3).map(truncateBullet);
+  // Pick 3 bullets spread across the entire script: first, middle, last
+  const mid = Math.floor(valid.length / 2);
+  return [truncateBullet(valid[0]), truncateBullet(valid[mid]), truncateBullet(valid[valid.length - 1])];
 }
 
 function videoFrame(source, side, name, muted = false) {
@@ -50,7 +56,7 @@ function bobScene(clip, index, charlieSource) {
   const bullets = extractBulletPoints(clip.bobScript);
   const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
   const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
-  const bulletFontSize = totalCharacters > 220 ? '3.0 vmin' : totalCharacters > 140 ? '3.4 vmin' : '3.8 vmin';
+  const bulletFontSize = totalCharacters > 240 ? '2.6 vmin' : totalCharacters > 180 ? '2.9 vmin' : '3.2 vmin';
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
