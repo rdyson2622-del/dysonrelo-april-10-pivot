@@ -44,6 +44,8 @@ const PACKAGE_INSTRUCTIONS = `Produce a complete package:
 8. TAGS: 3-5 lowercase tags (include "housing_market" and "national_real_estate").
 9. TRIGGER_TYPE: one of: ${VALID_TRIGGERS.join(', ')}
 
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any spoken script text (opening_script, bob_script, closing_script). Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+
 Return JSON with exactly these fields: headline, dateline, body, opening_script, bob_script, closing_script, wall_board_bullets, tags, trigger_type.`;
 
 function formatSourceBlock(src, label) {

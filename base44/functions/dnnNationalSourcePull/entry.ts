@@ -47,6 +47,8 @@ Pull the LATEST real data from this source right now. Write a complete DNN Natio
 6. VENDOR_SOLUTION: 1-2 sentences. What a vendor (lender, mover, title) should do about this.
 7. TAGS: 3-5 lowercase tags (include "national" as one tag).
 
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+
 Return JSON with exactly these fields: headline, dateline, body, client_solution, agent_solution, vendor_solution, tags.`,
     add_context_from_internet: true,
     model: 'gemini_3_flash',
@@ -80,6 +82,8 @@ CRITICAL RULES:
 - PLAIN LANGUAGE: Write at an 8th-grade reading level. Short sentences (under 20 words). Everyday words a neighbor would understand — no jargon, no industry buzzwords, no "robust" or "paradigm" or "mitigate." If a smart 13-year-old wouldn't understand a word, don't use it.
 - Keep each answer under 60 words. Natural spoken language only — no bullet points, no headers.
 - Answers must sound like someone talking, not reading. Contractions, direct address.
+
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any question or answer text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
 
 Return JSON with exactly these fields: qa (array of {question, answer}).`,
     response_json_schema: {

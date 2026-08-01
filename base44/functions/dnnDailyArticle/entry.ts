@@ -68,6 +68,8 @@ Write a complete DNN Intelligence Brief:
 5. VENDOR_SOLUTION: 1-2 sentences. What a vendor (lender, mover, title) should do about this.
 6. TAGS: 3–5 lowercase tags (include the city name as one tag).
 
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+
 Return JSON:
 {
   "headline": "...",
@@ -115,6 +117,8 @@ CRITICAL RULES:
 - Keep each answer under 65 words. Natural spoken language only — no bullet points, no headers, no "in conclusion."
 - Use contractions, direct address ("if you're moving to ${market.city}..."), and real specifics from the article data.
 - The segment should sound like two pros who genuinely like each other, not two people reading a script.
+
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any question or answer text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
 
 Return JSON:
 {

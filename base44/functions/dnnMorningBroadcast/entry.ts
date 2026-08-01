@@ -75,6 +75,8 @@ Write THREE spoken segments:
 3. charlie_close (40-60 words):
 - Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast — and if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you next time."
 
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+
 Plain spoken text only. No stage directions, no markdown, no scene labels.
 
 TODAY'S STORY DIGEST:

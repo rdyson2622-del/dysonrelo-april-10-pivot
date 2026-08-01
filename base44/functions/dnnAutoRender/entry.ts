@@ -59,6 +59,8 @@ async function ensureScripts(base44, article, body) {
 ARTICLE HEADLINE: ${article.headline}
 ARTICLE BODY: ${body.slice(0, 1200)}
 
+FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+
 Write TWO spoken segments in plain spoken text (no markdown, no stage directions):
 
 1. OPENING (120-180 words): Charlie Simmons opens the broadcast. Begin exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}." Then introduce this story naturally and toss to Bob Dyson, e.g. "For what this means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question]?"
