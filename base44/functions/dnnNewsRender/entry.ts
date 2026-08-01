@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 /**
  * dnnNewsRender — renders the DNN National Desk duo presentation.
@@ -76,15 +77,10 @@ Deno.serve(async (req) => {
     const checkRender = async (clip, role) => {
       const videoId = clip[`${role}HeygenId`];
       if (!videoId) return { skipped: true };
-      const res = await fetch(
-        `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(videoId)}`,
-        { headers: { 'X-Api-Key': heygenKey } }
-      );
-      const data = await res.json();
-      const status = data?.data?.status;
+      const { status, videoUrl, error } = await checkHeygenStatus(heygenKey, videoId);
 
       if (status === 'completed') {
-        const vidRes = await fetch(data?.data?.video_url);
+        const vidRes = await fetch(videoUrl);
         if (!vidRes.ok) return { error: 'download failed' };
         const buf = await vidRes.arrayBuffer();
         const file = new File([buf], `dnn_${clip.id}_${role}.mp4`, { type: 'video/mp4' });
@@ -93,7 +89,7 @@ Deno.serve(async (req) => {
         return { status: 'completed', url: up.file_url };
       }
       if (status === 'failed') {
-        const errMsg = data?.data?.error?.message || 'HeyGen render failed';
+        const errMsg = error || 'HeyGen render failed';
         await Clips.update(clip.id, { [`${role}Status`]: 'failed', errorMessage: errMsg });
         return { status: 'failed', error: errMsg };
       }

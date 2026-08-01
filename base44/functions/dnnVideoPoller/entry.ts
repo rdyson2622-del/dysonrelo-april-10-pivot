@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 /**
  * dnnVideoPoller
@@ -37,15 +38,9 @@ Deno.serve(async (req) => {
         if (status !== 'rendering' || !videoId) continue;
 
         try {
-          const statusRes = await fetch(
-            `${HEYGEN_API}/v1/video_status.get?video_id=${videoId}`,
-            { headers: { 'X-Api-Key': HEYGEN_API_KEY } }
-          );
-          const statusData = await statusRes.json();
-          const s = statusData?.data?.status;
+          const { status: s, videoUrl: cdnUrl, error: heygenError } = await checkHeygenStatus(HEYGEN_API_KEY, videoId);
 
-          if (s === 'completed' && statusData?.data?.video_url) {
-            const cdnUrl = statusData.data.video_url;
+          if (s === 'completed' && cdnUrl) {
             let savedUrl = null;
             try {
               const vidRes = await fetch(cdnUrl);
@@ -68,7 +63,7 @@ Deno.serve(async (req) => {
           } else if (s === 'failed') {
             await base44.asServiceRole.entities.DnnNewsClip.update(clip.id, {
               [`${role}Status`]: 'failed',
-              errorMessage: statusData?.data?.error?.message || 'Render failed',
+              errorMessage: heygenError || 'Render failed',
             });
             results.push({ type: 'clip', clipId: clip.id, role, status: 'failed' });
           }

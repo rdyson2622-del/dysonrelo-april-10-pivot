@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 /**
  * heygenCheckVideo
@@ -26,14 +27,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'video_id and article_id are required' }, { status: 400 });
     }
 
-    const res = await fetch(`${HEYGEN_API}/v1/video_status.get?video_id=${video_id}`, {
-      headers: { 'X-Api-Key': HEYGEN_API_KEY },
-    });
-    const data = await res.json();
-    console.log('RAW HEYGEN RESPONSE:', JSON.stringify(data, null, 2));
-
-    const status = data.data?.status;
-    const videoUrl = data.data?.video_url;
+    const { status, videoUrl, error } = await checkHeygenStatus(HEYGEN_API_KEY, video_id);
 
     if (status === 'completed' && videoUrl) {
       // Write the final MP4 URL back to the article
@@ -44,7 +38,7 @@ Deno.serve(async (req) => {
     }
 
     if (status === 'failed') {
-      return Response.json({ status: 'failed', detail: data.data?.error });
+      return Response.json({ status: 'failed', detail: error });
     }
 
     return Response.json({ status: 'pending' });
