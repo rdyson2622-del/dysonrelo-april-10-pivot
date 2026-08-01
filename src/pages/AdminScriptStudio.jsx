@@ -181,132 +181,107 @@ export default function AdminScriptStudio() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
-        {/* ── Section 1: Open/Close Template Editor + Visual Preview ── */}
-        <div className="grid lg:grid-cols-2 gap-5">
-          {/* Template editor */}
-          <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4" style={{ color: GOLD }} />
-                <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
-                  {template?.is_active ? 'Active Template' : 'Template'}
-                </p>
-                {template?.template_name && (
-                  <span className="text-[10px] text-slate-500">v{template.version} · {template.template_name}</span>
-                )}
-              </div>
-              {templateDirty && (
-                <span className="text-[9px] font-bold text-yellow-400 animate-pulse">● UNSAVED</span>
-              )}
-            </div>
-
-            {tplLoading || !template ? (
-              <div className="flex justify-center py-12"><Loader className="w-5 h-5 animate-spin" style={{ color: GOLD }} /></div>
-            ) : (
-              <div className="space-y-4">
-                {/* Open script template */}
-                <div>
-                  <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
-                    Open Script Template <span className="text-yellow-600">{'{DATE}'} {'{STORY_TEASERS}'}</span>
-                  </label>
-                  <textarea
-                    value={template.open_script_template || ''}
-                    onChange={(e) => handleTemplateField('open_script_template', e.target.value)}
-                    rows={7}
-                    className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
-                    style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
-                    placeholder="Good day from the DNN news desk. I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for {DATE}..."
-                  />
-                </div>
-
-                {/* Close script template */}
-                <div>
-                  <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
-                    Close Script Template <span className="text-yellow-600">{'{DATE}'}</span>
-                  </label>
-                  <textarea
-                    value={template.close_script_template || ''}
-                    onChange={(e) => handleTemplateField('close_script_template', e.target.value)}
-                    rows={4}
-                    className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
-                    style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
-                    placeholder="That's your DNN brief. The full stories are right below this broadcast..."
-                  />
-                </div>
-
-                {/* Bob tone guidelines */}
-                <div>
-                  <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
-                    Bob Tone Guidelines
-                  </label>
-                  <textarea
-                    value={template.bob_tone_guidelines || ''}
-                    onChange={(e) => handleTemplateField('bob_tone_guidelines', e.target.value)}
-                    rows={3}
-                    className="w-full rounded-lg p-3 text-[11px] text-white resize-y leading-relaxed"
-                    style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
-                    placeholder="Kinder, softer. Frame as suggestions and shared client experiences..."
-                  />
-                </div>
-
-                {/* Save button */}
-                <div className="flex items-center justify-between pt-1">
-                  {templateMsg && (
-                    <p className="text-[10px]" style={{ color: templateMsg.type === 'success' ? '#4ade80' : '#f87171' }}>
-                      {templateMsg.type === 'success' ? '✓ ' : '✗ '}{templateMsg.text}
-                    </p>
-                  )}
-                  <button onClick={handleSaveTemplate} disabled={!templateDirty || savingTemplate}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-40 ml-auto"
-                    style={{ background: savingTemplate ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                    {savingTemplate ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                    {savingTemplate ? 'Saving…' : 'Save Template (Permanent)'}
-                  </button>
-                </div>
-                <p className="text-[9px] text-slate-600 leading-relaxed">
-                  Saving here updates the master template. All <b className="text-slate-400">future</b> broadcasts will use this open/close.
-                  To change only today broadcast, edit the clips below.
-                </p>
-              </div>
-            )}
+      <div className="max-w-[1800px] mx-auto px-4 py-4 space-y-4">
+        {/* ── Row 1: Visual Previews — horizontal across the top ── */}
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Eye className="w-4 h-4" style={{ color: GOLD }} />
+            <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Visual Preview</p>
+            <span className="text-[10px] text-slate-600">· {todayDate}</span>
           </div>
-
-          {/* Visual preview */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Eye className="w-4 h-4" style={{ color: GOLD }} />
-              <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Visual Preview</p>
-              <span className="text-[10px] text-slate-600">· {todayDate}</span>
-            </div>
-
-            {/* Open preview */}
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1.5">OPEN — Charlie at desk</p>
-              <ScriptStudioPreview
-                label="OPEN"
-                script={previewOpen}
-                date={todayDate}
-                speaker="charlie"
-              />
+              <ScriptStudioPreview label="OPEN" script={previewOpen} date={todayDate} speaker="charlie" />
             </div>
-
-            {/* Close preview */}
             <div>
               <p className="text-[9px] font-bold tracking-widest uppercase text-slate-500 mb-1.5">CLOSE — Charlie signs off</p>
-              <ScriptStudioPreview
-                label="CLOSE"
-                script={previewClose}
-                date={todayDate}
-                speaker="charlie"
-              />
+              <ScriptStudioPreview label="CLOSE" script={previewClose} date={todayDate} speaker="charlie" />
             </div>
           </div>
         </div>
 
-        {/* ── Section 2: Today Broadcast Clips (on-the-fly editing) ── */}
-        <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
-          <div className="flex items-center justify-between mb-4">
+        {/* ── Row 2: Template Editor — 3 columns horizontal ── */}
+        <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4" style={{ color: GOLD }} />
+              <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+                {template?.is_active ? 'Active Template' : 'Template'}
+              </p>
+              {template?.template_name && (
+                <span className="text-[10px] text-slate-500">v{template.version} · {template.template_name}</span>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              {templateMsg && (
+                <p className="text-[10px]" style={{ color: templateMsg.type === 'success' ? '#4ade80' : '#f87171' }}>
+                  {templateMsg.type === 'success' ? '✓ ' : '✗ '}{templateMsg.text}
+                </p>
+              )}
+              {templateDirty && <span className="text-[9px] font-bold text-yellow-400 animate-pulse">● UNSAVED</span>}
+              <button onClick={handleSaveTemplate} disabled={!templateDirty || savingTemplate}
+                className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-40"
+                style={{ background: savingTemplate ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                {savingTemplate ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                {savingTemplate ? 'Saving…' : 'Save Template (Permanent)'}
+              </button>
+            </div>
+          </div>
+
+          {tplLoading || !template ? (
+            <div className="flex justify-center py-8"><Loader className="w-5 h-5 animate-spin" style={{ color: GOLD }} /></div>
+          ) : (
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
+                  Open Script <span className="text-yellow-600">{'{DATE}'} {'{STORY_TEASERS}'}</span>
+                </label>
+                <textarea
+                  value={template.open_script_template || ''}
+                  onChange={(e) => handleTemplateField('open_script_template', e.target.value)}
+                  rows={10}
+                  className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
+                  style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
+                  placeholder="Good day from the DNN news desk..."
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
+                  Close Script <span className="text-yellow-600">{'{DATE}'}</span>
+                </label>
+                <textarea
+                  value={template.close_script_template || ''}
+                  onChange={(e) => handleTemplateField('close_script_template', e.target.value)}
+                  rows={10}
+                  className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
+                  style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
+                  placeholder="That's your DNN brief..."
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-1.5 block">
+                  Bob Tone Guidelines
+                </label>
+                <textarea
+                  value={template.bob_tone_guidelines || ''}
+                  onChange={(e) => handleTemplateField('bob_tone_guidelines', e.target.value)}
+                  rows={10}
+                  className="w-full rounded-lg p-3 text-[11px] text-white resize-y leading-relaxed"
+                  style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
+                  placeholder="Kinder, softer. Frame as suggestions..."
+                />
+                <p className="text-[9px] text-slate-600 leading-relaxed mt-2">
+                  Saving updates the master template for all <b className="text-slate-400">future</b> broadcasts.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Row 3: Today Broadcast Clips — horizontal scroll ── */}
+        <div className="rounded-2xl p-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Clapperboard className="w-4 h-4" style={{ color: GOLD }} />
               <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
@@ -359,31 +334,33 @@ export default function AdminScriptStudio() {
               <p className="text-xs text-slate-600">No clips on this broadcast. Generate a script first.</p>
             </div>
           ) : editingClips ? (
-            /* ── Edit mode ── */
-            <div className="space-y-3">
-              {editingClips.map((clip, i) => (
-                <div key={i} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full"
-                      style={{
-                        background: clip.role === 'charlie' ? 'rgba(212,175,55,0.15)' : 'rgba(147,112,219,0.15)',
-                        color: clip.role === 'charlie' ? GOLD : '#A78BFA',
-                      }}>
-                      {clip.role}
-                    </span>
-                    <span className="text-[10px] text-slate-500">Clip #{i + 1}</span>
-                    {clip.videoUrl && <span className="text-[9px] text-green-400">✓ already rendered</span>}
+            /* ── Edit mode — horizontal columns ── */
+            <div>
+              <div className="flex gap-4 overflow-x-auto pb-3">
+                {editingClips.map((clip, i) => (
+                  <div key={i} className="rounded-xl p-3 shrink-0" style={{ width: '380px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full"
+                        style={{
+                          background: clip.role === 'charlie' ? 'rgba(212,175,55,0.15)' : 'rgba(147,112,219,0.15)',
+                          color: clip.role === 'charlie' ? GOLD : '#A78BFA',
+                        }}>
+                        {clip.role}
+                      </span>
+                      <span className="text-[10px] text-slate-500">Clip #{i + 1}</span>
+                      {clip.videoUrl && <span className="text-[9px] text-green-400">✓ rendered</span>}
+                    </div>
+                    <textarea
+                      value={clip.script || ''}
+                      onChange={(e) => handleClipChange(i, e.target.value)}
+                      rows={12}
+                      className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
+                      style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
+                    />
                   </div>
-                  <textarea
-                    value={clip.script || ''}
-                    onChange={(e) => handleClipChange(i, e.target.value)}
-                    rows={4}
-                    className="w-full rounded-lg p-3 text-[11px] text-white font-mono resize-y leading-relaxed"
-                    style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.15)', outline: 'none' }}
-                  />
-                </div>
-              ))}
-              <div className="flex items-center justify-between pt-1">
+                ))}
+              </div>
+              <div className="flex items-center justify-between pt-2 mt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                 {clipMsg && (
                   <p className="text-[10px]" style={{ color: clipMsg.type === 'success' ? '#4ade80' : '#f87171' }}>
                     {clipMsg.type === 'success' ? '✓ ' : '✗ '}{clipMsg.text}
@@ -404,7 +381,7 @@ export default function AdminScriptStudio() {
                 </div>
               </div>
               {hasRenderedVideo && (
-                <div className="flex items-start gap-2 rounded-lg p-2.5"
+                <div className="flex items-start gap-2 rounded-lg p-2.5 mt-2"
                   style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)' }}>
                   <AlertCircle className="w-3.5 h-3.5 text-yellow-400 shrink-0 mt-0.5" />
                   <p className="text-[10px] text-yellow-300 leading-relaxed">
@@ -415,10 +392,10 @@ export default function AdminScriptStudio() {
               )}
             </div>
           ) : (
-            /* ── Read-only clip view ── */
-            <div className="space-y-2">
+            /* ── Read-only clip view — horizontal columns ── */
+            <div className="flex gap-4 overflow-x-auto pb-3">
               {clips.map((clip, i) => (
-                <div key={i} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div key={i} className="rounded-xl p-3 shrink-0" style={{ width: '380px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full"
                       style={{
@@ -432,7 +409,8 @@ export default function AdminScriptStudio() {
                     {clip.status === 'rendering' && <span className="text-[9px] text-yellow-400">⏳ rendering</span>}
                     {clip.status === 'failed' && <span className="text-[9px] text-red-400">✗ failed</span>}
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-3 whitespace-pre-wrap font-mono">
+                  <p className="text-[11px] text-slate-400 leading-relaxed whitespace-pre-wrap font-mono"
+                    style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {clip.script || '(empty)'}
                   </p>
                 </div>
