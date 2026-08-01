@@ -10,8 +10,8 @@ function extractBulletPoints(script) {
   return sentences
     .map(sentence => sentence.trim())
     .filter(sentence => sentence.length > 25 && !/^(so|well|you know|now|okay|great|thanks|absolutely)[,.\s]/i.test(sentence))
-    .slice(0, 3)
-    .map(sentence => sentence.replace(/[.!?]+$/, '').slice(0, 140));
+    .slice(0, 2)
+    .map(sentence => sentence.replace(/[.!?]+$/, '').slice(0, 120));
 }
 
 function videoFrame(source, side, name, muted = false) {
@@ -44,28 +44,28 @@ function bobScene(clip, index, charlieSource) {
   const bullets = extractBulletPoints(clip.bobScript);
   const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
   const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
-  const bulletFontSize = totalCharacters > 280 ? '1.9 vmin' : totalCharacters > 180 ? '2.1 vmin' : '2.3 vmin';
+  const bulletFontSize = totalCharacters > 220 ? '3.0 vmin' : totalCharacters > 140 ? '3.4 vmin' : '3.8 vmin';
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
-      type: 'composition', track: 2, x: '40%', y: '42%', width: '62%', height: '66%',
+      type: 'composition', track: 2, x: '40%', y: '42%', width: '70%', height: '74%',
       x_anchor: '50%', y_anchor: '50%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
         {
-          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '10%', width: '90%', height: '5%',
+          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '8%', width: '90%', height: '6%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
-          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '1.7 vmin', letter_spacing: '18%',
+          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '2.6 vmin', letter_spacing: '18%',
         },
         {
-          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '23%', width: '90%', height: '14%',
+          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '20%', width: '90%', height: '16%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
-          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '2.6 vmin', line_height: '110%', letter_spacing: '4%',
+          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.8 vmin', line_height: '110%', letter_spacing: '4%',
         },
         {
-          type: 'text', track: 1, text: bulletText, x: '50%', y: '63%', width: '86%', height: '58%',
+          type: 'text', track: 1, text: bulletText, x: '50%', y: '62%', width: '88%', height: '60%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '0%',
-          fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '500', font_size: bulletFontSize, line_height: '132%',
+          fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '600', font_size: bulletFontSize, line_height: '128%',
         },
       ],
     },
