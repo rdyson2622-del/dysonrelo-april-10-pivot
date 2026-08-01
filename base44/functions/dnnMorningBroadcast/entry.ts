@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 /**
  * dnnMorningBroadcast — nightly DNN Morning Broadcast, tag-team edition.
@@ -195,14 +196,9 @@ ${digest}`,
           for (let i = 0; i < clips.length; i++) {
             const clip = clips[i];
             if (clip.videoUrl || !clip.heygenId) continue;
-            const res = await fetch(
-              `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(clip.heygenId)}`,
-              { headers: { 'X-Api-Key': heygenKey } }
-            );
-            const data = await res.json();
-            const status = data?.data?.status;
+            const { status, videoUrl, error } = await checkHeygenStatus(heygenKey, clip.heygenId);
             if (status === 'completed') {
-              const vidRes = await fetch(data?.data?.video_url);
+              const vidRes = await fetch(videoUrl);
               const buf = await vidRes.arrayBuffer();
               const file = new File([buf], `dnn_broadcast_${rec.broadcast_date}_clip${i}.mp4`, { type: 'video/mp4' });
               const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
@@ -211,7 +207,7 @@ ${digest}`,
             } else if (status === 'failed') {
               clips[i] = { ...clip, status: 'failed' };
               changed = true;
-              await Broadcasts.update(rec.id, { clips, status: 'failed', errorMessage: data?.data?.error?.message || 'HeyGen render failed' });
+              await Broadcasts.update(rec.id, { clips, status: 'failed', errorMessage: error || 'HeyGen render failed' });
             }
           }
           const allDone = clips.every(c => c.videoUrl);
@@ -238,21 +234,16 @@ ${digest}`,
 
         // Legacy solo broadcasts
         if (!rec.heygenId) continue;
-        const res = await fetch(
-          `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(rec.heygenId)}`,
-          { headers: { 'X-Api-Key': heygenKey } }
-        );
-        const data = await res.json();
-        const status = data?.data?.status;
+        const { status, videoUrl, error } = await checkHeygenStatus(heygenKey, rec.heygenId);
         if (status === 'completed') {
-          const vidRes = await fetch(data?.data?.video_url);
+          const vidRes = await fetch(videoUrl);
           const buf = await vidRes.arrayBuffer();
           const file = new File([buf], `dnn_broadcast_${rec.broadcast_date}.mp4`, { type: 'video/mp4' });
           const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
           await Broadcasts.update(rec.id, { videoUrl: up.file_url, status: 'completed' });
           results.push({ id: rec.id, status: 'completed', url: up.file_url });
         } else if (status === 'failed') {
-          const errMsg = data?.data?.error?.message || 'HeyGen render failed';
+          const errMsg = error || 'HeyGen render failed';
           await Broadcasts.update(rec.id, { status: 'failed', errorMessage: errMsg });
           results.push({ id: rec.id, status: 'failed', error: errMsg });
         } else {
