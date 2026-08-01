@@ -1,6 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
 
+// Active HeyGen presenter config — passed through to n8n so the external
+// pipeline renders with the correct anchor avatar + voice.
+const DEFAULT_AVATAR_ID = '41f40b894f6944188c7908253b12e921'; // Charlie Simmons
+const DEFAULT_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';  // Charlie voice
+
 /**
  * dnnDailyVideoPipeline — "Generate Daily Broadcast" trigger.
  *
@@ -110,6 +115,8 @@ export default async function(req) {
         body: JSON.stringify({
           broadcast_id: broadcast.id,
           prompt_topics: promptTopics,
+          avatar_id: DEFAULT_AVATAR_ID,
+          voice_id: DEFAULT_VOICE_ID,
         }),
       });
       if (!res.ok) {
