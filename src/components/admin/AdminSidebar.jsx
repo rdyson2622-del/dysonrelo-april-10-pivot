@@ -139,6 +139,7 @@ const NAV_SECTIONS = [
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
       { label: '📚 Daily News Library', path: '/admin/dnn/daily-library', icon: Library, highlight: true },
       { label: '🎬 Show Production Pipeline', path: '/admin/dnn/show-pipeline', icon: Clapperboard },
+      { label: '✏️ Script Studio (Template + Preview)', path: '/admin/dnn/script-studio', icon: Edit, highlight: true },
       { label: '⚡ HeyGen Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
       { label: '📊 Production Cost Dashboard', path: '/admin/production-dashboard', icon: BarChart3 },
     ],
