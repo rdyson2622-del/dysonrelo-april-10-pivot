@@ -111,6 +111,7 @@ CRITICAL RULES:
 - Each question and answer must include NATURAL HANDOFF language. Charlie tosses to Bob naturally ("Bob, you've been watching this market — what's the real story?"). Bob throws it back ("Back to you, Charlie" or "Charlie, here's what I'd watch...").
 - Include a REACTION in at least one exchange — Charlie reacting to something Bob said before asking the next question, or Bob reacting to Charlie's framing ("Well, you're not wrong about that, but...").
 - Include LIGHT HUMOR in roughly 1 of the 3 exchanges — a wry observation, a relatable analogy, or a gentle quip. Keep it natural and professional — never corny, never forced. Think dry wit, not jokes.
+- PLAIN LANGUAGE: Write at an 8th-grade reading level. Short sentences (under 20 words). Everyday words a neighbor would understand — no jargon, no industry buzzwords, no "robust" or "paradigm" or "mitigate" or "leverage." If a smart 13-year-old wouldn't understand a word, don't use it. Bob explains things simply, like talking to a friend, not a textbook.
 - Keep each answer under 65 words. Natural spoken language only — no bullet points, no headers, no "in conclusion."
 - Use contractions, direct address ("if you're moving to ${market.city}..."), and real specifics from the article data.
 - The segment should sound like two pros who genuinely like each other, not two people reading a script.

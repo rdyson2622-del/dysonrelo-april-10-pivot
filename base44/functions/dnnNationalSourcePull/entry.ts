@@ -77,6 +77,7 @@ Write 3 interview exchanges. Charlie asks sharp, natural anchor questions (not r
 CRITICAL RULES:
 - Bob NEVER says "That's a great question" or "Absolutely" — he just answers directly.
 - Charlie never reads stats verbatim from the article — she reacts and asks follow-ups.
+- PLAIN LANGUAGE: Write at an 8th-grade reading level. Short sentences (under 20 words). Everyday words a neighbor would understand — no jargon, no industry buzzwords, no "robust" or "paradigm" or "mitigate." If a smart 13-year-old wouldn't understand a word, don't use it.
 - Keep each answer under 60 words. Natural spoken language only — no bullet points, no headers.
 - Answers must sound like someone talking, not reading. Contractions, direct address.
 
