@@ -48,7 +48,7 @@ function bobScene(clip, index, charlieSource) {
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
-      type: 'composition', track: 2, x: '40%', y: '42%', width: '70%', height: '74%',
+      type: 'composition', track: 2, x: '40%', y: '42%', width: '46%', height: '48%',
       x_anchor: '50%', y_anchor: '50%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
