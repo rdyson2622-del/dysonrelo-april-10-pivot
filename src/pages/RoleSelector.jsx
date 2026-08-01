@@ -8,6 +8,7 @@ const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/p
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/67bc7aa5a_generated_image.png';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1b68bf8df_generated_image.png';
 
 const PATHS = [
   {
@@ -108,7 +109,7 @@ export default function RoleSelector() {
       <section
         className="relative h-screen"
         style={{
-          backgroundImage: `url('${STUDIO_BG}')`,
+          backgroundImage: `url('${STUDIO_WITH_ANCHORS}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
