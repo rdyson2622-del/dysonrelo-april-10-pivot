@@ -11,7 +11,6 @@ import { X, Loader2 } from 'lucide-react';
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
-const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1b68bf8df_generated_image.png';
 
 // Cloudinary 4K broadcast videos are huge (40MB+) and the audio track buffers
 // long before the video frames can decode, so viewers hear voice over a black
@@ -100,7 +99,7 @@ export default function BroadcastShow() {
           <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN</span>
         </div>
 
-        <img src={STUDIO_WITH_ANCHORS} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+        <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
         <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
           <img src={DNN_LOGO} alt="DNN" className="h-14 w-auto opacity-90" />
           <div className="flex items-center gap-3">
@@ -157,7 +156,7 @@ export default function BroadcastShow() {
       <video
         ref={videoRef}
         src={videoUrl}
-        poster={STUDIO_WITH_ANCHORS}
+        poster={STUDIO_BG}
         autoPlay
         controls
         playsInline
