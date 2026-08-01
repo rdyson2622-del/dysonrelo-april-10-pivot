@@ -15,9 +15,9 @@ function extractBulletPoints(script) {
 }
 
 function videoFrame(source, side, name, muted = false) {
-  const x = side === 'left' ? '19.6%' : '80.4%';
+  const x = side === 'left' ? '17%' : '83%';
   return [{
-    type: 'composition', track: 4, x, y: '80%', width: '39.15%', height: '39.15%',
+    type: 'composition', track: 4, x, y: '80%', width: '28%', height: '39.15%',
     fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
     elements: [{
       name, type: 'video', track: 1, source, width: '100%', height: '100%',
