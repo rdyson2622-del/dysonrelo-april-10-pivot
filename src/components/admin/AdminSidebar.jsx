@@ -13,9 +13,8 @@ import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
 import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
-import DnDLogo from '@/components/brand/DnDLogo';
-
 const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 // All collapsible section groups
 const NAV_SECTIONS = [
@@ -246,7 +245,7 @@ export default function AdminSidebar() {
     <aside className="w-64 flex flex-col h-screen shrink-0 overflow-y-auto" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
       {/* Logo */}
       <div className="p-6 flex items-center gap-3 shrink-0" style={{ borderBottom: '1px solid #D4AF3733' }}>
-        <Link to="/home"><DnDLogo size="sm" /></Link>
+        <Link to="/home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto cursor-pointer" /></Link>
         <div>
           <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
         </div>

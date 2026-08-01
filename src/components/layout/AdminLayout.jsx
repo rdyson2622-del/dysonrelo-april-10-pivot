@@ -54,7 +54,7 @@ export default function AdminLayout() {
 
       <main className="flex-1 overflow-auto relative" style={{ background: '#ede0cc' }}>
         {/* Top Controls */}
-        <div className="fixed top-3 left-3 z-50 flex items-center gap-2">
+        <div className="fixed top-3 left-3 md:left-[260px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
