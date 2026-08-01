@@ -68,7 +68,7 @@ function bobScene(clip, index, charlieSource) {
   bullets.forEach((point, i) => {
     const yPos = startY + (i * bulletSpacing);
     bulletElements.push({
-      type: 'rectangle', track: 1, x: '10%', y: `${yPos}%`, width: '1.2%', height: '3%',
+      type: 'shape', path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z', track: 1, x: '10%', y: `${yPos}%`, width: '1.2%', height: '3%',
       x_anchor: '50%', y_anchor: '50%',
       fill_color: gold,
     });
@@ -88,7 +88,7 @@ function bobScene(clip, index, charlieSource) {
       elements: [
         // Top gold accent bar
         {
-          type: 'rectangle', track: 1, x: '50%', y: '0%', width: '100%', height: '9%',
+          type: 'shape', path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z', track: 1, x: '50%', y: '0%', width: '100%', height: '9%',
           x_anchor: '50%', y_anchor: '0%',
           fill_color: gold,
         },
@@ -106,7 +106,7 @@ function bobScene(clip, index, charlieSource) {
         },
         // Gold divider line
         {
-          type: 'rectangle', track: 1, x: '50%', y: '36%', width: '78%', height: '0.5%',
+          type: 'shape', path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z', track: 1, x: '50%', y: '36%', width: '78%', height: '0.5%',
           x_anchor: '50%', y_anchor: '50%',
           fill_color: gold,
         },
@@ -207,7 +207,7 @@ export default async function(req) {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        output_format: 'mp4', width: 1280, height: 720, frame_rate: 30,
+        output_format: 'mp4', width: 1920, height: 1080, frame_rate: 30,
         elements: scenes,
         metadata: JSON.stringify({ type: 'dnn_studio_review', headline, articleId: body.articleId || null }),
       }),

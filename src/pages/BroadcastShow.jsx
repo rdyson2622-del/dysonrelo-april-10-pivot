@@ -14,7 +14,7 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 // screen. Downscale to 1280px on Cloudinary URLs so the video loads fast.
 function optimizeVideoUrl(url) {
   if (!url || !url.includes('res.cloudinary.com/video/upload/')) return url;
-  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto/');
+  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto,f_auto/');
 }
 
 export default function BroadcastShow() {

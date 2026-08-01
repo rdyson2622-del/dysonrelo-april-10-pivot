@@ -11,7 +11,7 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 // load instantly instead of buffering a 40MB file.
 function optimizeVideoUrl(url) {
   if (!url || !url.includes('res.cloudinary.com/video/upload/')) return url;
-  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto/');
+  return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto,f_auto/');
 }
 
 /**

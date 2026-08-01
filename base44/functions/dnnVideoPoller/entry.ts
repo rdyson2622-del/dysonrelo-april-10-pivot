@@ -37,6 +37,16 @@ Deno.serve(async (req) => {
         const videoId = clip[`${role}HeygenId`];
         if (status !== 'rendering' || !videoId) continue;
 
+        // 5-minute timeout: abort stuck HeyGen renders
+        if (Date.now() - new Date(clip.updated_date).getTime() > 5 * 60 * 1000) {
+          await base44.asServiceRole.entities.DnnNewsClip.update(clip.id, {
+            [`${role}Status`]: 'failed',
+            errorMessage: 'Render timed out after 5 minutes',
+          });
+          results.push({ type: 'clip', clipId: clip.id, role, status: 'timeout' });
+          continue;
+        }
+
         try {
           const { status: s, videoUrl: cdnUrl, error: heygenError } = await checkHeygenStatus(HEYGEN_API_KEY, videoId);
 

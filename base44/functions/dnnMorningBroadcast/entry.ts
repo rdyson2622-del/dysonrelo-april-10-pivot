@@ -155,7 +155,7 @@ ${digest}`,
           clips[i] = { ...clips[i], status: 'failed' };
           errors.push(r.error);
         } else {
-          clips[i] = { ...clips[i], heygenId: r.videoId, status: 'rendering' };
+          clips[i] = { ...clips[i], heygenId: r.videoId, status: 'rendering', startedAt: new Date().toISOString() };
         }
       }
       if (errors.length > 0) {
@@ -196,6 +196,16 @@ ${digest}`,
           for (let i = 0; i < clips.length; i++) {
             const clip = clips[i];
             if (clip.videoUrl || !clip.heygenId) continue;
+
+            // 5-minute timeout: abort stuck renders
+            if (clip.startedAt && Date.now() - new Date(clip.startedAt).getTime() > 5 * 60 * 1000) {
+              clips[i] = { ...clip, status: 'failed' };
+              changed = true;
+              await Broadcasts.update(rec.id, { clips, status: 'failed', errorMessage: 'Render timed out after 5 minutes' });
+              results.push({ id: rec.id, status: 'timeout', error: 'Render timed out after 5 minutes' });
+              continue;
+            }
+
             const { status, videoUrl, error } = await checkHeygenStatus(heygenKey, clip.heygenId);
             if (status === 'completed') {
               const vidRes = await fetch(videoUrl);

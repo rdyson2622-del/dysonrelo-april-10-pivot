@@ -26,6 +26,7 @@ const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 import { blockIfN8n } from '../../shared/n8nGuard.ts';
+import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -145,16 +146,19 @@ Deno.serve(async (req) => {
       }
 
       const results = [];
+      const FIVE_MINUTES = 5 * 60 * 1000;
       for (const broadcast of pending) {
-        const res = await fetch(
-          `https://api.heygen.com/v1/video_status.get?video_id=${encodeURIComponent(broadcast.heygenId)}`,
-          { headers: { 'X-Api-Key': heygenKey } }
-        );
-        const data = await res.json();
-        const status = data?.data?.status;
+        // 5-minute timeout: abort stuck stitching renders
+        if (Date.now() - new Date(broadcast.updated_date).getTime() > FIVE_MINUTES) {
+          await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: 'Stitching render timed out after 5 minutes' });
+          results.push({ id: broadcast.id, status: 'timeout', error: 'Stitching render timed out after 5 minutes' });
+          continue;
+        }
 
-        if (status === 'completed') {
-          const vidRes = await fetch(data?.data?.video_url);
+        const { status, videoUrl, error, duration } = await checkHeygenStatus(heygenKey, broadcast.heygenId);
+
+        if (status === 'completed' && videoUrl) {
+          const vidRes = await fetch(videoUrl);
           if (!vidRes.ok) {
             results.push({ id: broadcast.id, status: 'download_failed' });
             continue;
@@ -175,7 +179,7 @@ Deno.serve(async (req) => {
             source_type: 'upload',
             file_url: up.file_url,
             broadcast_date: broadcast.broadcast_date,
-            duration_seconds: data?.data?.duration || null,
+            duration_seconds: duration || null,
             tags: ['DNN', 'broadcast', 'real_estate', 'relocation'],
             is_active: true,
           };
@@ -193,7 +197,7 @@ Deno.serve(async (req) => {
             libraryEntry: libTitle,
           });
         } else if (status === 'failed') {
-          const errMsg = data?.data?.error?.message || 'HeyGen stitching render failed';
+          const errMsg = error || 'HeyGen stitching render failed';
           // Clear the heygenId so it can be retried
           await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: errMsg });
           results.push({ id: broadcast.id, status: 'failed', error: errMsg });

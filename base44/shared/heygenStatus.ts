@@ -15,5 +15,6 @@ export async function checkHeygenStatus(heygenKey: string, videoId: string) {
     status: info?.status || 'unknown',
     videoUrl: info?.video_url || null,
     error: info?.error?.message || (typeof info?.error === 'string' ? info.error : null),
+    duration: info?.duration || null,
   };
 }
