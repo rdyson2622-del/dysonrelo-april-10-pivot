@@ -54,9 +54,31 @@ function charlieScene(clip, index) {
 function bobScene(clip, index, charlieSource) {
   const bobName = `Bob-${index}`;
   const bullets = extractBulletPoints(clip.bobScript);
-  const bulletText = bullets.map(point => `•  ${point}`).join('\n\n');
   const totalCharacters = bullets.reduce((sum, point) => sum + point.length, 0);
   const bulletFontSize = totalCharacters > 240 ? '2.6 vmin' : totalCharacters > 180 ? '2.9 vmin' : '3.2 vmin';
+
+  // Individual bullet elements with gold square markers for precise, professional spacing
+  const bulletSpacing = 16;
+  const bulletAreaStart = 42;
+  const bulletAreaHeight = 48;
+  const totalBulletsHeight = (bullets.length - 1) * bulletSpacing;
+  const startY = bulletAreaStart + (bulletAreaHeight - totalBulletsHeight) / 2;
+
+  const bulletElements = [];
+  bullets.forEach((point, i) => {
+    const yPos = startY + (i * bulletSpacing);
+    bulletElements.push({
+      type: 'rectangle', track: 1, x: '10%', y: `${yPos}%`, width: '1.2%', height: '3%',
+      x_anchor: '50%', y_anchor: '50%',
+      fill_color: gold,
+    });
+    bulletElements.push({
+      type: 'text', track: 1, text: point, x: '14%', y: `${yPos}%`, width: '76%', height: '13%',
+      x_anchor: '0%', y_anchor: '50%', x_alignment: '0%', y_alignment: '50%',
+      fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '500', font_size: bulletFontSize, line_height: '125%',
+    });
+  });
+
   const elements = [
     { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
     {
@@ -64,21 +86,32 @@ function bobScene(clip, index, charlieSource) {
       x_anchor: '50%', y_anchor: '50%',
       fill_color: '#f5f0e8', stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1.5 vmin',
       elements: [
+        // Top gold accent bar
         {
-          type: 'text', track: 1, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '8%', width: '90%', height: '6%',
+          type: 'rectangle', track: 1, x: '50%', y: '0%', width: '100%', height: '9%',
+          x_anchor: '50%', y_anchor: '0%',
+          fill_color: gold,
+        },
+        // Header text on gold bar
+        {
+          type: 'text', track: 2, text: 'DNN INTELLIGENCE BUREAU', x: '50%', y: '4.5%', width: '90%', height: '7%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
-          fill_color: gold, font_family: 'Inter', font_weight: '700', font_size: '2.6 vmin', letter_spacing: '18%',
+          fill_color: '#ffffff', font_family: 'Inter', font_weight: '700', font_size: '2.2 vmin', letter_spacing: '20%',
         },
+        // Headline
         {
-          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '20%', width: '90%', height: '16%',
+          type: 'text', track: 1, text: String(clip.question || '').toUpperCase(), x: '50%', y: '22%', width: '86%', height: '14%',
           x_anchor: '50%', y_anchor: '50%', x_alignment: '50%', y_alignment: '50%',
-          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '500', font_size: '3.8 vmin', line_height: '110%', letter_spacing: '4%',
+          fill_color: '#1a1a1a', font_family: 'Cormorant Garamond', font_weight: '600', font_size: '3.4 vmin', line_height: '110%', letter_spacing: '3%',
         },
+        // Gold divider line
         {
-          type: 'text', track: 1, text: bulletText, x: '50%', y: '62%', width: '88%', height: '60%',
-          x_anchor: '50%', y_anchor: '50%', x_alignment: '0%', y_alignment: '0%',
-          fill_color: '#2a2a2a', font_family: 'Inter', font_weight: '600', font_size: bulletFontSize, line_height: '128%',
+          type: 'rectangle', track: 1, x: '50%', y: '36%', width: '78%', height: '0.5%',
+          x_anchor: '50%', y_anchor: '50%',
+          fill_color: gold,
         },
+        // Individual bullet elements
+        ...bulletElements,
       ],
     },
     ...videoFrame(clip.bobVideoUrl, 'right', bobName),
