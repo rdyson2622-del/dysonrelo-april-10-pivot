@@ -45,10 +45,17 @@ export default function BroadcastShow() {
           b.videoUrl &&
           !String(b.videoUrl).startsWith('heygen:pending:')
         );
-        const processing = broadcasts.find(b => b.status === 'processing');
-        const chosen = ready || processing;
-        if (chosen) setBroadcast(chosen);
+        if (ready) {
+          setBroadcast(ready);
+        } else {
+          // No playable broadcast — send viewers to the news feed so they
+          // always get real content instead of a stuck processing wheel.
+          window.location.href = '/dnn-news';
+          return;
+        }
       } catch (_) {
+        window.location.href = '/dnn-news';
+        return;
       } finally {
         setLoaded(true);
       }
