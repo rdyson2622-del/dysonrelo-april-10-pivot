@@ -17,13 +17,14 @@ function extractBulletPoints(script) {
 function videoFrame(source, side, name, muted = false) {
   const x = side === 'left' ? '19%' : '81%';
   return [{
-    type: 'composition', track: 4, x, y: '77%', width: '34%', height: '46%',
-    fill_color: '#000000', stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
+    type: 'composition', track: 4, x, y: '77%', width: '30%', height: '42%',
+    x_anchor: '50%', y_anchor: '50%',
+    stroke_color: gold, stroke_width: '0.35 vmin', border_radius: '1.2 vmin',
     elements: [{
       name, type: 'video', track: 1, source,
-      x: '50%', y: '52%', width: '165%', height: '165%',
+      x: '50%', y: '50%', width: '100%', height: '100%',
       x_anchor: '50%', y_anchor: '50%',
-      fit: 'cover', fill_color: '#000000', volume: muted ? '0%' : '100%',
+      fit: 'cover', volume: muted ? '0%' : '100%',
     }],
   }];
 }
