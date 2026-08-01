@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { X, Play, Pause, Volume2, VolumeX, Loader2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 
 const SPEAKER_LABELS = {
@@ -13,18 +14,184 @@ const SPEAKER_LABELS = {
 /**
  * DnnNewsBroadcastPlayer — a FULL-SCREEN broadcast player.
  *
- * Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
+ * Two modes:
  *
- * Background logic:
- *   - Sting: full-screen black (DNN logo video)
- *   - Charlie: studio backdrop (lower-left box)
- *   - Bob: off-white background with bullet-point overlay (lower-right box)
+ * 1. Single-video mode (n8n pipeline): pass `videoUrl` + `status`.
+ *    - status === 'processing' → clean "Processing Broadcast in Background..." indicator
+ *    - status === 'ready'      → single HTML5 <video> tag with the final 1080p MP4
+ *
+ * 2. Segment mode (legacy tag-team): pass `segments` (unchanged behavior).
+ *    Plays: DNN sting (with sound) → Charlie/Bob news clips → DNN sting (outro).
  *
  * Props:
- *   segments: [{ src, speaker: 'charlie'|'bob'|'sting', bullets?: string[], title?: string }]
+ *   videoUrl?: string                 — final MP4 URL (single-video mode)
+ *   status?: 'processing' | 'ready'   — broadcast lifecycle (single-video mode)
+ *   segments?: [{ src, speaker, bullets?, title? }]  — legacy segment mode
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
+export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, status }) {
+  const singleVideoMode = Boolean(videoUrl || status);
+
+  // --- Single-video mode (n8n pipeline) ---
+  if (singleVideoMode) {
+    return (
+      <SingleVideoPlayer
+        videoUrl={videoUrl}
+        status={status}
+        onClose={onClose}
+      />
+    );
+  }
+
+  // --- Legacy segment mode (unchanged) ---
+  return (
+    <SegmentPlayer segments={segments} onClose={onClose} />
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SingleVideoPlayer — n8n pipeline output
+// ---------------------------------------------------------------------------
+function SingleVideoPlayer({ videoUrl, status, onClose }) {
+  const videoRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+
+  const isProcessing = status === 'processing' && !videoUrl;
+  const canPlay = Boolean(videoUrl) && status !== 'processing';
+
+  useEffect(() => {
+    if (!canPlay) return;
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().then(() => {
+      setPlaying(true);
+      v.muted = false;
+      setMuted(false);
+    }).catch(() => {
+      v.muted = true;
+      setMuted(true);
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    });
+  }, [canPlay, videoUrl]);
+
+  // Ensure audio stops on unmount
+  useEffect(() => {
+    return () => { try { videoRef.current?.pause(); } catch (_) {} };
+  }, []);
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else { v.pause(); setPlaying(false); }
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
+
+  // Processing indicator
+  if (isProcessing) {
+    return (
+      <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-6"
+        style={{ background: '#000', overflow: 'hidden' }}>
+        <button onClick={onClose} aria-label="Close"
+          className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+          <X className="w-6 h-6" />
+        </button>
+
+        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+        <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
+          <img src={DNN_LOGO} alt="DNN" className="h-14 w-auto opacity-90" />
+          <div className="flex items-center gap-3">
+            <Loader2 className="w-5 h-5 animate-spin" style={{ color: GOLD }} />
+            <p className="text-sm font-bold tracking-[0.25em] uppercase" style={{ color: GOLD }}>
+              Processing Broadcast in Background...
+            </p>
+          </div>
+          <p className="text-xs text-slate-500 max-w-md leading-relaxed">
+            The DNN studio is rendering your daily broadcast. This will update
+            automatically the moment the video is ready.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!canPlay) {
+    return (
+      <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
+        <button onClick={onClose} aria-label="Close"
+          className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+          <X className="w-6 h-6" />
+        </button>
+        <img src={DNN_LOGO} alt="DNN" className="h-12 w-auto opacity-80" />
+        <p className="text-xs text-slate-500">No broadcast available at this time.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+      {/* Close button */}
+      <button onClick={onClose} aria-label="Close"
+        className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+        <X className="w-6 h-6" />
+      </button>
+
+      {/* DNN LIVE bug */}
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+        style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}>
+        <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
+        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>LIVE</span>
+        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
+      </div>
+
+      {/* Single HTML5 <video> — final 1080p MP4 from n8n */}
+      <video
+        ref={videoRef}
+        src={videoUrl}
+        poster={STUDIO_BG_URL}
+        autoPlay
+        controls
+        playsInline
+        preload="auto"
+        onClick={togglePlay}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#000' }}
+      />
+
+      {/* Tap for sound overlay when muted but playing */}
+      {playing && muted && (
+        <button
+          onClick={toggleMute}
+          aria-label="Tap for sound"
+          className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
+        >
+          <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
+            style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
+            <VolumeX className="w-8 h-8" style={{ color: GOLD }} />
+            <span className="text-xs font-bold tracking-wider uppercase" style={{ color: GOLD }}>
+              Tap for Sound
+            </span>
+          </span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SegmentPlayer — legacy tag-team mode (unchanged behavior)
+// ---------------------------------------------------------------------------
+function SegmentPlayer({ segments, onClose }) {
   const videoRef = useRef(null);
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -98,13 +265,6 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     setMuted(v.muted);
   };
 
-  const handleTimeUpdate = (event) => {
-    if (!hasBullets || bulletPageCount <= 1) return;
-    const { currentTime, duration } = event.currentTarget;
-    if (!duration) return;
-    setBulletPage(Math.min(bulletPageCount - 1, Math.floor((currentTime / duration) * bulletPageCount)));
-  };
-
   const isSting = seg.speaker === 'sting';
   const isBob = seg.speaker === 'bob';
   const hasBullets = isBob && Array.isArray(seg.bullets) && seg.bullets.length > 0;
@@ -117,6 +277,13 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose }) {
     ? [...segments.slice(0, idx)].reverse().find(segment => segment.speaker === 'charlie')
     : null;
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
+
+  const handleTimeUpdate = (event) => {
+    if (!hasBullets || bulletPageCount <= 1) return;
+    const { currentTime, duration } = event.currentTarget;
+    if (!duration) return;
+    setBulletPage(Math.min(bulletPageCount - 1, Math.floor((currentTime / duration) * bulletPageCount)));
+  };
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>

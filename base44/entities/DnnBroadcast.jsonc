@@ -86,11 +86,17 @@
         "draft",
         "script_ready",
         "rendering",
+        "processing",
+        "ready",
         "completed",
         "failed"
       ],
       "default": "draft",
-      "description": "Broadcast production lifecycle"
+      "description": "Broadcast production lifecycle. 'processing' = handed off to n8n, 'ready' = n8n callback received with final MP4."
+    },
+    "prompt_topics": {
+      "type": "string",
+      "description": "Topics/headlines sent to the n8n broadcast webhook for generation"
     },
     "errorMessage": {
       "type": "string",
