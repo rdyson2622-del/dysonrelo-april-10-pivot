@@ -53,8 +53,53 @@ Deno.serve(async (req) => {
 
       const dateSpoken = new Date().toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', weekday: 'long', month: 'long', day: 'numeric' });
 
-      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News Broadcast" for ${dateSpoken}.
+      // ── Fetch the active broadcast template (saved open/close) ──────────
+      const templates = await base44.asServiceRole.entities.BroadcastTemplate.filter(
+        { is_active: true }, '-version', 1
+      );
+      const activeTemplate = templates[0];
+
+      let openScript, bobAnswer, closeScript;
+
+      if (activeTemplate) {
+        // Use saved template for open/close — only generate Bob's answer fresh
+        const storyTeasers = top.slice(0, 4).map((a, i) => `Story ${i + 1}: ${a.headline}`).join('. ');
+        openScript = activeTemplate.open_script_template
+          .replace(/{DATE}/g, dateSpoken)
+          .replace(/{STORY_TEASERS}/g, storyTeasers);
+        closeScript = activeTemplate.close_script_template.replace(/{DATE}/g, dateSpoken);
+
+        const bobResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
+          prompt: `You are writing Bob Dyson's segment for the DNN Real Estate News Broadcast for ${dateSpoken}.
+
+Bob answers Charlie's question about the most relocation-relevant story from today's digest in 80-120 words.
+
+CRITICAL TONE RULES FOR BOB — KINDER AND SOFTER:
+- Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that."
+- Instead, Bob is warm, kind, and gentle. He frames his expertise as suggestions and shared client experiences.
+- He uses phrases like: "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well for some families...", "You might think about...", "What we've seen work..."
+- He speaks WITH the viewer, not AT them, like a trusted friend sharing perspective over coffee, not an instructor giving orders.
+- He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives.
+- When sharing solutions, he frames them as what other clients have CHOSEN to do, not what you must do.
+- Keep the warm, seasoned, dry-wit personality. Keep all facts, numbers, and specific details exactly the same.
+- Keep it conversational and natural spoken language.
+
+FORMATTING RULE — CRITICAL: Never use em-dashes, en-dashes, smart quotes, or bullet characters. Use only plain commas, periods, and straight quotes. HeyGen goes SILENT on em-dashes or smart punctuation.
+
+Plain spoken text only. No stage directions, no markdown, no scene labels.
+
+TODAY'S STORY DIGEST:
+${digest}
+
+Return ONLY Bob's spoken answer text.`,
+        });
+        bobAnswer = typeof bobResult === 'string'
+          ? bobResult.trim()
+          : (bobResult?.response || bobResult?.text || bobResult?.output || '').trim();
+      } else {
+        // No template yet — generate all three segments (original behavior)
+        const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+          prompt: `You are writing a two-anchor TV news script for the "DNN Real Estate News Broadcast" for ${dateSpoken}.
 
 CAST:
 - Charlie Simmons: the anchor, at the DNN studio news desk.
@@ -63,42 +108,47 @@ CAST:
 Write THREE spoken segments:
 
 1. charlie_open (180-240 words):
-- Begins exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}."
+- Begins exactly: "Good day from the DNN news desk. I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}."
 - Covers 3-4 of the most market-moving stories from the digest in punchy anchor style, each rewritten conversationally with smooth transitions.
-- ENDS by tossing to Bob about the single most relocation-relevant remaining story, e.g. "For what this really means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question about that story]?"
+- The open should frame D&D relocation services as SOLUTIONS to real estate situations, and encourage viewers to contact us with their real estate issues for possible suggestions or solutions.
+- ENDS by tossing to Bob about the single most relocation-relevant remaining story, e.g. "For what this really means if you're planning a move, let's bring in Bob Dyson. Bob, [specific question about that story]?"
 
 2. bob_answer (80-120 words):
 - Bob answers Charlie's question directly, in his warm, plain-spoken veteran voice.
 - Focuses on what it means for people relocating or buying/selling right now.
-- CRITICAL TONE RULE FOR BOB: Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that." Instead, Bob frames his expertise as suggestions and shared experience. He uses phrases like "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well...", "You might think about..." He speaks WITH the viewer, not AT them — like a trusted advisor sharing perspective, not an instructor giving orders. He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives.
+- CRITICAL TONE RULE FOR BOB — KINDER AND SOFTER: Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that." Instead, Bob is warm, kind, and gentle. He frames his expertise as suggestions and shared client experiences. He uses phrases like "I'd suggest considering...", "Many of our clients have found...", "One approach that's worked well for some families...", "You might think about...", "What we've seen work..." He speaks WITH the viewer, not AT them, like a trusted friend sharing perspective over coffee, not an instructor giving orders. He respects that the viewer may have their own knowledge and situation, so he offers options and considerations rather than directives. When sharing solutions, he frames them as what other clients have CHOSEN to do, not what you must do.
 - Ends by handing back, e.g. "...and that's the real story here, Charlie."
 
 3. charlie_close (40-60 words):
-- Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast — and if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you next time."
+- Thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full stories are right below this broadcast. And if any of them affect your move, just ask. I'm Charlie Simmons. We'll see you next time."
 
-FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+FORMATTING RULE — CRITICAL: Never use em-dashes, en-dashes, smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
 
 Plain spoken text only. No stage directions, no markdown, no scene labels.
 
 TODAY'S STORY DIGEST:
 ${digest}`,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            charlie_open: { type: 'string' },
-            bob_answer: { type: 'string' },
-            charlie_close: { type: 'string' },
+          response_json_schema: {
+            type: 'object',
+            properties: {
+              charlie_open: { type: 'string' },
+              bob_answer: { type: 'string' },
+              charlie_close: { type: 'string' },
+            },
+            required: ['charlie_open', 'bob_answer', 'charlie_close'],
           },
-          required: ['charlie_open', 'bob_answer', 'charlie_close'],
-        },
-      });
+        });
+        openScript = result.charlie_open;
+        bobAnswer = result.bob_answer;
+        closeScript = result.charlie_close;
+      }
 
       const clips = [
-        { role: 'charlie', script: result.charlie_open, status: 'not_started' },
-        { role: 'bob', script: result.bob_answer, status: 'not_started' },
-        { role: 'charlie', script: result.charlie_close, status: 'not_started' },
+        { role: 'charlie', script: openScript, status: 'not_started' },
+        { role: 'bob', script: bobAnswer, status: 'not_started' },
+        { role: 'charlie', script: closeScript, status: 'not_started' },
       ];
-      const fullScript = `${result.charlie_open}\n\n${result.bob_answer}\n\n${result.charlie_close}`;
+      const fullScript = `${openScript}\n\n${bobAnswer}\n\n${closeScript}`;
 
       const payload = {
         script: fullScript, headlines, presenter: 'charlie', format: 'tag_team',

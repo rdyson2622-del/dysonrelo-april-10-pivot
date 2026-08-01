@@ -1,0 +1,51 @@
+{
+  "name": "BroadcastTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "Name of this open/close template e.g. 'Standard DNN Open/Close v1'"
+    },
+    "version": {
+      "type": "number",
+      "default": 1,
+      "description": "Template version number"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Only one template should be active at a time \u2014 the pipeline uses the active one"
+    },
+    "open_script_template": {
+      "type": "string",
+      "description": "Charlie's opening script template. Use {DATE} and {STORY_TEASERS} as placeholders that get filled in per broadcast."
+    },
+    "close_script_template": {
+      "type": "string",
+      "description": "Charlie's closing script template. Use {DATE} as a placeholder."
+    },
+    "bob_tone_guidelines": {
+      "type": "string",
+      "description": "Tone rules for Bob's generated answer \u2014 kinder, softer, suggestive, sharing client experiences"
+    },
+    "open_word_count": {
+      "type": "number",
+      "default": 200,
+      "description": "Target word count for the open script"
+    },
+    "close_word_count": {
+      "type": "number",
+      "default": 50,
+      "description": "Target word count for the close script"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this template version"
+    }
+  },
+  "required": [
+    "template_name",
+    "open_script_template",
+    "close_script_template"
+  ]
+}
