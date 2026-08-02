@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
   Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
-  Send
+  Send, Trash2
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
@@ -57,6 +57,19 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [playing, setPlaying] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showStudioPreview, setShowStudioPreview] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete ${show.show_name || 'Show ' + (show.show_number || '?')} permanently?\n\nBroadcast date: ${show.broadcast_date}\n\nThis cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await base44.entities.DnnBroadcast.delete(show.id);
+      onRefresh();
+    } catch (e) {
+      setResult({ success: false, error: e.message });
+    }
+    setDeleting(false);
+  };
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
@@ -125,6 +138,12 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               ✓ STITCHED
             </span>
           )}
+          <button onClick={handleDelete} disabled={deleting}
+            aria-label="Delete show"
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 disabled:opacity-50"
+            style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>
+            {deleting ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+          </button>
         </div>
       </div>
 

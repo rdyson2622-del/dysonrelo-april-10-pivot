@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send } from 'lucide-react';
+import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2 } from 'lucide-react';
 
 const STATUS_STYLES = {
   new: { label: 'New', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)' },
@@ -105,6 +105,20 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
       'Marked as needs revision.'
     );
 
+  const handleDelete = async () => {
+    if (!confirm(`Delete this article permanently?\n\n"${article.headline}"\n\nThis cannot be undone.`)) return;
+    setSaving(true);
+    setMsg(null);
+    try {
+      await base44.entities.DnnArticle.delete(article.id);
+      setMsg({ type: 'success', text: 'Article deleted.' });
+      onChanged?.();
+    } catch (e) {
+      setMsg({ type: 'error', text: e.message });
+    }
+    setSaving(false);
+  };
+
   return (
     <div className="rounded-xl overflow-hidden" style={{ background: '#1a1a1a', border: `1px solid ${st.color}33` }}>
       {/* Header */}
@@ -206,6 +220,11 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
               style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.35)' }}>
               <AlertTriangle className="w-3 h-3" /> Mark Needs Revision
+            </button>
+            <button onClick={handleDelete} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80 ml-auto"
+              style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
+              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />} Delete
             </button>
           </div>
         </div>

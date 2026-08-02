@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft, Save, RefreshCw, Sparkles, Eye, FileText, Clapperboard,
-  AlertCircle, Loader, Edit3
+  AlertCircle, Loader, Edit3, Trash2
 } from 'lucide-react';
 import ScriptStudioPreview from '@/components/dnn/ScriptStudioPreview';
 
@@ -148,6 +148,21 @@ export default function AdminScriptStudio() {
       setClipMsg({ type: 'error', text: e.message });
     }
     setSavingClips(false);
+  };
+
+  const [deletingBroadcast, setDeletingBroadcast] = useState(false);
+
+  const handleDeleteBroadcast = async () => {
+    if (!latestBroadcast) return;
+    if (!confirm(`Delete ${latestBroadcast.show_name || 'this broadcast'} permanently?\n\nDate: ${latestBroadcast.broadcast_date}\n\nThis will remove all clips and scripts. This cannot be undone.`)) return;
+    setDeletingBroadcast(true);
+    try {
+      await base44.entities.DnnBroadcast.delete(latestBroadcast.id);
+      queryClient.invalidateQueries({ queryKey: ['studioLatestBroadcast'] });
+    } catch (e) {
+      setClipMsg({ type: 'error', text: e.message });
+    }
+    setDeletingBroadcast(false);
   };
 
   if (!isAdmin) return null;
@@ -307,6 +322,13 @@ export default function AdminScriptStudio() {
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all"
                   style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
                   <Edit3 className="w-3 h-3" /> Edit Clips (On-the-Fly)
+                </button>
+              )}
+              {latestBroadcast && !editingClips && (
+                <button onClick={handleDeleteBroadcast} disabled={deletingBroadcast}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-50"
+                  style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
+                  {deletingBroadcast ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />} Delete Broadcast
                 </button>
               )}
             </div>
