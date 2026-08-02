@@ -70,9 +70,11 @@ export default function Home() {
 
       {/* D&D logo + Client Portal pill — top left */}
       <div className="fixed top-3 left-3 z-[10000] hidden md:flex flex-col items-center gap-2">
-        <Link to="/?choose=1" title="Back to landing page">
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto transition-all hover:opacity-80" />
-        </Link>
+        {!sidebarOpen && (
+          <Link to="/?choose=1" title="Back to landing page">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto transition-all hover:opacity-80" />
+          </Link>
+        )}
         <button
           onClick={toggleSidebar}
           className="flex items-center gap-2 text-xs font-black tracking-[0.15em] px-4 py-2 rounded-lg transition-all hover:opacity-90"
