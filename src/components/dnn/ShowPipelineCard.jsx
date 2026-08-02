@@ -39,6 +39,7 @@ function getShowStage(show) {
   if (show.videoUrl) return 'ready';
   if (show.heygenId && show.status === 'completed') return 'stitch';
   if (show.status === 'completed') return 'stitch';
+  if (show.status === 'processing') return 'render';
   if (show.status === 'rendering') return 'render';
   if (show.status === 'script_ready') return 'script';
   if (show.status === 'failed') return 'render';
@@ -186,7 +187,15 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               </>
             )}
 
-            {currentStage === 'render' && (
+            {currentStage === 'render' && show.status === 'processing' && (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                Processing in n8n…
+              </div>
+            )}
+
+            {currentStage === 'render' && show.status !== 'processing' && (
               <button onClick={() => handleAction('check', 'Check')} disabled={busy === 'check'}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
                 style={{ background: busy === 'check' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
