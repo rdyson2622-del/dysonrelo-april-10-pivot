@@ -71,20 +71,20 @@ export default function AppLayout() {
         {/* ── ADMIN-ONLY COMMAND PILLS ── */}
         {isAdmin && <CommandPills />}
       </div>
-      {/* Content area with sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left sidebar — desktop only, toggled by the Client Portal box */}
-        {sidebarOpen && (
-          <div className="hidden md:flex">
-            <ClientSidebar />
-          </div>
-        )}
-        {/* Main content */}
+      {/* Content area — sidebar overlays content, never takes layout space */}
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Main content — always full width */}
         <div className="flex-1 overflow-auto pb-16 md:pb-0">
           <PortalAccessGuard>
             <Outlet />
           </PortalAccessGuard>
         </div>
+        {/* Sidebar overlay — slides over content when toggled, hidden on mobile */}
+        {sidebarOpen && (
+          <div className="absolute top-0 left-0 h-full z-40 hidden md:block shadow-2xl">
+            <ClientSidebar />
+          </div>
+        )}
       </div>
       <MobileBottomNav />
       <PageNumberBadge />
