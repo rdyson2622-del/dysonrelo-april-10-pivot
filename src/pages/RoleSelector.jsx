@@ -107,11 +107,12 @@ export default function RoleSelector() {
     <div className="bg-black">
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
-        className="relative h-screen"
+        className="relative w-screen h-screen"
         style={{
           backgroundImage: `url('${STUDIO_WITH_ANCHORS}')`,
-          backgroundSize: 'cover',
+          backgroundSize: '100% 100%',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
