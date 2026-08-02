@@ -18,7 +18,7 @@ export default function AppLayout() {
   const location = useLocation();
   const { landscape } = useLayout();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') !== 'false');
+  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => {
