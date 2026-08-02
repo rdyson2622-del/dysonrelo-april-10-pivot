@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2, RefreshCw } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import LayoutToggleButton from '@/components/layout/LayoutToggleButton';
-import { useLayout } from '@/lib/LayoutContext';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -60,7 +58,6 @@ const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.de
 
 export default function RoleSelector() {
   const navigate = useNavigate();
-  const { landscape } = useLayout();
   const [assignedRole, setAssignedRole] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [accessReady, setAccessReady] = useState(false);
@@ -107,30 +104,19 @@ export default function RoleSelector() {
   if (!accessReady) return <div className="min-h-screen bg-black" />;
 
   return (
-    <div className={`bg-black ${landscape ? 'force-landscape' : ''}`}>
+    <div className="bg-black">
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section className="relative w-full h-screen overflow-hidden">
-        <img
-          src={STUDIO_WITH_ANCHORS}
-          alt="DNN Real Estate News Studio"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: 'center' }}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${STUDIO_WITH_ANCHORS})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
-
-        {/* Minimal controls — refresh + landscape/portrait */}
-        <div className="fixed top-3 right-3 z-50 flex items-center gap-2">
-          <LayoutToggleButton />
-          <button
-            onClick={() => window.location.reload()}
-            aria-label="Refresh page"
-            title="Refresh"
-            className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
-            style={{ background: 'rgba(0,0,0,0.5)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-        </div>
 
         {/* Three pills — direct routing to News / Relocation / Intelligence */}
         <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
