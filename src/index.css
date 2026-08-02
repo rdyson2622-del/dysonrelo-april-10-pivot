@@ -130,6 +130,11 @@
   }
 }
 
+/* Hide scrollbar on the main content scroll container so page
+   backgrounds reach the full right edge of the viewport. */
+.no-scrollbar::-webkit-scrollbar { width: 0; height: 0; }
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
 /* Charlie chat input placeholder */
 .charlie-input::placeholder {
   color: #fff !important;
