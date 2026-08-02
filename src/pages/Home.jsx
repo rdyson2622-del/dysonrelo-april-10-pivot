@@ -137,7 +137,7 @@ export default function Home() {
           </div>
 
           {/* ── THE PILL ── */}
-          <div className="w-full max-w-4xl">
+          <div className="w-full">
             <div
               className="flex flex-row items-center rounded-lg px-3 py-2 gap-2 transition-all duration-300"
               style={{
@@ -200,7 +200,7 @@ export default function Home() {
           </div>
 
           {/* ── MARKETING BRIDGE ── */}
-          <div className="w-full max-w-4xl mt-14 mb-2">
+          <div className="w-full mt-14 mb-2">
             <div className="rounded-2xl px-8 py-10 text-center"
               style={{ background: 'rgba(0,0,0,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
               <p className="font-black leading-tight mb-2"
@@ -247,7 +247,7 @@ export default function Home() {
           </div>
 
           {/* ── CLIENT STORIES ── */}
-          <div className="w-full max-w-4xl mt-12 text-left">
+          <div className="w-full mt-12 text-left">
 
             <div
               ref={headingRef}
