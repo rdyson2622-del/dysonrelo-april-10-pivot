@@ -69,7 +69,7 @@ export default function AppLayout() {
       {/* Content area — sidebar overlays content, never takes layout space */}
       <div className="flex flex-1 overflow-hidden relative">
         {/* Main content — always full width */}
-        <div className="flex-1 w-full overflow-y-auto overflow-x-hidden no-scrollbar pb-16 md:pb-0">
+        <div className="flex-1 w-full overflow-auto pb-16 md:pb-0">
           <PortalAccessGuard>
             <Outlet />
           </PortalAccessGuard>
