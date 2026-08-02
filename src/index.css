@@ -151,6 +151,19 @@
   color: #ffffff !important;
 }
 
+/* ── Full-bleed content: force page section containers to fill the
+   viewport width inside the portal/admin layout content areas.
+   Scoped to .full-bleed-content so modals/dialogs (which portal to body)
+   are NOT affected. Only wide structure caps are overridden; small
+   readability caps (max-w-2xl and below) are preserved. */
+.full-bleed-content .max-w-7xl,
+.full-bleed-content .max-w-6xl,
+.full-bleed-content .max-w-5xl,
+.full-bleed-content .max-w-4xl,
+.full-bleed-content .max-w-3xl {
+  max-width: 100% !important;
+}
+
 @layer components {
   /* Elegant Display Heading - Serif */
   .display-heading {
