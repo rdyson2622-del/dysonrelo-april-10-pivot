@@ -120,7 +120,7 @@ function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
 export default function Admin() {
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="w-full">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
