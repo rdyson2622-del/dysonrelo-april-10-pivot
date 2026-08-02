@@ -156,6 +156,13 @@
    Scoped to .full-bleed-content so modals/dialogs (which portal to body)
    are NOT affected. Only wide structure caps are overridden; small
    readability caps (max-w-2xl and below) are preserved. */
+/* Force the page root (direct child of the layout content area) to fill
+   the full width, and widen all section containers. Modals/dialogs portal
+   to <body>, so they are outside .full-bleed-content and unaffected. */
+.full-bleed-content > * {
+  width: 100% !important;
+  max-width: 100% !important;
+}
 .full-bleed-content .max-w-7xl,
 .full-bleed-content .max-w-6xl,
 .full-bleed-content .max-w-5xl,

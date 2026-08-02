@@ -91,7 +91,7 @@ export default function AppLayout() {
           </div>
         )}
         {/* Main content */}
-        <div className="flex-1 overflow-auto pb-16 md:pb-0 full-bleed-content">
+        <div className="flex-1 min-w-0 w-full overflow-auto pb-16 md:pb-0 full-bleed-content">
           <PortalAccessGuard>
             <Outlet />
           </PortalAccessGuard>
