@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2, RefreshCw } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2, RefreshCw, Smartphone, Monitor } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import LayoutToggleButton from '@/components/layout/LayoutToggleButton';
 import { useLayout } from '@/lib/LayoutContext';
 
 const GOLD = '#D4AF37';
@@ -60,7 +59,7 @@ const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.de
 
 export default function RoleSelector() {
   const navigate = useNavigate();
-  const { landscape } = useLayout();
+  const { landscape, setLandscape } = useLayout();
   const [assignedRole, setAssignedRole] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [accessReady, setAccessReady] = useState(false);
@@ -120,7 +119,15 @@ export default function RoleSelector() {
         >
           <RefreshCw className="w-4 h-4" />
         </button>
-        <LayoutToggleButton />
+        <button
+          onClick={() => setLandscape(l => !l)}
+          aria-label={landscape ? 'Switch to Portrait' : 'Switch to Landscape'}
+          title={landscape ? 'Switch to Portrait' : 'Switch to Landscape'}
+          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
+          style={{ color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
+        >
+          {landscape ? <Smartphone className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
+        </button>
       </div>
 
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
