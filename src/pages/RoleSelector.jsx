@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import LayoutToggleButton from '@/components/layout/LayoutToggleButton';
+import { useLayout } from '@/lib/LayoutContext';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -58,6 +60,7 @@ const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.de
 
 export default function RoleSelector() {
   const navigate = useNavigate();
+  const { landscape } = useLayout();
   const [assignedRole, setAssignedRole] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [accessReady, setAccessReady] = useState(false);
@@ -104,7 +107,7 @@ export default function RoleSelector() {
   if (!accessReady) return <div className="min-h-screen bg-black" />;
 
   return (
-    <div className="bg-black">
+    <div className={`bg-black ${landscape ? 'force-landscape' : ''}`}>
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
         className="relative h-screen"
@@ -114,6 +117,20 @@ export default function RoleSelector() {
           backgroundPosition: 'center',
         }}
       >
+        {/* Floating controls — refresh + landscape/portrait toggle */}
+        <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
+          <button
+            onClick={() => window.location.reload()}
+            aria-label="Refresh page"
+            title="Refresh"
+            className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
+            style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}
+          >
+            <RefreshCw className="w-4 h-4" style={{ color: GOLD }} />
+          </button>
+          <LayoutToggleButton />
+        </div>
+
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
         {/* Three pills — direct routing to News / Relocation / Intelligence */}
