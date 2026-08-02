@@ -37,48 +37,40 @@ export default function AdminLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#ede0cc' }}>
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
-        <AdminSidebar />
-      </div>
-
-      {/* Mobile Menu Overlay */}
+      {/* Sidebar overlay — hidden by default, toggled via menu button, never takes layout space */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40" onClick={() => setMobileMenuOpen(false)}>
-          <div onClick={e => e.stopPropagation()} className="fixed left-0 top-0 h-full w-56 z-50">
+        <div className="fixed inset-0 z-40" onClick={() => setMobileMenuOpen(false)}>
+          <div onClick={e => e.stopPropagation()} className="fixed left-0 top-0 h-full z-50">
             <AdminSidebar />
           </div>
           <div className="absolute inset-0 bg-black/50" />
         </div>
       )}
 
-      <main className="flex-1 overflow-auto relative" style={{ background: '#ede0cc' }}>
-        {/* Top Controls */}
-        <div className="fixed top-3 left-3 md:left-[260px] z-50 flex items-center gap-2">
+      <main className="flex-1 w-full overflow-y-auto overflow-x-hidden no-scrollbar relative" style={{ background: '#ede0cc' }}>
+        {/* Top Controls — full width across the top */}
+        <div className="fixed top-3 left-3 z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
             style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.4)' }}
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
           </button>
         </div>
         <div className="fixed top-3 right-3 z-[10000] flex items-center gap-2">
           <CommandPills />
           <LayoutToggleButton />
         </div>
-        <div className="w-full">
-          {/* Back button */}
-          <div className="px-4 pt-16 md:pt-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
-            >
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          </div>
+        <div className="w-full pt-16">
           <Outlet />
         </div>
         <PageNumberBadge />
