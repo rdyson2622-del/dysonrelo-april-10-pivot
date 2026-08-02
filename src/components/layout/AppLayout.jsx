@@ -5,7 +5,7 @@ import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Tv } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
@@ -46,9 +46,20 @@ export default function AppLayout() {
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
         <PortalHomeButton
-          onClick={toggleSidebar}
+          onClick={() => navigate('/?choose=1')}
           label="STUDIO"
         />
+
+        {/* Sidebar toggle — TV box icon to the right of STUDIO */}
+        <button
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+          title="Toggle sidebar"
+          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
+          style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.45)' }}
+        >
+          <Tv className="w-4 h-4" />
+        </button>
 
         {/* Landscape / Portrait toggle */}
         <LayoutToggleButton />
@@ -77,7 +88,7 @@ export default function AppLayout() {
         {/* Sidebar overlay — slides over content when toggled, hidden on mobile */}
         {sidebarOpen && (
           <div className="absolute top-0 left-0 h-full z-40 hidden md:block shadow-2xl">
-            <ClientSidebar />
+            <ClientSidebar onToggle={toggleSidebar} />
           </div>
         )}
       </div>
