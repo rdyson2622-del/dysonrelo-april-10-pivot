@@ -68,7 +68,7 @@ export default function AdminLayout() {
           <CommandPills />
           <LayoutToggleButton />
         </div>
-        <div className="w-full full-bleed-content">
+        <div className="w-full">
           {/* Back button */}
           <div className="px-4 pt-16 md:pt-4">
             <button
