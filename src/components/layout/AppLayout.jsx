@@ -5,7 +5,7 @@ import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
-import { ArrowLeft, PanelLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
@@ -51,23 +51,12 @@ export default function AppLayout() {
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
         <PortalHomeButton
-          onClick={() => navigate('/?choose=1')}
+          onClick={toggleSidebar}
           label="STUDIO"
         />
 
         {/* Landscape / Portrait toggle */}
         <LayoutToggleButton />
-
-        {/* Sidebar toggle */}
-        <button
-          onClick={toggleSidebar}
-          aria-label="Toggle portal menu"
-          title="Toggle portal menu"
-          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
-          style={{ color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
-        >
-          <PanelLeft className="w-4 h-4" />
-        </button>
 
         <button
           onClick={() => navigate(-1)}
