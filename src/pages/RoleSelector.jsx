@@ -108,6 +108,21 @@ export default function RoleSelector() {
 
   return (
     <div className={`bg-black ${landscape ? 'force-landscape' : ''}`}>
+      {/* Top control bar — matches portal pages */}
+      <div className="px-4 py-3 flex items-center gap-3 sticky top-0 z-30" style={{ background: '#0d0d0d' }}>
+        <div className="flex-1" />
+        <button
+          onClick={() => window.location.reload()}
+          aria-label="Refresh page"
+          title="Refresh"
+          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
+          style={{ color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
+        >
+          <RefreshCw className="w-4 h-4" />
+        </button>
+        <LayoutToggleButton />
+      </div>
+
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
         className="relative h-screen"
@@ -117,20 +132,6 @@ export default function RoleSelector() {
           backgroundPosition: 'center',
         }}
       >
-        {/* Floating controls — refresh + landscape/portrait toggle */}
-        <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
-          <button
-            onClick={() => window.location.reload()}
-            aria-label="Refresh page"
-            title="Refresh"
-            className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
-            style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}
-          >
-            <RefreshCw className="w-4 h-4" style={{ color: GOLD }} />
-          </button>
-          <LayoutToggleButton />
-        </div>
-
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
         {/* Three pills — direct routing to News / Relocation / Intelligence */}
