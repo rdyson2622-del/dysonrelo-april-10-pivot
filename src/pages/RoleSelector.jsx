@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2, RefreshCw } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -105,17 +105,6 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
-      {/* Minimal refresh control — reloads the page to clear stale preview */}
-      <button
-        onClick={() => window.location.reload()}
-        aria-label="Refresh page"
-        title="Refresh"
-        className="fixed top-3 right-3 z-50 w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
-        style={{ background: 'rgba(0,0,0,0.5)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}
-      >
-        <RefreshCw className="w-4 h-4" />
-      </button>
-
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section
         className="relative h-screen"
