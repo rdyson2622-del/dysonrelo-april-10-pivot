@@ -165,8 +165,8 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
       <Route path="/broadcast-show" element={<BroadcastShow />} />
 
-      {/* Front door — qualifying landing page, no portal chrome */}
-      <Route path="/" element={<RoleSelector />} />
+      {/* Front door — client portal starts on its own landing page (no portal chrome) */}
+      <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Home" element={<Home />} />
 
