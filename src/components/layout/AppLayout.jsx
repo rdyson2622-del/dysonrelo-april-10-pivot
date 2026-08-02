@@ -18,14 +18,9 @@ export default function AppLayout() {
   const location = useLocation();
   const { landscape } = useLayout();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(() => sessionStorage.getItem('dyson_sidebar_expanded') === 'true');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(prev => {
-      sessionStorage.setItem('dyson_sidebar_expanded', String(!prev));
-      return !prev;
-    });
-  };
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
   useEffect(() => {
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
