@@ -214,13 +214,12 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               </div>
             )}
 
-            {currentStage === 'render' && show.status !== 'processing' && (
-              <button onClick={() => handleAction('check', 'Check')} disabled={busy === 'check'}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                style={{ background: busy === 'check' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                {busy === 'check' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                {busy === 'check' ? 'Checking…' : 'Check Render Status'}
-              </button>
+            {currentStage === 'render' && show.status === 'rendering' && (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                Rendering in HeyGen — n8n will callback automatically
+              </div>
             )}
 
             {currentStage === 'stitch' && (
