@@ -140,6 +140,9 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+      {/* Studio background — composited in-browser per design plan */}
+      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
         className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -155,18 +158,34 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
         <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
       </div>
 
-      {/* Single HTML5 <video> — final 1080p MP4 from n8n */}
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        poster={STUDIO_BG_URL}
-        autoPlay
-        controls
-        playsInline
-        preload="auto"
+      {/* Avatar video in a black-backed framed box over the studio set.
+          Black background covers the lime-green chroma-key areas per design rule. */}
+      <div
+        className="absolute cursor-pointer overflow-hidden"
         onClick={togglePlay}
-        style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#000' }}
-      />
+        style={{
+          width: 'clamp(220px, 30vw, 420px)',
+          aspectRatio: '16/9',
+          bottom: '12px',
+          left: '4px',
+          borderRadius: '12px',
+          border: `2px solid ${GOLD}`,
+          boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
+          background: '#000',
+          zIndex: 10,
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          autoPlay
+          playsInline
+          preload="auto"
+          onClick={togglePlay}
+          className="w-full h-full object-cover"
+          style={{ transform: 'scale(1.18)' }}
+        />
+      </div>
 
       {/* Tap for sound overlay when muted but playing */}
       {playing && muted && (
@@ -174,6 +193,7 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           onClick={toggleMute}
           aria-label="Tap for sound"
           className="absolute inset-0 flex items-center justify-center transition-all hover:bg-black/30"
+          style={{ zIndex: 15 }}
         >
           <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
             style={{ background: 'rgba(0,0,0,0.7)', border: `1px solid ${GOLD}` }}>
@@ -184,6 +204,21 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           </span>
         </button>
       )}
+
+      {/* Bottom controls */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4 z-20"
+        style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
+        <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ color: GOLD }}>
+          {playing ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
+        </button>
+        <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+          style={{ color: GOLD }}>
+          {muted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+        </button>
+      </div>
     </div>
   );
 }

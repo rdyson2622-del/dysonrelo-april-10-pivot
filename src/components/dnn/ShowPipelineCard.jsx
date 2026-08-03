@@ -347,8 +347,21 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             />
           )}
 
-          {/* Studio preview — full broadcast with DNN background + whiteboard bullets */}
+          {/* Studio preview — composited broadcast.
+              Single-MP4 pipeline shows use videoUrl mode (studio bg + framed avatar box).
+              Legacy tag-team shows fall back to segment mode. */}
           {showStudioPreview && (() => {
+            if (show.videoUrl) {
+              return (
+                <div className="fixed inset-0 z-[200]">
+                  <DnnNewsBroadcastPlayer
+                    videoUrl={show.videoUrl}
+                    status="ready"
+                    onClose={() => setShowStudioPreview(false)}
+                  />
+                </div>
+              );
+            }
             const clips = show.clips || [];
             const segments = [];
             for (const clip of clips) {
