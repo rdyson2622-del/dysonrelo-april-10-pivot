@@ -63,9 +63,14 @@ export default async function(req) {
       return Response.json({ success: false, status: 'failed', broadcast_id });
     }
 
+    // Defensive: n8n W2 has a bug injecting a stray "mp/" segment into the
+    // Base44 public file path (/files/mp/public/... → /files/public/...).
+    // Strip it so the stored URL always resolves, regardless of the n8n fix.
+    const safeVideoUrl = video_url.replace('/files/mp/public/', '/files/public/');
+
     await base44.asServiceRole.entities.DnnBroadcast.update(broadcast_id, {
       status: finalStatus,
-      videoUrl: video_url,
+      videoUrl: safeVideoUrl,
       errorMessage: null,
     });
 
@@ -73,7 +78,7 @@ export default async function(req) {
       success: true,
       broadcast_id,
       status: finalStatus,
-      video_url,
+      video_url: safeVideoUrl,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
