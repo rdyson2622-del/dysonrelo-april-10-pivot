@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
           input_text: intro,
           speed: 1.05,
         },
-        background: { type: 'color', value: '#00FF00' },
+        background: { type: 'color', value: '#0d0d0d' },
       });
     }
 
@@ -119,7 +119,7 @@ Deno.serve(async (req) => {
           input_text: outro,
           speed: 1.05,
         },
-        background: { type: 'color', value: '#00FF00' },
+        background: { type: 'color', value: '#0d0d0d' },
       });
     }
 
