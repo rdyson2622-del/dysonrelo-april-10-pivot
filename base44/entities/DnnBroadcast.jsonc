@@ -17,7 +17,7 @@
     },
     "script": {
       "type": "string",
-      "description": "Full anchor script covering the top headlines"
+      "description": "Full anchor script covering the top headlines (Gemini output)"
     },
     "headlines": {
       "type": "array",
@@ -74,11 +74,11 @@
     },
     "heygenId": {
       "type": "string",
-      "description": "HeyGen render job id (solo format)"
+      "description": "HeyGen render job id (solo format) \u2014 set by n8n Workflow 1 after dispatch"
     },
     "videoUrl": {
       "type": "string",
-      "description": "Permanent URL of the rendered broadcast video (solo format)"
+      "description": "Permanent CDN URL of the final rendered MP4 (set by n8n Workflow 2 after cloud upload)"
     },
     "status": {
       "type": "string",
@@ -92,7 +92,7 @@
         "failed"
       ],
       "default": "draft",
-      "description": "Broadcast production lifecycle. 'processing' = handed off to n8n, 'ready' = n8n callback received with final MP4."
+      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched, processing=awaiting callback, ready=MP4 uploaded, completed=Published, failed=error"
     },
     "prompt_topics": {
       "type": "string",
@@ -101,6 +101,11 @@
     "errorMessage": {
       "type": "string",
       "description": "Last render error"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this broadcast was published to all distribution channels (set by n8n Workflow 3)"
     },
     "distribution": {
       "type": "array",

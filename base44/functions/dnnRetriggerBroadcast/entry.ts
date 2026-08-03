@@ -44,9 +44,10 @@ export default async function(req) {
 
     const promptTopics = broadcast.prompt_topics || "Today's top relocation and real estate market headlines";
 
-    // Reset to processing so the callback can flip it to ready
+    // Reset to draft (Scripting stage) — n8n W1 will generate script, dispatch to
+    // HeyGen, then call dnnRenderDispatched to flip status → "rendering".
     await Broadcasts.update(broadcastId, {
-      status: 'processing',
+      status: 'draft',
       errorMessage: '',
       videoUrl: '',
       heygenId: '',
