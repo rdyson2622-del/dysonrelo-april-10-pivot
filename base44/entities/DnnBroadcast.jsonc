@@ -17,7 +17,19 @@
     },
     "script": {
       "type": "string",
-      "description": "Full anchor script covering the top headlines (Gemini output)"
+      "description": "Full combined anchor script (legacy / backward compat). New pipeline stores scenes separately below."
+    },
+    "intro_script": {
+      "type": "string",
+      "description": "Scene 1 script \u2014 spoken by Charlie (intro/open). Gemini outputs this as a separate JSON key."
+    },
+    "content_script": {
+      "type": "string",
+      "description": "Scene 2 script \u2014 spoken by Bob (main content/explainer). Gemini outputs this as a separate JSON key."
+    },
+    "outro_script": {
+      "type": "string",
+      "description": "Scene 3 script \u2014 spoken by Charlie (close/outro). Gemini outputs this as a separate JSON key."
     },
     "headlines": {
       "type": "array",
@@ -70,15 +82,15 @@
           }
         }
       },
-      "description": "Ordered clip sequence for tag_team broadcasts"
+      "description": "Ordered clip sequence for legacy tag_team per-clip rendering (deprecated for new 3-scene pipeline \u2014 use intro_script/content_script/outro_script instead)"
     },
     "heygenId": {
       "type": "string",
-      "description": "HeyGen render job id (solo format) \u2014 set by n8n Workflow 1 after dispatch"
+      "description": "HeyGen render job id for the FULL multi-scene show \u2014 set by n8n Workflow 1 after single dispatch. One id = one stitched MP4."
     },
     "videoUrl": {
       "type": "string",
-      "description": "Permanent CDN URL of the final rendered MP4 (set by n8n Workflow 2 after cloud upload)"
+      "description": "Permanent CDN URL of the final stitched MP4 (all 3 scenes combined) \u2014 set by n8n Workflow 2 after cloud upload"
     },
     "status": {
       "type": "string",
@@ -92,7 +104,7 @@
         "failed"
       ],
       "default": "draft",
-      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched, processing=awaiting callback, ready=MP4 uploaded, completed=Published, failed=error"
+      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched (single multi-scene job), processing=awaiting callback, ready=MP4 uploaded, completed=Published, failed=error"
     },
     "prompt_topics": {
       "type": "string",
