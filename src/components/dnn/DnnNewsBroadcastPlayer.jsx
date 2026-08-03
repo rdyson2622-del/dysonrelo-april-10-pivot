@@ -166,7 +166,7 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
         style={{
           width: 'clamp(220px, 30vw, 420px)',
           aspectRatio: '16/9',
-          bottom: '12px',
+          bottom: '10vh',
           left: '4px',
           borderRadius: '12px',
           border: `2px solid ${GOLD}`,
