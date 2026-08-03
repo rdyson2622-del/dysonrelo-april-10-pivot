@@ -182,28 +182,19 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {/* Action buttons based on current stage */}
           <div className="flex flex-wrap gap-2 mb-4">
             {currentStage === 'content' && (
-              <button onClick={() => handleAction('generate', 'Script')} disabled={busy === 'generate'}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                style={{ background: busy === 'generate' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                {busy === 'generate' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {busy === 'generate' ? 'Generating…' : 'Generate Script'}
-              </button>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
+                style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                n8n generates script & dispatches render automatically
+              </div>
             )}
 
             {currentStage === 'script' && (
-              <>
-                <button onClick={() => handleAction('render', 'Render')} disabled={busy === 'render'}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
-                  style={{ background: busy === 'render' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                  {busy === 'render' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Clapperboard className="w-3.5 h-3.5" />}
-                  {busy === 'render' ? 'Starting Renders…' : 'Start Clip Renders'}
-                </button>
-                <button onClick={onEditScript}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
-                  style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
-                  <Edit3 className="w-3.5 h-3.5" /> Edit Script
-                </button>
-              </>
+              <button onClick={onEditScript}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
+                style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                <Edit3 className="w-3.5 h-3.5" /> Edit Script
+              </button>
             )}
 
             {currentStage === 'render' && show.status === 'processing' && (
