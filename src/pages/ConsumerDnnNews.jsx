@@ -10,6 +10,7 @@ import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
+import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -585,6 +586,7 @@ export default function ConsumerDnnNews() {
 
       {/* Articles Feed */}
       <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
+        <FeaturedBroadcast />
         {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />

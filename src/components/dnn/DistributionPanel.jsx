@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Linkedin, Facebook, Instagram, Mail, Users, CheckCircle, XCircle, Clock,
-  RefreshCw, Send, DollarSign, ChevronRight
+  RefreshCw, Send, DollarSign, ChevronRight, Radio
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -85,6 +85,23 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     setPosting(null);
   };
 
+  const handleNewsPublish = async () => {
+    setPosting('in_app_news');
+    setResult(null);
+    try {
+      await updateDistribution({
+        channel: 'in_app_news',
+        status: 'sent',
+        recipient: 'In-App News Section',
+        posted_at: new Date().toISOString(),
+      });
+      setResult({ success: true, msg: 'Published to News section — now featured on /dnn-news' });
+    } catch (e) {
+      setResult({ success: false, msg: e.message });
+    }
+    setPosting(null);
+  };
+
   const handleEmailBlast = async () => {
     setPosting('email');
     setResult(null);
@@ -144,6 +161,16 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
       dist: getDist('subscriber_email'),
       action: handleEmailBlast,
       busy: posting === 'email',
+    },
+    {
+      key: 'in_app_news',
+      label: 'News Section',
+      icon: Radio,
+      color: GOLD,
+      bgColor: 'rgba(212,175,55,0.1)',
+      dist: getDist('in_app_news'),
+      action: handleNewsPublish,
+      busy: posting === 'in_app_news',
     },
     {
       key: 'agent_private_label',

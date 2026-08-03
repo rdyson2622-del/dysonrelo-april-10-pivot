@@ -131,7 +131,8 @@
               "facebook",
               "instagram",
               "subscriber_email",
-              "agent_private_label"
+              "agent_private_label",
+              "in_app_news"
             ],
             "description": "Distribution channel"
           },
