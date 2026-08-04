@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Play, Pause, Volume2, VolumeX, Radio } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a25febb8d_Screenshot2026-08-01at31026PM.png';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 /**
