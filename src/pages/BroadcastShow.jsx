@@ -80,11 +80,12 @@ function SimplePlayer({ videoUrl, showName }) {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
 
-  const startPlay = () => {
+  // Autoplay exactly once on mount. Safe: single <video>, strict guard.
+  useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
     setStarted(true);
-    setTimeout(() => {
+    const t = setTimeout(() => {
       const v = videoRef.current;
       if (!v) return;
       v.muted = false;
@@ -92,12 +93,14 @@ function SimplePlayer({ videoUrl, showName }) {
         setPlaying(true);
         setMuted(false);
       }).catch(() => {
+        // Browser blocked unmuted autoplay — fall back to muted
         v.muted = true;
         setMuted(true);
         v.play().then(() => setPlaying(true)).catch(() => {});
       });
-    }, 50);
-  };
+    }, 100);
+    return () => clearTimeout(t);
+  }, []);
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -171,14 +174,9 @@ function SimplePlayer({ videoUrl, showName }) {
             style={{ transform: 'scale(1.18)' }}
           />
         ) : (
-          <button onClick={startPlay} aria-label="Play broadcast"
-            className="w-full h-full flex items-center justify-center group"
-            style={{ background: '#000' }}>
-            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
-              <Play className="w-7 h-7 ml-1 text-black" fill="black" />
-            </div>
-          </button>
+          <div className="w-full h-full flex items-center justify-center" style={{ background: '#000' }}>
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
+          </div>
         )}
       </div>
 
