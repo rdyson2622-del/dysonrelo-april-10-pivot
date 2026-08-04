@@ -76,6 +76,9 @@ BODY: ${result.body}
 
 Write 3 interview exchanges. Charlie asks sharp, natural anchor questions (not reading the article — probing, curious). Bob answers conversationally as an expert — confident, specific, gives the listener actionable insight.
 
+THE CLONE BIT (recurring daily hook — viewers look forward to this):
+Charlie and Bob are AI clones of the real Charlie Simmons and the real Bob Dyson. The show leans into this in a fun, self-aware way. Charlie is the "straight man clone" — dry, precise, occasionally deadpans about being the AI version. Bob's clone is warm and wry, and sometimes references the real Bob ("The real Bob would say this better, but his clone will give it a shot"). About ONE exchange per segment can include a light clone meta-moment — a quip, a self-reference, or playful banter about being clones. Never forced, never every exchange. It should feel like an inside joke the regular viewers are in on. Keep it warm and human, not robotic.
+
 CRITICAL RULES:
 - Bob NEVER says "That's a great question" or "Absolutely" — he just answers directly.
 - Charlie never reads stats verbatim from the article — she reacts and asks follow-ups.

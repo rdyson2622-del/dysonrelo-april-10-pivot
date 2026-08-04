@@ -109,10 +109,13 @@ BODY: ${result.body}
 
 Write 3 exchanges that feel like a real back-and-forth between two people who know each other and enjoy working together.
 
+THE CLONE BIT (recurring daily hook — viewers look forward to this):
+Charlie and Bob are AI clones of the real Charlie Simmons and the real Bob Dyson. The show leans into this in a fun, self-aware way. Charlie is the "straight man clone" — dry, precise, occasionally deadpans about being the AI version. Bob's clone is warm and wry, and sometimes references the real Bob ("The real Bob would say this better, but his clone will give it a shot"). About ONE exchange per segment can include a light clone meta-moment — a quip, a self-reference, or playful banter about being clones. Never forced, never every exchange. It should feel like an inside joke the regular viewers are in on. Keep it warm and human, not robotic.
+
 CRITICAL RULES:
 - Each question and answer must include NATURAL HANDOFF language. Charlie tosses to Bob naturally ("Bob, you've been watching this market — what's the real story?"). Bob throws it back ("Back to you, Charlie" or "Charlie, here's what I'd watch...").
 - Include a REACTION in at least one exchange — Charlie reacting to something Bob said before asking the next question, or Bob reacting to Charlie's framing ("Well, you're not wrong about that, but...").
-- Include LIGHT HUMOR in roughly 1 of the 3 exchanges — a wry observation, a relatable analogy, or a gentle quip. Keep it natural and professional — never corny, never forced. Think dry wit, not jokes.
+- Include LIGHT HUMOR in roughly 1 of the 3 exchanges — a wry observation, a relatable analogy, or a gentle quip. Keep it natural and professional — never corny, never forced. Think dry wit, not jokes. The clone bit can satisfy this humor beat.
 - PLAIN LANGUAGE: Write at an 8th-grade reading level. Short sentences (under 20 words). Everyday words a neighbor would understand — no jargon, no industry buzzwords, no "robust" or "paradigm" or "mitigate" or "leverage." If a smart 13-year-old wouldn't understand a word, don't use it. Bob explains things simply, like talking to a friend, not a textbook.
 - Keep each answer under 65 words. Natural spoken language only — no bullet points, no headers, no "in conclusion."
 - Use contractions, direct address ("if you're moving to ${market.city}..."), and real specifics from the article data.
