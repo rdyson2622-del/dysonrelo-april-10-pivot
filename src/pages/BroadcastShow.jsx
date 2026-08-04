@@ -1,18 +1,14 @@
 // BroadcastShow — public full-screen broadcast player (no auth required).
-// Renders the composited DNN studio show (DnnNewsBroadcastPlayer) for the
-// latest ready broadcast. Shows a "Processing..." indicator while n8n renders.
-import React, { useState, useEffect } from 'react';
+// Minimal, single-video implementation. ONE <video> element, ONE play() call.
+// No realtime subscriptions, no complex autoplay, no possibility of echo.
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { X, Loader2 } from 'lucide-react';
-import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
+import { X, Loader2, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
-const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a25febb8d_Screenshot2026-08-01at31026PM.png';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
-// Cloudinary 4K broadcast videos are huge (40MB+) and the audio track buffers
-// long before the video frames can decode, so viewers hear voice over a black
-// screen. Downscale to 1280px on Cloudinary URLs so the video loads fast.
 function optimizeVideoUrl(url) {
   if (!url || !url.includes('res.cloudinary.com/video/upload/')) return url;
   return url.replace('/video/upload/', '/video/upload/c_scale,w_1280,q_auto,f_auto/');
@@ -22,10 +18,6 @@ export default function BroadcastShow() {
   const [broadcast, setBroadcast] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
-  // Fetch the latest ready broadcast ONCE on mount. No realtime subscription —
-  // the subscription was re-triggering the autoplay effect on every entity
-  // update (poller writing compositedVideoUrl, distribution, etc.), causing
-  // the audio to echo / play identically twice. A single fetch is enough.
   useEffect(() => {
     (async () => {
       try {
@@ -50,7 +42,6 @@ export default function BroadcastShow() {
     })();
   }, []);
 
-  const isProcessing = broadcast?.status === 'processing';
   const videoUrl = broadcast?.videoUrl ? optimizeVideoUrl(broadcast.videoUrl) : null;
   const canPlay = (broadcast?.status === 'ready' || broadcast?.status === 'completed') && videoUrl;
 
@@ -62,50 +53,10 @@ export default function BroadcastShow() {
     );
   }
 
-  // Processing state — clean background indicator
-  if (isProcessing && !canPlay) {
-    return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center gap-6" style={{ background: '#000' }}>
-        <button
-          onClick={() => window.location.href = '/'}
-          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105"
-          style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}` }}
-          aria-label="Close broadcast"
-        >
-          <X className="w-5 h-5" style={{ color: GOLD }} />
-        </button>
-
-        <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1.5 rounded-lg"
-          style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}>
-          <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
-          <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>DNN</span>
-        </div>
-
-        <img src={STUDIO_WITH_ANCHORS} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
-        <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
-          <img src={DNN_LOGO} alt="DNN" className="h-14 w-auto opacity-90" />
-          <div className="flex items-center gap-3">
-            <Loader2 className="w-5 h-5 animate-spin" style={{ color: GOLD }} />
-            <p className="text-sm font-bold tracking-[0.25em] uppercase" style={{ color: GOLD }}>
-              Processing Broadcast in Background...
-            </p>
-          </div>
-          <p className="text-xs text-slate-500 max-w-md leading-relaxed">
-            The DNN studio is rendering your daily broadcast. This page will update
-            automatically the moment the video is ready.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (!canPlay) {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
         <img src={DNN_LOGO} alt="DNN" className="h-12 w-auto opacity-80" />
-        <p className="text-sm font-bold tracking-[0.2em] uppercase" style={{ color: GOLD }}>
-          DNN Intelligence Bureau
-        </p>
         <p className="text-xs text-slate-500">No broadcast available at this time.</p>
         <button onClick={() => window.location.href = '/'} className="text-xs underline" style={{ color: GOLD }}>
           Return Home
@@ -114,15 +65,138 @@ export default function BroadcastShow() {
     );
   }
 
-  // key={videoUrl} forces a FULL remount if the URL ever changes — the old
-  // <video> unmounts (audio stops immediately) and a fresh player mounts.
-  // This eliminates any possibility of overlapping audio / echo.
+  return <SimplePlayer key={videoUrl} videoUrl={videoUrl} showName={broadcast?.show_name} />;
+}
+
+function SimplePlayer({ videoUrl, showName }) {
+  const videoRef = useRef(null);
+  const startedRef = useRef(false);
+  const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+
+  // Pause on unmount — no ghost audio
+  useEffect(() => {
+    return () => { try { videoRef.current?.pause(); } catch (_) {} };
+  }, []);
+
+  const startPlay = () => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    setStarted(true);
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.muted = false;
+      v.play().then(() => {
+        setPlaying(true);
+        setMuted(false);
+      }).catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().then(() => setPlaying(true)).catch(() => {});
+      });
+    }, 50);
+  };
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else { v.pause(); setPlaying(false); }
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
+
+  const handleEnded = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    setPlaying(false);
+  };
+
   return (
-    <DnnNewsBroadcastPlayer
-      key={videoUrl}
-      videoUrl={videoUrl}
-      status="ready"
-      onClose={() => window.location.href = '/'}
-    />
+    <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+
+      <button onClick={() => window.location.href = '/'} aria-label="Close"
+        className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+        <X className="w-6 h-6" />
+      </button>
+
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+        style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}>
+        <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
+        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>LIVE</span>
+        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
+      </div>
+
+      {showName && (
+        <div className="absolute top-4 right-20 z-20 px-3 py-1.5 rounded-lg"
+          style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <span className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>{showName}</span>
+        </div>
+      )}
+
+      {/* ONE video element — centered, black-backed, gold-bordered */}
+      <div className="absolute overflow-hidden"
+        style={{
+          width: 'clamp(220px, 30vw, 420px)',
+          aspectRatio: '16/9',
+          bottom: '10vh',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          borderRadius: '12px',
+          border: `2px solid ${GOLD}`,
+          boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
+          background: '#000',
+          zIndex: 10,
+        }}>
+        {started ? (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            playsInline
+            preload="auto"
+            loop={false}
+            onClick={togglePlay}
+            onEnded={handleEnded}
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.18)' }}
+          />
+        ) : (
+          <button onClick={startPlay} aria-label="Play broadcast"
+            className="w-full h-full flex items-center justify-center group"
+            style={{ background: '#000' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+              <Play className="w-7 h-7 ml-1 text-black" fill="black" />
+            </div>
+          </button>
+        )}
+      </div>
+
+      {started && (
+        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-4 z-20"
+          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
+          <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
+            className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {playing ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
+          </button>
+          <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
+            className="w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {muted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
