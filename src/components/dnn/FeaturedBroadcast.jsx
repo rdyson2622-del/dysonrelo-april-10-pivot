@@ -32,7 +32,7 @@ export default function FeaturedBroadcast() {
         <Radio className="w-4 h-4" style={{ color: GOLD }} />
         <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Featured Broadcast</span>
       </div>
-      <InlineStudioPlayer videoUrl={featured.videoUrl} showName={featured.show_name} />
+      <InlineStudioPlayer key={featured.id} videoUrl={featured.videoUrl} showName={featured.show_name} />
       {featured.headlines?.length > 0 && (
         <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headlines[0]}</p>
       )}
@@ -42,6 +42,7 @@ export default function FeaturedBroadcast() {
 
 function InlineStudioPlayer({ videoUrl, showName }) {
   const videoRef = useRef(null);
+  const playInitiatedRef = useRef(false);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -51,7 +52,14 @@ function InlineStudioPlayer({ videoUrl, showName }) {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
 
+  // Reset guard if the video URL actually changes (new broadcast)
+  useEffect(() => {
+    playInitiatedRef.current = false;
+  }, [videoUrl]);
+
   const startPlay = () => {
+    if (playInitiatedRef.current) return; // prevent double-play
+    playInitiatedRef.current = true;
     setStarted(true);
     // wait for next tick so the <video> mounts
     setTimeout(() => {
@@ -82,6 +90,14 @@ function InlineStudioPlayer({ videoUrl, showName }) {
     if (!v) return;
     v.muted = !v.muted;
     setMuted(v.muted);
+  };
+
+  // Hard stop on end — never loop, never restart
+  const handleEnded = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    setPlaying(false);
   };
 
   return (
@@ -126,7 +142,9 @@ function InlineStudioPlayer({ videoUrl, showName }) {
             src={videoUrl}
             playsInline
             preload="auto"
+            loop={false}
             onClick={togglePlay}
+            onEnded={handleEnded}
             className="w-full h-full object-cover"
             style={{ transform: 'scale(1.18)' }}
           />
