@@ -4,9 +4,10 @@
 // When the record flips to "ready" (n8n callback), renders a single HTML5
 // <video> tag with the final 1080p MP4. Subscribes to realtime updates so the
 // player swaps in the video the moment n8n calls back.
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, Loader2 } from 'lucide-react';
+import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -24,12 +25,6 @@ function optimizeVideoUrl(url) {
 export default function BroadcastShow() {
   const [broadcast, setBroadcast] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const videoRef = useRef(null);
-
-  // Ensure the video stops when the page unmounts so audio never lingers.
-  useEffect(() => {
-    return () => { try { videoRef.current?.pause(); } catch (_) {} };
-  }, []);
 
   // Fetch the latest broadcast + subscribe to realtime updates so the
   // "processing" → "ready" transition is reflected without a refresh.
@@ -140,42 +135,13 @@ export default function BroadcastShow() {
     );
   }
 
+  // Use the same composited studio player as "Preview Studio Show" —
+  // studio background + Charlie box, not the raw avatar video fullscreen.
   return (
-    <div className="fixed inset-0 bg-black">
-      {/* Close button */}
-      <button
-        onClick={() => window.location.href = '/'}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105"
-        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}` }}
-        aria-label="Close broadcast"
-      >
-        <X className="w-5 h-5" style={{ color: GOLD }} />
-      </button>
-
-      {/* DNN LIVE bug */}
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1.5 rounded-lg"
-        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid rgba(212,175,55,0.4)` }}>
-        <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
-        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>LIVE</span>
-        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
-      </div>
-
-      {/* Single HTML5 <video> — final 1080p MP4 from n8n */}
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        poster={STUDIO_WITH_ANCHORS}
-        autoPlay
-        controls
-        playsInline
-        preload="auto"
-        style={{
-          width: '100vw',
-          height: '100vh',
-          objectFit: 'cover',
-          background: '#000',
-        }}
-      />
-    </div>
+    <DnnNewsBroadcastPlayer
+      videoUrl={videoUrl}
+      status="ready"
+      onClose={() => window.location.href = '/'}
+    />
   );
 }
