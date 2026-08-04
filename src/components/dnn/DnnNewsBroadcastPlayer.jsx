@@ -91,8 +91,6 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
     // New video (or first load) → reset guards and start fresh
     autoPlayAttemptedRef.current = true;
     playPromiseRef.current = null;
-    setPlaying(false);
-    setMuted(true);
     v.currentTime = 0;
 
     // Try UNMUTED autoplay first — the user already interacted by clicking
@@ -102,6 +100,10 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
     const p = v.play();
     if (p) {
       playPromiseRef.current = p;
+      // Optimistically set playing=true so the bottom controls show a Pause
+      // button immediately — not a Play button while the video auto-plays.
+      setPlaying(true);
+      setMuted(false);
       p.then(() => {
         playPromiseRef.current = null;
         setPlaying(true);
