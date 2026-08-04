@@ -179,10 +179,10 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
         <video
           ref={videoRef}
           src={videoUrl}
-          autoPlay
           playsInline
           preload="auto"
           onClick={togglePlay}
+          onEnded={() => setPlaying(false)}
           className="w-full h-full object-cover"
           style={{ transform: 'scale(1.18)' }}
         />
