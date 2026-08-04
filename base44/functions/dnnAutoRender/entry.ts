@@ -5,19 +5,25 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
  *
  * Scheduled every 5 minutes. Picks up DnnArticles approved in the Daily News
  * Library (production_status === 'approved_for_render', render_requested === true)
- * and kicks off the FULL studio broadcast pipeline:
+ * and kicks off the FULL studio broadcast pipeline using the SINGLE-MP4 path:
  *
- *   1. Creates 3 DnnNewsClip records (intro / qa / outro) linked via article_id.
- *   2. Renders 3 HeyGen clips:
- *        - Charlie open  (avatar on green screen #00FF00 for chroma key)
- *        - Bob body      (talking photo on dark #0d0d0d)
- *        - Charlie close (avatar on green screen #00FF00)
- *   3. Sets the article to production_status 'rendering'.
+ *   1. Builds the 3 scripts (opening / body / closing) from the article.
+ *   2. Creates ONE DnnBroadcast record (show_number auto-incremented) with the
+ *      3 scripts stored as intro_script / content_script / outro_script.
+ *   3. Dispatches a SINGLE multi-scene HeyGen render request
+ *      (3 video_inputs -> 1 stitched MP4). One HeyGen job id = one MP4.
+ *   4. Stores the heygenId on the broadcast, flips status -> 'rendering'.
+ *   5. Sets the article to production_status 'rendering'.
  *
- * dnnVideoPoller then:
- *   - downloads the 3 finished clips
- *   - triggers dnnCreatomateRender to composite the studio backdrop + bullet banner
- *   - downloads the final MP4 back onto the article (production_status 'complete')
+ * Downstream (n8n W2 / n8nBroadcastCallback / dnnVideoPoller):
+ *   - receives the HeyGen completion, sets videoUrl + status -> 'ready'
+ *   - dnnCompositeBroadcast bakes the studio background into the MP4 (Creatomate)
+ *   - status -> 'compositing' -> 'completed'
+ *
+ * CRITICAL DESIGN RULE: This function NEVER creates 3 separate clips or makes
+ * 3 separate HeyGen calls. All three scripts are blended into ONE MP4 via a
+ * single multi-scene HeyGen request, then composited with the studio background
+ * — matching what is posted on the 1DNN news page.
  */
 
 const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
@@ -29,8 +35,8 @@ const HEYGEN_API = 'https://api.heygen.com';
 function clean(s) {
   return (s || '')
     .replace(/[*_#`]/g, '')
-    .replace(/[\u2014\u2013]/g, ', ')   // em-dash / en-dash → comma (HeyGen TTS goes silent on dashes)
-    .replace(/\u2026/g, '. ')          // ellipsis → period
+    .replace(/[\u2014\u2013]/g, ', ')   // em-dash / en-dash -> comma (HeyGen TTS goes silent on dashes)
+    .replace(/\u2026/g, '. ')          // ellipsis -> period
     .replace(/[\u201c\u201d]/g, '"')   // smart double quotes
     .replace(/[\u2018\u2019]/g, "'")   // smart single quotes
     .replace(/[\u2022\u25CF\u00B7]/g, '') // bullet / middot
@@ -59,13 +65,13 @@ async function ensureScripts(base44, article, body) {
 ARTICLE HEADLINE: ${article.headline}
 ARTICLE BODY: ${body.slice(0, 1200)}
 
-FORMATTING RULE — CRITICAL: Never use em-dashes (—), en-dashes (–), smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
+FORMATTING RULE — CRITICAL: Never use em-dashes, en-dashes, smart quotes, or bullet characters in any script text. Use only plain commas, periods, and straight quotes. HeyGen's text-to-speech engine goes SILENT when it encounters em-dashes or smart punctuation.
 
 Write TWO spoken segments in plain spoken text (no markdown, no stage directions):
 
-1. OPENING (120-180 words): Charlie Simmons opens the broadcast. Begin exactly: "Good day from the DNN news desk — I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}." Then introduce this story naturally and toss to Bob Dyson, e.g. "For what this means if you're planning a move, let's bring in Bob Dyson. Bob — [specific question]?"
+1. OPENING (120-180 words): Charlie Simmons opens the broadcast. Begin exactly: "Good day from the DNN news desk, I'm Charlie Simmons, and this is your DNN Real Estate News broadcast for ${dateSpoken}." Then introduce this story naturally and toss to Bob Dyson, e.g. "For what this means if you're planning a move, let's bring in Bob Dyson. Bob, [specific question]?"
 
-2. CLOSING (40-60 words): Charlie thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full story is right below this broadcast — and if it affects your move, just ask. I'm Charlie Simmons. We'll see you next time."
+2. CLOSING (40-60 words): Charlie thanks Bob briefly, then closes exactly with: "That's your DNN brief. The full story is right below this broadcast, and if it affects your move, just ask. I'm Charlie Simmons. We'll see you next time."
 
 Return JSON with exactly: { "opening": "...", "closing": "..." }`,
       response_json_schema: {
@@ -89,37 +95,47 @@ Return JSON with exactly: { "opening": "...", "closing": "..." }`,
   return { opening, closing };
 }
 
-async function renderCharlie(heygenKey, script) {
-  const res = await fetch(`${HEYGEN_API}/v2/video/generate`, {
-    method: 'POST',
-    headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      video_inputs: [{
-        character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
-        voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: script, speed: 1.05 },
-        background: { type: 'color', value: '#0d0d0d' },
-      }],
-      dimension: { width: 1280, height: 720 },
-    }),
-  });
-  const data = await res.json();
-  return data?.data?.video_id || null;
-}
+/**
+ * Dispatch a SINGLE multi-scene HeyGen render request.
+ * 3 video_inputs (Charlie intro / Bob body / Charlie outro) -> 1 stitched MP4.
+ * Returns the HeyGen video_id, or null on failure.
+ */
+async function dispatchSingleRender(heygenKey, opening, body, closing) {
+  const video_inputs = [];
 
-async function renderBob(heygenKey, script) {
+  if (opening) {
+    video_inputs.push({
+      character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
+      voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: opening, speed: 1.05 },
+      background: { type: 'color', value: '#0d0d0d' },
+    });
+  }
+  if (body) {
+    video_inputs.push({
+      character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
+      voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: body, emotion: 'Excited', speed: 1.12 },
+      background: { type: 'color', value: '#0d0d0d' },
+    });
+  }
+  if (closing) {
+    video_inputs.push({
+      character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
+      voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: closing, speed: 1.05 },
+      background: { type: 'color', value: '#0d0d0d' },
+    });
+  }
+
+  if (video_inputs.length === 0) return null;
+
   const res = await fetch(`${HEYGEN_API}/v2/video/generate`, {
     method: 'POST',
     headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      video_inputs: [{
-        character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
-        voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: script, emotion: 'Excited', speed: 1.12 },
-        background: { type: 'color', value: '#0d0d0d' },
-      }],
+      video_inputs,
       dimension: { width: 1280, height: 720 },
     }),
   });
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
   return data?.data?.video_id || null;
 }
 
@@ -138,6 +154,10 @@ Deno.serve(async (req) => {
       20
     );
 
+    // Determine the next show number from the highest existing show_number
+    const latest = await base44.asServiceRole.entities.DnnBroadcast.list('-show_number', 1);
+    let nextShowNumber = (latest[0]?.show_number || 0) + 1;
+
     const results = [];
     for (const article of articles) {
       try {
@@ -154,53 +174,69 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // 1. Create 3 DnnNewsClip records linked to this article
-        const clips = await base44.asServiceRole.entities.DnnNewsClip.bulkCreate([
-          { kind: 'intro', faqIndex: 0, question: article.headline, article_id: article.id, charlieScript: opening, charlieStatus: 'not_started' },
-          { kind: 'qa', faqIndex: 1, question: article.headline, article_id: article.id, bobScript: body, bobStatus: 'not_started' },
-          { kind: 'outro', faqIndex: 2, question: article.headline, article_id: article.id, charlieScript: closing, charlieStatus: 'not_started' },
-        ]);
+        // 1. Create ONE DnnBroadcast record with the 3 scripts
+        const broadcast = await base44.asServiceRole.entities.DnnBroadcast.create({
+          show_name: `Show ${nextShowNumber}`,
+          show_number: nextShowNumber,
+          broadcast_date: new Date().toISOString().slice(0, 10),
+          headlines: [article.headline],
+          presenter: 'charlie',
+          format: 'solo',
+          intro_script: opening,
+          content_script: body,
+          outro_script: closing,
+          status: 'script_ready',
+        });
 
-        // 2. Render 3 HeyGen clips
-        const introId = await renderCharlie(HEYGEN_API_KEY, opening);
-        const bodyId = await renderBob(HEYGEN_API_KEY, body);
-        const outroId = await renderCharlie(HEYGEN_API_KEY, closing);
+        // 2. Dispatch a SINGLE multi-scene HeyGen render (3 scenes -> 1 stitched MP4)
+        const heygenVideoId = await dispatchSingleRender(HEYGEN_API_KEY, opening, body, closing);
 
-        const errors = [];
-        if (!introId) errors.push('intro render failed');
-        if (!bodyId) errors.push('body render failed');
-        if (!outroId) errors.push('outro render failed');
-
-        if (errors.length) {
+        if (!heygenVideoId) {
+          await base44.asServiceRole.entities.DnnBroadcast.update(broadcast.id, {
+            status: 'failed',
+            errorMessage: 'HeyGen single-MP4 dispatch failed',
+          });
           await base44.asServiceRole.entities.DnnArticle.update(article.id, {
             production_status: 'failed',
-            last_render_error: errors.join('; '),
+            last_render_error: 'HeyGen single-MP4 dispatch failed',
             render_requested: false,
           });
-          results.push({ id: article.id, error: errors.join('; ') });
+          results.push({ id: article.id, error: 'heygen dispatch failed' });
+          nextShowNumber++;
           continue;
         }
 
-        // 3. Store HeyGen IDs on the clips
-        await base44.asServiceRole.entities.DnnNewsClip.bulkUpdate([
-          { id: clips[0].id, charlieHeygenId: introId, charlieStatus: 'rendering' },
-          { id: clips[1].id, bobHeygenId: bodyId, bobStatus: 'rendering' },
-          { id: clips[2].id, charlieHeygenId: outroId, charlieStatus: 'rendering' },
-        ]);
+        // 3. Store the single HeyGen job id on the broadcast, flip to rendering
+        await base44.asServiceRole.entities.DnnBroadcast.update(broadcast.id, {
+          heygenId: heygenVideoId,
+          status: 'rendering',
+          errorMessage: null,
+        });
 
-        // 4. Move article into rendering
+        // 4. Move the article into rendering
         await base44.asServiceRole.entities.DnnArticle.update(article.id, {
           production_status: 'rendering',
           render_requested: false,
           last_render_error: null,
-          heygen_video_id: null,
-          video_url: null,
+          heygen_video_id: heygenVideoId,
         });
-        results.push({ id: article.id, headline: article.headline, status: 'rendering', clips: 3 });
+
+        results.push({
+          id: article.id,
+          headline: article.headline,
+          broadcast_id: broadcast.id,
+          show_number: nextShowNumber,
+          heygen_video_id: heygenVideoId,
+          status: 'rendering',
+          scenes: 3,
+          mp4: 1,
+        });
+        nextShowNumber++;
 
         await new Promise((r) => setTimeout(r, 800));
       } catch (e) {
         results.push({ id: article.id, error: e.message });
+        nextShowNumber++;
       }
     }
 
