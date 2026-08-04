@@ -223,7 +223,10 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
       if (!accountsData.data || accountsData.data.length === 0) {
         results.facebook = { success: false, error: 'No Facebook Pages found' };
       } else {
-        const page = accountsData.data[0];
+        // Prefer the DNN News page; fall back to the first available page
+        const page = accountsData.data.find(p =>
+          (p.name || '').toLowerCase().includes('dnn')
+        ) || accountsData.data[0];
 
         // Upload video to the page via file_url (Facebook fetches it)
         const fbVideoRes = await fetch(`https://graph.facebook.com/v25.0/${page.id}/videos`, {
