@@ -4,14 +4,15 @@ import { base44 } from '@/api/base44Client';
 import { Play, Pause, Volume2, VolumeX, Radio } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a25febb8d_Screenshot2026-08-01at31026PM.png';
+// Exact same studio background used by DnnNewsBroadcastPlayer (Preview Studio Show)
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 /**
  * FeaturedBroadcast — the composited DNN studio show, embedded inline on
- * the News page. Shows the network studio background with the Charlie video
- * box centered in the lower area (matching the "Preview Studio Show" look).
- * No poster, no popup — the actual composite, playing inline.
+ * the News page. Uses the EXACT same studio background + Charlie box layout
+ * as the "Preview Studio Show" (DnnNewsBroadcastPlayer). Click-to-play only —
+ * no autoplay, so no double audio.
  */
 export default function FeaturedBroadcast() {
   const { data: broadcasts = [] } = useQuery({
@@ -45,26 +46,29 @@ function InlineStudioPlayer({ videoUrl, showName }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
-  useEffect(() => {
-    if (!started) return;
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    v.play().then(() => {
-      setPlaying(true);
-      v.muted = false;
-      setMuted(false);
-    }).catch(() => {
-      v.muted = true;
-      setMuted(true);
-      v.play().then(() => setPlaying(true)).catch(() => {});
-    });
-  }, [started]);
-
-  // Pause when component unmounts (prevents orphaned audio)
+  // Pause on unmount so audio never lingers
   useEffect(() => {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
+
+  const startPlay = () => {
+    setStarted(true);
+    // wait for next tick so the <video> mounts
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.muted = true;
+      v.play().then(() => {
+        setPlaying(true);
+        v.muted = false;
+        setMuted(false);
+      }).catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().then(() => setPlaying(true)).catch(() => {});
+      });
+    }, 50);
+  };
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -83,8 +87,8 @@ function InlineStudioPlayer({ videoUrl, showName }) {
   return (
     <div className="relative w-full overflow-hidden rounded-2xl"
       style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-      {/* Network studio background */}
-      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      {/* Network studio background — same image as Preview Studio Show */}
+      <img src={STUDIO_BG_URL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
 
       {/* DNN LIVE bug */}
       <div className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
@@ -127,7 +131,7 @@ function InlineStudioPlayer({ videoUrl, showName }) {
             style={{ transform: 'scale(1.18)' }}
           />
         ) : (
-          <button onClick={() => setStarted(true)} aria-label="Play studio show"
+          <button onClick={startPlay} aria-label="Play studio show"
             className="w-full h-full flex items-center justify-center group"
             style={{ background: '#000' }}>
             <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
