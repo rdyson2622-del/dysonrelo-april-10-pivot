@@ -1,9 +1,6 @@
-// BroadcastShow — public full-screen broadcast player (no auth required)
-// Plays the latest DnnBroadcast. While a broadcast is "processing" (handed off
-// to n8n), shows a clean "Processing Broadcast in Background..." indicator.
-// When the record flips to "ready" (n8n callback), renders a single HTML5
-// <video> tag with the final 1080p MP4. Subscribes to realtime updates so the
-// player swaps in the video the moment n8n calls back.
+// BroadcastShow — public full-screen broadcast player (no auth required).
+// Renders the composited DNN studio show (DnnNewsBroadcastPlayer) for the
+// latest ready broadcast. Shows a "Processing..." indicator while n8n renders.
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X, Loader2 } from 'lucide-react';
@@ -11,7 +8,6 @@ import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
-const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a25febb8d_Screenshot2026-08-01at31026PM.png';
 
 // Cloudinary 4K broadcast videos are huge (40MB+) and the audio track buffers
