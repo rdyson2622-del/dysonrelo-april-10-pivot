@@ -90,7 +90,15 @@
     },
     "videoUrl": {
       "type": "string",
-      "description": "Permanent CDN URL of the final stitched MP4 (all 3 scenes combined) \u2014 set by n8n Workflow 2 after cloud upload"
+      "description": "Permanent CDN URL of the final stitched MP4 (all 3 scenes combined) \u2014 set by n8n Workflow 2 after cloud upload. This is the RAW avatar video with no studio background."
+    },
+    "compositedVideoUrl": {
+      "type": "string",
+      "description": "Final MP4 with the DNN studio background BAKED IN (studio bg + anchor box) via Creatomate. This is the version distributed to LinkedIn/Facebook/Instagram so social posts show the full studio set, not the raw avatar. Value is 'creatomate:pending:<renderId>' while the Creatomate render is in progress."
+    },
+    "compositedRenderId": {
+      "type": "string",
+      "description": "Creatomate render job id for the studio composite (tracked so the poller can finish the bake)"
     },
     "status": {
       "type": "string",
@@ -100,11 +108,12 @@
         "rendering",
         "processing",
         "ready",
+        "compositing",
         "completed",
         "failed"
       ],
       "default": "draft",
-      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched (single multi-scene job), processing=awaiting callback, ready=MP4 uploaded, completed=Published, failed=error"
+      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched (single multi-scene job), processing=awaiting callback, ready=MP4 uploaded, compositing=Creatomate baking studio bg, completed=Published, failed=error"
     },
     "prompt_topics": {
       "type": "string",

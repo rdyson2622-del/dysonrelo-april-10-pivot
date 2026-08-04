@@ -13,8 +13,50 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
   const queryClient = useQueryClient();
   const [posting, setPosting] = useState(null);
   const [result, setResult] = useState(null);
+  const [baking, setBaking] = useState(false);
 
   const distribution = show.distribution || [];
+
+  // Studio composite state
+  const composited = show.compositedVideoUrl;
+  const isBaking = composited && String(composited).startsWith('creatomate:pending:');
+  const hasComposited = composited && !isBaking;
+
+  const handleBakeStudio = async () => {
+    setBaking(true);
+    setResult(null);
+    try {
+      const res = await base44.functions.invoke('dnnCompositeBroadcast', {
+        broadcast_id: show.id,
+        action: 'start',
+      });
+      if (res.data?.renderId) {
+        setResult({ success: true, msg: 'Studio bake started — Creatomate is rendering. Check back in ~2 min.' });
+        onRefresh();
+        // Auto-poll after 90s
+        setTimeout(async () => {
+          try {
+            const check = await base44.functions.invoke('dnnCompositeBroadcast', {
+              broadcast_id: show.id,
+              action: 'check',
+              renderId: res.data.renderId,
+            });
+            if (check.data?.status === 'succeeded') {
+              setResult({ success: true, msg: 'Studio show baked! Video now has the studio backdrop.' });
+              onRefresh();
+            }
+          } catch (_) {}
+          setBaking(false);
+        }, 90000);
+      } else {
+        setResult({ success: false, msg: res.data?.error || 'Bake failed to start' });
+        setBaking(false);
+      }
+    } catch (e) {
+      setResult({ success: false, msg: e.message });
+      setBaking(false);
+    }
+  };
 
   const getDist = (channel) => distribution.find(d => d.channel === channel);
 
@@ -36,7 +78,7 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
     try {
       const res = await base44.functions.invoke('postToLinkedInV2', {
         text: `📡 DNN Intelligence Bureau\n\n${show.headlines?.[0] || 'Daily Real Estate News Broadcast'}\n\nCharlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.\n\n🔔 Watch the full broadcast: https://1dnn.com/dnn-news?autoplay=1\nSubscribe for free: https://1dnn.com/subscribe`,
-        videoUrl: show.videoUrl,
+        videoUrl: hasComposited ? show.compositedVideoUrl : show.videoUrl,
         imageUrl: DNN_STUDIO_IMAGE,
         title: show.headlines?.[0] || 'DNN Broadcast',
         description: "Charlie Simmons and Bob Dyson break down today's top relocation and real estate intelligence.",
@@ -187,6 +229,31 @@ export default function DistributionPanel({ show, onRefresh, onAgentDistribute }
 
   return (
     <div>
+      {/* Studio Bake — bakes the studio background INTO the MP4 via Creatomate */}
+      <div className="mb-3 rounded-lg p-3" style={{ background: hasComposited ? 'rgba(74,222,128,0.06)' : 'rgba(212,175,55,0.06)', border: `1px solid ${hasComposited ? 'rgba(74,222,128,0.25)' : 'rgba(212,175,55,0.25)'}` }}>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Radio className="w-4 h-4" style={{ color: GOLD }} />
+            <span className="text-xs font-bold text-white">Studio Backdrop Bake</span>
+          </div>
+          {hasComposited && <CheckCircle className="w-3.5 h-3.5 text-green-400" />}
+          {isBaking && <RefreshCw className="w-3.5 h-3.5 text-yellow-400 animate-spin" />}
+        </div>
+        <p className="text-[10px] text-slate-400 mb-2 leading-relaxed">
+          {hasComposited
+            ? 'Studio background baked into the MP4. Social posts will show the full studio set.'
+            : isBaking
+            ? 'Creatomate is baking the studio background into the video…'
+            : 'The raw video has no studio backdrop. Bake it in before posting to social so LinkedIn/Facebook get the full studio show.'}
+        </p>
+        <button onClick={handleBakeStudio} disabled={baking || isBaking || hasComposited}
+          className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[10px] font-bold text-black transition-all disabled:opacity-50"
+          style={{ background: baking || isBaking ? '#666' : hasComposited ? 'rgba(74,222,128,0.2)' : GOLD }}>
+          {baking || isBaking ? <RefreshCw className="w-3 h-3 animate-spin" /> : hasComposited ? <CheckCircle className="w-3 h-3" /> : <Send className="w-3 h-3" />}
+          {baking || isBaking ? 'Baking…' : hasComposited ? 'Baked' : 'Bake Studio Show'}
+        </button>
+      </div>
+
       <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500 mb-3">Distribution & Posting Progress:</p>
       <div className="grid grid-cols-2 gap-2">
         {channels.map(ch => {

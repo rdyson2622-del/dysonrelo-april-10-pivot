@@ -31,11 +31,16 @@ export default async function(req) {
     if (!broadcast) {
       return Response.json({ error: 'Broadcast not found' }, { status: 404 });
     }
-    if (!broadcast.videoUrl || String(broadcast.videoUrl).startsWith('heygen:pending:')) {
+    const hasComposited = broadcast.compositedVideoUrl && !String(broadcast.compositedVideoUrl).startsWith('creatomate:pending:');
+    const hasRaw = broadcast.videoUrl && !String(broadcast.videoUrl).startsWith('heygen:pending:');
+    if (!hasComposited && !hasRaw) {
       return Response.json({ error: 'Broadcast has no finished video URL yet' }, { status: 400 });
     }
 
-    const videoUrl = broadcast.videoUrl;
+    // Prefer the studio-composited MP4 (studio bg baked in) for social posts.
+    // Fall back to the raw avatar MP4 only if the composite isn't ready yet.
+    const videoUrl = hasComposited ? broadcast.compositedVideoUrl : broadcast.videoUrl;
+    const usedComposited = Boolean(hasComposited);
     const headlineText = broadcast.headlines?.length
       ? broadcast.headlines.join(' | ')
       : (broadcast.prompt_topics || 'Daily Real Estate Intelligence');
