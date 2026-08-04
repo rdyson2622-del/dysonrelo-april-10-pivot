@@ -54,42 +54,35 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, st
 // ---------------------------------------------------------------------------
 function SingleVideoPlayer({ videoUrl, status, onClose }) {
   const videoRef = useRef(null);
-  const autoPlayAttemptedRef = useRef(false);
   const playPromiseRef = useRef(null);
-  const lastVideoUrlRef = useRef(null);
+  const hasPlayedRef = useRef(false); // strict mount-once guard
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true); // muted-first for browser autoplay policy
 
   const isProcessing = status === 'processing' && !videoUrl;
   const canPlay = Boolean(videoUrl) && status !== 'processing';
 
-  // Ensure audio stops on unmount
+  // Ensure audio stops on unmount — no ghost audio after navigating away
   useEffect(() => {
-    return () => { try { videoRef.current?.pause(); } catch (_) {} };
+    return () => {
+      try { videoRef.current?.pause(); } catch (_) {}
+      hasPlayedRef.current = false;
+    };
   }, []);
 
-  // AUTOPLAY with guardrails:
-  //  1. Muted-first per browser autoplay policy, then surface "tap for sound".
-  //  2. autoPlayAttemptedRef + playPromiseRef ensure play() is called exactly
-  //     ONCE per video — no racing play() promises = no double audio.
-  //  3. loop={false} + onEnded pauses and does NOT restart = no looping.
+  // AUTOPLAY — called exactly ONCE per mount. The parent uses key={videoUrl}
+  // so any URL change fully remounts this component (old <video> unmounts →
+  // audio stops, fresh hasPlayedRef starts false). No realtime subscription
+  // re-triggers this effect. No racing play() promises. No echo.
   useEffect(() => {
     if (!canPlay) return;
+    if (hasPlayedRef.current) return; // strict: play only once per mount
+    hasPlayedRef.current = true;
 
     const v = videoRef.current;
     if (!v) return;
 
-    // GUARD: Don't restart if this same video is already playing.
-    // Prevents the "duplicated run" glitch — if a parent re-render
-    // (e.g. realtime subscription) re-triggers this effect, we skip
-    // the currentTime=0 + play() and let the existing playback continue.
-    if (lastVideoUrlRef.current === videoUrl && !v.paused && !v.ended) {
-      return;
-    }
-    lastVideoUrlRef.current = videoUrl;
-
-    // New video (or first load) → reset guards and start fresh
-    autoPlayAttemptedRef.current = true;
+    // Start fresh — reset play promise and seek to beginning
     playPromiseRef.current = null;
     v.currentTime = 0;
 

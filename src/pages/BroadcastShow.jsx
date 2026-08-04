@@ -22,15 +22,14 @@ export default function BroadcastShow() {
   const [broadcast, setBroadcast] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
-  // Fetch the latest broadcast + subscribe to realtime updates so the
-  // "processing" → "ready" transition is reflected without a refresh.
+  // Fetch the latest ready broadcast ONCE on mount. No realtime subscription —
+  // the subscription was re-triggering the autoplay effect on every entity
+  // update (poller writing compositedVideoUrl, distribution, etc.), causing
+  // the audio to echo / play identically twice. A single fetch is enough.
   useEffect(() => {
-    let unsubscribe = null;
     (async () => {
       try {
         const broadcasts = await base44.entities.DnnBroadcast.list('-updated_date', 20);
-        // Prefer a "ready" broadcast with a video, otherwise show the latest
-        // "processing" one (if any) so the user sees the in-progress state.
         const ready = broadcasts.find(b =>
           (b.status === 'ready' || b.status === 'completed') &&
           b.videoUrl &&
@@ -39,8 +38,6 @@ export default function BroadcastShow() {
         if (ready) {
           setBroadcast(ready);
         } else {
-          // No playable broadcast — send viewers to the news feed so they
-          // always get real content instead of a stuck processing wheel.
           window.location.href = '/dnn-news';
           return;
         }
@@ -51,20 +48,6 @@ export default function BroadcastShow() {
         setLoaded(true);
       }
     })();
-
-    // Realtime: flip to the video as soon as n8n calls back
-    unsubscribe = base44.entities.DnnBroadcast.subscribe((event) => {
-      if (event?.type === 'update' && event?.data) {
-        const b = event.data;
-        if (b.status === 'ready' && b.videoUrl) {
-          setBroadcast(b);
-        } else if (b.status === 'processing') {
-          setBroadcast(prev => prev ? { ...prev, status: 'processing' } : b);
-        }
-      }
-    });
-
-    return () => { if (unsubscribe) unsubscribe(); };
   }, []);
 
   const isProcessing = broadcast?.status === 'processing';
@@ -131,10 +114,12 @@ export default function BroadcastShow() {
     );
   }
 
-  // Use the same composited studio player as "Preview Studio Show" —
-  // studio background + Charlie box, not the raw avatar video fullscreen.
+  // key={videoUrl} forces a FULL remount if the URL ever changes — the old
+  // <video> unmounts (audio stops immediately) and a fresh player mounts.
+  // This eliminates any possibility of overlapping audio / echo.
   return (
     <DnnNewsBroadcastPlayer
+      key={videoUrl}
       videoUrl={videoUrl}
       status="ready"
       onClose={() => window.location.href = '/'}
