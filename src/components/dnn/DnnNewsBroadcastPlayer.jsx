@@ -84,18 +84,30 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
 
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
     v.currentTime = 0;
+
+    // Try UNMUTED autoplay first — the user already interacted by clicking
+    // "Preview Studio Show", so the browser allows audio. Only fall back to
+    // muted if the browser blocks it (rare on user-initiated opens).
+    v.muted = false;
     const p = v.play();
     if (p) {
       playPromiseRef.current = p;
       p.then(() => {
         playPromiseRef.current = null;
         setPlaying(true);
+        setMuted(false);
       }).catch(() => {
-        // Muted autoplay blocked (very rare) — user can tap the play button
+        // Unmuted autoplay blocked — fall back to muted + "Tap for Sound"
         playPromiseRef.current = null;
-        setPlaying(false);
+        v.muted = true;
+        setMuted(true);
+        const p2 = v.play();
+        if (p2) {
+          playPromiseRef.current = p2;
+          p2.then(() => { playPromiseRef.current = null; setPlaying(true); })
+            .catch(() => { playPromiseRef.current = null; setPlaying(false); });
+        }
       });
     }
   }, [canPlay, videoUrl]);
@@ -219,7 +231,6 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           playsInline
           preload="auto"
           loop={false}
-          muted
           onClick={togglePlay}
           onEnded={handleEnded}
           className="w-full h-full object-cover"
