@@ -18,13 +18,22 @@ export default function FeaturedBroadcast() {
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['featuredNewsBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-show_number', 20),
+    // Prevent window-focus refetches from changing the video URL mid-playback,
+    // which was causing the duplicate "second run" over the news section.
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   const featured = broadcasts.find(b =>
-    b.videoUrl && (b.distribution || []).some(d => d.channel === 'in_app_news' && d.status === 'sent')
+    (b.compositedVideoUrl || b.videoUrl) && (b.distribution || []).some(d => d.channel === 'in_app_news' && d.status === 'sent')
   );
 
   if (!featured) return null;
+
+  // Prioritize composited (studio backdrop baked in). Filter out pending placeholders.
+  const compUrl = featured.compositedVideoUrl;
+  const playUrl = (compUrl && !String(compUrl).startsWith('creatomate:pending:')) ? compUrl : featured.videoUrl;
+  if (!playUrl) return null;
 
   return (
     <div className="mb-8">
@@ -32,7 +41,11 @@ export default function FeaturedBroadcast() {
         <Radio className="w-4 h-4" style={{ color: GOLD }} />
         <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Featured Broadcast</span>
       </div>
-      <InlineStudioPlayer key={featured.id} videoUrl={featured.videoUrl} showName={featured.show_name} />
+      {/* key={playUrl} forces a FULL remount when the URL changes — the old
+          <video> unmounts (audio stops) and a fresh player mounts. This
+          eliminates the race condition where a query refetch reset the
+          play guard mid-playback and caused a duplicate "second run". */}
+      <InlineStudioPlayer key={playUrl} videoUrl={playUrl} showName={featured.show_name} />
       {featured.headlines?.length > 0 && (
         <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headlines[0]}</p>
       )}
@@ -52,13 +65,16 @@ function InlineStudioPlayer({ videoUrl, showName }) {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
 
-  // Reset guard if the video URL actually changes (new broadcast)
-  useEffect(() => {
-    playInitiatedRef.current = false;
-  }, [videoUrl]);
+  // NOTE: No useEffect to reset playInitiatedRef on videoUrl change.
+  // The parent uses key={playUrl}, so a URL change fully remounts this
+  // component (old <video> unmounts → audio stops, fresh state starts).
+  // This eliminates the race condition that caused duplicate playback.
 
   const startPlay = () => {
     if (playInitiatedRef.current) return; // prevent double-play
+    // Hard guard: if a video is somehow already playing, don't start another
+    const existing = videoRef.current;
+    if (existing && !existing.paused && !existing.ended) return;
     playInitiatedRef.current = true;
     setStarted(true);
     // wait for next tick so the <video> mounts
