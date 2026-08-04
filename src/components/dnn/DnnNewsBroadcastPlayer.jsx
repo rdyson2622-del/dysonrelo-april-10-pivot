@@ -56,6 +56,7 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
   const videoRef = useRef(null);
   const autoPlayAttemptedRef = useRef(false);
   const playPromiseRef = useRef(null);
+  const lastVideoUrlRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true); // muted-first for browser autoplay policy
 
@@ -73,17 +74,25 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
   //     ONCE per video — no racing play() promises = no double audio.
   //  3. loop={false} + onEnded pauses and does NOT restart = no looping.
   useEffect(() => {
-    // New video → reset guards
-    autoPlayAttemptedRef.current = false;
-    playPromiseRef.current = null;
-    setPlaying(false);
-    setMuted(true);
-
     if (!canPlay) return;
-    autoPlayAttemptedRef.current = true;
 
     const v = videoRef.current;
     if (!v) return;
+
+    // GUARD: Don't restart if this same video is already playing.
+    // Prevents the "duplicated run" glitch — if a parent re-render
+    // (e.g. realtime subscription) re-triggers this effect, we skip
+    // the currentTime=0 + play() and let the existing playback continue.
+    if (lastVideoUrlRef.current === videoUrl && !v.paused && !v.ended) {
+      return;
+    }
+    lastVideoUrlRef.current = videoUrl;
+
+    // New video (or first load) → reset guards and start fresh
+    autoPlayAttemptedRef.current = true;
+    playPromiseRef.current = null;
+    setPlaying(false);
+    setMuted(true);
     v.currentTime = 0;
 
     // Try UNMUTED autoplay first — the user already interacted by clicking
