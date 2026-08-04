@@ -41,10 +41,12 @@ export default function FeaturedBroadcast() {
 
 function InlineStudioPlayer({ videoUrl, showName }) {
   const videoRef = useRef(null);
+  const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
+    if (!started) return;
     const v = videoRef.current;
     if (!v) return;
     v.muted = true;
@@ -57,7 +59,12 @@ function InlineStudioPlayer({ videoUrl, showName }) {
       setMuted(true);
       v.play().then(() => setPlaying(true)).catch(() => {});
     });
-  }, [videoUrl]);
+  }, [started]);
+
+  // Pause when component unmounts (prevents orphaned audio)
+  useEffect(() => {
+    return () => { try { videoRef.current?.pause(); } catch (_) {} };
+  }, []);
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -96,8 +103,7 @@ function InlineStudioPlayer({ videoUrl, showName }) {
       </div>
 
       {/* Charlie video box — centered horizontally, lower area, over studio bg */}
-      <div className="absolute overflow-hidden cursor-pointer"
-        onClick={togglePlay}
+      <div className="absolute overflow-hidden"
         style={{
           width: 'clamp(200px, 34%, 380px)',
           aspectRatio: '16/9',
@@ -110,19 +116,30 @@ function InlineStudioPlayer({ videoUrl, showName }) {
           background: '#000',
           zIndex: 10,
         }}>
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          playsInline
-          preload="auto"
-          onClick={togglePlay}
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.18)' }}
-        />
+        {started ? (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            playsInline
+            preload="auto"
+            onClick={togglePlay}
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.18)' }}
+          />
+        ) : (
+          <button onClick={() => setStarted(true)} aria-label="Play studio show"
+            className="w-full h-full flex items-center justify-center group"
+            style={{ background: '#000' }}>
+            <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+              <Play className="w-6 h-6 ml-1 text-black" fill="black" />
+            </div>
+          </button>
+        )}
       </div>
 
       {/* Tap for sound */}
-      {playing && muted && (
+      {started && playing && muted && (
         <button onClick={toggleMute} aria-label="Tap for sound"
           className="absolute inset-0 flex items-center justify-center z-30">
           <span className="flex flex-col items-center gap-2 px-6 py-4 rounded-lg"
@@ -133,20 +150,22 @@ function InlineStudioPlayer({ videoUrl, showName }) {
         </button>
       )}
 
-      {/* Bottom controls */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-3 z-20"
-        style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
-        <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
-          className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ color: GOLD }}>
-          {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-        </button>
-        <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
-          className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-          style={{ color: GOLD }}>
-          {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-        </button>
-      </div>
+      {/* Bottom controls — only after started */}
+      {started && (
+        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-6 px-6 py-3 z-20"
+          style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}>
+          <button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+          </button>
+          <button onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'}
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ color: GOLD }}>
+            {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
