@@ -54,32 +54,36 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, st
 // ---------------------------------------------------------------------------
 function SingleVideoPlayer({ videoUrl, status, onClose }) {
   const videoRef = useRef(null);
+  const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
   const isProcessing = status === 'processing' && !videoUrl;
   const canPlay = Boolean(videoUrl) && status !== 'processing';
 
-  useEffect(() => {
-    if (!canPlay) return;
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = true;
-    v.play().then(() => {
-      setPlaying(true);
-      v.muted = false;
-      setMuted(false);
-    }).catch(() => {
-      v.muted = true;
-      setMuted(true);
-      v.play().then(() => setPlaying(true)).catch(() => {});
-    });
-  }, [canPlay, videoUrl]);
-
   // Ensure audio stops on unmount
   useEffect(() => {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
+
+  // Click-to-play only — no autoplay, so no double audio from racing play() calls.
+  const startPlay = () => {
+    setStarted(true);
+    setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.muted = true;
+      v.play().then(() => {
+        setPlaying(true);
+        v.muted = false;
+        setMuted(false);
+      }).catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().then(() => setPlaying(true)).catch(() => {});
+      });
+    }, 50);
+  };
 
   const togglePlay = () => {
     const v = videoRef.current;
@@ -161,8 +165,7 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
       {/* Avatar video in a black-backed framed box over the studio set.
           Black background covers the lime-green chroma-key areas per design rule. */}
       <div
-        className="absolute cursor-pointer overflow-hidden"
-        onClick={togglePlay}
+        className="absolute overflow-hidden"
         style={{
           width: 'clamp(220px, 30vw, 420px)',
           aspectRatio: '16/9',
@@ -176,16 +179,27 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           zIndex: 10,
         }}
       >
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          playsInline
-          preload="auto"
-          onClick={togglePlay}
-          onEnded={() => setPlaying(false)}
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.18)' }}
-        />
+        {started ? (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            playsInline
+            preload="auto"
+            onClick={togglePlay}
+            onEnded={() => setPlaying(false)}
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.18)' }}
+          />
+        ) : (
+          <button onClick={startPlay} aria-label="Play broadcast"
+            className="w-full h-full flex items-center justify-center group"
+            style={{ background: '#000' }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+              <Play className="w-7 h-7 ml-1 text-black" fill="black" />
+            </div>
+          </button>
+        )}
       </div>
 
       {/* Tap for sound overlay when muted but playing */}
