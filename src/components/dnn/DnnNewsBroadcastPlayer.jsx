@@ -54,9 +54,10 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, st
 // ---------------------------------------------------------------------------
 function SingleVideoPlayer({ videoUrl, status, onClose }) {
   const videoRef = useRef(null);
-  const [started, setStarted] = useState(false);
+  const autoPlayAttemptedRef = useRef(false);
+  const playPromiseRef = useRef(null);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true); // muted-first for browser autoplay policy
 
   const isProcessing = status === 'processing' && !videoUrl;
   const canPlay = Boolean(videoUrl) && status !== 'processing';
@@ -66,29 +67,54 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
     return () => { try { videoRef.current?.pause(); } catch (_) {} };
   }, []);
 
-  // Click-to-play only — no autoplay, so no double audio from racing play() calls.
-  const startPlay = () => {
-    setStarted(true);
-    setTimeout(() => {
-      const v = videoRef.current;
-      if (!v) return;
-      v.muted = true;
-      v.play().then(() => {
+  // AUTOPLAY with guardrails:
+  //  1. Muted-first per browser autoplay policy, then surface "tap for sound".
+  //  2. autoPlayAttemptedRef + playPromiseRef ensure play() is called exactly
+  //     ONCE per video — no racing play() promises = no double audio.
+  //  3. loop={false} + onEnded pauses and does NOT restart = no looping.
+  useEffect(() => {
+    // New video → reset guards
+    autoPlayAttemptedRef.current = false;
+    playPromiseRef.current = null;
+    setPlaying(false);
+    setMuted(true);
+
+    if (!canPlay) return;
+    autoPlayAttemptedRef.current = true;
+
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.currentTime = 0;
+    const p = v.play();
+    if (p) {
+      playPromiseRef.current = p;
+      p.then(() => {
+        playPromiseRef.current = null;
         setPlaying(true);
-        v.muted = false;
-        setMuted(false);
       }).catch(() => {
-        v.muted = true;
-        setMuted(true);
-        v.play().then(() => setPlaying(true)).catch(() => {});
+        // Muted autoplay blocked (very rare) — user can tap the play button
+        playPromiseRef.current = null;
+        setPlaying(false);
       });
-    }, 50);
+    }
+  }, [canPlay, videoUrl]);
+
+  const safePlay = () => {
+    const v = videoRef.current;
+    if (!v || playPromiseRef.current) return; // never stack play() calls
+    const p = v.play();
+    if (p) {
+      playPromiseRef.current = p;
+      p.then(() => { playPromiseRef.current = null; setPlaying(true); })
+       .catch(() => { playPromiseRef.current = null; });
+    }
   };
 
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
-    if (v.paused) { v.play(); setPlaying(true); }
+    if (v.paused) { safePlay(); }
     else { v.pause(); setPlaying(false); }
   };
 
@@ -97,6 +123,14 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
     if (!v) return;
     v.muted = !v.muted;
     setMuted(v.muted);
+  };
+
+  // Hard stop on end — never loop, never restart
+  const handleEnded = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    setPlaying(false);
   };
 
   // Processing indicator
@@ -179,21 +213,22 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           zIndex: 10,
         }}
       >
-        {started ? (
-          <video
-            ref={videoRef}
-            src={videoUrl}
-            playsInline
-            preload="auto"
-            onClick={togglePlay}
-            onEnded={() => setPlaying(false)}
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(1.18)' }}
-          />
-        ) : (
-          <button onClick={startPlay} aria-label="Play broadcast"
-            className="w-full h-full flex items-center justify-center group"
-            style={{ background: '#000' }}>
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          playsInline
+          preload="auto"
+          loop={false}
+          muted
+          onClick={togglePlay}
+          onEnded={handleEnded}
+          className="w-full h-full object-cover"
+          style={{ transform: 'scale(1.18)' }}
+        />
+        {!playing && (
+          <button onClick={safePlay} aria-label="Play broadcast"
+            className="absolute inset-0 w-full h-full flex items-center justify-center group"
+            style={{ background: 'rgba(0,0,0,0.45)' }}>
             <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
               style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
               <Play className="w-7 h-7 ml-1 text-black" fill="black" />
