@@ -245,16 +245,6 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
           className="w-full h-full object-cover"
           style={{ transform: 'scale(1.18)' }}
         />
-        {!playing && (
-          <button onClick={safePlay} aria-label="Play broadcast"
-            className="absolute inset-0 w-full h-full flex items-center justify-center group"
-            style={{ background: 'rgba(0,0,0,0.45)' }}>
-            <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
-              <Play className="w-7 h-7 ml-1 text-black" fill="black" />
-            </div>
-          </button>
-        )}
       </div>
 
       {/* Tap for sound overlay when muted but playing */}
