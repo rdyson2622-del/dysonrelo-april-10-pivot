@@ -493,6 +493,7 @@ function SendShowModal({ audienceId, audienceName, eligibleCount, onClose }) {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
+  const [firstTouch, setFirstTouch] = useState(false);
 
   React.useEffect(() => {
     base44.entities.DnnBroadcast.list('-created_date', 20).then(b => {
@@ -508,6 +509,7 @@ function SendShowModal({ audienceId, audienceName, eligibleCount, onClose }) {
       const res = await base44.functions.invoke('dnnAudienceDistribute', {
         broadcast_id: broadcastId,
         audience_id: audienceId,
+        mode: firstTouch ? 'first_touch' : 'broadcast',
       });
       setResult(res);
     } catch (e) {
@@ -548,10 +550,31 @@ function SendShowModal({ audienceId, audienceName, eligibleCount, onClose }) {
             </select>
           )}
         </div>
+        <label className="flex items-start gap-3 rounded-lg p-3 cursor-pointer transition-all" style={{
+          background: firstTouch ? `${GOLD}1a` : '#1a1a1a',
+          border: `1px solid ${firstTouch ? GOLD : '#444'}`,
+        }}>
+          <input
+            type="checkbox"
+            checked={firstTouch}
+            onChange={e => setFirstTouch(e.target.checked)}
+            className="mt-0.5 w-4 h-4 accent-yellow-500"
+          />
+          <div>
+            <p className="text-sm font-semibold" style={{ color: firstTouch ? GOLD : '#fff' }}>
+              ✉️ First Touch (Cold Intro)
+            </p>
+            <p className="text-xs mt-0.5" style={{ color: '#aaa' }}>
+              Sends the saved cold-intro email template (with [First Name]/[Company Name] merged per contact) instead of the broadcast link. Only contacts who haven't received anything yet are emailed.
+            </p>
+          </div>
+        </label>
         <div className="rounded-lg p-3 text-sm" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
           <p style={{ color: '#888' }} className="mb-1">
             <Mail className="w-3.5 h-3.5 inline mr-1" style={{ color: GOLD }} />
-            Each contact receives a personalized email via your connected Gmail account with a link to watch the broadcast.
+            {firstTouch
+              ? 'Each new contact receives the cold-intro email via your connected Gmail account.'
+              : 'Each contact receives a personalized email via your connected Gmail account with a link to watch the broadcast.'}
           </p>
         </div>
         {result && (

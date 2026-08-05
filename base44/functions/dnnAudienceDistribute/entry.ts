@@ -64,6 +64,20 @@ export default async function(req) {
     }, '-created_date', 500);
 
     const eligible = contacts.filter(c => c.email && c.consent_status !== 'declined');
+    const useFirstTouch = body.mode === 'first_touch' && Boolean(audience.first_touch_body);
+    // First-touch only goes to contacts who haven't received anything yet
+    const loopContacts = useFirstTouch
+      ? eligible.filter(c => !c.sends_received || c.sends_received === 0)
+      : eligible;
+    if (useFirstTouch && loopContacts.length === 0) {
+      return Response.json({
+        success: false,
+        error: 'All eligible contacts have already received at least one send — no first-touch candidates remain',
+        audience_name: audience.audience_name,
+        total_contacts: contacts.length,
+        eligible: eligible.length,
+      }, { status: 400 });
+    }
     if (eligible.length === 0) {
       return Response.json({
         success: false,
@@ -87,15 +101,18 @@ export default async function(req) {
       : (broadcast.prompt_topics || 'Daily Real Estate Intelligence');
     const showName = broadcast.show_name || `Show ${broadcast.show_number || ''}`;
 
-    const subject = body.subject || `DNN Intelligence — ${showName}: ${headlineText.slice(0, 80)}`;
+    let subject = body.subject || (useFirstTouch && audience.first_touch_subject
+      ? audience.first_touch_subject
+      : `DNN Intelligence — ${showName}: ${headlineText.slice(0, 80)}`);
     const preheader = body.preheader || 'Dyson & Dyson Real Estate Concierge — the only news network that reports what happened AND tells you what to do about it.';
 
     const distribution = [...(broadcast.distribution || [])];
     const results = { sent: [], failed: [], skipped: [] };
 
-    for (const contact of eligible) {
+    for (const contact of loopContacts) {
       const firstName = (contact.contact_name || '').split(' ')[0] || 'there';
-      const htmlBody = `<!DOCTYPE html>
+      const companyName = contact.company || 'your company';
+      let htmlBody = `<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#0a0a0a;font-family:Georgia,serif;">
 <div style="max-width:600px;margin:0 auto;background:#0a0a0a;color:#ffffff;">
   <div style="padding:24px 32px;border-bottom:1px solid #D4AF37;">
@@ -132,7 +149,31 @@ export default async function(req) {
 </div>
 </body></html>`;
 
-      const textBody = `DNN Intelligence Bureau — ${showName}\n${headlineText}\n\nHi ${firstName},\n\nA new DNN broadcast is ready for you.\n\nWatch it here: https://1dnn.com/dnn-news\n\n${preheader}\n\n— Dyson & Dyson Real Estate Concierge\n\nPREFER TEXT? Reply with "TEXT ME" and your mobile number to get the 2-minute daily update on your phone.\n\n---\nYou received this because you are part of the ${audience.audience_name} distribution list.\nDyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111\nTo unsubscribe, reply with "unsubscribe".`;
+      let textBody = `DNN Intelligence Bureau — ${showName}\n${headlineText}\n\nHi ${firstName},\n\nA new DNN broadcast is ready for you.\n\nWatch it here: https://1dnn.com/dnn-news\n\n${preheader}\n\n— Dyson & Dyson Real Estate Concierge\n\nPREFER TEXT? Reply with "TEXT ME" and your mobile number to get the 2-minute daily update on your phone.\n\n---\nYou received this because you are part of the ${audience.audience_name} distribution list.\nDyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111\nTo unsubscribe, reply with "unsubscribe".`;
+
+      if (useFirstTouch) {
+        const mergedBody = (audience.first_touch_body || '')
+          .replace(/\[First Name\]/g, firstName)
+          .replace(/\[Company Name\]/g, companyName);
+        textBody = mergedBody;
+        htmlBody = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#0a0a0a;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;background:#0a0a0a;color:#ffffff;">
+  <div style="padding:24px 32px;border-bottom:1px solid #D4AF37;">
+    <div style="font-size:11px;letter-spacing:0.25em;color:#D4AF37;font-weight:700;text-transform:uppercase;">DNN Intelligence Bureau</div>
+    <div style="font-size:10px;color:#888;margin-top:4px;">Dyson & Dyson Real Estate Concierge</div>
+  </div>
+  <div style="padding:32px;">
+    <div style="white-space:pre-wrap;font-family:Georgia,serif;font-size:15px;line-height:1.6;color:#cccccc;">${mergedBody.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    <p style="color:#666;font-size:11px;line-height:1.5;margin-top:24px;border-top:1px solid #333;padding-top:16px;">
+      Dyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111<br/>
+      To unsubscribe, reply with "unsubscribe".
+    </p>
+  </div>
+</div>
+</body></html>`;
+        subject = subject.replace(/\[Company Name\]/g, companyName);
+      }
 
       const mimeMessage =
         `To: ${encodeHeader(contact.contact_name)} <${contact.email}>\r\n` +
