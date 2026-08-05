@@ -1,0 +1,107 @@
+{
+  "name": "AudienceContact",
+  "type": "object",
+  "properties": {
+    "audience_id": {
+      "type": "string",
+      "description": "Reference to TargetAudienceProfile ID this contact belongs to"
+    },
+    "audience_name": {
+      "type": "string",
+      "description": "Denormalized audience segment name for display"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Contact's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact mobile number (E.164) for Twilio B2B SMS"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company / organization this contact works at"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title (e.g., VP of Human Resources, Global Mobility Manager)"
+    },
+    "department": {
+      "type": "string",
+      "description": "Department (e.g., HR, Global Mobility, Talent Relocation)"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "consent_status": {
+      "type": "string",
+      "enum": [
+        "opted_in",
+        "pending",
+        "declined",
+        "unknown"
+      ],
+      "default": "pending",
+      "description": "B2B consent status \u2014 TCPA still requires consent for automated texts/calls even B2B"
+    },
+    "consent_source": {
+      "type": "string",
+      "description": "How consent was obtained (e.g., 'business_card', 'linkedin', 'inbound_inquiry')"
+    },
+    "recruitment_source": {
+      "type": "string",
+      "enum": [
+        "csv_import",
+        "manual_entry",
+        "linkedin",
+        "referral",
+        "inbound",
+        "other"
+      ],
+      "default": "manual_entry",
+      "description": "How this contact was added to the system"
+    },
+    "import_batch": {
+      "type": "string",
+      "description": "CSV batch name this contact came from"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "bounced",
+        "unsubscribed",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Contact status \u2014 bounced/unsubscribed contacts are skipped during distribution"
+    },
+    "last_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the last broadcast was sent to this contact"
+    },
+    "sends_received": {
+      "type": "number",
+      "default": 0,
+      "description": "Total broadcasts sent to this contact"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this contact"
+    }
+  },
+  "required": [
+    "contact_name",
+    "audience_id"
+  ]
+}

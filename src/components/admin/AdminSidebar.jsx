@@ -102,6 +102,7 @@ const NAV_SECTIONS = [
     label: 'CORPORATE RELO / HR',
     children: [
       { label: 'HR Explainer Videos & Guidelines', path: '/admin/corporate-relo', icon: Video },
+      { label: 'B2B Audience Distribution', path: '/admin/audience-distribution', icon: Send, highlight: true },
       { label: 'Public Corporate Relo Page', path: '/corporate-relo', icon: Globe },
     ],
   },
