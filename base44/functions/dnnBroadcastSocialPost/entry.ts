@@ -27,6 +27,10 @@ export default async function(req) {
       return Response.json({ error: 'broadcast_id is required' }, { status: 400 });
     }
 
+    // Default to the DNN LinkedIn company page unless caller overrides with
+    // a different organizationName (or explicitly passes 'personal').
+    const linkedinOrg = organizationName === 'personal' ? null : (organizationName || 'DNN');
+
     const broadcast = await base44.asServiceRole.entities.DnnBroadcast.get(broadcast_id).catch(() => null);
     if (!broadcast) {
       return Response.json({ error: 'Broadcast not found' }, { status: 404 });
