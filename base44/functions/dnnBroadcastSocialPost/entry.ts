@@ -60,11 +60,14 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
 
 #RealEstateNews #RelocationIntelligence #DNN #DysonAndDyson #HousingMarket #RealEstate`;
 
-    const results = { linkedin: null, facebook: null };
+    const results = { linkedin: null, facebook: null, instagram: null };
     const distribution = [...(broadcast.distribution || [])];
 
     // ─── LinkedIn video upload ───────────────────────────────────────────
-    try {
+    const channels = Array.isArray(body.channels) ? body.channels : ['linkedin', 'facebook'];
+    if (!channels.includes('linkedin')) {
+      results.linkedin = { success: false, skipped: true, error: 'LinkedIn not requested in channels' };
+    } else try {
       const { accessToken } = await base44.asServiceRole.connectors.getConnection('linkedin');
       const headers = {
         Authorization: `Bearer ${accessToken}`,
@@ -218,7 +221,6 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
 
     // ─── Facebook video upload ───────────────────────────────────────────
     // Skip Facebook unless explicitly requested (channels=['facebook'] or ['linkedin','facebook'])
-    const channels = Array.isArray(body.channels) ? body.channels : ['linkedin', 'facebook'];
     if (!channels.includes('facebook')) {
       results.facebook = { success: false, skipped: true, error: 'Facebook not requested in channels' };
     } else try {
@@ -260,11 +262,76 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
       results.facebook = { success: false, error: e.message };
     }
 
+    // ─── Instagram video upload (Business account) ─────────────────────
+    // Instagram requires a 2-step publish: create a media container, then publish it.
+    // Uses graph.instagram.com (NOT graph.facebook.com) per the connector guide.
+    if (!channels.includes('instagram')) {
+      results.instagram = { success: false, skipped: true, error: 'Instagram not requested in channels' };
+    } else try {
+      const { accessToken: igToken } = await base44.asServiceRole.connectors.getConnection('instagram');
+      // Resolve the Instagram Business user id
+      const meRes = await fetch(`https://graph.instagram.com/me?fields=id,username&access_token=${igToken}`);
+      const meData = await meRes.json().catch(() => ({}));
+      const igUserId = meData.id;
+      if (!igUserId) {
+        results.instagram = { success: false, error: 'Could not resolve Instagram Business user id', details: meData };
+      } else {
+        // Step 1 — create the video media container
+        const createRes = await fetch(`https://graph.instagram.com/v25.0/${igUserId}/media`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            media_type: 'REELS',
+            video_url: videoUrl,
+            caption: socialText.slice(0, 2200),
+            share_to_feed: true,
+            access_token: igToken,
+          }),
+        });
+        const createData = await createRes.json();
+        if (!createRes.ok || !createData.id) {
+          results.instagram = { success: false, error: createData.error?.message || 'Instagram media creation failed', details: createData };
+        } else {
+          const creationId = createData.id;
+          // Poll until the container is READY (max 60s)
+          let containerReady = false;
+          let pollStatus = 'IN_PROGRESS';
+          for (let attempt = 0; attempt < 36; attempt++) {
+            await new Promise(r => setTimeout(r, 5000));
+            const statusRes = await fetch(`https://graph.instagram.com/v25.0/${creationId}?fields=status_code&access_token=${igToken}`);
+            const statusData = await statusRes.json().catch(() => ({}));
+            pollStatus = statusData.status_code || 'UNKNOWN';
+            if (pollStatus === 'FINISHED') { containerReady = true; break; }
+            if (pollStatus === 'ERROR') break;
+          }
+          if (!containerReady) {
+            results.instagram = { success: false, error: `Instagram video processing did not finish (status: ${pollStatus})` };
+          } else {
+            // Step 2 — publish the container
+            const publishRes = await fetch(`https://graph.instagram.com/v25.0/${igUserId}/media_publish`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ creation_id: creationId, access_token: igToken }),
+            });
+            const publishData = await publishRes.json();
+            if (!publishRes.ok) {
+              results.instagram = { success: false, error: publishData.error?.message || 'Instagram publish failed', details: publishData };
+            } else {
+              results.instagram = { success: true, post_id: publishData.id, username: meData.username };
+              distribution.push({ channel: 'instagram', status: 'sent', post_id: publishData.id, posted_at: new Date().toISOString(), recipient: meData.username });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      results.instagram = { success: false, error: e.message };
+    }
+
     // Record distribution on the broadcast
     await base44.asServiceRole.entities.DnnBroadcast.update(broadcast_id, { distribution });
 
     return Response.json({
-      success: results.linkedin?.success || results.facebook?.success,
+      success: results.linkedin?.success || results.facebook?.success || results.instagram?.success,
       broadcast_id,
       ...results,
     });
