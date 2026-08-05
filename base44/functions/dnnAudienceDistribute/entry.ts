@@ -116,16 +116,23 @@ export default async function(req) {
     <div style="margin:28px 0;">
       <a href="https://1dnn.com/dnn-news" style="background:linear-gradient(135deg,#e8c84a 0%,#D4AF37 50%,#b8920a 100%);color:#000;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;">Watch the Full Broadcast</a>
     </div>
+    <div style="background:#111;border:1px solid #D4AF3744;border-radius:10px;padding:18px 22px;margin:28px 0;">
+      <p style="color:#D4AF37;font-size:13px;font-weight:700;margin:0 0 6px;letter-spacing:0.05em;">📱 Prefer to get this by text?</p>
+      <p style="color:#bbb;font-size:14px;line-height:1.5;margin:0;">Get the 2-minute daily market update on your phone. Reply to this email with <strong style="color:#fff;">"TEXT ME"</strong> and your mobile number, and we'll add you to our VIP SMS list.</p>
+    </div>
     <p style="color:#888;font-size:13px;line-height:1.6;border-top:1px solid #333;padding-top:20px;margin-top:32px;">
       You received this because you are part of the <strong style="color:#D4AF37;">${audience.audience_name}</strong> distribution list.<br/>
       Dyson & Dyson Real Estate Concierge — the only news network that reports what happened AND tells you exactly what to do about it.
     </p>
-    <p style="color:#666;font-size:11px;margin-top:16px;">To unsubscribe, reply with "unsubscribe".</p>
+    <p style="color:#666;font-size:11px;line-height:1.5;margin-top:12px;">
+      Dyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111<br/>
+      To unsubscribe, reply with "unsubscribe". To opt into SMS, reply with "TEXT ME" + your mobile number.
+    </p>
   </div>
 </div>
 </body></html>`;
 
-      const textBody = `DNN Intelligence Bureau — ${showName}\n${headlineText}\n\nHi ${firstName},\n\nA new DNN broadcast is ready for you.\n\nWatch it here: https://1dnn.com/dnn-news\n\n${preheader}\n\n— Dyson & Dyson Real Estate Concierge\n\nYou received this because you are part of the ${audience.audience_name} distribution list. To unsubscribe, reply with "unsubscribe".`;
+      const textBody = `DNN Intelligence Bureau — ${showName}\n${headlineText}\n\nHi ${firstName},\n\nA new DNN broadcast is ready for you.\n\nWatch it here: https://1dnn.com/dnn-news\n\n${preheader}\n\n— Dyson & Dyson Real Estate Concierge\n\nPREFER TEXT? Reply with "TEXT ME" and your mobile number to get the 2-minute daily update on your phone.\n\n---\nYou received this because you are part of the ${audience.audience_name} distribution list.\nDyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111\nTo unsubscribe, reply with "unsubscribe".`;
 
       const mimeMessage =
         `To: ${encodeHeader(contact.contact_name)} <${contact.email}>\r\n` +
