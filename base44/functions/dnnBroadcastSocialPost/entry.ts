@@ -75,7 +75,7 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
       let authorUrn;
       let postedAs = 'personal';
 
-      if (organizationName) {
+      if (linkedinOrg) {
         const aclsRes = await fetch(
           'https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&state=APPROVED&projection=(elements*(organization,role,state))',
           { headers }
@@ -95,12 +95,12 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
         }
 
         const org = orgs.find(o =>
-          o.localizedName?.toLowerCase().includes(organizationName.toLowerCase()) ||
-          o.vanityName?.toLowerCase().includes(organizationName.toLowerCase())
+          o.localizedName?.toLowerCase().includes(linkedinOrg.toLowerCase()) ||
+          o.vanityName?.toLowerCase().includes(linkedinOrg.toLowerCase())
         );
 
         if (!org) {
-          results.linkedin = { success: false, error: `No LinkedIn page matching "${organizationName}"`, available: orgs.map(o => o.localizedName) };
+          results.linkedin = { success: false, error: `No LinkedIn page matching "${linkedinOrg}"`, available: orgs.map(o => o.localizedName) };
         } else {
           authorUrn = `urn:li:organization:${org.id}`;
           postedAs = org.localizedName;
@@ -217,7 +217,11 @@ Subscribe for free daily intelligence: https://1dnn.com/subscribe
     }
 
     // ─── Facebook video upload ───────────────────────────────────────────
-    try {
+    // Skip Facebook unless explicitly requested (channels=['facebook'] or ['linkedin','facebook'])
+    const channels = Array.isArray(body.channels) ? body.channels : ['linkedin', 'facebook'];
+    if (!channels.includes('facebook')) {
+      results.facebook = { success: false, skipped: true, error: 'Facebook not requested in channels' };
+    } else try {
       const { accessToken: fbToken } = await base44.asServiceRole.connectors.getConnection('facebook_pages');
       const accountsRes = await fetch(
         `https://graph.facebook.com/v25.0/me/accounts?fields=id,name,access_token&access_token=${fbToken}`
