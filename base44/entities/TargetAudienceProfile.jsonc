@@ -101,6 +101,14 @@
       "type": "string",
       "description": "Reference to MarketingCampaign ID if an outreach campaign was created"
     },
+    "first_touch_subject": {
+      "type": "string",
+      "description": "Cold intro email subject for first contact with this audience. Supports [Company Name] merge token."
+    },
+    "first_touch_body": {
+      "type": "string",
+      "description": "Cold intro email body for first contact with this audience. Supports [First Name] and [Company Name] merge tokens, replaced per contact at send time."
+    },
     "notes": {
       "type": "string",
       "description": "Internal notes and observations"
