@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { Play, Trash2, Pencil, X, Radio, Calendar, ChevronRight } from 'lucide-react';
+import { Play, Trash2, Pencil, X, Radio, Calendar, ChevronRight, Share2 } from 'lucide-react';
+import DnnBroadcastShare from '@/components/dnn/DnnBroadcastShare';
 
 const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
@@ -28,6 +29,7 @@ export default function DnnBroadcastArchive({ limit, showViewAll }) {
   const [editing, setEditing] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
+  const [sharing, setSharing] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -126,12 +128,15 @@ export default function DnnBroadcastArchive({ limit, showViewAll }) {
                     <img src={DNN_LOGO} alt="DNN" className="h-4 w-auto" />
                     <span className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>{b.show_name || 'DNN'}</span>
                   </div>
-                  {isAdmin && (
-                    <div className="absolute top-2 right-2 flex gap-1.5">
-                      <button onClick={(e) => { e.stopPropagation(); startEdit(b); }} className="p-1.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #00ccff' }} title="Edit"><Pencil className="w-3.5 h-3.5" style={{ color: '#00ccff' }} /></button>
-                      <button onClick={(e) => { e.stopPropagation(); handleDelete(b.id); }} className="p-1.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ff3333' }} title="Delete"><Trash2 className="w-3.5 h-3.5" style={{ color: '#ff3333' }} /></button>
-                    </div>
-                  )}
+                  <div className="absolute top-2 right-2 flex gap-1.5">
+                    <button onClick={(e) => { e.stopPropagation(); setSharing(b); }} className="p-1.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(212,175,55,0.5)' }} title="Share"><Share2 className="w-3.5 h-3.5" style={{ color: GOLD }} /></button>
+                    {isAdmin && (
+                      <>
+                        <button onClick={(e) => { e.stopPropagation(); startEdit(b); }} className="p-1.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #00ccff' }} title="Edit"><Pencil className="w-3.5 h-3.5" style={{ color: '#00ccff' }} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); handleDelete(b.id); }} className="p-1.5 rounded-lg" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ff3333' }} title="Delete"><Trash2 className="w-3.5 h-3.5" style={{ color: '#ff3333' }} /></button>
+                      </>
+                    )}
+                  </div>
                 </div>
                 {/* Info */}
                 <div className="p-3">
@@ -164,6 +169,11 @@ export default function DnnBroadcastArchive({ limit, showViewAll }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Share modal */}
+      {sharing && (
+        <DnnBroadcastShare broadcast={sharing} url={urlOf(sharing)} isAdmin={isAdmin} onClose={() => setSharing(null)} />
       )}
 
       {/* Edit modal */}
