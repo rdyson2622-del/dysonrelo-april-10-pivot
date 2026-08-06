@@ -124,6 +124,7 @@ const NAV_SECTIONS = [
     color: '#D4AF37',
     children: [
       { label: 'DNN News', path: '/dnn-news', icon: Newspaper },
+      { label: '📺 Broadcast Archive', path: '/dnn-archive', icon: Clapperboard },
       { label: 'News Feed (Staging)', path: '/admin/dnn/news-feed', icon: Newspaper },
       { label: 'Market Data Hub', path: '/admin/dnn/market-data', icon: BarChart3 },
       { label: 'Subscriber CRM', path: '/admin/dnn/subscribers', icon: Users },

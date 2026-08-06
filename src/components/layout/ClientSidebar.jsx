@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
-  Newspaper, DollarSign, Shield, Fingerprint,
+  Newspaper, Archive, DollarSign, Shield, Fingerprint,
   CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -251,6 +251,7 @@ export default function ClientSidebar({ onToggle }) {
           </p>
           <div className="flex flex-col gap-1">
             <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />
+            <NavLink to="/dnn-archive" icon={Archive} location={location} label="Broadcast Archive" />
             <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
             <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
           </div>
