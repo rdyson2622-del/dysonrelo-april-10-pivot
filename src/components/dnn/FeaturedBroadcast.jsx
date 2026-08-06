@@ -177,71 +177,51 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
         </span>
       </div>
 
-      {/* Video — full-frame when the composited MP4 is used (studio set is
-          baked in), otherwise the raw avatar in a gold-bordered Charlie box
-          over the studio background. */}
-      {useComposited ? (
-        <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
-          {started ? (
-            <video
-              ref={videoRef}
-              src={activeUrl}
-              playsInline
-              preload="auto"
-              loop={false}
-              onEnded={handleEnded}
-              onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
-              className="w-full h-full object-cover pointer-events-none"
-            />
-          ) : (
-            <button onClick={startPlay} aria-label="Play studio show"
-              className="w-full h-full flex items-center justify-center group"
-              style={{ background: '#000' }}>
-              <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-                style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
-                <Play className="w-7 h-7 ml-1 text-black" fill="black" />
-              </div>
-            </button>
-          )}
-        </div>
-      ) : (
-        <div className="absolute overflow-hidden"
-          style={{
-            width: 'clamp(200px, 34%, 380px)',
-            aspectRatio: '16/9',
-            bottom: '12%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            borderRadius: '12px',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
-            background: '#000',
-            zIndex: 10,
-          }}>
-          {started ? (
-            <video
-              ref={videoRef}
-              src={activeUrl}
-              playsInline
-              preload="auto"
-              loop={false}
-              onEnded={handleEnded}
-              onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
-              className="w-full h-full object-cover pointer-events-none"
-              style={{ transform: 'scale(1.18)' }}
-            />
-          ) : (
-            <button onClick={startPlay} aria-label="Play studio show"
-              className="w-full h-full flex items-center justify-center group"
-              style={{ background: '#000' }}>
-              <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-                style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
-                <Play className="w-6 h-6 ml-1 text-black" fill="black" />
-              </div>
-            </button>
-          )}
-        </div>
-      )}
+      {/* Video — ALWAYS mounted (never conditionally rendered). This is the
+          bulletproof fix for the duplicate-audio bug: if the <video> is
+          created/destroyed on a state toggle, a mid-playback re-render can
+          orphan the playing element while React mounts a fresh one — giving
+          you a "second run" of the audio near the end of long videos. By
+          keeping a single <video> alive for the component's entire lifetime
+          and only toggling the play-button overlay, it is impossible for
+          React to create a second video element. */}
+      <div className={useComposited ? "absolute inset-0 z-10" : "absolute overflow-hidden"}
+        style={useComposited
+          ? { background: '#000' }
+          : {
+              width: 'clamp(200px, 34%, 380px)',
+              aspectRatio: '16/9',
+              bottom: '12%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              borderRadius: '12px',
+              border: `2px solid ${GOLD}`,
+              boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
+              background: '#000',
+              zIndex: 10,
+            }}>
+        <video
+          ref={videoRef}
+          src={activeUrl}
+          playsInline
+          preload="auto"
+          loop={false}
+          onEnded={handleEnded}
+          onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
+          className={`w-full h-full object-cover pointer-events-none ${started ? 'opacity-100' : 'opacity-0'}`}
+          style={useComposited ? {} : { transform: 'scale(1.18)' }}
+        />
+        {!started && (
+          <button onClick={startPlay} aria-label="Play studio show"
+            className="absolute inset-0 w-full h-full flex items-center justify-center group"
+            style={{ background: '#000' }}>
+            <div className={`rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${useComposited ? 'w-16 h-16' : 'w-14 h-14'}`}
+              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+              <Play className={useComposited ? 'w-7 h-7 ml-1' : 'w-6 h-6 ml-1'} fill="black" style={{ color: '#000' }} />
+            </div>
+          </button>
+        )}
+      </div>
 
       {/* Tap for sound */}
       {started && playing && muted && (
