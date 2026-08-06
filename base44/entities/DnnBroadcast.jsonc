@@ -31,6 +31,13 @@
       "type": "string",
       "description": "Scene 3 script \u2014 spoken by Charlie (close/outro). Gemini outputs this as a separate JSON key."
     },
+    "content_bullets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Curated bullet points for Bob's content segment. Rendered as a timed whiteboard panel above Bob's box in the studio composite. If empty, bullets are auto-derived from content_script sentences."
+    },
     "headlines": {
       "type": "array",
       "items": {
