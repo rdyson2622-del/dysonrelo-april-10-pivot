@@ -45,7 +45,7 @@ export default function FeaturedBroadcast() {
           <video> unmounts (audio stops) and a fresh player mounts. This
           eliminates the race condition where a query refetch reset the
           play guard mid-playback and caused a duplicate "second run". */}
-      <InlineStudioPlayer key={featured.id} videoUrl={playUrl} showName={featured.show_name} />
+      <InlineStudioPlayer key={featured.id} videoUrl={playUrl} showName={featured.show_name} composited={!!featured.compositedVideoUrl && playUrl === featured.compositedVideoUrl} />
       {featured.headlines?.length > 0 && (
         <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headlines[0]}</p>
       )}
@@ -53,7 +53,7 @@ export default function FeaturedBroadcast() {
   );
 }
 
-function InlineStudioPlayer({ videoUrl, showName }) {
+function InlineStudioPlayer({ videoUrl, showName, composited }) {
   const videoRef = useRef(null);
   const playInitiatedRef = useRef(false);
   // Lock the URL once playback starts so a query refetch (e.g. the
@@ -126,8 +126,13 @@ function InlineStudioPlayer({ videoUrl, showName }) {
   return (
     <div className="relative w-full overflow-hidden rounded-2xl"
       style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-      {/* Network studio background — same image as Preview Studio Show */}
-      <img src={STUDIO_BG_URL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      {/* Network studio background — only for the raw (non-composited) video.
+          The composited MP4 already has the studio set baked in, so we play it
+          full-frame instead of overlaying a second background (which caused the
+          "doubled" studio look on the news page). */}
+      {!composited && (
+        <img src={STUDIO_BG_URL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      )}
 
       {/* DNN LIVE bug */}
       <div className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg"
@@ -145,42 +150,69 @@ function InlineStudioPlayer({ videoUrl, showName }) {
         </span>
       </div>
 
-      {/* Charlie video box — centered horizontally, lower area, over studio bg */}
-      <div className="absolute overflow-hidden"
-        style={{
-          width: 'clamp(200px, 34%, 380px)',
-          aspectRatio: '16/9',
-          bottom: '12%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          borderRadius: '12px',
-          border: `2px solid ${GOLD}`,
-          boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
-          background: '#000',
-          zIndex: 10,
-        }}>
-        {started ? (
-          <video
-            ref={videoRef}
-            src={activeUrl}
-            playsInline
-            preload="auto"
-            loop={false}
-            onEnded={handleEnded}
-            className="w-full h-full object-cover pointer-events-none"
-            style={{ transform: 'scale(1.18)' }}
-          />
-        ) : (
-          <button onClick={startPlay} aria-label="Play studio show"
-            className="w-full h-full flex items-center justify-center group"
-            style={{ background: '#000' }}>
-            <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
-              <Play className="w-6 h-6 ml-1 text-black" fill="black" />
-            </div>
-          </button>
-        )}
-      </div>
+      {/* Video — full-frame when the composited MP4 is used (studio set is
+          baked in), otherwise the raw avatar in a gold-bordered Charlie box
+          over the studio background. */}
+      {composited ? (
+        <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
+          {started ? (
+            <video
+              ref={videoRef}
+              src={activeUrl}
+              playsInline
+              preload="auto"
+              loop={false}
+              onEnded={handleEnded}
+              className="w-full h-full object-cover pointer-events-none"
+            />
+          ) : (
+            <button onClick={startPlay} aria-label="Play studio show"
+              className="w-full h-full flex items-center justify-center group"
+              style={{ background: '#000' }}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+                <Play className="w-7 h-7 ml-1 text-black" fill="black" />
+              </div>
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="absolute overflow-hidden"
+          style={{
+            width: 'clamp(200px, 34%, 380px)',
+            aspectRatio: '16/9',
+            bottom: '12%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '12px',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
+            background: '#000',
+            zIndex: 10,
+          }}>
+          {started ? (
+            <video
+              ref={videoRef}
+              src={activeUrl}
+              playsInline
+              preload="auto"
+              loop={false}
+              onEnded={handleEnded}
+              className="w-full h-full object-cover pointer-events-none"
+              style={{ transform: 'scale(1.18)' }}
+            />
+          ) : (
+            <button onClick={startPlay} aria-label="Play studio show"
+              className="w-full h-full flex items-center justify-center group"
+              style={{ background: '#000' }}>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
+                <Play className="w-6 h-6 ml-1 text-black" fill="black" />
+              </div>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Tap for sound */}
       {started && playing && muted && (
