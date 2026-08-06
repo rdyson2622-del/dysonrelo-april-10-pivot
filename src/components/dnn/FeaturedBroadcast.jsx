@@ -45,7 +45,7 @@ export default function FeaturedBroadcast() {
           <video> unmounts (audio stops) and a fresh player mounts. This
           eliminates the race condition where a query refetch reset the
           play guard mid-playback and caused a duplicate "second run". */}
-      <InlineStudioPlayer key={playUrl} videoUrl={playUrl} showName={featured.show_name} />
+      <InlineStudioPlayer key={featured.id} videoUrl={playUrl} showName={featured.show_name} />
       {featured.headlines?.length > 0 && (
         <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headlines[0]}</p>
       )}
@@ -56,19 +56,25 @@ export default function FeaturedBroadcast() {
 function InlineStudioPlayer({ videoUrl, showName }) {
   const videoRef = useRef(null);
   const playInitiatedRef = useRef(false);
+  // Lock the URL once playback starts so a query refetch (e.g. the
+  // Creatomate composite finishing mid-show) can't swap/reload the src
+  // and trigger a "second run" of the audio.
+  const lockedUrlRef = useRef(null);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
-  // Pause on unmount so audio never lingers
-  useEffect(() => {
-    return () => { try { videoRef.current?.pause(); } catch (_) {} };
-  }, []);
+  const activeUrl = lockedUrlRef.current || videoUrl;
 
-  // NOTE: No useEffect to reset playInitiatedRef on videoUrl change.
-  // The parent uses key={playUrl}, so a URL change fully remounts this
-  // component (old <video> unmounts → audio stops, fresh state starts).
-  // This eliminates the race condition that caused duplicate playback.
+  // Pause on unmount so audio never lingers. Capture the element in the
+  // effect closure (not via ref at cleanup time) because React clears refs
+  // before passive-effect cleanups run — using videoRef.current directly
+  // would find null and leave a detached <video> playing orphan audio.
+  useEffect(() => {
+    if (!started) return;
+    const v = videoRef.current;
+    return () => { try { v?.pause(); } catch (_) {} };
+  }, [started]);
 
   const startPlay = () => {
     if (playInitiatedRef.current) return; // prevent double-play
@@ -76,6 +82,7 @@ function InlineStudioPlayer({ videoUrl, showName }) {
     const existing = videoRef.current;
     if (existing && !existing.paused && !existing.ended) return;
     playInitiatedRef.current = true;
+    lockedUrlRef.current = videoUrl; // freeze src for this playback session
     setStarted(true);
     // wait for next tick so the <video> mounts
     setTimeout(() => {
@@ -155,7 +162,7 @@ function InlineStudioPlayer({ videoUrl, showName }) {
         {started ? (
           <video
             ref={videoRef}
-            src={videoUrl}
+            src={activeUrl}
             playsInline
             preload="auto"
             loop={false}
