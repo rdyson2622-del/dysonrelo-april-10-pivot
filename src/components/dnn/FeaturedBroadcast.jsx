@@ -60,11 +60,17 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
   // Creatomate composite finishing mid-show) can't swap/reload the src
   // and trigger a "second run" of the audio.
   const lockedUrlRef = useRef(null);
+  // Lock the layout (composited vs charlie-box) at play time so a mid-playback
+  // refetch (Creatomate finishing) can't flip the branch and orphan the playing
+  // <video> (orphan audio) while mounting a second (paused) one.
+  const lockedCompositedRef = useRef(null);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
   const activeUrl = lockedUrlRef.current || videoUrl;
+  // Freeze the layout for the whole playback session once started.
+  const useComposited = lockedCompositedRef.current !== null ? lockedCompositedRef.current : composited;
 
   // Pause on unmount so audio never lingers. Capture the element in the
   // effect closure (not via ref at cleanup time) because React clears refs
@@ -81,8 +87,11 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
     // Hard guard: if a video is somehow already playing, don't start another
     const existing = videoRef.current;
     if (existing && !existing.paused && !existing.ended) return;
+    // Pause every other <video> on the page so two broadcasts can't run at once
+    document.querySelectorAll('video').forEach(v => { try { if (!v.paused) v.pause(); } catch (_) {} });
     playInitiatedRef.current = true;
     lockedUrlRef.current = videoUrl; // freeze src for this playback session
+    lockedCompositedRef.current = composited; // freeze layout for this session
     setStarted(true);
     // wait for next tick so the <video> mounts
     setTimeout(() => {
@@ -130,7 +139,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
           The composited MP4 already has the studio set baked in, so we play it
           full-frame instead of overlaying a second background (which caused the
           "doubled" studio look on the news page). */}
-      {!composited && (
+      {!useComposited && (
         <img src={STUDIO_BG_URL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
       )}
 
@@ -153,7 +162,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
       {/* Video — full-frame when the composited MP4 is used (studio set is
           baked in), otherwise the raw avatar in a gold-bordered Charlie box
           over the studio background. */}
-      {composited ? (
+      {useComposited ? (
         <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
           {started ? (
             <video
@@ -163,6 +172,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
               preload="auto"
               loop={false}
               onEnded={handleEnded}
+              onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
               className="w-full h-full object-cover pointer-events-none"
             />
           ) : (
@@ -198,6 +208,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
               preload="auto"
               loop={false}
               onEnded={handleEnded}
+              onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
               className="w-full h-full object-cover pointer-events-none"
               style={{ transform: 'scale(1.18)' }}
             />

@@ -159,7 +159,8 @@ export default function DnnBroadcastArchive({ limit, showViewAll }) {
               <button onClick={() => setPlaying(null)} className="text-white/70 hover:text-white"><X className="w-6 h-6" /></button>
             </div>
             <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <video src={urlOf(playing)} controls autoPlay playsInline className="w-full h-full object-contain" />
+              <video src={urlOf(playing)} controls autoPlay playsInline className="w-full h-full object-contain"
+                onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }} />
             </div>
           </div>
         </div>
