@@ -32,8 +32,6 @@ function estDuration(s) {
 function buildWhiteboard(broadcast) {
   const introDur = estDuration(broadcast.intro_script);
   const contentDur = estDuration(broadcast.content_script);
-  const outroDur = estDuration(broadcast.outro_script);
-  const total = introDur + contentDur + outroDur;
 
   // Need a content segment to place the whiteboard in.
   if (contentDur <= 0) return [];
@@ -53,65 +51,88 @@ function buildWhiteboard(broadcast) {
   bullets = bullets.slice(0, MAX_BULLETS);
 
   const n = bullets.length;
-  // Whiteboard panel: centered above the Bob box (Bob box center y=80%, so
-  // the panel sits in the upper-middle region of the studio set).
-  const panelX = '50%';
-  const panelY = '33%';
-  const panelW = '54%';
-  const panelH = '30%';
-
-  // Responsive font size (points) — shrinks as the bullet count grows.
-  const fontSize = n <= 3 ? 48 : n <= 5 ? 40 : 34;
-
-  // Each bullet appears at a staggered offset within the content window and
-  // stays visible through the end of Bob's segment (accumulating whiteboard).
-  const step = contentDur / n;
   const contentStart = introDur;
-  const contentEnd = introDur + contentDur;
+
+  // Panel size grows with bullet count so text always fits with breathing room.
+  const panelW = '64%';
+  const panelH = n <= 2 ? '26%' : n <= 4 ? '32%' : '38%';
+  const panelY = n <= 2 ? '31%' : n <= 4 ? '33%' : '35%';
+
+  // Font size (points) — shrinks as the bullet count / text length grows.
+  const maxLen = Math.max(...bullets.map(b => b.length));
+  let fontSize = n <= 2 ? 50 : n <= 4 ? 42 : 34;
+  if (maxLen > 80) fontSize -= 6;
+  if (maxLen > 120) fontSize -= 4;
 
   const elements = [];
-  // Panel background (appears with the content segment, fades out at its end).
+
+  // Panel background — gold-bordered white card, centered above Bob's box.
   elements.push({
     type: 'shape',
     path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z',
     track: 4,
-    x: panelX, y: panelY, width: panelW, height: panelH,
+    x: '50%', y: panelY, width: panelW, height: panelH,
     x_anchor: '50%', y_anchor: '50%',
-    fill_color: '#ffffff', fill_opacity: 0.96,
-    stroke_color: gold, stroke_width: '0.35 vmin',
+    fill_color: '#ffffff', fill_opacity: 0.97,
+    stroke_color: gold, stroke_width: '0.45 vmin',
     border_radius: '1.5 vmin',
     time: contentStart, duration: contentDur,
-    animations: [{ type: 'fade', time: 0, duration: 0.5 }],
+    animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
 
-  // Each bullet is its own text element on its own track (so multiple are
-  // visible simultaneously as they accumulate). Positioned in rows inside the
-  // panel; x is left-aligned with padding, y is the row center.
-  const rowHeight = 28 / n; // % of height per row (panel is 30% tall, leave padding)
-  const panelTopPct = 33 - 15; // panel center 33% − half-height 15% = 18% top
-  const textX = '30%'; // left-aligned, 4% padding inside the 24%–78% panel
-  const textW = '44%';
+  // Header bar — gold "KEY POINTS" title at the top of the panel for visual flow.
+  const panelTopPct = parseFloat(panelY) - parseFloat(panelH) / 2;
+  const headerY = panelTopPct + 3.5;
 
-  bullets.forEach((b, i) => {
-    const rowCenterPct = panelTopPct + (i + 0.5) * rowHeight;
-    const appearAt = contentStart + i * step;
-    const remainFor = contentEnd - appearAt;
-    elements.push({
-      type: 'text',
-      track: 5 + i,
-      text: `•  ${b}`,
-      x: textX, y: `${rowCenterPct}%`, width: textW,
-      x_anchor: '0%', y_anchor: '50%',
-      font_family: 'Inter',
-      font_size: fontSize,
-      font_color: '#1a1a1a',
-      text_align: 'left',
-      line_align: 'center',
-      line_height: 1.25,
-      time: appearAt,
-      duration: remainFor,
-      animations: [{ type: 'fade', time: 0, duration: 0.4 }],
-    });
+  elements.push({
+    type: 'text',
+    track: 5,
+    text: 'KEY POINTS',
+    x: '50%', y: `${headerY}%`, width: panelW,
+    x_anchor: '50%', y_anchor: '50%',
+    font_family: 'Inter',
+    font_size: 26,
+    font_color: gold,
+    text_align: 'center',
+    line_align: 'center',
+    time: contentStart, duration: contentDur,
+    animations: [{ type: 'fade', time: 0, duration: 0.4 }],
+  });
+
+  // Thin gold divider line under the header.
+  const dividerY = panelTopPct + 7;
+  elements.push({
+    type: 'shape',
+    path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z',
+    track: 6,
+    x: '50%', y: `${dividerY}%`, width: '52%', height: '0.15%',
+    x_anchor: '50%', y_anchor: '50%',
+    fill_color: gold, fill_opacity: 0.5,
+    time: contentStart, duration: contentDur,
+    animations: [{ type: 'fade', time: 0, duration: 0.4 }],
+  });
+
+  // All bullets as a SINGLE centered text block — much more reliable than
+  // per-bullet positioning (which was left-aligning everything in the top-left
+  // corner). Each bullet on its own line, centered horizontally and vertically
+  // in the body area below the header.
+  const bulletText = bullets.map(b => `•  ${b}`).join('\n');
+  const bodyY = parseFloat(panelY) + 3;
+
+  elements.push({
+    type: 'text',
+    track: 7,
+    text: bulletText,
+    x: '50%', y: `${bodyY}%`, width: '58%',
+    x_anchor: '50%', y_anchor: '50%',
+    font_family: 'Inter',
+    font_size: fontSize,
+    font_color: '#1a1a1a',
+    text_align: 'center',
+    line_align: 'center',
+    line_height: 1.5,
+    time: contentStart, duration: contentDur,
+    animations: [{ type: 'fade', time: 0.3, duration: 0.4 }],
   });
 
   return elements;
