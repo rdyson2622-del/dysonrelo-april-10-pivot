@@ -159,9 +159,8 @@ function InlineStudioPlayer({ videoUrl, showName }) {
             playsInline
             preload="auto"
             loop={false}
-            onClick={togglePlay}
             onEnded={handleEnded}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover pointer-events-none"
             style={{ transform: 'scale(1.18)' }}
           />
         ) : (
