@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { RefreshCw, Zap, TrendingDown, AlertTriangle } from 'lucide-react';
+import {
+  RefreshCw, Zap, TrendingDown, AlertTriangle, Film, MessageSquare,
+  Sparkles, Music, ExternalLink
+} from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -39,6 +42,17 @@ export default function HeygenCreditMonitor() {
     enabled: isAdmin,
   });
 
+  // Aggregate balances + usage for all paid pipeline nodes
+  const { data: pipeline, isLoading: pipelineLoading } = useQuery({
+    queryKey: ['pipelineCredits'],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('pipelineCreditsMonitor', {});
+      return res.data || res;
+    },
+    refetchInterval: 30000,
+    enabled: isAdmin,
+  });
+
   const rendering = articles.filter(a => a.video_url && a.video_url.startsWith('heygen:pending:'));
   const completed = articles.filter(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
 
@@ -65,8 +79,8 @@ export default function HeygenCreditMonitor() {
         <div className="flex items-center gap-3 mb-8">
           <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
           <div>
-            <h1 className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>HeyGen Credit Monitor</h1>
-            <p className="text-[10px] text-slate-500">Live API credit balance — auto-refreshes every 15s</p>
+            <h1 className="text-sm font-black tracking-[0.3em] uppercase" style={{ color: GOLD }}>Pipeline Credit Monitor</h1>
+            <p className="text-[10px] text-slate-500">Live balances across every paid n8n node — HeyGen, Twilio, Creatomate, Gemini & Epidemic</p>
           </div>
         </div>
 
@@ -156,11 +170,113 @@ export default function HeygenCreditMonitor() {
           )}
         </div>
 
+        {/* Pipeline services — other paid n8n nodes */}
+        <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Other Paid Pipeline Nodes</p>
+            <button
+              onClick={() => queryClient.invalidateQueries({ queryKey: ['pipelineCredits'] })}
+              className="flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 rounded-lg text-black"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+            >
+              <RefreshCw className="w-3 h-3" /> Refresh
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ServiceCard
+              icon={MessageSquare}
+              color="#f22f46"
+              title="Twilio (SMS)"
+              tag="Live Balance"
+              live={pipeline?.twilio?.available}
+              loading={pipelineLoading}
+              error={pipeline?.twilio?.error}
+              primary={pipeline?.twilio?.available ? `$${Number(pipeline.twilio.balance).toFixed(2)}` : '—'}
+              secondary={pipeline?.twilio?.available ? `${pipeline.twilio.currency} · B2B SMS outreach` : 'No balance'}
+              dashboardUrl="https://console.twilio.com/us1/develop/console/billing"
+            />
+            <ServiceCard
+              icon={Film}
+              color="#8b5cf6"
+              title="Creatomate (Studio Composite)"
+              tag="Usage Tracked"
+              live={false}
+              loading={pipelineLoading}
+              primary={`${pipeline?.creatomate?.in_progress ?? 0} baking`}
+              secondary={`${pipeline?.creatomate?.completed_this_month ?? 0} completed this month`}
+              note={pipeline?.creatomate?.note}
+              dashboardUrl={pipeline?.creatomate?.dashboard_url}
+            />
+            <ServiceCard
+              icon={Sparkles}
+              color="#4285f4"
+              title="Gemini (Scripting LLM)"
+              tag="Usage Tracked"
+              live={false}
+              loading={pipelineLoading}
+              primary={`${pipeline?.gemini?.articles_today ?? 0} today`}
+              secondary="articles generated"
+              note={pipeline?.gemini?.note}
+              dashboardUrl={pipeline?.gemini?.dashboard_url}
+            />
+            <ServiceCard
+              icon={Music}
+              color="#22c55e"
+              title="Epidemic Sound (Music)"
+              tag="Subscription"
+              live={false}
+              loading={pipelineLoading}
+              primary="Flat plan"
+              secondary="no per-call balance"
+              note={pipeline?.epidemic?.note}
+              dashboardUrl={pipeline?.epidemic?.dashboard_url}
+            />
+          </div>
+        </div>
+
         {/* Auto-refresh note */}
         <p className="text-center text-[10px] text-slate-600">
-          Page auto-refreshes every 15 seconds. Keep this tab open to watch credits in real-time.
+          HeyGen + Twilio balances auto-refresh every 15–30s. Creatomate, Gemini & Epidemic have no balance API — usage counts are pulled from the pipeline database instead.
         </p>
       </div>
+    </div>
+  );
+}
+
+// ─── Pipeline Service Card ─────────────────────────────────────────────────
+function ServiceCard({ icon: Icon, color, title, tag, live, loading, error, primary, secondary, note, dashboardUrl }) {
+  return (
+    <div className="rounded-xl p-4 flex flex-col" style={{ background: '#0a0a0a', border: `1px solid ${color}33` }}>
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}1a` }}>
+            <Icon className="w-4 h-4" style={{ color }} />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-white leading-tight">{title}</p>
+            <p className="text-[9px] font-bold tracking-widest uppercase mt-0.5" style={{ color }}>
+              {live ? '● Live' : tag}
+            </p>
+          </div>
+        </div>
+        {dashboardUrl && (
+          <a href={dashboardUrl} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-white transition-colors">
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        )}
+      </div>
+
+      {loading ? (
+        <div className="w-8 h-8 border-2 rounded-full animate-spin mx-auto my-2" style={{ borderColor: `${color}30`, borderTopColor: color }} />
+      ) : error ? (
+        <p className="text-[11px] text-red-400 leading-snug">{error}</p>
+      ) : (
+        <>
+          <p className="text-2xl font-black" style={{ color, fontFamily: 'Cormorant Garamond, serif' }}>{primary}</p>
+          <p className="text-[10px] text-slate-500 mt-0.5">{secondary}</p>
+          {note && <p className="text-[10px] text-slate-600 mt-2 leading-snug">{note}</p>}
+        </>
+      )}
     </div>
   );
 }
