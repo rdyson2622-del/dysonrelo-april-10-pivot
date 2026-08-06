@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   BarChart3, Linkedin, Facebook, Instagram, Mail, Send, Users, Eye,
   ThumbsUp, MessageCircle, Share2, PlayCircle, TrendingUp, CheckCircle2,
-  XCircle, Newspaper, Clock
+  XCircle, Newspaper, Clock, Trash2, Loader2
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -122,7 +122,7 @@ export default function AdminShowPerformance() {
           </div>
         ) : (
           shows.map(show => (
-            <ShowCard key={show.id} show={show} openCount={opensByBroadcast[show.id] || 0} />
+            <ShowCard key={show.id} show={show} openCount={opensByBroadcast[show.id] || 0} range={range} />
           ))
         )}
       </div>
@@ -131,8 +131,24 @@ export default function AdminShowPerformance() {
 }
 
 // ─── Show Card ──────────────────────────────────────────────────────────────
-function ShowCard({ show, openCount }) {
+function ShowCard({ show, openCount, range }) {
+  const queryClient = useQueryClient();
+  const [deleting, setDeleting] = useState(false);
   const dist = show.distribution || [];
+
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete "${show.show_name || `Show ${show.show_number || ''}`}"? This removes the broadcast and all its performance data. This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await base44.entities.DnnBroadcast.delete(show.id);
+      queryClient.invalidateQueries({ queryKey: ['show-performance-broadcasts', range] });
+      queryClient.invalidateQueries({ queryKey: ['email-opens-recent'] });
+    } catch (e) {
+      alert(e.message || 'Failed to delete broadcast');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   // Group distribution by channel
   const byChannel = useMemo(() => {
@@ -172,7 +188,7 @@ function ShowCard({ show, openCount }) {
             <p className="text-xs mt-1 truncate" style={{ color: '#666' }}>{show.headlines.slice(0, 2).join(' · ')}</p>
           )}
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 items-center">
           {emailSent > 0 && (
             <div className="text-center px-3 py-1.5 rounded-lg" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}44` }}>
               <p className="text-[10px] uppercase tracking-wider" style={{ color: '#888' }}>Open Rate</p>
@@ -180,6 +196,15 @@ function ShowCard({ show, openCount }) {
               <p className="text-[10px]" style={{ color: '#666' }}>{openCount}/{emailSent}</p>
             </div>
           )}
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            title="Delete this report"
+            className="p-2 rounded-lg transition-all hover:bg-red-500/20 disabled:opacity-50"
+            style={{ border: '1px solid #ef444455', color: '#ef4444' }}
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 
