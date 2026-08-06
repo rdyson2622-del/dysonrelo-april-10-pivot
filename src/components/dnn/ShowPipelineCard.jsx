@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
   Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
-  Send, Trash2
+  Send, Trash2, Download
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
@@ -58,6 +58,38 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showStudioPreview, setShowStudioPreview] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  // Download the finished MP4 as a clean, properly-named .mp4 file so it opens
+  // in any player and uploads to YouTube / social schedulers without rejection.
+  // (The stored file is valid H.264+AAC+faststart — the issue is delivery/filename,
+  //  not the codec. This forces a proper .mp4 download.)
+  const handleDownloadMp4 = async () => {
+    setDownloading(true);
+    const url = (show.compositedVideoUrl && !String(show.compositedVideoUrl).startsWith('creatomate:pending:'))
+      ? show.compositedVideoUrl : show.videoUrl;
+    if (!url) { setDownloading(false); return; }
+    const rawName = (show.show_name || `show-${show.show_number || ''}`).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const filename = `${rawName || 'dnn-broadcast'}.mp4`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+      // Fallback: open the direct URL in a new tab so the user can save it manually
+      window.open(url, '_blank');
+      setResult({ success: false, error: `Auto-download blocked (${e.message}). Opened in a new tab — right-click the video → Save Video As "${filename}"` });
+    }
+    setDownloading(false);
+  };
 
   const handleDelete = async () => {
     if (!confirm(`Delete ${show.show_name || 'Show ' + (show.show_number || '?')} permanently?\n\nBroadcast date: ${show.broadcast_date}\n\nThis cannot be undone.`)) return;
@@ -279,11 +311,20 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Composited Video:</p>
-                <button onClick={() => setShowStudioPreview(true)}
-                  className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
-                  style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-                  <Play className="w-3 h-3" /> Preview Studio Show
-                </button>
+                <div className="flex gap-2">
+                  <button onClick={() => setShowStudioPreview(true)}
+                    className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
+                    style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                    <Play className="w-3 h-3" /> Preview Studio Show
+                  </button>
+                  <button onClick={handleDownloadMp4} disabled={downloading}
+                    title="Download a clean .mp4 file (opens everywhere, uploads to YouTube)"
+                    className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-white transition-all hover:scale-[1.02] disabled:opacity-50"
+                    style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    {downloading ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+                    {downloading ? 'Preparing…' : 'Download MP4'}
+                  </button>
+                </div>
               </div>
               <div className="rounded-xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.15)' }}>
                 {playing ? (
