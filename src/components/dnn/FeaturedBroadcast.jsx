@@ -90,6 +90,21 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
   // Freeze the layout for the whole playback session once started.
   const useComposited = lockedCompositedRef.current !== null ? lockedCompositedRef.current : composited;
 
+  // Set the video src via ref assignment — NOT via a React prop. If the src
+  // is a React prop, any re-render (e.g. the parent query refetching after the
+  // composite finishes) can cause React to touch the DOM `src` attribute, which
+  // makes the browser reload the media element and start a SECOND audio stream
+  // while the first one is still playing → "double/triple audio" bug. By setting
+  // src imperatively in this one-shot effect, the <video> element's src is
+  // written exactly once for the component's entire lifetime and can never be
+  // touched by a re-render.
+  useEffect(() => {
+    if (videoRef.current && activeUrl) {
+      videoRef.current.src = activeUrl;
+      videoRef.current.load();
+    }
+  }, [activeUrl]);
+
   // Pause on unmount so audio never lingers. Capture the element in the
   // effect closure (not via ref at cleanup time) because React clears refs
   // before passive-effect cleanups run — using videoRef.current directly
@@ -111,21 +126,22 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
     lockedUrlRef.current = videoUrl; // freeze src for this playback session
     lockedCompositedRef.current = composited; // freeze layout for this session
     setStarted(true);
-    // wait for next tick so the <video> mounts
-    setTimeout(() => {
-      const v = videoRef.current;
-      if (!v) return;
+    // Play directly — no setTimeout. The <video> is already mounted (always
+    // mounted), so we can call play() immediately. The muted-then-unmute dance
+    // satisfies browser autoplay policies: start muted (always allowed), then
+    // unmute once playback is confirmed.
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().then(() => {
+      setPlaying(true);
+      v.muted = false;
+      setMuted(false);
+    }).catch(() => {
       v.muted = true;
-      v.play().then(() => {
-        setPlaying(true);
-        v.muted = false;
-        setMuted(false);
-      }).catch(() => {
-        v.muted = true;
-        setMuted(true);
-        v.play().then(() => setPlaying(true)).catch(() => {});
-      });
-    }, 50);
+      setMuted(true);
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    });
   };
 
   const togglePlay = () => {
@@ -202,7 +218,6 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
             }}>
         <video
           ref={videoRef}
-          src={activeUrl}
           playsInline
           preload="auto"
           loop={false}
