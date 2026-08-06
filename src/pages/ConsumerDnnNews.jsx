@@ -11,6 +11,7 @@ import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
+import DnnBroadcastArchive from '@/components/dnn/DnnBroadcastArchive';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -669,6 +670,11 @@ export default function ConsumerDnnNews() {
 
           </div>
         )}
+      </div>
+
+      {/* Broadcast Archive — past + current shows, admin edit/delete */}
+      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
+        <DnnBroadcastArchive limit={6} showViewAll />
       </div>
 
       {/* Competitive Comparison — Why DNN Is Different */}

@@ -75,6 +75,7 @@ import AIAssistants from './pages/AIAssistants';
 import ReadyToStart from './components/dashboard/ReadyToStart';
 import CharlieVoicePresentation from './pages/CharlieVoicePresentation';
 import ConsumerDnnNews from './pages/ConsumerDnnNews';
+import DnnBroadcastArchivePage from './pages/DnnBroadcastArchivePage';
 import MyAgent from './pages/MyAgent';
 import FinancialServices from './pages/FinancialServices';
 import AdminNewLandingPage from './pages/AdminNewLandingPage';
@@ -198,6 +199,7 @@ const AuthenticatedApp = () => {
         <Route path="/find-agent" element={<FindAgent />} />
         <Route path="/media" element={<MediaRoom />} />
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
+        <Route path="/dnn-archive" element={<DnnBroadcastArchivePage />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
         <Route path="/relo-management" element={<ReloManagement />} />

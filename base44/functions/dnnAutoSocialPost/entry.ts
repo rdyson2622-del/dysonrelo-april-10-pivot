@@ -59,12 +59,28 @@ export default async function(req) {
       return Response.json({ skipped: true, reason: 'No finished video URL yet' });
     }
 
+    // Mark the show as posted to the in-app News section (DB-only flag — no API
+    // call). This is what makes it appear on the News page featured slot + the
+    // Broadcast Archive. Mutate the in-memory broadcast.distribution so the
+    // social post call below includes it in the array it writes back; if social
+    // is fully skipped we persist it ourselves.
+    let addedInAppNews = false;
+    const distArr = [...(broadcast.distribution || [])];
+    if (!distArr.some(d => d.channel === 'in_app_news' && d.status === 'sent')) {
+      distArr.push({ channel: 'in_app_news', status: 'sent', recipient: 'All News Page Visitors', posted_at: new Date().toISOString() });
+      broadcast.distribution = distArr;
+      addedInAppNews = true;
+    }
+
     // Skip channels already successfully posted (prevents duplicates on re-fire).
     const dist = broadcast.distribution || [];
     const alreadySent = (ch) => dist.some(d => d.channel === ch && d.status === 'sent');
     const channelsToPost = AUTO_CHANNELS.filter(ch => !alreadySent(ch));
     if (channelsToPost.length === 0) {
-      return Response.json({ skipped: true, reason: 'All channels already posted', broadcast_id: broadcastId });
+      if (addedInAppNews) {
+        await base44.asServiceRole.entities.DnnBroadcast.update(broadcastId, { distribution: broadcast.distribution });
+      }
+      return Response.json({ skipped: true, reason: 'All social channels already posted', broadcast_id: broadcastId, added_in_app_news: addedInAppNews });
     }
 
     const result = await postBroadcastToSocial(base44, broadcast, {
@@ -76,6 +92,7 @@ export default async function(req) {
       success: result.success,
       broadcast_id: broadcastId,
       channels_posted: channelsToPost,
+      added_in_app_news: addedInAppNews,
       ...result,
     });
   } catch (error) {
