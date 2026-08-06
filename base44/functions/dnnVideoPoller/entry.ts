@@ -38,11 +38,12 @@ Deno.serve(async (req) => {
         const videoId = clip[`${role}HeygenId`];
         if (status !== 'rendering' || !videoId) continue;
 
-        // 5-minute timeout: abort stuck HeyGen renders
-        if (Date.now() - new Date(clip.updated_date).getTime() > 5 * 60 * 1000) {
+        // 10-minute timeout: single-scene clips normally finish in 2-5 min, but
+        // HeyGen queue delays can push that out. Give buffer before aborting.
+        if (Date.now() - new Date(clip.updated_date).getTime() > 10 * 60 * 1000) {
           await base44.asServiceRole.entities.DnnNewsClip.update(clip.id, {
             [`${role}Status`]: 'failed',
-            errorMessage: 'Render timed out after 5 minutes',
+            errorMessage: 'Render timed out after 10 minutes',
           });
           results.push({ type: 'clip', clipId: clip.id, role, status: 'timeout' });
           continue;
@@ -103,12 +104,12 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // 25-minute timeout: multi-scene stitched renders (3 scenes -> 1 MP4) take
-        // longer than single clips. Only abort if genuinely stuck.
-        if (Date.now() - new Date(bc.updated_date).getTime() > 25 * 60 * 1000) {
+        // 45-minute timeout: multi-scene stitched renders (3 scenes -> 1 MP4) can
+        // take 20-30+ min under HeyGen queue load. Only abort if genuinely stuck.
+        if (Date.now() - new Date(bc.updated_date).getTime() > 45 * 60 * 1000) {
           await base44.asServiceRole.entities.DnnBroadcast.update(bc.id, {
             status: 'failed',
-            errorMessage: 'HeyGen render timed out after 25 minutes',
+            errorMessage: 'HeyGen render timed out after 45 minutes',
           });
           results.push({ type: 'broadcast', broadcast_id: bc.id, status: 'timeout' });
           continue;
