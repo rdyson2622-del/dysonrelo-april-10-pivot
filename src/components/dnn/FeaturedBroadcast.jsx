@@ -18,22 +18,39 @@ export default function FeaturedBroadcast() {
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['featuredNewsBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-show_number', 20),
-    // Prevent window-focus refetches from changing the video URL mid-playback,
-    // which was causing the duplicate "second run" over the news section.
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  const featured = broadcasts.find(b =>
-    (b.compositedVideoUrl || b.videoUrl) && (b.distribution || []).some(d => d.channel === 'in_app_news' && d.status === 'sent')
-  );
+  // Lock the featured broadcast on FIRST resolve. A background refetch (e.g.
+  // the Creatomate composite finishing ~60s later) swaps compositedVideoUrl
+  // from a pending placeholder to a real URL, which changes the playUrl prop
+  // and triggers a delayed "second run" of the audio. By freezing the
+  // selection (id + url + layout) for the entire page session, the player
+  // props never change mid-playback — no remount, no src swap, no duplicate.
+  const lockedRef = useRef(null);
+  if (!lockedRef.current) {
+    const f = broadcasts.find(b =>
+      (b.compositedVideoUrl || b.videoUrl) &&
+      (b.distribution || []).some(d => d.channel === 'in_app_news' && d.status === 'sent')
+    );
+    if (f) {
+      const compUrl = f.compositedVideoUrl;
+      const playUrl = (compUrl && !String(compUrl).startsWith('creatomate:pending:')) ? compUrl : f.videoUrl;
+      if (playUrl) {
+        lockedRef.current = {
+          id: f.id,
+          playUrl,
+          showName: f.show_name,
+          composited: !!f.compositedVideoUrl && playUrl === f.compositedVideoUrl,
+          headline: f.headlines?.[0],
+        };
+      }
+    }
+  }
 
+  const featured = lockedRef.current;
   if (!featured) return null;
-
-  // Prioritize composited (studio backdrop baked in). Filter out pending placeholders.
-  const compUrl = featured.compositedVideoUrl;
-  const playUrl = (compUrl && !String(compUrl).startsWith('creatomate:pending:')) ? compUrl : featured.videoUrl;
-  if (!playUrl) return null;
 
   return (
     <div className="mb-8">
@@ -41,13 +58,14 @@ export default function FeaturedBroadcast() {
         <Radio className="w-4 h-4" style={{ color: GOLD }} />
         <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Featured Broadcast</span>
       </div>
-      {/* key={playUrl} forces a FULL remount when the URL changes — the old
-          <video> unmounts (audio stops) and a fresh player mounts. This
-          eliminates the race condition where a query refetch reset the
-          play guard mid-playback and caused a duplicate "second run". */}
-      <InlineStudioPlayer key={featured.id} videoUrl={playUrl} showName={featured.show_name} composited={!!featured.compositedVideoUrl && playUrl === featured.compositedVideoUrl} />
-      {featured.headlines?.length > 0 && (
-        <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headlines[0]}</p>
+      <InlineStudioPlayer
+        key={featured.id}
+        videoUrl={featured.playUrl}
+        showName={featured.showName}
+        composited={featured.composited}
+      />
+      {featured.headline && (
+        <p className="text-sm font-bold mt-3" style={{ color: '#1a1a1a' }}>{featured.headline}</p>
       )}
     </div>
   );
