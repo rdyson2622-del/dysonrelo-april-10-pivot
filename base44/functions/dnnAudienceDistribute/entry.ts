@@ -112,6 +112,8 @@ export default async function(req) {
     for (const contact of loopContacts) {
       const firstName = (contact.contact_name || '').split(' ')[0] || 'there';
       const companyName = contact.company || 'your company';
+      const pixelUrl = `https://1dnn.com/api/functions/emailOpenPixel?bid=${encodeURIComponent(broadcast_id)}&cid=${encodeURIComponent(contact.id)}&aid=${encodeURIComponent(audience_id)}`;
+      const pixelImg = `<img src="${pixelUrl}" width="1" height="1" alt="" style="display:none;border:0;width:1px;height:1px;"/>`;
       let htmlBody = `<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#0a0a0a;font-family:Georgia,serif;">
 <div style="max-width:600px;margin:0 auto;background:#0a0a0a;color:#ffffff;">
@@ -147,7 +149,7 @@ export default async function(req) {
     </p>
   </div>
 </div>
-</body></html>`;
+${pixelImg}</body></html>`;
 
       let textBody = `DNN Intelligence Bureau — ${showName}\n${headlineText}\n\nHi ${firstName},\n\nA new DNN broadcast is ready for you.\n\nWatch it here: https://1dnn.com/dnn-news\n\n${preheader}\n\n— Dyson & Dyson Real Estate Concierge\n\nPREFER TEXT? Reply with "TEXT ME" and your mobile number to get the 2-minute daily update on your phone.\n\n---\nYou received this because you are part of the ${audience.audience_name} distribution list.\nDyson & Dyson Real Estate Concierge · 1 Embarcadero Center, San Francisco, CA 94111\nTo unsubscribe, reply with "unsubscribe".`;
 
@@ -171,7 +173,7 @@ export default async function(req) {
     </p>
   </div>
 </div>
-</body></html>`;
+${pixelImg}</body></html>`;
         subject = subject.replace(/\[Company Name\]/g, companyName);
       }
 

@@ -1,0 +1,35 @@
+{
+  "name": "EmailOpen",
+  "type": "object",
+  "properties": {
+    "broadcast_id": {
+      "type": "string",
+      "description": "Reference to DnnBroadcast ID this open belongs to"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Reference to AudienceContact ID (if known)"
+    },
+    "audience_id": {
+      "type": "string",
+      "description": "Reference to TargetAudienceProfile ID (if known)"
+    },
+    "channel": {
+      "type": "string",
+      "default": "subscriber_email",
+      "description": "Email channel the open came from"
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the email was opened (pixel fire time)"
+    },
+    "user_agent": {
+      "type": "string",
+      "description": "Truncated User-Agent string from the open request"
+    }
+  },
+  "required": [
+    "broadcast_id"
+  ]
+}

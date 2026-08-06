@@ -112,6 +112,7 @@ import AdminScriptStudio from './pages/AdminScriptStudio';
 import AdminDailyNewsLibrary from './pages/AdminDailyNewsLibrary';
 import HeygenCreditMonitor from './pages/HeygenCreditMonitor';
 import AdminProductionDashboard from './pages/AdminProductionDashboard';
+import AdminShowPerformance from './pages/AdminShowPerformance';
 import AdminComplianceReview from './pages/AdminComplianceReview';
 import Shard2Dashboard from './pages/Shard2Dashboard';
 import Shard2Pages from './pages/Shard2Pages';
@@ -288,6 +289,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/daily-library" element={<AdminDailyNewsLibrary />} />
         <Route path="/admin/heygen-credits" element={<HeygenCreditMonitor />} />
         <Route path="/admin/production-dashboard" element={<AdminProductionDashboard />} />
+        <Route path="/admin/dnn/show-performance" element={<AdminShowPerformance />} />
         <Route path="/admin/compliance-review" element={<AdminComplianceReview />} />
         <Route path="/admin/qa-script-studio" element={<AdminQAScriptStudio />} />
         <Route path="/admin/shard2" element={<Shard2Dashboard />} />
