@@ -54,8 +54,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
     edited_opening_script: article.edited_opening_script ?? article.generated_opening_script ?? '',
     edited_body_script: article.edited_body_script ?? article.generated_body_script ?? article.body ?? '',
     edited_closing_script: article.edited_closing_script ?? article.generated_closing_script ?? '',
-    edited_full_script: article.edited_full_script ?? article.generated_full_script ?? '',
-    edited_lower_third_text: article.edited_lower_third_text ?? article.generated_lower_third_text ?? '',
     pronunciation_notes: article.pronunciation_notes ?? '',
     correction_notes: article.correction_notes ?? '',
   });
@@ -177,14 +175,11 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             <ReadOnly label="Generated Opening (Scene 1 — DNN Open)" value={article.generated_opening_script} />
             <ReadOnly label="Generated Body (Scene 2 — News Story)" value={article.generated_body_script} />
             <ReadOnly label="Generated Closing (Scene 3 — Dyson Outro)" value={article.generated_closing_script} />
-            <ReadOnly label="Generated Lower-Third Text" value={article.generated_lower_third_text} />
           </div>
 
           {/* Editable fields */}
           <div className="space-y-3">
-            <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Final Script — Editable (anchor: Charlie Simmons)</p>
-            <Field label="Full Script (used for render if filled)" value={draft.edited_full_script} onChange={set('edited_full_script')} rows={6} placeholder="If filled, this overrides the generated full script for HeyGen." />
-            <Field label="Lower-Third Text" value={draft.edited_lower_third_text} onChange={set('edited_lower_third_text')} rows={2} />
+            <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Notes (internal)</p>
             <Field label="Pronunciation Notes" value={draft.pronunciation_notes} onChange={set('pronunciation_notes')} rows={2} placeholder="e.g. 'Dyson = DYE-son', 'Camas = KAM-us'" />
             <Field label="Correction Notes (internal)" value={draft.correction_notes} onChange={set('correction_notes')} rows={2} />
           </div>
