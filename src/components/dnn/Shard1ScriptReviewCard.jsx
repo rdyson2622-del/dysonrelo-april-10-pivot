@@ -64,10 +64,15 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   const persist = async (extra, successText) => {
     setSaving(true);
     setMsg(null);
-    await base44.entities.DnnArticle.update(article.id, { ...draft, ...extra });
-    setSaving(false);
-    setMsg({ type: 'success', text: successText });
-    onChanged?.();
+    try {
+      await base44.entities.DnnArticle.update(article.id, { ...draft, ...extra });
+      setMsg({ type: 'success', text: successText });
+      onChanged?.();
+    } catch (e) {
+      setMsg({ type: 'error', text: e.message || 'Save failed' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSave = () => persist({}, 'Corrections saved.');
