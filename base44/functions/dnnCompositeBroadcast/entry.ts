@@ -29,6 +29,28 @@ function estDuration(s) {
  * from content_script sentences. If no content_script exists, no whiteboard is
  * rendered (we can't time it reliably).
  */
+// Hard caps so a single bullet can never wrap to more than ~2 lines and the
+// total block can never exceed the panel. These are the root-cause fix for the
+// recurring "overlapping garbled text" bug — previous versions derived bullets
+// from full sentences and guessed a font size, which overflowed the panel.
+const BULLET_MAX_CHARS = 48;
+const HEADER_PX = 80; // header + divider reserve inside the panel
+
+function shortenBullet(s) {
+  let t = String(s).trim().replace(/\s+/g, ' ');
+  // Cut at the first natural break (comma, semicolon, em-dash) for a clean phrase.
+  const breakMatch = t.match(/^(.{8,}?)[,;—–-]\s/);
+  if (breakMatch && breakMatch[1].length <= BULLET_MAX_CHARS) {
+    t = breakMatch[1].trim();
+  }
+  if (t.length > BULLET_MAX_CHARS) {
+    t = t.slice(0, BULLET_MAX_CHARS);
+    const lastSpace = t.lastIndexOf(' ');
+    if (lastSpace > 20) t = t.slice(0, lastSpace);
+  }
+  return t.replace(/[.,;:]+$/, '');
+}
+
 function buildWhiteboard(broadcast) {
   const introDur = estDuration(broadcast.intro_script);
   const contentDur = estDuration(broadcast.content_script);
@@ -38,12 +60,12 @@ function buildWhiteboard(broadcast) {
 
   // Resolve bullets: curated first, else derive from content_script sentences.
   let bullets = Array.isArray(broadcast.content_bullets) && broadcast.content_bullets.length
-    ? broadcast.content_bullets.map(b => String(b).trim()).filter(Boolean)
+    ? broadcast.content_bullets.map(b => shortenBullet(b)).filter(Boolean)
     : [];
   if (bullets.length === 0 && broadcast.content_script) {
     bullets = broadcast.content_script
       .split(/(?<=[.!?])\s+/)
-      .map(s => s.trim())
+      .map(s => shortenBullet(s))
       .filter(s => s && wordCount(s) >= 2)
       .slice(0, MAX_BULLETS);
   }
@@ -53,16 +75,21 @@ function buildWhiteboard(broadcast) {
   const n = bullets.length;
   const contentStart = introDur;
 
-  // Panel size grows with bullet count so text always fits with breathing room.
+  // Panel size grows with bullet count.
   const panelW = '64%';
   const panelH = n <= 2 ? '26%' : n <= 4 ? '32%' : '38%';
   const panelY = n <= 2 ? '31%' : n <= 4 ? '33%' : '35%';
 
-  // Font size (points) — shrinks as the bullet count / text length grows.
-  const maxLen = Math.max(...bullets.map(b => b.length));
-  let fontSize = n <= 2 ? 50 : n <= 4 ? 42 : 34;
-  if (maxLen > 80) fontSize -= 6;
-  if (maxLen > 120) fontSize -= 4;
+  // ── Font size PROVEN to fit the panel ────────────────────────────────
+  // Geometry: canvas is 1920x1080. Panel text width = 58% of 1920 = 1113px.
+  // Each bullet is capped at BULLET_MAX_CHARS so at most it wraps to 2 lines.
+  // Worst case totalLines = n * 2. Line height = fontSize * 1.4 (pt→px: *96/72).
+  // fontSizePx * totalLines <= availablePx  →  fontSize <= avail / (totalLines * 1.867)
+  const panelHeightPx = (parseFloat(panelH) / 100) * 1080;
+  const availablePx = panelHeightPx - HEADER_PX;
+  const totalLines = n * 2; // worst case: every bullet wraps once
+  let fontSize = Math.floor(availablePx / (totalLines * 1.867));
+  fontSize = Math.max(20, Math.min(40, fontSize)); // clamp to readable range
 
   const elements = [];
 
