@@ -43,12 +43,11 @@ function shortenBullet(s) {
   if (breakMatch && breakMatch[1].length <= BULLET_MAX_CHARS) {
     t = breakMatch[1].trim();
   }
-  if (t.length > BULLET_MAX_CHARS) {
-    t = t.slice(0, BULLET_MAX_CHARS);
-    const lastSpace = t.lastIndexOf(' ');
-    if (lastSpace > 20) t = t.slice(0, lastSpace);
-  }
-  return t.replace(/[.,;:]+$/, '');
+  // Aggressive: keep only the first 5 words so the bullet fits ONE line with no
+  // wrapping (Creatomate's wrap was collapsing multi-line text). Manual
+  // content_bullets entries are used as-is when present.
+  const words = t.split(' ').slice(0, 5).join(' ');
+  return words.replace(/[.,;:]+$/, '');
 }
 
 function buildWhiteboard(broadcast) {

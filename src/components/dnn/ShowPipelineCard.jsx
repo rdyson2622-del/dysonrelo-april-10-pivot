@@ -10,6 +10,7 @@ import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
 import DistributionTracker from '@/components/dnn/DistributionTracker';
 import SocialAnalyticsPanel from '@/components/dnn/SocialAnalyticsPanel';
 import DnnNewsBroadcastPlayer from '@/components/dnn/DnnNewsBroadcastPlayer';
+import WhiteboardBulletsEditor from '@/components/dnn/WhiteboardBulletsEditor';
 
 function extractBullets(script) {
   if (!script) return [];
@@ -344,6 +345,11 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 )}
               </div>
             </div>
+          )}
+
+          {/* Whiteboard bullets editor — manual short bullets for the studio overlay */}
+          {show.videoUrl && (
+            <WhiteboardBulletsEditor show={show} onRefresh={onRefresh} />
           )}
 
           {/* Script preview */}
