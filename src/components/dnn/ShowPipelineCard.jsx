@@ -392,12 +392,16 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               Single-MP4 pipeline shows use videoUrl mode (studio bg + framed avatar box).
               Legacy tag-team shows fall back to segment mode. */}
           {showStudioPreview && (() => {
-            if (show.videoUrl) {
+            const compUrl = show.compositedVideoUrl;
+            const isComp = compUrl && !String(compUrl).startsWith('creatomate:pending:');
+            const playUrl = isComp ? compUrl : show.videoUrl;
+            if (playUrl) {
               return (
                 <div className="fixed inset-0 z-[200]">
                   <DnnNewsBroadcastPlayer
-                    videoUrl={show.videoUrl}
+                    videoUrl={playUrl}
                     status="ready"
+                    composited={!!isComp}
                     onClose={() => setShowStudioPreview(false)}
                   />
                 </div>

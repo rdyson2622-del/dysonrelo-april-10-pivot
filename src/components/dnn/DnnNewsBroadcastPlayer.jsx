@@ -29,7 +29,7 @@ const SPEAKER_LABELS = {
  *   segments?: [{ src, speaker, bullets?, title? }]  — legacy segment mode
  *   onClose: () => void
  */
-export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, status }) {
+export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, status, composited }) {
   const singleVideoMode = Boolean(videoUrl || status);
 
   // --- Single-video mode (n8n pipeline) ---
@@ -38,6 +38,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, st
       <SingleVideoPlayer
         videoUrl={videoUrl}
         status={status}
+        composited={composited}
         onClose={onClose}
       />
     );
@@ -52,7 +53,7 @@ export default function DnnNewsBroadcastPlayer({ segments, onClose, videoUrl, st
 // ---------------------------------------------------------------------------
 // SingleVideoPlayer — n8n pipeline output
 // ---------------------------------------------------------------------------
-function SingleVideoPlayer({ videoUrl, status, onClose }) {
+function SingleVideoPlayer({ videoUrl, status, composited, onClose }) {
   const videoRef = useRef(null);
   const playPromiseRef = useRef(null);
   const hasPlayedRef = useRef(false); // strict mount-once guard
@@ -194,8 +195,12 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      {/* Studio background — composited in-browser per design plan */}
-      <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      {/* Studio background — only for raw (non-composited) video.
+          The composited MP4 already has the studio set + whiteboard baked in,
+          so we play it full-frame instead of overlaying a second background. */}
+      {!composited && (
+        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
+      )}
 
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
@@ -212,35 +217,50 @@ function SingleVideoPlayer({ videoUrl, status, onClose }) {
         <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
       </div>
 
-      {/* Avatar video in a black-backed framed box over the studio set.
-          Black background covers the lime-green chroma-key areas per design rule. */}
-      <div
-        className="absolute overflow-hidden"
-        style={{
-          width: 'clamp(220px, 30vw, 420px)',
-          aspectRatio: '16/9',
-          bottom: '10vh',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          borderRadius: '12px',
-          border: `2px solid ${GOLD}`,
-          boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
-          background: '#000',
-          zIndex: 10,
-        }}
-      >
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          playsInline
-          preload="auto"
-          loop={false}
-          onClick={togglePlay}
-          onEnded={handleEnded}
-          className="w-full h-full object-cover"
-          style={{ transform: 'scale(1.18)' }}
-        />
-      </div>
+      {/* Video — full-frame when composited (studio bg + whiteboard baked in),
+          or in a black-backed framed box over the studio set when raw. */}
+      {composited ? (
+        <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            playsInline
+            preload="auto"
+            loop={false}
+            onClick={togglePlay}
+            onEnded={handleEnded}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div
+          className="absolute overflow-hidden"
+          style={{
+            width: 'clamp(220px, 30vw, 420px)',
+            aspectRatio: '16/9',
+            bottom: '10vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            borderRadius: '12px',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
+            background: '#000',
+            zIndex: 10,
+          }}
+        >
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            playsInline
+            preload="auto"
+            loop={false}
+            onClick={togglePlay}
+            onEnded={handleEnded}
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.18)' }}
+          />
+        </div>
+      )}
 
       {/* Tap for sound overlay when muted but playing */}
       {playing && muted && (
