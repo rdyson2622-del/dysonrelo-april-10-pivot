@@ -151,6 +151,40 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             <Field label="Scene 3 — Closing" value={draft.edited_closing_script} onChange={set('edited_closing_script')} rows={4} />
           </div>
 
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-2">
+            <button onClick={handleSave} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save Corrections
+            </button>
+            <button onClick={handleRepublish} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
+              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />} Save & Republish
+            </button>
+            <button onClick={handleApprove} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
+              <CheckCircle className="w-3 h-3" /> Approve for Render
+            </button>
+            <button onClick={handleRerender} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
+              <RefreshCw className="w-3 h-3" /> Request Re-render
+            </button>
+            <button onClick={handleNeedsRevision} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
+              style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.35)' }}>
+              <AlertTriangle className="w-3 h-3" /> Mark Needs Revision
+            </button>
+            <button onClick={handleDelete} disabled={saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80 ml-auto"
+              style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
+              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />} Delete
+            </button>
+          </div>
+
           {/* Source content */}
           <ReadOnly label="Source Article Body" value={article.body} />
 
@@ -188,40 +222,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
           {msg && (
             <p className="text-xs" style={{ color: msg.type === 'success' ? '#4ade80' : '#f87171' }}>{msg.text}</p>
           )}
-
-          {/* Action buttons */}
-          <div className="flex flex-wrap gap-2 pt-1">
-            <button onClick={handleSave} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
-              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save Corrections
-            </button>
-            <button onClick={handleRepublish} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
-              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />} Save & Republish
-            </button>
-            <button onClick={handleApprove} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
-              <CheckCircle className="w-3 h-3" /> Approve for Render
-            </button>
-            <button onClick={handleRerender} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
-              <RefreshCw className="w-3 h-3" /> Request Re-render
-            </button>
-            <button onClick={handleNeedsRevision} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.35)' }}>
-              <AlertTriangle className="w-3 h-3" /> Mark Needs Revision
-            </button>
-            <button onClick={handleDelete} disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80 ml-auto"
-              style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
-              {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />} Delete
-            </button>
-          </div>
         </div>
       )}
     </div>
