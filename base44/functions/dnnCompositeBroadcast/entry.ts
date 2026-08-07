@@ -93,8 +93,8 @@ function buildWhiteboard(broadcast) {
     font_family: 'Inter',
     font_size: 26,
     font_color: gold,
-    text_align: 'center',
-    line_align: 'center',
+    x_alignment: '50%',
+    y_alignment: '50%',
     time: contentStart, duration: contentDur,
     animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
@@ -128,8 +128,8 @@ function buildWhiteboard(broadcast) {
     font_family: 'Inter',
     font_size: fontSize,
     font_color: '#1a1a1a',
-    text_align: 'center',
-    line_align: 'center',
+    x_alignment: '50%',
+    y_alignment: '50%',
     line_height: 1.5,
     time: contentStart, duration: contentDur,
     animations: [{ type: 'fade', time: 0.3, duration: 0.4 }],
@@ -227,9 +227,8 @@ export default async function(req) {
     // black-backed box at the bottom-center (matches the in-browser Charlie box).
     // A timed whiteboard panel of bullet points is baked in above Bob's box,
     // synced to the content segment so viewers can follow along.
-    // Whiteboard overlay intentionally omitted — it produced garbled/overlapping
-    // text in the composited MP4 and burned API credits on failed re-renders.
-    // The composite is now just the studio background + the anchor box.
+    const whiteboard = buildWhiteboard(broadcast);
+
     const elements = [
       { type: 'image', track: 1, source: studioBackground, fit: 'cover' },
       // Black backing box behind the video (covers chroma-key edges)
@@ -247,6 +246,7 @@ export default async function(req) {
         fit: 'cover', volume: '100%',
         stroke_color: gold, stroke_width: '0.4 vmin', border_radius: '1 vmin',
       },
+      ...whiteboard,
     ];
 
     const createRes = await fetch('https://api.creatomate.com/v2/renders', {
