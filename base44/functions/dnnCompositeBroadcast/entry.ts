@@ -139,28 +139,34 @@ function buildWhiteboard(broadcast) {
     animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
 
-  // All bullets as a SINGLE centered text block — much more reliable than
-  // per-bullet positioning (which was left-aligning everything in the top-left
-  // corner). Each bullet on its own line, centered horizontally and vertically
-  // in the body area below the header.
-  const bulletText = bullets.map(b => `•  ${b}`).join('\n');
-  const bodyY = parseFloat(panelY) + 3;
+  // ── ONE text element PER bullet with explicit Y positions ─────────────
+  // The single multi-line text block collapsed all lines to the same Y
+  // coordinate (Creatomate ignores \n line spacing when y_alignment is centered).
+  // Rendering each bullet as its own element with a computed slot Y makes
+  // overlap mathematically impossible.
+  const panelTop = parseFloat(panelY) - parseFloat(panelH) / 2;
+  const bodyTop = panelTop + 9;       // below header + divider
+  const bodyBottom = parseFloat(panelY) + parseFloat(panelH) / 2 - 2;
+  const bodyHeightPct = bodyBottom - bodyTop;
+  const slotPct = bodyHeightPct / n;
 
-  elements.push({
-    type: 'text',
-    track: 7,
-    text: bulletText,
-    x: '50%', y: `${bodyY}%`, width: '58%',
-    x_anchor: '50%', y_anchor: '50%',
-    font_family: 'Inter',
-    font_size: fontSize,
-    font_color: '#1a1a1a',
-    x_alignment: '50%',
-    y_alignment: '50%',
-    line_height: 1.5,
-    time: contentStart, duration: contentDur,
-    animations: [{ type: 'fade', time: 0.3, duration: 0.4 }],
-  });
+  for (let i = 0; i < n; i++) {
+    const slotCenter = bodyTop + slotPct * (i + 0.5);
+    elements.push({
+      type: 'text',
+      track: 7 + i,
+      text: `•  ${bullets[i]}`,
+      x: '50%', y: `${slotCenter.toFixed(2)}%`, width: '56%',
+      x_anchor: '50%', y_anchor: '50%',
+      font_family: 'Inter',
+      font_size: fontSize,
+      font_color: '#1a1a1a',
+      x_alignment: '50%',
+      y_alignment: '50%',
+      time: contentStart, duration: contentDur,
+      animations: [{ type: 'fade', time: 0.3 + i * 0.15, duration: 0.4 }],
+    });
+  }
 
   return elements;
 }
