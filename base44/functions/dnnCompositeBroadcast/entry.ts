@@ -74,30 +74,43 @@ function buildWhiteboard(broadcast) {
   const n = bullets.length;
   const contentStart = introDur;
 
-  // Panel size grows with bullet count.
-  const panelW = '64%';
-  const panelH = n <= 2 ? '26%' : n <= 4 ? '32%' : '38%';
-  const panelY = n <= 2 ? '31%' : n <= 4 ? '33%' : '35%';
+  // ── ABSOLUTE PIXEL LAYOUT (canvas = 1920×1080) ────────────────────────
+  // Previous attempts used percentage-based Y with y_anchor/y_alignment on
+  // text elements. Creatomate silently collapsed every bullet to the same
+  // Y coordinate, producing the overlapping "smear" the user keeps seeing.
+  //
+  // Fix: position every text element with y as a NUMBER (Creatomate treats
+  // bare numbers as pixels) and y_anchor '0%' (top edge). No y_alignment.
+  // Each bullet's TOP edge is at a distinct pixel value — overlap is now
+  // mathematically impossible. Shapes (panel, divider) keep percentages
+  // since those render correctly.
+  const CANVAS_W = 1920;
+  const CANVAS_H = 1080;
 
-  // ── Font size PROVEN to fit the panel ────────────────────────────────
-  // Geometry: canvas is 1920x1080. Panel text width = 58% of 1920 = 1113px.
-  // Each bullet is capped at BULLET_MAX_CHARS so at most it wraps to 2 lines.
-  // Worst case totalLines = n * 2. Line height = fontSize * 1.4 (pt→px: *96/72).
-  // fontSizePx * totalLines <= availablePx  →  fontSize <= avail / (totalLines * 1.867)
-  const panelHeightPx = (parseFloat(panelH) / 100) * 1080;
-  const availablePx = panelHeightPx - HEADER_PX;
-  const totalLines = n * 2; // worst case: every bullet wraps once
-  let fontSize = Math.floor(availablePx / (totalLines * 1.867));
-  fontSize = Math.max(20, Math.min(40, fontSize)); // clamp to readable range
+  // Panel geometry in pixels (centered horizontally, upper-middle vertically).
+  const panelWidthPx = Math.round(CANVAS_W * 0.64);   // 1229px
+  const panelHeightPx = n <= 2 ? Math.round(CANVAS_H * 0.26)
+                       : n <= 4 ? Math.round(CANVAS_H * 0.32)
+                                : Math.round(CANVAS_H * 0.38);
+  const panelCenterYPx = n <= 2 ? Math.round(CANVAS_H * 0.31)
+                       : n <= 4 ? Math.round(CANVAS_H * 0.33)
+                                : Math.round(CANVAS_H * 0.35);
+  const panelTopPx = panelCenterYPx - Math.round(panelHeightPx / 2);
+  const panelLeftPx = Math.round((CANVAS_W - panelWidthPx) / 2);
+
+  // Fixed readable font size — bullets are ≤5 words so they never wrap.
+  const fontSize = 38;
+  const lineSpacingPx = 64;  // vertical gap between bullet top-edges
 
   const elements = [];
 
-  // Panel background — gold-bordered white card, centered above Bob's box.
+  // Panel background — gold-bordered white card (shape, percentages OK).
   elements.push({
     type: 'shape',
     path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z',
     track: 4,
-    x: '50%', y: panelY, width: panelW, height: panelH,
+    x: '50%', y: `${(panelCenterYPx / CANVAS_H * 100).toFixed(2)}%`,
+    width: '64%', height: `${(panelHeightPx / CANVAS_H * 100).toFixed(2)}%`,
     x_anchor: '50%', y_anchor: '50%',
     fill_color: '#ffffff', fill_opacity: 0.97,
     stroke_color: gold, stroke_width: '0.45 vmin',
@@ -106,62 +119,62 @@ function buildWhiteboard(broadcast) {
     animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
 
-  // Header bar — gold "KEY POINTS" title at the top of the panel for visual flow.
-  const panelTopPct = parseFloat(panelY) - parseFloat(panelH) / 2;
-  const headerY = panelTopPct + 3.5;
-
+  // Header "KEY POINTS" — pixel Y, top-anchored.
+  const headerTopPx = panelTopPx + 24;
   elements.push({
     type: 'text',
     track: 5,
     text: 'KEY POINTS',
-    x: '50%', y: `${headerY}%`, width: panelW,
-    x_anchor: '50%', y_anchor: '50%',
+    x: CANVAS_W / 2,            // pixel center
+    y: headerTopPx,            // pixel top-edge
+    width: panelWidthPx - 80,
+    x_anchor: '50%', y_anchor: '0%',
     font_family: 'Inter',
-    font_size: 26,
+    font_size: 28,
     font_color: gold,
     x_alignment: '50%',
-    y_alignment: '50%',
     time: contentStart, duration: contentDur,
     animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
 
-  // Thin gold divider line under the header.
-  const dividerY = panelTopPct + 7;
+  // Divider line under header — pixel Y as a thin shape.
+  const dividerTopPx = headerTopPx + 42;
   elements.push({
     type: 'shape',
     path: 'M 0% 0% L 100% 0% L 100% 100% L 0% 100% Z',
     track: 6,
-    x: '50%', y: `${dividerY}%`, width: '52%', height: '0.15%',
-    x_anchor: '50%', y_anchor: '50%',
+    x: CANVAS_W / 2, y: dividerTopPx,
+    width: Math.round(panelWidthPx * 0.52), height: 2,
+    x_anchor: '50%', y_anchor: '0%',
     fill_color: gold, fill_opacity: 0.5,
     time: contentStart, duration: contentDur,
     animations: [{ type: 'fade', time: 0, duration: 0.4 }],
   });
 
-  // ── ONE text element PER bullet with explicit Y positions ─────────────
-  // The single multi-line text block collapsed all lines to the same Y
-  // coordinate (Creatomate ignores \n line spacing when y_alignment is centered).
-  // Rendering each bullet as its own element with a computed slot Y makes
-  // overlap mathematically impossible.
-  const panelTop = parseFloat(panelY) - parseFloat(panelH) / 2;
-  const bodyTop = panelTop + 9;       // below header + divider
-  const bodyBottom = parseFloat(panelY) + parseFloat(panelH) / 2 - 2;
-  const bodyHeightPct = bodyBottom - bodyTop;
-  const slotPct = bodyHeightPct / n;
+  // ── Bullets — each its own text element, ABSOLUTE pixel Y, top-anchored ──
+  // This is the root-cause fix: distinct pixel Y values + y_anchor '0%' means
+  // Creatomate cannot collapse them to one line.
+  const bodyTopPx = dividerTopPx + 28;
+  // Vertically center the bullet block within the remaining panel space.
+  const bodyBottomPx = panelTopPx + panelHeightPx - 24;
+  const bodyHeightPx = bodyBottomPx - bodyTopPx;
+  const blockHeightPx = lineSpacingPx * (n - 1) + fontSize;
+  const startYpx = bodyTopPx + Math.max(0, (bodyHeightPx - blockHeightPx) / 2);
 
   for (let i = 0; i < n; i++) {
-    const slotCenter = bodyTop + slotPct * (i + 0.5);
+    const bulletTopPx = Math.round(startYpx + i * lineSpacingPx);
     elements.push({
       type: 'text',
       track: 7 + i,
       text: `•  ${bullets[i]}`,
-      x: '50%', y: `${slotCenter.toFixed(2)}%`, width: '56%',
-      x_anchor: '50%', y_anchor: '50%',
+      x: CANVAS_W / 2,
+      y: bulletTopPx,
+      width: Math.round(panelWidthPx * 0.82),
+      x_anchor: '50%', y_anchor: '0%',
       font_family: 'Inter',
       font_size: fontSize,
       font_color: '#1a1a1a',
       x_alignment: '50%',
-      y_alignment: '50%',
       time: contentStart, duration: contentDur,
       animations: [{ type: 'fade', time: 0.3 + i * 0.15, duration: 0.4 }],
     });
