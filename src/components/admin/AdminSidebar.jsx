@@ -6,7 +6,7 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard, Library
+  Clapperboard, Library, Monitor
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -316,6 +316,22 @@ export default function AdminSidebar() {
         >
           <BookOpen className="w-4 h-4" />
           🧭 Claude AI Agent Library Flow Chart
+        </Link>
+      </div>
+
+      {/* Claude Screen Viewer — always visible */}
+      <div className="px-3 pt-1 pb-1">
+        <Link
+          to="/admin/claude-screen-viewer"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/claude-screen-viewer' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Monitor className="w-4 h-4" />
+          👁️ Claude Screen Viewer
         </Link>
       </div>
 
