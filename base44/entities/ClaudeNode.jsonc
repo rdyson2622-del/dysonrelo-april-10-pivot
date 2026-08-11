@@ -38,6 +38,15 @@
       "default": false,
       "description": "Marks priority nodes (e.g. claude.md master file) with a gold star badge"
     },
+    "is_private": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, only the user whose ID matches private_owner_id can view and edit this node. Hidden from all other users including admins."
+    },
+    "private_owner_id": {
+      "type": "string",
+      "description": "User ID of the sole owner who can access this node when is_private is true."
+    },
     "node_order": {
       "type": "number",
       "default": 0,
@@ -47,5 +56,61 @@
   "required": [
     "title",
     "section"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.is_private": {
+            "$ne": true
+          }
+        },
+        {
+          "data.private_owner_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "data.is_private": {
+                "$ne": true
+              }
+            },
+            {
+              "user_condition": {
+                "role": "admin"
+              }
+            }
+          ]
+        },
+        {
+          "data.private_owner_id": "{{user.id}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "data.is_private": {
+                "$ne": true
+              }
+            },
+            {
+              "user_condition": {
+                "role": "admin"
+              }
+            }
+          ]
+        },
+        {
+          "data.private_owner_id": "{{user.id}}"
+        }
+      ]
+    }
+  }
 }
