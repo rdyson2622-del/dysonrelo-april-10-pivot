@@ -129,6 +129,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Subscribe from './pages/Subscribe';
 import AgentSubscribe from './pages/AgentSubscribe';
 import TermsOfService from './pages/TermsOfService';
+import AdminClaudeFlowChart from './pages/AdminClaudeFlowChart';
+import AdminClaudeNodeDetail from './pages/AdminClaudeNodeDetail';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -299,6 +301,8 @@ const AuthenticatedApp = () => {
         <Route path="/admin/shard2/scripts" element={<Shard2Scripts />} />
         <Route path="/admin/shard2/library" element={<Shard2Library />} />
         <Route path="/admin/shard2/settings" element={<Shard2Settings />} />
+        <Route path="/admin/claude-flow" element={<AdminClaudeFlowChart />} />
+        <Route path="/admin/claude-node/:nodeId" element={<AdminClaudeNodeDetail />} />
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />

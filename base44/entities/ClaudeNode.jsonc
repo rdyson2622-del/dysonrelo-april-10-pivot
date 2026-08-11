@@ -1,0 +1,60 @@
+{
+  "name": "ClaudeNode",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Node title shown on the flow chart card"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short one-line description shown under the title on the canvas"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full markdown content of this node \u2014 the prompt, instructions, or context you are building for Claude"
+    },
+    "google_doc_url": {
+      "type": "string",
+      "description": "Link to the Google Doc containing the full long-form content (hybrid storage). Clicking the node's detail page opens this."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "context",
+        "instruction",
+        "prompt",
+        "reference",
+        "output",
+        "decision"
+      ],
+      "default": "instruction",
+      "description": "Node category \u2014 controls color coding on the canvas"
+    },
+    "position_x": {
+      "type": "number",
+      "default": 100,
+      "description": "Canvas X position (pixels)"
+    },
+    "position_y": {
+      "type": "number",
+      "default": 100,
+      "description": "Canvas Y position (pixels)"
+    },
+    "connected_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of nodes this node links to (drawn as arrows on the canvas)"
+    },
+    "node_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Display / sort order"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}
