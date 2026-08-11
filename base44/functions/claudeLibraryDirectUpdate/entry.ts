@@ -5,9 +5,9 @@ export default async function(req) {
   try {
     // ── Auth: shared API key in x-api-key header ──
     const apiKey = req.headers.get('x-api-key') || req.headers.get('X-Api-Key');
-    const expectedKey = secrets.get("CLAUDE_LIBRARY_API_KEY");
+    const expectedKey = secrets.get("CLAUDELIBRARYAPIKEY");
     if (!expectedKey) {
-      return Response.json({ error: 'Server secret CLAUDE_LIBRARY_API_KEY is not configured. Set it in Dashboard → Settings → Environment Variables.' }, { status: 500 });
+      return Response.json({ error: 'Server secret CLAUDELIBRARYAPIKEY is not configured. Set it in Dashboard → Settings → Environment Variables.' }, { status: 500 });
     }
     if (!apiKey || apiKey !== expectedKey) {
       return Response.json({ error: 'Invalid or missing API key. Send it in the x-api-key header.' }, { status: 401 });
