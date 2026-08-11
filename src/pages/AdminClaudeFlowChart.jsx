@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import NodeFormModal from '@/components/claude-flow/NodeFormModal';
 import {
   Download, Plus, Pencil, ArrowLeft, ExternalLink, Star,
-  Building2, Brain, BookOpen, Wrench, FileText, ChevronRight,
+  Building2, Brain, BookOpen, Wrench, FileText, ChevronRight, RefreshCw,
 } from 'lucide-react';
 
 const SECTIONS = [
@@ -53,10 +53,20 @@ export default function AdminClaudeFlowChart() {
   const [exporting, setExporting] = useState(false);
   const [exportUrl, setExportUrl] = useState(null);
 
-  const { data: nodes = [], isLoading } = useQuery({
+  const { data: nodes = [], isLoading, isFetching, refetch } = useQuery({
     queryKey: ['claude-nodes'],
     queryFn: () => base44.entities.ClaudeNode.list('node_order', 500),
+    refetchOnWindowFocus: true,
   });
+
+  // Realtime subscription — external API pushes (claudeLibraryDirectUpdate, Drive webhook sync)
+  // invalidate the cache so new content appears live without a manual refresh.
+  useEffect(() => {
+    const unsubscribe = base44.entities.ClaudeNode.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ['claude-nodes'] });
+    });
+    return unsubscribe;
+  }, [queryClient]);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.ClaudeNode.create(data),
@@ -173,13 +183,25 @@ export default function AdminClaudeFlowChart() {
               <ArrowLeft className="w-4 h-4 mr-1.5" />
               Home
             </Button>
-            <Button
-              onClick={() => { setEditingNode(null); setShowModal(true); }}
-              className="gold-btn border-0"
-            >
-              <Plus className="w-4 h-4 mr-1.5" />
-              Add Node
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => refetch()}
+                disabled={isFetching}
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10"
+                title="Refresh nodes"
+              >
+                <RefreshCw className={`w-4 h-4 mr-1.5 ${isFetching ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+              <Button
+                onClick={() => { setEditingNode(null); setShowModal(true); }}
+                className="gold-btn border-0"
+              >
+                <Plus className="w-4 h-4 mr-1.5" />
+                Add Node
+              </Button>
+            </div>
           </div>
 
           {/* Section header */}
@@ -252,6 +274,15 @@ export default function AdminClaudeFlowChart() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="border-white/20 text-white hover:bg-white/10 bg-transparent border"
+              title="Refresh nodes"
+            >
+              <RefreshCw className={`w-4 h-4 mr-1.5 ${isFetching ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
             <Button
               onClick={handleExport}
               disabled={exporting || nodes.length === 0}
