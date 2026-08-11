@@ -4,57 +4,48 @@
   "properties": {
     "title": {
       "type": "string",
-      "description": "Node title shown on the flow chart card"
+      "description": "Node title shown in the navigation list"
     },
     "summary": {
       "type": "string",
-      "description": "Short one-line description shown under the title on the canvas"
+      "description": "Short one-line description shown under the title"
     },
-    "content": {
+    "section": {
       "type": "string",
-      "description": "Full markdown content of this node \u2014 the prompt, instructions, or context you are building for Claude"
+      "enum": [
+        "departments",
+        "agent_context",
+        "skills_sops",
+        "tools_integrations"
+      ],
+      "default": "agent_context",
+      "description": "Main navigation section this node belongs to"
+    },
+    "subsection": {
+      "type": "string",
+      "description": "Sub-grouping within a section (e.g. 'Marketing', 'DNN News', 'Operations', 'Sales', 'Finance' for Departments). Leave empty for flat sections."
     },
     "google_doc_url": {
       "type": "string",
-      "description": "Link to the Google Doc containing the full long-form content (hybrid storage). Clicking the node's detail page opens this."
+      "description": "Link to the Google Doc containing the full content. Clicking this node opens this URL."
     },
-    "category": {
+    "content": {
       "type": "string",
-      "enum": [
-        "context",
-        "instruction",
-        "prompt",
-        "reference",
-        "output",
-        "decision"
-      ],
-      "default": "instruction",
-      "description": "Node category \u2014 controls color coding on the canvas"
+      "description": "Optional in-app content (markdown). Primary content lives in the linked Google Doc."
     },
-    "position_x": {
-      "type": "number",
-      "default": 100,
-      "description": "Canvas X position (pixels)"
-    },
-    "position_y": {
-      "type": "number",
-      "default": 100,
-      "description": "Canvas Y position (pixels)"
-    },
-    "connected_to": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "IDs of nodes this node links to (drawn as arrows on the canvas)"
+    "is_priority": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marks priority nodes (e.g. claude.md master file) with a gold star badge"
     },
     "node_order": {
       "type": "number",
       "default": 0,
-      "description": "Display / sort order"
+      "description": "Sort order within a section/subsection"
     }
   },
   "required": [
-    "title"
+    "title",
+    "section"
   ]
 }

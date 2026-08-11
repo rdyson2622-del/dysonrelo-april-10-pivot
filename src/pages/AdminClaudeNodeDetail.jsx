@@ -1,11 +1,17 @@
 import React from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
-import { ArrowLeft, FileText, Pencil, ExternalLink } from 'lucide-react';
-import { CATEGORY_COLORS } from '@/components/claude-flow/FlowCanvas';
+import { ArrowLeft, FileText, ExternalLink, Star } from 'lucide-react';
+
+const SECTION_LABELS = {
+  departments: 'Departments',
+  agent_context: 'Agent Context',
+  skills_sops: 'Skills & SOPs',
+  tools_integrations: 'Tools & Integrations',
+};
 
 export default function AdminClaudeNodeDetail() {
   const { nodeId } = useParams();
@@ -15,11 +21,6 @@ export default function AdminClaudeNodeDetail() {
     queryKey: ['claude-node', nodeId],
     queryFn: () => base44.entities.ClaudeNode.get(nodeId),
     enabled: !!nodeId,
-  });
-
-  const { data: allNodes = [] } = useQuery({
-    queryKey: ['claude-nodes'],
-    queryFn: () => base44.entities.ClaudeNode.list('node_order', 200),
   });
 
   if (isLoading) {
@@ -41,12 +42,6 @@ export default function AdminClaudeNodeDetail() {
     );
   }
 
-  const colors = CATEGORY_COLORS[node.category] || CATEGORY_COLORS.instruction;
-  const connectedNodes = (node.connected_to || [])
-    .map((id) => allNodes.find((n) => n.id === id))
-    .filter(Boolean);
-  const incomingNodes = allNodes.filter((n) => (n.connected_to || []).includes(node.id));
-
   return (
     <div className="min-h-screen bg-dyson-black text-white">
       <div className="border-b border-white/10 px-6 py-3 flex items-center gap-3">
@@ -56,44 +51,46 @@ export default function AdminClaudeNodeDetail() {
           className="border-white/20 text-white hover:bg-white/10"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Flow Chart
-        </Button>
-        <div className="flex-1" />
-        <Button
-          onClick={() => navigate('/admin/claude-flow')}
-          className="gold-btn border-0"
-        >
-          <Pencil className="w-4 h-4 mr-1.5" />
-          Edit in Flow Chart
+          Agent Library
         </Button>
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
-        <div
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-3"
-          style={{ background: colors.bg, border: `1px solid ${colors.border}`, color: colors.border }}
-        >
-          {colors.label}
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+          <span>{SECTION_LABELS[node.section] || node.section}</span>
+          {node.subsection && (
+            <>
+              <span>/</span>
+              <span>{node.subsection}</span>
+            </>
+          )}
         </div>
 
-        <h1 className="text-3xl font-serif text-white mb-2">{node.title}</h1>
+        {/* Title */}
+        <div className="flex items-center gap-3 mb-2">
+          {node.is_priority && <Star className="w-6 h-6 text-dyson-gold fill-dyson-gold shrink-0" />}
+          <h1 className="text-3xl font-serif text-white">{node.title}</h1>
+        </div>
         {node.summary && <p className="text-gray-400 text-lg mb-6">{node.summary}</p>}
 
+        {/* Google Doc link — primary CTA */}
         {node.google_doc_url && (
           <a
             href={node.google_doc_url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-lg border border-dyson-gold/40 bg-dyson-gold/10 text-dyson-gold-light text-sm hover:bg-dyson-gold/20 transition"
+            className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-lg border border-dyson-gold/40 bg-dyson-gold/10 text-dyson-gold-light text-sm font-medium hover:bg-dyson-gold/20 transition"
           >
             <FileText className="w-4 h-4" />
             Open Google Doc
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
         )}
 
+        {/* Optional in-app content */}
         {node.content && (
-          <div className="bg-dyson-charcoal border border-white/10 rounded-xl p-6 mb-8">
+          <div className="bg-dyson-charcoal border border-white/10 rounded-xl p-6">
             <h2 className="text-sm font-semibold text-dyson-gold uppercase tracking-wider mb-3">Content</h2>
             <div className="prose prose-invert max-w-none text-gray-200">
               <ReactMarkdown>{node.content}</ReactMarkdown>
@@ -101,55 +98,12 @@ export default function AdminClaudeNodeDetail() {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {connectedNodes.length > 0 && (
-            <div className="bg-dyson-charcoal border border-white/10 rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-dyson-gold uppercase tracking-wider mb-3">
-                Connects To ({connectedNodes.length})
-              </h3>
-              <div className="space-y-2">
-                {connectedNodes.map((n) => {
-                  const c = CATEGORY_COLORS[n.category] || CATEGORY_COLORS.instruction;
-                  return (
-                    <Link
-                      key={n.id}
-                      to={`/admin/claude-node/${n.id}`}
-                      className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition"
-                    >
-                      <span className="w-2 h-2 rounded-full" style={{ background: c.border }} />
-                      <span className="text-white text-sm">{n.title}</span>
-                      <ExternalLink className="w-3 h-3 text-gray-500 ml-auto" />
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {incomingNodes.length > 0 && (
-            <div className="bg-dyson-charcoal border border-white/10 rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-dyson-gold uppercase tracking-wider mb-3">
-                Linked From ({incomingNodes.length})
-              </h3>
-              <div className="space-y-2">
-                {incomingNodes.map((n) => {
-                  const c = CATEGORY_COLORS[n.category] || CATEGORY_COLORS.instruction;
-                  return (
-                    <Link
-                      key={n.id}
-                      to={`/admin/claude-node/${n.id}`}
-                      className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/5 transition"
-                    >
-                      <span className="w-2 h-2 rounded-full" style={{ background: c.border }} />
-                      <span className="text-white text-sm">{n.title}</span>
-                      <ExternalLink className="w-3 h-3 text-gray-500 ml-auto" />
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+        {!node.google_doc_url && !node.content && (
+          <div className="bg-dyson-charcoal border border-white/10 rounded-xl p-8 text-center text-gray-500">
+            <FileText className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            <p>No Google Doc link or content set for this node yet.</p>
+          </div>
+        )}
       </div>
     </div>
   );

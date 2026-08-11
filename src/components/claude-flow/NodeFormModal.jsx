@@ -3,18 +3,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { CATEGORY_COLORS } from './FlowCanvas';
+import { Trash2 } from 'lucide-react';
 
-export default function NodeFormModal({ node, allNodes, onSave, onClose }) {
+const SECTIONS = [
+  { key: 'departments', label: 'Departments' },
+  { key: 'agent_context', label: 'Agent Context' },
+  { key: 'skills_sops', label: 'Skills & SOPs' },
+  { key: 'tools_integrations', label: 'Tools & Integrations' },
+];
+
+export default function NodeFormModal({ node, allNodes, defaultSection, onSave, onDelete, onClose }) {
   const [form, setForm] = useState({
     title: '',
     summary: '',
-    content: '',
+    section: 'agent_context',
+    subsection: '',
     google_doc_url: '',
-    category: 'instruction',
-    connected_to: [],
-    position_x: 100,
-    position_y: 100,
+    content: '',
+    is_priority: false,
+    node_order: 0,
   });
 
   useEffect(() => {
@@ -22,28 +29,31 @@ export default function NodeFormModal({ node, allNodes, onSave, onClose }) {
       setForm({
         title: node.title || '',
         summary: node.summary || '',
-        content: node.content || '',
+        section: node.section || 'agent_context',
+        subsection: node.subsection || '',
         google_doc_url: node.google_doc_url || '',
-        category: node.category || 'instruction',
-        connected_to: node.connected_to || [],
-        position_x: node.position_x ?? 100,
-        position_y: node.position_y ?? 100,
+        content: node.content || '',
+        is_priority: node.is_priority || false,
+        node_order: node.node_order ?? 0,
       });
+    } else if (defaultSection) {
+      setForm((f) => ({ ...f, section: defaultSection }));
     }
-  }, [node]);
-
-  const toggleConnection = (id) => {
-    setForm((f) => ({
-      ...f,
-      connected_to: f.connected_to.includes(id)
-        ? f.connected_to.filter((x) => x !== id)
-        : [...f.connected_to, id],
-    }));
-  };
+  }, [node, defaultSection]);
 
   const handleSubmit = () => {
     if (!form.title.trim()) return;
-    onSave(form);
+    onSave({
+      ...form,
+      subsection: form.section === 'departments' ? form.subsection : '',
+      node_order: Number(form.node_order) || 0,
+    });
+  };
+
+  const handleDelete = () => {
+    if (node && confirm('Delete this node permanently?')) {
+      onDelete(node.id);
+    }
   };
 
   const inputCls = 'bg-dyson-charcoal border-white/20 text-white';
@@ -63,53 +73,55 @@ export default function NodeFormModal({ node, allNodes, onSave, onClose }) {
               className={inputCls}
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="e.g. System Prompt — Relocation Concierge"
+              placeholder="e.g. Email Campaigns"
             />
           </div>
 
           <div>
-            <Label className="text-white mb-1.5 block">Summary (one line, shown on canvas)</Label>
+            <Label className="text-white mb-1.5 block">Summary (one line)</Label>
             <Input
               className={inputCls}
               value={form.summary}
               onChange={(e) => setForm({ ...form, summary: e.target.value })}
-              placeholder="Short description visible on the flow chart card"
+              placeholder="Short description shown under the title"
             />
           </div>
 
           <div>
-            <Label className="text-white mb-1.5 block">Category</Label>
+            <Label className="text-white mb-1.5 block">Section</Label>
             <div className="flex flex-wrap gap-2">
-              {Object.entries(CATEGORY_COLORS).map(([key, val]) => (
+              {SECTIONS.map((s) => (
                 <button
-                  key={key}
+                  key={s.key}
                   type="button"
-                  onClick={() => setForm({ ...form, category: key })}
+                  onClick={() => setForm({ ...form, section: s.key, subsection: s.key === 'departments' ? form.subsection : '' })}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition"
                   style={{
-                    borderColor: val.border,
-                    background: form.category === key ? val.border : 'transparent',
-                    color: form.category === key ? '#000' : val.border,
+                    borderColor: form.section === s.key ? '#D4AF37' : 'rgba(255,255,255,0.2)',
+                    background: form.section === s.key ? 'rgba(212,175,55,0.2)' : 'transparent',
+                    color: form.section === s.key ? '#D4AF37' : '#fff',
                   }}
                 >
-                  {val.label}
+                  {s.label}
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
-            <Label className="text-white mb-1.5 block">Content (Markdown — the prompt/instructions for Claude)</Label>
-            <Textarea
-              className={inputCls + ' min-h-[200px] font-mono text-sm'}
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Paste or write the full prompt, context, or instructions for this node..."
-            />
-          </div>
+          {form.section === 'departments' && (
+            <div>
+              <Label className="text-white mb-1.5 block">Subsection (Department group)</Label>
+              <Input
+                className={inputCls}
+                value={form.subsection}
+                onChange={(e) => setForm({ ...form, subsection: e.target.value })}
+                placeholder="e.g. Marketing, DNN News, Operations, Sales, Finance"
+              />
+            </div>
+          )}
 
           <div>
-            <Label className="text-white mb-1.5 block">Google Doc URL (hybrid — long-form content link)</Label>
+            <Label className="text-white mb-1.5 block">Google Doc URL (clicking this node opens this link)</Label>
             <Input
               className={inputCls}
               value={form.google_doc_url}
@@ -119,62 +131,60 @@ export default function NodeFormModal({ node, allNodes, onSave, onClose }) {
           </div>
 
           <div>
-            <Label className="text-white mb-1.5 block">Connects To (click to toggle)</Label>
-            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 border border-white/10 rounded-lg">
-              {allNodes
-                .filter((n) => n.id !== node?.id)
-                .map((n) => (
-                  <button
-                    key={n.id}
-                    type="button"
-                    onClick={() => toggleConnection(n.id)}
-                    className="px-2.5 py-1 rounded-md text-xs border transition"
-                    style={{
-                      borderColor: form.connected_to.includes(n.id) ? '#D4AF37' : 'rgba(255,255,255,0.2)',
-                      background: form.connected_to.includes(n.id) ? 'rgba(212,175,55,0.2)' : 'transparent',
-                      color: form.connected_to.includes(n.id) ? '#D4AF37' : '#fff',
-                    }}
-                  >
-                    {n.title}
-                  </button>
-                ))}
-              {allNodes.filter((n) => n.id !== node?.id).length === 0 && (
-                <span className="text-gray-500 text-xs">No other nodes yet.</span>
-              )}
-            </div>
+            <Label className="text-white mb-1.5 block">Content (optional markdown — primary content lives in the Google Doc)</Label>
+            <Textarea
+              className={inputCls + ' min-h-[120px] font-mono text-sm'}
+              value={form.content}
+              onChange={(e) => setForm({ ...form, content: e.target.value })}
+              placeholder="Optional in-app content or notes..."
+            />
           </div>
 
-          {!node && (
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-white mb-1.5 block">Canvas X</Label>
-                <Input
-                  type="number"
-                  className={inputCls}
-                  value={form.position_x}
-                  onChange={(e) => setForm({ ...form, position_x: Number(e.target.value) })}
-                />
-              </div>
-              <div>
-                <Label className="text-white mb-1.5 block">Canvas Y</Label>
-                <Input
-                  type="number"
-                  className={inputCls}
-                  value={form.position_y}
-                  onChange={(e) => setForm({ ...form, position_y: Number(e.target.value) })}
-                />
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-white mb-1.5 block">Sort Order</Label>
+              <Input
+                type="number"
+                className={inputCls}
+                value={form.node_order}
+                onChange={(e) => setForm({ ...form, node_order: e.target.value })}
+              />
             </div>
-          )}
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 cursor-pointer pb-2">
+                <input
+                  type="checkbox"
+                  checked={form.is_priority}
+                  onChange={(e) => setForm({ ...form, is_priority: e.target.checked })}
+                  className="w-4 h-4 accent-dyson-gold"
+                />
+                <span className="text-white text-sm">Priority node (gold star)</span>
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div className="flex justify-end gap-2 mt-6">
-          <Button variant="outline" onClick={onClose} className="border-white/20 text-white hover:bg-white/10">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} className="gold-btn border-0">
-            {node ? 'Save Changes' : 'Create Node'}
-          </Button>
+        <div className="flex justify-between gap-2 mt-6">
+          <div>
+            {node && (
+              <Button
+                variant="outline"
+                onClick={handleDelete}
+                className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+              >
+                <Trash2 className="w-4 h-4 mr-1.5" />
+                Delete
+              </Button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={onClose} className="border-white/20 text-white hover:bg-white/10">
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit} className="gold-btn border-0">
+              {node ? 'Save Changes' : 'Create Node'}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
