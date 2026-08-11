@@ -246,7 +246,7 @@ export default function AdminClaudeFlowChart() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-serif text-dyson-gold">Agent Library</h1>
+            <h1 className="text-2xl font-serif text-dyson-gold">Claude Agent Library Flow Chart</h1>
             <p className="text-gray-400 text-sm mt-1">
               Visual flowchart navigation for the DysonRelo AI agent system. Click a section to browse.
             </p>
