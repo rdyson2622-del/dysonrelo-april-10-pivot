@@ -282,45 +282,48 @@ export default function AdminClaudeFlowChart() {
             <div className="w-8 h-8 border-4 border-dyson-gold/30 border-t-dyson-gold rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {SECTIONS.map((section) => {
+          <div className="flex items-stretch gap-0 overflow-x-auto pb-4">
+            {SECTIONS.map((section, idx) => {
               const count = sectionNodes(section.key).length;
               return (
-                <button
-                  key={section.key}
-                  onClick={() => setActiveSection(section.key)}
-                  className="group relative overflow-hidden rounded-2xl border-2 p-6 text-left transition-all hover:scale-[1.02]"
-                  style={{
-                    borderColor: `${section.color}40`,
-                    background: section.bg,
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: `radial-gradient(circle at top right, ${section.color}15, transparent 60%)` }}
-                  />
-                  <div className="relative flex items-start gap-4">
+                <React.Fragment key={section.key}>
+                  <button
+                    onClick={() => setActiveSection(section.key)}
+                    className="group relative shrink-0 w-44 rounded-xl border-2 p-4 text-left transition-all hover:scale-[1.03] hover:shadow-lg"
+                    style={{
+                      borderColor: `${section.color}50`,
+                      background: section.bg,
+                    }}
+                  >
                     <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
-                      style={{ background: `${section.color}20`, border: `1px solid ${section.color}50` }}
-                    >
-                      <section.icon className="w-7 h-7" style={{ color: section.color }} />
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-xl font-serif text-white mb-1">{section.label}</h2>
-                      <p className="text-gray-400 text-sm leading-relaxed">{section.description}</p>
-                      <div className="flex items-center gap-2 mt-3">
-                        <span
-                          className="text-xs font-medium px-2 py-0.5 rounded-full"
-                          style={{ background: `${section.color}20`, color: section.color }}
-                        >
-                          {count} {count === 1 ? 'item' : 'items'}
-                        </span>
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"
+                      style={{ background: `radial-gradient(circle at top right, ${section.color}18, transparent 65%)` }}
+                    />
+                    <div className="relative flex flex-col items-center text-center gap-2">
+                      <div
+                        className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0"
+                        style={{ background: `${section.color}25`, border: `1px solid ${section.color}60` }}
+                      >
+                        <section.icon className="w-5 h-5" style={{ color: section.color }} />
                       </div>
+                      <h2 className="text-sm font-serif text-white leading-tight">{section.label}</h2>
+                      <span
+                        className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                        style={{ background: `${section.color}20`, color: section.color }}
+                      >
+                        {count} {count === 1 ? 'item' : 'items'}
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-white transition" />
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-white transition shrink-0 mt-1" />
-                  </div>
-                </button>
+                  </button>
+                  {idx < SECTIONS.length - 1 && (
+                    <div className="flex items-center shrink-0 px-1">
+                      <div className="w-6 h-0.5" style={{ background: `${section.color}40` }} />
+                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: section.color, opacity: 0.6 }} />
+                      <div className="w-6 h-0.5" style={{ background: `${SECTIONS[idx + 1].color}40` }} />
+                    </div>
+                  )}
+                </React.Fragment>
               );
             })}
           </div>
