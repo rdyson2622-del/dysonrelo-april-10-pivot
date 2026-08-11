@@ -315,7 +315,7 @@ export default function AdminSidebar() {
           }}
         >
           <BookOpen className="w-4 h-4" />
-          🧭 Claude Agent Library Flow Chart
+          🧭 Claude AI Agent Library Flow Chart
         </Link>
       </div>
 
