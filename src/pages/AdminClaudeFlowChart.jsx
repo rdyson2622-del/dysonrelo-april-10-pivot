@@ -11,7 +11,7 @@ import {
 const SECTIONS = [
   {
     key: 'departments',
-    label: 'Departments',
+    label: 'D&D Departments',
     icon: Building2,
     description: 'Marketing, Operations, Sales, Finance & DNN News',
     color: '#D4AF37',
@@ -19,7 +19,7 @@ const SECTIONS = [
   },
   {
     key: 'agent_context',
-    label: 'Agent Context',
+    label: 'AI Agent Intelligence',
     icon: Brain,
     description: 'Master files, brand voice, customer profiles & company knowledge',
     color: '#3b82f6',
@@ -27,7 +27,7 @@ const SECTIONS = [
   },
   {
     key: 'skills_sops',
-    label: 'Skills & SOPs',
+    label: 'Skills and Standard Operating Procedures',
     icon: BookOpen,
     description: 'Standard operating procedures & skill definitions',
     color: '#10b981',
@@ -35,7 +35,7 @@ const SECTIONS = [
   },
   {
     key: 'tools_integrations',
-    label: 'Tools & Integrations',
+    label: 'Integrations, Work Flows & N8N WebHooks',
     icon: Wrench,
     description: 'Gmail, Drive, Slack, Calendar & CRM connections',
     color: '#8b5cf6',
@@ -268,12 +268,21 @@ export default function AdminClaudeFlowChart() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-serif text-dyson-gold">Claude AI Agent Library Flow Chart</h1>
+            <h1 className="text-2xl font-serif text-dyson-gold">Claude AI Agent Library Flow Charts</h1>
             <p className="text-gray-400 text-sm mt-1">
               Visual flowchart navigation for the DysonRelo AI agent system. Click a section to browse.
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              onClick={() => window.history.back()}
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10"
+              title="Back"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
+              Back
+            </Button>
             <Button
               onClick={() => refetch()}
               disabled={isFetching}
