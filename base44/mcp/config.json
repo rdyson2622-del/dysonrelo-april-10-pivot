@@ -1,0 +1,138 @@
+{
+  "auth": "oauth",
+  "tools": {
+    "functions": [
+      {
+        "name": "find_destination_agents",
+        "title": "Find and notify destination agents",
+        "description": "Finds the top 5 real estate agents in a destination city via web search, creates referral proposal records, and emails each agent an exclusive relocation lead offer with accept/decline links. Admin only. Use when a seller is relocating and you need to recruit receiving-market agents.",
+        "handler": "findAndNotifyAgents",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "seller_outreach_id": { "type": "string", "description": "The ListingOwner/SellerOutreach record id this lead came from." },
+            "destination_city": { "type": "string", "description": "City the seller is moving to." },
+            "destination_state": { "type": "string", "description": "State the seller is moving to (2-letter, e.g. TX)." },
+            "seller_name": { "type": "string", "description": "Seller's full name for the email." },
+            "moving_timeline": { "type": "string", "description": "Optional timeline, e.g. '3-6 months'." }
+          },
+          "required": ["seller_outreach_id", "destination_city", "destination_state"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "create_owner_outreach_campaign",
+        "title": "Create owner outreach campaign",
+        "description": "Creates an OwnerOutreachCampaign record for a listing owner if one does not already exist. Admin only. Use before sending the first outreach SMS to a homeowner.",
+        "handler": "createOutreachCampaign",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "listing_owner_id": { "type": "string", "description": "The ListingOwner record id to start a campaign for." }
+          },
+          "required": ["listing_owner_id"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "send_owner_sms_batch",
+        "title": "Send owner outreach SMS batch",
+        "description": "Sends the Day 1 owner-outreach SMS to a batch of listing owners via Twilio, using the 'Owner Outreach SMS #1 - Day 1' template. Admin only. Each owner needs a valid phone and listing_owner_id. Logs the batch to BatchSMSLog.",
+        "handler": "sendBatchOutreachSMS",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "city": { "type": "string", "description": "City label for the batch log." },
+            "owners": {
+              "type": "array",
+              "description": "List of owners to text.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "listing_owner_id": { "type": "string", "description": "ListingOwner record id." },
+                  "phone": { "type": "string", "description": "E.164 phone number, e.g. +15125551234." },
+                  "owner_name": { "type": "string", "description": "Owner name for the template merge." },
+                  "property_address": { "type": "string", "description": "Property address (optional, for logging)." }
+                },
+                "required": ["listing_owner_id", "phone"]
+              }
+            }
+          },
+          "required": ["owners"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "run_morning_broadcast",
+        "title": "Run DNN morning broadcast",
+        "description": "Drives the DNN morning broadcast pipeline. action 'generate' writes today's Charlie/Bob scripts from published articles; 'render' starts HeyGen clip renders; 'run' does both; 'check' polls in-progress renders and stores completed videos. Admin only.",
+        "handler": "dnnMorningBroadcast",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "action": { "type": "string", "description": "One of: generate, render, run, check.", "enum": ["generate", "render", "run", "check"] }
+          },
+          "required": ["action"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "generate_daily_articles",
+        "title": "Generate daily DNN articles",
+        "description": "Generates 10 localized DNN Intelligence Briefs across random markets and trigger types (tax, housing, jobs, rates, migration, employer news) and publishes them to the consumer feed. No parameters. Admin only.",
+        "handler": "dnnDailyArticle",
+        "input_schema": { "type": "object", "properties": {} },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "trigger_broadcast_distribution",
+        "title": "Trigger broadcast distribution",
+        "description": "Fires the n8n multi-channel publishing webhook for a broadcast whose status is 'ready' and has a videoUrl, publishing to LinkedIn, Facebook, Instagram, SMS, and email. Pass the broadcast id. Admin only.",
+        "handler": "dnnTriggerDistribution",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "entity_id": { "type": "string", "description": "The DnnBroadcast record id to distribute." }
+          },
+          "required": ["entity_id"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "render_article_video",
+        "title": "Render article avatar video",
+        "description": "Synthesizes anchor audio for a DNN article and kicks off a HeyGen lip-sync avatar video render. Returns a video_id to poll via heygenCheckVideo. Admin only.",
+        "handler": "heygenRenderVideo",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "article_id": { "type": "string", "description": "The DnnArticle record id to render." },
+            "avatar_id": { "type": "string", "description": "HeyGen Photo Avatar id. Defaults to 'Adrian_public_2_20240312' if omitted." }
+          },
+          "required": ["article_id"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "generate_referral_agreement",
+        "title": "Generate referral agreement",
+        "description": "Generates a Relocation Referral & Management Agreement document (markdown text) between Dyson & Dyson and a listing agent/broker for a specific property. Returns the agreement text ready for signature.",
+        "handler": "generateReferralAgreement",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "list_agent_name": { "type": "string", "description": "Listing agent full name." },
+            "broker_name": { "type": "string", "description": "Brokerage name." },
+            "list_agent_email": { "type": "string", "description": "Listing agent email." },
+            "property_address": { "type": "string", "description": "Subject property address." },
+            "seller_name": { "type": "string", "description": "Seller name (optional)." },
+            "referral_fee_percent": { "type": "number", "description": "Referral fee percent of D&D's management fee. Defaults to 25." },
+            "relocation_mgmt_fee_percent": { "type": "number", "description": "Relocation management fee percent of buyer-side commission. Defaults to 15." }
+          },
+          "required": ["list_agent_name", "broker_name", "property_address"]
+        },
+        "annotations": { "read_only_hint": true, "destructive_hint": false, "idempotent_hint": true }
+      }
+    ]
+  }
+}
