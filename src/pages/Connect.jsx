@@ -133,7 +133,7 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
 
               {/* The 8 tools */}
               <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-                <p className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-3">Available Tools (8)</p>
+                <p className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-3">Available Tools (9)</p>
                 <div className="space-y-2 text-xs">
                   {[
                     ['find_destination_agents', 'seller_outreach_id, destination_city, destination_state'],
@@ -144,6 +144,7 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
                     ['trigger_broadcast_distribution', 'entity_id'],
                     ['render_article_video', 'article_id'],
                     ['generate_referral_agreement', 'list_agent_name, broker_name, property_address'],
+                    ['list_referral_agents', '(none) — optional: list_name, city, status, limit'],
                   ].map(([name, reqArgs]) => (
                     <div key={name} className="flex flex-col sm:flex-row gap-1 sm:gap-3 pb-2 border-b border-white/5 last:border-0">
                       <code className="text-dyson-gold font-mono shrink-0">{name}</code>

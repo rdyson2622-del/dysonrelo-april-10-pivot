@@ -1,0 +1,121 @@
+{
+  "name": "ReferralAgentList",
+  "type": "object",
+  "properties": {
+    "agent_name": {
+      "type": "string",
+      "description": "Agent's full name"
+    },
+    "list_name": {
+      "type": "string",
+      "description": "Source list this agent belongs to (e.g. 'DD Master Roster', 'SD County Non-Broker Affiliated')"
+    },
+    "email": {
+      "type": "string",
+      "description": "Agent email (if available)"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Agent phone number (if available)"
+    },
+    "dre_license_number": {
+      "type": "string",
+      "description": "DRE license number"
+    },
+    "dre_license_state": {
+      "type": "string",
+      "default": "CA",
+      "description": "State that issued the license"
+    },
+    "license_expiration_date": {
+      "type": "string",
+      "description": "License expiration date"
+    },
+    "license_type": {
+      "type": "string",
+      "description": "License type (Salesperson, Broker, etc.)"
+    },
+    "license_status": {
+      "type": "string",
+      "description": "License status (e.g. Licensed NBA)"
+    },
+    "license_effective_date": {
+      "type": "string",
+      "description": "License effective date"
+    },
+    "original_license_date": {
+      "type": "string",
+      "description": "Original date of license"
+    },
+    "address": {
+      "type": "string",
+      "description": "Mailing address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip_code": {
+      "type": "string",
+      "description": "ZIP code"
+    },
+    "county_name": {
+      "type": "string",
+      "description": "County name"
+    },
+    "agent_communications": {
+      "type": "string",
+      "description": "Communication notes from the master roster"
+    },
+    "ic_agreement_signed": {
+      "type": "string",
+      "description": "Independent contractor agreement status/date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "contacted",
+        "converted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Referral agent status"
+    },
+    "import_batch": {
+      "type": "string",
+      "description": "Import batch identifier"
+    }
+  },
+  "required": [
+    "agent_name",
+    "list_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

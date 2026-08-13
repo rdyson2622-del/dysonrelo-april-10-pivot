@@ -246,6 +246,15 @@ export default function AdminAgentVetting() {
     queryFn: () => base44.entities.PartnerAgent.list('-created_date', 100),
   });
 
+  const [referralFilter, setReferralFilter] = useState('all');
+  const { data: referralAgents = [] } = useQuery({
+    queryKey: ['referralAgentList'],
+    queryFn: () => base44.entities.ReferralAgentList.list('-created_date', 500),
+  });
+
+  const referralLists = [...new Set(referralAgents.map(a => a.list_name).filter(Boolean))];
+  const filteredReferral = referralFilter === 'all' ? referralAgents : referralAgents.filter(a => a.list_name === referralFilter);
+
   const handleAddToBureau = async () => {
     if (!result?.agent_name) return;
     await base44.entities.PartnerAgent.create({
@@ -362,6 +371,62 @@ export default function AdminAgentVetting() {
             </div>
           </div>
         </div>
+
+        {/* Referral Agent Lists */}
+        <div className="mt-8 rounded-2xl p-6" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <FileCheck className="w-4 h-4" style={{ color: GOLD }} />
+            <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Referral Agent Lists</p>
+            <span className="text-xs ml-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>{referralAgents.length} agents on file</span>
+          </div>
+
+          {/* List filter pills */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <button onClick={() => setReferralFilter('all')}
+              className={`text-xs font-bold px-3 py-1.5 rounded-full transition ${referralFilter === 'all' ? 'text-black' : 'text-white'}`}
+              style={referralFilter === 'all' ? { background: GOLD } : { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              All ({referralAgents.length})
+            </button>
+            {referralLists.map(name => (
+              <button key={name} onClick={() => setReferralFilter(name)}
+                className={`text-xs font-bold px-3 py-1.5 rounded-full transition ${referralFilter === name ? 'text-black' : 'text-white'}`}
+                style={referralFilter === name ? { background: GOLD } : { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                {name} ({referralAgents.filter(a => a.list_name === name).length})
+              </button>
+            ))}
+          </div>
+
+          {/* Agent list */}
+          <div className="space-y-1.5 max-h-[400px] overflow-y-auto pr-1">
+            {filteredReferral.length === 0 && (
+              <p className="text-xs text-center py-8" style={{ color: 'rgba(255,255,255,0.3)' }}>No referral agents imported yet.</p>
+            )}
+            {filteredReferral.slice(0, 200).map(a => (
+              <div key={a.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-black"
+                  style={{ background: 'rgba(212,175,55,0.1)', color: GOLD }}>
+                  {a.agent_name?.[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white truncate">{a.agent_name}</p>
+                  <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    {a.city || '—'} · {a.dre_license_number || 'No DRE'} · {a.email || 'No email'}
+                  </p>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 capitalize"
+                  style={{ color: GOLD, background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
+                  {a.status}
+                </span>
+              </div>
+            ))}
+            {filteredReferral.length > 200 && (
+              <p className="text-xs text-center py-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                Showing 200 of {filteredReferral.length}. Use the Claude webhook to query the full list.
+              </p>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

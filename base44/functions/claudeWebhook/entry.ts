@@ -77,6 +77,13 @@ const TOOLS = [
     required_args: ['list_agent_name', 'broker_name', 'property_address'],
     optional_args: ['list_agent_email', 'seller_name', 'referral_fee_percent', 'relocation_mgmt_fee_percent'],
   },
+  {
+    name: 'list_referral_agents',
+    description: 'Lists real estate agents from the imported referral agent rosters. Filter by list_name ("DD Master Roster" or "SD County Non-Broker Affiliated"), city, status, or license_status. Returns up to 100 agents with name, email, phone, DRE license, city, and status. Use this to retrieve agents for marketing outreach and daily news subscriber recruitment.',
+    function: '__inline__',
+    required_args: [],
+    optional_args: ['list_name', 'city', 'status', 'license_status', 'limit'],
+  },
 ];
 
 export default async function(req) {
@@ -131,6 +138,42 @@ export default async function(req) {
     const missing = toolDef.required_args.filter(a => providedArgs[a] === undefined || providedArgs[a] === null);
     if (missing.length > 0) {
       return Response.json({ error: `Missing required args for ${tool}: ${missing.join(', ')}` }, { status: 400 });
+    }
+
+    // ── Inline tools (handled directly, no backend function delegation) ─
+    if (toolDef.function === '__inline__' && tool === 'list_referral_agents') {
+      const { list_name, city, status, license_status, limit } = providedArgs;
+      const filter = {};
+      if (list_name) filter.list_name = list_name;
+      if (city) filter.city = city;
+      if (status) filter.status = status;
+      if (license_status) filter.license_status = license_status;
+      const agents = await base44.asServiceRole.entities.ReferralAgentList.filter(
+        filter,
+        '-created_date',
+        Math.min(parseInt(limit) || 100, 500)
+      );
+      return Response.json({
+        tool,
+        success: true,
+        result: {
+          count: agents.length,
+          agents: agents.map(a => ({
+            id: a.id,
+            agent_name: a.agent_name,
+            list_name: a.list_name,
+            email: a.email,
+            phone: a.phone,
+            dre_license_number: a.dre_license_number,
+            city: a.city,
+            state: a.state,
+            license_status: a.license_status,
+            license_type: a.license_type,
+            license_expiration_date: a.license_expiration_date,
+            status: a.status,
+          })),
+        },
+      });
     }
 
     // ── Delegate to the original backend function ──────────────────────
