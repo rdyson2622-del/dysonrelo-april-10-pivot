@@ -286,5 +286,39 @@
     "headline",
     "body",
     "status"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.status": {
+            "$in": [
+              "published",
+              "blasted"
+            ]
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

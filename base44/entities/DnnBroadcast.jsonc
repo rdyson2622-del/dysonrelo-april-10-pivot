@@ -193,41 +193,32 @@
             "type": "object",
             "properties": {
               "impressions": {
-                "type": "number",
-                "description": "Total views/impressions"
+                "type": "number"
               },
               "unique_impressions": {
-                "type": "number",
-                "description": "Unique viewers"
+                "type": "number"
               },
               "likes": {
-                "type": "number",
-                "description": "Total likes/reactions"
+                "type": "number"
               },
               "comments": {
-                "type": "number",
-                "description": "Total comments"
+                "type": "number"
               },
               "shares": {
-                "type": "number",
-                "description": "Total shares/reposts"
+                "type": "number"
               },
               "video_views": {
-                "type": "number",
-                "description": "Video-specific views (for video posts)"
+                "type": "number"
               },
               "engagement_rate": {
-                "type": "number",
-                "description": "Engagement rate as a percentage"
+                "type": "number"
               },
               "previous_impressions": {
-                "type": "number",
-                "description": "Previous poll's impressions \u2014 for trend calculation"
+                "type": "number"
               },
               "polled_at": {
                 "type": "string",
-                "format": "date-time",
-                "description": "When analytics were last polled"
+                "format": "date-time"
               }
             },
             "description": "Social media analytics pulled from platform APIs"
@@ -239,5 +230,39 @@
   },
   "required": [
     "broadcast_date"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.status": {
+            "$in": [
+              "ready",
+              "completed"
+            ]
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }
