@@ -132,6 +132,7 @@ import TermsOfService from './pages/TermsOfService';
 import AdminClaudeFlowChart from './pages/AdminClaudeFlowChart';
 import AdminClaudeNodeDetail from './pages/AdminClaudeNodeDetail';
 import AdminClaudeScreenViewer from './pages/AdminClaudeScreenViewer';
+import Connect from './pages/Connect';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -311,6 +312,7 @@ const AuthenticatedApp = () => {
       <Route path="/agent-landing" element={<AgentLanding />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/connect" element={<Connect />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
