@@ -255,18 +255,26 @@ export default function AdminAgentVetting() {
   const referralLists = [...new Set(referralAgents.map(a => a.list_name).filter(Boolean))];
   const filteredReferral = referralFilter === 'all' ? referralAgents : referralAgents.filter(a => a.list_name === referralFilter);
 
-  const exportReferralCSV = () => {
-    const headers = ['agent_name','list_name','email','phone','dre_license_number','dre_license_state','license_type','license_status','license_expiration_date','license_effective_date','original_license_date','address','city','state','zip_code','county_name','agent_communications','ic_agreement_signed','status'];
-    const escape = (v) => `"${(v ?? '').toString().replace(/"/g, '""')}"`;
-    const rows = filteredReferral.map(a => headers.map(h => escape(a[h])).join(','));
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `referral_agents_${referralFilter === 'all' ? 'all' : referralFilter.replace(/\s+/g, '_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+  const [exporting, setExporting] = useState(false);
+  const exportReferralCSV = async () => {
+    setExporting(true);
+    try {
+      const filter = referralFilter === 'all' ? {} : { list_name: referralFilter };
+      const allAgents = await base44.entities.ReferralAgentList.filter(filter, '-created_date', 10000);
+      const headers = ['agent_name','list_name','email','phone','dre_license_number','dre_license_state','license_type','license_status','license_expiration_date','license_effective_date','original_license_date','address','city','state','zip_code','county_name','agent_communications','ic_agreement_signed','status'];
+      const escape = (v) => `"${(v ?? '').toString().replace(/"/g, '""')}"`;
+      const rows = allAgents.map(a => headers.map(h => escape(a[h])).join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `referral_agents_${referralFilter === 'all' ? 'all' : referralFilter.replace(/\s+/g, '_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleAddToBureau = async () => {
@@ -392,10 +400,11 @@ export default function AdminAgentVetting() {
             <FileCheck className="w-4 h-4" style={{ color: GOLD }} />
             <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Referral Agent Lists</p>
             <span className="text-xs ml-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>{referralAgents.length} agents on file</span>
-            <button onClick={exportReferralCSV} disabled={filteredReferral.length === 0}
+            <button onClick={exportReferralCSV} disabled={exporting || filteredReferral.length === 0}
               className="text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5 disabled:opacity-40"
               style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}>
-              <Download className="w-3 h-3" /> Export CSV
+              {exporting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
+              {exporting ? 'Exporting...' : 'Export CSV'}
             </button>
           </div>
 
