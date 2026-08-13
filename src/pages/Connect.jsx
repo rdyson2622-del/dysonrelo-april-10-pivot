@@ -59,14 +59,14 @@ export default function Connect() {
           <label className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-2 block">API Key (put in x-api-key header)</label>
           <div className="flex items-center gap-3">
             <code className="flex-1 px-4 py-3 rounded-lg bg-black/40 border border-white/10 text-sm text-white font-mono overflow-x-auto whitespace-nowrap">
-              CLAUDELIBRARYAPIKEY
+              •••••••• (visible in Settings → Secrets)
             </code>
-            <Button onClick={() => copy('CLAUDELIBRARYAPIKEY', 'key')} className="gold-btn border-0 shrink-0">
-              {copied === 'key' ? <Check className="w-4 h-4 mr-1.5" /> : <Key className="w-4 h-4 mr-1.5" />}
-              {copied === 'key' ? 'Copied' : 'Copy'}
-            </Button>
           </div>
-          <p className="text-xs text-gray-500 mt-3">This is the value of the CLAUDELIBRARYAPIKEY secret set in your app settings. Use it as the <code className="text-dyson-gold">x-api-key</code> header on every request.</p>
+          <div className="mt-3 rounded-lg border border-dyson-gold/30 bg-dyson-gold/10 p-3">
+            <p className="text-xs text-white leading-relaxed">
+              <strong className="text-dyson-gold">⚠️ IMPORTANT:</strong> The API key is the <em>secret value</em> you set for <code className="text-dyson-gold">CLAUDELIBRARYAPIKEY</code> in your app's <strong>Settings → Secrets</strong> dashboard — <strong className="text-white">NOT</strong> the literal string "CLAUDELIBRARYAPIKEY". Copy the actual value from the secrets dashboard and give it to your AI assistant to use as the <code className="text-dyson-gold">x-api-key</code> header.
+            </p>
+          </div>
         </div>
 
         {/* Client Tabs */}
