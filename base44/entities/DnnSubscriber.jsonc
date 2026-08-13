@@ -30,7 +30,7 @@
     },
     "partner_agent_id": {
       "type": "string",
-      "description": "Hard-tagged PartnerAgent ID \u2014 this subscriber belongs exclusively to this agent's silo"
+      "description": "Hard-tagged PartnerAgent ID — this subscriber belongs exclusively to this agent's silo"
     },
     "partner_agent_name": {
       "type": "string",
@@ -89,7 +89,11 @@
         "role": "admin"
       }
     },
-    "create": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
     "update": {
       "user_condition": {
         "role": "admin"

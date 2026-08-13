@@ -85,7 +85,7 @@
     "dre_license_expiration": {
       "type": "string",
       "format": "date",
-      "description": "License expiration date \u2014 used for renewal alerts"
+      "description": "License expiration date — used for renewal alerts"
     },
     "dre_license_state": {
       "type": "string",
@@ -168,7 +168,18 @@
     "city"
   ],
   "rls": {
-    "read": {},
+    "read": {
+      "$or": [
+        {
+          "data.status": "active"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
     "create": {
       "user_condition": {
         "role": "admin"

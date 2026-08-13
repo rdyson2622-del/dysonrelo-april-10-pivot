@@ -59,7 +59,7 @@
         "gold"
       ],
       "default": "bronze",
-      "description": "DNN Featured Lender tier \u2014 determines monthly placement fee"
+      "description": "DNN Featured Lender tier — determines monthly placement fee"
     },
     "bio": {
       "type": "string",
@@ -92,7 +92,18 @@
     "email"
   ],
   "rls": {
-    "read": {},
+    "read": {
+      "$or": [
+        {
+          "data.status": "active"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
     "create": {
       "user_condition": {
         "role": "admin"
