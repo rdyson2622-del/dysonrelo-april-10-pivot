@@ -91,7 +91,8 @@ From Daily News Library / BroadcastTemplate:
 | Freeze HeyGen as non-default for new morning shows | Next (flag in auto-render) |
 | Retire Creatomate from morning social path | Next |
 | Evergreen silent video loops (optional polish) | Later |
-| Browser MediaRecorder social bake | Later |
+| Browser MediaRecorder social bake | **Done** — `bakeInHouseShow` → `compositedVideoUrl` |
+| DNN Desk lead + specialists | **Done** — see `DNN_DESK_AGENTS_AND_MP4_PLAN.md` |
 
 ---
 
@@ -99,4 +100,4 @@ From Daily News Library / BroadcastTemplate:
 
 - Do not rebuild lip-synced photoreal avatars in-house yet  
 - Do not cancel Twilio / Meta / LinkedIn distribution  
-- Do not delete HeyGen functions immediately — keep as **manual fallback** until in-house path is trusted for a full week of mornings
+- Do not delete HeyGen functions immediately — keep as **manual fallback** until in-house bake is trusted for a full week of mornings

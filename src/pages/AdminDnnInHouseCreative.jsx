@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  ArrowLeft, CheckCircle2, Clapperboard, Layers, Radio, Trash2, XCircle, Zap
+  ArrowLeft, CheckCircle2, Clapperboard, Download, Layers, Radio, Trash2, Users, XCircle, Zap
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import InHouseMorningShowPlayer from '@/components/dnn/InHouseMorningShowPlayer';
+import { bakeInHouseShow } from '@/lib/bakeInHouseShow';
+import { DNN_SOCIAL_TARGETS } from '@/lib/dnnDeskAgents';
 
 const GOLD = '#D4AF37';
 
@@ -22,7 +24,7 @@ const DEFAULT_BULLETS = [
 const KILL = [
   { name: 'ElevenLabs', status: 'already gone', detail: 'Zero code usage. Confirm billing cancelled.' },
   { name: 'HeyGen', status: 'eliminate for daily', detail: 'Replace daily avatar renders with host plates + Google TTS. Keep functions as manual fallback only.' },
-  { name: 'Creatomate', status: 'eliminate for daily', detail: 'Studio is assembled in-app. Social can deep-link until we add a bake step.' },
+  { name: 'Creatomate', status: 'eliminate for daily', detail: 'Replaced by in-house canvas bake → compositedVideoUrl for social MP4.' },
   { name: 'Epidemic Sound', status: 'eliminate', detail: 'Unused in render path. Owned DNN sting already ships.' },
   { name: 'n8n creative W1–W3', status: 'eliminate', detail: 'M2M already blocked. Base44 owns orchestration.' },
 ];
@@ -35,7 +37,12 @@ const KEEP = [
 ];
 
 export default function AdminDnnInHouseCreative() {
+  const queryClient = useQueryClient();
   const [playing, setPlaying] = useState(false);
+  const [baking, setBaking] = useState(false);
+  const [bakeProgress, setBakeProgress] = useState(null);
+  const [bakeResult, setBakeResult] = useState(null);
+  const [bakeError, setBakeError] = useState('');
 
   const { data: broadcasts = [], isLoading } = useQuery({
     queryKey: ['inhouse-latest-broadcast'],
@@ -56,6 +63,30 @@ export default function AdminDnnInHouseCreative() {
       || 'DNN Morning Intelligence — In-House Creative';
     return { intro, content, outro, bullets, headline };
   }, [latest]);
+
+  const handleBake = async () => {
+    setBaking(true);
+    setBakeError('');
+    setBakeResult(null);
+    setBakeProgress({ phase: 'start', message: 'Starting Signal bake…' });
+    try {
+      const result = await bakeInHouseShow({
+        introScript: show.intro,
+        contentScript: show.content,
+        outroScript: show.outro,
+        bullets: show.bullets,
+        headline: show.headline,
+        broadcastId: latest?.id || null,
+        onProgress: setBakeProgress,
+      });
+      setBakeResult(result);
+      queryClient.invalidateQueries({ queryKey: ['inhouse-latest-broadcast'] });
+    } catch (err) {
+      setBakeError(err?.message || 'Bake failed');
+    } finally {
+      setBaking(false);
+    }
+  };
 
   return (
     <div className="min-h-screen p-6 pb-16" style={{ background: '#0a0a0a' }}>
@@ -116,13 +147,14 @@ export default function AdminDnnInHouseCreative() {
             <Layers className="w-4 h-4" style={{ color: GOLD }} />
             <h2 className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Morning creative flow</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
             {[
               'National sources',
               'White-label rewrite',
               'Script parameters',
               'Google TTS dual-host',
-              'Owned studio assemble',
+              'Bake usable MP4',
+              'Post to 7 sites',
             ].map((step, i) => (
               <div key={step} className="rounded-xl p-3 text-center" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}33` }}>
                 <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-1" style={{ color: GOLD }}>0{i + 1}</p>
@@ -131,7 +163,7 @@ export default function AdminDnnInHouseCreative() {
             ))}
           </div>
           <p className="text-xs mt-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-            Full write-up: <code style={{ color: GOLD }}>DNN_INHOUSE_CREATIVE.md</code>
+            Plans: <code style={{ color: GOLD }}>DNN_INHOUSE_CREATIVE.md</code> · <code style={{ color: GOLD }}>DNN_DESK_AGENTS_AND_MP4_PLAN.md</code>
           </p>
         </div>
 
@@ -151,26 +183,84 @@ export default function AdminDnnInHouseCreative() {
                 </p>
               </div>
             </div>
-            {!playing ? (
+            <div className="flex flex-wrap gap-2">
+              {!playing ? (
+                <button
+                  type="button"
+                  onClick={() => setPlaying(true)}
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full"
+                  style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: `1px solid ${GOLD}55` }}
+                >
+                  <Radio className="w-3.5 h-3.5" /> Preview show
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setPlaying(false)}
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full"
+                  style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
+                >
+                  <XCircle className="w-3.5 h-3.5" /> Reset player
+                </button>
+              )}
               <button
                 type="button"
-                onClick={() => setPlaying(true)}
-                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full"
+                disabled={baking}
+                onClick={handleBake}
+                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full disabled:opacity-50"
                 style={{ background: GOLD, color: '#000' }}
               >
-                <Radio className="w-3.5 h-3.5" /> Run in-house show
+                <Download className="w-3.5 h-3.5" />
+                {baking ? 'Baking MP4…' : 'Bake usable MP4'}
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setPlaying(false)}
-                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] px-4 py-2 rounded-full"
-                style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}
-              >
-                <XCircle className="w-3.5 h-3.5" /> Reset player
-              </button>
-            )}
+            </div>
           </div>
+
+          {(baking || bakeProgress || bakeResult || bakeError) && (
+            <div className="mb-4 rounded-xl p-4" style={{ background: 'rgba(212,175,55,0.06)', border: `1px solid ${GOLD}33` }}>
+              {baking && (
+                <p className="text-sm font-semibold" style={{ color: GOLD }}>
+                  Signal bake · {bakeProgress?.message || 'Working…'}
+                </p>
+              )}
+              {bakeError && (
+                <p className="text-sm" style={{ color: '#FCA5A5' }}>Bake failed: {bakeError}</p>
+              )}
+              {bakeResult && (
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold" style={{ color: '#22C55E' }}>
+                    Usable video ready ({Math.round((bakeResult.bytes || 0) / 1024)} KB) — Herald can distribute to 7 sites.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={bakeResult.fileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-bold px-3 py-1.5 rounded-full"
+                      style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}
+                    >
+                      Open CDN video →
+                    </a>
+                    <a
+                      href={bakeResult.fileUrl}
+                      download
+                      className="text-xs font-bold px-3 py-1.5 rounded-full"
+                      style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.12)' }}
+                    >
+                      Download for YT / TikTok / X
+                    </a>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {DNN_SOCIAL_TARGETS.map((s) => (
+                      <span key={s.id} className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.55)' }}>
+                        {s.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {playing ? (
             <InHouseMorningShowPlayer
@@ -184,8 +274,8 @@ export default function AdminDnnInHouseCreative() {
             />
           ) : (
             <div className="rounded-2xl flex items-center justify-center" style={{ aspectRatio: '16 / 9', background: '#111', border: '1px dashed rgba(212,175,55,0.25)' }}>
-              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                Press Run to assemble studio + dual hosts + Google TTS — zero HeyGen credits.
+              <p className="text-sm px-6 text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Preview the show, or Bake usable MP4 to set compositedVideoUrl for social posting — zero HeyGen / Creatomate credits.
               </p>
             </div>
           )}
@@ -195,23 +285,23 @@ export default function AdminDnnInHouseCreative() {
         <div className="rounded-2xl p-5" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-2 mb-3">
             <Zap className="w-4 h-4" style={{ color: GOLD }} />
-            <h2 className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Next build steps</h2>
+            <h2 className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>Conductor next steps</h2>
           </div>
           <ol className="space-y-2 text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            <li>1. Run this prototype against tomorrow’s approved Daily News Library scripts.</li>
-            <li>2. Point `/dnn-news` playback at the in-house player when scripts are approved (HeyGen becomes fallback only).</li>
-            <li>3. Change social posts to prefer the 1dnn.com watch link instead of Creatomate-baked MP4.</li>
-            <li>4. After one clean week of mornings, disable `dnnAutoRender` HeyGen dispatch by default.</li>
+            <li>1. Approve tomorrow’s scripts in Daily News Library (Composer).</li>
+            <li>2. Bake MP4 here (Signal) → confirm CDN URL on the broadcast.</li>
+            <li>3. Herald posts LI / FB / IG via existing social core; download for YouTube / TikTok / X.</li>
+            <li>4. After one clean week, keep HeyGen auto-render off by default.</li>
           </ol>
           <div className="flex flex-wrap gap-2 mt-4">
-            <Link to="/admin/dnn/daily-library" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: `1px solid ${GOLD}44` }}>
+            <Link to="/admin/dnn/desk-org" className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: `1px solid ${GOLD}44` }}>
+              <Users className="w-3.5 h-3.5" /> DNN Desk org →
+            </Link>
+            <Link to="/admin/dnn/daily-library" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
               Daily News Library →
             </Link>
-            <Link to="/admin/dnn/script-studio" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              Script Studio →
-            </Link>
-            <Link to="/admin/heygen-credits" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              Credit Monitor →
+            <Link to="/admin/social-launch" className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              Social Launch →
             </Link>
           </div>
         </div>

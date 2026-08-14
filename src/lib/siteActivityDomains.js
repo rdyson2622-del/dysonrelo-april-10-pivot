@@ -64,6 +64,7 @@ export const SITE_ACTIVITY_DOMAINS = [
     ],
     hubs: [
       { label: 'In-House Creative', path: '/admin/dnn/in-house-creative' },
+      { label: 'DNN Desk Agents', path: '/admin/dnn/desk-org' },
       { label: 'Show Pipeline', path: '/admin/dnn/show-pipeline' },
       { label: 'Script Studio', path: '/admin/dnn/script-studio' },
       { label: 'Script Review', path: '/admin/dnn/script-review' },
