@@ -48,6 +48,7 @@ const adminSections = [
     color: GOLD,
     modules: [
       { name: 'Site Coordination', path: '/admin/site-coordination', icon: BarChart3, description: 'Cross-domain pulse, attention queue, daily rhythm', color: GOLD },
+      { name: 'In-House Creative', path: '/admin/dnn/in-house-creative', icon: Clapperboard, description: 'Morning news without HeyGen / Creatomate', color: '#EF4444' },
       { name: 'Show Performance', path: '/admin/dnn/show-performance', icon: Clapperboard, description: 'DNN distribution, opens, and engagement', color: '#D4AF37' },
       { name: 'Production Costs', path: '/admin/production-dashboard', icon: TrendingUp, description: 'Render pipelines, quotas, and cost projection', color: '#06B6D4' },
       { name: 'Pipeline Credits', path: '/admin/heygen-credits', icon: Zap, description: 'HeyGen, Twilio, and pipeline headroom', color: '#F59E0B' },

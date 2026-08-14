@@ -55,14 +55,15 @@ export const SITE_ACTIVITY_DOMAINS = [
   {
     id: 'dnn_broadcast',
     title: 'DNN News & Broadcast',
-    purpose: 'Script → HeyGen → publish → distribute',
+    purpose: 'National sources → white-label script → in-house studio (Charlie + Bob)',
     accent: '#D4AF37',
     dailyFocus: [
-      'Confirm morning / evening brief status in Show Pipeline',
-      'Clear Script Review / Script Studio blockers',
-      'Watch Pipeline Credit Monitor before large renders',
+      'Confirm morning brief scripts in Daily News Library',
+      'Run In-House Creative prototype (no HeyGen credits)',
+      'Treat HeyGen / Creatomate as fallback only while migrating',
     ],
     hubs: [
+      { label: 'In-House Creative', path: '/admin/dnn/in-house-creative' },
       { label: 'Show Pipeline', path: '/admin/dnn/show-pipeline' },
       { label: 'Script Studio', path: '/admin/dnn/script-studio' },
       { label: 'Script Review', path: '/admin/dnn/script-review' },

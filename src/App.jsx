@@ -112,6 +112,7 @@ import DnnVideoPreview from './pages/DnnVideoPreview';
 import AdminShowPipeline from './pages/AdminShowPipeline';
 import AdminScriptStudio from './pages/AdminScriptStudio';
 import AdminDailyNewsLibrary from './pages/AdminDailyNewsLibrary';
+import AdminDnnInHouseCreative from './pages/AdminDnnInHouseCreative';
 import HeygenCreditMonitor from './pages/HeygenCreditMonitor';
 import AdminProductionDashboard from './pages/AdminProductionDashboard';
 import AdminShowPerformance from './pages/AdminShowPerformance';
@@ -295,6 +296,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/show-pipeline" element={<AdminShowPipeline />} />
         <Route path="/admin/dnn/script-studio" element={<AdminScriptStudio />} />
         <Route path="/admin/dnn/daily-library" element={<AdminDailyNewsLibrary />} />
+        <Route path="/admin/dnn/in-house-creative" element={<AdminDnnInHouseCreative />} />
         <Route path="/admin/heygen-credits" element={<HeygenCreditMonitor />} />
         <Route path="/admin/production-dashboard" element={<AdminProductionDashboard />} />
         <Route path="/admin/dnn/show-performance" element={<AdminShowPerformance />} />
