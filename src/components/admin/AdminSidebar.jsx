@@ -288,8 +288,20 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Admin Dashboard — always visible */}
+      {/* Site Coordination + Admin Dashboard — always visible */}
       <div className="px-3 pt-2 space-y-0.5">
+        <Link
+          to="/admin/site-coordination"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/site-coordination' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Zap className="w-4 h-4" />
+          Site Coordination
+        </Link>
         <Link
           to="/admin"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"

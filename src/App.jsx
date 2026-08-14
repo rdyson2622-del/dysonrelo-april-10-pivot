@@ -48,6 +48,7 @@ import AdminMarketingCampaigns from './pages/AdminMarketingCampaigns';
 import AdminTargetAudiences from './pages/AdminTargetAudiences';
 import AdminAudienceDistribution from './pages/AdminAudienceDistribution';
 import AdminCampaignRoadmap from './pages/AdminCampaignRoadmap';
+import AdminSiteCoordination from './pages/AdminSiteCoordination';
 import AdminSocialLaunch from './pages/AdminSocialLaunch';
 import AdminOutreachPipeline from './pages/AdminOutreachPipeline';
 import AdminBatchSMSLog from './pages/AdminBatchSMSLog';
@@ -224,6 +225,7 @@ const AuthenticatedApp = () => {
       {/* Admin Routes with Sidebar Layout */}
       <Route element={<AdminLayout />}>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/site-coordination" element={<AdminSiteCoordination />} />
         <Route path="/admin/scripts" element={<CharlieScripts />} />
         <Route path="/admin/clients" element={<AdminClients />} />
         <Route path="/admin/client-detail" element={<AdminClientDetail />} />

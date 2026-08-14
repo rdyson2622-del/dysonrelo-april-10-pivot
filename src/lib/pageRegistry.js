@@ -28,6 +28,7 @@ export const PAGE_REGISTRY = {
 
   // ========== ADMIN PAGES ==========
   30: { name: 'Admin Dashboard',        path: '/admin',                       section: 'Admin' },
+  29: { name: 'Site Coordination',      path: '/admin/site-coordination',     section: 'Admin' },
   31: { name: 'Admin Clients',          path: '/admin/clients',               section: 'Admin' },
   32: { name: 'Client Detail',          path: '/admin/client-detail',         section: 'Admin' },
   33: { name: 'Communications',         path: '/admin/communications',        section: 'Admin' },

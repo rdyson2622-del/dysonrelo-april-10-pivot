@@ -128,6 +128,13 @@ export default function Admin() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
+          <Link
+            to="/admin/site-coordination"
+            className="inline-flex items-center gap-2 mt-4 text-xs font-black tracking-[0.15em] uppercase px-4 py-2 rounded-full transition-opacity hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}
+          >
+            Overall Site Coordination →
+          </Link>
         </motion.div>
 
         {/* Summary Dashboard Charts */}
