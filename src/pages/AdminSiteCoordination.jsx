@@ -133,7 +133,7 @@ export default function AdminSiteCoordination() {
 
   const { data: optIns = [], isLoading: loadingOptIns } = useQuery({
     queryKey: ['coord-optins'],
-    queryFn: () => safeList(base44.entities.OptIn, '-created_date', 300),
+    queryFn: () => safeList(base44.entities.OptIn, '-opted_in_at', 300),
     refetchInterval: 30000,
   });
 
@@ -155,27 +155,58 @@ export default function AdminSiteCoordination() {
     refetchInterval: 30000,
   });
 
+  const { data: campaigns = [], isLoading: loadingCampaigns } = useQuery({
+    queryKey: ['coord-outreach-campaigns'],
+    queryFn: () => safeList(base44.entities.OwnerOutreachCampaign, '-sms_sent_date', 2000),
+    refetchInterval: 30000,
+  });
+
+  const { data: pitches = [], isLoading: loadingPitches } = useQuery({
+    queryKey: ['coord-pitches'],
+    queryFn: () => safeList(base44.entities.MediaPitch, '-created_date', 300),
+    refetchInterval: 30000,
+  });
+
+  const { data: flagged = [], isLoading: loadingFlagged } = useQuery({
+    queryKey: ['coord-flagged'],
+    queryFn: () =>
+      base44.entities.ChatMessage.filter({ flag_status: { $ne: 'none' } }, '-created_date')
+        .catch(() => []),
+    refetchInterval: 30000,
+  });
+
   const { data: partners = [], isLoading: loadingPartners } = useQuery({
     queryKey: ['coord-partners'],
     queryFn: () => safeList(base44.entities.VettedPartner, '-created_date', 500),
     refetchInterval: 60000,
   });
 
-  const { data: outreachTasks = [], isLoading: loadingTasks } = useQuery({
-    queryKey: ['coord-outreach-tasks'],
-    queryFn: () => safeList(base44.entities.OutreachTask, '-created_date', 300),
-    refetchInterval: 30000,
+  const { data: revenueAgents = [], isLoading: loadingRevenue } = useQuery({
+    queryKey: ['coord-partner-agents'],
+    queryFn: () => safeList(base44.entities.PartnerAgent, '-created_date', 200),
+    refetchInterval: 60000,
   });
 
   const pulse = useMemo(() => {
     const openEscalations = escalations.filter((e) => e.status === 'open' || e.status === 'in_progress');
     const newOptIns = optIns.filter((o) => o.status === 'new');
     const notContacted = owners.filter((o) => o.contact_status === 'not_contacted');
-    const openTasks = outreachTasks.filter((t) => t.status !== 'completed' && t.status !== 'done');
+    const responded = campaigns.filter((c) => c.workflow_stage && c.workflow_stage !== 'outreach');
+    const responseRate = campaigns.length
+      ? Math.round((responded.length / campaigns.length) * 100)
+      : 0;
     const pendingBroadcasts = broadcasts.filter((b) =>
       ['draft', 'rendering', 'ready'].includes(b.status)
     );
     const queuedCampaigns = scheduled.filter((s) => s.status === 'scheduled' || s.status === 'queued');
+    const hotPitches = pitches.filter((p) => p.status === 'hot' || p.status === 'replied');
+    const openFlags = flagged.filter((m) => m.flag_status && m.flag_status !== 'none' && m.flag_status !== 'resolved');
+    const mrr = revenueAgents.reduce((sum, a) => {
+      if (a.status !== 'active') return sum;
+      const tier = a.featured_tier || 'bronze';
+      const prices = { bronze: 497, silver: 997, gold: 1997 };
+      return sum + (prices[tier] || 497);
+    }, 0);
 
     return {
       clients: clients.length,
@@ -186,7 +217,11 @@ export default function AdminSiteCoordination() {
       pendingBroadcasts: pendingBroadcasts.length,
       queuedCampaigns: queuedCampaigns.length,
       partners: partners.length,
-      openTasks: openTasks.length,
+      responseRate,
+      campaignCount: campaigns.length,
+      hotPitches: hotPitches.length,
+      openFlags: openFlags.length,
+      mrr,
       attention: [
         ...openEscalations.slice(0, 5).map((e) => ({
           id: e.id,
@@ -212,21 +247,30 @@ export default function AdminSiteCoordination() {
           path: '/admin/dnn/show-pipeline',
           accent: GOLD,
         })),
-        ...openTasks.slice(0, 4).map((t) => ({
-          id: t.id,
-          kind: 'Outreach task',
-          title: t.title || t.task_type || 'Open task',
-          meta: t.owner_name || t.property_address || t.status,
-          path: '/admin/outreach-pipeline',
-          accent: '#F59E0B',
+        ...hotPitches.slice(0, 4).map((p) => ({
+          id: p.id,
+          kind: 'Hot PR pitch',
+          title: p.subject || p.outlet || 'Pitch',
+          meta: p.contact_name || p.status,
+          path: '/admin/pitch-tracker',
+          accent: '#EC4899',
+        })),
+        ...openFlags.slice(0, 3).map((m) => ({
+          id: m.id,
+          kind: 'Flagged chat',
+          title: (m.content || 'Flagged message').slice(0, 80),
+          meta: m.flag_status,
+          path: '/admin/flagged-conversations',
+          accent: '#F97316',
         })),
       ].slice(0, 12),
     };
-  }, [clients, owners, optIns, escalations, broadcasts, scheduled, partners, outreachTasks]);
+  }, [clients, owners, optIns, escalations, broadcasts, scheduled, partners, campaigns, pitches, flagged, revenueAgents]);
 
   const loadingPulse =
     loadingClients || loadingOwners || loadingOptIns || loadingEscalations ||
-    loadingBroadcasts || loadingScheduled || loadingPartners || loadingTasks;
+    loadingBroadcasts || loadingScheduled || loadingPartners || loadingCampaigns ||
+    loadingPitches || loadingFlagged || loadingRevenue;
 
   const hubCount = SITE_ACTIVITY_DOMAINS.reduce((n, d) => n + d.hubs.length, 0);
 
@@ -279,10 +323,45 @@ export default function AdminSiteCoordination() {
             <PulseCard label="Open escalations" value={pulse.openEscalations} hint="Charlie needs humans" accent="#EF4444" loading={loadingPulse} path="/admin/charlie-escalations" />
             <PulseCard label="DNN in flight" value={pulse.pendingBroadcasts} hint="draft / rendering / ready" accent={GOLD} loading={loadingPulse} path="/admin/dnn/show-pipeline" />
             <PulseCard label="Queued SMS" value={pulse.queuedCampaigns} hint="Scheduled campaigns" accent="#F97316" loading={loadingPulse} path="/admin/scheduled-campaigns" />
-            <PulseCard label="Open outreach tasks" value={pulse.openTasks} hint="Pipeline follow-ups" accent="#F59E0B" loading={loadingPulse} path="/admin/outreach-pipeline" />
+            <PulseCard label="Outreach response" value={`${pulse.responseRate}%`} hint={`${pulse.campaignCount} campaigns sampled`} accent="#F59E0B" loading={loadingPulse} path="/admin/outreach-analytics" />
             <PulseCard label="Vetted partners" value={pulse.partners} hint="PRN / affiliate roster" accent="#34D399" loading={loadingPulse} path="/admin/roster" />
-            <PulseCard label="Domains" value={SITE_ACTIVITY_DOMAINS.length} hint={`${hubCount} linked hubs`} accent="#06B6D4" loading={false} />
-            <PulseCard label="Attention queue" value={pulse.attention.length} hint="Items needing eyes now" accent="#EC4899" loading={loadingPulse} />
+            <PulseCard label="Hot / replied pitches" value={pulse.hotPitches} hint="PR Pitch Tracker" accent="#EC4899" loading={loadingPulse} path="/admin/pitch-tracker" />
+            <PulseCard label="Featured MRR" value={`$${pulse.mrr.toLocaleString()}`} hint="Active partner tiers" accent="#06B6D4" loading={loadingPulse} path="/admin/dnn/revenue" />
+          </div>
+        </section>
+
+        {/* Analytics & oversight strip — promotes existing live dashboards */}
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <Zap className="w-4 h-4" style={{ color: GOLD }} />
+            <h2 className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+              Analytics & oversight
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { label: 'Outreach Analytics', path: '/admin/outreach-analytics', detail: `${pulse.responseRate}% response · city funnel`, accent: '#EC4899' },
+              { label: 'Show Performance', path: '/admin/dnn/show-performance', detail: 'Opens, distribution, engagement', accent: GOLD },
+              { label: 'Production Costs', path: '/admin/production-dashboard', detail: 'Render pipelines + quotas', accent: '#06B6D4' },
+              { label: 'Pipeline Credits', path: '/admin/heygen-credits', detail: 'HeyGen · Twilio · Creatomate', accent: '#F59E0B' },
+              { label: 'Owner Kanban', path: '/admin/owner-kanban', detail: 'Live response stages', accent: '#10B981' },
+              { label: 'Active Campaigns', path: '/admin/active-campaigns', detail: 'In-flight batch SMS', accent: '#EF4444' },
+              { label: 'Subscriber CRM', path: '/admin/dnn/subscribers', detail: 'Tiers and hot leads', accent: '#8B5CF6' },
+              { label: 'Flagged Messages', path: '/admin/flagged-conversations', detail: `${pulse.openFlags} open flags`, accent: '#F97316' },
+            ].map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="rounded-2xl p-4 transition-opacity hover:opacity-90"
+                style={{ background: '#000', border: `1px solid ${item.accent}33` }}
+              >
+                <p className="text-sm font-bold" style={{ color: '#fff' }}>{item.label}</p>
+                <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{item.detail}</p>
+                <p className="text-[10px] font-black tracking-[0.15em] uppercase mt-3" style={{ color: item.accent }}>
+                  Open dashboard →
+                </p>
+              </Link>
+            ))}
           </div>
         </section>
 
