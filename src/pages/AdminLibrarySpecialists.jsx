@@ -255,7 +255,7 @@ export default function AdminLibrarySpecialists() {
             className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
             style={{ border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
           >
-            🗺️ Master Workflow Atlas
+            🗺️ Grok Bot- Master Workflow Atlas
           </Link>
           <Link
             to="/connect"

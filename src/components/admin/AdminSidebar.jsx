@@ -23,7 +23,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
-      { label: '🗺️ Master Workflow Atlas', path: '/admin/workflows', icon: GitBranch, highlight: true },
+      { label: '🗺️ Grok Bot- Master Workflow Atlas', path: '/admin/workflows', icon: GitBranch, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
@@ -339,7 +339,7 @@ export default function AdminSidebar() {
           }}
         >
           <GitBranch className="w-4 h-4" />
-          🗺️ Master Workflow Atlas
+          🗺️ Grok Bot- Master Workflow Atlas
         </Link>
       </div>
 

@@ -166,7 +166,7 @@ function MasterView() {
       <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
         For new IT · pictures first
       </p>
-      <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>Master Workflow Atlas</h1>
+      <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>Grok Bot- Master Workflow Atlas</h1>
       <p className="text-gray-400 text-sm max-w-3xl leading-relaxed mb-8">
         This is the map of how DysonRelo actually runs. Five department desks do the work.
         Three knowledge desks keep the files and pipes honest. Click a department to see its flowchart —
