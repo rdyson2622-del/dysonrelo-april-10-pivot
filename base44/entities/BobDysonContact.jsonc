@@ -1,0 +1,113 @@
+{
+  "name": "BobDysonContact",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Contact's full name"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Given name from Google Contacts"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Family name from Google Contacts"
+    },
+    "email": {
+      "type": "string",
+      "description": "Primary email address"
+    },
+    "emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All email addresses on file for this contact"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Primary phone number"
+    },
+    "phones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All phone numbers on file"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company / organization"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title"
+    },
+    "city": {
+      "type": "string",
+      "description": "City from address"
+    },
+    "state": {
+      "type": "string",
+      "description": "State from address"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes from Google Contacts"
+    },
+    "google_contact_id": {
+      "type": "string",
+      "description": "Google People API resourceName \u2014 used to dedupe on re-import"
+    },
+    "google_resource_name": {
+      "type": "string",
+      "description": "Google People API resource name (people/xxx)"
+    },
+    "import_batch": {
+      "type": "string",
+      "description": "Import batch identifier"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Google Contacts group memberships / labels"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Contact status"
+    }
+  },
+  "required": [
+    "full_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
