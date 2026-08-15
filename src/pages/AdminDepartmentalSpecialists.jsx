@@ -21,7 +21,6 @@ function PlatformBadge({ platform }) {
 }
 
 function SpecialistCard({ spec, selected, onSelect }) {
-  const isCompany = spec.scope === 'company';
   return (
     <button
       type="button"
@@ -48,11 +47,6 @@ function SpecialistCard({ spec, selected, onSelect }) {
       <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
         {spec.oneLiner}
       </p>
-      {isCompany && (
-        <p className="text-[10px] font-bold tracking-widest uppercase mt-3" style={{ color: '#a78bfa' }}>
-          Company-wide · not a DysonRelo build desk
-        </p>
-      )}
     </button>
   );
 }
@@ -137,7 +131,7 @@ export default function AdminDepartmentalSpecialists() {
         <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>AI Departmental Specialists</h1>
         <p className="text-gray-400 text-sm max-w-3xl leading-relaxed mb-6">
           Claude is retired. Cursor builds the Base44 app. Grok Bot writes briefs and visuals.
-          These five desks match the Agent Library. Finance is company-wide and does not change DysonRelo.com unless you explicitly ask.
+          Four Base44 desks: Marketing, Operations, Sales, and DNN News. Company finance is outside this app and is not assigned here.
         </p>
 
         <div
@@ -179,7 +173,7 @@ export default function AdminDepartmentalSpecialists() {
           <PlatformBadge platform={COORDINATOR.platform} />
         </div>
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
           {SPECIALISTS.map((spec) => (
             <SpecialistCard
               key={spec.id}

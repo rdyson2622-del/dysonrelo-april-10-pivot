@@ -10,7 +10,8 @@ Route work to a departmental specialist before coding:
 - Operations — intake, compliance, skip trace, relo ops
 - Sales — PRN, recruiting, agreements, roster
 - DNN News — articles, broadcast, Charlie/Bob, HeyGen
-- Finance — company financials only; do not change the app unless explicitly asked
+
+Company finance is outside Base44. Do not add or invoke a Finance specialist in this app.
 
 Read `AGENTS.md` and `specialists/README.md`. Implement Grok briefs from `briefs/from-grok/`. Feature branches only; never force-push `main`. After merge, the human publishes on Base44.com.
 

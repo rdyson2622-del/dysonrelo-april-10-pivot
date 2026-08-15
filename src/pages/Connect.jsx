@@ -175,7 +175,7 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
             </div>
             <ol className="space-y-4">
               {step(1, <>Create <code className="text-dyson-gold">briefs/from-grok/YYYY-MM-DD-short-slug/HANDOFF.md</code> from the template in <code className="text-dyson-gold">briefs/HANDOFF_TEMPLATE.md</code>.</>)}
-              {step(2, <>Set <strong className="text-white">Department</strong> to Marketing, Operations, Sales, DNN News, or Finance.</>)}
+              {step(2, <>Set <strong className="text-white">Department</strong> to Marketing, Operations, Sales, or DNN News.</>)}
               {step(3, <>Put mockups or MP4s in <code className="text-dyson-gold">assets/from-grok/YYYY-MM-DD-short-slug/</code> when image tools are available again.</>)}
               {step(4, <>Open a GitHub PR (label <strong className="text-white">from-grok</strong> if it exists) and tell Cursor it is ready.</>)}
             </ol>
@@ -205,7 +205,7 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
           <TabsContent value="cursor" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
             <div className="mb-4">
               <h3 className="text-lg font-serif text-white mb-1">Cursor — builder and coordinator</h3>
-              <p className="text-sm text-gray-400">Start a Cloud Agent at cursor.com/agents on this repo, or chat in Cursor desktop. Name the desk first: Marketing, Operations, Sales, DNN News, or Finance. No xAI login is required for Cursor.</p>
+              <p className="text-sm text-gray-400">Start a Cloud Agent at cursor.com/agents on this repo, or chat in Cursor desktop. Name the desk first: Marketing, Operations, Sales, or DNN News. No xAI login is required for Cursor.</p>
             </div>
             <ol className="space-y-4">
               {step(1, <>Open a Cursor Cloud Agent or desktop chat on the <strong className="text-white">dysonrelo-april-10-pivot</strong> repo.</>)}

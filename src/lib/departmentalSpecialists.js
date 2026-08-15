@@ -23,11 +23,11 @@ export const COORDINATOR = {
   owns: [
     'Reading briefs/from-grok/ and implementing them',
     'Feature branches, PRs, and Base44 publish path',
-    'Routing work to Marketing, Operations, Sales, DNN News, or Finance',
+    'Routing work to Marketing, Operations, Sales, or DNN News',
   ],
   doesNotOwn: [
     'Original visuals/storyboards (Grok Bot, when the xAI account is active)',
-    'Company bookkeeping outside an explicit Finance request',
+    'Company financials — Finance is outside Base44 and has no specialist in this app',
   ],
 };
 
@@ -204,36 +204,6 @@ export const SPECIALISTS = [
     doesNotOwn: [
       'Owner outreach SMS (Marketing Specialist)',
       'PRN legal agreements (Sales Specialist)',
-    ],
-  },
-  {
-    id: 'finance',
-    name: 'Finance Specialist',
-    shortName: 'Finance',
-    department: 'Finance',
-    icon: '💼',
-    color: '#a78bfa',
-    platform: 'Grok (advisory)',
-    scope: 'company',
-    oneLiner: 'Company-wide Dyson & Dyson financials — not a DysonRelo.com / Base44 build desk.',
-    howToAsk: 'Say “Finance Specialist: …” for forecasts, fees, or books. Do not use this desk to change the app unless you explicitly say so.',
-    grokDoes: 'Models, fee math, cash-flow notes, and board-style summaries.',
-    cursorDoes: 'Only touches repo/app code when you explicitly ask for a finance-related page or report.',
-    adminPaths: [
-      '/admin/dnn/revenue',
-      '/admin/production-dashboard',
-      '/admin/heygen-credits',
-    ],
-    codeGlobs: [],
-    owns: [
-      'Referral-fee and relo-management fee math (advisory)',
-      'HeyGen / production cost watch (advisory)',
-      'Featured-agent revenue framing (advisory)',
-      'Company books and forecasts outside the app',
-    ],
-    doesNotOwn: [
-      'Building or redesigning DysonRelo.com pages by default',
-      'Lender-matching UX (that is Sales / Operations on the app)',
     ],
   },
 ];

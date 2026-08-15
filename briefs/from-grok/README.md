@@ -1,7 +1,7 @@
 # Briefs from Grok Bot
 
 Grok drops task briefs here. Cursor implements them in Base44/GitHub.
-Set **Department** on every brief: Marketing | Operations | Sales | DNN News | Finance.
+Set **Department** on every brief: Marketing | Operations | Sales | DNN News.
 See `specialists/README.md`. Claude is retired as the operating team.
 
 ## How to hand off (Grok)

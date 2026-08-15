@@ -1,8 +1,0 @@
----
-description: Finance Specialist — company-wide advisory, not a DysonRelo build desk
-alwaysApply: false
----
-
-When the user says “Finance Specialist” or the task is company books, fee math, or forecasts:
-
-Read `specialists/finance.md`. Advise only. Do not edit DysonRelo / Base44 code unless the user explicitly asks to change a finance-related page or report.

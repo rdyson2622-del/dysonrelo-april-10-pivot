@@ -13,7 +13,7 @@ const SECTIONS = [
     key: 'departments',
     label: 'D&D Departments',
     icon: Building2,
-    description: 'Marketing, Operations, Sales, Finance & DNN News',
+    description: 'Marketing, Operations, Sales & DNN News',
     color: '#D4AF37',
     bg: 'rgba(212,175,55,0.08)',
   },

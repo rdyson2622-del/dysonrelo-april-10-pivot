@@ -22,7 +22,8 @@ Before coding, identify the desk. Full roster: `specialists/README.md` and `src/
 | Operations Specialist | Intake, compliance, skip trace, relo ops | Cursor |
 | Sales Specialist | PRN, recruiting, agreements, roster | Cursor + Grok (pitch copy) |
 | DNN News Specialist | Articles, broadcast, Charlie/Bob, HeyGen | Grok (editorial) + Cursor (pipeline) |
-| Finance Specialist | Company financials | Grok advisory — **not** a DysonRelo build desk |
+
+Company finance is **out of scope for Base44** — do not assign a Finance specialist in this app.
 
 If the request spans desks, stay Coordinator: split the work, do not mix DNN studio changes into a marketing SMS PR.
 

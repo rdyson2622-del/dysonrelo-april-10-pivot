@@ -4,7 +4,7 @@
 **To:** Cursor (Base44 coordinator)  
 **Date:** YYYY-MM-DD  
 **Priority:** low | normal | high  
-**Department:** Marketing | Operations | Sales | DNN News | Finance  
+**Department:** Marketing | Operations | Sales | DNN News  
 
 ## Goal
 One sentence: what should ship in Base44 / on 1dnn.com.
