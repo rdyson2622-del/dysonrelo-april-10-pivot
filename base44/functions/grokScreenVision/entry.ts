@@ -8,6 +8,12 @@ import { secrets } from 'base44:runtime';
 
 export default async function(req) {
   try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
     const apiKey = secrets.get("ANTHROPIC_API_KEY");
     if (!apiKey) {
       return Response.json(

@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user || user.role !== 'admin') return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
 
     const body = await req.json().catch(() => ({}));
     const { action = 'search', term, trackId, format = 'mp3', quality = 'normal', limit = 20, offset = 0 } = body;
