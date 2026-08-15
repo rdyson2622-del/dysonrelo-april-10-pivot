@@ -107,6 +107,13 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
 
+  // Open the full-screen studio preview — always stop the inline preview
+  // video first so we don't get two audio tracks playing simultaneously.
+  const openStudioPreview = () => {
+    setPlaying(false);
+    setShowStudioPreview(true);
+  };
+
   const handleAction = async (action, label) => {
     setBusy(action);
     setResult(null);
@@ -272,7 +279,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
 
             {currentStage === 'ready' && (
               <>
-                <button onClick={() => setShowStudioPreview(true)}
+                <button onClick={openStudioPreview}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all"
                   style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
                   <Play className="w-3.5 h-3.5" /> Preview Studio Show
@@ -320,7 +327,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500">Composited Video:</p>
                 <div className="flex gap-2">
-                  <button onClick={() => setShowStudioPreview(true)}
+                  <button onClick={openStudioPreview}
                     className="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.02]"
                     style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
                     <Play className="w-3 h-3" /> Preview Studio Show
