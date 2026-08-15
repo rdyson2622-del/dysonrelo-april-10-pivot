@@ -48,7 +48,7 @@ export default async function(req) {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { broadcast_id, heygen_video_id, script, intro_script, content_script, outro_script } = body || {};
+    const { broadcast_id, heygen_video_id, script, intro_script, content_script, outro_script, pipeline } = body || {};
     if (!broadcast_id) {
       return Response.json({ error: 'broadcast_id is required' }, { status: 400 });
     }
@@ -79,6 +79,11 @@ export default async function(req) {
     }
     if (outro_script && typeof outro_script === 'string') {
       update.outro_script = outro_script;
+    }
+    // Store the pipeline indicator if n8n passes it (higgsfield_11labs shows
+    // use a Higgsfield job id instead of HeyGen, but the field is the same)
+    if (pipeline && typeof pipeline === 'string') {
+      update.pipeline = pipeline;
     }
 
     await base44.asServiceRole.entities.DnnBroadcast.update(broadcast_id, update);

@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, Zap, AlertTriangle, ChevronDown, ChevronRight,
   FileText, Clapperboard, Film, CheckCircle, XCircle, Clock, Edit3,
-  Sparkles, Layers
+  Sparkles, Layers, Plus, Loader2
 } from 'lucide-react';
 import ShowPipelineCard from '@/components/dnn/ShowPipelineCard';
 import ScriptEditorModal from '@/components/dnn/ScriptEditorModal';
@@ -18,6 +18,24 @@ export default function AdminShowPipeline() {
   const [editingShow, setEditingShow] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMsg, setRefreshMsg] = useState(null);
+  const [generating, setGenerating] = useState(null); // 'heygen' | 'higgsfield_11labs' | null
+
+  const handleGenerate = async (pipeline) => {
+    setGenerating(pipeline);
+    setRefreshMsg(null);
+    try {
+      const res = await base44.functions.invoke('dnnDailyVideoPipeline', { pipeline });
+      if (res.data?.success) {
+        setRefreshMsg(`✓ ${pipeline === 'higgsfield_11labs' ? 'Higgsfield + 11 Labs' : 'HeyGen'} show dispatched — n8n is generating`);
+      } else {
+        setRefreshMsg(`✗ ${res.data?.error || 'Dispatch failed'}`);
+      }
+      queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] });
+    } catch (e) {
+      setRefreshMsg(`✗ ${e.message}`);
+    }
+    setGenerating(null);
+  };
 
   useEffect(() => {
     base44.auth.me().then(user => {
@@ -101,12 +119,28 @@ export default function AdminShowPipeline() {
           {refreshMsg && (
             <span className="text-[10px] text-slate-400 max-w-xs truncate">{refreshMsg}</span>
           )}
-          <button onClick={handleRefresh} disabled={refreshing}
-            className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Refreshing…' : 'Refresh'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => handleGenerate('higgsfield_11labs')} disabled={!!generating}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #818cf8, #6366f1)' }}
+              title="Generate a new daily show using the Higgsfield + 11 Labs pipeline">
+              {generating === 'higgsfield_11labs' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+              {generating === 'higgsfield_11labs' ? 'Dispatching…' : '⚡ Higgsfield Show'}
+            </button>
+            <button onClick={() => handleGenerate('heygen')} disabled={!!generating}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+              title="Generate a new daily show using the HeyGen pipeline">
+              {generating === 'heygen' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+              {generating === 'heygen' ? 'Dispatching…' : 'HeyGen Show'}
+            </button>
+            <button onClick={handleRefresh} disabled={refreshing}
+              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-white transition-opacity disabled:opacity-50"
+              style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing…' : 'Refresh'}
+            </button>
+          </div>
         </div>
       </div>
 
