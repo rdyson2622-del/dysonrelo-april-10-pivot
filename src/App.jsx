@@ -48,6 +48,7 @@ import AdminMarketingCampaigns from './pages/AdminMarketingCampaigns';
 import AdminTargetAudiences from './pages/AdminTargetAudiences';
 import AdminAudienceDistribution from './pages/AdminAudienceDistribution';
 import AdminCampaignRoadmap from './pages/AdminCampaignRoadmap';
+import AdminSiteCoordination from './pages/AdminSiteCoordination';
 import AdminSocialLaunch from './pages/AdminSocialLaunch';
 import AdminOutreachPipeline from './pages/AdminOutreachPipeline';
 import AdminBatchSMSLog from './pages/AdminBatchSMSLog';
@@ -111,6 +112,8 @@ import DnnVideoPreview from './pages/DnnVideoPreview';
 import AdminShowPipeline from './pages/AdminShowPipeline';
 import AdminScriptStudio from './pages/AdminScriptStudio';
 import AdminDailyNewsLibrary from './pages/AdminDailyNewsLibrary';
+import AdminDnnInHouseCreative from './pages/AdminDnnInHouseCreative';
+import AdminDnnDeskOrg from './pages/AdminDnnDeskOrg';
 import HeygenCreditMonitor from './pages/HeygenCreditMonitor';
 import AdminProductionDashboard from './pages/AdminProductionDashboard';
 import AdminShowPerformance from './pages/AdminShowPerformance';
@@ -224,6 +227,7 @@ const AuthenticatedApp = () => {
       {/* Admin Routes with Sidebar Layout */}
       <Route element={<AdminLayout />}>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/site-coordination" element={<AdminSiteCoordination />} />
         <Route path="/admin/scripts" element={<CharlieScripts />} />
         <Route path="/admin/clients" element={<AdminClients />} />
         <Route path="/admin/client-detail" element={<AdminClientDetail />} />
@@ -293,6 +297,8 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/show-pipeline" element={<AdminShowPipeline />} />
         <Route path="/admin/dnn/script-studio" element={<AdminScriptStudio />} />
         <Route path="/admin/dnn/daily-library" element={<AdminDailyNewsLibrary />} />
+        <Route path="/admin/dnn/in-house-creative" element={<AdminDnnInHouseCreative />} />
+        <Route path="/admin/dnn/desk-org" element={<AdminDnnDeskOrg />} />
         <Route path="/admin/heygen-credits" element={<HeygenCreditMonitor />} />
         <Route path="/admin/production-dashboard" element={<AdminProductionDashboard />} />
         <Route path="/admin/dnn/show-performance" element={<AdminShowPerformance />} />

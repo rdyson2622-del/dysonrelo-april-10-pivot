@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
-  Brain, AlertTriangle, Sparkles, TrendingUp
+  Brain, AlertTriangle, Sparkles, TrendingUp, BarChart3, Newspaper, Zap, DollarSign, Clapperboard, UserPlus
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const GOLD = '#D4AF37';
+
+const OWNER_STATUS_ORDER = [
+  { key: 'not_contacted', label: 'Not Contacted' },
+  { key: 'contacted', label: 'Contacted' },
+  { key: 'in_conversation', label: 'In Conversation' },
+  { key: 'interested', label: 'Interested' },
+  { key: 'not_interested', label: 'Not Interested' },
+  { key: 'converted', label: 'Converted' },
+];
 
 const adminSections = [
   {
@@ -17,7 +26,7 @@ const adminSections = [
     modules: [
       { name: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search, description: 'Find and manage property search profiles', color: '#3B82F6' },
       { name: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Search, description: 'Find owner name & contact info by property address via BatchData', color: '#D4AF37' },
-      { name: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal, description: 'Monitor outreach workflow stages', color: '#F59E0B' },
+      { name: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal, description: 'Monitor opt-in funnel and conversion by source', color: '#F59E0B' },
       { name: 'Compose SMS', path: '/admin/compose-sms', icon: MessageCircle, description: 'Send SMS campaigns to owners', color: '#06B6D4' },
       { name: 'Owner Response Board', path: '/admin/owner-kanban', icon: Home, description: 'View owner responses and engagement', color: '#10B981' },
       { name: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: Download, description: 'View sent batch SMS history', color: '#22C55E' },
@@ -27,9 +36,26 @@ const adminSections = [
     heading: 'MARKETING CAMPAIGNS',
     color: GOLD,
     modules: [
+      { name: 'Active Campaigns', path: '/admin/active-campaigns', icon: Zap, description: 'Watch in-flight batch SMS sends in real time', color: '#EF4444' },
       { name: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: ScrollText, description: 'Schedule and manage SMS campaigns', color: '#F97316' },
       { name: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: Sparkles, description: 'Track campaign performance metrics', color: '#EC4899' },
       { name: 'SMS Sequences', path: '/admin/sms-sequences', icon: SendHorizontal, description: 'Build multi-step SMS sequences', color: '#06B6D4' },
+      { name: 'New Opt-Ins', path: '/admin/opt-ins', icon: UserPlus, description: 'Triage fresh opt-ins by source and status', color: '#22C55E' },
+    ]
+  },
+  {
+    heading: 'INTELLIGENCE & OVERSIGHT',
+    color: GOLD,
+    modules: [
+      { name: 'Site Coordination', path: '/admin/site-coordination', icon: BarChart3, description: 'Cross-domain pulse, attention queue, daily rhythm', color: GOLD },
+      { name: 'In-House Creative', path: '/admin/dnn/in-house-creative', icon: Clapperboard, description: 'Morning news without HeyGen / Creatomate', color: '#EF4444' },
+      { name: 'Show Performance', path: '/admin/dnn/show-performance', icon: Clapperboard, description: 'DNN distribution, opens, and engagement', color: '#D4AF37' },
+      { name: 'Production Costs', path: '/admin/production-dashboard', icon: TrendingUp, description: 'Render pipelines, quotas, and cost projection', color: '#06B6D4' },
+      { name: 'Pipeline Credits', path: '/admin/heygen-credits', icon: Zap, description: 'HeyGen, Twilio, and pipeline headroom', color: '#F59E0B' },
+      { name: 'DNN Subscriber CRM', path: '/admin/dnn/subscribers', icon: Newspaper, description: 'Subscriber tiers and hot leads', color: '#8B5CF6' },
+      { name: 'Featured Agent Revenue', path: '/admin/dnn/revenue', icon: DollarSign, description: 'Partner agent MRR by tier', color: '#10B981' },
+      { name: 'Pitch Tracker', path: '/admin/pitch-tracker', icon: Sparkles, description: 'PR pitch kanban and hot replies', color: '#EC4899' },
+      { name: 'Flagged Messages', path: '/admin/flagged-conversations', icon: Flag, description: 'Human review for flagged Charlie chats', color: '#EF4444' },
     ]
   },
   {
@@ -50,6 +76,123 @@ const adminSections = [
     ]
   },
 ];
+
+function OwnerStatusChart() {
+  const { data: owners = [], isLoading } = useQuery({
+    queryKey: ['admin-chart-owners'],
+    queryFn: () => base44.entities.ListingOwner.list('-created_date', 2000),
+    refetchInterval: 30000,
+  });
+
+  const chartData = useMemo(() => {
+    const counts = Object.fromEntries(OWNER_STATUS_ORDER.map((s) => [s.key, 0]));
+    owners.forEach((o) => {
+      const key = o.contact_status || 'not_contacted';
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return OWNER_STATUS_ORDER
+      .map((s) => ({ status: s.label, count: counts[s.key] || 0 }))
+      .filter((row) => row.count > 0 || ['Not Contacted', 'Interested', 'Converted'].includes(row.status));
+  }, [owners]);
+
+  return (
+    <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2">
+          <Home className="w-5 h-5" style={{ color: '#10B981' }} />
+          <h3 className="font-bold text-white">Listing Owners by Status</h3>
+        </div>
+        <Link to="/admin/owners" className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: '#10B981' }}>
+          Open →
+        </Link>
+      </div>
+      {isLoading ? (
+        <div className="h-[300px] rounded-xl animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }} />
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="status" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '11px' }} interval={0} angle={-18} textAnchor="end" height={60} />
+            <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} allowDecimals={false} />
+            <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }} />
+            <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+      <p className="text-[11px] mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
+        Live from ListingOwner · {owners.length} sampled records
+      </p>
+    </div>
+  );
+}
+
+function ReferralTrendChart() {
+  const { data: referrals = [], isLoading } = useQuery({
+    queryKey: ['admin-chart-referrals'],
+    queryFn: () => base44.entities.AgentReferral.list('-created_date', 500),
+    refetchInterval: 30000,
+  });
+
+  const chartData = useMemo(() => {
+    const weeks = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i -= 1) {
+      const start = new Date(now);
+      start.setDate(start.getDate() - (i * 7 + 6));
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(now);
+      end.setDate(end.getDate() - (i * 7));
+      end.setHours(23, 59, 59, 999);
+      weeks.push({
+        week: `W${6 - i}`,
+        labelStart: start,
+        labelEnd: end,
+        referrals: 0,
+      });
+    }
+    referrals.forEach((r) => {
+      const created = new Date(r.created_date || r.updated_date || 0);
+      if (Number.isNaN(created.getTime())) return;
+      const bucket = weeks.find((w) => created >= w.labelStart && created <= w.labelEnd);
+      if (bucket) bucket.referrals += 1;
+    });
+    return weeks.map(({ week, referrals: count }) => ({ week, referrals: count }));
+  }, [referrals]);
+
+  const pending = referrals.filter((r) =>
+    ['proposal_sent', 'agreed', 'in_process'].includes(r.referral_status)
+  ).length;
+
+  return (
+    <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-5 h-5" style={{ color: '#EF4444' }} />
+          <h3 className="font-bold text-white">Incoming Referrals Trend</h3>
+        </div>
+        <Link to="/admin/referrals" className="text-[10px] font-black tracking-[0.15em] uppercase" style={{ color: '#EF4444' }}>
+          {pending} open →
+        </Link>
+      </div>
+      {isLoading ? (
+        <div className="h-[300px] rounded-xl animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }} />
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="week" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+            <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} allowDecimals={false} />
+            <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px' }} />
+            <Line type="monotone" dataKey="referrals" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 4 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
+      <p className="text-[11px] mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
+        Live from AgentReferral · last 6 weeks · {referrals.length} sampled
+      </p>
+    </div>
+  );
+}
 
 function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
   const navigate = useNavigate();
@@ -128,60 +271,24 @@ export default function Admin() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
+          <Link
+            to="/admin/site-coordination"
+            className="inline-flex items-center gap-2 mt-4 text-xs font-black tracking-[0.15em] uppercase px-4 py-2 rounded-full transition-opacity hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.12)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}
+          >
+            Overall Site Coordination →
+          </Link>
         </motion.div>
 
-        {/* Summary Dashboard Charts */}
+        {/* Summary Dashboard Charts — live Base44 aggregations */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
         >
-          {/* Active Listings Chart */}
-          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <Home className="w-5 h-5" style={{ color: '#10B981' }} />
-              <h3 className="font-bold text-white">Active Listings by Status</h3>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={[
-                { status: 'Not Contacted', count: 142 },
-                { status: 'In Progress', count: 87 },
-                { status: 'Interested', count: 54 },
-                { status: 'Converted', count: 23 }
-              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="status" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }} />
-                <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Incoming Referrals Chart */}
-          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5" style={{ color: '#EF4444' }} />
-              <h3 className="font-bold text-white">Incoming Referrals Trend</h3>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={[
-                { week: 'W1', referrals: 12 },
-                { week: 'W2', referrals: 18 },
-                { week: 'W3', referrals: 15 },
-                { week: 'W4', referrals: 28 },
-                { week: 'W5', referrals: 32 },
-                { week: 'W6', referrals: 27 }
-              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="week" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="referrals" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <OwnerStatusChart />
+          <ReferralTrendChart />
         </motion.div>
 
         {/* Live Interactive Stats */}
@@ -210,7 +317,7 @@ export default function Admin() {
             }}
           />
           <LiveStatCard
-            label="Active Campaigns"
+            label="Queued SMS"
             icon={SendHorizontal}
             path="/admin/scheduled-campaigns"
             accentColor="#F97316"

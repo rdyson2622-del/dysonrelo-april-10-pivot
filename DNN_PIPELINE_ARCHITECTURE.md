@@ -1,8 +1,11 @@
 # DNN Daily News — Decoupled 3-Stage Pipeline Architecture
 
-> **Status**: ACTIVE — transitioned from monolithic n8n workflow to event-driven micro-workflows.
-> **Reason**: The single linear n8n workflow experienced execution timeouts and payload errors
-> because HeyGen renders (2-5 min) exceeded n8n's Wait node timeout window.
+> **Status**: LEGACY / FALLBACK — creative path is being replaced.
+> **New target**: see [`DNN_INHOUSE_CREATIVE.md`](./DNN_INHOUSE_CREATIVE.md)
+> (eliminate HeyGen + Creatomate for daily mornings; Google TTS + owned studio).
+>
+> Historical note: transitioned from monolithic n8n workflow to event-driven
+> micro-workflows because HeyGen renders (2-5 min) exceeded n8n Wait timeouts.
 
 ---
 

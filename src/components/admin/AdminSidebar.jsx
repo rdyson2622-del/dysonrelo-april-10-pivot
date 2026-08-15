@@ -36,7 +36,9 @@ const NAV_SECTIONS = [
       { label: 'Compose SMS', path: '/admin/compose-sms', icon: SendHorizontal },
       { label: 'Owner Response Board', path: '/admin/owner-kanban', icon: LayoutDashboard },
       { label: 'Batch SMS Logs', path: '/admin/batch-sms-log', icon: List },
+      { label: 'Active Campaigns', path: '/admin/active-campaigns', icon: Zap },
       { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns', icon: Calendar },
+      { label: 'New Opt-Ins', path: '/admin/opt-ins', icon: UserCheck },
       { label: 'Video SMS Campaign', path: '/admin/video-sms-campaign', icon: Video },
       { label: 'Video Library', path: '/admin/video-library', icon: Video },
       { label: 'Outreach Analytics', path: '/admin/outreach-analytics', icon: BarChart3 },
@@ -139,6 +141,8 @@ const NAV_SECTIONS = [
       { label: '✅ Shard 1 Script Review', path: '/admin/dnn/script-review', icon: FileCheck },
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
       { label: '📚 Daily News Library', path: '/admin/dnn/daily-library', icon: Library, highlight: true },
+      { label: '🎬 In-House Creative (No HeyGen)', path: '/admin/dnn/in-house-creative', icon: Clapperboard, highlight: true },
+      { label: '🧠 DNN Desk Agents', path: '/admin/dnn/desk-org', icon: Users, highlight: true },
       { label: '🎬 Show Production Pipeline', path: '/admin/dnn/show-pipeline', icon: Clapperboard },
       { label: '✏️ Script Studio (Template + Preview)', path: '/admin/dnn/script-studio', icon: Edit, highlight: true },
       { label: '⚡ Pipeline Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
@@ -288,8 +292,20 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Admin Dashboard — always visible */}
+      {/* Site Coordination + Admin Dashboard — always visible */}
       <div className="px-3 pt-2 space-y-0.5">
+        <Link
+          to="/admin/site-coordination"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/site-coordination' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Zap className="w-4 h-4" />
+          Site Coordination
+        </Link>
         <Link
           to="/admin"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"

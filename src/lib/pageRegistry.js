@@ -28,6 +28,7 @@ export const PAGE_REGISTRY = {
 
   // ========== ADMIN PAGES ==========
   30: { name: 'Admin Dashboard',        path: '/admin',                       section: 'Admin' },
+  29: { name: 'Site Coordination',      path: '/admin/site-coordination',     section: 'Admin' },
   31: { name: 'Admin Clients',          path: '/admin/clients',               section: 'Admin' },
   32: { name: 'Client Detail',          path: '/admin/client-detail',         section: 'Admin' },
   33: { name: 'Communications',         path: '/admin/communications',        section: 'Admin' },
@@ -73,7 +74,9 @@ export const PAGE_REGISTRY = {
   73: { name: 'Agent Vetting',          path: '/admin/dnn/agent-vetting',     section: 'Admin' },
   74: { name: 'Lender Vetting',         path: '/admin/dnn/lender-vetting',    section: 'Admin' },
   75: { name: 'Bureau Stories',         path: '/admin/dnn/bureau-stories',    section: 'Admin' },
-  76: { name: 'Charlie Scripts (Old)',  path: '/admin/scripts',               section: 'Admin' },
+  76: { name: 'In-House Creative',      path: '/admin/dnn/in-house-creative',  section: 'Admin' },
+  77: { name: 'DNN Desk Agents',        path: '/admin/dnn/desk-org',           section: 'Admin' },
+  78: { name: 'Charlie Scripts (Old)',  path: '/admin/scripts',               section: 'Admin' },
 };
 
 // Helper function: Get page number by path

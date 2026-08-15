@@ -1,0 +1,218 @@
+/**
+ * Site Activity Domains — single source of truth for coordinating
+ * every operational lane on 1dnn.com / DysonRelo.
+ *
+ * Used by Admin Site Coordination and any future ops surfaces.
+ */
+
+export const SITE_ACTIVITY_DOMAINS = [
+  {
+    id: 'client_pipeline',
+    title: 'Client Relocation Pipeline',
+    purpose: 'Intake → roadmap → escrow → closed move',
+    accent: '#8B5CF6',
+    dailyFocus: [
+      'Review new RelocationClient records and assign owners',
+      'Clear open Charlie escalations within 2 business hours',
+      'Advance stalled Action Steps / roadmap milestones',
+    ],
+    hubs: [
+      { label: 'Clients', path: '/admin/clients' },
+      { label: 'Client Detail', path: '/admin/client-detail' },
+      { label: 'Communications', path: '/admin/communications' },
+      { label: 'Flagged Conversations', path: '/admin/flagged-conversations' },
+      { label: 'Charlie Escalations', path: '/admin/charlie-escalations' },
+      { label: 'Lead Handoff', path: '/admin/lead-handoff' },
+      { label: 'Opt-Ins', path: '/admin/opt-ins' },
+    ],
+  },
+  {
+    id: 'owner_outreach',
+    title: 'Owner / Seller Outreach',
+    purpose: 'PropStream → skip-trace → SMS → kanban → opt-in',
+    accent: '#F59E0B',
+    dailyFocus: [
+      'Monitor active / scheduled SMS campaigns',
+      'Work Owner Response Board replies within 2 hours',
+      'Import cleaned skip-trace lists before Compose SMS',
+    ],
+    hubs: [
+      { label: 'Search Profiles', path: '/admin/search-profiles' },
+      { label: 'Skip Trace', path: '/admin/skip-trace' },
+      { label: 'Bulk Skip Trace', path: '/admin/bulk-skip-trace' },
+      { label: 'Listing Owners', path: '/admin/owners' },
+      { label: 'Compose SMS', path: '/admin/compose-sms' },
+      { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline' },
+      { label: 'Owner Kanban', path: '/admin/owner-kanban' },
+      { label: 'Active Campaigns', path: '/admin/active-campaigns' },
+      { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns' },
+      { label: 'Batch SMS Logs', path: '/admin/batch-sms-log' },
+      { label: 'SMS Sequences', path: '/admin/sms-sequences' },
+      { label: 'Outreach Analytics', path: '/admin/outreach-analytics' },
+      { label: 'Campaign Roadmap', path: '/admin/campaign-roadmap' },
+    ],
+  },
+  {
+    id: 'dnn_broadcast',
+    title: 'DNN News & Broadcast',
+    purpose: 'National sources → white-label script → in-house studio (Charlie + Bob)',
+    accent: '#D4AF37',
+    dailyFocus: [
+      'Confirm morning brief scripts in Daily News Library',
+      'Run In-House Creative prototype (no HeyGen credits)',
+      'Treat HeyGen / Creatomate as fallback only while migrating',
+    ],
+    hubs: [
+      { label: 'In-House Creative', path: '/admin/dnn/in-house-creative' },
+      { label: 'DNN Desk Agents', path: '/admin/dnn/desk-org' },
+      { label: 'Show Pipeline', path: '/admin/dnn/show-pipeline' },
+      { label: 'Script Studio', path: '/admin/dnn/script-studio' },
+      { label: 'Script Review', path: '/admin/dnn/script-review' },
+      { label: 'Daily News Library', path: '/admin/dnn/daily-library' },
+      { label: 'DNN Studio', path: '/admin/dnn/studio' },
+      { label: 'Video Preview & Blast', path: '/admin/dnn/video-preview' },
+      { label: 'News Feed', path: '/admin/dnn/news-feed' },
+      { label: 'Subscriber CRM', path: '/admin/dnn/subscribers' },
+      { label: 'Communications Hub', path: '/admin/dnn/communications' },
+      { label: 'Show Performance', path: '/admin/dnn/show-performance' },
+      { label: 'Pipeline Credits', path: '/admin/heygen-credits' },
+      { label: 'Production Costs', path: '/admin/production-dashboard' },
+      { label: 'Consumer DNN News', path: '/dnn-news' },
+    ],
+  },
+  {
+    id: 'prn_affiliate',
+    title: 'PRN & Affiliate Recruiting',
+    purpose: 'Recruit → roster → agreements → lead handoff',
+    accent: '#34D399',
+    dailyFocus: [
+      'Advance recruiting pipeline stages',
+      'Confirm signed PRN / Master agreements',
+      'Route inbound agent referrals to Lead Handoff',
+    ],
+    hubs: [
+      { label: 'Affiliate Recruiting', path: '/admin/affiliate-recruiting' },
+      { label: 'Master Partner Roster', path: '/admin/roster' },
+      { label: 'Sending Agent Tracker', path: '/admin/sending-agents' },
+      { label: 'Exodus Outreach', path: '/admin/exodus-outreach' },
+      { label: 'Exodus Pitch', path: '/admin/exodus-pitch' },
+      { label: 'Partner Benefits', path: '/admin/partner-benefits' },
+      { label: 'PRN Agreements', path: '/admin/prn-agreements' },
+      { label: 'Master Agreement', path: '/admin/master-agreement' },
+      { label: 'PRN Agent Plan', path: '/admin/prn-agent-plan' },
+      { label: 'Referrals', path: '/admin/referrals' },
+      { label: 'Agent Vetting', path: '/admin/dnn/agent-vetting' },
+      { label: 'Lender Vetting', path: '/admin/dnn/lender-vetting' },
+      { label: 'Agent Bureau', path: '/admin/dnn/agent-bureau' },
+    ],
+  },
+  {
+    id: 'pr_media',
+    title: 'PR & Media',
+    purpose: 'Contacts → pitches → press assets',
+    accent: '#EC4899',
+    dailyFocus: [
+      'Follow up open pitches in Pitch Tracker',
+      'Keep Press Kit assets current for outbound',
+    ],
+    hubs: [
+      { label: 'Media CRM', path: '/admin/media-crm' },
+      { label: 'Pitch Tracker', path: '/admin/pitch-tracker' },
+      { label: 'Press Kit', path: '/admin/press-kit' },
+      { label: 'Mass Pitch Personalizer', path: '/admin/mass-pitch' },
+      { label: 'Social Launch', path: '/admin/social-launch' },
+      { label: 'Bureau Stories', path: '/admin/dnn/bureau-stories' },
+    ],
+  },
+  {
+    id: 'charlie_brain',
+    title: "Charlie's Brain & Voice",
+    purpose: 'Scripts, knowledge, escalations, Bob answers',
+    accent: '#A78BFA',
+    dailyFocus: [
+      'Triage open escalations → KB or human reply',
+      'Ship approved script / KB updates before peak traffic',
+    ],
+    hubs: [
+      { label: 'Charlie Scripts', path: '/admin/charlie-scripts' },
+      { label: 'Knowledge Base', path: '/admin/charlie-knowledge-base' },
+      { label: 'Escalations', path: '/admin/charlie-escalations' },
+      { label: "Bob's Video Answers", path: '/admin/bob-library' },
+      { label: 'Voice Presentation', path: '/charlie-voice' },
+      { label: 'Q&A Script Studio', path: '/admin/qa-script-studio' },
+    ],
+  },
+  {
+    id: 'production_studio',
+    title: 'Production & Creative Studio',
+    purpose: 'Shard2, Claude flow, landing experiments',
+    accent: '#06B6D4',
+    dailyFocus: [
+      'Check Shard2 / Claude flow for blocked renders',
+      'Review compliance docs before publish',
+    ],
+    hubs: [
+      { label: 'Shard2 Dashboard', path: '/admin/shard2' },
+      { label: 'Shard2 Pages', path: '/admin/shard2/pages' },
+      { label: 'Shard2 Scripts', path: '/admin/shard2/scripts' },
+      { label: 'Shard2 Library', path: '/admin/shard2/library' },
+      { label: 'Claude Flow Charts', path: '/admin/claude-flow' },
+      { label: 'Claude Screen Viewer', path: '/admin/claude-screen-viewer' },
+      { label: 'Compliance Review', path: '/admin/compliance-review' },
+      { label: 'Presentation Library', path: '/admin/presentation-library' },
+      { label: 'Video Library', path: '/admin/video-library' },
+      { label: 'New Landing Page', path: '/admin/new-landing-page' },
+      { label: 'Recruiting Broadcast', path: '/admin/dnn/recruiting' },
+    ],
+  },
+  {
+    id: 'corporate_b2b',
+    title: 'Corporate Relo / B2B',
+    purpose: 'HR explainers, audience distribution, B2B revenue',
+    accent: '#14B8A6',
+    dailyFocus: [
+      'Keep corporate explainer clips current',
+      'Push B2B audience distribution for active partners',
+    ],
+    hubs: [
+      { label: 'Corporate Relo Admin', path: '/admin/corporate-relo' },
+      { label: 'Audience Distribution', path: '/admin/audience-distribution' },
+      { label: 'Target Audiences', path: '/admin/target-audiences' },
+      { label: 'Marketing Campaigns', path: '/admin/marketing-campaigns' },
+      { label: 'DNN Revenue', path: '/admin/dnn/revenue' },
+      { label: 'Public Corporate Relo', path: '/corporate-relo' },
+      { label: 'Relo Management', path: '/admin/relo-management' },
+      { label: 'Business Plan', path: '/admin/business-plan' },
+    ],
+  },
+];
+
+export const COORDINATION_RHYTHM = [
+  {
+    window: 'Morning (before first DNN blast)',
+    items: [
+      'Site Coordination pulse — note red attention items',
+      'DNN Show Pipeline — script / render / ready status',
+      'Pipeline Credit Monitor — HeyGen + Twilio headroom',
+      'Charlie Escalations — clear overnight opens',
+    ],
+  },
+  {
+    window: 'Midday',
+    items: [
+      'Owner Kanban + Compose SMS — reply SLA',
+      'Active / Scheduled Campaigns — pause if spam risk',
+      'New Opt-Ins + Clients — assign owners',
+      'PR Pitch Tracker — follow-ups due today',
+    ],
+  },
+  {
+    window: 'Close of day',
+    items: [
+      'Affiliate / PRN pipeline — agreements & handoffs',
+      'Compliance / Content Approval backlog',
+      'Log blockers for next Cloud Agent / staff shift',
+      'Confirm evening DNN brief queued or published',
+    ],
+  },
+];
