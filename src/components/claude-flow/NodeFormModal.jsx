@@ -111,11 +111,28 @@ export default function NodeFormModal({ node, allNodes, defaultSection, onSave, 
           {form.section === 'departments' && (
             <div>
               <Label className="text-white mb-1.5 block">Subsection (Department group)</Label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {['Marketing', 'Operations', 'Sales', 'DNN News', 'Finance'].map((dept) => (
+                  <button
+                    key={dept}
+                    type="button"
+                    onClick={() => setForm({ ...form, subsection: dept })}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium border-2 transition"
+                    style={{
+                      borderColor: form.subsection === dept ? '#D4AF37' : 'rgba(255,255,255,0.2)',
+                      background: form.subsection === dept ? 'rgba(212,175,55,0.2)' : 'transparent',
+                      color: form.subsection === dept ? '#D4AF37' : '#fff',
+                    }}
+                  >
+                    {dept}
+                  </button>
+                ))}
+              </div>
               <Input
                 className={inputCls}
                 value={form.subsection}
                 onChange={(e) => setForm({ ...form, subsection: e.target.value })}
-                placeholder="e.g. Marketing, DNN News, Operations, Sales, Finance"
+                placeholder="Marketing | Operations | Sales | DNN News | Finance"
               />
             </div>
           )}

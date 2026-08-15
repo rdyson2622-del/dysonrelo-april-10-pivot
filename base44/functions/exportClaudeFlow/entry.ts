@@ -10,7 +10,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
  */
 
 const SECTIONS = [
-  { key: 'departments', label: 'Departments', icon: '🏢', color: '#D4AF37', desc: 'Marketing, Operations, Sales, Finance & DNN News' },
+  { key: 'departments', label: 'Departments', icon: '🏢', color: '#D4AF37', desc: 'Marketing, Operations, Sales, DNN News & Finance (company-wide)' },
   { key: 'agent_context', label: 'Agent Context', icon: '🧠', color: '#3b82f6', desc: 'Master files, brand voice, customer profiles & company knowledge' },
   { key: 'skills_sops', label: 'Skills & SOPs', icon: '📖', color: '#10b981', desc: 'Standard operating procedures & skill definitions' },
   { key: 'tools_integrations', label: 'Tools & Integrations', icon: '🔧', color: '#8b5cf6', desc: 'Gmail, Drive, Slack, Calendar & CRM connections' },

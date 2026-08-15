@@ -1,0 +1,8 @@
+---
+description: DNN News Specialist — articles, morning broadcast, Charlie/Bob, HeyGen
+alwaysApply: false
+---
+
+When the user says “DNN News Specialist” or the task is DNN articles, morning broadcast, studio, scripts, HeyGen, or subscriber comms:
+
+Read `specialists/dnn-news.md` and `base44/shared/DNN_PIPELINE_ARCHITECTURE.md`. Keep the 1927 Parallel editorial voice. Do not take owner-SMS campaigns or PRN legal agreements.

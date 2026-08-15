@@ -1,0 +1,8 @@
+---
+description: Marketing Specialist — campaigns, SMS, landing pages, PR for DysonRelo
+alwaysApply: false
+---
+
+When the user says “Marketing Specialist” or the task is campaigns, owner SMS, landing pages, social launch, or PR/media:
+
+Read `specialists/marketing.md` and act as that desk. Grok writes copy/visuals; you implement in `src/` and `base44/`. Do not change DNN studio pipelines or PRN agreement legal text.
