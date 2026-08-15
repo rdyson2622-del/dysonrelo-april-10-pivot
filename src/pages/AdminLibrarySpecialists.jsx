@@ -170,7 +170,7 @@ export default function AdminLibrarySpecialists() {
     setSeeding(true);
     setSeedResult(null);
     try {
-      const res = await base44.functions.invoke('claudeLibrarySeedCatalog', {
+      const res = await base44.functions.invoke('grokLibrarySeedCatalog', {
         nodes: catalogSeedPayload(),
       });
       const data = res?.data || res;
@@ -256,14 +256,6 @@ export default function AdminLibrarySpecialists() {
             style={{ border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
           >
             🗺️ Master Workflow Atlas
-          </Link>
-          <Link
-            to="/admin/claude-flow"
-            className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
-            style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
-          >
-            <BookOpen className="w-4 h-4" style={{ color: GOLD }} />
-            Knowledge Library
           </Link>
           <Link
             to="/connect"
