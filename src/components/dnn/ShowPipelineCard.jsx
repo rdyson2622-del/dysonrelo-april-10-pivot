@@ -129,6 +129,8 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
         res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'start', broadcastId: show.id });
       } else if (action === 'checkStitch') {
         res = await base44.functions.invoke('dnnStitchBroadcast', { action: 'check' });
+      } else if (action === 'rerun') {
+        res = await base44.functions.invoke('dnnRerunShow', { broadcast_id: show.id });
       }
       setResult({ success: !res?.data?.error, data: res?.data });
       onRefresh();
@@ -162,6 +164,17 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Rerun button — re-dispatch through n8n with corrected scene order */}
+          <button onClick={() => {
+            if (!confirm(`Rerun ${show.show_name || 'Show ' + (show.show_number || '?')}?\n\nThis will clear the current video and re-dispatch through n8n with corrected scene ordering (intro → content → outro).`)) return;
+            handleAction('rerun', 'Rerun');
+          }} disabled={busy === 'rerun'}
+            title="Re-dispatch this show through n8n with corrected scene order"
+            className="flex items-center gap-1 text-[9px] font-bold px-2.5 py-1 rounded-full text-white transition-all hover:scale-105 disabled:opacity-50"
+            style={{ background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', color: '#a5b4fc' }}>
+            {busy === 'rerun' ? <RefreshCw className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+            {busy === 'rerun' ? 'Rerunning…' : '↻ Rerun'}
+          </button>
           {/* Distribution tracker */}
           {show.videoUrl && <DistributionTracker show={show} />}
           {/* Pipeline badge — shows which render pipeline produced this show */}

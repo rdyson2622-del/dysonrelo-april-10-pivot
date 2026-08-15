@@ -58,11 +58,18 @@ export async function createAndDispatchBroadcast(base44, opts) {
     headlines: promptTopics.split(' | ').filter(Boolean),
   });
 
-  // 2. Fire the n8n webhook with the broadcast_id + pipeline indicator
+  // 2. Fire the n8n webhook with the broadcast_id + pipeline indicator.
+  //    scene_order tells n8n the EXACT order to generate + stitch the 3 scenes.
+  //    Without this, n8n may stitch scenes out of order (e.g. content before intro).
   const payload = {
     broadcast_id: broadcast.id,
     prompt_topics: promptTopics,
     pipeline: 'higgsfield_11labs',
+    scene_order: [
+      { scene: 1, field: 'intro_script', speaker: 'charlie', label: 'Intro / Opening', instruction: 'Charlie opens the show and introduces the headlines' },
+      { scene: 2, field: 'content_script', speaker: 'bob', label: 'Main Content', instruction: 'Bob explains the news story in depth' },
+      { scene: 3, field: 'outro_script', speaker: 'charlie', label: 'Outro / Closing', instruction: 'Charlie closes the show and signs off' },
+    ],
   };
 
   let webhookStatus = 'sent';
