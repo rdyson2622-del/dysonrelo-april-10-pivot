@@ -48,7 +48,7 @@ export default function AdminClaudeNodeDetail() {
         <Button
           variant="outline"
           onClick={() => navigate('/admin/claude-flow')}
-          className="border-white/20 text-white hover:bg-white/10"
+          className="border-white/20 text-black hover:bg-black/5"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" />
           Agent Library
