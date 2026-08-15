@@ -125,14 +125,7 @@ export default function AdminShowPipeline() {
               style={{ background: 'linear-gradient(135deg, #818cf8, #6366f1)' }}
               title="Generate a new daily show using the Higgsfield + 11 Labs pipeline">
               {generating === 'higgsfield_11labs' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-              {generating === 'higgsfield_11labs' ? 'Dispatching…' : '⚡ Higgsfield Show'}
-            </button>
-            <button onClick={() => handleGenerate('heygen')} disabled={!!generating}
-              className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
-              title="Generate a new daily show using the HeyGen pipeline">
-              {generating === 'heygen' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-              {generating === 'heygen' ? 'Dispatching…' : 'HeyGen Show'}
+              {generating === 'higgsfield_11labs' ? 'Dispatching…' : '⚡ Generate Daily Show'}
             </button>
             <button onClick={handleRefresh} disabled={refreshing}
               className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-white transition-opacity disabled:opacity-50"
