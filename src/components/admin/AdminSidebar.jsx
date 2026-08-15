@@ -66,6 +66,7 @@ const NAV_SECTIONS = [
     children: [
       { label: '📊 Sales Flow Chart', path: '/admin/workflows/sales', icon: GitBranch, highlight: true },
       { label: 'Recruiting Pipeline', path: '/admin/affiliate-recruiting', icon: Users },
+      { label: '↳ Bob Dyson Contact List', path: '/admin/bob-dyson-contacts', icon: Users, indent: true, highlight: true },
       { label: '↳ Master Partner Roster', path: '/admin/roster', icon: List, indent: true },
       { label: '↳ Exodus Pitch Page', path: '/admin/exodus-pitch', icon: ArrowRight, indent: true },
       { label: '↳ Partner Benefits', path: '/admin/partner-benefits', icon: ArrowRight, indent: true },

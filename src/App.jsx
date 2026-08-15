@@ -96,6 +96,7 @@ import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
 import AdminRoster from './pages/AdminRoster';
 import AdminAffiliateRecruiting from './pages/AdminAffiliateRecruiting';
+import AdminBobDysonContacts from './pages/AdminBobDysonContacts';
 import VettedAgentsCity from './pages/VettedAgentsCity';
 import SendingAgentDashboard from './pages/SendingAgentDashboard';
 import AdminExodusPitch from './pages/AdminExodusPitch';
@@ -279,6 +280,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
+        <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
         <Route path="/admin/exodus-pitch" element={<AdminExodusPitch />} />
         <Route path="/admin/partner-benefits" element={<AdminPartnerBenefits />} />
