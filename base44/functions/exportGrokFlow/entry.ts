@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { buildAgentLibraryHtml } from '../../shared/agentLibraryExport.ts';
 
 /**
- * exportClaudeFlow — generates a STANDALONE, self-contained HTML file
+ * exportGrokFlow — generates a STANDALONE, self-contained HTML file
  * that renders the Agent Library as a sectioned navigation hub:
  *   HOME → 4 section boxes → sub-item lists → Google Doc links
  *
