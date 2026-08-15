@@ -7,7 +7,7 @@ import { ArrowLeft, Copy, Check, RefreshCw, Sparkles, MessageSquare, MousePointe
 export default function Connect() {
   const [copied, setCopied] = useState('');
   const serverUrl = new URL('/api/mcp', window.location.origin).toString();
-  const webhookUrl = new URL('/api/functions/claudeWebhook', window.location.origin).toString();
+  const webhookUrl = new URL('/api/functions/grokWebhook', window.location.origin).toString();
 
   const copy = (text, label) => {
     navigator.clipboard.writeText(text);

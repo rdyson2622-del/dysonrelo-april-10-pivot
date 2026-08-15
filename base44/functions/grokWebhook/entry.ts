@@ -105,6 +105,22 @@ export default async function(req) {
     if (req.method === 'GET') {
       return Response.json({
         server: 'DysonRelo Grok Webhook',
+        migration_notice: {
+          date: '2026-08-15',
+          message: 'The Claude AI Agent Library has been rebranded to the Grok AI Agent Library. All backend functions have been migrated from claude* naming to grok* naming. The old claudeWebhook, claudeScreenVision, claudeLibraryDirectUpdate, claudeLibraryProvisionDocs, claudeLibrarySeedCatalog, claudeLibrarySyncDoc, claudeLibraryWebhookSync, and exportClaudeFlow functions are deprecated and will be removed. Use the grok* equivalents going forward. The API key (CLAUDELIBRARYAPIKEY secret value) and all tool names/arguments remain unchanged — only the endpoint URL changed from /api/functions/claudeWebhook to /api/functions/grokWebhook.',
+          old_endpoint: '/api/functions/claudeWebhook',
+          new_endpoint: '/api/functions/grokWebhook',
+          deprecated_functions: [
+            'claudeWebhook', 'claudeScreenVision', 'claudeLibraryDirectUpdate',
+            'claudeLibraryProvisionDocs', 'claudeLibrarySeedCatalog',
+            'claudeLibrarySyncDoc', 'claudeLibraryWebhookSync', 'exportClaudeFlow',
+          ],
+          replacement_functions: [
+            'grokWebhook', 'grokScreenVision', 'grokLibraryDirectUpdate',
+            'grokLibraryProvisionDocs', 'grokLibrarySeedCatalog',
+            'grokLibrarySyncDoc', 'grokLibraryWebhookSync', 'exportGrokFlow',
+          ],
+        },
         tool_count: TOOLS.length,
         tools: TOOLS.map(t => ({
           name: t.name,

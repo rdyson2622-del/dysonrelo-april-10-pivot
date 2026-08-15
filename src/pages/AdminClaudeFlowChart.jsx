@@ -113,7 +113,7 @@ export default function AdminClaudeFlowChart() {
   const handleSeedCatalog = async () => {
     setSeeding(true);
     try {
-      await base44.functions.invoke('claudeLibrarySeedCatalog', {
+      await base44.functions.invoke('grokLibrarySeedCatalog', {
         nodes: catalogSeedPayload(),
       });
       queryClient.invalidateQueries({ queryKey: ['claude-nodes'] });
@@ -126,7 +126,7 @@ export default function AdminClaudeFlowChart() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const res = await base44.functions.invoke('exportClaudeFlow', {});
+      const res = await base44.functions.invoke('exportGrokFlow', {});
       const data = res?.data || res;
       if (data?.file_url) {
         setExportUrl(data.file_url);

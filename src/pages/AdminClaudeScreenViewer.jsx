@@ -12,7 +12,7 @@ const JPEG_QUALITY = 0.7;
 const MAX_HISTORY_TURNS = 12;
 
 const SYSTEM_PROMPT =
-  "You are Claude acting as a continuous screen-viewing assistant for the admin of DysonRelo. " +
+  "You are Grok acting as a continuous screen-viewing assistant for the admin of DysonRelo. " +
   "The user is sharing their screen live and you receive a fresh screenshot every few seconds. " +
   "Provide concise, high-signal observations: what's on screen, anything that looks broken or " +
   "worth attention, and brief suggestions. Keep responses short (2-4 sentences) unless the user " +
@@ -61,9 +61,9 @@ export default function AdminClaudeScreenViewer() {
     return canvas.toDataURL('image/jpeg', JPEG_QUALITY);
   }, []);
 
-  const sendToClaude = useCallback(async (imageDataUrl, prompt) => {
+  const sendToGrok = useCallback(async (imageDataUrl, prompt) => {
     const base64 = imageDataUrl.split(',')[1];
-    const res = await base44.functions.invoke('claudeScreenVision', {
+    const res = await base44.functions.invoke('grokScreenVision', {
       image_base64: base64,
       image_media_type: 'image/jpeg',
       prompt,
@@ -81,7 +81,7 @@ export default function AdminClaudeScreenViewer() {
     setLastFrameUrl(frame);
     setAnalyzing(true);
     try {
-      const text = await sendToClaude(frame, prompt);
+      const text = await sendToGrok(frame, prompt);
       conversationRef.current.push({ role: 'user', content: prompt });
       conversationRef.current.push({ role: 'assistant', content: text });
       if (conversationRef.current.length > MAX_HISTORY_TURNS * 2) {
@@ -92,11 +92,11 @@ export default function AdminClaudeScreenViewer() {
         { role: 'assistant', content: text, ts: Date.now(), kind },
       ]);
     } catch (e) {
-      setError(e.message || 'Claude request failed.');
+      setError(e.message || 'Grok request failed.');
     } finally {
       setAnalyzing(false);
     }
-  }, [captureFrame, sendToClaude]);
+  }, [captureFrame, sendToGrok]);
 
   const tick = useCallback(() => {
     if (analyzingRef.current) return;
@@ -182,10 +182,10 @@ export default function AdminClaudeScreenViewer() {
           <div>
             <h1 className="text-2xl font-serif text-dyson-gold flex items-center gap-2">
               <Monitor className="w-6 h-6" />
-              Claude Screen Viewer
+              Grok Screen Viewer
             </h1>
             <p className="text-gray-400 text-sm mt-1">
-              Share your screen and Claude will continuously observe and answer questions about what it sees.
+              Share your screen and Grok will continuously observe and answer questions about what it sees.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -225,7 +225,7 @@ export default function AdminClaudeScreenViewer() {
               {analyzing && (
                 <div className="absolute top-2 right-2 flex items-center gap-1.5 text-xs bg-black/70 px-2 py-1 rounded-full">
                   <Loader2 className="w-3 h-3 animate-spin text-dyson-gold" />
-                  <span className="text-dyson-gold">Claude is looking…</span>
+                  <span className="text-dyson-gold">Grok is looking…</span>
                 </div>
               )}
             </div>
@@ -274,7 +274,7 @@ export default function AdminClaudeScreenViewer() {
           {/* Right: transcript + input */}
           <div className="flex flex-col rounded-xl border border-white/15 bg-dyson-charcoal h-[70vh]">
             <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-              <span className="text-sm font-semibold text-dyson-gold">Claude Transcript</span>
+              <span className="text-sm font-semibold text-dyson-gold">Grok Transcript</span>
               <span className="text-xs text-gray-500">{transcript.length} messages</span>
             </div>
 
@@ -283,7 +283,7 @@ export default function AdminClaudeScreenViewer() {
                 <div className="h-full flex items-center justify-center text-center text-gray-500 text-sm">
                   <div>
                     <Eye className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                    Start sharing your screen — Claude will begin observing automatically.
+                    Start sharing your screen — Grok will begin observing automatically.
                   </div>
                 </div>
               ) : (
@@ -314,7 +314,7 @@ export default function AdminClaudeScreenViewer() {
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={sharing ? 'Ask Claude about your screen…' : 'Start sharing to ask questions'}
+                placeholder={sharing ? 'Ask Grok about your screen…' : 'Start sharing to ask questions'}
                 disabled={!sharing || analyzing}
                 className="bg-black/40 border-white/20 text-white"
               />
