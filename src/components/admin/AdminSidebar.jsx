@@ -319,6 +319,22 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
+      {/* AI Library Specialists — Canon, Playbook, Conduit */}
+      <div className="px-3 pt-1 pb-1">
+        <Link
+          to="/admin/library-specialists"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/library-specialists' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Brain className="w-4 h-4" />
+          📜 AI Library Specialists
+        </Link>
+      </div>
+
       {/* Claude Screen Viewer — always visible */}
       <div className="px-3 pt-1 pb-1">
         <Link

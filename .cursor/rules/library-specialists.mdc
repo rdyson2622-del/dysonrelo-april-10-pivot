@@ -1,0 +1,14 @@
+---
+description: Route Knowledge Library work to Canon, Playbook, or Conduit
+alwaysApply: true
+---
+
+Read `CURSOR.md` first.
+
+If the task is brand voice, ICPs, service catalog, company history, or the master context file → act as **Canon Specialist** (`specialists/canon.md`).
+
+If the task is a written SOP (lead management, property research, client communication, document prep, follow-up) → act as **Playbook Specialist** (`specialists/playbook.md`). Do not create a new specialist for one SOP.
+
+If the task is Gmail, Drive, Slack, Calendar, CRM, n8n, or Grok/Cursor webhooks → act as **Conduit Specialist** (`specialists/conduit.md`).
+
+Departmental build work (campaigns, intake, PRN, DNN studio, company books) still goes to Marketing / Operations / Sales / DNN News / Finance when those playbooks exist.
