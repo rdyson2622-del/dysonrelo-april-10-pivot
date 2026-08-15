@@ -18,11 +18,10 @@
     "pipeline": {
       "type": "string",
       "enum": [
-        "heygen",
         "higgsfield_11labs"
       ],
-      "default": "heygen",
-      "description": "Render pipeline that produced this show \u2014 heygen (legacy HeyGen + Creatomate) or higgsfield_11labs (new n8n pipeline: Higgsfield video + 11 Labs audio)"
+      "default": "higgsfield_11labs",
+      "description": "Render pipeline that produced this show \u2014 Higgsfield video + 11 Labs audio via n8n"
     },
     "script": {
       "type": "string",
@@ -98,23 +97,23 @@
           }
         }
       },
-      "description": "Ordered clip sequence for legacy tag_team per-clip rendering (deprecated for new 3-scene pipeline \u2014 use intro_script/content_script/outro_script instead)"
+      "description": "Ordered clip sequence for legacy tag_team per-clip rendering (deprecated \u2014 use intro_script/content_script/outro_script instead)"
     },
     "heygenId": {
       "type": "string",
-      "description": "HeyGen render job id for the FULL multi-scene show \u2014 set by n8n Workflow 1 after single dispatch. One id = one stitched MP4."
+      "description": "Render job id for the FULL multi-scene show \u2014 set by n8n after single dispatch. One id = one stitched MP4."
     },
     "videoUrl": {
       "type": "string",
-      "description": "Permanent CDN URL of the final stitched MP4 (all 3 scenes combined) \u2014 set by n8n Workflow 2 after cloud upload. This is the RAW avatar video with no studio background."
+      "description": "Permanent CDN URL of the final stitched MP4 (all 3 scenes combined) \u2014 set by n8n after cloud upload."
     },
     "compositedVideoUrl": {
       "type": "string",
-      "description": "Final MP4 with the DNN studio background BAKED IN (studio bg + anchor box) via Creatomate. This is the version distributed to LinkedIn/Facebook/Instagram so social posts show the full studio set, not the raw avatar. Value is 'creatomate:pending:<renderId>' while the Creatomate render is in progress."
+      "description": "Final MP4 with the DNN studio background BAKED IN (studio bg + anchor box). This is the version distributed to LinkedIn/Facebook/Instagram so social posts show the full studio set, not the raw avatar."
     },
     "compositedRenderId": {
       "type": "string",
-      "description": "Creatomate render job id for the studio composite (tracked so the poller can finish the bake)"
+      "description": "Studio composite render job id (tracked so the poller can finish the bake)"
     },
     "status": {
       "type": "string",
@@ -129,7 +128,7 @@
         "failed"
       ],
       "default": "draft",
-      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=render dispatched (HeyGen or Higgsfield), processing=awaiting callback, ready=MP4 uploaded, compositing=Creatomate baking studio bg, completed=Published, failed=error"
+      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=render dispatched, processing=awaiting callback, ready=MP4 uploaded, compositing=studio bg baking, completed=Published, failed=error"
     },
     "prompt_topics": {
       "type": "string",

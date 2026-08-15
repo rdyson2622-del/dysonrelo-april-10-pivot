@@ -249,9 +249,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                {show.pipeline === 'higgsfield_11labs'
-                  ? 'Rendering in Higgsfield + 11 Labs — n8n will callback automatically'
-                  : 'Rendering in HeyGen — n8n will callback automatically'}
+                Rendering in Higgsfield + 11 Labs — n8n will callback automatically
               </div>
             )}
 

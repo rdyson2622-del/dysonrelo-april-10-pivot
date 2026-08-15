@@ -2,12 +2,14 @@
  * Shared dispatch logic for DNN broadcast shows.
  *
  * Used by both:
- *   - dnnDailyVideoPipeline (admin-triggered, supports HeyGen or Higgsfield)
- *   - dnnHiggsfieldDailyShow (scheduled automation, Higgsfield + 11 Labs)
+ *   - dnnDailyVideoPipeline (admin-triggered)
+ *   - dnnHiggsfieldDailyShow (scheduled automation)
  *
  * Both functions create a DnnBroadcast record and fire the n8n webhook
- * (N8N_BROADCAST_WEBHOOK_URL). n8n then generates the script, renders the
- * video, and calls back dnnRenderDispatched / n8nBroadcastCallback.
+ * (N8N_BROADCAST_WEBHOOK_URL) with pipeline: 'higgsfield_11labs'. n8n then
+ * generates the script (Gemini), renders the video (Higgsfield), generates
+ * audio (11 Labs), stitches the 3 scenes, and calls back
+ * dnnRenderDispatched / n8nBroadcastCallback.
  */
 
 /**
@@ -31,15 +33,13 @@ export async function gatherPromptTopics(base44) {
  *
  * @param {object} base44 - Base44 client (from createClientFromRequest)
  * @param {object} opts
- * @param {string} opts.pipeline - 'heygen' or 'higgsfield_11labs'
+ * @param {string} opts.pipeline - 'higgsfield_11labs'
  * @param {string} opts.promptTopics - headline topics for the script
  * @param {string} opts.webhookUrl - n8n webhook URL
- * @param {string} [opts.avatarId] - HeyGen avatar (heygen pipeline only)
- * @param {string} [opts.voiceId] - HeyGen voice (heygen pipeline only)
  * @returns {object} { success, broadcast_id, status, pipeline, webhook }
  */
 export async function createAndDispatchBroadcast(base44, opts) {
-  const { pipeline, promptTopics, webhookUrl, avatarId, voiceId } = opts;
+  const { pipeline, promptTopics, webhookUrl } = opts;
 
   const today = new Date().toISOString().slice(0, 10);
   const existing = await base44.asServiceRole.entities.DnnBroadcast.list('-created_date', 1);
@@ -52,7 +52,7 @@ export async function createAndDispatchBroadcast(base44, opts) {
     broadcast_date: today,
     presenter: 'charlie',
     format: 'solo',
-    pipeline: pipeline || 'heygen',
+    pipeline: 'higgsfield_11labs',
     status: 'processing',
     prompt_topics: promptTopics,
     headlines: promptTopics.split(' | ').filter(Boolean),
@@ -62,10 +62,8 @@ export async function createAndDispatchBroadcast(base44, opts) {
   const payload = {
     broadcast_id: broadcast.id,
     prompt_topics: promptTopics,
-    pipeline: pipeline || 'heygen',
+    pipeline: 'higgsfield_11labs',
   };
-  if (avatarId) payload.avatar_id = avatarId;
-  if (voiceId) payload.voice_id = voiceId;
 
   let webhookStatus = 'sent';
   try {
@@ -94,7 +92,7 @@ export async function createAndDispatchBroadcast(base44, opts) {
     success: webhookStatus === 'sent',
     broadcast_id: broadcast.id,
     status: webhookStatus === 'sent' ? 'processing' : 'failed',
-    pipeline: pipeline || 'heygen',
+    pipeline: 'higgsfield_11labs',
     webhook: webhookStatus,
   };
 }

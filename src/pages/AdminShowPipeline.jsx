@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
-  RefreshCw, Play, Zap, AlertTriangle, ChevronDown, ChevronRight,
+  RefreshCw, Play, ChevronDown, ChevronRight,
   FileText, Clapperboard, Film, CheckCircle, XCircle, Clock, Edit3,
   Sparkles, Layers, Plus, Loader2
 } from 'lucide-react';
@@ -18,15 +18,15 @@ export default function AdminShowPipeline() {
   const [editingShow, setEditingShow] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMsg, setRefreshMsg] = useState(null);
-  const [generating, setGenerating] = useState(null); // 'heygen' | 'higgsfield_11labs' | null
+  const [generating, setGenerating] = useState(false);
 
-  const handleGenerate = async (pipeline) => {
-    setGenerating(pipeline);
+  const handleGenerate = async () => {
+    setGenerating(true);
     setRefreshMsg(null);
     try {
-      const res = await base44.functions.invoke('dnnDailyVideoPipeline', { pipeline });
+      const res = await base44.functions.invoke('dnnDailyVideoPipeline', {});
       if (res.data?.success) {
-        setRefreshMsg(`✓ ${pipeline === 'higgsfield_11labs' ? 'Higgsfield + 11 Labs' : 'HeyGen'} show dispatched — n8n is generating`);
+        setRefreshMsg('✓ Higgsfield + 11 Labs show dispatched — n8n is generating');
       } else {
         setRefreshMsg(`✗ ${res.data?.error || 'Dispatch failed'}`);
       }
@@ -34,7 +34,7 @@ export default function AdminShowPipeline() {
     } catch (e) {
       setRefreshMsg(`✗ ${e.message}`);
     }
-    setGenerating(null);
+    setGenerating(false);
   };
 
   useEffect(() => {
@@ -84,23 +84,6 @@ export default function AdminShowPipeline() {
     enabled: isAdmin,
   });
 
-  // HeyGen credit balance
-  const { data: quota, isLoading: quotaLoading } = useQuery({
-    queryKey: ['heygenQuota'],
-    queryFn: async () => {
-      const res = await base44.functions.invoke('heygenQuota', {});
-      return res.data?.data || res.data;
-    },
-    refetchInterval: 30000,
-    enabled: isAdmin,
-  });
-
-  const apiCredits = quota?.remaining_quota ?? 0;
-  const planCredits = quota?.details?.plan_credit ?? 0;
-  const totalCredits = apiCredits + planCredits;
-  const avgCostPerVideo = 30;
-  const isLow = apiCredits < 200;
-
   if (!isAdmin) return null;
 
   return (
@@ -120,12 +103,12 @@ export default function AdminShowPipeline() {
             <span className="text-[10px] text-slate-400 max-w-xs truncate">{refreshMsg}</span>
           )}
           <div className="flex items-center gap-2">
-            <button onClick={() => handleGenerate('higgsfield_11labs')} disabled={!!generating}
+            <button onClick={handleGenerate} disabled={generating}
               className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, #818cf8, #6366f1)' }}
               title="Generate a new daily show using the Higgsfield + 11 Labs pipeline">
-              {generating === 'higgsfield_11labs' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-              {generating === 'higgsfield_11labs' ? 'Dispatching…' : '⚡ Generate Daily Show'}
+              {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
+              {generating ? 'Dispatching…' : '⚡ Generate Daily Show'}
             </button>
             <button onClick={handleRefresh} disabled={refreshing}
               className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-white transition-opacity disabled:opacity-50"
@@ -135,37 +118,6 @@ export default function AdminShowPipeline() {
             </button>
           </div>
         </div>
-      </div>
-
-      {/* HeyGen Credit Bar */}
-      <div className="px-6 py-4 flex items-center gap-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: isLow ? 'rgba(239,68,68,0.04)' : 'rgba(212,175,55,0.04)' }}>
-        <Zap className="w-5 h-5 shrink-0" style={{ color: isLow ? '#ef4444' : GOLD }} fill={isLow ? '#ef4444' : GOLD} />
-        <div className="flex items-center gap-6">
-          <div>
-            <p className="text-[9px] font-black tracking-widest uppercase text-slate-500">API Credits</p>
-            <p className="text-xl font-black" style={{ color: isLow ? '#ef4444' : GOLD, fontFamily: 'Cormorant Garamond, serif' }}>
-              {quotaLoading ? '…' : apiCredits.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <p className="text-[9px] font-black tracking-widest uppercase text-slate-500">Plan Credits</p>
-            <p className="text-xl font-black text-white" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-              {quotaLoading ? '…' : planCredits.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <p className="text-[9px] font-black tracking-widest uppercase text-slate-500">Est. Renders Left</p>
-            <p className="text-xl font-black text-slate-300" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-              {quotaLoading ? '…' : Math.floor(apiCredits / avgCostPerVideo)}
-            </p>
-          </div>
-        </div>
-        {isLow && !quotaLoading && (
-          <div className="flex items-center gap-2 ml-auto px-3 py-2 rounded-lg" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)' }}>
-            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-            <p className="text-xs text-red-300">Low! Top up at heygen.com/settings/billing</p>
-          </div>
-        )}
       </div>
 
       {/* Pipeline shows */}
