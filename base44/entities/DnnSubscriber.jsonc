@@ -30,7 +30,7 @@
     },
     "partner_agent_id": {
       "type": "string",
-      "description": "Hard-tagged PartnerAgent ID — this subscriber belongs exclusively to this agent's silo"
+      "description": "Hard-tagged PartnerAgent ID \u2014 this subscriber belongs exclusively to this agent's silo"
     },
     "partner_agent_name": {
       "type": "string",
@@ -84,12 +84,19 @@
     "email"
   ],
   "rls": {
-    "read": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
     "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
       "user_condition": {
         "role": "admin"
       }
