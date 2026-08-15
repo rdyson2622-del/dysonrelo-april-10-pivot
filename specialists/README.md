@@ -26,6 +26,7 @@ Do not add a sixth “Brand Voice Specialist” or a “Gmail Specialist.” Upd
 2. Grok Bot: `Department: Canon` | `Playbook` | `Conduit` in `briefs/HANDOFF_TEMPLATE.md`
 3. Admin: **AI Library Specialists** at `/admin/library-specialists`
 4. Seed library nodes: button on that page, or Admin → Knowledge Library
+5. Pictures for new IT: **Master Workflow Atlas** at `/admin/workflows` — also the first item in each admin department section
 
 ## Not these specialists
 

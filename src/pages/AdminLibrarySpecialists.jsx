@@ -251,6 +251,13 @@ export default function AdminLibrarySpecialists() {
 
         <div className="flex flex-wrap gap-3 mt-8">
           <Link
+            to="/admin/workflows"
+            className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
+            style={{ border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
+          >
+            🗺️ Master Workflow Atlas
+          </Link>
+          <Link
             to="/admin/claude-flow"
             className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
             style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}

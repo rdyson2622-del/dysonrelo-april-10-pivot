@@ -75,6 +75,8 @@ export const PAGE_REGISTRY = {
   75: { name: 'Bureau Stories',         path: '/admin/dnn/bureau-stories',    section: 'Admin' },
   76: { name: 'Charlie Scripts (Old)',  path: '/admin/scripts',               section: 'Admin' },
   77: { name: 'AI Library Specialists', path: '/admin/library-specialists',   section: 'Admin' },
+  78: { name: 'Master Workflow Atlas',  path: '/admin/workflows',             section: 'Admin' },
+  79: { name: 'Department Flow Chart',  path: '/admin/workflows/:deskId',     section: 'Admin' },
 };
 
 // Helper function: Get page number by path

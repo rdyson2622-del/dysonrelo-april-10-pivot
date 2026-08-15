@@ -128,6 +128,13 @@ export default function Admin() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
+          <Link
+            to="/admin/workflows"
+            className="inline-flex items-center gap-2 mt-4 text-sm px-4 py-2 rounded-xl"
+            style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
+          >
+            🗺️ New here? Open the Master Workflow Atlas (pictures, not code)
+          </Link>
         </motion.div>
 
         {/* Summary Dashboard Charts */}

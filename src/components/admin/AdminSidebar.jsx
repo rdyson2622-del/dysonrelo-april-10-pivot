@@ -6,7 +6,7 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard, Library, Monitor, Plug
+  Clapperboard, Library, Monitor, Plug, GitBranch
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -23,6 +23,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '🗺️ Master Workflow Atlas', path: '/admin/workflows', icon: GitBranch, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
@@ -30,6 +31,7 @@ const NAV_SECTIONS = [
     key: 'marketing_prep',
     label: 'MARKETING & PREP',
     children: [
+      { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
       { label: 'Search Listing Profiles', path: '/admin/search-profiles', icon: Search },
       { label: 'Skip Trace Lookup', path: '/admin/skip-trace', icon: Fingerprint },
       { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline', icon: SendHorizontal },
@@ -49,6 +51,7 @@ const NAV_SECTIONS = [
     key: 'pr',
     label: 'PR & MEDIA',
     children: [
+      { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
       { label: 'Media CRM', path: '/admin/media-crm', icon: Newspaper },
       { label: 'Pitch Tracker', path: '/admin/pitch-tracker', icon: Star },
       { label: 'Press Kit Assets', path: '/admin/press-kit', icon: Package },
@@ -61,6 +64,7 @@ const NAV_SECTIONS = [
     icon: Users,
     color: '#34d399',
     children: [
+      { label: '📊 Sales Flow Chart', path: '/admin/workflows/sales', icon: GitBranch, highlight: true },
       { label: 'Recruiting Pipeline', path: '/admin/affiliate-recruiting', icon: Users },
       { label: '↳ Master Partner Roster', path: '/admin/roster', icon: List, indent: true },
       { label: '↳ Exodus Pitch Page', path: '/admin/exodus-pitch', icon: ArrowRight, indent: true },
@@ -72,6 +76,7 @@ const NAV_SECTIONS = [
     key: 'results',
     label: 'CLIENT MARKETING RESULTS',
     children: [
+      { label: '📊 Sales Flow Chart', path: '/admin/workflows/sales', icon: GitBranch, highlight: true },
       { label: 'Listing Clients', path: '/admin/clients', icon: Home },
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Private Referral Network (PRN)', isHeader: true },
@@ -94,6 +99,7 @@ const NAV_SECTIONS = [
     key: 'relo_management',
     label: 'RELO MANAGEMENT',
     children: [
+      { label: '📊 Operations Flow Chart', path: '/admin/workflows/operations', icon: GitBranch, highlight: true },
       { label: 'Relo Management Explainer', path: '/admin/relo-management', icon: Home },
     ],
   },
@@ -101,6 +107,7 @@ const NAV_SECTIONS = [
     key: 'corporate_relo',
     label: 'CORPORATE RELO / HR',
     children: [
+      { label: '📊 Operations Flow Chart', path: '/admin/workflows/operations', icon: GitBranch, highlight: true },
       { label: 'HR Explainer Videos & Guidelines', path: '/admin/corporate-relo', icon: Video },
       { label: 'B2B Audience Distribution', path: '/admin/audience-distribution', icon: Send, highlight: true },
       { label: 'Public Corporate Relo Page', path: '/corporate-relo', icon: Globe },
@@ -110,6 +117,7 @@ const NAV_SECTIONS = [
     key: 'operations',
     label: 'OPERATIONS',
     children: [
+      { label: '📊 Operations Flow Chart', path: '/admin/workflows/operations', icon: GitBranch, highlight: true },
       { label: '🛡 Compliance Doc Review', path: '/admin/compliance-review', icon: FileCheck },
       { label: '🎬 Q&A Script Studio', path: '/admin/qa-script-studio', icon: Video },
       { label: 'Presentation Library', path: '/admin/presentation-library', icon: FileText },
@@ -123,6 +131,7 @@ const NAV_SECTIONS = [
     icon: Globe,
     color: '#D4AF37',
     children: [
+      { label: '📊 DNN Flow Chart', path: '/admin/workflows/dnn', icon: GitBranch, highlight: true },
       { label: 'DNN News', path: '/dnn-news', icon: Newspaper },
       { label: '📺 Broadcast Archive', path: '/dnn-archive', icon: Clapperboard },
       { label: 'News Feed (Staging)', path: '/admin/dnn/news-feed', icon: Newspaper },
@@ -150,6 +159,7 @@ const NAV_SECTIONS = [
     key: 'creative_lab',
     label: 'CREATIVE LAB',
     children: [
+      { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
       { label: 'New Landing Page', path: '/admin/new-landing-page', icon: Globe },
     ],
   },
@@ -157,6 +167,7 @@ const NAV_SECTIONS = [
     key: 'agent_lender_vetting',
     label: 'AGENT VETTING & LENDER',
     children: [
+      { label: '📊 Sales Flow Chart', path: '/admin/workflows/sales', icon: GitBranch, highlight: true },
       { label: 'Looking to Vette an Agent?', path: '/admin/dnn/agent-vetting', icon: Shield },
       { label: 'Looking to Select a Lender?', path: '/admin/dnn/lender-vetting', icon: DollarSign },
     ],
@@ -167,11 +178,24 @@ const NAV_SECTIONS = [
     icon: Brain,
     color: '#A78BFA',
     children: [
+      { label: '📊 Operations Flow Chart', path: '/admin/workflows/operations', icon: GitBranch, highlight: true },
       { label: 'Scripts', path: '/admin/charlie-scripts', icon: ScrollText },
       { label: 'Knowledge Base', path: '/admin/charlie-knowledge-base', icon: Brain },
       { label: "Bob's Video Answers", path: '/admin/bob-library', icon: Video },
       { label: 'Escalations', path: '/admin/charlie-escalations', icon: AlertTriangle },
       { label: 'Voice Presentation', path: '/charlie-voice', icon: MessageCircle },
+    ],
+  },
+  {
+    key: 'finance',
+    label: 'FINANCE',
+    icon: DollarSign,
+    color: '#a78bfa',
+    children: [
+      { label: '📊 Finance Flow Chart', path: '/admin/workflows/finance', icon: GitBranch, highlight: true },
+      { label: 'Featured Agent Revenue', path: '/admin/dnn/revenue', icon: TrendingUp },
+      { label: 'Production Cost Dashboard', path: '/admin/production-dashboard', icon: BarChart3 },
+      { label: 'Pipeline Credit Monitor', path: '/admin/heygen-credits', icon: Zap },
     ],
   },
 ];
@@ -300,6 +324,22 @@ export default function AdminSidebar() {
         >
           <LayoutDashboard className="w-4 h-4" />
           Admin Dashboard
+        </Link>
+      </div>
+
+      {/* Master Workflow Atlas — always visible */}
+      <div className="px-3 pt-1 pb-1">
+        <Link
+          to="/admin/workflows"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <GitBranch className="w-4 h-4" />
+          🗺️ Master Workflow Atlas
         </Link>
       </div>
 

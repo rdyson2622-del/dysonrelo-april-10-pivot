@@ -45,7 +45,8 @@ The public page `/ai-assistants` (Charlie, Scout, Nexus, Relay, …) is the **cu
 
 ## Agent Library (Knowledge Library)
 
-Admin: `/admin/claude-flow`
+Admin pictures (start here if you are human / new IT): `/admin/workflows`  
+Knowledge Library: `/admin/claude-flow`
 
 1. **Departments** — Marketing, Operations, Sales, Finance, DNN News
 2. **AI Agent Intelligence** — this file, brand voice, ICPs, service catalog, company history
