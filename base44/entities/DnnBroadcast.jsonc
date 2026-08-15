@@ -15,6 +15,15 @@
       "format": "date",
       "description": "The date this broadcast covers (YYYY-MM-DD)"
     },
+    "pipeline": {
+      "type": "string",
+      "enum": [
+        "heygen",
+        "higgsfield_11labs"
+      ],
+      "default": "heygen",
+      "description": "Render pipeline that produced this show \u2014 heygen (legacy HeyGen + Creatomate) or higgsfield_11labs (new n8n pipeline: Higgsfield video + 11 Labs audio)"
+    },
     "script": {
       "type": "string",
       "description": "Full combined anchor script (legacy / backward compat). New pipeline stores scenes separately below."
@@ -120,7 +129,7 @@
         "failed"
       ],
       "default": "draft",
-      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=HeyGen dispatched (single multi-scene job), processing=awaiting callback, ready=MP4 uploaded, compositing=Creatomate baking studio bg, completed=Published, failed=error"
+      "description": "3-stage pipeline lifecycle: draft=Scripting, rendering=render dispatched (HeyGen or Higgsfield), processing=awaiting callback, ready=MP4 uploaded, compositing=Creatomate baking studio bg, completed=Published, failed=error"
     },
     "prompt_topics": {
       "type": "string",

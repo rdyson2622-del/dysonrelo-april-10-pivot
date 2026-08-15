@@ -26,7 +26,7 @@ const GOLD = '#D4AF37';
 const STAGES = [
   { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected' },
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen renders each clip' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video' },
   { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4' },
   { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets' },
   { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents' },
@@ -157,6 +157,13 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
         <div className="flex items-center gap-2">
           {/* Distribution tracker */}
           {show.videoUrl && <DistributionTracker show={show} />}
+          {/* Pipeline badge — shows which render pipeline produced this show */}
+          {show.pipeline === 'higgsfield_11labs' && (
+            <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
+              style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
+              ⚡ HIGGSFIELD + 11 LABS
+            </span>
+          )}
           {/* Stage badge */}
           <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
             style={{
@@ -242,7 +249,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                Rendering in HeyGen — n8n will callback automatically
+                {show.pipeline === 'higgsfield_11labs'
+                  ? 'Rendering in Higgsfield + 11 Labs — n8n will callback automatically'
+                  : 'Rendering in HeyGen — n8n will callback automatically'}
               </div>
             )}
 
