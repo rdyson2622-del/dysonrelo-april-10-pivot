@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import BobDysonContactModal from "@/components/admin/BobDysonContactModal";
 import {
   Users,
   Mail,
@@ -14,6 +15,9 @@ import {
   Search,
   AlertCircle,
   CheckCircle2,
+  Trash2,
+  Edit2,
+  UserPlus,
 } from "lucide-react";
 
 const GOLD = "#D4AF37";
@@ -56,13 +60,20 @@ function exportCSV(contacts) {
 }
 
 export default function AdminBobDysonContacts() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [importing, setImporting] = useState(false);
   const [importSource, setImportSource] = useState("saved");
   const [importResult, setImportResult] = useState(null);
   const [importError, setImportError] = useState(null);
   const [filterTag, setFilterTag] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editingContact, setEditingContact] = useState(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.BobDysonContact.delete(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["bob_dyson_contacts"] }),
+  });
 
   const { data: contacts = [], isLoading } = useQuery({
     queryKey: ["bob_dyson_contacts"],
@@ -109,7 +120,7 @@ export default function AdminBobDysonContacts() {
       const data = res?.data || res;
       if (data?.error) throw new Error(data.error);
       setImportResult(data);
-      queryClient.invalidateQueries({ queryKey: ["bob_dyson_contacts"] });
+      qc.invalidateQueries({ queryKey: ["bob_dyson_contacts"] });
     } catch (e) {
       setImportError(e.message || "Import failed");
     } finally {
@@ -131,15 +142,24 @@ export default function AdminBobDysonContacts() {
               Gmail contacts imported from rdyson2622@gmail.com via Google Contacts
             </p>
           </div>
-          <Button
-            onClick={() => exportCSV(filtered)}
-            disabled={filtered.length === 0}
-            variant="outline"
-            className="border-white/20 text-white hover:bg-white/10"
-          >
-            <Download className="w-4 h-4 mr-1.5" />
-            Export CSV ({filtered.length})
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => { setEditingContact(null); setShowModal(true); }}
+              className="gold-btn border-0"
+            >
+              <UserPlus className="w-4 h-4 mr-1.5" />
+              Add Contact
+            </Button>
+            <Button
+              onClick={() => exportCSV(filtered)}
+              disabled={filtered.length === 0}
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10"
+            >
+              <Download className="w-4 h-4 mr-1.5" />
+              Export CSV ({filtered.length})
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -277,6 +297,7 @@ export default function AdminBobDysonContacts() {
                   <th className="text-left px-4 py-3 hidden lg:table-cell">Phone</th>
                   <th className="text-left px-4 py-3 hidden lg:table-cell">Company</th>
                   <th className="text-left px-4 py-3 hidden xl:table-cell">Tags</th>
+                  <th className="text-right px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -317,6 +338,26 @@ export default function AdminBobDysonContacts() {
                         ))}
                       </div>
                     </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => { setEditingContact(c); setShowModal(true); }}
+                          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                          title="Edit contact"
+                        >
+                          <Edit2 className="w-3.5 h-3.5 text-dyson-gold" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (window.confirm(`Delete ${c.full_name}?`)) deleteMutation.mutate(c.id);
+                          }}
+                          className="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors"
+                          title="Delete contact"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -328,8 +369,16 @@ export default function AdminBobDysonContacts() {
               </div>
             )}
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
+          )}
+          </div>
+
+          {showModal && (
+          <BobDysonContactModal
+           contact={editingContact}
+           onClose={() => { setShowModal(false); setEditingContact(null); }}
+           onSaved={() => qc.invalidateQueries({ queryKey: ["bob_dyson_contacts"] })}
+          />
+          )}
+          </div>
+          );
+          }

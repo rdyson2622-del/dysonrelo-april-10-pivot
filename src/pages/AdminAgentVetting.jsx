@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, CheckCircle, XCircle, AlertTriangle, Star,
   ChevronDown, ChevronUp, Plus, Loader2, FileCheck, UserCheck,
-  Award, Globe, Sparkles, Download
+  Award, Globe, Sparkles, Download, Trash2, Edit2, UserPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import ReferralAgentModal from '@/components/admin/ReferralAgentModal';
 
 const GOLD = '#D4AF37';
 
@@ -255,6 +256,14 @@ export default function AdminAgentVetting() {
   const referralLists = [...new Set(referralAgents.map(a => a.list_name).filter(Boolean))];
   const filteredReferral = referralFilter === 'all' ? referralAgents : referralAgents.filter(a => a.list_name === referralFilter);
 
+  const [showReferralModal, setShowReferralModal] = useState(false);
+  const [editingReferral, setEditingReferral] = useState(null);
+
+  const deleteReferralMutation = useMutation({
+    mutationFn: (id) => base44.entities.ReferralAgentList.delete(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['referralAgentList'] }),
+  });
+
   const [exporting, setExporting] = useState(false);
   const exportReferralCSV = async () => {
     setExporting(true);
@@ -400,6 +409,12 @@ export default function AdminAgentVetting() {
             <FileCheck className="w-4 h-4" style={{ color: GOLD }} />
             <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Referral Agent Lists</p>
             <span className="text-xs ml-auto" style={{ color: 'rgba(255,255,255,0.4)' }}>{referralAgents.length} agents on file</span>
+            <button
+              onClick={() => { setEditingReferral(null); setShowReferralModal(true); }}
+              className="text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5"
+              style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
+              <UserPlus className="w-3 h-3" /> Add Agent
+            </button>
             <button onClick={exportReferralCSV} disabled={exporting || filteredReferral.length === 0}
               className="text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1.5 disabled:opacity-40"
               style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}>
@@ -445,6 +460,20 @@ export default function AdminAgentVetting() {
                   style={{ color: GOLD, background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}>
                   {a.status}
                 </span>
+                <button
+                  onClick={() => { setEditingReferral(a); setShowReferralModal(true); }}
+                  className="p-1 rounded-lg hover:bg-white/10 transition-colors shrink-0"
+                  title="Edit agent"
+                >
+                  <Edit2 className="w-3 h-3" style={{ color: GOLD }} />
+                </button>
+                <button
+                  onClick={() => { if (window.confirm(`Delete ${a.agent_name}?`)) deleteReferralMutation.mutate(a.id); }}
+                  className="p-1 rounded-lg hover:bg-red-500/10 transition-colors shrink-0"
+                  title="Delete agent"
+                >
+                  <Trash2 className="w-3 h-3 text-red-400" />
+                </button>
               </div>
             ))}
             {filteredReferral.length > 200 && (
@@ -454,6 +483,15 @@ export default function AdminAgentVetting() {
             )}
           </div>
         </div>
+
+        {showReferralModal && (
+          <ReferralAgentModal
+            agent={editingReferral}
+            defaultListName={referralFilter !== 'all' ? referralFilter : undefined}
+            onClose={() => { setShowReferralModal(false); setEditingReferral(null); }}
+            onSaved={() => qc.invalidateQueries({ queryKey: ['referralAgentList'] })}
+          />
+        )}
 
       </div>
     </div>
