@@ -7,8 +7,7 @@ You are working on **DysonRelo** (dysonrelo.com / 1dnn.com), a Base44 app in thi
 | App | Job |
 | --- | --- |
 | **Cursor** (you, in this repo) | Implement pages, entities, and functions. Open PRs. Coordinate desks. |
-| **Grok Bot** | Write briefs, copy, scripts, and visuals into `briefs/from-grok/` and `assets/from-grok/`. |
-| **Claude** | Retired as the operating team. Do not start new departmental work there. |
+| **Grok Bot** | Replaced Claude. Write briefs, copy, scripts, and visuals into `briefs/from-grok/` and `assets/from-grok/`. |
 
 Cursor Cloud Agents do **not** need the owner’s xAI login. If the xAI account is still suspended, Grok Bot visuals may be delayed — still implement from text briefs.
 

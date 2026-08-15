@@ -270,7 +270,7 @@ export default function AdminClaudeFlowChart() {
           <div>
             <h1 className="text-2xl font-serif text-dyson-gold">Knowledge Library</h1>
             <p className="text-gray-400 text-sm mt-1">
-              Department files, SOPs, and integrations for Cursor + Grok. Claude is retired as the operating team. Click a section to browse.
+              Department files, SOPs, and integrations for Cursor + Grok Bot. Grok Bot replaced Claude. Click a section to browse.
             </p>
           </div>
           <div className="flex items-center gap-2">

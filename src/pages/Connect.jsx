@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Copy, Check, RefreshCw, Sparkles, MessageSquare, MousePointer, Code, Webhook } from 'lucide-react';
+import { ArrowLeft, Copy, Check, RefreshCw, Sparkles, MessageSquare, MousePointer, Webhook } from 'lucide-react';
 
 export default function Connect() {
   const [copied, setCopied] = useState('');
@@ -40,7 +40,7 @@ export default function Connect() {
         <div className="mb-8">
           <h2 className="text-3xl font-serif text-white mb-3">Connect Cursor &amp; Grok to DysonRelo</h2>
           <p className="text-gray-400 text-base leading-relaxed">
-            <strong className="text-white">Claude is retired</strong> as the operating team. Use <strong className="text-white">Cursor</strong> to build the Base44 app and <strong className="text-white">Grok Bot</strong> for briefs and visuals.
+            <strong className="text-white">Grok Bot replaced Claude.</strong> Use <strong className="text-white">Cursor</strong> to build the Base44 app and <strong className="text-white">Grok Bot</strong> for briefs and visuals.
             Departmental specialists live at <Link to="/admin/specialists" className="text-dyson-gold underline">/admin/specialists</Link>.
             The webhook and MCP options below still work if a client needs to trigger live tools.
           </p>
@@ -73,7 +73,7 @@ export default function Connect() {
 
         {/* Client Tabs */}
         <Tabs defaultValue="cursor" className="w-full">
-          <TabsList className="grid grid-cols-5 mb-6 bg-dyson-charcoal border border-white/10">
+          <TabsList className="grid grid-cols-4 mb-6 bg-dyson-charcoal border border-white/10">
             <TabsTrigger value="cursor" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
               <MousePointer className="w-3.5 h-3.5 mr-1.5" /> Cursor
             </TabsTrigger>
@@ -85,9 +85,6 @@ export default function Connect() {
             </TabsTrigger>
             <TabsTrigger value="chatgpt" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
               <MessageSquare className="w-3.5 h-3.5 mr-1.5" /> ChatGPT
-            </TabsTrigger>
-            <TabsTrigger value="claude" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
-              <Code className="w-3.5 h-3.5 mr-1.5" /> Claude (retired)
             </TabsTrigger>
           </TabsList>
 
@@ -178,18 +175,6 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
               {step(2, <>Set <strong className="text-white">Department</strong> to Marketing, Operations, Sales, or DNN News.</>)}
               {step(3, <>Put mockups or MP4s in <code className="text-dyson-gold">assets/from-grok/YYYY-MM-DD-short-slug/</code> when image tools are available again.</>)}
               {step(4, <>Open a GitHub PR (label <strong className="text-white">from-grok</strong> if it exists) and tell Cursor it is ready.</>)}
-            </ol>
-          </TabsContent>
-
-          <TabsContent value="claude" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
-            <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-              <p className="text-sm text-amber-100">Claude is retired as the DysonRelo operating team. Use Cursor + Grok. These MCP steps remain only as a legacy fallback.</p>
-            </div>
-            <ol className="space-y-4">
-              {step(1, <>Open <strong className="text-white">Claude Desktop</strong> → click your profile menu (top-left) → <strong className="text-white">Settings</strong>.</>)}
-              {step(2, <>Select <strong className="text-white">Connectors</strong> → click <strong className="text-white">"Add custom connector"</strong>.</>)}
-              {step(3, <>Name it <strong className="text-white">DysonRelo</strong> and paste the server URL above. Click <strong className="text-white">Add</strong>.</>)}
-              {consentStep(4)}
             </ol>
           </TabsContent>
 

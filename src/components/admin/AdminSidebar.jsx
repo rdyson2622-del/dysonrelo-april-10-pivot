@@ -319,7 +319,7 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Knowledge Library (former Claude Agent Library) — always visible */}
+      {/* Knowledge Library — always visible */}
       <div className="px-3 pt-1 pb-1">
         <Link
           to="/admin/claude-flow"
@@ -335,7 +335,7 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Claude Screen Viewer — always visible */}
+      {/* Screen Viewer — always visible */}
       <div className="px-3 pt-1 pb-1">
         <Link
           to="/admin/claude-screen-viewer"
@@ -347,7 +347,7 @@ export default function AdminSidebar() {
           }}
         >
           <Monitor className="w-4 h-4" />
-          👁️ Claude Screen Viewer
+          👁️ Screen Viewer
         </Link>
       </div>
 

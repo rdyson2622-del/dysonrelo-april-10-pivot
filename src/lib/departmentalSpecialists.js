@@ -5,7 +5,7 @@
  *   specialists/*.md
  *   .cursor/rules/specialist-*.mdc
  *
- * Claude is retired as the operating team. Cursor implements Base44/GitHub.
+ * Grok Bot replaced Claude. Cursor implements Base44/GitHub.
  * Grok Bot writes briefs, copy, and visuals into briefs/from-grok/ and assets/from-grok/.
  */
 
@@ -220,20 +220,11 @@ export const HOW_THE_TWO_APPS_WORK = {
   },
   grok: {
     title: 'Grok Bot',
-    role: 'Creative and brief writer',
+    role: 'Replaced Claude — creative and brief writer',
     does: [
       'Writes HANDOFF.md briefs under briefs/from-grok/',
       'Drops mockups, storyboards, and MP4s under assets/from-grok/',
       'May be limited while the xAI account is suspended (especially image/video tools)',
-    ],
-  },
-  claude: {
-    title: 'Claude (retired)',
-    role: 'No longer the operating team',
-    does: [
-      'Claude Desktop MCP remains on /connect as a legacy option only',
-      'The old “Claude Agent Library” is now the Knowledge Library',
-      'Do not start new departmental work in Claude',
     ],
   },
 };

@@ -130,7 +130,7 @@ export default function AdminDepartmentalSpecialists() {
         </p>
         <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>AI Departmental Specialists</h1>
         <p className="text-gray-400 text-sm max-w-3xl leading-relaxed mb-6">
-          Claude is retired. Cursor builds the Base44 app. Grok Bot writes briefs and visuals.
+          Grok Bot replaced Claude. Cursor builds the Base44 app. Grok Bot writes briefs and visuals.
           Four Base44 desks: Marketing, Operations, Sales, and DNN News. Company finance is outside this app and is not assigned here.
         </p>
 
@@ -145,7 +145,7 @@ export default function AdminDepartmentalSpecialists() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
           {Object.values(HOW_THE_TWO_APPS_WORK).map((app) => (
             <div key={app.title} className="rounded-xl p-4" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.1)' }}>
               <p className="text-sm font-serif text-white mb-1">{app.title}</p>

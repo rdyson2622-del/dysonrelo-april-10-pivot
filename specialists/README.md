@@ -1,6 +1,6 @@
 # AI Departmental Specialists
 
-Bob’s operating team for the DysonRelo **Base44** app. **Claude is retired.** Cursor builds. Grok Bot writes briefs and visuals.
+Bob’s operating team for the DysonRelo **Base44** app. **Grok Bot replaced Claude.** Cursor builds. Grok Bot writes briefs and visuals.
 
 Four Base44 desks: **Marketing, Operations, Sales, DNN News.**  
 Company finance is outside Base44 and is not assigned here.

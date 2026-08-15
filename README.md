@@ -1,6 +1,6 @@
 **Welcome to your Base44 project**
 
-**AI operating team:** Claude is retired. Cursor builds this repo; Grok Bot writes briefs. See `specialists/README.md` and Admin → AI Departmental Specialists. 
+**AI operating team:** Grok Bot replaced Claude. Cursor builds this repo; Grok Bot writes briefs. See `specialists/README.md` and Admin → AI Departmental Specialists. 
 
 **About**
 
