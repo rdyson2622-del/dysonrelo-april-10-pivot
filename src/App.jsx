@@ -132,6 +132,8 @@ import TermsOfService from './pages/TermsOfService';
 import AdminClaudeFlowChart from './pages/AdminClaudeFlowChart';
 import AdminClaudeNodeDetail from './pages/AdminClaudeNodeDetail';
 import AdminClaudeScreenViewer from './pages/AdminClaudeScreenViewer';
+import AdminLibrarySpecialists from './pages/AdminLibrarySpecialists';
+import AdminWorkflowAtlas from './pages/AdminWorkflowAtlas';
 import Connect from './pages/Connect';
 
 const AuthenticatedApp = () => {
@@ -306,6 +308,9 @@ const AuthenticatedApp = () => {
         <Route path="/admin/claude-flow" element={<AdminClaudeFlowChart />} />
         <Route path="/admin/claude-node/:nodeId" element={<AdminClaudeNodeDetail />} />
         <Route path="/admin/claude-screen-viewer" element={<AdminClaudeScreenViewer />} />
+        <Route path="/admin/library-specialists" element={<AdminLibrarySpecialists />} />
+        <Route path="/admin/workflows" element={<AdminWorkflowAtlas />} />
+        <Route path="/admin/workflows/:deskId" element={<AdminWorkflowAtlas />} />
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />

@@ -1,0 +1,8 @@
+---
+description: Conduit Specialist — Gmail, Drive, Slack, Calendar, CRM, n8n and Grok webhooks
+alwaysApply: false
+---
+
+When the user says “Conduit Specialist” or the task is Gmail, Google Drive, Slack, Calendar, CRM sync, n8n, or Grok/Cursor webhooks:
+
+Read `specialists/conduit.md` and act as that desk. Document secret *names*, never values. Do not change DNN editorial or campaign copy. n8n M2M may be disabled by `n8nGuard` — check before assuming a pipeline is live.

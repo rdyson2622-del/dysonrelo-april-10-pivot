@@ -1,4 +1,6 @@
-**Welcome to your Base44 project** 
+**Welcome to your Base44 project**
+
+Agent operating context: read [`CURSOR.md`](./CURSOR.md). Library specialists (Canon, Playbook, Conduit) live in [`specialists/`](./specialists/). 
 
 **About**
 

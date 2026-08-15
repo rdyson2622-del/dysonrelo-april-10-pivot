@@ -3,9 +3,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import NodeFormModal from '@/components/claude-flow/NodeFormModal';
+import { Link } from 'react-router-dom';
+import { catalogBySection, catalogSeedPayload } from '@/lib/agentLibraryCatalog';
 import {
   Download, Plus, Pencil, ArrowLeft, ExternalLink, Star,
-  Building2, Brain, BookOpen, Wrench, FileText, ChevronRight, RefreshCw,
+  Building2, Brain, BookOpen, Wrench, FileText, ChevronRight, RefreshCw, Sparkles,
 } from 'lucide-react';
 
 const SECTIONS = [
@@ -35,9 +37,9 @@ const SECTIONS = [
   },
   {
     key: 'tools_integrations',
-    label: 'Integrations, Work Flows & N8N WebHooks',
+    label: 'Integrations, Work Flows & N8N OR GROK WebHooks',
     icon: Wrench,
-    description: 'Gmail, Drive, Slack, Calendar & CRM connections',
+    description: 'Gmail, Drive, Slack, Calendar, CRM, n8n & Grok connections',
     color: '#8b5cf6',
     bg: 'rgba(139,92,246,0.08)',
   },
@@ -52,6 +54,7 @@ export default function AdminClaudeFlowChart() {
   const [editingNode, setEditingNode] = useState(null);
   const [exporting, setExporting] = useState(false);
   const [exportUrl, setExportUrl] = useState(null);
+  const [seeding, setSeeding] = useState(false);
 
   const { data: nodes = [], isLoading, isFetching, refetch } = useQuery({
     queryKey: ['claude-nodes'],
@@ -105,6 +108,19 @@ export default function AdminClaudeFlowChart() {
     if (confirm('Delete this node?')) {
       deleteMutation.mutate(id);
     }
+  };
+
+  const handleSeedCatalog = async () => {
+    setSeeding(true);
+    try {
+      await base44.functions.invoke('claudeLibrarySeedCatalog', {
+        nodes: catalogSeedPayload(),
+      });
+      queryClient.invalidateQueries({ queryKey: ['claude-nodes'] });
+    } catch (e) {
+      console.error('Catalog seed failed:', e);
+    }
+    setSeeding(false);
   };
 
   const handleExport = async () => {
@@ -224,10 +240,12 @@ export default function AdminClaudeFlowChart() {
               <div className="w-8 h-8 border-4 border-dyson-gold/30 border-t-dyson-gold rounded-full animate-spin" />
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center py-16 text-gray-500">
-              <p className="text-lg mb-2">No nodes in this section yet</p>
-              <p className="text-sm">Click "Add Node" to create the first one.</p>
-            </div>
+            <CatalogEmptyState
+              sectionKey={activeSection}
+              existingTitles={new Set(nodes.map((n) => n.title))}
+              seeding={seeding}
+              onSeed={handleSeedCatalog}
+            />
           ) : hasSubsections ? (
             <div className="space-y-8">
               {subsections.map((sub) => (
@@ -271,6 +289,10 @@ export default function AdminClaudeFlowChart() {
             <h1 className="text-2xl font-serif text-dyson-gold">Claude AI Agent Library Flow Charts</h1>
             <p className="text-gray-400 text-sm mt-1">
               Visual flowchart navigation for the DysonRelo AI agent system. Click a section to browse.
+              {' '}
+              <Link to="/admin/library-specialists" className="text-dyson-gold underline underline-offset-2">
+                Canon, Playbook & Conduit roster
+              </Link>
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -378,6 +400,62 @@ export default function AdminClaudeFlowChart() {
             onClose={() => { setShowModal(false); setEditingNode(null); }}
           />
         )}
+      </div>
+    </div>
+  );
+}
+
+function CatalogEmptyState({ sectionKey, existingTitles, seeding, onSeed }) {
+  const catalog = catalogBySection(sectionKey);
+  if (catalog.length === 0) {
+    return (
+      <div className="text-center py-16 text-gray-500">
+        <p className="text-lg mb-2">No nodes in this section yet</p>
+        <p className="text-sm">Click &quot;Add Node&quot; to create the first one.</p>
+      </div>
+    );
+  }
+
+  const missing = catalog.filter((n) => !existingTitles.has(n.title)).length;
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <p className="text-white text-sm font-medium">Catalog ready to seed</p>
+          <p className="text-gray-500 text-xs mt-1">
+            These documents belong to the Canon / Playbook / Conduit desks. Seed them into the library, or add a node by hand.
+          </p>
+        </div>
+        <Button
+          onClick={onSeed}
+          disabled={seeding || missing === 0}
+          className="gold-btn border-0 shrink-0"
+        >
+          <Sparkles className="w-4 h-4 mr-1.5" />
+          {seeding ? 'Seeding…' : 'Seed catalog'}
+        </Button>
+      </div>
+      <div className="space-y-2">
+        {catalog.map((doc) => (
+          <div
+            key={doc.slug}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg border border-dashed border-white/15 bg-dyson-charcoal/60"
+          >
+            {doc.is_priority ? (
+              <Star className="w-4 h-4 text-dyson-gold fill-dyson-gold shrink-0" />
+            ) : (
+              <FileText className="w-4 h-4 text-gray-500 shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="text-white text-sm font-medium truncate">{doc.title}</div>
+              <div className="text-gray-400 text-xs truncate">{doc.summary}</div>
+            </div>
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 shrink-0">
+              {doc.owner}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

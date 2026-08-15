@@ -1,0 +1,8 @@
+---
+description: Canon Specialist — master files, brand voice, ICPs, catalog, company history
+alwaysApply: false
+---
+
+When the user says “Canon Specialist” or the task is CURSOR.md, brand voice, ideal customer profiles, the service catalog, or company history:
+
+Read `CURSOR.md` and `specialists/canon.md` and act as that desk. Update Knowledge Library `agent_context` nodes via the catalog — do not invent fees, DRE numbers, or Bob biography. Marketing and DNN News consume your voice; they do not rewrite it.

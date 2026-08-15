@@ -7,9 +7,9 @@ import { Trash2 } from 'lucide-react';
 
 const SECTIONS = [
   { key: 'departments', label: 'Departments' },
-  { key: 'agent_context', label: 'Agent Context' },
+  { key: 'agent_context', label: 'AI Agent Intelligence' },
   { key: 'skills_sops', label: 'Skills & SOPs' },
-  { key: 'tools_integrations', label: 'Tools & Integrations' },
+  { key: 'tools_integrations', label: 'Integrations & Webhooks' },
 ];
 
 export default function NodeFormModal({ node, allNodes, defaultSection, onSave, onDelete, onClose }) {

@@ -8,9 +8,9 @@ import { ArrowLeft, FileText, ExternalLink, Star } from 'lucide-react';
 
 const SECTION_LABELS = {
   departments: 'Departments',
-  agent_context: 'Agent Context',
-  skills_sops: 'Skills & SOPs',
-  tools_integrations: 'Tools & Integrations',
+  agent_context: 'AI Agent Intelligence',
+  skills_sops: 'Skills and Standard Operating Procedures',
+  tools_integrations: 'Integrations, Work Flows & N8N OR GROK WebHooks',
 };
 
 export default function AdminClaudeNodeDetail() {
