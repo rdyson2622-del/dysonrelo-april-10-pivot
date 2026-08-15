@@ -74,6 +74,7 @@ export const PAGE_REGISTRY = {
   74: { name: 'Lender Vetting',         path: '/admin/dnn/lender-vetting',    section: 'Admin' },
   75: { name: 'Bureau Stories',         path: '/admin/dnn/bureau-stories',    section: 'Admin' },
   76: { name: 'Charlie Scripts (Old)',  path: '/admin/scripts',               section: 'Admin' },
+  77: { name: 'AI Departmental Specialists', path: '/admin/specialists',     section: 'Admin' },
 };
 
 // Helper function: Get page number by path

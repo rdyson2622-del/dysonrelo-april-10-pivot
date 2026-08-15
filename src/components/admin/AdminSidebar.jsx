@@ -303,7 +303,23 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Claude Agent Library Flow Chart — always visible */}
+      {/* AI Departmental Specialists — always visible */}
+      <div className="px-3 pt-1 pb-1">
+        <Link
+          to="/admin/specialists"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/specialists' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <BookOpen className="w-4 h-4" />
+          🧭 AI Departmental Specialists
+        </Link>
+      </div>
+
+      {/* Knowledge Library (former Claude Agent Library) — always visible */}
       <div className="px-3 pt-1 pb-1">
         <Link
           to="/admin/claude-flow"
@@ -315,7 +331,7 @@ export default function AdminSidebar() {
           }}
         >
           <BookOpen className="w-4 h-4" />
-          🧭 Claude AI Agent Library Flow Charts
+          📚 Knowledge Library
         </Link>
       </div>
 

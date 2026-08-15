@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Copy, Check, RefreshCw, Sparkles, MessageSquare, MousePointer, Code, Webhook, Key } from 'lucide-react';
+import { ArrowLeft, Copy, Check, RefreshCw, Sparkles, MessageSquare, MousePointer, Code, Webhook } from 'lucide-react';
 
 export default function Connect() {
   const [copied, setCopied] = useState('');
@@ -38,9 +38,11 @@ export default function Connect() {
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h2 className="text-3xl font-serif text-white mb-3">Connect Your AI Assistant to DysonRelo</h2>
+          <h2 className="text-3xl font-serif text-white mb-3">Connect Cursor &amp; Grok to DysonRelo</h2>
           <p className="text-gray-400 text-base leading-relaxed">
-            Two ways to connect: <strong className="text-white">Webhook API</strong> (simple, works today — recommended) or <strong className="text-white">MCP Server</strong> (OAuth-based, richer protocol). Use the tabs below for setup instructions for your AI client.
+            <strong className="text-white">Claude is retired</strong> as the operating team. Use <strong className="text-white">Cursor</strong> to build the Base44 app and <strong className="text-white">Grok Bot</strong> for briefs and visuals.
+            Departmental specialists live at <Link to="/admin/specialists" className="text-dyson-gold underline">/admin/specialists</Link>.
+            The webhook and MCP options below still work if a client needs to trigger live tools.
           </p>
         </div>
 
@@ -70,22 +72,22 @@ export default function Connect() {
         </div>
 
         {/* Client Tabs */}
-        <Tabs defaultValue="webhook" className="w-full">
+        <Tabs defaultValue="cursor" className="w-full">
           <TabsList className="grid grid-cols-5 mb-6 bg-dyson-charcoal border border-white/10">
+            <TabsTrigger value="cursor" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+              <MousePointer className="w-3.5 h-3.5 mr-1.5" /> Cursor
+            </TabsTrigger>
+            <TabsTrigger value="grok" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Grok Bot
+            </TabsTrigger>
             <TabsTrigger value="webhook" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
               <Webhook className="w-3.5 h-3.5 mr-1.5" /> Webhook API
-            </TabsTrigger>
-            <TabsTrigger value="claude" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
-              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Claude (MCP)
             </TabsTrigger>
             <TabsTrigger value="chatgpt" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
               <MessageSquare className="w-3.5 h-3.5 mr-1.5" /> ChatGPT
             </TabsTrigger>
-            <TabsTrigger value="cursor" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
-              <MousePointer className="w-3.5 h-3.5 mr-1.5" /> Cursor
-            </TabsTrigger>
-            <TabsTrigger value="custom" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
-              <Code className="w-3.5 h-3.5 mr-1.5" /> Custom
+            <TabsTrigger value="claude" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+              <Code className="w-3.5 h-3.5 mr-1.5" /> Claude (retired)
             </TabsTrigger>
           </TabsList>
 
@@ -154,19 +156,35 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
                 </div>
               </div>
 
-              {/* Claude Desktop instructions */}
+              {/* Cursor / Grok webhook instructions */}
               <div className="rounded-lg border border-dyson-gold/20 bg-dyson-gold/5 p-4">
-                <p className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-2">Using with Claude Desktop</p>
+                <p className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-2">Using with Cursor or Grok</p>
                 <ol className="space-y-2 text-sm text-gray-300">
-                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">1.</span> In Claude Desktop, create a new Project or conversation.</li>
-                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">2.</span> Add this to your Project knowledge / system instructions:<br/><code className="text-xs text-dyson-gold break-all">You have access to a webhook API at {webhookUrl}. Use the x-api-key header with the value [your CLAUDELIBRARYAPIKEY]. GET to list tools, POST with {`{"tool":"<name>","args":{...}}`} to execute.</code></li>
-                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">3.</span> Claude can now make HTTP requests to trigger any of the 8 operations.</li>
+                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">1.</span> In Cursor, name the departmental specialist, then ask it to call this webhook when a live tool is needed.</li>
+                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">2.</span> Give the assistant this instruction:<br/><code className="text-xs text-dyson-gold break-all">You have access to a webhook API at {webhookUrl}. Use the x-api-key header with the value [your CLAUDELIBRARYAPIKEY]. GET to list tools, POST with {`{"tool":"<name>","args":{...}}`} to execute.</code></li>
+                  <li className="flex gap-2"><span className="text-dyson-gold font-bold">3.</span> Grok Bot should not call this webhook — it writes a brief; Cursor executes tools.</li>
                 </ol>
               </div>
             </div>
           </TabsContent>
 
+          <TabsContent value="grok" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-serif text-white mb-1">Grok Bot — briefs and visuals</h3>
+              <p className="text-sm text-gray-400">Grok does not edit the Base44 app. It writes a handoff; Cursor builds it. If the xAI account is still suspended, skip visuals and type the same brief in Cursor.</p>
+            </div>
+            <ol className="space-y-4">
+              {step(1, <>Create <code className="text-dyson-gold">briefs/from-grok/YYYY-MM-DD-short-slug/HANDOFF.md</code> from the template in <code className="text-dyson-gold">briefs/HANDOFF_TEMPLATE.md</code>.</>)}
+              {step(2, <>Set <strong className="text-white">Department</strong> to Marketing, Operations, Sales, DNN News, or Finance.</>)}
+              {step(3, <>Put mockups or MP4s in <code className="text-dyson-gold">assets/from-grok/YYYY-MM-DD-short-slug/</code> when image tools are available again.</>)}
+              {step(4, <>Open a GitHub PR (label <strong className="text-white">from-grok</strong> if it exists) and tell Cursor it is ready.</>)}
+            </ol>
+          </TabsContent>
+
           <TabsContent value="claude" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
+            <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+              <p className="text-sm text-amber-100">Claude is retired as the DysonRelo operating team. Use Cursor + Grok. These MCP steps remain only as a legacy fallback.</p>
+            </div>
             <ol className="space-y-4">
               {step(1, <>Open <strong className="text-white">Claude Desktop</strong> → click your profile menu (top-left) → <strong className="text-white">Settings</strong>.</>)}
               {step(2, <>Select <strong className="text-white">Connectors</strong> → click <strong className="text-white">"Add custom connector"</strong>.</>)}
@@ -185,10 +203,14 @@ Header: x-api-key: <your CLAUDELIBRARYAPIKEY value>`}</pre>
           </TabsContent>
 
           <TabsContent value="cursor" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-serif text-white mb-1">Cursor — builder and coordinator</h3>
+              <p className="text-sm text-gray-400">Start a Cloud Agent at cursor.com/agents on this repo, or chat in Cursor desktop. Name the desk first: Marketing, Operations, Sales, DNN News, or Finance. No xAI login is required for Cursor.</p>
+            </div>
             <ol className="space-y-4">
-              {step(1, <>Open <strong className="text-white">Cursor</strong> → <strong className="text-white">Settings</strong> → <strong className="text-white">Tools & Integrations</strong>.</>)}
-              {step(2, <>Click <strong className="text-white">"New MCP Server"</strong> — this opens <code className="text-dyson-gold">mcp.json</code>.</>)}
-              {step(3, <>Add an entry with <code className="text-dyson-gold">"url"</code> set to the server URL above. Save and <strong className="text-white">toggle it on</strong>.</>)}
+              {step(1, <>Open a Cursor Cloud Agent or desktop chat on the <strong className="text-white">dysonrelo-april-10-pivot</strong> repo.</>)}
+              {step(2, <>Start with the specialist name, e.g. <code className="text-dyson-gold">DNN News Specialist: fix this morning&apos;s broadcast script review.</code></>)}
+              {step(3, <>Optional live tools: <strong className="text-white">Settings</strong> → <strong className="text-white">Tools & Integrations</strong> → <strong className="text-white">New MCP Server</strong> and set <code className="text-dyson-gold">url</code> to the MCP server URL above.</>)}
               {consentStep(4)}
             </ol>
           </TabsContent>

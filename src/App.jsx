@@ -132,6 +132,7 @@ import TermsOfService from './pages/TermsOfService';
 import AdminClaudeFlowChart from './pages/AdminClaudeFlowChart';
 import AdminClaudeNodeDetail from './pages/AdminClaudeNodeDetail';
 import AdminClaudeScreenViewer from './pages/AdminClaudeScreenViewer';
+import AdminDepartmentalSpecialists from './pages/AdminDepartmentalSpecialists';
 import Connect from './pages/Connect';
 
 const AuthenticatedApp = () => {
@@ -303,6 +304,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/shard2/scripts" element={<Shard2Scripts />} />
         <Route path="/admin/shard2/library" element={<Shard2Library />} />
         <Route path="/admin/shard2/settings" element={<Shard2Settings />} />
+        <Route path="/admin/specialists" element={<AdminDepartmentalSpecialists />} />
         <Route path="/admin/claude-flow" element={<AdminClaudeFlowChart />} />
         <Route path="/admin/claude-node/:nodeId" element={<AdminClaudeNodeDetail />} />
         <Route path="/admin/claude-screen-viewer" element={<AdminClaudeScreenViewer />} />
