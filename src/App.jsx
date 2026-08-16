@@ -138,6 +138,7 @@ import AdminDispatchLog from './pages/AdminDispatchLog';
 import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
 import MasterShowSheet from './pages/MasterShowSheet';
+import RoadMapEntry from './pages/RoadMapEntry';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -177,8 +178,8 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
       <Route path="/broadcast-show" element={<BroadcastShow />} />
 
-      {/* Front door — studio landing page with active role pills */}
-      <Route path="/" element={<RoleSelector />} />
+      {/* Front door — simplified road map entry page */}
+      <Route path="/" element={<RoadMapEntry />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Home" element={<Home />} />
 
