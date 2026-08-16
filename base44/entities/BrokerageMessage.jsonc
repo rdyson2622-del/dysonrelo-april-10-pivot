@@ -1,0 +1,126 @@
+{
+  "name": "BrokerageMessage",
+  "type": "object",
+  "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "The Brokerage entity ID this message belongs to."
+    },
+    "page_context": {
+      "type": "string",
+      "description": "Which portal page the message was sent from (dashboard, escrow, listings, agents, marketing, luxury)"
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "red_light_fix",
+        "edit_request",
+        "direction",
+        "guidance",
+        "change_request"
+      ],
+      "default": "general",
+      "description": "Type of communication: general chat, red-light fix request, edit consideration, direction/guidance, or change request"
+    },
+    "subject_label": {
+      "type": "string",
+      "description": "Optional human label for the specific item being discussed (e.g. escrow number, listing address)"
+    },
+    "sender_id": {
+      "type": "string",
+      "description": "User ID of the sender"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Denormalized sender display name"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "brokerage_admin",
+        "broker",
+        "agent",
+        "admin"
+      ],
+      "description": "Portal role of the sender"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "voice"
+      ],
+      "default": "text",
+      "description": "Whether the message was typed or transcribed from voice"
+    },
+    "content": {
+      "type": "string",
+      "description": "The message content (text or transcribed voice)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "acknowledged",
+        "in_progress",
+        "resolved"
+      ],
+      "default": "sent",
+      "description": "Lifecycle: sent=just posted, acknowledged=admin saw it, in_progress=being worked, resolved=done"
+    },
+    "admin_response": {
+      "type": "string",
+      "description": "Response from the platform admin / human-in-the-loop"
+    },
+    "responded_by": {
+      "type": "string",
+      "description": "Admin email who responded"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the admin responded"
+    }
+  },
+  "required": [
+    "brokerage_id",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
