@@ -325,15 +325,15 @@ const AuthenticatedApp = () => {
         <Route path="/admin/grok-command" element={<AdminGrokCommand />} />
         <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
         <Route path="/admin/roadmap" element={<RoadMapToCompletion />} />
-        <Route path="/admin/wisdom/escrow" element={<Navigate to="/brokerage/escrow" replace />} />
-        <Route path="/admin/wisdom/listings" element={<Navigate to="/brokerage/listings" replace />} />
-        <Route path="/admin/wisdom/agents" element={<Navigate to="/brokerage/agents" replace />} />
-        <Route path="/admin/wisdom/marketing" element={<Navigate to="/brokerage/marketing" replace />} />
-        <Route path="/admin/wisdom/luxury" element={<Navigate to="/brokerage/luxury" replace />} />
+        <Route path="/admin/wisdom/escrow" element={<EscrowManagement />} />
+        <Route path="/admin/wisdom/listings" element={<ListingManagement />} />
+        <Route path="/admin/wisdom/agents" element={<AgentRecords />} />
+        <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
+        <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
       </Route>
 
-      {/* Broker/Agent Portal — brokerage subscriber view (Wisdom = subscriber #1) */}
+      {/* Brokerage Portal — subscriber view (Wisdom Properties = subscriber #1) */}
       <Route element={<BrokerageLayout />}>
         <Route path="/brokerage" element={<BrokerageDashboard />} />
         <Route path="/brokerage/escrow" element={<EscrowManagement />} />
@@ -342,7 +342,7 @@ const AuthenticatedApp = () => {
         <Route path="/brokerage/marketing" element={<WisdomMarketing />} />
         <Route path="/brokerage/luxury" element={<LuxuryPresence />} />
       </Route>
-      
+
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
       <Route path="/agent-landing" element={<AgentLanding />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />

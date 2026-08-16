@@ -1,143 +1,169 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Building2, Users, Megaphone, Star, ArrowRight,
-  Database, Mail, Webhook, AlertTriangle, CheckCircle2, Loader2,
+  AlertTriangle, CheckCircle2, Clock, Database, Mail, Webhook,
+  Loader2
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
-const SOURCES = [
-  { id: 'boldtrail_api', label: 'BoldTrail API', icon: Database, desc: 'Direct Deals API pull', route: '/brokerage/escrow' },
-  { id: 'gmail', label: 'Gmail Parsing', icon: Mail, desc: 'Parse transaction emails', route: '/brokerage/escrow' },
-  { id: 'apination', label: 'API Nation Webhook', icon: Webhook, desc: 'Real-time push (passive)', route: '/brokerage/escrow' },
+const SECTIONS = [
+  { id: 'escrow',    label: 'Escrow Management', icon: Shield,     path: '/brokerage/escrow',    desc: 'Track every transaction milestone', color: GOLD },
+  { id: 'listings',  label: 'Listings',          icon: Building2,  path: '/brokerage/listings',  desc: 'Active and sold property inventory', color: '#38bdf8' },
+  { id: 'agents',    label: 'Agent Records',     icon: Users,      path: '/brokerage/agents',    desc: 'Your agents and their performance',  color: '#10b981' },
+  { id: 'marketing', label: 'Marketing',        icon: Megaphone,  path: '/brokerage/marketing', desc: 'Campaigns and lead generation',      color: '#a78bfa' },
+  { id: 'luxury',    label: 'Luxury Presence',  icon: Star,       path: '/brokerage/luxury',    desc: 'Prestige portfolio and concierge',  color: '#f59e0b' },
 ];
 
-const SECTIONS = [
-  { label: 'Escrow', icon: Shield, route: '/brokerage/escrow', desc: 'Transaction milestones & sync', color: GOLD },
-  { label: 'Listings', icon: Building2, route: '/brokerage/listings', desc: 'Active & sold listings', color: '#38bdf8' },
-  { label: 'Agents', icon: Users, route: '/brokerage/agents', desc: 'Agent roster & profiles', color: '#10b981' },
-  { label: 'Marketing', icon: Megaphone, route: '/brokerage/marketing', desc: 'Campaigns & outreach', color: '#a78bfa' },
-  { label: 'Luxury', icon: Star, route: '/brokerage/luxury', desc: 'Luxury presence tier', color: '#f59e0b' },
+const SYNC_SOURCES = [
+  { id: 'boldtrail_api', label: 'BoldTrail API',  icon: Database, fn: 'boldtrailSyncEscrow', desc: 'Direct Deals API pull' },
+  { id: 'gmail',         label: 'Gmail Parsing',  icon: Mail,     fn: 'gmailEscrowSync',     desc: 'Parse transaction emails' },
+  { id: 'apination',     label: 'API Nation',     icon: Webhook,  fn: null,                   desc: 'Real-time webhook (passive)' },
 ];
 
 export default function BrokerageDashboard() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [syncing, setSyncing] = useState(null);
+  const [syncResult, setSyncResult] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
+
   const { data: brokerage } = useQuery({
-    queryKey: ['myBrokerage'],
+    queryKey: ['brokeragePortal', user?.id, user?.data?.brokerage_id],
     queryFn: async () => {
-      const list = await base44.entities.Brokerage.list();
-      return list[0] || null;
+      if (user?.role === 'admin') {
+        const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
+        return list?.[0] || null;
+      }
+      if (user?.data?.brokerage_id) {
+        return await base44.entities.Brokerage.get(user.data.brokerage_id);
+      }
+      return null;
     },
+    enabled: !!user,
   });
-  const { data: milestones = [] } = useQuery({
-    queryKey: ['escrowMilestones'],
+
+  const { data: milestones = [], isLoading: milesLoading } = useQuery({
+    queryKey: ['brokerageEscrowMilestones'],
     queryFn: () => base44.entities.EscrowMilestone.list('-due_date', 200),
     refetchInterval: 30000,
   });
 
+  const runSync = async (sourceId, fnName) => {
+    if (!fnName) return;
+    setSyncing(sourceId);
+    setSyncResult(null);
+    try {
+      const res = await base44.functions.invoke(fnName, {});
+      setSyncResult({ source: sourceId, ok: true, data: res.data });
+    } catch (e) {
+      setSyncResult({ source: sourceId, ok: false, error: e.message });
+    }
+    setSyncing(null);
+  };
+
   const today = new Date();
-  const atRisk = milestones.filter((m) => {
-    if (m.status === 'completed' || m.status === 'waived' || !m.due_date) return false;
+  const atRisk = milestones.filter(m => {
+    if (m.status === 'completed' || m.status === 'waived') return false;
+    if (!m.due_date) return false;
     const days = Math.ceil((new Date(m.due_date) - today) / (1000 * 60 * 60 * 24));
     return days <= 3;
   });
-  const completed = milestones.filter((m) => m.status === 'completed').length;
-  const escrowCount = new Set(milestones.map((m) => m.escrow_number).filter(Boolean)).size;
+  const completed = milestones.filter(m => m.status === 'completed').length;
 
   return (
-    <div className="p-6 md:p-8 min-h-screen" style={{ background: '#0a0a0a' }}>
-      {/* Header */}
+    <div className="p-6 md:p-8">
+      {/* ── Brokerage header ── */}
       <div className="mb-8">
-        <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: GOLD }}>
-          Broker/Agent Portal
+        <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>
+          {brokerage?.plan_tier === 'founder' ? 'Founder Subscriber · Pilot Brokerage' : 'Brokerage Subscriber'}
         </p>
-        <h1 className="text-3xl font-serif text-white">{brokerage?.name || '—'}</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Subscriber #{brokerage?.id?.slice(-4) || '—'} · {brokerage?.plan_tier || '—'} tier · {brokerage?.status || '—'}
+        <h1 className="text-4xl font-serif text-white mb-2">{brokerage?.name || '—'}</h1>
+        <p className="text-sm text-gray-500">
+          {brokerage?.status === 'active' ? 'Subscription active' : brokerage?.status || 'Loading…'}
+          {brokerage?.subscribed_at && ` · Subscribed ${new Date(brokerage.subscribed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
         </p>
       </div>
 
-      {/* Stats */}
+      {/* ── Escrow summary strip ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <StatBox label="Active Escrows" value={escrowCount} color={GOLD} />
-        <StatBox label="Total Milestones" value={milestones.length} color="#fff" />
-        <StatBox label="At Risk (≤3 days)" value={atRisk.length} color="#ef4444" />
-        <StatBox label="Completed" value={completed} color="#22c55e" />
+        <SummaryStat label="Active Escrows" value={milesLoading ? '—' : new Set(milestones.map(m => m.escrow_number)).size} color={GOLD} icon={Shield} />
+        <SummaryStat label="Total Milestones" value={milesLoading ? '—' : milestones.length} color="#fff" icon={Clock} />
+        <SummaryStat label="At Risk (≤3d)" value={milesLoading ? '—' : atRisk.length} color="#ef4444" icon={AlertTriangle} />
+        <SummaryStat label="Completed" value={milesLoading ? '—' : completed} color="#22c55e" icon={CheckCircle2} />
       </div>
 
-      {/* Connectivity — test all integrations here */}
+      {/* ── Connectivity testing panel ── */}
       <div className="mb-8">
-        <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Connectivity & Data Sources
+        <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: GOLD }}>
+          Connectivity — Test Your Integrations
         </p>
         <div className="grid md:grid-cols-3 gap-3">
-          {SOURCES.map((src) => {
+          {SYNC_SOURCES.map(src => {
             const Icon = src.icon;
+            const isSyncing = syncing === src.id;
             return (
-              <button
-                key={src.id}
-                onClick={() => navigate(src.route)}
-                className="text-left rounded-xl p-4 transition-all hover:scale-[1.02]"
-                style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}
-              >
+              <div key={src.id} className="rounded-xl p-4" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
                 <div className="flex items-center gap-2 mb-2">
                   <Icon className="w-4 h-4" style={{ color: GOLD }} />
                   <span className="text-sm font-serif text-white">{src.label}</span>
                 </div>
-                <p className="text-xs text-gray-500 mb-2">{src.desc}</p>
-                <p className="text-[10px] flex items-center gap-1" style={{ color: GOLD }}>
-                  Test in Escrow <ArrowRight className="w-2.5 h-2.5" />
-                </p>
-              </button>
+                <p className="text-xs text-gray-500 mb-3">{src.desc}</p>
+                {src.fn ? (
+                  <button
+                    onClick={() => runSync(src.id, src.fn)}
+                    disabled={isSyncing}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all disabled:opacity-50"
+                    style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
+                  >
+                    {isSyncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Database className="w-3.5 h-3.5" />}
+                    {isSyncing ? 'Testing…' : 'Test Sync'}
+                  </button>
+                ) : (
+                  <div className="w-full text-center px-3 py-2 rounded-lg text-xs text-gray-500" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    Listening for webhooks…
+                  </div>
+                )}
+                {syncResult && syncResult.source === src.id && (
+                  <p className="text-[10px] mt-2" style={{ color: syncResult.ok ? '#22c55e' : '#ef4444' }}>
+                    {syncResult.ok ? `✓ ${syncResult.data.milestones_created || syncResult.data.milestones_upserted || 0} upserted` : `✗ ${syncResult.error}`}
+                  </p>
+                )}
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* At-risk banner */}
-      {atRisk.length > 0 && (
-        <div
-          className="rounded-xl p-4 mb-8 flex items-center gap-3 cursor-pointer"
-          style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)' }}
-          onClick={() => navigate('/brokerage/escrow')}
-        >
-          <AlertTriangle className="w-5 h-5 shrink-0" style={{ color: '#ef4444' }} />
-          <p className="text-sm text-white">
-            <span className="font-bold">{atRisk.length}</span> milestone{atRisk.length !== 1 ? 's' : ''} due within 3 days or overdue — review in Escrow.
-          </p>
-        </div>
-      )}
-
-      {/* Portal sections */}
+      {/* ── Section cards ── */}
       <div>
-        <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Portal Sections
+        <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: GOLD }}>
+          Your Portal Sections
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {SECTIONS.map((sec) => {
+          {SECTIONS.map(sec => {
             const Icon = sec.icon;
             return (
               <button
-                key={sec.label}
-                onClick={() => navigate(sec.route)}
-                className="text-left rounded-xl p-5 transition-all hover:scale-[1.02]"
-                style={{ background: '#111', border: `1px solid ${sec.color}25` }}
+                key={sec.id}
+                onClick={() => navigate(sec.path)}
+                className="group rounded-xl p-5 text-left transition-all hover:scale-[1.02]"
+                style={{ background: '#111', border: `1px solid ${sec.color}30` }}
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ background: `${sec.color}15`, border: `1px solid ${sec.color}35` }}
-                  >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${sec.color}15`, border: `1px solid ${sec.color}30` }}>
                     <Icon className="w-5 h-5" style={{ color: sec.color }} />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-serif text-white">{sec.label}</h3>
-                    <p className="text-[10px] text-gray-500">{sec.desc}</p>
-                  </div>
+                  <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors" />
                 </div>
+                <h3 className="text-base font-serif text-white mb-1">{sec.label}</h3>
+                <p className="text-xs text-gray-500">{sec.desc}</p>
               </button>
             );
           })}
@@ -147,11 +173,14 @@ export default function BrokerageDashboard() {
   );
 }
 
-function StatBox({ label, value, color }) {
+function SummaryStat({ label, value, color, icon: Icon }) {
   return (
-    <div className="rounded-xl p-3" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
-      <p className="text-2xl font-serif" style={{ color }}>{value}</p>
-      <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">{label}</p>
+    <div className="rounded-xl p-4" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-2xl font-serif" style={{ color }}>{value}</p>
+        <Icon className="w-4 h-4" style={{ color: `${color}80` }} />
+      </div>
+      <p className="text-[10px] text-gray-500 uppercase tracking-wider">{label}</p>
     </div>
   );
 }

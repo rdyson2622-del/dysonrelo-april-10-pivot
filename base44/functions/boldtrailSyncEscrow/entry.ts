@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
-import { mapDealToMilestones, upsertEscrowMilestone, getDefaultBrokerageId } from '../../shared/boldtrailSync.ts';
+import { mapDealToMilestones, upsertEscrowMilestone, resolveBrokerageId } from '../../shared/boldtrailSync.ts';
 
 /**
  * Option A — Direct BoldTrail API sync.
@@ -35,8 +35,6 @@ export default async function(req) {
       }, { status: 400 });
     }
 
-    const brokerage_id = await getDefaultBrokerageId(base44);
-
     const url = new URL(`${baseUrl}/deals`);
     url.searchParams.set('status', 'active');
     const res = await fetch(url.toString(), {
@@ -54,9 +52,10 @@ export default async function(req) {
     const body = await res.json();
     const deals = Array.isArray(body) ? body : (body.deals || body.data || []);
 
+    const brokerageId = await resolveBrokerageId(base44);
     let created = 0, updated = 0, skipped = 0;
     for (const deal of deals) {
-      const milestones = mapDealToMilestones(deal, deal.client_id, brokerage_id);
+      const milestones = mapDealToMilestones(deal, deal.client_id, brokerageId);
       if (milestones.length === 0) { skipped++; continue; }
       for (const m of milestones) {
         try {

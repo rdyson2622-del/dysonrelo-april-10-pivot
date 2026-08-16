@@ -5,18 +5,18 @@
  */
 
 /**
- * Resolve the default brokerage ID to tag synced milestones with.
- * Returns the first active brokerage, falling back to the first founder-tier brokerage.
- * Used by sync functions that don't receive an explicit brokerage_id in their payload.
+ * Resolve the default brokerage_id for sync functions.
+ * Returns the first founder or active Brokerage's id.
+ * When more brokerages onboard, pass brokerage_id explicitly in the payload instead.
  */
-export async function getDefaultBrokerageId(base44) {
-  try {
-    const active = await base44.asServiceRole.entities.Brokerage.filter({ status: "active" });
-    if (active && active.length > 0) return active[0].id;
-    const founders = await base44.asServiceRole.entities.Brokerage.filter({ plan_tier: "founder" });
-    if (founders && founders.length > 0) return founders[0].id;
-  } catch {}
-  return null;
+export async function resolveBrokerageId(base44, explicitId) {
+  if (explicitId) return explicitId;
+  const brokerages = await base44.asServiceRole.entities.Brokerage.filter(
+    { status: { "$in": ["active", "trial"] } },
+    "-subscribed_at",
+    1
+  );
+  return brokerages && brokerages.length > 0 ? brokerages[0].id : null;
 }
 
 /**
