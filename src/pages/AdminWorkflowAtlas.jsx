@@ -8,6 +8,7 @@ import {
   getFlow,
 } from '@/lib/departmentWorkflows';
 import { useStageStatuses } from '@/hooks/useStageStatuses';
+import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import WorkflowActionPanel from '@/components/workflow/WorkflowActionPanel';
 import WorkflowActionLog from '@/components/workflow/WorkflowActionLog';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
@@ -121,8 +122,9 @@ function StageDetail({ stage, color }) {
 function DepartmentView({ deskId }) {
   const desk = getDesk(deskId);
   const flow = getFlow(deskId);
-  const [active, setActive] = useState(flow?.stages?.[0]?.id || null);
-  const stageStatuses = useStageStatuses(deskId);
+  const [userActive, setUserActive] = useState(null);
+  const { stageStatuses: realStatuses, isModelMode } = useStageStatuses(deskId);
+  const { statuses: animatedStatuses, activeStageId: animatedActive } = useAnimatedDemoStatuses(flow?.stages);
 
   if (!desk || !flow) {
     return (
@@ -132,9 +134,14 @@ function DepartmentView({ deskId }) {
     );
   }
 
+  // Model mode (only dummies): animation drives statuses + active stage — the line is alive.
+  // Real mode: real statuses drive, user controls the active stage by clicking.
+  const stageStatuses = isModelMode ? animatedStatuses : realStatuses;
+  const active = isModelMode ? (animatedActive || flow.stages[0]?.id) : (userActive || flow.stages[0]?.id);
+  const setActive = isModelMode ? () => {} : setUserActive;
+
   const stage = flow.stages.find((s) => s.id === active) || flow.stages[0];
 
-  // Find the first running stage to auto-select it
   const runningStage = flow.stages.find(s => stageStatuses[s.id]?.status === 'running');
   const flaggedStage = flow.stages.find(s => stageStatuses[s.id]?.status === 'flagged');
 
@@ -157,7 +164,14 @@ function DepartmentView({ deskId }) {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mb-2">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
+      <div className="flex items-center gap-2 mb-2">
+        <p className="text-xs text-gray-500">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
+        {isModelMode && (
+          <span className="text-[9px] px-2 py-0.5 rounded-full font-bold animate-pulse" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}>
+            ● LIVE DEMO
+          </span>
+        )}
+      </div>
       <FlowRoadmapLine
         stages={flow.stages}
         stageStatuses={stageStatuses}

@@ -27,6 +27,7 @@ export function useStageStatuses(deskId) {
 
   // Prefer real actions; fall back to dummies as the model when nothing real exists
   const realActions = actions.filter(a => !a.is_dummy);
+  const isModelMode = realActions.length === 0;
   const effectiveActions = realActions.length > 0 ? realActions : actions;
 
   const stageStatuses = {};
@@ -37,7 +38,7 @@ export function useStageStatuses(deskId) {
     }
   });
 
-  return stageStatuses;
+  return { stageStatuses, isModelMode };
 }
 
 /**
