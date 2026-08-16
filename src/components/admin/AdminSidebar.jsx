@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search,
@@ -245,7 +245,51 @@ export default function AdminSidebar() {
       saveOpenState(next);
       return next;
     });
+    // User manually toggled — reset the idle timer
+    resetIdleTimer();
   };
+
+  // Collapse all sections except the one containing the active route
+  const sidebarRef = useRef(null);
+  const idleTimerRef = useRef(null);
+
+  const collapseToActive = useCallback(() => {
+    setOpenSections(prev => {
+      const next = {};
+      NAV_SECTIONS.forEach(s => {
+        const hasActive = getSectionPaths(s).some(p => location.pathname === p || location.pathname.startsWith(p));
+        next[s.key] = hasActive;
+      });
+      saveOpenState(next);
+      return next;
+    });
+  }, [location.pathname]);
+
+  const resetIdleTimer = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => {
+      collapseToActive();
+    }, 120000); // 2 minutes idle
+  }, [collapseToActive]);
+
+  // Collapse to active section after navigation
+  useEffect(() => {
+    collapseToActive();
+  }, [location.pathname, collapseToActive]);
+
+  // Idle timer — collapse after 2 min of no sidebar interaction
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+    if (!sidebar) return;
+    const events = ['mousemove', 'click', 'scroll', 'keydown', 'touchstart'];
+    const handler = () => resetIdleTimer();
+    events.forEach(e => sidebar.addEventListener(e, handler));
+    resetIdleTimer();
+    return () => {
+      events.forEach(e => sidebar.removeEventListener(e, handler));
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
+  }, [resetIdleTimer]);
 
   const { data: batchLogs = [] } = useQuery({
     queryKey: ['batchSmsLogs'],
@@ -270,7 +314,7 @@ export default function AdminSidebar() {
     : [];
 
   return (
-    <aside className="w-64 flex flex-col h-screen shrink-0 overflow-y-auto" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
+    <aside ref={sidebarRef} className="w-64 flex flex-col h-screen shrink-0 overflow-y-auto" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
       {/* Logo */}
       <div className="p-6 flex items-center gap-3 shrink-0" style={{ borderBottom: '1px solid #D4AF3733' }}>
         <Link to="/home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto cursor-pointer" /></Link>
