@@ -41,6 +41,16 @@ const SYSTEM_PROMPTS = {
   ...Object.fromEntries(GROK_ASSISTANTS.map(a => [a.id, a.prompt])),
 };
 
+// Orchestrators (chief, bob, jay) auto-route to specialists via grokChiefOrchestrate.
+// Direct specialists just chat.
+const ORCHESTRATOR_IDS = ['chief', 'bob', 'jay'];
+
+// Look up a specialist's display color by its dept/lib id
+const getSpecialistMeta = (id) => {
+  const s = GROK_ASSISTANTS.find(a => a.id === `dept_${id}` || a.id === `lib_${id}`);
+  return { name: s?.name || id, color: s?.color || '#D4AF37' };
+};
+
 function OrgNode({ specialist, isSelected, onClick }) {
   return (
     <button
@@ -102,21 +112,73 @@ export default function AdminGrokCommand() {
     }));
 
     try {
-      const fullPrompt = `${SYSTEM_PROMPTS[selectedId]}\n\nUser: ${msg}`;
-      const res = await base44.integrations.Core.InvokeLLM({
-        prompt: fullPrompt,
-      });
-      const response = typeof res === 'string' ? res : (res?.text || JSON.stringify(res));
+      // Orchestrators (chief, bob, jay) route through the orchestration backend —
+      // they dispatch to the right specialist and return the specialist's response.
+      if (ORCHESTRATOR_IDS.includes(selectedId)) {
+        const res = await base44.functions.invoke('grokChiefOrchestrate', {
+          message: msg,
+          conversation: (messages[selectedId] || []).map(m => ({
+            role: m.role === 'bot' ? 'assistant' : 'user',
+            content: m.content,
+          })),
+          orchestrator_id: selectedId,
+        });
+        const data = res?.data || res;
 
-      setMessages(prev => ({
-        ...prev,
-        [selectedId]: [...(prev[selectedId] || []), { role: 'bot', content: response }],
-      }));
+        if (data?.error) throw new Error(data.error);
 
-      setActivityFeed(prev => [
-        { specialist: selected.name, color: selected.color, message: msg, response, time: new Date() },
-        ...prev,
-      ].slice(0, 50));
+        // 1. Show the orchestrator's routing decision
+        setMessages(prev => ({
+          ...prev,
+          [selectedId]: [...(prev[selectedId] || []), { role: 'bot', content: data.orchestrator_response }],
+        }));
+
+        // 2. If a specialist was dispatched, show their response with their own color/name
+        if (data.specialist_response) {
+          const meta = getSpecialistMeta(data.specialist_id);
+          setMessages(prev => ({
+            ...prev,
+            [selectedId]: [...(prev[selectedId] || []), {
+              role: 'bot',
+              content: data.specialist_response,
+              isSpecialist: true,
+              specialistName: data.specialist_name || meta.name,
+              specialistColor: meta.color,
+            }],
+          }));
+        }
+
+        // 3. Log the dispatch in the activity feed
+        setActivityFeed(prev => [
+          {
+            specialist: data.specialist_name
+              ? `${selected.name} → ${data.specialist_name}`
+              : selected.name,
+            color: selected.color,
+            message: msg,
+            response: data.specialist_response || data.orchestrator_response,
+            time: new Date(),
+          },
+          ...prev,
+        ].slice(0, 50));
+      } else {
+        // Direct specialist chat — existing behavior
+        const fullPrompt = `${SYSTEM_PROMPTS[selectedId]}\n\nUser: ${msg}`;
+        const res = await base44.integrations.Core.InvokeLLM({
+          prompt: fullPrompt,
+        });
+        const response = typeof res === 'string' ? res : (res?.text || JSON.stringify(res));
+
+        setMessages(prev => ({
+          ...prev,
+          [selectedId]: [...(prev[selectedId] || []), { role: 'bot', content: response }],
+        }));
+
+        setActivityFeed(prev => [
+          { specialist: selected.name, color: selected.color, message: msg, response, time: new Date() },
+          ...prev,
+        ].slice(0, 50));
+      }
     } catch (e) {
       setMessages(prev => ({
         ...prev,
@@ -241,6 +303,11 @@ export default function AdminGrokCommand() {
               <div>
                 <p className="text-sm font-bold" style={{ color: selected.color }}>{selected.name}</p>
                 <p className="text-[11px] text-slate-400">{selected.desc}</p>
+                {ORCHESTRATOR_IDS.includes(selectedId) && (
+                  <p className="text-[10px] mt-0.5 font-bold tracking-wide" style={{ color: selected.color }}>
+                    ⚡ Auto-routes to specialists
+                  </p>
+                )}
               </div>
             </div>
 
@@ -253,23 +320,31 @@ export default function AdminGrokCommand() {
                   <p className="text-xs text-slate-600 mt-1">Click any node on the org chart to switch specialists</p>
                 </div>
               )}
-              {chatMessages.map((m, i) => (
+              {chatMessages.map((m, i) => {
+                const bubbleColor = m.isSpecialist ? m.specialistColor : selected.color;
+                return (
                 <div key={i} className={`flex gap-2 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: m.role === 'user' ? '#333' : `${selected.color}22` }}>
+                    style={{ background: m.role === 'user' ? '#333' : `${bubbleColor}22` }}>
                     {m.role === 'user'
                       ? <User className="w-3.5 h-3.5 text-slate-400" />
-                      : <Bot className="w-3.5 h-3.5" style={{ color: selected.color }} />}
+                      : <Bot className="w-3.5 h-3.5" style={{ color: bubbleColor }} />}
                   </div>
                   <div className={`rounded-xl px-3 py-2 max-w-[80%] ${m.role === 'user' ? 'text-right' : ''}`}
                     style={{
                       background: m.role === 'user' ? '#2a2a2a' : '#1a1a1a',
-                      border: m.role === 'user' ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${selected.color}22`,
+                      border: m.role === 'user' ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${bubbleColor}44`,
                     }}>
+                    {m.isSpecialist && (
+                      <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: m.specialistColor }}>
+                        {m.specialistName}
+                      </div>
+                    )}
                     <p className="text-sm whitespace-pre-wrap" style={{ color: m.role === 'user' ? '#e0e0e0' : '#d0d0d0' }}>{m.content}</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
               {sending && (
                 <div className="flex gap-2">
                   <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${selected.color}22` }}>
