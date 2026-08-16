@@ -147,6 +147,7 @@ import LuxuryPresence from './pages/wisdom/LuxuryPresence';
 import BrokerageLayout from './components/layout/BrokerageLayout';
 import BrokerageDashboard from './pages/brokerage/BrokerageDashboard';
 import TransactionAudit from './pages/brokerage/TransactionAudit';
+import BuyingClients from './pages/wisdom/BuyingClients';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
 
@@ -343,6 +344,7 @@ const AuthenticatedApp = () => {
         <Route path="/brokerage/escrow" element={<EscrowManagement />} />
         <Route path="/brokerage/audit" element={<TransactionAudit />} />
         <Route path="/brokerage/listings" element={<ListingManagement />} />
+        <Route path="/brokerage/buying-clients" element={<BuyingClients />} />
         <Route path="/brokerage/agents" element={<AgentRecords />} />
         <Route path="/brokerage/marketing" element={<WisdomMarketing />} />
         <Route path="/brokerage/luxury" element={<LuxuryPresence />} />

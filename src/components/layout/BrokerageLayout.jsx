@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard, Shield, Building2, Users, Megaphone, Star,
-  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen, FileSearch
+  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen, FileSearch, ShoppingBag
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
@@ -12,13 +12,14 @@ import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
 const GOLD = '#D4AF37';
 
 const NAV_ITEMS = [
-  { id: 'dashboard',  label: 'Dashboard',  icon: LayoutDashboard, path: '/brokerage' },
-  { id: 'escrow',     label: 'Escrow',      icon: Shield,          path: '/brokerage/escrow' },
-  { id: 'audit',      label: 'Doc Audit',   icon: FileSearch,     path: '/brokerage/audit' },
-  { id: 'listings',   label: 'Listings',    icon: Building2,      path: '/brokerage/listings' },
-  { id: 'agents',     label: 'Agents',      icon: Users,          path: '/brokerage/agents' },
-  { id: 'marketing',  label: 'Marketing',   icon: Megaphone,      path: '/brokerage/marketing' },
-  { id: 'luxury',     label: 'Luxury',      icon: Star,           path: '/brokerage/luxury' },
+  { id: 'dashboard',  label: 'Dashboard',                  icon: LayoutDashboard, path: '/brokerage' },
+  { id: 'escrow',     label: 'Escrows',                     icon: Shield,          path: '/brokerage/escrow' },
+  { id: 'audit',      label: 'Doc Audit',                   icon: FileSearch,      path: '/brokerage/audit' },
+  { id: 'listings',   label: 'Listing Clients',             icon: Building2,       path: '/brokerage/listings' },
+  { id: 'buying',     label: 'Buying Clients',              icon: ShoppingBag,     path: '/brokerage/buying-clients' },
+  { id: 'agents',     label: 'Company Agents and Other Agents', icon: Users,       path: '/brokerage/agents' },
+  { id: 'marketing',  label: 'Marketing Campaigns',         icon: Megaphone,       path: '/brokerage/marketing' },
+  { id: 'luxury',     label: 'Luxury Presence Website',     icon: Star,            path: '/brokerage/luxury' },
 ];
 
 export default function BrokerageLayout() {
@@ -132,7 +133,7 @@ export default function BrokerageLayout() {
                 style={{
                   background: isActive ? 'rgba(212,175,55,0.12)' : 'transparent',
                   border: isActive ? '1px solid rgba(212,175,55,0.3)' : '1px solid transparent',
-                  color: isActive ? GOLD : '#888',
+                  color: isActive ? GOLD : '#f0f0f0',
                 }}
                 title={collapsed ? item.label : undefined}
               >
@@ -147,7 +148,8 @@ export default function BrokerageLayout() {
         <div className="px-2 py-4 border-t border-white/5 space-y-1">
           <button
             onClick={() => navigate('/')}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:text-white transition-colors"
+            style={{ color: '#f0f0f0' }}
             title={collapsed ? 'Front Door' : undefined}
           >
             <Home className="w-4 h-4 shrink-0" />
@@ -157,7 +159,7 @@ export default function BrokerageLayout() {
             <button
               onClick={() => navigate('/admin')}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#aaa' }}
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#f0f0f0' }}
               title={collapsed ? 'Back to Admin' : undefined}
             >
               <ArrowLeft className="w-4 h-4 shrink-0" />
