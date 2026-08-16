@@ -173,7 +173,7 @@ export default function RoadMapEntry() {
       </header>
 
       {/* ── Hero ── */}
-      <main className="flex-1 flex flex-col items-center px-6 pt-16 pb-12">
+      <main className="flex-1 flex flex-col items-center px-6 pt-8 pb-12">
         <div className="max-w-4xl w-full text-center">
           <div className="flex justify-center mb-4">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
