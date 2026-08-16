@@ -336,7 +336,7 @@ export default function AdminSidebar() {
           }}
         >
           <Bot className="w-4 h-4 shrink-0" />
-          GROK BOT COMMAND CENTER
+          <span className="text-center leading-tight">GROK BOT<br/>COMMAND CENTER</span>
         </Link>
       </div>
 
