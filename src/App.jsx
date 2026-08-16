@@ -134,6 +134,7 @@ import AdminClaudeScreenViewer from './pages/AdminClaudeScreenViewer';
 import AdminLibrarySpecialists from './pages/AdminLibrarySpecialists';
 import AdminWorkflowAtlas from './pages/AdminWorkflowAtlas';
 import AdminGrokCommand from './pages/AdminGrokCommand';
+import AdminDispatchLog from './pages/AdminDispatchLog';
 import Connect from './pages/Connect';
 
 const AuthenticatedApp = () => {
@@ -311,6 +312,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/workflows" element={<AdminWorkflowAtlas />} />
         <Route path="/admin/workflows/:deskId" element={<AdminWorkflowAtlas />} />
         <Route path="/admin/grok-command" element={<AdminGrokCommand />} />
+        <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
