@@ -22,7 +22,9 @@ export default async function(req) {
     // Get Gmail access token via the connected OAuth connector
     let accessToken;
     try {
-      accessToken = await base44.asServiceRole.connectors.getConnection('gmail');
+      const conn = await base44.asServiceRole.connectors.getConnection('gmail');
+      accessToken = conn?.accessToken;
+      if (!accessToken) throw new Error('No access token returned');
     } catch (e) {
       return Response.json({
         error: 'Gmail connector not connected',
