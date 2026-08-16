@@ -107,7 +107,7 @@ export default function AgentSubscribe() {
         </p>
         <h1 className="text-3xl md:text-4xl font-black text-white mb-3 max-w-2xl mx-auto"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-          You've Been Selected to Join the Dyson Relocation Network
+          You've Been Selected to Join the Dyson Relocation Management Network
         </h1>
         <p className="text-sm md:text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Subscribe to receive the DNN Real Estate News broadcast every morning — for yourself and your clients —
