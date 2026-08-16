@@ -86,7 +86,7 @@ const PORTAL_COPY = {
     eyebrow: 'The front door',
     title: 'Real Estate Issues',
     titleAccent: '& Relocation Road Maps',
-    subtitle: 'This is what new visitors see. Tell us what needs fixing — we\'ll map the route before they talk to an agent.',
+    subtitle: '',
   },
 };
 
@@ -111,6 +111,13 @@ export default function RoadMapEntry() {
   const flow = getFlowForPill(selectedPill);
   const { statuses, activeStageId } = useAnimatedDemoStatuses(flow?.stages);
   const copy = getPortalCopy(user);
+
+  // Two independent live roadmap demos — Issues + Relocation
+  const issuesFlow = getFlow('marketing');
+  const relocationFlow = getFlow('operations');
+  const { statuses: issuesStatuses, activeStageId: issuesActive } = useAnimatedDemoStatuses(issuesFlow?.stages);
+  const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
+  const [demoMode, setDemoMode] = useState('issues');
 
   const handleSubmit = () => {
     if (!inputValue.trim()) return;
@@ -174,9 +181,11 @@ export default function RoadMapEntry() {
             <br />
             <span className="gold-text-gradient">{copy.titleAccent}</span>
           </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            {copy.subtitle}
-          </p>
+          {copy.subtitle && (
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+              {copy.subtitle}
+            </p>
+          )}
 
           {/* ── Pill bar ── */}
           <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -225,24 +234,65 @@ export default function RoadMapEntry() {
           </p>
         </div>
 
-        {/* ── Animated roadmap demo ── */}
+        {/* ── Two live animated roadmap demos ── */}
         <div className="max-w-5xl w-full mt-14">
-          <div className="flex items-center justify-center gap-2 mb-4">
+          <div className="flex flex-col items-center gap-4 mb-5">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
               ● Live Demo — Here's what your roadmap looks like
             </span>
+            {/* Toggle between Issues and Relocation */}
+            <div className="inline-flex rounded-full p-1" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <button
+                onClick={() => setDemoMode('issues')}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
+                style={{
+                  background: demoMode === 'issues' ? `${GOLD}20` : 'transparent',
+                  border: `1.5px solid ${demoMode === 'issues' ? GOLD : 'transparent'}`,
+                  color: demoMode === 'issues' ? GOLD : '#888',
+                }}
+              >
+                <Home className="w-4 h-4" />
+                Real Estate Issue
+              </button>
+              <button
+                onClick={() => setDemoMode('relocation')}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
+                style={{
+                  background: demoMode === 'relocation' ? 'rgba(16,185,129,0.18)' : 'transparent',
+                  border: `1.5px solid ${demoMode === 'relocation' ? '#10b981' : 'transparent'}`,
+                  color: demoMode === 'relocation' ? '#10b981' : '#888',
+                }}
+              >
+                <Compass className="w-4 h-4" />
+                Relocation
+              </button>
+            </div>
           </div>
+
           <div
             className="rounded-2xl p-6 transition-colors duration-500"
-            style={{ background: '#0a0a0a', border: `1px solid ${selectedPill.color}30` }}
+            style={{
+              background: '#0a0a0a',
+              border: `1px solid ${demoMode === 'issues' ? `${GOLD}30` : 'rgba(16,185,129,0.30)'}`,
+            }}
           >
-            <FlowRoadmapLine
-              stages={flow.stages}
-              stageStatuses={statuses}
-              color={selectedPill.color}
-              activeStageId={activeStageId}
-              onSelect={() => {}}
-            />
+            {demoMode === 'issues' ? (
+              <FlowRoadmapLine
+                stages={issuesFlow?.stages || []}
+                stageStatuses={issuesStatuses}
+                color={GOLD}
+                activeStageId={issuesActive}
+                onSelect={() => {}}
+              />
+            ) : (
+              <FlowRoadmapLine
+                stages={relocationFlow?.stages || []}
+                stageStatuses={relocationStatuses}
+                color="#10b981"
+                activeStageId={relocationActive}
+                onSelect={() => {}}
+              />
+            )}
             <div className="grid grid-cols-3 gap-4 mt-2">
               <div className="text-center">
                 <div
