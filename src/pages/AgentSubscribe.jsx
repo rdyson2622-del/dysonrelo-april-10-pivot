@@ -112,9 +112,9 @@ export default function AgentSubscribe() {
         <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
           EXCLUSIVE AGENT INVITATION
         </p>
-        <h1 className="text-3xl md:text-4xl font-black text-white mb-3 max-w-2xl mx-auto"
+        <h1 className="text-2xl md:text-3xl font-black text-white mb-3 max-w-4xl mx-auto whitespace-nowrap"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-          You've Been Selected to Join the Dyson Relocation Management Network
+          You've Been Selected to Join the AGI Assisted Dyson Relocation Management Network
         </h1>
         <p className="text-sm md:text-base max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Based on your sales performance, you are invited to Subscribe to membership to our Corporate and Private Client Relocation network.
