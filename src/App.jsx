@@ -146,6 +146,8 @@ import WisdomMarketing from './pages/wisdom/WisdomMarketing';
 import LuxuryPresence from './pages/wisdom/LuxuryPresence';
 import BrokerageLayout from './components/layout/BrokerageLayout';
 import BrokerageDashboard from './pages/brokerage/BrokerageDashboard';
+import SubscriberSetup from './pages/SubscriberSetup';
+import AdminAddSubscriber from './pages/AdminAddSubscriber';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -330,6 +332,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/wisdom/agents" element={<AgentRecords />} />
         <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
         <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
+        <Route path="/admin/add-subscriber" element={<AdminAddSubscriber />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
       </Route>
 
@@ -343,6 +346,7 @@ const AuthenticatedApp = () => {
         <Route path="/brokerage/luxury" element={<LuxuryPresence />} />
       </Route>
 
+      <Route path="/subscriber-setup" element={<SubscriberSetup />} />
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
       <Route path="/agent-landing" element={<AgentLanding />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />

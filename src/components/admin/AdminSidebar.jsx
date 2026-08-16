@@ -6,7 +6,7 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2
+  Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -26,6 +26,7 @@ const NAV_SECTIONS = [
       { isCommsBadge: true },
       { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
       { label: '🏢 Brokerage Portal (Wisdom)', path: '/brokerage', icon: Building2, highlight: true },
+      { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
