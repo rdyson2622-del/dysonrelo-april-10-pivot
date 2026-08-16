@@ -139,6 +139,11 @@ import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
 import MasterShowSheet from './pages/MasterShowSheet';
 import RoadMapEntry from './pages/RoadMapEntry';
+import EscrowManagement from './pages/wisdom/EscrowManagement';
+import ListingManagement from './pages/wisdom/ListingManagement';
+import AgentRecords from './pages/wisdom/AgentRecords';
+import WisdomMarketing from './pages/wisdom/WisdomMarketing';
+import LuxuryPresence from './pages/wisdom/LuxuryPresence';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -318,6 +323,11 @@ const AuthenticatedApp = () => {
         <Route path="/admin/grok-command" element={<AdminGrokCommand />} />
         <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
         <Route path="/admin/roadmap" element={<RoadMapToCompletion />} />
+        <Route path="/admin/wisdom/escrow" element={<EscrowManagement />} />
+        <Route path="/admin/wisdom/listings" element={<ListingManagement />} />
+        <Route path="/admin/wisdom/agents" element={<AgentRecords />} />
+        <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
+        <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
       </Route>
       
