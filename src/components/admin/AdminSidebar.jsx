@@ -24,7 +24,6 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
-      { label: '🗺️ Grok Bot- Master Workflow Atlas', path: '/admin/workflows', icon: GitBranch, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
@@ -341,6 +340,22 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
+      {/* Master Workflow Atlas — directly under Command Center */}
+      <div className="px-3 pb-2 shrink-0">
+        <Link
+          to="/admin/workflows"
+          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+          style={{
+            background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <GitBranch className="w-4 h-4 shrink-0" />
+          <span className="text-center leading-tight">WORKFLOW<br/>ATLAS</span>
+        </Link>
+      </div>
+
       {/* Recent Grok Dispatches — live feed from the Command Center */}
       <AdminDispatchWidget />
 
@@ -390,22 +405,6 @@ export default function AdminSidebar() {
         >
           <LayoutDashboard className="w-4 h-4" />
           Admin Dashboard
-        </Link>
-      </div>
-
-      {/* Master Workflow Atlas — always visible */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/admin/workflows"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <GitBranch className="w-4 h-4" />
-          🗺️ Grok Bot- Master Workflow Atlas
         </Link>
       </div>
 
