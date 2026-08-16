@@ -5,6 +5,21 @@
  */
 
 /**
+ * Resolve the default brokerage ID to tag synced milestones with.
+ * Returns the first active brokerage, falling back to the first founder-tier brokerage.
+ * Used by sync functions that don't receive an explicit brokerage_id in their payload.
+ */
+export async function getDefaultBrokerageId(base44) {
+  try {
+    const active = await base44.asServiceRole.entities.Brokerage.filter({ status: "active" });
+    if (active && active.length > 0) return active[0].id;
+    const founders = await base44.asServiceRole.entities.Brokerage.filter({ plan_tier: "founder" });
+    if (founders && founders.length > 0) return founders[0].id;
+  } catch {}
+  return null;
+}
+
+/**
  * Upsert an EscrowMilestone — match by escrow_number + milestone_type.
  * Creates if new, updates if existing. Returns the saved record.
  */

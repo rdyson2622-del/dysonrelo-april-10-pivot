@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
-import { upsertEscrowMilestone } from '../../shared/boldtrailSync.ts';
+import { upsertEscrowMilestone, getDefaultBrokerageId } from '../../shared/boldtrailSync.ts';
 
 /**
  * Option B — Gmail-based escrow sync.
@@ -31,6 +31,8 @@ export default async function(req) {
         hint: 'Authorize the Gmail connector in the dashboard so this function can read transaction emails.',
       }, { status: 400 });
     }
+
+    const brokerage_id = await getDefaultBrokerageId(base44);
 
     // List recent messages matching the query
     const listUrl = new URL('https://gmail.googleapis.com/gmail/v1/users/me/messages');
@@ -85,6 +87,7 @@ export default async function(req) {
       }
       try {
         await upsertEscrowMilestone(base44, {
+          brokerage_id,
           client_id: 'gmail_import',
           escrow_number: data.escrow_number,
           property_address: data.property_address || '',

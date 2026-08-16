@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2, Briefcase } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -51,6 +51,14 @@ const PATHS = [
     badge: 'CORPORATE RELO / HR',
     dest: '/corporate-relo',
     roleKey: 'hr',
+  },
+  {
+    icon: Briefcase,
+    label: 'I am a Brokerage Subscriber',
+    sub: 'Manage your firm\'s escrow, listings, agents, and marketing through the Broker/Agent Portal.',
+    badge: 'BROKER/AGENT PORTAL',
+    dest: '/brokerage',
+    roleKey: 'brokerage_admin',
   },
 ];
 

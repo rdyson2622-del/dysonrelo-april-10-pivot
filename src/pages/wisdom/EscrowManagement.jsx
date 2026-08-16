@@ -62,7 +62,7 @@ export default function EscrowManagement() {
           <Shield className="w-6 h-6" style={{ color: GOLD }} />
         </div>
         <div>
-          <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Wisdom Properties</p>
+          <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Broker/Agent Portal</p>
           <h1 className="text-3xl font-serif text-white">Escrow Management</h1>
         </div>
       </div>

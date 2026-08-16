@@ -222,7 +222,6 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
   const [smsWidgetOpen, setSmsWidgetOpen] = useState(true);
-  const [wisdomOpen, setWisdomOpen] = useState(true);
 
   // Sections that are always open by default (never collapsed on first visit)
   const DEFAULT_OPEN = new Set(['dnn', 'dnn']);
@@ -374,45 +373,20 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Wisdom Properties — escrow/listing/agent management suite */}
+      {/* Broker/Agent Portal — enter the brokerage subscriber view (Wisdom = subscriber #1) */}
       <div className="px-3 pb-2 shrink-0">
-        <button
-          onClick={() => setWisdomOpen(v => !v)}
+        <Link
+          to="/brokerage"
           className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
           style={{
-            background: location.pathname.startsWith('/admin/wisdom') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            background: location.pathname.startsWith('/brokerage') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
             color: '#D4AF37',
             border: '1px solid rgba(212,175,55,0.35)',
           }}
         >
           <Building2 className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">WISDOM<br/>PROPERTIES</span>
-          {wisdomOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-        </button>
-        {wisdomOpen && (
-          <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
-            <Link to="/admin/wisdom/escrow" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/escrow' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/escrow' ? '#D4AF37' : '#ccc' }}>
-              <Shield className="w-3 h-3 shrink-0" />
-              <span className="truncate">Escrow Management</span>
-            </Link>
-            <Link to="/admin/wisdom/listings" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/listings' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/listings' ? '#D4AF37' : '#ccc' }}>
-              <Home className="w-3 h-3 shrink-0" />
-              <span className="truncate">Listing Management</span>
-            </Link>
-            <Link to="/admin/wisdom/agents" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/agents' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/agents' ? '#D4AF37' : '#ccc' }}>
-              <Users className="w-3 h-3 shrink-0" />
-              <span className="truncate">Agent Records</span>
-            </Link>
-            <Link to="/admin/wisdom/marketing" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/marketing' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/marketing' ? '#D4AF37' : '#ccc' }}>
-              <TrendingUp className="w-3 h-3 shrink-0" />
-              <span className="truncate">Marketing</span>
-            </Link>
-            <Link to="/admin/wisdom/luxury" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/luxury' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/luxury' ? '#D4AF37' : '#ccc' }}>
-              <Star className="w-3 h-3 shrink-0" />
-              <span className="truncate">Luxury Presence</span>
-            </Link>
-          </div>
-        )}
+          <span className="text-center leading-tight">BROKER/AGENT<br/>PORTAL</span>
+        </Link>
       </div>
 
       {/* Recent Grok Dispatches — live feed from the Command Center */}

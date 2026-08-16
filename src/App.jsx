@@ -144,6 +144,8 @@ import ListingManagement from './pages/wisdom/ListingManagement';
 import AgentRecords from './pages/wisdom/AgentRecords';
 import WisdomMarketing from './pages/wisdom/WisdomMarketing';
 import LuxuryPresence from './pages/wisdom/LuxuryPresence';
+import BrokerageLayout from './components/layout/BrokerageLayout';
+import BrokerageDashboard from './pages/brokerage/BrokerageDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -323,12 +325,22 @@ const AuthenticatedApp = () => {
         <Route path="/admin/grok-command" element={<AdminGrokCommand />} />
         <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
         <Route path="/admin/roadmap" element={<RoadMapToCompletion />} />
-        <Route path="/admin/wisdom/escrow" element={<EscrowManagement />} />
-        <Route path="/admin/wisdom/listings" element={<ListingManagement />} />
-        <Route path="/admin/wisdom/agents" element={<AgentRecords />} />
-        <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
-        <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
+        <Route path="/admin/wisdom/escrow" element={<Navigate to="/brokerage/escrow" replace />} />
+        <Route path="/admin/wisdom/listings" element={<Navigate to="/brokerage/listings" replace />} />
+        <Route path="/admin/wisdom/agents" element={<Navigate to="/brokerage/agents" replace />} />
+        <Route path="/admin/wisdom/marketing" element={<Navigate to="/brokerage/marketing" replace />} />
+        <Route path="/admin/wisdom/luxury" element={<Navigate to="/brokerage/luxury" replace />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
+      </Route>
+
+      {/* Broker/Agent Portal — brokerage subscriber view (Wisdom = subscriber #1) */}
+      <Route element={<BrokerageLayout />}>
+        <Route path="/brokerage" element={<BrokerageDashboard />} />
+        <Route path="/brokerage/escrow" element={<EscrowManagement />} />
+        <Route path="/brokerage/listings" element={<ListingManagement />} />
+        <Route path="/brokerage/agents" element={<AgentRecords />} />
+        <Route path="/brokerage/marketing" element={<WisdomMarketing />} />
+        <Route path="/brokerage/luxury" element={<LuxuryPresence />} />
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />

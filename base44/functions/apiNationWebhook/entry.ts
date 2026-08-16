@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
-import { mapWebhookEventToMilestone, upsertEscrowMilestone } from '../../shared/boldtrailSync.ts';
+import { mapWebhookEventToMilestone, upsertEscrowMilestone, getDefaultBrokerageId } from '../../shared/boldtrailSync.ts';
 
 /**
  * Option C — API Nation webhook receiver.
@@ -30,12 +30,14 @@ export default async function(req) {
       return Response.json({ error: 'Invalid payload' }, { status: 400 });
     }
 
+    const brokerage_id = await getDefaultBrokerageId(base44);
+
     // API Nation may send a single event or a batch
     const events = Array.isArray(event.events) ? event.events : [event];
     let created = 0, updated = 0, skipped = 0;
     for (const evt of events) {
       try {
-        const milestone = mapWebhookEventToMilestone(evt, evt.client_id);
+        const milestone = mapWebhookEventToMilestone(evt, evt.client_id, brokerage_id);
         if (!milestone.escrow_number || !milestone.milestone_type) { skipped++; continue; }
         await upsertEscrowMilestone(base44, milestone);
         created++;
