@@ -7,7 +7,6 @@ import {
   ArrowLeft, Loader2, Home
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
-import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 
 const GOLD = '#D4AF37';
 
@@ -153,11 +152,6 @@ export default function BrokerageLayout() {
             {user.email}
           </p>
         </div>
-
-        {/* Communication pill — on sub-pages only (dashboard has the command pill) */}
-        {brokerage && location.pathname !== '/brokerage' && (
-          <BrokerageCommPill brokerageId={brokerage.id} user={user} />
-        )}
 
         {/* Page content */}
         <Outlet />

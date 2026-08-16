@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   MessageSquare, X, Send, Mic, AlertTriangle, Edit3,
-  Compass, Lightbulb, RefreshCw, CheckCircle2, Loader2
+  Compass, Lightbulb, RefreshCw, CheckCircle2, Loader2, Navigation
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -24,17 +24,56 @@ function getPageContext(pathname) {
   return seg || 'dashboard';
 }
 
-export default function BrokerageCommPill({ brokerageId, user }) {
+/**
+ * BrokerageCommPill — inline communication pill.
+ * Self-fetches the current user + brokerage so it can be dropped into any
+ * brokerage page without props. Sits in document flow (not floating).
+ * Voice or text → saves a BrokerageMessage scoped to the current page.
+ */
+export default function BrokerageCommPill() {
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const [text, setText] = useState('');
   const [subjectType, setSubjectType] = useState('general');
   const [listening, setListening] = useState(false);
   const [sending, setSending] = useState(false);
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [hint, setHint] = useState('');
   const recognitionRef = useRef(null);
   const pageContext = getPageContext(location.pathname);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
+
+  const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;
+
+  const { data: brokerage } = useQuery({
+    queryKey: ['brokeragePortal', user?.id, userBrokerageId],
+    queryFn: async () => {
+      if (user?.role === 'admin') {
+        const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
+        return list?.[0] || null;
+      }
+      if (userBrokerageId) return await base44.entities.Brokerage.get(userBrokerageId);
+      return null;
+    },
+    enabled: !!user,
+  });
+
+  const brokerageId = brokerage?.id;
+
+  const { data: messages = [] } = useQuery({
+    queryKey: ['brokerageMessages', brokerageId, pageContext],
+    queryFn: () => base44.entities.BrokerageMessage.filter(
+      { brokerage_id: brokerageId, page_context: pageContext },
+      '-created_date',
+      20
+    ),
+    enabled: !!brokerageId,
+    refetchInterval: 15000,
+  });
 
   useEffect(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -46,27 +85,15 @@ export default function BrokerageCommPill({ brokerageId, user }) {
       rec.lang = 'en-US';
       rec.onresult = (e) => {
         const transcript = e.results[0][0].transcript;
-        setText(prev => prev ? `${prev} ${transcript}` : transcript);
+        setText(transcript);
+        setHint('Heard: "' + transcript + '"');
       };
       rec.onend = () => setListening(false);
-      rec.onerror = () => setListening(false);
+      rec.onerror = () => { setListening(false); setHint('Voice error — try again or type.'); };
       recognitionRef.current = rec;
     }
-    return () => {
-      try { recognitionRef.current?.abort(); } catch {}
-    };
+    return () => { try { recognitionRef.current?.abort(); } catch {} };
   }, []);
-
-  const { data: messages = [], isLoading } = useQuery({
-    queryKey: ['brokerageMessages', brokerageId, pageContext],
-    queryFn: () => base44.entities.BrokerageMessage.filter(
-      { brokerage_id: brokerageId, page_context: pageContext },
-      '-created_date',
-      20
-    ),
-    enabled: !!brokerageId,
-    refetchInterval: 15000,
-  });
 
   const toggleVoice = () => {
     if (!recognitionRef.current) return;
@@ -74,6 +101,8 @@ export default function BrokerageCommPill({ brokerageId, user }) {
       recognitionRef.current.stop();
       setListening(false);
     } else {
+      setText('');
+      setHint('Listening… speak your message');
       try {
         recognitionRef.current.start();
         setListening(true);
@@ -84,6 +113,7 @@ export default function BrokerageCommPill({ brokerageId, user }) {
   const send = async () => {
     if (!text.trim() || !brokerageId) return;
     setSending(true);
+    setHint('');
     try {
       await base44.entities.BrokerageMessage.create({
         brokerage_id: brokerageId,
@@ -97,9 +127,10 @@ export default function BrokerageCommPill({ brokerageId, user }) {
         status: 'sent',
       });
       setText('');
+      setHint('✓ Sent');
       queryClient.invalidateQueries({ queryKey: ['brokerageMessages', brokerageId, pageContext] });
     } catch (e) {
-      console.error('Failed to send brokerage message:', e);
+      setHint('Error — try again');
     } finally {
       setSending(false);
     }
@@ -108,170 +139,121 @@ export default function BrokerageCommPill({ brokerageId, user }) {
   const pendingCount = messages.filter(m => m.status === 'sent').length;
 
   return (
-    <>
-      {/* ── Floating Pill (collapsed) ── */}
-      {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-2.5 rounded-full transition-all hover:scale-105"
-          style={{
-            background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.08))',
-            border: `1.5px solid ${GOLD}`,
-            boxShadow: `0 4px 20px rgba(212,175,55,0.25)`,
-            backdropFilter: 'blur(8px)',
-          }}
-        >
-          <MessageSquare className="w-4 h-4" style={{ color: GOLD }} />
-          <span className="text-xs font-semibold tracking-wide" style={{ color: GOLD }}>
-            Communication
-          </span>
-          {pendingCount > 0 && (
-            <span className="ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold" style={{ background: '#ef4444', color: '#fff' }}>
-              {pendingCount}
-            </span>
-          )}
-        </button>
-      )}
-
-      {/* ── Expanded Panel ── */}
-      {open && (
-        <div
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[min(560px,calc(100vw-2rem))]"
-          style={{
-            background: 'rgba(10,10,10,0.97)',
-            border: `1px solid ${GOLD}40`,
-            borderRadius: '16px',
-            boxShadow: `0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,175,55,0.1)`,
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-            <div className="flex items-center gap-2">
-              <MessageSquare className="w-4 h-4" style={{ color: GOLD }} />
-              <span className="text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
-                {pageContext} — Communication
-              </span>
-            </div>
-            <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-white transition-colors">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Subject type pills */}
-          <div className="flex flex-wrap gap-1.5 px-4 py-2.5 border-b border-white/5">
-            {SUBJECT_TYPES.map(s => {
-              const Icon = s.icon;
-              const active = subjectType === s.id;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => setSubjectType(s.id)}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all"
-                  style={{
-                    background: active ? `${s.color}20` : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${active ? s.color : 'rgba(255,255,255,0.08)'}`,
-                    color: active ? s.color : '#888',
-                  }}
-                >
-                  <Icon className="w-3 h-3" />
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Messages list */}
-          <div className="max-h-48 overflow-y-auto px-4 py-3 space-y-2">
-            {isLoading && (
-              <div className="flex justify-center py-4">
-                <Loader2 className="w-4 h-4 animate-spin text-gray-600" />
-              </div>
-            )}
-            {!isLoading && messages.length === 0 && (
-              <p className="text-center text-[11px] text-gray-600 py-4">
-                No messages yet on {pageContext}. Send guidance, edits, or red-light fixes below.
-              </p>
-            )}
-            {messages.map(m => {
-              const cfg = SUBJECT_TYPES.find(s => s.id === m.subject_type) || SUBJECT_TYPES[0];
-              const Icon = cfg.icon;
-              return (
-                <div key={m.id} className="rounded-lg p-2.5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-1.5">
-                      <Icon className="w-3 h-3" style={{ color: cfg.color }} />
-                      <span className="text-[10px] font-semibold" style={{ color: cfg.color }}>{cfg.label}</span>
-                      <span className="text-[9px] text-gray-600">· {m.sender_name}</span>
-                    </div>
-                    <span className="text-[9px] text-gray-600">
-                      {new Date(m.created_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-300 leading-relaxed">{m.content}</p>
-                  {m.admin_response && (
-                    <div className="mt-2 pt-2 border-t border-white/5">
-                      <p className="text-[9px] font-bold tracking-wider uppercase mb-0.5" style={{ color: GOLD }}>Admin Response</p>
-                      <p className="text-xs text-gray-400 leading-relaxed">{m.admin_response}</p>
-                    </div>
-                  )}
-                  {m.status === 'resolved' && (
-                    <div className="flex items-center gap-1 mt-1.5">
-                      <CheckCircle2 className="w-3 h-3 text-green-500" />
-                      <span className="text-[9px] text-green-500 font-semibold">Resolved</span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Input row */}
-          <div className="px-4 py-3 border-t border-white/5">
-            <div className="flex items-center gap-2">
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
-                placeholder={`Send ${SUBJECT_TYPES.find(s => s.id === subjectType)?.label.toLowerCase()} on ${pageContext}…`}
-                rows={1}
-                className="flex-1 bg-transparent text-white text-xs resize-none outline-none placeholder-gray-600 max-h-24"
-                style={{ border: 'none' }}
-              />
-              {voiceSupported && (
-                <button
-                  onClick={toggleVoice}
-                  className="p-2 rounded-full transition-all"
-                  style={{
-                    background: listening ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.04)',
-                    border: `1px solid ${listening ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
-                  }}
-                  title={listening ? 'Stop recording' : 'Voice input'}
-                >
-                  <Mic className={`w-3.5 h-3.5 ${listening ? 'animate-pulse' : ''}`} style={{ color: listening ? '#ef4444' : '#888' }} />
-                </button>
-              )}
+    <div className="max-w-3xl w-full mb-6">
+      <div
+        className="rounded-2xl px-4 py-3 transition-all"
+        style={{
+          background: 'linear-gradient(135deg, rgba(212,175,55,0.10), rgba(212,175,55,0.04))',
+          border: `1.5px solid ${listening ? GOLD : `${GOLD}50`}`,
+          boxShadow: listening ? `0 0 24px ${GOLD}30` : 'none',
+        }}
+      >
+        {/* Subject type pills */}
+        <div className="flex flex-wrap gap-1.5 mb-2.5">
+          {SUBJECT_TYPES.map(s => {
+            const Icon = s.icon;
+            const active = subjectType === s.id;
+            return (
               <button
-                onClick={send}
-                disabled={!text.trim() || sending}
-                className="p-2 rounded-full transition-all disabled:opacity-30"
+                key={s.id}
+                onClick={() => setSubjectType(s.id)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all"
                 style={{
-                  background: text.trim() ? `${GOLD}20` : 'rgba(255,255,255,0.04)',
-                  border: `1px solid ${text.trim() ? GOLD : 'rgba(255,255,255,0.1)'}`,
+                  background: active ? `${s.color}20` : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${active ? s.color : 'rgba(255,255,255,0.08)'}`,
+                  color: active ? s.color : '#888',
                 }}
               >
-                {sending ? <Loader2 className="w-3.5 h-3.5 animate-spin" style={{ color: GOLD }} /> : <Send className="w-3.5 h-3.5" style={{ color: text.trim() ? GOLD : '#888' }} />}
+                <Icon className="w-3 h-3" />
+                {s.label}
               </button>
-            </div>
-            {listening && (
-              <p className="text-[10px] mt-1.5 flex items-center gap-1" style={{ color: '#ef4444' }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                Listening… speak your message
-              </p>
+            );
+          })}
+          {pendingCount > 0 && (
+            <span className="ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-bold self-center" style={{ background: '#ef4444', color: '#fff' }}>
+              {pendingCount} pending
+            </span>
+          )}
+        </div>
+
+        {/* Input row */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleVoice}
+            className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all"
+            style={{
+              background: listening ? 'rgba(239,68,68,0.15)' : `${GOLD}15`,
+              border: `1.5px solid ${listening ? '#ef4444' : GOLD}`,
+            }}
+            title={listening ? 'Stop' : 'Speak'}
+          >
+            {listening ? (
+              <span className="flex items-center gap-0.5">
+                <span className="w-1 h-3 rounded-sm bg-red-500 animate-pulse"></span>
+                <span className="w-1 h-4 rounded-sm bg-red-500 animate-pulse" style={{ animationDelay: '0.15s' }}></span>
+                <span className="w-1 h-2 rounded-sm bg-red-500 animate-pulse" style={{ animationDelay: '0.3s' }}></span>
+              </span>
+            ) : (
+              <Mic className="w-4 h-4" style={{ color: GOLD }} />
             )}
+          </button>
+
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => { setText(e.target.value); setHint(''); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } }}
+            placeholder={listening ? 'Listening…' : `Speak or type — ${SUBJECT_TYPES.find(s => s.id === subjectType)?.label.toLowerCase()} on ${pageContext}`}
+            className="flex-1 bg-transparent text-sm outline-none placeholder-stone-400"
+            style={{ color: '#f5f5f0' }}
+            disabled={sending}
+          />
+
+          <button
+            onClick={send}
+            disabled={!text.trim() || sending}
+            className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30"
+            style={{
+              background: text.trim() ? `${GOLD}20` : 'rgba(255,255,255,0.04)',
+              border: `1.5px solid ${text.trim() ? GOLD : 'rgba(255,255,255,0.1)'}`,
+            }}
+            title="Send"
+          >
+            {sending ? <Loader2 className="w-4 h-4 animate-spin" style={{ color: GOLD }} /> : <Send className="w-4 h-4" style={{ color: text.trim() ? GOLD : '#888' }} />}
+          </button>
+        </div>
+
+        {/* Hint */}
+        {(hint || listening) && (
+          <div className="mt-2 flex items-center gap-1.5 px-1">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: listening ? '#ef4444' : GOLD }} />
+            <p className="text-[11px]" style={{ color: listening ? '#ef4444' : GOLD }}>
+              {hint || 'Listening… speak your message'}
+            </p>
           </div>
+        )}
+      </div>
+
+      {/* Recent messages */}
+      {messages.length > 0 && (
+        <div className="mt-2 space-y-1.5 max-h-32 overflow-y-auto">
+          {messages.slice(0, 4).map(m => {
+            const cfg = SUBJECT_TYPES.find(s => s.id === m.subject_type) || SUBJECT_TYPES[0];
+            const Icon = cfg.icon;
+            return (
+              <div key={m.id} className="flex items-start gap-2 text-[11px] px-2">
+                <Icon className="w-3 h-3 mt-0.5 shrink-0" style={{ color: cfg.color }} />
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold" style={{ color: cfg.color }}>{cfg.label}</span>
+                  <span className="text-stone-300 ml-1.5">{m.content}</span>
+                  {m.admin_response && <span className="text-stone-500 ml-1.5">→ {m.admin_response}</span>}
+                </div>
+                {m.status === 'resolved' && <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />}
+              </div>
+            );
+          })}
         </div>
       )}
-    </>
+    </div>
   );
 }

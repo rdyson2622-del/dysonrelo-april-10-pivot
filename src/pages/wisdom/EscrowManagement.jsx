@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2, Clock, Building2, Loader2 } from 'lucide-react';
+import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 
 const GOLD = '#D4AF37';
 
@@ -66,6 +67,9 @@ export default function EscrowManagement() {
           <h1 className="text-3xl font-serif text-white">Escrow Management</h1>
         </div>
       </div>
+
+      {/* Communication pill — first thing under the heading */}
+      <BrokerageCommPill />
 
       {/* Integration sources */}
       <div className="grid md:grid-cols-3 gap-3 mb-6">

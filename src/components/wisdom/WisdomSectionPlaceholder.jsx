@@ -1,5 +1,6 @@
 import React from 'react';
 import { Building2 } from 'lucide-react';
+import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 
 const GOLD = '#D4AF37';
 
@@ -15,6 +16,9 @@ export default function WisdomSectionPlaceholder({ title, description, icon: Ico
           <h1 className="text-3xl font-serif text-white">{title}</h1>
         </div>
       </div>
+
+      {/* Communication pill — first thing under the heading */}
+      <BrokerageCommPill />
 
       <div className="rounded-2xl p-8 max-w-3xl" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
         <p className="text-gray-300 text-lg leading-relaxed mb-4">{description}</p>
