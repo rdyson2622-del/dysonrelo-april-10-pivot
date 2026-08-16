@@ -1,10 +1,12 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
-import { secrets } from 'base44:runtime';
 
 // Grok Screen Vision — receives a base64 screenshot + prompt (+ rolling text
-// conversation) and forwards to the Anthropic Messages API with vision enabled.
-// Returns the model's text response. Used by the admin screen viewer for
-// continuous screen observation.
+// conversation) and forwards it to the platform's built-in LLM (the same engine
+// that powers the Grok Bot specialists in the Command Center) with the image
+// attached via file_urls for vision capability.
+//
+// This drops the Anthropic API dependency — no ANTHROPIC_API_KEY needed.
+// Uses platform LLM credits (InvokeLLM) instead.
 
 export default async function(req) {
   try {
@@ -12,14 +14,6 @@ export default async function(req) {
     const user = await base44.auth.me();
     if (!user || user.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
-    }
-
-    const apiKey = secrets.get("ANTHROPIC_API_KEY");
-    if (!apiKey) {
-      return Response.json(
-        { error: 'ANTHROPIC_API_KEY secret not configured. Add it in Dashboard → Settings → Environment Variables.' },
-        { status: 500 }
-      );
     }
 
     const body = await req.json().catch(() => null);
@@ -45,60 +39,63 @@ export default async function(req) {
     }
 
     const mediaType = image_media_type || 'image/jpeg';
+    const ext = mediaType === 'image/png' ? 'png' : 'jpg';
 
-    // Build messages: prior text turns (if any) + current image+prompt turn.
-    const messages = [];
+    // Decode base64 → binary buffer
+    const binString = atob(image_base64);
+    const bytes = new Uint8Array(binString.length);
+    for (let i = 0; i < binString.length; i++) {
+      bytes[i] = binString.charCodeAt(i);
+    }
+
+    // Upload the frame so InvokeLLM can read it via file_urls (vision)
+    const file = new File([bytes], `screen-frame.${ext}`, { type: mediaType });
+    const uploadRes = await base44.integrations.Core.UploadFile({ file });
+    const fileUrl = uploadRes?.file_url;
+    if (!fileUrl) {
+      throw new Error('Frame upload failed — no file_url returned.');
+    }
+
+    // Build the full prompt: system instructions + rolling conversation + current ask
+    // (InvokeLLM has no separate system_prompt param, so we fold it in)
+    let fullPrompt = '';
+    if (system_prompt) {
+      fullPrompt += `${system_prompt}\n\n---\n\n`;
+    }
     if (Array.isArray(conversation)) {
       for (const turn of conversation) {
         if (turn && turn.role && turn.content) {
-          messages.push({ role: turn.role, content: String(turn.content) });
+          fullPrompt += `${turn.role === 'assistant' ? 'Grok' : 'User'}: ${turn.content}\n`;
         }
       }
+      fullPrompt += '\n---\n\n';
     }
-
-    const currentContent = [
-      { type: 'image', source: { type: 'base64', media_type: mediaType, data: image_base64 } },
-    ];
     if (prompt) {
-      currentContent.push({ type: 'text', text: String(prompt) });
-    }
-    messages.push({ role: 'user', content: currentContent });
-
-    const payload = {
-      model: model || 'claude-sonnet-4-5-20250929',
-      max_tokens: Math.min(Math.max(Number(max_tokens) || 1024, 64), 4096),
-      messages,
-    };
-    if (system_prompt) {
-      payload.system = String(system_prompt);
+      fullPrompt += `User: ${prompt}\nGrok:`;
+    } else {
+      fullPrompt += `Grok:`;
     }
 
-    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(payload),
+    // Call the platform LLM with the image attached — routes to a vision-capable model
+    const llmRes = await base44.integrations.Core.InvokeLLM({
+      prompt: fullPrompt,
+      file_urls: [fileUrl],
     });
 
-    const apiJson = await apiRes.json().catch(() => ({}));
-    if (!apiRes.ok) {
-      return Response.json(
-        { error: apiJson?.error?.message || `Anthropic API error (${apiRes.status})`, raw: apiJson },
-        { status: 502 }
-      );
-    }
+    const text = typeof llmRes === 'string'
+      ? llmRes
+      : (llmRes?.text || (llmRes?.response) || JSON.stringify(llmRes));
 
-    const text = (apiJson.content || []).map((c) => c.text || '').join('').trim();
     return Response.json({
-      text,
-      usage: apiJson.usage || null,
-      model: apiJson.model || null,
-      stop_reason: apiJson.stop_reason || null,
+      text: String(text).trim(),
+      usage: null,
+      model: 'grok-bot',
+      stop_reason: null,
     });
   } catch (error) {
-    return Response.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    return Response.json(
+      { error: error.message || 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
