@@ -26,7 +26,14 @@ export default async function(req) {
         hint: 'Generate an API token in BoldTrail: Lead Engine → Lead Dropbox → My API Tokens (All scope), then save it as the BOLDTRAIL_API_TOKEN secret.',
       }, { status: 400 });
     }
-    const baseUrl = (secrets.get('BOLDTRAIL_API_BASE_URL') || 'https://api.boldtrail.com/v2').replace(/\/$/, '');
+    const rawBase = (secrets.get('BOLDTRAIL_API_BASE_URL') || '').trim();
+    const baseUrl = (rawBase || 'https://api.boldtrail.com/v2').replace(/\/$/, '');
+    if (!/^https?:\/\//.test(baseUrl)) {
+      return Response.json({
+        error: 'BOLDTRAIL_API_BASE_URL is invalid',
+        hint: 'Set it to https://api.boldtrail.com/v2 (or the exact base from the BoldTrail developer portal). Current value is empty or malformed.',
+      }, { status: 400 });
+    }
 
     const url = new URL(`${baseUrl}/deals`);
     url.searchParams.set('status', 'active');
