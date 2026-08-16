@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Send, ArrowLeft, Activity, Bot, User, Loader2 } from 'lucide-react';
+import { Send, ArrowLeft, Activity, Bot, User, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { LIBRARY_SPECIALISTS } from '@/lib/librarySpecialists';
 import { WORKFLOW_DESKS } from '@/lib/departmentWorkflows';
 
@@ -88,7 +89,12 @@ export default function AdminGrokCommand() {
   const [messages, setMessages] = useState({});
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [activityFeed, setActivityFeed] = useState([]);
+  const queryClient = useQueryClient();
+  const { data: activityFeed = [] } = useQuery({
+    queryKey: ['grokDispatches', 'command-center'],
+    queryFn: () => base44.entities.GrokDispatch.list('-created_date', 50),
+    refetchInterval: 5000,
+  });
   const scrollRef = useRef(null);
 
   const selected = SPECIALISTS.find(s => s.id === selectedId);
@@ -148,19 +154,8 @@ export default function AdminGrokCommand() {
           }));
         }
 
-        // 3. Log the dispatch in the activity feed
-        setActivityFeed(prev => [
-          {
-            specialist: data.specialist_name
-              ? `${selected.name} → ${data.specialist_name}`
-              : selected.name,
-            color: selected.color,
-            message: msg,
-            response: data.specialist_response || data.orchestrator_response,
-            time: new Date(),
-          },
-          ...prev,
-        ].slice(0, 50));
+        // 3. Refresh the persistent dispatch log
+        queryClient.invalidateQueries({ queryKey: ['grokDispatches'] });
       } else {
         // Direct specialist chat — existing behavior
         const fullPrompt = `${SYSTEM_PROMPTS[selectedId]}\n\nUser: ${msg}`;
@@ -174,10 +169,7 @@ export default function AdminGrokCommand() {
           [selectedId]: [...(prev[selectedId] || []), { role: 'bot', content: response }],
         }));
 
-        setActivityFeed(prev => [
-          { specialist: selected.name, color: selected.color, message: msg, response, time: new Date() },
-          ...prev,
-        ].slice(0, 50));
+        // Direct specialist chats don't create dispatch records
       }
     } catch (e) {
       setMessages(prev => ({
@@ -272,22 +264,31 @@ export default function AdminGrokCommand() {
                 <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: GOLD }}>Live Activity Feed</p>
               </div>
               {activityFeed.length === 0 ? (
-                <p className="text-sm text-slate-500 py-4 text-center">No communications yet. Send a message to a specialist to see it here.</p>
+                <p className="text-sm text-slate-500 py-4 text-center">No dispatches yet. Send a message to an orchestrator (Chief, Bob, or Jay) to see it here.</p>
               ) : (
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {activityFeed.map((entry, i) => (
-                    <div key={i} className="rounded-lg p-3" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.05)' }}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: entry.color }} />
-                        <span className="text-xs font-bold" style={{ color: entry.color }}>{entry.specialist}</span>
-                        <span className="text-[10px] text-slate-500 ml-auto">
-                          {entry.time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-                        </span>
+                <div className="space-y-2 max-h-80 overflow-y-auto">
+                  {activityFeed.map((d) => {
+                    const failed = d.status === 'failed';
+                    const label = d.specialist_name ? `${d.orchestrator_name} → ${d.specialist_name}` : d.orchestrator_name;
+                    const color = d.orchestrator_color || '#D4AF37';
+                    return (
+                      <div key={d.id} className="rounded-lg p-3" style={{ background: '#1a1a1a', border: `1px solid ${failed ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.05)'}` }}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+                          <span className="text-xs font-bold" style={{ color: color }}>{label}</span>
+                          {failed
+                            ? <XCircle className="w-3 h-3 ml-auto" style={{ color: '#ef4444' }} />
+                            : <CheckCircle2 className="w-3 h-3 ml-auto" style={{ color: '#22c55e' }} />
+                          }
+                          <span className="text-[10px] text-slate-500">
+                            {new Date(d.created_date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-300 mb-1 truncate"><span className="text-slate-500">Q:</span> {d.admin_message}</p>
+                        <p className="text-xs text-slate-400 line-clamp-2"><span className="text-slate-500">A:</span> {d.specialist_response || d.orchestrator_response || '—'}</p>
                       </div>
-                      <p className="text-xs text-slate-300 mb-1 truncate"><span className="text-slate-500">Q:</span> {entry.message}</p>
-                      <p className="text-xs text-slate-400 line-clamp-2"><span className="text-slate-500">A:</span> {entry.response}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
