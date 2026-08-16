@@ -42,9 +42,10 @@ export function computeDaysUntil(dueDate) {
  * A single deal typically yields several milestones (inspection, appraisal, close, etc.)
  * depending on which dates the deal exposes.
  */
-export function mapDealToMilestones(deal, client_id) {
+export function mapDealToMilestones(deal, client_id, brokerage_id) {
   const milestones = [];
   const base = {
+    brokerage_id: brokerage_id || null,
     client_id: client_id || "boldtrail_import",
     property_address: deal.property_address || deal.address || "",
     escrow_company: deal.escrow_company || deal.title_company || "BoldTrail",
@@ -80,10 +81,11 @@ export function mapDealToMilestones(deal, client_id) {
  * Map an API Nation webhook payload (transaction event) to a single milestone.
  * API Nation payloads vary; we extract what we can defensively.
  */
-export function mapWebhookEventToMilestone(event, client_id) {
+export function mapWebhookEventToMilestone(event, client_id, brokerage_id) {
   const tx = event.transaction || event.deal || event.data || event;
   const milestone_type = normalizeMilestoneType(event.event_type || event.milestone || tx.milestone_type);
   return {
+    brokerage_id: brokerage_id || tx.brokerage_id || null,
     client_id: client_id || tx.client_id || "apination_import",
     property_address: tx.property_address || tx.address || "",
     escrow_company: tx.escrow_company || tx.title_company || "BoldTrail",

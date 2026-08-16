@@ -1,0 +1,99 @@
+{
+  "name": "Brokerage",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Brokerage firm name (e.g. Wisdom Properties)"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Brokerage logo image URL"
+    },
+    "brand_color": {
+      "type": "string",
+      "description": "Primary brand hex color for co-branded portal theming"
+    },
+    "plan_tier": {
+      "type": "string",
+      "enum": [
+        "founder",
+        "pro",
+        "basic"
+      ],
+      "default": "basic",
+      "description": "Subscription tier. founder = pilot/first brokerage (Wisdom), pro = full paying, basic = starter"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "trial",
+        "suspended",
+        "churned"
+      ],
+      "default": "trial",
+      "description": "Subscription lifecycle status"
+    },
+    "primary_contact_name": {
+      "type": "string",
+      "description": "Main contact at the brokerage (the brokerage admin)"
+    },
+    "primary_contact_email": {
+      "type": "string",
+      "description": "Main contact email"
+    },
+    "boldtrail_subdomain": {
+      "type": "string",
+      "description": "Their BoldTrail BackOffice subdomain (e.g. wisdom.brokermint.com) \u2014 identifies which BackOffice account to sync"
+    },
+    "apination_connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether API Nation webhook integration is active for this brokerage"
+    },
+    "subscribed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this brokerage subscribed to the platform"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal platform-side notes about this brokerage"
+    }
+  },
+  "required": [
+    "name",
+    "plan_tier",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

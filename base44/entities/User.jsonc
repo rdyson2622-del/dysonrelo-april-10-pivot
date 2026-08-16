@@ -9,7 +9,7 @@
         "user"
       ],
       "default": "user",
-      "description": "User role"
+      "description": "Platform role: admin = platform architect (full build access), user = standard account"
     },
     "portal_role": {
       "type": "string",
@@ -18,9 +18,14 @@
         "agent",
         "referral_agent",
         "vendor",
-        "hr"
+        "hr",
+        "brokerage_admin"
       ],
-      "description": "The single portal this subscribed user is assigned to"
+      "description": "The single portal this subscribed user is assigned to. brokerage_admin = manages a subscribed brokerage firm (sees only their brokerage's data)"
+    },
+    "brokerage_id": {
+      "type": "string",
+      "description": "For brokerage_admin users: the Brokerage entity ID this user is scoped to. Platform admins leave this empty."
     },
     "is_suspended": {
       "type": "boolean",
