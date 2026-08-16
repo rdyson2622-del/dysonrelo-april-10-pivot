@@ -15,8 +15,10 @@ const STATUS_CONFIG = {
 };
 
 export default function FlowRoadmapLine({ stages, stageStatuses, color, activeStageId, onSelect }) {
-  const completedCount = stages.filter(s => stageStatuses[s.id]?.status === 'completed').length;
-  const progressPercent = stages.length > 0 ? (completedCount / stages.length) * 100 : 0;
+  const safeStages = stages || [];
+  const safeStatuses = stageStatuses || {};
+  const completedCount = safeStages.filter(s => safeStatuses[s.id]?.status === 'completed').length;
+  const progressPercent = safeStages.length > 0 ? (completedCount / safeStages.length) * 100 : 0;
 
   return (
     <div className="mb-10 mt-2">
@@ -42,8 +44,8 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
         />
         {/* Markers */}
         <div className="absolute inset-0 flex items-center justify-between px-2">
-          {stages.map((s) => {
-            const status = stageStatuses[s.id]?.status || 'pending';
+          {safeStages.map((s) => {
+            const status = safeStatuses[s.id]?.status || 'pending';
             const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
             const Icon = cfg.icon;
             const isActive = activeStageId === s.id;
@@ -79,11 +81,11 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
 
       {/* ── LABELS ROW ── */}
       <div className="flex justify-between px-1 mt-1">
-        {stages.map((s) => {
-          const status = stageStatuses[s.id]?.status || 'pending';
+        {safeStages.map((s) => {
+          const status = safeStatuses[s.id]?.status || 'pending';
           const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
           const isActive = activeStageId === s.id;
-          const action = stageStatuses[s.id];
+          const action = safeStatuses[s.id];
           return (
             <button
               key={s.id}
