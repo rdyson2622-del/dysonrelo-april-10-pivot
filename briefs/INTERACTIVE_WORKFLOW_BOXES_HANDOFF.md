@@ -271,4 +271,20 @@ Answer these for all 6 flows × their stages. That is the spec Cursor builds fro
 
 ---
 
+## 11. Extensibility — adding new flows
+
+The interactive system is **data-driven, not hard-coded**. Adding a 7th or 8th flow is just adding an entry to `DEPARTMENT_FLOWS` in `departmentWorkflows.js` — no changes to the interactive box system, the `WorkflowAction` entity, or the `WorkflowActionPanel` component.
+
+**Current flows (6):** Marketing, Operations, Sales & PRN, DNN News, Finance, Knowledge.
+
+**Candidates to break out later (only when they need their own multi-step chain):**
+- **PR & Media** — currently a stage ("press") inside Marketing. Has 4 dedicated admin pages. Break out if it grows beyond a single stage.
+- **Charlie's Brain** — currently a stage ("watch") inside Operations. Has scripts, KB, escalations, voice. Break out if it needs its own multi-step flow.
+- **Corporate Relo / HR** — currently a stage ("plan") inside Operations. Has its own landing page and B2B distribution.
+- **Agent & Lender Vetting** — currently a stage ("vet") inside Sales.
+
+**Rule:** Start with the 6. Break out a new flow only when a stage clearly needs its own multi-step chain. Don't pre-split — that creates empty flows. Each new flow needs: an entry in `WORKFLOW_DESKS`, an entry in `DEPARTMENT_FLOWS` with stages + `export_target` per stage, and the specialist prompt spec from Grok Bot. The interactive UI picks it up automatically.
+
+---
+
 **End of brief. Base44 will verify the build when Cursor's work syncs back.**
