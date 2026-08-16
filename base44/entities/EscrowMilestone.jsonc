@@ -98,6 +98,48 @@
     "extracted_from": {
       "type": "string",
       "description": "Filename or document name this was extracted from"
+    },
+    "alert_tier": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "client"
+      ],
+      "default": "internal",
+      "description": "Visibility tier for this alert. internal = Agent/TC/Compliance see it first to fix before stressing the client. client = escalated to buyer/seller."
+    },
+    "alert_status": {
+      "type": "string",
+      "enum": [
+        "raised",
+        "acknowledged",
+        "mitigating",
+        "resolved_internal",
+        "escalated_to_client"
+      ],
+      "default": "raised",
+      "description": "Two-tier alert workflow. raised=just detected, acknowledged=agent/TC saw it, mitigating=working on a fix (often via EscrowIssue resolver), resolved_internal=fixed without ever notifying client, escalated_to_client=could not fix internally, client now notified."
+    },
+    "acknowledged_by_name": {
+      "type": "string",
+      "description": "Name of the agent/TC who acknowledged the alert."
+    },
+    "acknowledged_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "client_notified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the buyer/seller has been notified of this alert."
+    },
+    "client_notified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mitigation_notes": {
+      "type": "string",
+      "description": "Notes from the agent/TC on how the issue was mitigated or why it was escalated."
     }
   },
   "required": [

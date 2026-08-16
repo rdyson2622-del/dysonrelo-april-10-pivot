@@ -40,11 +40,17 @@ export default async function(req) {
           const key = m.escrow_number || m.property_address || 'unknown';
           if (!byEscrow[key]) byEscrow[key] = { escrow_number: m.escrow_number, address: m.property_address, company: m.escrow_company, items: [] };
           byEscrow[key].items.push({
+            id: m.id,
             milestone: m.milestone_name || m.milestone_type,
             due_date: m.due_date,
             days,
             status: m.status,
             severity: isOverdue ? 'overdue' : (m.status === 'at_risk' || m.status === 'failed' ? 'critical' : 'due_soon'),
+            alert_tier: m.alert_tier || 'internal',
+            alert_status: m.alert_status || 'raised',
+            acknowledged_by_name: m.acknowledged_by_name || null,
+            client_notified: m.client_notified || false,
+            mitigation_notes: m.mitigation_notes || null,
           });
         }
       });
