@@ -199,14 +199,14 @@ export default function RoadMapEntry() {
                 <button
                   key={pill.id}
                   onClick={() => setSelectedPill(pill)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all"
+                  className="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-full text-base font-medium transition-all"
                   style={{
                     background: isActive ? `${pill.color}20` : 'rgba(255,255,255,0.03)',
                     border: `1.5px solid ${isActive ? pill.color : 'rgba(255,255,255,0.1)'}`,
                     color: isActive ? pill.color : '#888',
                   }}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                   {pill.label}
                 </button>
               );
