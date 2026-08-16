@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2, Clock, Building2, Loader2, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2, Clock, Building2, Loader2, ChevronDown, ChevronUp, ArrowRight, Siren } from 'lucide-react';
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import EscrowIssueResolver from '@/components/brokerage/EscrowIssueResolver';
 
 const GOLD = '#D4AF37';
 
@@ -27,11 +28,35 @@ export default function EscrowManagement() {
   const [syncing, setSyncing] = useState(null);
   const [syncResult, setSyncResult] = useState(null);
   const [selectedEscrowKey, setSelectedEscrowKey] = useState(null);
+  const [resolver, setResolver] = useState(null); // { escrow, milestone }
+  const [user, setUser] = useState(null);
+
+  useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
+  const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;
+  const { data: brokerage } = useQuery({
+    queryKey: ['brokeragePortal', user?.id, userBrokerageId],
+    queryFn: async () => {
+      if (user?.role === 'admin') {
+        const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
+        return list?.[0] || null;
+      }
+      if (userBrokerageId) return await base44.entities.Brokerage.get(userBrokerageId);
+      return null;
+    },
+    enabled: !!user,
+  });
 
   const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['escrowMilestones'],
     queryFn: () => base44.entities.EscrowMilestone.list('-due_date', 200),
     refetchInterval: 30000,
+  });
+
+  // Applied escrow issues — their detour stages merge into the live roadmap
+  const { data: escrowIssues = [] } = useQuery({
+    queryKey: ['escrowIssues'],
+    queryFn: () => base44.entities.EscrowIssue.filter({ status: 'applied' }, '-created_date', 200),
+    refetchInterval: 20000,
   });
 
   const runSync = async (sourceId, fnName) => {
@@ -157,11 +182,22 @@ export default function EscrowManagement() {
             const key = esc.number || esc.address || `esc-${i}`;
             const isSelected = selectedEscrowKey === key;
             const sorted = [...esc.milestones].sort((a,b) => new Date(a.due_date) - new Date(b.due_date));
-            const stages = sorted.map(m => ({
-              id: m.id,
-              title: m.milestone_name || m.milestone_type.replace(/_/g, ' '),
-              plain: m.due_date ? new Date(m.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
-            }));
+            // Applied detour stages from issues on this escrow
+            const escDetours = escrowIssues.filter(is => (is.escrow_number === esc.number) || (is.property_address === esc.address));
+            const detourStages = escDetours.flatMap(is => (is.detour_stages || []).map((d, di) => ({
+              id: `detour-${is.id}-${di}`,
+              title: d.title,
+              plain: d.due_date ? new Date(d.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
+              _detour: true,
+            })));
+            const stages = [
+              ...sorted.map(m => ({
+                id: m.id,
+                title: m.milestone_name || m.milestone_type.replace(/_/g, ' '),
+                plain: m.due_date ? new Date(m.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
+              })),
+              ...detourStages,
+            ];
             const stageStatuses = {};
             sorted.forEach(m => {
               stageStatuses[m.id] = {
@@ -169,7 +205,11 @@ export default function EscrowManagement() {
                 flag_reason: m.status === 'at_risk' || m.status === 'failed' ? (m.notes || 'At risk') : undefined,
               };
             });
+            detourStages.forEach(d => {
+              stageStatuses[d.id] = { status: 'detour', flag_reason: 'Issue detour' };
+            });
             const completedCount = sorted.filter(m => m.status === 'completed').length;
+            const openIssueCount = escDetours.length;
             return (
               <div
                 key={i}
@@ -184,9 +224,19 @@ export default function EscrowManagement() {
                 <div className="flex items-center justify-between p-4">
                   <div>
                     <h3 className="text-sm font-serif text-white">{esc.address || 'Unknown address'}</h3>
-                    <p className="text-xs text-gray-500">{esc.company} · Escrow #{esc.number || '—'} · {esc.milestones.length} milestones · {completedCount} done</p>
+                    <p className="text-xs text-gray-500">{esc.company} · Escrow #{esc.number || '—'} · {esc.milestones.length} milestones · {completedCount} done{openIssueCount > 0 && ` · ${openIssueCount} issue${openIssueCount !== 1 ? 's' : ''}`}</p>
                   </div>
                   <div className="flex items-center gap-2">
+                    {isSelected && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setResolver({ escrow: esc, milestone: null }); }}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all"
+                        style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.4)', color: '#ef4444' }}
+                      >
+                        <Siren className="w-3 h-3" />
+                        Raise Issue
+                      </button>
+                    )}
                     <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}40`, color: GOLD }}>
                       {isSelected ? 'LIVE ROADMAP' : 'OPEN'}
                     </span>
@@ -196,12 +246,16 @@ export default function EscrowManagement() {
 
                 {isSelected && stages.length > 0 && (
                   <div className="px-4 pb-4 pt-1 border-t border-white/5">
+                    <p className="text-[9px] text-stone-600 mb-1">Click any milestone to raise an issue and get an instant expert solution + roadmap detour</p>
                     <FlowRoadmapLine
                       stages={stages}
                       stageStatuses={stageStatuses}
                       color={GOLD}
                       activeStageId={null}
-                      onSelect={() => {}}
+                      onSelect={(stageId) => {
+                        const ms = sorted.find(m => m.id === stageId);
+                        if (ms) setResolver({ escrow: esc, milestone: ms });
+                      }}
                     />
                   </div>
                 )}
@@ -212,6 +266,17 @@ export default function EscrowManagement() {
             );
           })}
         </div>
+      )}
+
+      {/* Issue Resolver modal */}
+      {resolver && (
+        <EscrowIssueResolver
+          escrow={resolver.escrow}
+          milestone={resolver.milestone}
+          brokerageId={brokerage?.id}
+          onClose={() => setResolver(null)}
+          onApplied={() => queryClient.invalidateQueries({ queryKey: ['escrowIssues'] })}
+        />
       )}
     </div>
   );
