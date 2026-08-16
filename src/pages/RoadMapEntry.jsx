@@ -338,7 +338,7 @@ export default function RoadMapEntry() {
             >
               <div className="flex items-center gap-2 mb-4">
                 <X className="w-5 h-5" style={{ color: '#ef4444' }} />
-                <h3 className="text-lg font-serif" style={{ color: '#888' }}>Go to an Agent First</h3>
+                <h3 className="text-lg font-serif" style={{ color: '#ffffff' }}>Go to an Agent First</h3>
               </div>
               <ul className="space-y-2.5 text-sm text-gray-500">
                 <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />They sell you a house</li>
