@@ -26,7 +26,10 @@ export default function BrokerageLayout() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    base44.auth.me().then(setUser).catch(() => {
+      // Not authenticated — send to login, return here after
+      base44.auth.redirectToLogin(window.location.pathname);
+    });
   }, []);
 
   const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;

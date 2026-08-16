@@ -107,8 +107,14 @@ export default function RoadMapEntry() {
   const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
-  }, []);
+    base44.auth.me().then(u => {
+      setUser(u);
+      // Auto-route subscribed brokerage users to their Broker/Agent Portal
+      if (u && u.role !== 'admin' && (u.portal_role === 'brokerage_admin' || u.portal_role === 'broker') && u.brokerage_id) {
+        navigate('/brokerage', { replace: true });
+      }
+    }).catch(() => {});
+  }, [navigate]);
 
   const flow = getFlowForPill(selectedPill);
   const { statuses, activeStageId } = useAnimatedDemoStatuses(flow?.stages);
