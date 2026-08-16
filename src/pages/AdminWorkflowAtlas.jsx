@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, ExternalLink, CheckCircle2, AlertTriangle, Loader2, Circle } from 'lucide-react';
 import {
@@ -126,6 +126,20 @@ function DepartmentView({ deskId }) {
   const { stageStatuses: realStatuses, isModelMode } = useStageStatuses(deskId);
   const { statuses: animatedStatuses, activeStageId: animatedActive } = useAnimatedDemoStatuses(flow?.stages);
 
+  // Auto-follow: in real mode the detail panel tracks the running/flagged stage so
+  // the line feels alive when an admin runs a function. User clicks override
+  // temporarily; when a new stage goes live, auto-follow resumes.
+  const liveStageId = flow?.stages?.find(s => realStatuses[s.id]?.status === 'running')?.id
+    || flow?.stages?.find(s => realStatuses[s.id]?.status === 'flagged')?.id;
+  const prevLiveRef = useRef(null);
+  useEffect(() => {
+    if (isModelMode) return;
+    if (liveStageId && liveStageId !== prevLiveRef.current) {
+      setUserActive(null);
+    }
+    prevLiveRef.current = liveStageId;
+  }, [liveStageId, isModelMode]);
+
   if (!desk || !flow) {
     return (
       <div className="text-gray-400">
@@ -135,9 +149,11 @@ function DepartmentView({ deskId }) {
   }
 
   // Model mode (only dummies): animation drives statuses + active stage — the line is alive.
-  // Real mode: real statuses drive, user controls the active stage by clicking.
+  // Real mode: real statuses drive, auto-follows the live stage, user clicks override temporarily.
   const stageStatuses = isModelMode ? animatedStatuses : realStatuses;
-  const active = isModelMode ? (animatedActive || flow.stages[0]?.id) : (userActive || flow.stages[0]?.id);
+  const active = isModelMode
+    ? (animatedActive || flow.stages[0]?.id)
+    : (userActive || liveStageId || flow.stages[0]?.id);
   const setActive = isModelMode ? () => {} : setUserActive;
 
   const stage = flow.stages.find((s) => s.id === active) || flow.stages[0];
@@ -166,11 +182,15 @@ function DepartmentView({ deskId }) {
 
       <div className="flex items-center gap-2 mb-2">
         <p className="text-xs text-gray-500">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
-        {isModelMode && (
+        {isModelMode ? (
           <span className="text-[9px] px-2 py-0.5 rounded-full font-bold animate-pulse" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}>
             ● LIVE DEMO
           </span>
-        )}
+        ) : (runningStage || flaggedStage) ? (
+          <span className="text-[9px] px-2 py-0.5 rounded-full font-bold animate-pulse" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.4)' }}>
+            ● LIVE
+          </span>
+        ) : null}
       </div>
       <FlowRoadmapLine
         stages={flow.stages}
