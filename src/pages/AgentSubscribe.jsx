@@ -139,6 +139,10 @@ export default function AgentSubscribe() {
             Every client move is mapped step-by-step — schools, escrow, movers, timing. You watch it happen in real time.
           </p>
         </div>
+
+        <p className="text-sm md:text-base max-w-2xl mx-auto mt-6 text-center font-medium" style={{ color: '#ffffff' }}>
+          You will be one of only 1,000 of the top vetted brokers nationally in all 50 states. Please respond to your invite or we will move on to our next potential member in your area. There is no fee to membership other than chosen upgrades.
+        </p>
       </div>
 
       {/* Value props */}
