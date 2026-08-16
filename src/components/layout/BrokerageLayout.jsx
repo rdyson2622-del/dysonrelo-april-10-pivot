@@ -7,6 +7,7 @@ import {
   ArrowLeft, Loader2, Home
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
+import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
 
 const GOLD = '#D4AF37';
 
@@ -152,6 +153,9 @@ export default function BrokerageLayout() {
             {user.email}
           </p>
         </div>
+
+        {/* Real-time critical alerts — live across all portal pages */}
+        <BrokerageAlertBanner />
 
         {/* Page content */}
         <Outlet />

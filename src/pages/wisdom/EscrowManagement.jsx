@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2, Clock, Building2, Loader2 } from 'lucide-react';
+import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2, Clock, Building2, Loader2, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
+
+const STATUS_MAP = {
+  pending: 'pending',
+  in_progress: 'running',
+  completed: 'completed',
+  waived: 'completed',
+  at_risk: 'flagged',
+  failed: 'flagged',
+};
 
 const SOURCES = [
   { id: 'boldtrail_api', label: 'BoldTrail API', icon: Database, fn: 'boldtrailSyncEscrow', desc: 'Direct Deals API pull' },
@@ -16,6 +26,7 @@ export default function EscrowManagement() {
   const queryClient = useQueryClient();
   const [syncing, setSyncing] = useState(null);
   const [syncResult, setSyncResult] = useState(null);
+  const [selectedEscrowKey, setSelectedEscrowKey] = useState(null);
 
   const { data: milestones = [], isLoading } = useQuery({
     queryKey: ['escrowMilestones'],
@@ -126,7 +137,7 @@ export default function EscrowManagement() {
         </div>
       )}
 
-      {/* Escrow list */}
+      {/* Escrow list — click any escrow to open its live roadmap */}
       {isLoading ? (
         <div className="flex justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
@@ -138,23 +149,68 @@ export default function EscrowManagement() {
           <p className="text-gray-600 text-xs">Run a sync above (BoldTrail API or Gmail) to pull live transactions. API Nation webhooks will populate automatically once configured.</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {escrowList.map((esc, i) => (
-            <div key={i} className="rounded-xl p-4" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h3 className="text-sm font-serif text-white">{esc.address || 'Unknown address'}</h3>
-                  <p className="text-xs text-gray-500">{esc.company} · Escrow #{esc.number || '—'}</p>
+        <div className="space-y-3">
+          <p className="text-[10px] font-black tracking-widest uppercase text-center" style={{ color: GOLD }}>
+            ● {escrowList.length} Escrow{escrowList.length !== 1 ? 's' : ''} In Process — Select one to view its live roadmap
+          </p>
+          {escrowList.map((esc, i) => {
+            const key = esc.number || esc.address || `esc-${i}`;
+            const isSelected = selectedEscrowKey === key;
+            const sorted = [...esc.milestones].sort((a,b) => new Date(a.due_date) - new Date(b.due_date));
+            const stages = sorted.map(m => ({
+              id: m.id,
+              title: m.milestone_name || m.milestone_type.replace(/_/g, ' '),
+              plain: m.due_date ? new Date(m.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
+            }));
+            const stageStatuses = {};
+            sorted.forEach(m => {
+              stageStatuses[m.id] = {
+                status: STATUS_MAP[m.status] || 'pending',
+                flag_reason: m.status === 'at_risk' || m.status === 'failed' ? (m.notes || 'At risk') : undefined,
+              };
+            });
+            const completedCount = sorted.filter(m => m.status === 'completed').length;
+            return (
+              <div
+                key={i}
+                className="rounded-xl transition-all cursor-pointer"
+                style={{
+                  background: '#111',
+                  border: isSelected ? `1.5px solid ${GOLD}` : '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: isSelected ? `0 0 16px ${GOLD}20` : 'none',
+                }}
+                onClick={() => setSelectedEscrowKey(isSelected ? null : key)}
+              >
+                <div className="flex items-center justify-between p-4">
+                  <div>
+                    <h3 className="text-sm font-serif text-white">{esc.address || 'Unknown address'}</h3>
+                    <p className="text-xs text-gray-500">{esc.company} · Escrow #{esc.number || '—'} · {esc.milestones.length} milestones · {completedCount} done</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}40`, color: GOLD }}>
+                      {isSelected ? 'LIVE ROADMAP' : 'OPEN'}
+                    </span>
+                    {isSelected ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+                  </div>
                 </div>
-                <span className="text-xs text-gray-500">{esc.milestones.length} milestones</span>
+
+                {isSelected && stages.length > 0 && (
+                  <div className="px-4 pb-4 pt-1 border-t border-white/5">
+                    <FlowRoadmapLine
+                      stages={stages}
+                      stageStatuses={stageStatuses}
+                      color={GOLD}
+                      activeStageId={null}
+                      onSelect={() => {}}
+                    />
+                  </div>
+                )}
+                {isSelected && stages.length === 0 && (
+                  <p className="px-4 pb-4 text-xs text-gray-500">No milestones tracked for this escrow yet.</p>
+                )}
               </div>
-              <div className="flex flex-wrap gap-2">
-                {esc.milestones.sort((a,b) => new Date(a.due_date) - new Date(b.due_date)).map(m => (
-                  <MilestoneChip key={m.id} milestone={m} />
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
