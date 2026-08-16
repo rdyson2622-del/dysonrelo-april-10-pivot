@@ -6,7 +6,7 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard, Library, Monitor, Plug, GitBranch, Bot
+  Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -353,6 +353,22 @@ export default function AdminSidebar() {
         >
           <GitBranch className="w-4 h-4 shrink-0" />
           <span className="text-center leading-tight">WORKFLOW<br/>ATLAS</span>
+        </Link>
+      </div>
+
+      {/* Road Map to Completion — master one-glance dashboard */}
+      <div className="px-3 pb-2 shrink-0">
+        <Link
+          to="/admin/roadmap"
+          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+          style={{
+            background: location.pathname === '/admin/roadmap' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Map className="w-4 h-4 shrink-0" />
+          <span className="text-center leading-tight">ROAD MAP<br/>TO COMPLETION</span>
         </Link>
       </div>
 

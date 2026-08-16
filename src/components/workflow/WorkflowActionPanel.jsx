@@ -143,53 +143,57 @@ export default function WorkflowActionPanel({ stage, desk, onActionLogged }) {
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{ background: '#111', border: `1px solid ${deskColor}40` }}>
-      {/* ── WHITE COPY: WHAT / WHY / WHO / WHEN / WHERE ── */}
-      <div className="p-6 pb-4" style={{ borderBottom: `1px solid ${deskColor}25` }}>
-        <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: deskColor }}>
+      {/* ── STAGE TITLE + DESCRIPTION ── */}
+      <div className="p-8 pb-6">
+        <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: deskColor }}>
           {stage.title}
         </p>
-        <p className="text-sm text-gray-300 leading-relaxed mb-5">{stage.plain}</p>
+        <p className="text-base text-gray-200 leading-relaxed">{stage.plain}</p>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <WhiteCopyRow icon={Sparkles} label="WHAT" value={stage.what || stage.title} color={deskColor} />
-          <WhiteCopyRow icon={Shield} label="WHY" value={stage.why || '—'} color={deskColor} />
-          <WhiteCopyRow icon={User} label="WHO" value={stage.who || desk.specialist} color={deskColor} />
-          <WhiteCopyRow icon={Clock} label="WHEN" value={stage.when || 'On demand'} color={deskColor} />
-          <WhiteCopyRow icon={MapPin} label="WHERE" value={stage.where || 'Admin panel'} color={deskColor} />
+      {/* ── WHITE COPY: compact single-row metadata ── */}
+      <div className="px-8 pb-6">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs">
+          <WhiteCopyChip icon={Shield} label="WHY" value={stage.why || '—'} color={deskColor} />
+          <WhiteCopyChip icon={User} label="WHO" value={stage.who || desk.specialist} color={deskColor} />
+          <WhiteCopyChip icon={Clock} label="WHEN" value={stage.when || 'On demand'} color={deskColor} />
+          <WhiteCopyChip icon={MapPin} label="WHERE" value={stage.where || 'Admin panel'} color={deskColor} />
         </div>
       </div>
 
       {/* ── INPUT + EXECUTE ── */}
-      <div className="p-6 pt-4">
+      <div className="px-8 pb-8" style={{ borderTop: `1px solid ${deskColor}15`, paddingTop: '24px' }}>
         {exportTarget ? (
-          <>
-            <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>
-              Execute this stage
-            </p>
-            <p className="text-[11px] text-gray-500 mb-3">
-              Calls <span className="font-mono" style={{ color: deskColor }}>{exportTarget.function}</span>
-              {exportTarget.entity && <> → creates/updates <span className="font-mono" style={{ color: deskColor }}>{exportTarget.entity}</span></>}
-            </p>
+          <div className="space-y-4">
+            <div>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: GOLD }}>
+                Execute
+              </p>
+              <p className="text-[11px] text-gray-500">
+                <span className="font-mono" style={{ color: deskColor }}>{exportTarget.function}</span>
+                {exportTarget.entity && <> → <span className="font-mono" style={{ color: deskColor }}>{exportTarget.entity}</span></>}
+              </p>
+            </div>
             <textarea
               value={input}
               onChange={e => setInput(e.target.value)}
-              placeholder={exportTarget.input_hint || 'Optional instructions for this run…'}
+              placeholder={exportTarget.input_hint || 'Optional instructions…'}
               rows={2}
-              className="w-full px-3 py-2 rounded-lg text-sm text-white outline-none resize-none mb-3"
-              style={{ background: '#1a1a1a', border: `1px solid ${deskColor}30` }}
+              className="w-full px-4 py-3 rounded-lg text-sm text-white outline-none resize-none"
+              style={{ background: '#1a1a1a', border: `1px solid ${deskColor}25` }}
             />
             <button
               onClick={handleExecute}
               disabled={!canExecute}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold text-black transition-all disabled:opacity-40"
+              className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-bold text-black transition-all disabled:opacity-40"
               style={{ background: deskColor }}
             >
               {executing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
               {executing ? 'Running…' : `Execute ${stage.title}`}
             </button>
-          </>
+          </div>
         ) : (
-          <div className="rounded-lg p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="rounded-lg p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <p className="text-xs text-gray-500">
               This stage is <span className="font-bold text-gray-400">advisory / manual</span>. No automated function wired yet.
             </p>
@@ -213,7 +217,7 @@ export default function WorkflowActionPanel({ stage, desk, onActionLogged }) {
 
         {/* ── LIVE STATUS ── */}
         {action && (
-          <div className="mt-4">
+          <div className="mt-5">
             <StatusBanner action={action} color={deskColor} onClearFlag={handleClearFlag} />
           </div>
         )}
@@ -222,14 +226,12 @@ export default function WorkflowActionPanel({ stage, desk, onActionLogged }) {
   );
 }
 
-function WhiteCopyRow({ icon: Icon, label, value, color }) {
+function WhiteCopyChip({ icon: Icon, label, value, color }) {
   return (
-    <div className="flex items-start gap-2.5 rounded-lg p-2.5" style={{ background: 'rgba(255,255,255,0.03)' }}>
-      <Icon className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color }} />
-      <div>
-        <p className="text-[9px] font-black tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</p>
-        <p className="text-xs text-gray-300 leading-snug">{value}</p>
-      </div>
+    <div className="flex items-center gap-1.5">
+      <Icon className="w-3 h-3 shrink-0" style={{ color, opacity: 0.6 }} />
+      <span className="text-[9px] font-black tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</span>
+      <span className="text-gray-300">{value}</span>
     </div>
   );
 }

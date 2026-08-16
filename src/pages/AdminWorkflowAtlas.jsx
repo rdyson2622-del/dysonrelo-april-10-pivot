@@ -1,48 +1,84 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink, CheckCircle2, AlertTriangle, Loader2, Circle } from 'lucide-react';
 import {
   WORKFLOW_DESKS,
   MASTER_JOURNEYS,
   getDesk,
   getFlow,
 } from '@/lib/departmentWorkflows';
+import { useStageStatuses } from '@/hooks/useStageStatuses';
 import WorkflowActionPanel from '@/components/workflow/WorkflowActionPanel';
 import WorkflowActionLog from '@/components/workflow/WorkflowActionLog';
 
 const GOLD = '#D4AF37';
 
-function Connector({ color }) {
+const STATUS_META = {
+  pending:   { color: null,       icon: Circle,        glow: false },
+  running:   { color: '#D4AF37',  icon: Loader2,        glow: true  },
+  completed: { color: '#22c55e', icon: CheckCircle2,  glow: false },
+  flagged:   { color: '#ef4444', icon: AlertTriangle,  glow: true  },
+};
+
+function Connector({ color, active }) {
   return (
     <div className="flex items-center shrink-0 px-1">
-      <div className="w-5 h-0.5" style={{ background: `${color}40` }} />
-      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color, opacity: 0.7 }} />
-      <div className="w-5 h-0.5" style={{ background: `${color}40` }} />
+      <div className="w-5 h-0.5" style={{ background: active ? color : `${color}30` }} />
+      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color, opacity: active ? 1 : 0.4 }} />
+      <div className="w-5 h-0.5" style={{ background: active ? color : `${color}30` }} />
     </div>
   );
 }
 
-function StageBox({ stage, index, color, selected, onSelect }) {
+function StageBox({ stage, index, color, selected, onSelect, status }) {
+  const meta = STATUS_META[status] || STATUS_META.pending;
+  const statusColor = meta.color;
+  const Icon = meta.icon;
+  const isPending = status === 'pending' || !status;
+
   return (
     <button
       type="button"
       onClick={() => onSelect(stage.id)}
       className="group relative shrink-0 w-40 rounded-xl border-2 p-4 text-left transition-all hover:scale-[1.03]"
       style={{
-        borderColor: selected ? color : `${color}50`,
-        background: selected ? `${color}22` : `${color}0d`,
+        borderColor: selected ? color : (statusColor ? `${statusColor}80` : `${color}50`),
+        background: selected ? `${color}22` : (statusColor ? `${statusColor}15` : `${color}0d`),
+        boxShadow: meta.glow ? `0 0 16px ${statusColor}50` : 'none',
       }}
     >
-      <div
-        className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black mb-2"
-        style={{ background: `${color}25`, border: `1px solid ${color}60`, color }}
-      >
-        {index + 1}
+      <div className="flex items-center justify-between mb-2">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black"
+          style={{ background: `${color}25`, border: `1px solid ${color}60`, color }}
+        >
+          {index + 1}
+        </div>
+        {statusColor && (
+          <div
+            className="w-6 h-6 rounded-full flex items-center justify-center"
+            style={{ background: `${statusColor}20`, border: `1px solid ${statusColor}50` }}
+          >
+            <Icon
+              className={`w-3.5 h-3.5 ${status === 'running' ? 'animate-spin' : ''}`}
+              style={{ color: statusColor }}
+            />
+          </div>
+        )}
       </div>
       <h3 className="text-sm font-serif text-white leading-tight mb-1">{stage.title}</h3>
       <p className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.55)' }}>
         {stage.plain}
       </p>
+      {status === 'flagged' && (
+        <p className="text-[9px] mt-2 font-bold" style={{ color: '#ef4444' }}>⛔ STOPPED</p>
+      )}
+      {status === 'completed' && (
+        <p className="text-[9px] mt-2 font-bold" style={{ color: '#22c55e' }}>✓ DONE</p>
+      )}
+      {status === 'running' && (
+        <p className="text-[9px] mt-2 font-bold" style={{ color: GOLD }}>● IN PROGRESS</p>
+      )}
       <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-white mt-2" />
     </button>
   );
@@ -85,6 +121,7 @@ function DepartmentView({ deskId }) {
   const desk = getDesk(deskId);
   const flow = getFlow(deskId);
   const [active, setActive] = useState(flow?.stages?.[0]?.id || null);
+  const stageStatuses = useStageStatuses(deskId);
 
   if (!desk || !flow) {
     return (
@@ -96,9 +133,13 @@ function DepartmentView({ deskId }) {
 
   const stage = flow.stages.find((s) => s.id === active) || flow.stages[0];
 
+  // Find the first running stage to auto-select it
+  const runningStage = flow.stages.find(s => stageStatuses[s.id]?.status === 'running');
+  const flaggedStage = flow.stages.find(s => stageStatuses[s.id]?.status === 'flagged');
+
   return (
     <div>
-      <div className="flex items-start gap-4 mb-6 pb-6 border-b border-white/10">
+      <div className="flex items-start gap-4 mb-8 pb-6 border-b border-white/10">
         <div
           className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0"
           style={{ background: `${desk.color}18`, border: `1px solid ${desk.color}50` }}
@@ -115,20 +156,59 @@ function DepartmentView({ deskId }) {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mb-3">Click a box. Read the English. Execute or open the page.</p>
-      <div className="flex items-stretch gap-0 overflow-x-auto pb-4">
-        {flow.stages.map((s, idx) => (
-          <React.Fragment key={s.id}>
-            <StageBox
-              stage={s}
-              index={idx}
-              color={desk.color}
-              selected={active === s.id}
-              onSelect={setActive}
-            />
-            {idx < flow.stages.length - 1 && <Connector color={desk.color} />}
-          </React.Fragment>
-        ))}
+      {/* Status alerts */}
+      {flaggedStage && (
+        <div className="rounded-xl p-3 mb-4 flex items-center gap-2" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.35)' }}>
+          <AlertTriangle className="w-4 h-4" style={{ color: '#ef4444' }} />
+          <p className="text-xs" style={{ color: '#ef4444' }}>
+            <span className="font-bold">STOPPED:</span> "{flaggedStage.title}" has a 401 flag. Flow is blocked until a human clears it.
+          </p>
+          <button
+            onClick={() => setActive(flaggedStage.id)}
+            className="ml-auto text-[10px] font-bold px-2 py-1 rounded"
+            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}
+          >
+            View flag
+          </button>
+        </div>
+      )}
+      {runningStage && runningStage.id !== active && (
+        <div className="rounded-xl p-3 mb-4 flex items-center gap-2" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <Loader2 className="w-4 h-4 animate-spin" style={{ color: GOLD }} />
+          <p className="text-xs" style={{ color: GOLD }}>
+            <span className="font-bold">IN PROGRESS:</span> "{runningStage.title}" is running right now.
+          </p>
+          <button
+            onClick={() => setActive(runningStage.id)}
+            className="ml-auto text-[10px] font-bold px-2 py-1 rounded"
+            style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
+          >
+            Watch
+          </button>
+        </div>
+      )}
+
+      <p className="text-xs text-gray-500 mb-4">Click a box to see the white copy and execute. Lights show real-time status.</p>
+      <div className="flex items-stretch gap-0 overflow-x-auto pb-6">
+        {flow.stages.map((s, idx) => {
+          const status = stageStatuses[s.id]?.status || 'pending';
+          const nextStage = flow.stages[idx + 1];
+          const nextStatus = nextStage ? (stageStatuses[nextStage.id]?.status || 'pending') : null;
+          const connectorActive = status === 'completed' || status === 'running';
+          return (
+            <React.Fragment key={s.id}>
+              <StageBox
+                stage={s}
+                index={idx}
+                color={desk.color}
+                selected={active === s.id}
+                onSelect={setActive}
+                status={status}
+              />
+              {idx < flow.stages.length - 1 && <Connector color={desk.color} active={connectorActive} />}
+            </React.Fragment>
+          );
+        })}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
