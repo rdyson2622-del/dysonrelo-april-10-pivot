@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertTriangle, Loader2, Circle, Clock,
   TrendingUp, Award, Zap, Sparkles, ArrowLeft, ExternalLink
 } from 'lucide-react';
+import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
 
 const GOLD = '#D4AF37';
 
@@ -71,7 +72,7 @@ function MasterLine({ items }) {
   );
 }
 
-function AccomplishmentCard({ item }) {
+function AccomplishmentCard({ item, onOrder }) {
   return (
     <div className="rounded-xl p-4" style={{ background: '#111', border: '1px solid rgba(34,197,94,0.25)' }}>
       <div className="flex items-start gap-3">
@@ -111,11 +112,20 @@ function AccomplishmentCard({ item }) {
           </div>
         </div>
       </div>
+      {onOrder && (
+        <button
+          onClick={() => onOrder(item)}
+          className="mt-3 flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all hover:scale-[1.02]"
+          style={{ background: 'rgba(212,175,55,0.1)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
+        >
+          <Zap className="w-3 h-3" /> I Need This Too
+        </button>
+      )}
     </div>
   );
 }
 
-function InFlightCard({ item }) {
+function InFlightCard({ item, onOrder }) {
   const cfg = STATUS_CONFIG[item.status] || STATUS_CONFIG.requested;
   const Icon = cfg.icon;
   return (
@@ -131,6 +141,15 @@ function InFlightCard({ item }) {
         {item.agi_agent && <span style={{ color: GOLD }}>{item.agi_agent}</span>}
         {item.flag_reason && <span style={{ color: '#ef4444' }}>⛔ {item.flag_reason}</span>}
       </div>
+      {onOrder && (
+        <button
+          onClick={() => onOrder(item)}
+          className="mt-2 flex items-center gap-1 text-[10px] font-bold transition-all hover:scale-[1.02]"
+          style={{ color: GOLD }}
+        >
+          <Zap className="w-2.5 h-2.5" /> Order This
+        </button>
+      )}
     </div>
   );
 }
@@ -138,6 +157,7 @@ function InFlightCard({ item }) {
 export default function MasterShowSheet() {
   const navigate = useNavigate();
   const [period, setPeriod] = useState('weekly');
+  const [orderModal, setOrderModal] = useState(null);
 
   const { data: allItems = [], isLoading } = useQuery({
     queryKey: ['subscriberRoadmaps'],
@@ -207,9 +227,18 @@ export default function MasterShowSheet() {
             <h1 className="text-3xl font-serif">Roadmaps Requested & Accomplished</h1>
             <p className="text-sm text-gray-400 mt-1">Every request, every AGI agent, every outcome — in one view.</p>
           </div>
-          <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
-            <ArrowLeft className="w-4 h-4" /> Back
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOrderModal({})}
+              className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-lg text-black transition-all hover:scale-[1.03]"
+              style={{ background: GOLD }}
+            >
+              <Zap className="w-4 h-4" /> Request a Roadmap
+            </button>
+            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          </div>
         </div>
 
         {/* Period toggle */}
@@ -256,7 +285,7 @@ export default function MasterShowSheet() {
               </p>
             ) : (
               <div className="space-y-3">
-                {accomplishments.map(item => <AccomplishmentCard key={item.id} item={item} />)}
+                {accomplishments.map(item => <AccomplishmentCard key={item.id} item={item} onOrder={setOrderModal} />)}
               </div>
             )}
           </div>
@@ -275,7 +304,7 @@ export default function MasterShowSheet() {
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {inFlight.map(item => <InFlightCard key={item.id} item={item} />)}
+                  {inFlight.map(item => <InFlightCard key={item.id} item={item} onOrder={setOrderModal} />)}
                 </div>
               )}
             </div>
@@ -304,6 +333,13 @@ export default function MasterShowSheet() {
           </div>
         </div>
       </div>
+      {orderModal && (
+        <OrderFlowModal
+          prefill={orderModal}
+          onClose={() => setOrderModal(null)}
+          onOrdered={() => setOrderModal(null)}
+        />
+      )}
     </div>
   );
 }
