@@ -154,10 +154,7 @@ export default function BrokerageDashboard() {
         {/* ── Communication pill — speak or type to message the platform team ── */}
         <BrokerageCommPill />
 
-        <div className="h-3" />
 
-        {/* ── Clickless command pill — voice or text, auto-routes ── */}
-        <BrokerageCommandPill brokerageName={brokerage?.name} />
 
         {/* ── Five live animated roadmap demos ── */}
         <div className="max-w-5xl w-full mt-6">
