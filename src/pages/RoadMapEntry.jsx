@@ -5,6 +5,7 @@ import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
+import DnDLogo from '@/components/brand/DnDLogo';
 import {
   ArrowRight, Home, Compass, MapPin, X, CheckCircle2,
   AlertTriangle, Star, Building2, User
@@ -173,10 +174,13 @@ export default function RoadMapEntry() {
       {/* ── Hero ── */}
       <main className="flex-1 flex flex-col items-center px-6 pt-16 pb-12">
         <div className="max-w-4xl w-full text-center">
+          <div className="flex justify-center mb-4">
+            <DnDLogo size="sm" />
+          </div>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>
-          <h1 className="text-5xl md:text-6xl font-serif mb-5 leading-tight">
+          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight">
             {copy.title}
             <br />
             <span className="gold-text-gradient">{copy.titleAccent}</span>
