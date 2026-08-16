@@ -43,6 +43,10 @@
       "type": "string",
       "description": "Main contact email"
     },
+    "office_address": {
+      "type": "string",
+      "description": "Brokerage office street address (shown on the co-branded portal)"
+    },
     "boldtrail_subdomain": {
       "type": "string",
       "description": "Their BoldTrail BackOffice subdomain (e.g. wisdom.brokermint.com) \u2014 identifies which BackOffice account to sync"
