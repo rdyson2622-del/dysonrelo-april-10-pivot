@@ -98,7 +98,16 @@
     },
     "flag_reason": {
       "type": "string",
-      "description": "Why this item is blocked/flagged (401 auth, error, timeout, etc.)"
+      "description": "Why this item is blocked/flagged (401 auth, error, timeout, human deadline breach, etc.)"
+    },
+    "flag_source": {
+      "type": "string",
+      "enum": [
+        "agi",
+        "human_accountability"
+      ],
+      "default": "agi",
+      "description": "Who or what caused the flag. agi = AGI agent/system issue (401, error, timeout). human_accountability = a human in the chain (selected agent, closer, marketer) missed a deadline or contract expectation \u2014 caught by the real-time monitor."
     },
     "period": {
       "type": "string",

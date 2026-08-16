@@ -128,11 +128,17 @@ function AccomplishmentCard({ item, onOrder }) {
 function InFlightCard({ item, onOrder }) {
   const cfg = STATUS_CONFIG[item.status] || STATUS_CONFIG.requested;
   const Icon = cfg.icon;
+  const isHumanFlag = item.flag_source === 'human_accountability';
   return (
-    <div className="rounded-xl p-3" style={{ background: '#111', border: `1px solid ${cfg.color}30` }}>
+    <div className="rounded-xl p-3" style={{ background: '#111', border: `1px solid ${isHumanFlag ? '#ef4444' : cfg.color}30` }}>
       <div className="flex items-center gap-2 mb-1">
         <Icon className={`w-4 h-4 ${cfg.spin ? 'animate-spin' : ''}`} style={{ color: cfg.color }} />
         <span className="text-[9px] font-black tracking-widest uppercase" style={{ color: cfg.color }}>{cfg.label}</span>
+        {isHumanFlag && (
+          <span className="text-[8px] px-1.5 py-0.5 rounded font-black animate-pulse" style={{ background: 'rgba(239,68,68,0.2)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.5)' }}>
+            ⚠ HUMAN
+          </span>
+        )}
         {item.is_dummy && <span className="text-[8px] px-1 py-0.5 rounded font-bold ml-auto" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: `1px solid ${GOLD}40` }}>MODEL</span>}
       </div>
       <h3 className="text-sm font-serif text-white mb-1">{item.title}</h3>
