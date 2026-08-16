@@ -1,0 +1,96 @@
+{
+  "name": "GrokDispatch",
+  "type": "object",
+  "properties": {
+    "admin_message": {
+      "type": "string",
+      "description": "The original request from the admin"
+    },
+    "orchestrator_id": {
+      "type": "string",
+      "enum": [
+        "chief",
+        "bob",
+        "jay"
+      ],
+      "description": "Which orchestrator handled this dispatch"
+    },
+    "orchestrator_name": {
+      "type": "string",
+      "description": "Denormalized orchestrator display name"
+    },
+    "orchestrator_color": {
+      "type": "string",
+      "description": "Denormalized orchestrator display color (hex)"
+    },
+    "specialist_id": {
+      "type": "string",
+      "description": "Which specialist was routed to (null if respond_directly)"
+    },
+    "specialist_name": {
+      "type": "string",
+      "description": "Denormalized specialist display name (null if respond_directly)"
+    },
+    "specialist_color": {
+      "type": "string",
+      "description": "Denormalized specialist display color (null if respond_directly)"
+    },
+    "routing_reason": {
+      "type": "string",
+      "description": "Why this specialist was chosen"
+    },
+    "specialist_response": {
+      "type": "string",
+      "description": "The specialist's answer (null if respond_directly)"
+    },
+    "orchestrator_response": {
+      "type": "string",
+      "description": "The routing decision text shown to the admin"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "delegate",
+        "respond_directly"
+      ],
+      "description": "Whether the orchestrator delegated to a specialist or responded directly"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed"
+      ],
+      "default": "completed",
+      "description": "Dispatch outcome"
+    }
+  },
+  "required": [
+    "admin_message",
+    "orchestrator_id",
+    "action",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

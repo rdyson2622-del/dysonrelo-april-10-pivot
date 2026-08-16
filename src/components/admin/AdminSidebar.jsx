@@ -13,6 +13,7 @@ import { base44 } from '@/api/base44Client';
 import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
 import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
+import AdminDispatchWidget from '@/components/admin/AdminDispatchWidget';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
@@ -339,6 +340,9 @@ export default function AdminSidebar() {
           <span className="text-center leading-tight">COMMAND<br/>CENTER</span>
         </Link>
       </div>
+
+      {/* Recent Grok Dispatches — live feed from the Command Center */}
+      <AdminDispatchWidget />
 
       {/* ── VIEW AS: Master Key Action Boxes ── */}
       <div className="px-3 pt-3 pb-2 shrink-0">
