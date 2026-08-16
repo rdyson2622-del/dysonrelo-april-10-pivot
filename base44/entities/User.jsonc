@@ -19,13 +19,14 @@
         "referral_agent",
         "vendor",
         "hr",
-        "brokerage_admin"
+        "brokerage_admin",
+        "broker"
       ],
-      "description": "The single portal this subscribed user is assigned to. brokerage_admin = manages a subscribed brokerage firm (sees only their brokerage's data)"
+      "description": "The single portal this subscribed user is assigned to. brokerage_admin = managing broker (full data review/input for their brokerage). broker = broker (not managing, limited input). agent = agent under a brokerage."
     },
     "brokerage_id": {
       "type": "string",
-      "description": "For brokerage_admin users: the Brokerage entity ID this user is scoped to. Platform admins leave this empty."
+      "description": "For brokerage users: the Brokerage entity ID this user is scoped to. Platform admins leave this empty."
     },
     "is_suspended": {
       "type": "boolean",

@@ -34,15 +34,16 @@ export default function BrokerageDashboard() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;
   const { data: brokerage } = useQuery({
-    queryKey: ['brokeragePortal', user?.id, user?.data?.brokerage_id],
+    queryKey: ['brokeragePortal', user?.id, userBrokerageId],
     queryFn: async () => {
       if (user?.role === 'admin') {
         const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
         return list?.[0] || null;
       }
-      if (user?.data?.brokerage_id) {
-        return await base44.entities.Brokerage.get(user.data.brokerage_id);
+      if (userBrokerageId) {
+        return await base44.entities.Brokerage.get(userBrokerageId);
       }
       return null;
     },

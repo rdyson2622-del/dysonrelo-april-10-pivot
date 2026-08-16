@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Shield, Building2, Users, Megaphone, Star,
   ArrowLeft, Loader2, Home
 } from 'lucide-react';
+import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 
 const GOLD = '#D4AF37';
 
@@ -27,16 +28,18 @@ export default function BrokerageLayout() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
-  // Fetch the brokerage record — admin sees the first (Wisdom), brokerage_admin sees their own
+  const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;
+
+  // Fetch the brokerage record — admin sees the first (Wisdom), brokerage users see their own
   const { data: brokerage, isLoading } = useQuery({
-    queryKey: ['brokeragePortal', user?.id, user?.data?.brokerage_id],
+    queryKey: ['brokeragePortal', user?.id, userBrokerageId],
     queryFn: async () => {
       if (user?.role === 'admin') {
         const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
         return list?.[0] || null;
       }
-      if (user?.data?.brokerage_id) {
-        return await base44.entities.Brokerage.get(user.data.brokerage_id);
+      if (userBrokerageId) {
+        return await base44.entities.Brokerage.get(userBrokerageId);
       }
       return null;
     },
@@ -52,6 +55,11 @@ export default function BrokerageLayout() {
   }
 
   const isPlatformAdmin = user.role === 'admin';
+
+  // Gate: non-admin users without a brokerage_id must complete onboarding first
+  if (!isPlatformAdmin && !userBrokerageId) {
+    return <BrokerageOnboarding />;
+  }
 
   return (
     <div className="min-h-screen flex" style={{ background: '#0a0a0a' }}>
@@ -132,7 +140,7 @@ export default function BrokerageLayout() {
         <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 sticky top-0 z-10" style={{ background: '#0a0a0a' }}>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>
-              Brokerage Portal
+              Broker/Agent Portal
             </span>
             {isPlatformAdmin && (
               <span className="text-[9px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
