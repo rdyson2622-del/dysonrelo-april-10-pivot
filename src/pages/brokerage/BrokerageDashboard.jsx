@@ -148,6 +148,8 @@ export default function BrokerageDashboard() {
           </p>
         </div>
 
+        <div className="h-10" />
+
         {/* ── Clickless command pill — voice or text, auto-routes ── */}
         <BrokerageCommandPill brokerageName={brokerage?.name} />
 

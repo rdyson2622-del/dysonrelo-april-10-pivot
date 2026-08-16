@@ -168,7 +168,8 @@ User command: "${cmd.replace(/"/g, "'")}"`,
               }
             }}
             placeholder={listening ? 'Listening…' : 'Speak or type — "take me to listings and my property on Liberty street"'}
-            className="flex-1 bg-transparent text-white text-sm outline-none placeholder-gray-600"
+            className="flex-1 bg-transparent text-sm outline-none placeholder-stone-300"
+            style={{ color: '#f5f5f0' }}
             disabled={routing}
           />
 
