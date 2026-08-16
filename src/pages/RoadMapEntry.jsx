@@ -176,13 +176,13 @@ export default function RoadMapEntry() {
       <main className="flex-1 flex flex-col items-center px-6 pt-16 pb-12">
         <div className="max-w-4xl w-full text-center">
           <div className="flex justify-center mb-4">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '60px', width: 'auto' }} />
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
           </div>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>
-          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight">
-            {copy.title} <span className="gold-text-gradient">{copy.titleAccent}</span>
+          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight text-white">
+            {copy.title} {copy.titleAccent}
           </h1>
           {copy.subtitle && (
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
