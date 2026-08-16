@@ -1,0 +1,163 @@
+{
+  "name": "SubscriberRoadmap",
+  "type": "object",
+  "properties": {
+    "subscriber_id": {
+      "type": "string",
+      "description": "Reference to the subscriber's user/client ID"
+    },
+    "subscriber_name": {
+      "type": "string",
+      "description": "Denormalized subscriber display name"
+    },
+    "subscriber_type": {
+      "type": "string",
+      "enum": [
+        "dnn_subscriber",
+        "relocation_client",
+        "vetted_partner",
+        "agent",
+        "admin"
+      ],
+      "default": "relocation_client",
+      "description": "What kind of subscriber owns this roadmap item"
+    },
+    "title": {
+      "type": "string",
+      "description": "Roadmap item title \u2014 what was requested or accomplished"
+    },
+    "desk_id": {
+      "type": "string",
+      "description": "Which department desk handled this (marketing, operations, sales, dnn, finance, knowledge)"
+    },
+    "desk_name": {
+      "type": "string",
+      "description": "Denormalized desk name for display"
+    },
+    "request_text": {
+      "type": "string",
+      "description": "The original request from the subscriber"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "queued",
+        "in_progress",
+        "completed",
+        "flagged",
+        "cancelled"
+      ],
+      "default": "requested",
+      "description": "Lifecycle: requested=submitted, queued=accepted by AGI, in_progress=AGI working, completed=done, flagged=blocked (401), cancelled=withdrawn"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "agi_agent": {
+      "type": "string",
+      "description": "Which AGI agent/specialist handled this request"
+    },
+    "agi_agent_color": {
+      "type": "string",
+      "description": "Denormalized AGI agent display color (hex)"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the subscriber requested this"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AGI agent started working on it"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When it was completed"
+    },
+    "duration_ms": {
+      "type": "number",
+      "description": "Total time from request to completion in milliseconds"
+    },
+    "result_summary": {
+      "type": "string",
+      "description": "What was accomplished \u2014 the outcome shown on the show sheet"
+    },
+    "result_url": {
+      "type": "string",
+      "description": "Link to the deliverable (video, document, broadcast, city guide, etc.)"
+    },
+    "flag_reason": {
+      "type": "string",
+      "description": "Why this item is blocked/flagged (401 auth, error, timeout, etc.)"
+    },
+    "period": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "default": "weekly",
+      "description": "Reporting period this item belongs to for the show sheet"
+    },
+    "is_dummy": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, this is a placeholder model showing what a show sheet looks like. Real requests replace dummies visually \u2014 if any non-dummy items exist for a subscriber, dummies are hidden. When all real items complete, dummies reappear as the model."
+    }
+  },
+  "required": [
+    "subscriber_id",
+    "title",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.is_dummy": true
+        },
+        {
+          "data.subscriber_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "data.subscriber_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

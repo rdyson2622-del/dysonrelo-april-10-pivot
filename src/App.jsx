@@ -137,6 +137,7 @@ import AdminGrokCommand from './pages/AdminGrokCommand';
 import AdminDispatchLog from './pages/AdminDispatchLog';
 import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
+import MasterShowSheet from './pages/MasterShowSheet';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -220,6 +221,7 @@ const AuthenticatedApp = () => {
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
         <Route path="/subscribe" element={<Subscribe />} />
+      <Route path="/master-show-sheet" element={<MasterShowSheet />} />
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
@@ -315,6 +317,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/grok-command" element={<AdminGrokCommand />} />
         <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
         <Route path="/admin/roadmap" element={<RoadMapToCompletion />} />
+        <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
       </Route>
       
       <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
