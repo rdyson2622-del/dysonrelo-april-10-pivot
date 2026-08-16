@@ -223,14 +223,14 @@ export default function RoadMapEntry() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder={selectedPill.placeholder}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 pr-36 text-white text-base placeholder-gray-500 focus:outline-none focus:border-dyson-gold/50 transition-colors"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl px-8 py-5 pr-48 text-white text-xl placeholder-gray-500 focus:outline-none focus:border-dyson-gold/50 transition-colors"
             />
             <button
               onClick={handleSubmit}
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gold-btn text-sm font-bold"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl gold-btn text-lg font-bold"
             >
               Map My Route
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
 
