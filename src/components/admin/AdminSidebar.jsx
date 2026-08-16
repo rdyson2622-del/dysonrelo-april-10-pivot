@@ -279,6 +279,22 @@ export default function AdminSidebar() {
         </div>
       </div>
 
+      {/* Grok Specialist Command Center — top of sidebar */}
+      <div className="px-3 pt-3 pb-2 shrink-0">
+        <Link
+          to="/admin/grok-command"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+          style={{
+            background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Bot className="w-4 h-4" />
+          🤖 Grok Specialist Command
+        </Link>
+      </div>
+
       {/* ── VIEW AS: Master Key Action Boxes ── */}
       <div className="px-3 pt-3 pb-2 shrink-0">
         <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: '#D4AF37' }}>View Portal As:</p>
@@ -376,21 +392,7 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Grok Specialist Command Center — always visible */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/admin/grok-command"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Bot className="w-4 h-4" />
-          🤖 Grok Specialist Command
-        </Link>
-      </div>
+
 
       {/* Connect AI Assistant — always visible */}
       <div className="px-3 pt-1 pb-1">
