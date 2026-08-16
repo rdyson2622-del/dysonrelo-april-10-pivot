@@ -16,7 +16,7 @@ const STATUS_CONFIG = {
 
 export default function FlowRoadmapLine({ stages, stageStatuses, color, activeStageId, onSelect, compact = false }) {
   const m = compact
-    ? { active: 28, normal: 22, iconA: 'w-3.5 h-3.5', iconN: 'w-3 h-3', labelW: 76, lineH: 34, title: 'text-[10px]', status: 'text-[7px]', margin: 'mb-5 mt-1' }
+    ? { active: 18, normal: 14, iconA: 'w-2 h-2', iconN: 'w-1.5 h-1.5', labelW: 52, lineH: 20, title: 'text-[7px]', status: 'text-[5px]', margin: 'mb-2 mt-0.5' }
     : { active: 42, normal: 34, iconA: 'w-5 h-5', iconN: 'w-4 h-4', labelW: 130, lineH: 52, title: 'text-xs', status: 'text-[8px]', margin: 'mb-10 mt-2' };
   const safeStages = stages || [];
   const safeStatuses = stageStatuses || {};

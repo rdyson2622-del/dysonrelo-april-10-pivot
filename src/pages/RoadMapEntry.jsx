@@ -121,7 +121,6 @@ export default function RoadMapEntry() {
   const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
   const exploreFlowDemo = EXPLORE_FLOW;
   const { statuses: exploreStatuses, activeStageId: exploreActive } = useAnimatedDemoStatuses(exploreFlowDemo?.stages);
-  const [demoMode, setDemoMode] = useState('issues');
 
   const handleSubmit = () => {
     if (!inputValue.trim()) return;
@@ -239,61 +238,21 @@ export default function RoadMapEntry() {
           </p>
         </div>
 
-        {/* ── Two live animated roadmap demos ── */}
-        <div className="max-w-5xl w-full mt-14">
-          <div className="flex flex-col items-center gap-4 mb-5">
+        {/* ── Three live animated roadmap demos ── */}
+        <div className="max-w-5xl w-full mt-10">
+          <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
               ● Live Demo — Here's what your roadmap looks like
             </span>
-            {/* Toggle between Issues and Relocation */}
-            <div className="inline-flex rounded-full p-1" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <button
-                onClick={() => setDemoMode('issues')}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
-                style={{
-                  background: demoMode === 'issues' ? `${GOLD}20` : 'transparent',
-                  border: `1.5px solid ${demoMode === 'issues' ? GOLD : 'transparent'}`,
-                  color: demoMode === 'issues' ? GOLD : '#888',
-                }}
-              >
-                <Home className="w-4 h-4" />
-                Real Estate Issue
-              </button>
-              <button
-                onClick={() => setDemoMode('relocation')}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
-                style={{
-                  background: demoMode === 'relocation' ? 'rgba(16,185,129,0.18)' : 'transparent',
-                  border: `1.5px solid ${demoMode === 'relocation' ? '#10b981' : 'transparent'}`,
-                  color: demoMode === 'relocation' ? '#10b981' : '#888',
-                }}
-              >
-                <Compass className="w-4 h-4" />
-                Relocation
-              </button>
-              <button
-                onClick={() => setDemoMode('explore')}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
-                style={{
-                  background: demoMode === 'explore' ? 'rgba(56,189,248,0.18)' : 'transparent',
-                  border: `1.5px solid ${demoMode === 'explore' ? '#38bdf8' : 'transparent'}`,
-                  color: demoMode === 'explore' ? '#38bdf8' : '#888',
-                }}
-              >
-                <MapPin className="w-4 h-4" />
-                Explore City
-              </button>
-            </div>
           </div>
 
-          <div
-            className="rounded-2xl p-3 sm:p-6 transition-colors duration-500"
-            style={{
-              background: '#0a0a0a',
-              border: `1px solid ${demoMode === 'issues' ? `${GOLD}30` : demoMode === 'relocation' ? 'rgba(16,185,129,0.30)' : 'rgba(56,189,248,0.30)'}`,
-            }}
-          >
-            {demoMode === 'issues' ? (
+          <div className="space-y-2.5">
+            {/* Issues */}
+            <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: `1px solid ${GOLD}30` }}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <Home className="w-3 h-3" style={{ color: GOLD }} />
+                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>Real Estate Issue</span>
+              </div>
               <FlowRoadmapLine
                 stages={issuesFlow?.stages || []}
                 stageStatuses={issuesStatuses}
@@ -302,7 +261,14 @@ export default function RoadMapEntry() {
                 onSelect={() => {}}
                 compact
               />
-            ) : demoMode === 'relocation' ? (
+            </div>
+
+            {/* Relocation */}
+            <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(16,185,129,0.30)' }}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <Compass className="w-3 h-3" style={{ color: '#10b981' }} />
+                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: '#10b981' }}>Relocation</span>
+              </div>
               <FlowRoadmapLine
                 stages={relocationFlow?.stages || []}
                 stageStatuses={relocationStatuses}
@@ -311,7 +277,14 @@ export default function RoadMapEntry() {
                 onSelect={() => {}}
                 compact
               />
-            ) : (
+            </div>
+
+            {/* Explore City */}
+            <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(56,189,248,0.30)' }}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <MapPin className="w-3 h-3" style={{ color: '#38bdf8' }} />
+                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: '#38bdf8' }}>Explore City</span>
+              </div>
               <FlowRoadmapLine
                 stages={exploreFlowDemo?.stages || []}
                 stageStatuses={exploreStatuses}
@@ -320,35 +293,28 @@ export default function RoadMapEntry() {
                 onSelect={() => {}}
                 compact
               />
-            )}
-            <div className="grid grid-cols-3 gap-4 mt-2">
-              <div className="text-center">
-                <div
-                  className="w-8 h-8 rounded-full mx-auto mb-2 flex items-center justify-center"
-                  style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid #22c55e' }}
-                >
-                  <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
-                </div>
-                <p className="text-[10px] text-gray-500">Green = Done</p>
+            </div>
+          </div>
+
+          {/* Mini legend */}
+          <div className="flex justify-center gap-4 mt-3">
+            <div className="flex items-center gap-1.5">
+              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid #22c55e' }}>
+                <CheckCircle2 className="w-2.5 h-2.5" style={{ color: '#22c55e' }} />
               </div>
-              <div className="text-center">
-                <div
-                  className="w-8 h-8 rounded-full mx-auto mb-2 flex items-center justify-center animate-pulse"
-                  style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid #D4AF37' }}
-                >
-                  <span className="w-2 h-2 rounded-full" style={{ background: '#D4AF37' }} />
-                </div>
-                <p className="text-[10px] text-gray-500">Gold = In Progress</p>
+              <span className="text-[9px] text-gray-500">Done</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-4 h-4 rounded-full flex items-center justify-center animate-pulse" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid #D4AF37' }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#D4AF37' }} />
               </div>
-              <div className="text-center">
-                <div
-                  className="w-8 h-8 rounded-full mx-auto mb-2 flex items-center justify-center"
-                  style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444' }}
-                >
-                  <AlertTriangle className="w-4 h-4" style={{ color: '#ef4444' }} />
-                </div>
-                <p className="text-[10px] text-gray-500">Red = Stopped (401)</p>
+              <span className="text-[9px] text-gray-500">In Progress</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444' }}>
+                <AlertTriangle className="w-2.5 h-2.5" style={{ color: '#ef4444' }} />
               </div>
+              <span className="text-[9px] text-gray-500">Stopped (401)</span>
             </div>
           </div>
         </div>
