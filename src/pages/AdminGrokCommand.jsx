@@ -139,7 +139,7 @@ export default function AdminGrokCommand() {
             <button onClick={() => navigate('/admin')} className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Admin
             </button>
-            <h1 className="text-2xl font-bold text-white">Grok Specialist Command Center</h1>
+            <h1 className="text-2xl font-bold text-white">Command Center</h1>
             <p className="text-sm text-slate-400 mt-1">Pecking order · Communicate with any specialist · Watch responses in real-time</p>
           </div>
         </div>
