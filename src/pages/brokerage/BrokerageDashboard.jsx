@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import BrokerageCommandPill from '@/components/brokerage/BrokerageCommandPill';
 import {
   Shield, Building2, Users, Megaphone, Star, ArrowRight,
   AlertTriangle, CheckCircle2, Clock, Loader2
@@ -147,8 +148,11 @@ export default function BrokerageDashboard() {
           </p>
         </div>
 
+        {/* ── Clickless command pill — voice or text, auto-routes ── */}
+        <BrokerageCommandPill brokerageName={brokerage?.name} />
+
         {/* ── Five live animated roadmap demos ── */}
-        <div className="max-w-5xl w-full mt-10">
+        <div className="max-w-5xl w-full mt-6">
           <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
               ● Live — Your five brokerage roadmaps
