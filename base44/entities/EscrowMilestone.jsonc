@@ -2,6 +2,10 @@
   "name": "EscrowMilestone",
   "type": "object",
   "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "The Brokerage entity ID this milestone belongs to. Set by sync functions. Platform admins see all; brokerage_admin users see only their own."
+    },
     "client_id": {
       "type": "string",
       "description": "Associated RelocationClient ID"
@@ -103,19 +107,40 @@
   ],
   "rls": {
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "create": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "delete": {
       "user_condition": {
