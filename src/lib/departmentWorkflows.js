@@ -180,8 +180,8 @@ export const DEPARTMENT_FLOWS = {
 
   sales: {
     title: 'REFERRAL AGENT RECRUITING FLOW',
-    audience: 'New IT · how independent agents become the national desk',
-    story: 'Dyson is the relo department boutique firms do not have. They keep 25%. We manage the move. Agreements stay clean.',
+    audience: 'A New AGI - IT  approach to Relocation· This is how how independent Brokerage agents become members of the national desk',
+    story: 'DysonRelo.com  becomes the National Relocation Department for boutique firms in every city in all 50 states. The referring agent keeps 25%. We manage the move for a management fee paid by the receiving agent. Agreements stay clean.',
     stages: [
       {
         id: 'recruit',
