@@ -105,6 +105,23 @@ export default function BrokerageDashboard() {
     refetchInterval: 30000,
   });
 
+  // Live-data detection per flow — distinguishes real records from animated demos
+  const { data: listings = [] } = useQuery({
+    queryKey: ['brokerageLiveListings'],
+    queryFn: () => base44.entities.ListingImport.list('-created_date', 50).catch(() => []),
+    refetchInterval: 60000,
+  });
+  const { data: agents = [] } = useQuery({
+    queryKey: ['brokerageLiveAgents'],
+    queryFn: () => base44.entities.VettedPartner.filter({ status: 'active' }, '-created_date', 50).catch(() => []),
+    refetchInterval: 60000,
+  });
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['brokerageLiveCampaigns'],
+    queryFn: () => base44.entities.MarketingCampaign.list('-created_date', 50).catch(() => []),
+    refetchInterval: 60000,
+  });
+
   // Animated statuses for each of the five roadmaps
   const escrowAnim = useAnimatedDemoStatuses(ESCROW_FLOW.stages);
   const listingsAnim = useAnimatedDemoStatuses(LISTINGS_FLOW.stages);
@@ -119,6 +136,16 @@ export default function BrokerageDashboard() {
     marketing: marketingAnim,
     luxury: luxuryAnim,
   };
+
+  // Which roadmaps have real data backing them (vs. animated demos/dummies)
+  const liveMap = {
+    escrow: milestones.length > 0,
+    listings: listings.length > 0,
+    agents: agents.length > 0,
+    marketing: campaigns.length > 0,
+    luxury: false,
+  };
+  const liveCount = Object.values(liveMap).filter(Boolean).length;
 
   const today = new Date();
   const atRisk = milestones.filter(m => {
@@ -159,22 +186,40 @@ export default function BrokerageDashboard() {
         {/* ── Five live animated roadmap demos ── */}
         <div className="max-w-5xl w-full mt-6">
           <div className="flex flex-col items-center gap-2 mb-4">
-            <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
-              ● Live — Your five brokerage roadmaps
-            </span>
+            {liveCount > 0 ? (
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.4)', color: '#22c55e' }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                LIVE — {liveCount} roadmap{liveCount !== 1 ? 's' : ''} streaming real data
+              </span>
+            ) : (
+              <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#666' }}>
+                ○ Demo — animated roadmaps (connect data sources to go live)
+              </span>
+            )}
           </div>
 
           <div className="space-y-2.5">
             {SUB_ITEMS.map(item => {
               const Icon = item.icon;
               const anim = animMap[item.id];
+              const isLive = liveMap[item.id];
               return (
                 <div
                   key={item.id}
-                  className="rounded-xl p-2 sm:p-3 cursor-pointer transition-all hover:scale-[1.005]"
-                  style={{ background: '#0a0a0a', border: `1px solid ${item.color}30` }}
+                  className="rounded-xl p-2 sm:p-3 cursor-pointer transition-all hover:scale-[1.005] relative"
+                  style={{
+                    background: '#0a0a0a',
+                    border: isLive ? `1.5px solid #22c55e` : `1px solid ${item.color}30`,
+                    boxShadow: isLive ? '0 0 16px rgba(34,197,94,0.15)' : 'none',
+                  }}
                   onClick={() => navigate(item.path)}
                 >
+                  {isLive && (
+                    <div className="absolute top-0 right-0 flex items-center gap-1 px-2 py-0.5 rounded-bl-lg rounded-tr-xl text-[8px] font-black tracking-widest uppercase" style={{ background: '#22c55e', color: '#0a0a0a' }}>
+                      <span className="w-1 h-1 rounded-full bg-black/60 animate-pulse" />
+                      LIVE
+                    </div>
+                  )}
                   <button
                     onClick={(e) => { e.stopPropagation(); navigate(item.path); }}
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
@@ -196,7 +241,10 @@ export default function BrokerageDashboard() {
                     onSelect={() => {}}
                     compact
                   />
-                  <p className="text-[10px] text-gray-600 mt-1 px-1">{item.tagline}</p>
+                  <p className="text-[10px] text-gray-600 mt-1 px-1">
+                    {isLive ? <span style={{ color: '#22c55e' }}>● Live data · </span> : <span style={{ color: '#555' }}>○ Demo · </span>}
+                    {item.tagline}
+                  </p>
                 </div>
               );
             })}
