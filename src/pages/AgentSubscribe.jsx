@@ -125,7 +125,7 @@ export default function AgentSubscribe() {
         {/* Dummy active relocation process roadmap */}
         <div className="max-w-3xl mx-auto mt-8 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(16,185,129,0.25)' }}>
           <p className="text-[10px] font-black tracking-widest uppercase mb-2 text-center" style={{ color: '#10b981' }}>
-            ● Live — Your Relocation Process Roadmap
+            ● Live — Your AGI Assisted Fully Automated Progressive Relocation Roadmap
           </p>
           <FlowRoadmapLine
             stages={relocationFlow?.stages || []}
