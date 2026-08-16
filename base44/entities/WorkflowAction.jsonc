@@ -1,0 +1,123 @@
+{
+  "name": "WorkflowAction",
+  "type": "object",
+  "properties": {
+    "desk_id": {
+      "type": "string",
+      "description": "Department desk id (marketing, operations, sales, dnn, finance, knowledge)"
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "Stage id within the desk flow (e.g. write, render, publish)"
+    },
+    "stage_title": {
+      "type": "string",
+      "description": "Denormalized stage title for display"
+    },
+    "desk_name": {
+      "type": "string",
+      "description": "Denormalized desk name for display"
+    },
+    "input_text": {
+      "type": "string",
+      "description": "Free-text input the operator typed before executing"
+    },
+    "input_payload": {
+      "type": "object",
+      "description": "Structured input sent to the backend function"
+    },
+    "function_name": {
+      "type": "string",
+      "description": "Backend function that was invoked"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "flagged"
+      ],
+      "default": "pending",
+      "description": "Execution lifecycle: pending=queued, running=in flight, completed=success, failed=error, flagged=401 blocked"
+    },
+    "output": {
+      "type": "string",
+      "description": "Text result returned by the function"
+    },
+    "output_payload": {
+      "type": "object",
+      "description": "Structured result returned by the function"
+    },
+    "flag_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "auth_401",
+        "error",
+        "timeout",
+        "data_missing"
+      ],
+      "default": "none",
+      "description": "401 flag mechanism \u2014 blocks the flow until a human clears it. auth_401=permissions/credit issue, error=function error, timeout=no response, data_missing=required data absent"
+    },
+    "flag_reason": {
+      "type": "string",
+      "description": "Human-readable explanation of why the flag fired"
+    },
+    "flag_cleared": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a human has cleared the flag allowing the flow to continue"
+    },
+    "flag_cleared_by": {
+      "type": "string",
+      "description": "Admin email who cleared the flag"
+    },
+    "flag_cleared_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the flag was cleared"
+    },
+    "entity_ref": {
+      "type": "string",
+      "description": "Reference to created/updated entity (e.g. 'DnnBroadcast:abc123')"
+    },
+    "specialist_id": {
+      "type": "string",
+      "description": "Which specialist/ orchestrator handled this action"
+    },
+    "duration_ms": {
+      "type": "number",
+      "description": "Execution duration in milliseconds"
+    }
+  },
+  "required": [
+    "desk_id",
+    "stage_id",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

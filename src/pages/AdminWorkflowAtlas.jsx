@@ -7,6 +7,8 @@ import {
   getDesk,
   getFlow,
 } from '@/lib/departmentWorkflows';
+import WorkflowActionPanel from '@/components/workflow/WorkflowActionPanel';
+import WorkflowActionLog from '@/components/workflow/WorkflowActionLog';
 
 const GOLD = '#D4AF37';
 
@@ -113,7 +115,7 @@ function DepartmentView({ deskId }) {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 mb-3">Click a box. Read the English. Then open the page.</p>
+      <p className="text-xs text-gray-500 mb-3">Click a box. Read the English. Execute or open the page.</p>
       <div className="flex items-stretch gap-0 overflow-x-auto pb-4">
         {flow.stages.map((s, idx) => (
           <React.Fragment key={s.id}>
@@ -129,7 +131,14 @@ function DepartmentView({ deskId }) {
         ))}
       </div>
 
-      <StageDetail stage={stage} color={desk.color} />
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <WorkflowActionPanel stage={stage} desk={desk} />
+        </div>
+        <div>
+          <WorkflowActionLog deskId={desk.id} color={desk.color} />
+        </div>
+      </div>
     </div>
   );
 }
