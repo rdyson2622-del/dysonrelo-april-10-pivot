@@ -24,6 +24,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
