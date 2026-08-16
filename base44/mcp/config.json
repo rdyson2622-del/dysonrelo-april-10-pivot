@@ -132,6 +132,215 @@
           "required": ["list_agent_name", "broker_name", "property_address"]
         },
         "annotations": { "read_only_hint": true, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "run_higgsfield_daily_show",
+        "title": "Run Higgsfield daily show",
+        "description": "Triggers the daily DNN news show generation using the Higgsfield + 11 Labs pipeline. Gathers today's published article headlines, creates a DnnBroadcast record, and fires the n8n webhook to render the full show (Gemini script, Higgsfield video, 11 Labs audio, stitched MP4). No parameters — runs automatically on schedule but can be triggered manually. Admin only.",
+        "handler": "dnnHiggsfieldDailyShow",
+        "input_schema": { "type": "object", "properties": {} },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "start_daily_video_pipeline",
+        "title": "Start daily video pipeline",
+        "description": "Creates a DnnBroadcast record and fires the n8n webhook to start the Higgsfield + 11 Labs render pipeline. Optionally pass prompt_topics to override the default (today's published article headlines). n8n generates the script, renders the video, generates audio, stitches 3 scenes into one MP4, and calls back with the result. Admin only.",
+        "handler": "dnnDailyVideoPipeline",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "prompt_topics": { "type": "string", "description": "Optional topics/headlines override. If omitted, uses today's published article headlines." }
+          },
+          "required": []
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "rerun_broadcast",
+        "title": "Rerun a botched broadcast",
+        "description": "Re-dispatches an existing DnnBroadcast through the n8n Higgsfield + 11 Labs pipeline. Use this when a show's stitched video has scenes in the wrong order or the render came out wrong. Resets the broadcast to 'processing', clears stale video state, and re-fires the n8n webhook with explicit intro-content-outro scene ordering. Admin only.",
+        "handler": "dnnRerunShow",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "broadcast_id": { "type": "string", "description": "The DnnBroadcast record id to re-render." }
+          },
+          "required": ["broadcast_id"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "distribute_broadcast_to_audience",
+        "title": "Distribute broadcast to B2B audience",
+        "description": "Sends a finished DNN broadcast to a B2B audience (e.g. Corporate HR Managers) via Gmail. Fetches all active AudienceContact records for the given audience_id and sends a personalized email to each. Skips bounced/unsubscribed contacts. Records each send in the broadcast's distribution array. Admin only.",
+        "handler": "dnnAudienceDistribute",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "broadcast_id": { "type": "string", "description": "The DnnBroadcast record id to distribute." },
+            "audience_id": { "type": "string", "description": "The TargetAudienceProfile record id to send to." },
+            "subject": { "type": "string", "description": "Optional email subject line. Defaults to 'DNN Intelligence — Show N: headlines'." },
+            "preheader": { "type": "string", "description": "Optional preview text shown before the email body." },
+            "mode": { "type": "string", "description": "Set to 'first_touch' to send only to contacts who haven't received anything yet, using the audience's first-touch template. Omit for standard distribution." }
+          },
+          "required": ["broadcast_id", "audience_id"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "blast_facebook",
+        "title": "Blast latest article to Facebook",
+        "description": "Posts the most recent published DNN article with a completed video to the Dyson Facebook Page. Builds social copy from the article headline and teaser, posts to Facebook, and marks the article as 'blasted' on success. No parameters. Admin only.",
+        "handler": "dnnSocialBlast",
+        "input_schema": { "type": "object", "properties": {} },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "post_to_linkedin",
+        "title": "Post video or image to LinkedIn",
+        "description": "Posts a video (or image fallback) to LinkedIn. When videoUrl is provided, uploads and posts the video; otherwise falls back to imageUrl. When organizationName is provided, posts to that company page (must be an admin); otherwise posts to the user's personal profile. Admin only.",
+        "handler": "postToLinkedInV2",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "text": { "type": "string", "description": "The post caption / commentary text." },
+            "videoUrl": { "type": "string", "description": "URL of the video to upload and post. Required if no imageUrl." },
+            "imageUrl": { "type": "string", "description": "URL of the image to post (fallback when no video). Required if no videoUrl." },
+            "title": { "type": "string", "description": "Optional title for the media attachment." },
+            "description": { "type": "string", "description": "Optional alt text / description for the media." },
+            "organizationName": { "type": "string", "description": "Optional LinkedIn organization page name to post as. If omitted, posts to the user's personal profile." }
+          },
+          "required": ["text"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "vet_agent",
+        "title": "Vet a real estate agent",
+        "description": "Runs an AI-powered vetting analysis on a real estate agent candidate for the DNN Agent Bureau. Scores DRE license status, production volume, market specialization, brokerage reputation, buyer-side experience, communication fit, and referral protectability. Returns a full vetting report with score (out of 35), recommendation (APPROVE/CONDITIONAL/REJECT), summary, red flags, and interview questions. Admin only.",
+        "handler": "vettingAgent",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "agent_name": { "type": "string", "description": "Agent's full name." },
+            "dre_number": { "type": "string", "description": "DRE license number (optional but flagged if missing)." },
+            "state": { "type": "string", "description": "State that issued the license, e.g. CA. Defaults to CA." },
+            "brokerage": { "type": "string", "description": "Brokerage name (optional but flagged if missing)." },
+            "markets": { "type": "string", "description": "Target markets (comma-separated string or array)." }
+          },
+          "required": ["agent_name"]
+        },
+        "annotations": { "read_only_hint": true, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "vet_lender",
+        "title": "Vet a mortgage lender",
+        "description": "Runs an AI-powered vetting analysis on a mortgage lender candidate for the DNN Vetted Lender Bureau. Scores NMLS license status, production volume, loan type expertise, close-time performance, communication reputation, company backing, and fiduciary fit. Returns a full vetting report with score (out of 35), recommendation, summary, red flags, and interview questions. Admin only.",
+        "handler": "vettingLender",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "lender_name": { "type": "string", "description": "Lender's full name." },
+            "nmls_number": { "type": "string", "description": "NMLS license number (optional but flagged if missing)." },
+            "state": { "type": "string", "description": "State of licensure." },
+            "company": { "type": "string", "description": "Mortgage company / bank name." },
+            "markets": { "type": "string", "description": "Target markets (comma-separated string or array)." },
+            "loan_types": { "type": "string", "description": "Loan types offered (comma-separated, e.g. 'conventional, FHA, VA, jumbo, bridge, DSCR')." }
+          },
+          "required": ["lender_name"]
+        },
+        "annotations": { "read_only_hint": true, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "send_client_sms",
+        "title": "Send SMS to a client",
+        "description": "Sends a single SMS message to a client via Twilio. Use for individual, personalized messages (not batch blasts). Requires a valid E.164 phone number and message body. Admin only.",
+        "handler": "sendClientSMS",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "phone": { "type": "string", "description": "E.164 phone number, e.g. +15125551234." },
+            "message": { "type": "string", "description": "The SMS message body." },
+            "client_id": { "type": "string", "description": "Optional RelocationClient record id for logging." },
+            "client_name": { "type": "string", "description": "Optional client name for logging." }
+          },
+          "required": ["phone", "message"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "subscribe_to_dnn",
+        "title": "Subscribe a user to DNN",
+        "description": "Subscribes an email address to the DNN daily news broadcast. Creates a DnnSubscriber record (tier 1 / free) or re-subscribes if they previously unsubscribed. Optionally tag them to a partner agent's silo. No auth required — can be called from public-facing subscribe forms.",
+        "handler": "dnnSubscribe",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "description": "Subscriber email address." },
+            "full_name": { "type": "string", "description": "Subscriber full name (optional)." },
+            "source": { "type": "string", "description": "Where they subscribed from, e.g. 'direct', 'linkedin', 'agent_portal'." },
+            "partner_agent_id": { "type": "string", "description": "Optional PartnerAgent id to tag this subscriber to an agent's silo." },
+            "partner_agent_name": { "type": "string", "description": "Optional denormalized agent name for display." }
+          },
+          "required": ["email"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "notify_admin_sms",
+        "title": "Send admin alert SMS",
+        "description": "Sends an SMS alert to the admin phone number (configured via ADMIN_PHONE_NUMBER secret). Use to notify the team of important events — new client messages, inbound communications, or custom alerts. Accepts a freeform payload; if 'message' is provided it sends that text directly, otherwise it builds an alert from event/data fields. No auth required — typically called by automations.",
+        "handler": "notifyAdmin",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string", "description": "Custom alert text to send. If provided, sent directly. Otherwise the function builds an alert from event/data fields." },
+            "event": { "type": "object", "description": "Optional event payload (entity_name, type) for structured alerts." },
+            "data": { "type": "object", "description": "Optional entity data payload for structured alerts." }
+          },
+          "required": []
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "notify_escalation_email",
+        "title": "Email admins about a Charlie escalation",
+        "description": "Emails all admin users when Charlie (the AI concierge) couldn't answer a consumer question and a human response is needed. Includes the consumer's name, email, question, the page they were on, priority level, and Charlie's handoff line. Typically called by an entity automation when a CharlieEscalation record is created. No auth required.",
+        "handler": "notifyEscalation",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "description": "The escalation payload.",
+              "properties": {
+                "consumer_name": { "type": "string", "description": "Consumer's name." },
+                "consumer_email": { "type": "string", "description": "Consumer's email (optional)." },
+                "consumer_question": { "type": "string", "description": "The question Charlie couldn't answer." },
+                "handoff_response": { "type": "string", "description": "The handoff line Charlie used when deflecting." },
+                "priority": { "type": "string", "description": "Priority level: low, medium, high, or urgent. Defaults to medium." },
+                "page_context": { "type": "string", "description": "Which page the consumer was on when they asked." }
+              }
+            }
+          },
+          "required": ["data"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "stitch_broadcast_clips",
+        "title": "Stitch broadcast clips into one video",
+        "description": "Stitches individual broadcast clips into a single composited MP4 using HeyGen multi-input rendering. action 'start' finds a completed broadcast with clips but no composited video and starts the stitch render; 'check' polls in-progress stitching renders and stores completed videos. Admin only.",
+        "handler": "dnnStitchBroadcast",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "action": { "type": "string", "description": "One of: start, check.", "enum": ["start", "check"] },
+            "broadcastId": { "type": "string", "description": "Optional DnnBroadcast record id to stitch. If omitted with action 'start', uses the most recent completed broadcast with un-stitched clips." }
+          },
+          "required": ["action"]
+        },
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
       }
     ]
   }
