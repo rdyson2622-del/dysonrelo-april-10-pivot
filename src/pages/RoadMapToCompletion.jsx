@@ -4,6 +4,7 @@ import { useAllDeskStatuses } from '@/hooks/useStageStatuses';
 import {
   WORKFLOW_DESKS, getFlow,
 } from '@/lib/departmentWorkflows';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import {
   ArrowLeft, CheckCircle2, AlertTriangle, Loader2, Circle,
   Clock, Star, MapPin, Activity, Zap
@@ -41,16 +42,18 @@ function StatusLight({ status, size = 'sm' }) {
 }
 
 function DeskRoadmap({ desk, stageStatuses, totals }) {
+  const navigate = useNavigate();
   const flow = getFlow(desk.id);
   if (!flow) return null;
 
   const stages = flow.stages;
   const hasAny = Object.keys(stageStatuses || {}).length > 0;
+  const goToDesk = () => navigate(`/admin/workflows/${desk.id}`);
 
   return (
-    <Link
-      to={`/admin/workflows/${desk.id}`}
-      className="block rounded-2xl p-5 transition-all hover:scale-[1.01]"
+    <div
+      onClick={goToDesk}
+      className="block rounded-2xl p-5 transition-all hover:scale-[1.01] cursor-pointer"
       style={{ background: '#111', border: `1px solid ${desk.color}30` }}
     >
       {/* Desk header */}
@@ -87,49 +90,15 @@ function DeskRoadmap({ desk, stageStatuses, totals }) {
         </div>
       </div>
 
-      {/* Stage flow with status lights */}
-      <div className="flex items-center gap-1 overflow-x-auto pb-2">
-        {stages.map((s, idx) => {
-          const action = stageStatuses?.[s.id];
-          const status = action?.status || 'pending';
-          const cfg = STATUS_CONFIG[status];
-          return (
-            <React.Fragment key={s.id}>
-              <div
-                className="shrink-0 rounded-xl px-3 py-2.5 min-w-[140px] transition-all"
-                style={{
-                  background: cfg.bg,
-                  border: `1.5px solid ${cfg.color}${status === 'pending' ? '30' : '60'}`,
-                  boxShadow: cfg.glow ? `0 0 12px ${cfg.color}40` : 'none',
-                }}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <StatusLight status={status} />
-                  <span className="text-[9px] font-black tracking-widest uppercase" style={{ color: cfg.color }}>
-                    {cfg.label}
-                  </span>
-                  {action?.duration_ms && status === 'completed' && (
-                    <span className="text-[9px] text-gray-500 ml-auto flex items-center gap-0.5">
-                      <Clock className="w-2.5 h-2.5" />
-                      {(action.duration_ms / 1000).toFixed(1)}s
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs font-serif text-white leading-tight">{s.title}</p>
-                {status === 'flagged' && action?.flag_reason && (
-                  <p className="text-[9px] mt-1 italic line-clamp-1" style={{ color: '#ef4444' }}>
-                    ⛔ {action.flag_reason}
-                  </p>
-                )}
-              </div>
-              {idx < stages.length - 1 && (
-                <div className="w-4 h-px shrink-0" style={{ background: `${desk.color}40` }} />
-              )}
-            </React.Fragment>
-          );
-        })}
-      </div>
-    </Link>
+      {/* Tesla-style linear roadmap line */}
+      <FlowRoadmapLine
+        stages={stages}
+        stageStatuses={stageStatuses}
+        color={desk.color}
+        activeStageId={stages[0]?.id}
+        onSelect={goToDesk}
+      />
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ import {
 import { useStageStatuses } from '@/hooks/useStageStatuses';
 import WorkflowActionPanel from '@/components/workflow/WorkflowActionPanel';
 import WorkflowActionLog from '@/components/workflow/WorkflowActionLog';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
 
@@ -188,28 +189,14 @@ function DepartmentView({ deskId }) {
         </div>
       )}
 
-      <p className="text-xs text-gray-500 mb-4">Click a box to see the white copy and execute. Lights show real-time status.</p>
-      <div className="flex items-stretch gap-0 overflow-x-auto pb-6">
-        {flow.stages.map((s, idx) => {
-          const status = stageStatuses[s.id]?.status || 'pending';
-          const nextStage = flow.stages[idx + 1];
-          const nextStatus = nextStage ? (stageStatuses[nextStage.id]?.status || 'pending') : null;
-          const connectorActive = status === 'completed' || status === 'running';
-          return (
-            <React.Fragment key={s.id}>
-              <StageBox
-                stage={s}
-                index={idx}
-                color={desk.color}
-                selected={active === s.id}
-                onSelect={setActive}
-                status={status}
-              />
-              {idx < flow.stages.length - 1 && <Connector color={desk.color} active={connectorActive} />}
-            </React.Fragment>
-          );
-        })}
-      </div>
+      <p className="text-xs text-gray-500 mb-2">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
+      <FlowRoadmapLine
+        stages={flow.stages}
+        stageStatuses={stageStatuses}
+        color={desk.color}
+        activeStageId={active}
+        onSelect={setActive}
+      />
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
