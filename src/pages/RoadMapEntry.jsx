@@ -5,7 +5,8 @@ import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
-import DnDLogo from '@/components/brand/DnDLogo';
+
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 import {
   ArrowRight, Home, Compass, MapPin, X, CheckCircle2,
   AlertTriangle, Star, Building2, User
@@ -84,7 +85,7 @@ const PORTAL_COPY = {
     subtitle: 'Got a client who needs help? We\'ll map the route before you pitch your service. Lenders, title, movers — we connect you when the client is ready.',
   },
   admin: {
-    eyebrow: 'The front door',
+    eyebrow: 'Your front door',
     title: 'Real Estate Issues',
     titleAccent: '& Relocation Road Maps',
     subtitle: '',
@@ -175,15 +176,13 @@ export default function RoadMapEntry() {
       <main className="flex-1 flex flex-col items-center px-6 pt-16 pb-12">
         <div className="max-w-4xl w-full text-center">
           <div className="flex justify-center mb-4">
-            <DnDLogo size="sm" />
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '60px', width: 'auto' }} />
           </div>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>
           <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight">
-            {copy.title}
-            <br />
-            <span className="gold-text-gradient">{copy.titleAccent}</span>
+            {copy.title} <span className="gold-text-gradient">{copy.titleAccent}</span>
           </h1>
           {copy.subtitle && (
             <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
