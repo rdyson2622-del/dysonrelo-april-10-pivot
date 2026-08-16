@@ -6,7 +6,8 @@ import {
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
-  Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus
+  Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
+  FileSearch, ShoppingBag
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -395,23 +396,31 @@ export default function AdminSidebar() {
           <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
             <Link to="/admin/wisdom/escrow" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/escrow' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/escrow' ? '#D4AF37' : '#ccc' }}>
               <Shield className="w-3 h-3 shrink-0" />
-              <span className="truncate">Escrow Management</span>
+              <span className="truncate">Escrows</span>
+            </Link>
+            <Link to="/admin/wisdom/audit" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/audit' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/audit' ? '#D4AF37' : '#ccc' }}>
+              <FileSearch className="w-3 h-3 shrink-0" />
+              <span className="truncate">Doc Audit</span>
             </Link>
             <Link to="/admin/wisdom/listings" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/listings' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/listings' ? '#D4AF37' : '#ccc' }}>
               <Home className="w-3 h-3 shrink-0" />
-              <span className="truncate">Listing Management</span>
+              <span className="truncate">Listing Clients</span>
+            </Link>
+            <Link to="/admin/wisdom/buying-clients" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/buying-clients' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/buying-clients' ? '#D4AF37' : '#ccc' }}>
+              <ShoppingBag className="w-3 h-3 shrink-0" />
+              <span className="truncate">Buying Clients</span>
             </Link>
             <Link to="/admin/wisdom/agents" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/agents' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/agents' ? '#D4AF37' : '#ccc' }}>
               <Users className="w-3 h-3 shrink-0" />
-              <span className="truncate">Agent Records</span>
+              <span className="truncate">Company Agents and Other Agents</span>
             </Link>
             <Link to="/admin/wisdom/marketing" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/marketing' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/marketing' ? '#D4AF37' : '#ccc' }}>
               <TrendingUp className="w-3 h-3 shrink-0" />
-              <span className="truncate">Marketing</span>
+              <span className="truncate">Marketing Campaigns</span>
             </Link>
             <Link to="/admin/wisdom/luxury" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/luxury' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/luxury' ? '#D4AF37' : '#ccc' }}>
               <Star className="w-3 h-3 shrink-0" />
-              <span className="truncate">Luxury Presence</span>
+              <span className="truncate">Luxury Presence Website</span>
             </Link>
           </div>
         )}

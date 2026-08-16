@@ -330,7 +330,9 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dispatch-log" element={<AdminDispatchLog />} />
         <Route path="/admin/roadmap" element={<RoadMapToCompletion />} />
         <Route path="/admin/wisdom/escrow" element={<EscrowManagement />} />
+        <Route path="/admin/wisdom/audit" element={<TransactionAudit />} />
         <Route path="/admin/wisdom/listings" element={<ListingManagement />} />
+        <Route path="/admin/wisdom/buying-clients" element={<BuyingClients />} />
         <Route path="/admin/wisdom/agents" element={<AgentRecords />} />
         <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
         <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
