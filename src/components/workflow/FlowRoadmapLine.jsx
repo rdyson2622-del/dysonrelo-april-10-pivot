@@ -14,16 +14,19 @@ const STATUS_CONFIG = {
   detour:    { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', glow: false, icon: MapPin,        label: 'DETOUR',      spin: false },
 };
 
-export default function FlowRoadmapLine({ stages, stageStatuses, color, activeStageId, onSelect }) {
+export default function FlowRoadmapLine({ stages, stageStatuses, color, activeStageId, onSelect, compact = false }) {
+  const m = compact
+    ? { active: 28, normal: 22, iconA: 'w-3.5 h-3.5', iconN: 'w-3 h-3', labelW: 76, lineH: 34, title: 'text-[10px]', status: 'text-[7px]', margin: 'mb-5 mt-1' }
+    : { active: 42, normal: 34, iconA: 'w-5 h-5', iconN: 'w-4 h-4', labelW: 130, lineH: 52, title: 'text-xs', status: 'text-[8px]', margin: 'mb-10 mt-2' };
   const safeStages = stages || [];
   const safeStatuses = stageStatuses || {};
   const completedCount = safeStages.filter(s => safeStatuses[s.id]?.status === 'completed').length;
   const progressPercent = safeStages.length > 0 ? (completedCount / safeStages.length) * 100 : 0;
 
   return (
-    <div className="mb-10 mt-2">
+    <div className={m.margin}>
       {/* ── THE LINE + MARKERS ── */}
-      <div className="relative" style={{ height: '52px' }}>
+      <div className="relative" style={{ height: m.lineH }}>
         {/* Base track */}
         <div
           className="absolute rounded-full"
@@ -60,15 +63,15 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
                 <div
                   className="rounded-full flex items-center justify-center transition-all duration-300"
                   style={{
-                    width: isActive ? 42 : 34,
-                    height: isActive ? 42 : 34,
+                    width: isActive ? m.active : m.normal,
+                    height: isActive ? m.active : m.normal,
                     background: cfg.bg,
                     border: `2.5px solid ${cfg.color}`,
                     boxShadow: cfg.glow ? `0 0 20px ${cfg.color}, 0 0 6px ${cfg.color}` : 'none',
                   }}
                 >
                   <Icon
-                    className={isActive ? 'w-5 h-5' : 'w-4 h-4'}
+                    className={isActive ? m.iconA : m.iconN}
                     style={{ color: cfg.color }}
                     spin={cfg.spin ? true : undefined}
                   />
@@ -92,13 +95,13 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
               type="button"
               onClick={() => onSelect(s.id)}
               className="flex flex-col items-center text-center group"
-              style={{ width: '130px', flexShrink: 0 }}
+              style={{ width: m.labelW, flexShrink: 0 }}
             >
-              <p className="text-[8px] font-black tracking-[0.15em] uppercase mb-0.5" style={{ color: cfg.color }}>
+              <p className={`${m.status} font-black tracking-[0.15em] uppercase mb-0.5`} style={{ color: cfg.color }}>
                 {cfg.label}
               </p>
               <p
-                className="text-xs font-serif leading-tight"
+                className={`${m.title} font-serif leading-tight`}
                 style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.6)', fontWeight: isActive ? 600 : 400 }}
               >
                 {s.title}

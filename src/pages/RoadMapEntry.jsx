@@ -119,6 +119,8 @@ export default function RoadMapEntry() {
   const relocationFlow = getFlow('operations');
   const { statuses: issuesStatuses, activeStageId: issuesActive } = useAnimatedDemoStatuses(issuesFlow?.stages);
   const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
+  const exploreFlowDemo = EXPLORE_FLOW;
+  const { statuses: exploreStatuses, activeStageId: exploreActive } = useAnimatedDemoStatuses(exploreFlowDemo?.stages);
   const [demoMode, setDemoMode] = useState('issues');
 
   const handleSubmit = () => {
@@ -269,14 +271,26 @@ export default function RoadMapEntry() {
                 <Compass className="w-4 h-4" />
                 Relocation
               </button>
+              <button
+                onClick={() => setDemoMode('explore')}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all"
+                style={{
+                  background: demoMode === 'explore' ? 'rgba(56,189,248,0.18)' : 'transparent',
+                  border: `1.5px solid ${demoMode === 'explore' ? '#38bdf8' : 'transparent'}`,
+                  color: demoMode === 'explore' ? '#38bdf8' : '#888',
+                }}
+              >
+                <MapPin className="w-4 h-4" />
+                Explore City
+              </button>
             </div>
           </div>
 
           <div
-            className="rounded-2xl p-6 transition-colors duration-500"
+            className="rounded-2xl p-3 sm:p-6 transition-colors duration-500"
             style={{
               background: '#0a0a0a',
-              border: `1px solid ${demoMode === 'issues' ? `${GOLD}30` : 'rgba(16,185,129,0.30)'}`,
+              border: `1px solid ${demoMode === 'issues' ? `${GOLD}30` : demoMode === 'relocation' ? 'rgba(16,185,129,0.30)' : 'rgba(56,189,248,0.30)'}`,
             }}
           >
             {demoMode === 'issues' ? (
@@ -286,14 +300,25 @@ export default function RoadMapEntry() {
                 color={GOLD}
                 activeStageId={issuesActive}
                 onSelect={() => {}}
+                compact
               />
-            ) : (
+            ) : demoMode === 'relocation' ? (
               <FlowRoadmapLine
                 stages={relocationFlow?.stages || []}
                 stageStatuses={relocationStatuses}
                 color="#10b981"
                 activeStageId={relocationActive}
                 onSelect={() => {}}
+                compact
+              />
+            ) : (
+              <FlowRoadmapLine
+                stages={exploreFlowDemo?.stages || []}
+                stageStatuses={exploreStatuses}
+                color="#38bdf8"
+                activeStageId={exploreActive}
+                onSelect={() => {}}
+                compact
               />
             )}
             <div className="grid grid-cols-3 gap-4 mt-2">
