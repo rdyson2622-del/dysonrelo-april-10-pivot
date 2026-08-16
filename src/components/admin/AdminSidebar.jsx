@@ -433,7 +433,7 @@ export default function AdminSidebar() {
           }}
         >
           <Monitor className="w-4 h-4" />
-          👁️ Claude Screen Viewer
+          👁️ Grok Screen Viewer
         </Link>
       </div>
 
