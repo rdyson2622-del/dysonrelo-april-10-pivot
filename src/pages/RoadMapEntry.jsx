@@ -233,7 +233,7 @@ export default function RoadMapEntry() {
             </button>
           </div>
 
-          <p className="text-xs text-gray-600 mt-3">
+          <p className="text-xs text-white mt-3">
             {selectedPill.tagline} · No commitment · We map it first, you decide later
           </p>
         </div>
