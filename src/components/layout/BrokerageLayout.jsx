@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard, Shield, Building2, Users, Megaphone, Star,
-  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen
+  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen, FileSearch
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
@@ -14,6 +14,7 @@ const GOLD = '#D4AF37';
 const NAV_ITEMS = [
   { id: 'dashboard',  label: 'Dashboard',  icon: LayoutDashboard, path: '/brokerage' },
   { id: 'escrow',     label: 'Escrow',      icon: Shield,          path: '/brokerage/escrow' },
+  { id: 'audit',      label: 'Doc Audit',   icon: FileSearch,     path: '/brokerage/audit' },
   { id: 'listings',   label: 'Listings',    icon: Building2,      path: '/brokerage/listings' },
   { id: 'agents',     label: 'Agents',      icon: Users,          path: '/brokerage/agents' },
   { id: 'marketing',  label: 'Marketing',   icon: Megaphone,      path: '/brokerage/marketing' },

@@ -1,0 +1,227 @@
+{
+  "name": "TransactionDocAnalysis",
+  "type": "object",
+  "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "Brokerage entity ID this analysis belongs to."
+    },
+    "escrow_number": {
+      "type": "string",
+      "description": "Escrow transaction number this document analysis is attached to."
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address for context."
+    },
+    "doc_type": {
+      "type": "string",
+      "enum": [
+        "rpa",
+        "counter_offer",
+        "amendment",
+        "addendum",
+        "combined",
+        "other"
+      ],
+      "description": "Type of document analyzed: rpa = Residential Purchase Agreement, counter_offer = buyer/seller counter, amendment, addendum, combined = multiple docs in one pass."
+    },
+    "doc_name": {
+      "type": "string",
+      "description": "Filename or document label from BackOffice."
+    },
+    "doc_file_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of the source documents uploaded to Base44 storage (passed to the LLM)."
+    },
+    "extracted_deadlines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Deadline name e.g. 'Inspection Contingency', 'Loan Approval', 'Close of Escrow'."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Extracted deadline date."
+          },
+          "responsible_party": {
+            "type": "string",
+            "description": "Who must act by this deadline."
+          },
+          "days_from_acceptance": {
+            "type": "number",
+            "description": "How many days after contract acceptance this deadline falls."
+          }
+        }
+      },
+      "description": "All deadlines extracted from the document terms by the LLM."
+    },
+    "signature_requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "party": {
+            "type": "string",
+            "description": "Who must sign e.g. 'Buyer', 'Seller', 'Both'."
+          },
+          "document_section": {
+            "type": "string",
+            "description": "Which section/clause requires the signature."
+          },
+          "deadline_date": {
+            "type": "string",
+            "format": "date",
+            "description": "By when the signature must be executed."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "signed",
+              "missing",
+              "unknown"
+            ],
+            "default": "unknown",
+            "description": "Whether the LLM could confirm the signature was executed."
+          }
+        }
+      },
+      "description": "Signature requirements extracted from the document."
+    },
+    "friction_hotspots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hotspot_type": {
+            "type": "string",
+            "enum": [
+              "tight_deadline",
+              "missing_signature",
+              "contingency_gap",
+              "lending_risk",
+              "title_risk",
+              "ambiguous_term",
+              "unusual_clause",
+              "other"
+            ],
+            "description": "Category of friction the LLM flagged."
+          },
+          "description": {
+            "type": "string",
+            "description": "Why this is a friction hotspot."
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ],
+            "description": "How likely this hotspot is to cause a missed deadline or failed close."
+          },
+          "related_deadline": {
+            "type": "string",
+            "description": "Which extracted deadline this hotspot threatens."
+          },
+          "recommended_action": {
+            "type": "string",
+            "description": "What the brokerage should do to prevent friction here."
+          }
+        }
+      },
+      "description": "Proactive friction hotspots the LLM projected from the document terms \u2014 where deadlines are likely to slip before they're missed."
+    },
+    "terms_summary": {
+      "type": "string",
+      "description": "Plain-English summary of the key terms (price, contingency lengths, financing type, special clauses)."
+    },
+    "hotspot_score": {
+      "type": "number",
+      "description": "0-100 friction score. Higher = more likely to experience missed deadlines. Computed from severity + count of hotspots."
+    },
+    "analyzed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the LLM analysis was run."
+    },
+    "alert_milestone_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of EscrowMilestone records created/updated as real-time friction alerts from this analysis."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "analyzing",
+        "analyzed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Lifecycle: pending=queued, analyzing=LLM in flight, analyzed=done, failed=error."
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if the analysis failed."
+    }
+  },
+  "required": [
+    "escrow_number",
+    "doc_type"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
