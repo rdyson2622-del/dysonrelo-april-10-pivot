@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { ChevronDown, ChevronRight, Send, CheckCircle2, AlertCircle, MapPin, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Send, CheckCircle2, AlertCircle, MapPin, Trash2, ArrowLeft, Plus, Edit3 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 const SMS_TEMPLATE = `Hi {{owner_name}}, this is Dyson & Dyson Concierge Relocation. We noticed your home is listed — We offer our FREE Concierge Relocation Services to manage your entire move & find your next home. Learn more from: https://dysonrelo.com and a testimonial at https://youtu.be/In_JbQXZoy0 — Reply YES or call Bob at (858) 353-1200. Reply STOP to opt out.`;
 
-function CityRow({ city, batches, onDelete }) {
+function CityRow({ city, batches, onDelete, selectedBatchId, onSelectBatch }) {
   const [open, setOpen] = useState(false);
 
   const totalBatchSize = batches.reduce((s, b) => s + (b.batch_size || 0), 0);
@@ -81,13 +82,23 @@ function CityRow({ city, batches, onDelete }) {
           <td className="px-4 py-2 text-center text-xs text-slate-400" />
           <td className="px-4 py-2 text-center text-xs text-slate-400">{log.estimated_duration_minutes ? `${log.estimated_duration_minutes}m` : '—'}</td>
           <td className="px-4 py-2 text-center">
-            <button
-              onClick={(e) => { e.stopPropagation(); onDelete(log.id); }}
-              className="p-1 rounded hover:bg-red-50 text-slate-300 hover:text-red-500 transition"
-              title="Delete this batch log"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center justify-center gap-2">
+              <input
+                type="radio"
+                name="selectedBatch"
+                checked={selectedBatchId === log.id}
+                onChange={() => onSelectBatch(log.id)}
+                className="w-3.5 h-3.5 accent-blue-600 cursor-pointer"
+                title="Select this batch"
+              />
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete(log.id); }}
+                className="p-1 rounded hover:bg-red-50 text-slate-300 hover:text-red-500 transition"
+                title="Delete this batch log"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </td>
         </tr>
       ))}
@@ -97,12 +108,25 @@ function CityRow({ city, batches, onDelete }) {
 
 export default function AdminBatchSMSLog() {
   const [templateOpen, setTemplateOpen] = useState(false);
+  const [selectedBatchId, setSelectedBatchId] = useState(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this batch log entry?')) return;
     await base44.entities.BatchSMSLog.delete(id);
     queryClient.invalidateQueries({ queryKey: ['batchSMSLogs'] });
+    if (selectedBatchId === id) setSelectedBatchId(null);
+  };
+
+  const handleEditSelected = () => {
+    if (!selectedBatchId) { alert('Please select a batch to edit (expand a city and click the radio button).'); return; }
+    navigate('/admin/compose-sms');
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!selectedBatchId) { alert('Please select a batch to delete (expand a city and click the radio button).'); return; }
+    await handleDelete(selectedBatchId);
   };
 
   const { data: logs = [], isLoading } = useQuery({
@@ -143,6 +167,34 @@ export default function AdminBatchSMSLog() {
   return (
     <div className="p-6 min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto">
+
+        {/* Action Toolbar */}
+        <div className="flex items-center gap-2 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-slate-700 hover:bg-slate-800 transition"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+          <button
+            onClick={() => navigate('/admin/compose-sms')}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-green-600 hover:bg-green-700 transition"
+          >
+            <Plus className="w-4 h-4" /> Add
+          </button>
+          <button
+            onClick={handleEditSelected}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition"
+          >
+            <Edit3 className="w-4 h-4" /> Edit
+          </button>
+          <button
+            onClick={handleDeleteSelected}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition"
+          >
+            <Trash2 className="w-4 h-4" /> Delete
+          </button>
+        </div>
 
         {/* Header + Grand Totals */}
         <div className="flex items-start justify-between mb-5 flex-wrap gap-4">
@@ -217,7 +269,7 @@ export default function AdminBatchSMSLog() {
               </thead>
               <tbody>
                 {grouped.map(([city, batches]) => (
-                  <CityRow key={city} city={city} batches={batches} onDelete={handleDelete} />
+                  <CityRow key={city} city={city} batches={batches} onDelete={handleDelete} selectedBatchId={selectedBatchId} onSelectBatch={setSelectedBatchId} />
                 ))}
               </tbody>
             </table>
