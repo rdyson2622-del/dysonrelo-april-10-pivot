@@ -179,7 +179,7 @@ export const DEPARTMENT_FLOWS = {
   },
 
   sales: {
-    title: 'Sales & PRN flow',
+    title: 'REFERRAL AGENT RECRUITING FLOW',
     audience: 'New IT · how independent agents become the national desk',
     story: 'Dyson is the relo department boutique firms do not have. They keep 25%. We manage the move. Agreements stay clean.',
     stages: [
