@@ -157,9 +157,18 @@ function DepartmentView({ deskId }) {
         </div>
       </div>
 
-      {/* Status alerts */}
+      <p className="text-xs text-gray-500 mb-2">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
+      <FlowRoadmapLine
+        stages={flow.stages}
+        stageStatuses={stageStatuses}
+        color={desk.color}
+        activeStageId={active}
+        onSelect={setActive}
+      />
+
+      {/* Status alerts — below the roadmap so the line is the first thing seen */}
       {flaggedStage && (
-        <div className="rounded-xl p-3 mb-4 flex items-center gap-2" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.35)' }}>
+        <div className="rounded-xl p-3 mt-4 flex items-center gap-2" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.35)' }}>
           <AlertTriangle className="w-4 h-4" style={{ color: '#ef4444' }} />
           <p className="text-xs" style={{ color: '#ef4444' }}>
             <span className="font-bold">STOPPED:</span> "{flaggedStage.title}" has a 401 flag. Flow is blocked until a human clears it.
@@ -174,7 +183,7 @@ function DepartmentView({ deskId }) {
         </div>
       )}
       {runningStage && runningStage.id !== active && (
-        <div className="rounded-xl p-3 mb-4 flex items-center gap-2" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)' }}>
+        <div className="rounded-xl p-3 mt-4 flex items-center gap-2" style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)' }}>
           <Loader2 className="w-4 h-4 animate-spin" style={{ color: GOLD }} />
           <p className="text-xs" style={{ color: GOLD }}>
             <span className="font-bold">IN PROGRESS:</span> "{runningStage.title}" is running right now.
@@ -188,15 +197,6 @@ function DepartmentView({ deskId }) {
           </button>
         </div>
       )}
-
-      <p className="text-xs text-gray-500 mb-2">Follow the line — green = done, gold = in progress, red = stopped (401). Click a marker for detail.</p>
-      <FlowRoadmapLine
-        stages={flow.stages}
-        stageStatuses={stageStatuses}
-        color={desk.color}
-        activeStageId={active}
-        onSelect={setActive}
-      />
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">

@@ -5,6 +5,11 @@ import { base44 } from '@/api/base44Client';
  * useStageStatuses — queries the latest WorkflowAction per stage for a desk.
  * Returns a map of stage_id → { status, flag_type, created_date, duration_ms, output }
  *
+ * Dummy model logic:
+ *   If any real (non-dummy) actions exist for the desk, only real actions are used.
+ *   If no real actions exist, dummy actions fill in as the "model" so visitors
+ *   always see what a flow looks like — even before any real project runs.
+ *
  * Status lighting:
  *   pending   = no action yet (dim)
  *   running   = in flight (lit up / pulsing)
@@ -20,8 +25,12 @@ export function useStageStatuses(deskId) {
     enabled: !!deskId,
   });
 
+  // Prefer real actions; fall back to dummies as the model when nothing real exists
+  const realActions = actions.filter(a => !a.is_dummy);
+  const effectiveActions = realActions.length > 0 ? realActions : actions;
+
   const stageStatuses = {};
-  actions.forEach(a => {
+  effectiveActions.forEach(a => {
     const existing = stageStatuses[a.stage_id];
     if (!existing || new Date(a.created_date) > new Date(existing.created_date)) {
       stageStatuses[a.stage_id] = a;
@@ -34,6 +43,8 @@ export function useStageStatuses(deskId) {
 /**
  * useAllDeskStatuses — queries ALL WorkflowActions across all desks.
  * Returns a map of desk_id → { stageStatuses, totals }
+ *
+ * Same dummy-preference logic applied per desk.
  */
 export function useAllDeskStatuses() {
   const { data: actions = [] } = useQuery({
@@ -42,13 +53,27 @@ export function useAllDeskStatuses() {
     refetchInterval: 5000,
   });
 
-  const deskMap = {};
+  // Group all actions by desk first
+  const byDesk = {};
   actions.forEach(a => {
-    if (!deskMap[a.desk_id]) deskMap[a.desk_id] = {};
-    const existing = deskMap[a.desk_id][a.stage_id];
-    if (!existing || new Date(a.created_date) > new Date(existing.created_date)) {
-      deskMap[a.desk_id][a.stage_id] = a;
-    }
+    if (!byDesk[a.desk_id]) byDesk[a.desk_id] = [];
+    byDesk[a.desk_id].push(a);
+  });
+
+  const deskMap = {};
+
+  // For each desk: prefer real actions, fall back to dummies as the model
+  Object.entries(byDesk).forEach(([deskId, deskActions]) => {
+    const realActions = deskActions.filter(a => !a.is_dummy);
+    const effectiveActions = realActions.length > 0 ? realActions : deskActions;
+
+    if (!deskMap[deskId]) deskMap[deskId] = {};
+    effectiveActions.forEach(a => {
+      const existing = deskMap[deskId][a.stage_id];
+      if (!existing || new Date(a.created_date) > new Date(existing.created_date)) {
+        deskMap[deskId][a.stage_id] = a;
+      }
+    });
   });
 
   // Compute totals per desk

@@ -14,16 +14,21 @@ const GOLD = '#D4AF37';
 export default function WorkflowActionLog({ deskId, color }) {
   const deskColor = color || GOLD;
 
-  const { data: actions = [], isLoading } = useQuery({
+  const { data: allActions = [], isLoading } = useQuery({
     queryKey: ['workflowActions', deskId],
     queryFn: () => base44.entities.WorkflowAction.filter(
       { desk_id: deskId },
       '-created_date',
-      20
+      50
     ),
     refetchInterval: 4000,
     enabled: !!deskId,
   });
+
+  // Prefer real actions; fall back to dummies as the model when nothing real exists
+  const realActions = allActions.filter(a => !a.is_dummy);
+  const actions = (realActions.length > 0 ? realActions : allActions).slice(0, 20);
+  const showingModel = realActions.length === 0 && allActions.length > 0;
 
   if (isLoading) {
     return (
@@ -40,6 +45,11 @@ export default function WorkflowActionLog({ deskId, color }) {
         <p className="text-xs font-black tracking-widest uppercase" style={{ color: deskColor }}>
           Accountability Log — Last 20 Actions
         </p>
+        {showingModel && (
+          <span className="text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto" style={{ background: 'rgba(212,175,55,0.15)', color: deskColor, border: `1px solid ${deskColor}40` }}>
+            MODEL
+          </span>
+        )}
       </div>
 
       {actions.length === 0 ? (

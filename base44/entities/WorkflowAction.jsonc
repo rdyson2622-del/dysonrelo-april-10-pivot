@@ -91,6 +91,11 @@
     "duration_ms": {
       "type": "number",
       "description": "Execution duration in milliseconds"
+    },
+    "is_dummy": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, this record is a placeholder 'model' showing what a flow looks like. Real projects replace dummies visually \u2014 if any non-dummy actions exist for a desk, dummies are hidden. When all real projects complete, dummies reappear as the model so infrequent visitors still see what to expect."
     }
   },
   "required": [
