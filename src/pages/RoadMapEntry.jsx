@@ -191,30 +191,8 @@ export default function RoadMapEntry() {
             </p>
           )}
 
-          {/* ── Pill bar ── */}
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            {PILLS.map((pill) => {
-              const Icon = pill.icon;
-              const isActive = selectedPill.id === pill.id;
-              return (
-                <button
-                  key={pill.id}
-                  onClick={() => setSelectedPill(pill)}
-                  className="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-full text-base font-medium transition-all"
-                  style={{
-                    background: isActive ? `${pill.color}20` : 'rgba(255,255,255,0.03)',
-                    border: `1.5px solid ${isActive ? pill.color : 'rgba(255,255,255,0.1)'}`,
-                    color: isActive ? pill.color : '#888',
-                  }}
-                >
-                  <Icon className="w-5 h-5" />
-                  {pill.label}
-                </button>
-              );
-            })}
-          </div>
-
           {/* ── Input bar ── */}
+          <p className="text-xs text-gray-500 mb-3 text-center">Type your request · Click a roadmap below to pick a mode</p>
           <div className="relative max-w-2xl mx-auto">
             <input
               type="text"
@@ -249,10 +227,18 @@ export default function RoadMapEntry() {
           <div className="space-y-2.5">
             {/* Issues */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: `1px solid ${GOLD}30` }}>
-              <div className="flex items-center gap-1.5 mb-1">
-                <Home className="w-3 h-3" style={{ color: GOLD }} />
-                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: GOLD }}>Real Estate Issue</span>
-              </div>
+              <button
+                onClick={() => setSelectedPill(PILLS[0])}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                style={{
+                  background: selectedPill.id === 'real_estate_issue' ? `${GOLD}20` : 'rgba(255,255,255,0.03)',
+                  border: `1.5px solid ${selectedPill.id === 'real_estate_issue' ? GOLD : 'rgba(255,255,255,0.1)'}`,
+                  color: selectedPill.id === 'real_estate_issue' ? GOLD : '#888',
+                }}
+              >
+                <Home className="w-3.5 h-3.5" />
+                Real Estate Issue
+              </button>
               <FlowRoadmapLine
                 stages={issuesFlow?.stages || []}
                 stageStatuses={issuesStatuses}
@@ -265,10 +251,18 @@ export default function RoadMapEntry() {
 
             {/* Relocation */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(16,185,129,0.30)' }}>
-              <div className="flex items-center gap-1.5 mb-1">
-                <Compass className="w-3 h-3" style={{ color: '#10b981' }} />
-                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: '#10b981' }}>Relocation</span>
-              </div>
+              <button
+                onClick={() => setSelectedPill(PILLS[1])}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                style={{
+                  background: selectedPill.id === 'relocation' ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.03)',
+                  border: `1.5px solid ${selectedPill.id === 'relocation' ? '#10b981' : 'rgba(255,255,255,0.1)'}`,
+                  color: selectedPill.id === 'relocation' ? '#10b981' : '#888',
+                }}
+              >
+                <Compass className="w-3.5 h-3.5" />
+                Relocation Roadmap
+              </button>
               <FlowRoadmapLine
                 stages={relocationFlow?.stages || []}
                 stageStatuses={relocationStatuses}
@@ -281,10 +275,18 @@ export default function RoadMapEntry() {
 
             {/* Explore City */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(56,189,248,0.30)' }}>
-              <div className="flex items-center gap-1.5 mb-1">
-                <MapPin className="w-3 h-3" style={{ color: '#38bdf8' }} />
-                <span className="text-[9px] font-bold tracking-wider uppercase" style={{ color: '#38bdf8' }}>Explore City</span>
-              </div>
+              <button
+                onClick={() => setSelectedPill(PILLS[2])}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                style={{
+                  background: selectedPill.id === 'explore_city' ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.03)',
+                  border: `1.5px solid ${selectedPill.id === 'explore_city' ? '#38bdf8' : 'rgba(255,255,255,0.1)'}`,
+                  color: selectedPill.id === 'explore_city' ? '#38bdf8' : '#888',
+                }}
+              >
+                <MapPin className="w-3.5 h-3.5" />
+                Explore a City
+              </button>
               <FlowRoadmapLine
                 stages={exploreFlowDemo?.stages || []}
                 stageStatuses={exploreStatuses}
