@@ -220,6 +220,7 @@ export default function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [pageCode, setPageCode] = useState('');
+  const [smsWidgetOpen, setSmsWidgetOpen] = useState(true);
 
   // Sections that are always open by default (never collapsed on first visit)
   const DEFAULT_OPEN = new Set(['dnn', 'dnn']);
@@ -549,30 +550,41 @@ export default function AdminSidebar() {
       {/* Admin Charlie Card */}
       <AdminCharlieCard />
 
-      {/* Recent Batch SMS Widget */}
+      {/* Recent Batch SMS Widget — collapsible */}
       <div className="mx-3 mb-3 p-3 rounded-lg shrink-0" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
-        <Link to="/admin/batch-sms-log" className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#D4AF37' }}>📡 Recent SMS Batches</span>
-          <ArrowRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
-        </Link>
-        <div className="space-y-2">
-          {batchLogs.length > 0 ? (
-            batchLogs.slice(0, 3).map(log => (
-              <div key={log.id} className="text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-white truncate max-w-[110px]">{log.city || 'Unknown'}</span>
-                  <span className="font-semibold ml-1 shrink-0" style={{ color: '#D4AF37' }}>✓ {log.sent_count || 0}</span>
-                </div>
-                <div className="text-slate-400 mt-0.5">
-                  {log.sent_at ? new Date(log.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
-                  {log.failed_count > 0 && <span className="text-red-400"> · {log.failed_count} failed</span>}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-xs text-slate-500">No batches sent yet</p>
-          )}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => { setSmsWidgetOpen(v => !v); resetIdleTimer(); }}
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
+            style={{ color: '#D4AF37' }}
+          >
+            {smsWidgetOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
+            📡 Recent SMS Batches
+          </button>
+          <Link to="/admin/batch-sms-log" onClick={resetIdleTimer}>
+            <ArrowRight className="w-3 h-3 hover:scale-110 transition-transform" style={{ color: '#D4AF37' }} />
+          </Link>
         </div>
+        {smsWidgetOpen && (
+          <div className="space-y-2 mt-2">
+            {batchLogs.length > 0 ? (
+              batchLogs.slice(0, 3).map(log => (
+                <div key={log.id} className="text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white truncate max-w-[110px]">{log.city || 'Unknown'}</span>
+                    <span className="font-semibold ml-1 shrink-0" style={{ color: '#D4AF37' }}>✓ {log.sent_count || 0}</span>
+                  </div>
+                  <div className="text-slate-400 mt-0.5">
+                    {log.sent_at ? new Date(log.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+                    {log.failed_count > 0 && <span className="text-red-400"> · {log.failed_count} failed</span>}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-xs text-slate-500">No batches sent yet</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Quick Page Jump */}
