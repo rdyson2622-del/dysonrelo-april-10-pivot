@@ -2,25 +2,43 @@ import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Send, ArrowLeft, Activity, Bot, User, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { LIBRARY_SPECIALISTS } from '@/lib/librarySpecialists';
+import { WORKFLOW_DESKS } from '@/lib/departmentWorkflows';
 
 const GOLD = '#D4AF37';
+
+// Build Grok Assistants from library specialists + departmental desks
+const GROK_ASSISTANTS = [
+  ...LIBRARY_SPECIALISTS.map(s => ({
+    id: `lib_${s.id}`,
+    name: s.shortName || s.name,
+    role: s.department,
+    color: s.color,
+    desc: s.oneLiner,
+    prompt: `You are the ${s.name} for Dyson & Dyson. ${s.oneLiner} You own: ${(s.owns || []).join(', ')}. Platform: ${s.platform}. Keep responses concise and actionable.`,
+  })),
+  ...WORKFLOW_DESKS.filter(d => d.id !== 'knowledge').map(d => ({
+    id: `dept_${d.id}`,
+    name: d.name,
+    role: d.short,
+    color: d.color,
+    desc: d.specialist,
+    prompt: `You are the ${d.specialist} for Dyson & Dyson. ${d.short} Keep responses concise and actionable.`,
+  })),
+];
 
 const SPECIALISTS = [
   { id: 'bob', name: 'Bob', role: 'real estate / strategy', tier: 'top', color: '#D4AF37', desc: 'Co-founder · Revenue & Strategy' },
   { id: 'jay', name: 'Jay', role: 'CTO / IT / Base44', tier: 'top', color: '#3B82F6', desc: 'Co-founder · Technology & Platform' },
   { id: 'chief', name: 'Chief of Staff', role: 'desk', tier: 'mid', color: '#A78BFA', desc: 'Central coordinator · Triage & routing' },
-  { id: 'director', name: 'Director', role: 'video / media', tier: 'bottom', color: '#EC4899', desc: 'DNN video production & broadcast' },
-  { id: 'relay', name: 'Relay N8N', role: 'automations', tier: 'bottom', color: '#10B981', desc: 'Workflow automations & API relays' },
-  { id: 'hunt', name: 'Hunt', role: 'job applications', tier: 'bottom', color: '#F59E0B', desc: 'Recruitment & candidate tracking' },
+  ...GROK_ASSISTANTS.map(a => ({ ...a, tier: 'assistant' })),
 ];
 
 const SYSTEM_PROMPTS = {
   bob: 'You are Bob Dyson, co-founder of Dyson & Dyson Concierge Relocation. You specialize in real estate strategy, market analysis, and relocation services. You are direct, strategic, and focus on revenue-generating activities. Keep responses concise and actionable.',
   jay: 'You are Jay, the CTO and IT specialist for Dyson & Dyson. You manage the Base44 platform, integrations, automations, and technical infrastructure. You are technical, precise, and solution-oriented. Keep responses concise and technical.',
-  chief: 'You are the Chief of Staff for Dyson & Dyson. You coordinate between Bob, Jay, and the specialist bots (Director, Relay N8N, Hunt). You manage the desk, triage tasks, and ensure smooth operations. You are organized and diplomatic. Keep responses concise and structured.',
-  director: 'You are the Director of Video and Media for DNN (Dyson News Network). You manage video production, broadcast pipelines, studio compositing, and media content distribution. You are creative and production-focused. Keep responses concise and practical.',
-  relay: 'You are Relay N8N, the automation specialist for Dyson & Dyson. You manage n8n workflows, API integrations, webhook relays, and automated pipelines. You are systematic and process-driven. Keep responses concise and technical.',
-  hunt: 'You are Hunt, the job applications specialist for Dyson & Dyson. You manage recruitment, job postings, candidate tracking, and HR outreach. You are thorough and detail-oriented. Keep responses concise and organized.',
+  chief: 'You are the Chief of Staff for Dyson & Dyson. You coordinate between Bob, Jay, and the Grok specialist assistants. You manage the desk, triage tasks, and ensure smooth operations. You are organized and diplomatic. Keep responses concise and structured.',
+  ...Object.fromEntries(GROK_ASSISTANTS.map(a => [a.id, a.prompt])),
 };
 
 function OrgNode({ specialist, isSelected, onClick }) {
@@ -110,7 +128,7 @@ export default function AdminGrokCommand() {
 
   const topTier = SPECIALISTS.filter(s => s.tier === 'top');
   const midTier = SPECIALISTS.filter(s => s.tier === 'mid');
-  const bottomTier = SPECIALISTS.filter(s => s.tier === 'bottom');
+  const assistantTier = SPECIALISTS.filter(s => s.tier === 'assistant');
 
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
@@ -157,22 +175,30 @@ export default function AdminGrokCommand() {
                 ))}
               </div>
 
-              {/* Connector lines from mid to bottom (3 branches) */}
-              <div className="relative h-6 mb-2">
-                {/* Vertical from mid */}
-                <div className="absolute left-1/2 top-0 w-px h-3 -translate-x-1/2" style={{ background: 'rgba(255,255,255,0.15)' }} />
-                {/* Horizontal bar */}
-                <div className="absolute top-3 left-1/4 right-1/4 h-px" style={{ background: 'rgba(255,255,255,0.15)' }} />
-                {/* Three verticals down */}
-                <div className="absolute top-3 left-1/4 w-px h-3 -translate-x-1/2" style={{ background: 'rgba(255,255,255,0.15)' }} />
-                <div className="absolute top-3 left-1/2 w-px h-3 -translate-x-1/2" style={{ background: 'rgba(255,255,255,0.15)' }} />
-                <div className="absolute top-3 left-3/4 w-px h-3 -translate-x-1/2" style={{ background: 'rgba(255,255,255,0.15)' }} />
+              {/* Connector line from mid down */}
+              <div className="flex justify-center mb-3">
+                <div className="w-px h-6" style={{ background: 'rgba(255,255,255,0.15)' }} />
               </div>
 
-              {/* Bottom tier */}
-              <div className="flex items-start justify-center gap-4">
-                {bottomTier.map(s => (
-                  <OrgNode key={s.id} specialist={s} isSelected={selectedId === s.id} onClick={() => setSelectedId(s.id)} />
+              {/* Grok Assistants — all created specialists */}
+              <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3 text-center" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Grok Assistants ({assistantTier.length})
+              </p>
+              <div className="flex flex-wrap items-start justify-center gap-2">
+                {assistantTier.map(s => (
+                  <button
+                    key={s.id}
+                    onClick={() => setSelectedId(s.id)}
+                    className="rounded-full px-3 py-2 text-center transition-all hover:scale-105"
+                    style={{
+                      background: selectedId === s.id ? `${s.color}22` : '#1e1e1e',
+                      border: `1.5px solid ${selectedId === s.id ? s.color : 'rgba(255,255,255,0.12)'}`,
+                    }}
+                  >
+                    <p className="text-xs font-bold" style={{ color: selectedId === s.id ? s.color : '#e0e0e0' }}>
+                      {s.name}
+                    </p>
+                  </button>
                 ))}
               </div>
             </div>
