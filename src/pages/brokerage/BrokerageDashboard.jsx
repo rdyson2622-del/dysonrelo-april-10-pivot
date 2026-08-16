@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import BrokerageCommandPill from '@/components/brokerage/BrokerageCommandPill';
+import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 import {
   Shield, Building2, Users, Megaphone, Star, ArrowRight,
   AlertTriangle, CheckCircle2, Clock, Loader2
@@ -149,6 +150,11 @@ export default function BrokerageDashboard() {
         </div>
 
         <div className="h-10" />
+
+        {/* ── Communication pill — speak or type to message the platform team ── */}
+        <BrokerageCommPill />
+
+        <div className="h-3" />
 
         {/* ── Clickless command pill — voice or text, auto-routes ── */}
         <BrokerageCommandPill brokerageName={brokerage?.name} />
