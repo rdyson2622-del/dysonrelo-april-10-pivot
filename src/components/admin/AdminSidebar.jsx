@@ -328,15 +328,15 @@ export default function AdminSidebar() {
       <div className="px-3 pt-3 pb-2 shrink-0">
         <Link
           to="/admin/grok-command"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
           style={{
             background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
             color: '#D4AF37',
             border: '1px solid rgba(212,175,55,0.35)',
           }}
         >
-          <Bot className="w-4 h-4" />
-          🤖 Grok Specialist Command
+          <Bot className="w-4 h-4 shrink-0" />
+          GROK BOT COMMAND CENTER
         </Link>
       </div>
 
