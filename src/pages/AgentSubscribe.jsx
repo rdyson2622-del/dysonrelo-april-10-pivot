@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { CheckCircle, ArrowRight, Building2, MapPin, Award, Mail, Phone } from 'lucide-react';
+import { getFlow } from '@/lib/departmentWorkflows';
+import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -15,6 +18,10 @@ export default function AgentSubscribe() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+
+  // Dummy active relocation process roadmap demo
+  const relocationFlow = getFlow('operations');
+  const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -109,10 +116,29 @@ export default function AgentSubscribe() {
           style={{ fontFamily: 'Cormorant Garamond, serif' }}>
           You've Been Selected to Join the Dyson Relocation Management Network
         </h1>
-        <p className="text-sm md:text-base max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          Subscribe to receive the DNN Real Estate News broadcast every morning — for yourself and your clients —
-          and learn about affiliation with the nation's premier independent-brokerage relocation network.
+        <p className="text-sm md:text-base max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          Based on your sales performance, you are invited to Subscribe to membership to our Corporate and Private Client Relocation network.
+          You also subscribe to the DNN National and Local Real Estate News Broadcast Service most every morning — for yourself and your clients —
+          and learn about affiliation with the nation's premier independent-brokerage relocation network. We do not sell real estate — we manage the process.
         </p>
+
+        {/* Dummy active relocation process roadmap */}
+        <div className="max-w-3xl mx-auto mt-8 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(16,185,129,0.25)' }}>
+          <p className="text-[10px] font-black tracking-widest uppercase mb-2 text-center" style={{ color: '#10b981' }}>
+            ● Live — Your Relocation Process Roadmap
+          </p>
+          <FlowRoadmapLine
+            stages={relocationFlow?.stages || []}
+            stageStatuses={relocationStatuses}
+            color="#10b981"
+            activeStageId={relocationActive}
+            onSelect={() => {}}
+            compact
+          />
+          <p className="text-[10px] text-gray-500 text-center mt-2">
+            Every client move is mapped step-by-step — schools, escrow, movers, timing. You watch it happen in real time.
+          </p>
+        </div>
       </div>
 
       {/* Value props */}
