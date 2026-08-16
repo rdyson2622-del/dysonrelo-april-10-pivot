@@ -12,6 +12,16 @@ Every function on the site — not just the admin workflow atlas — becomes a *
 
 This is not a dashboard. It is a **live, visible chain of accountability** that runs alongside every real estate transaction, every relocation, every show, every referral.
 
+### The deeper purpose (the "glue")
+
+The visual part of this — during the production of ALL functions — is the **new glue that helps the consumer transition to AI workflows and understand them.** Most consumers have never watched an AI workflow run. They don't trust what they can't see. This visual layer is how they see it: every stage, every reason, every flag, every accountable party — in plain English, in real time.
+
+When the consumer can watch the flow, two things happen:
+1. **Accountability becomes true, clean, and clear.** Not a promise — a visible fact. The consumer sees who is responsible at each stage, when credits are spent, and where a 401 flag appeared. No party can hide.
+2. **The consumer transitions to AI workflows without fear.** They are not being asked to trust a black box. They are being asked to watch a transparent one. The visual is the on-ramp from "I don't understand AI" to "I can see exactly what the AI is doing for me right now."
+
+This is why the visual is not a nice-to-have. It is the adoption mechanism. Without it, the AI workflows are invisible to the people they serve. With it, the AI workflows are accountable, legible, and trustworthy.
+
 ---
 
 ## 2. What the viewer sees (the "white copy" concept)
