@@ -238,8 +238,8 @@ export default function RoadMapEntry() {
             {/* Issues */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: `1px solid ${GOLD}30` }}>
               <button
-                onClick={() => setSelectedPill(PILLS[0])}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                onClick={() => navigate('/solve-my-story')}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
                 style={{
                   background: selectedPill.id === 'real_estate_issue' ? `${GOLD}20` : 'rgba(255,255,255,0.03)',
                   border: `1.5px solid ${selectedPill.id === 'real_estate_issue' ? GOLD : 'rgba(255,255,255,0.1)'}`,
@@ -262,8 +262,8 @@ export default function RoadMapEntry() {
             {/* Relocation */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(16,185,129,0.30)' }}>
               <button
-                onClick={() => setSelectedPill(PILLS[1])}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                onClick={() => navigate('/relocation-intake')}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
                 style={{
                   background: selectedPill.id === 'relocation' ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.03)',
                   border: `1.5px solid ${selectedPill.id === 'relocation' ? '#10b981' : 'rgba(255,255,255,0.1)'}`,
@@ -286,8 +286,8 @@ export default function RoadMapEntry() {
             {/* Explore City */}
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(56,189,248,0.30)' }}>
               <button
-                onClick={() => setSelectedPill(PILLS[2])}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5"
+                onClick={() => navigate('/city-guide')}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
                 style={{
                   background: selectedPill.id === 'explore_city' ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.03)',
                   border: `1.5px solid ${selectedPill.id === 'explore_city' ? '#38bdf8' : 'rgba(255,255,255,0.1)'}`,
