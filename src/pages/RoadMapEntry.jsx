@@ -198,7 +198,7 @@ export default function RoadMapEntry() {
           )}
 
           {/* ── Input bar ── */}
-          <p className="text-xs text-gray-500 mb-3 text-center">Type your request · Click a roadmap below to pick a mode</p>
+          <p className="text-xs text-gray-500 mb-3 text-center">If you have a real estate opportunity or issue, Type or Voice your request  here then  you can visually follow our progress and results. Dyson Real Estate Solutions is a one of a kind AGI intelligence solution process that maps our progress in real time.</p>
           <div className="relative max-w-2xl mx-auto">
             <input
               type="text"
