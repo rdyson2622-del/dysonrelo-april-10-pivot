@@ -40,9 +40,12 @@ export default function DnnComparisonSection() {
           <p className="text-xs font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             Why DNN Is Different
           </p>
-          <h2 className="display-heading mb-4" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', letterSpacing: '0.12em', color: '#1a1a1a' }}>
+          <h2 className="display-heading mb-3" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', letterSpacing: '0.12em', color: '#1a1a1a' }}>
             The Only News Network That Solves Problems
           </h2>
+          <p className="display-heading mb-4" style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.75rem)', letterSpacing: '0.25em', color: GOLD }}>
+            WE ARE NEWS WITH SOLUTIONS
+          </p>
           <p className="text-sm leading-relaxed" style={{ color: '#4a4a4a', maxWidth: '640px' }}>
             HousingWire reports the news. Inman covers the industry. Sirva moves your boxes.
             Nobody does what DNN does — report market-moving news AND deliver tailored solutions
