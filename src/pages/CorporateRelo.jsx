@@ -65,7 +65,7 @@ export default function CorporateRelo() {
           />
         </div>
 
-        <p className="text-lg leading-relaxed max-w-2xl" style={{ color: '#1a1a1a' }}>
+        <p className="leading-relaxed max-w-2xl mt-10" style={{ color: '#1a1a1a', fontSize: '1.75rem' }}>
           We save your company the relocation management costs charged by traditional corporate relocation companies.
           Instead, we share in the commission offered to the buying or selling agent in our national and international
           networks — so your people land well, and your budget stays intact.
