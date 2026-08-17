@@ -132,7 +132,7 @@ export default function Home() {
                     className="absolute inset-0 flex flex-col items-center justify-center gap-4"
                     style={{ background: '#000' }}
                   >
-                    <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '45px', width: 'auto' }} />
+                    <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '180px', width: 'auto' }} />
                     <span className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
                       <svg viewBox="0 0 24 24" className="w-7 h-7" fill="#000" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
                     </span>
