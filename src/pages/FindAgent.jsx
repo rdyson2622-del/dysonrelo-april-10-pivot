@@ -165,29 +165,8 @@ export default function FindAgent() {
           })}
         </div>
 
-        {/* The 4-step process */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-          className="rounded-3xl p-8" style={{ background: '#000', border: `1px solid ${GOLD}33` }}>
-          <h3 className="text-xl font-bold mb-6" style={{ color: GOLD }}>Our 4-Step Agent Selection Process</h3>
-          <div className="space-y-5">
-            {[
-              { num: 1, title: 'Your Relocation Profile', desc: 'We learn your destination, timeline, budget, lifestyle priorities, and communication style before anything else.' },
-              { num: 2, title: 'Deep Market Vetting', desc: 'We research 20+ agents in your destination market — DRE records, production history, reviews, and personality fit.' },
-              { num: 3, title: 'Your Shortlist', desc: 'You receive 3–5 hand-selected finalists. No pitches. No competitions. Just a clear recommendation and your choice.' },
-              { num: 4, title: 'Buyer Broker Agreement', desc: 'Once you select your agent, you formalize the relationship. This unlocks your full City Guide, property tools, and concierge access.' },
-            ].map((step, i) => (
-              <div key={i} className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-sm" style={{ background: GOLD, color: '#000' }}>
-                  {step.num}
-                </div>
-                <div>
-                  <p className="font-bold mb-1" style={{ color: '#fff' }}>{step.title}</p>
-                  <p className="text-sm" style={{ color: '#888' }}>{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        {/* The 4-step process — animated Solution Map line diagram (replaces white-on-white text list) */}
+        <AgentSelectionSolutionMap />
 
         {/* Portal Subscribe */}
         <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
@@ -196,8 +175,8 @@ export default function FindAgent() {
         {!client && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="text-center pb-8">
             <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>Ready to let us find the right agent for you?</p>
-            <a href="/relocation-intake" className="inline-block px-10 py-3 rounded-full font-bold text-sm" style={{ background: GOLD, color: '#000' }}>
-              Start Your Relocation Profile →
+            <a href="/relocation-intake" className="inline-block px-10 py-3 rounded-full font-bold text-sm text-center" style={{ background: GOLD, color: '#000' }}>
+              Following is our process to plan your clients move
             </a>
           </motion.div>
         )}
