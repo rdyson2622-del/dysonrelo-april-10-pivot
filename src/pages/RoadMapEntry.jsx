@@ -200,17 +200,26 @@ export default function RoadMapEntry() {
           {/* ── Input bar ── */}
           <p className="mb-3 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.</p>
           <div className="max-w-2xl mx-auto flex items-center gap-3">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              placeholder="A listing, a stalled escrow, a buyer or seller problem, a contract issue.."
-              className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-lg placeholder-gray-500 focus:outline-none focus:border-dyson-gold/50 transition-colors"
-            />
+            <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#fcfcfc', border: '1px solid rgba(212,175,55,0.4)' }}>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                className="relative z-10 w-full bg-transparent px-6 py-[1.3rem] text-black text-lg focus:outline-none transition-colors"
+              />
+              {!inputValue && (
+                <div className="absolute inset-0 flex items-center px-6 overflow-hidden whitespace-nowrap pointer-events-none">
+                  <span className="inline-flex animate-marquee text-lg" style={{ color: '#999' }}>
+                    <span className="px-6">A listing · a stalled escrow · a buyer or seller problem · a contract issue · </span>
+                    <span className="px-6">A listing · a stalled escrow · a buyer or seller problem · a contract issue · </span>
+                  </span>
+                </div>
+              )}
+            </div>
             <button
               onClick={handleSubmit}
-              className="shrink-0 inline-flex items-center gap-2 px-5 py-4 rounded-2xl gold-btn text-sm font-bold"
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-[1.3rem] rounded-2xl gold-btn text-sm font-bold"
             >
               Map My Route
               <ArrowRight className="w-4 h-4" />
