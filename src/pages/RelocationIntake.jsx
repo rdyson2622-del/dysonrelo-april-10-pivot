@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
 import RelocationIntakeSolutionMap from '@/components/roadmap/RelocationIntakeSolutionMap';
-import DysonPromise from '@/components/intake/DysonPromise';
+import ReloAgentScrollSequence from '@/components/intake/ReloAgentScrollSequence';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -438,9 +438,6 @@ export default function RelocationIntake() {
           <RelocationIntakeSolutionMap />
           </div>
 
-          {/* The Dyson Promise — relocation managers positioning statement */}
-          <DysonPromise />
-
           {/* Insulation Factor — shown before form */}
         <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.35)' }}>
           <p className="text-base font-bold mb-3" style={{ color: '#D4AF37' }}>Why We Hand-Select Your Local Team</p>
@@ -464,9 +461,13 @@ export default function RelocationIntake() {
           </div>
         </div>
 
+        {/* 6-Page Scroll Sequence — sits between the two black boxes */}
+        <ReloAgentScrollSequence />
+
         {/* Form Card */}
         <motion.div
          key={step}
+         id="about-you"
          initial={{ opacity: 0, x: 20 }}
          animate={{ opacity: 1, x: 0 }}
          transition={{ duration: 0.25 }}
