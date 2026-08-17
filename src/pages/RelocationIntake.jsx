@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
 import RelocationIntakeSolutionMap from '@/components/roadmap/RelocationIntakeSolutionMap';
+import DysonPromise from '@/components/intake/DysonPromise';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -436,6 +437,9 @@ export default function RelocationIntake() {
           <div className="mb-10">
           <RelocationIntakeSolutionMap />
           </div>
+
+          {/* The Dyson Promise — relocation managers positioning statement */}
+          <DysonPromise />
 
           {/* Insulation Factor — shown before form */}
         <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.35)' }}>
