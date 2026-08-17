@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Play, X, Volume2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -88,6 +89,13 @@ export default function DnnStudioLanding() {
         </div>
       </header>
 
+      {/* ── Hero title ── */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 text-center" style={{ bottom: '30%' }}>
+        <h1 className="text-3xl sm:text-5xl font-black tracking-[0.15em] text-white" style={{ textShadow: '0 2px 24px rgba(0,0,0,0.85)' }}>
+          DNN REAL ESTATE NEWS
+        </h1>
+      </div>
+
       {/* ── Three gold pills — centered, ~20% up from bottom ── */}
       <div className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5" style={{ bottom: '20%' }}>
         {PILLS.map((pill) => (
@@ -110,10 +118,26 @@ export default function DnnStudioLanding() {
       </div>
 
       {/* ── Tagline under pills ── */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 text-center" style={{ bottom: '12%' }}>
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 text-center" style={{ bottom: '14%' }}>
         <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: 'rgba(212,175,55,0.7)' }}>
           DNN Real Estate News · The Intelligence Environment
         </p>
+      </div>
+
+      {/* ── Bottom media player controls ── */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-6 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
+        <div className="flex items-center gap-4 max-w-5xl mx-auto">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: GOLD }}>1</div>
+          <div className="flex-1 h-1 rounded-full relative" style={{ background: 'rgba(255,255,255,0.15)' }}>
+            <div className="absolute top-0 left-0 h-full rounded-full" style={{ width: '35%', background: GOLD }} />
+            <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full" style={{ left: 'calc(35% - 6px)', background: GOLD, boxShadow: '0 0 8px rgba(212,175,55,0.6)' }} />
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <button className="text-gray-400 hover:text-white transition-colors"><X className="w-4 h-4" /></button>
+            <button className="hover:opacity-80 transition-opacity" style={{ color: GOLD }}><Play className="w-5 h-5" /></button>
+            <button className="text-gray-400 hover:text-white transition-colors"><Volume2 className="w-4 h-4" /></button>
+          </div>
+        </div>
       </div>
     </div>
   );
