@@ -118,6 +118,12 @@ export default function ClientSidebar({ onToggle }) {
 
       {/* ── Two Core Value Links ── */}
       <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <Link to="/"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+          style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+          <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+          SOLUTIONS
+        </Link>
         <Link to="/relo-management"
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
           style={{ color: GOLD }}>
