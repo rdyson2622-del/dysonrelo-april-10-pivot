@@ -239,15 +239,21 @@ export default function RoadMapEntry() {
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: `1px solid ${GOLD}30` }}>
               <button
                 onClick={() => navigate('/solve-my-story')}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all mb-1.5 hover:scale-[1.03] overflow-hidden"
                 style={{
-                  background: selectedPill.id === 'real_estate_issue' ? `${GOLD}20` : 'rgba(255,255,255,0.03)',
-                  border: `1.5px solid ${selectedPill.id === 'real_estate_issue' ? GOLD : 'rgba(255,255,255,0.1)'}`,
-                  color: selectedPill.id === 'real_estate_issue' ? GOLD : '#888',
+                  background: '#fcfcfc',
+                  border: `1.5px solid ${GOLD}`,
+                  color: '#000000',
+                  minWidth: '180px',
                 }}
               >
-                <Home className="w-3.5 h-3.5" />
-                Real Estate Issue
+                <Home className="w-3.5 h-3.5 shrink-0" />
+                <span className="overflow-hidden whitespace-nowrap">
+                  <span className="inline-flex animate-marquee">
+                    <span className="px-3">Real Estate Issue</span>
+                    <span className="px-3">Real Estate Issue</span>
+                  </span>
+                </span>
               </button>
               <FlowRoadmapLine
                 stages={issuesFlow?.stages || []}
@@ -263,15 +269,21 @@ export default function RoadMapEntry() {
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(16,185,129,0.30)' }}>
               <button
                 onClick={() => navigate('/relocation-intake')}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all mb-1.5 hover:scale-[1.03] overflow-hidden"
                 style={{
-                  background: selectedPill.id === 'relocation' ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.03)',
-                  border: `1.5px solid ${selectedPill.id === 'relocation' ? '#10b981' : 'rgba(255,255,255,0.1)'}`,
-                  color: selectedPill.id === 'relocation' ? '#10b981' : '#888',
+                  background: '#fcfcfc',
+                  border: `1.5px solid #10b981`,
+                  color: '#000000',
+                  minWidth: '180px',
                 }}
               >
-                <Compass className="w-3.5 h-3.5" />
-                Relocation Roadmap
+                <Compass className="w-3.5 h-3.5 shrink-0" />
+                <span className="overflow-hidden whitespace-nowrap">
+                  <span className="inline-flex animate-marquee">
+                    <span className="px-3">Relocation Roadmap</span>
+                    <span className="px-3">Relocation Roadmap</span>
+                  </span>
+                </span>
               </button>
               <FlowRoadmapLine
                 stages={relocationFlow?.stages || []}
@@ -287,15 +299,21 @@ export default function RoadMapEntry() {
             <div className="rounded-xl p-2 sm:p-3" style={{ background: '#0a0a0a', border: '1px solid rgba(56,189,248,0.30)' }}>
               <button
                 onClick={() => navigate('/city-guide')}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all mb-1.5 hover:scale-[1.03]"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold transition-all mb-1.5 hover:scale-[1.03] overflow-hidden"
                 style={{
-                  background: selectedPill.id === 'explore_city' ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.03)',
-                  border: `1.5px solid ${selectedPill.id === 'explore_city' ? '#38bdf8' : 'rgba(255,255,255,0.1)'}`,
-                  color: selectedPill.id === 'explore_city' ? '#38bdf8' : '#888',
+                  background: '#fcfcfc',
+                  border: `1.5px solid #38bdf8`,
+                  color: '#000000',
+                  minWidth: '180px',
                 }}
               >
-                <MapPin className="w-3.5 h-3.5" />
-                Explore a City
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <span className="overflow-hidden whitespace-nowrap">
+                  <span className="inline-flex animate-marquee">
+                    <span className="px-3">Explore a City</span>
+                    <span className="px-3">Explore a City</span>
+                  </span>
+                </span>
               </button>
               <FlowRoadmapLine
                 stages={exploreFlowDemo?.stages || []}
