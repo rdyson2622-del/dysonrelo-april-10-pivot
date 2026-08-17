@@ -30,6 +30,7 @@ export default function EscrowManagement() {
   const [selectedEscrowKey, setSelectedEscrowKey] = useState(null);
   const [resolver, setResolver] = useState(null); // { escrow, milestone }
   const [user, setUser] = useState(null);
+  const [copiedUrl, setCopiedUrl] = useState(false);
 
   useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
   const userBrokerageId = user?.brokerage_id || user?.data?.brokerage_id;
@@ -52,6 +53,16 @@ export default function EscrowManagement() {
     refetchInterval: 30000,
   });
 
+  const { data: boldtrailHealth, refetch: refetchBoldtrailHealth, isFetching: healthLoading } = useQuery({
+    queryKey: ['boldtrailHealthCheck'],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('boldtrailHealthCheck', {});
+      return res.data || res;
+    },
+    enabled: !!user,
+    retry: false,
+  });
+
   // Applied escrow issues — their detour stages merge into the live roadmap
   const { data: escrowIssues = [] } = useQuery({
     queryKey: ['escrowIssues'],
@@ -67,6 +78,7 @@ export default function EscrowManagement() {
       const res = await base44.functions.invoke(fnName, {});
       setSyncResult({ source: sourceId, ok: true, data: res.data });
       queryClient.invalidateQueries(['escrowMilestones']);
+      queryClient.invalidateQueries(['boldtrailHealthCheck']);
     } catch (e) {
       setSyncResult({ source: sourceId, ok: false, error: e.message });
     }
@@ -106,6 +118,19 @@ export default function EscrowManagement() {
 
       {/* Communication pill — first thing under the heading */}
       <BrokerageCommPill />
+
+      <BoldtrailLinkCard
+        health={boldtrailHealth}
+        loading={healthLoading}
+        copiedUrl={copiedUrl}
+        onCopy={() => {
+          const url = boldtrailHealth?.official_base_url || 'https://my.brokermint.com/api/v2';
+          navigator.clipboard.writeText(url);
+          setCopiedUrl(true);
+          setTimeout(() => setCopiedUrl(false), 2000);
+        }}
+        onRecheck={() => refetchBoldtrailHealth()}
+      />
 
       {/* Integration sources */}
       <div className="grid md:grid-cols-3 gap-3 mb-6">
@@ -277,6 +302,66 @@ export default function EscrowManagement() {
           onClose={() => setResolver(null)}
           onApplied={() => queryClient.invalidateQueries({ queryKey: ['escrowIssues'] })}
         />
+      )}
+    </div>
+  );
+}
+
+function BoldtrailLinkCard({ health, loading, copiedUrl, onCopy, onRecheck }) {
+  const live = health?.link_live;
+  const statusColor = live ? '#22c55e' : health?.token_present ? '#f59e0b' : '#ef4444';
+  const statusLabel = live
+    ? (health?.backoffice_live ? 'Back Office live' : 'CRM live (contacts only — not escrow)')
+    : health?.token_present
+      ? 'Token present — Back Office rejected it'
+      : loading
+        ? 'Checking…'
+        : 'Secrets incomplete';
+  return (
+    <div className="rounded-xl p-4 mb-6" style={{ background: '#111', border: `1px solid ${statusColor}55` }}>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Wisdom Properties · BoldTrail link</p>
+          <p className="text-sm text-white mt-1">
+            Status: <span style={{ color: statusColor }}>{statusLabel}</span>
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Host used: <code className="text-gray-300">{health?.resolved_base_url || 'https://my.brokermint.com/api/v2'}</code>
+            {health?.resolved_from ? ` · from ${health.resolved_from}` : ''}
+            {health?.token_present ? ` · token ${health.token_looks_like_jwt ? 'looks like a JWT' : 'present'}` : ' · token missing'}
+          </p>
+        </div>
+        <button
+          onClick={onRecheck}
+          disabled={loading}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold disabled:opacity-50"
+          style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
+        >
+          {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+          Re-check
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <code className="text-xs px-2 py-1 rounded bg-black/40 text-white">BOLDTRAIL_API_BASE_URL</code>
+        <span className="text-xs text-gray-500">=</span>
+        <code className="text-xs px-2 py-1 rounded bg-black/40 text-white">{health?.official_base_url || 'https://my.brokermint.com/api/v2'}</code>
+        <button
+          onClick={onCopy}
+          className="text-[10px] font-bold px-2 py-1 rounded"
+          style={{ background: 'rgba(212,175,55,0.12)', color: GOLD }}
+        >
+          {copiedUrl ? 'Copied' : 'Copy URL'}
+        </button>
+      </div>
+      <ol className="text-xs text-gray-400 space-y-1 list-decimal pl-4">
+        <li>Wisdom BoldTrail <strong className="text-white">Back Office</strong> (company admin) → Admin → API settings → copy the API key. If it is hidden, email support@brokermint.com. Lead Engine JWTs cannot pull escrow.</li>
+        <li>Base44.com → DysonRelo app → Settings → Secrets → paste that key as <code className="text-gray-200">BOLDTRAIL_API_TOKEN</code>.</li>
+        <li>Same Secrets page → set <code className="text-gray-200">BOLDTRAIL_API_BASE_URL</code> to the URL above (https, no trailing slash). Save, then Re-check.</li>
+      </ol>
+      {Array.isArray(health?.next_steps) && health.next_steps.length > 0 && (
+        <p className="text-xs mt-3" style={{ color: live ? '#22c55e' : '#f59e0b' }}>
+          {health.next_steps[0]}
+        </p>
       )}
     </div>
   );

@@ -15,6 +15,7 @@ Keep Gmail, Drive, Slack, Calendar, CRM, n8n, and Grok webhooks connected, docum
 - Slack Notifications (team alerts, pipeline routing)
 - Calendar Management (scheduling, availability, reminders)
 - CRM Connections (ListingOwner, Audience, Media, DNN subscribers)
+- BoldTrail / Wisdom Back Office (escrow + doc audit)
 - n8n workflow webhooks and the Grok/Cursor webhook API
 - Knowledge Library section `tools_integrations`
 - Secrets hygiene: never commit keys; document names only
@@ -35,6 +36,7 @@ Keep Gmail, Drive, Slack, Calendar, CRM, n8n, and Grok webhooks connected, docum
 | Slack | Signal | Not yet a Base44 connector — Conduit builds it |
 | Calendar | Relay / Operations | Not yet a connector — Conduit builds it |
 | CRM | Scout / Nexus / Bridge | Entities, not a third-party CRM |
+| BoldTrail | Wisdom escrow / Doc Audit | `boldtrailSyncEscrow`, `boldtrailPullTransactionDocs`, `boldtrailHealthCheck` |
 | n8n | Conductor / Herald | DNN pipeline; `n8nGuard` may block M2M |
 | Grok webhook | Coordinator | `claudeWebhook`, `claudeLibraryDirectUpdate` |
 
@@ -45,7 +47,19 @@ Keep Gmail, Drive, Slack, Calendar, CRM, n8n, and Grok webhooks connected, docum
 - Gmail: `base44/functions/gmailOwnerReplyHandler/`
 - Gateway: `base44/functions/claudeWebhook/`, `src/pages/Connect.jsx`
 - n8n: `DNN_PIPELINE_ARCHITECTURE.md`, `base44/shared/n8nGuard.ts`, `n8nBroadcastCallback`
-- Admin: `/admin/library-specialists`, `/connect`, `/admin/claude-flow` (Integrations)
+- BoldTrail: `base44/shared/boldtrailSync.ts`, `base44/functions/boldtrailSyncEscrow/`, `boldtrailPullTransactionDocs/`, `boldtrailHealthCheck/`
+- Admin: `/admin/library-specialists`, `/connect`, `/admin/claude-flow` (Integrations), `/admin/wisdom/escrow`
+
+## BoldTrail secrets (names only)
+
+Wisdom Properties Back Office talks to DysonRelo through two Base44 secrets. Cursor cannot set them — a human pastes them on Base44.com → Settings → Secrets.
+
+| Secret | Value to paste |
+| --- | --- |
+| `BOLDTRAIL_API_BASE_URL` | `https://my.brokermint.com/api/v2` (Wisdom Back Office / Brokermint). `api.boldtrail.com` 403s. CRM contacts live at `https://api.kvcore.com/v2/public` and do **not** expose `/deals`. |
+| `BOLDTRAIL_API_TOKEN` | Back Office API key from Admin → API settings (or support@brokermint.com). Lead Engine → Lead Dropbox JWTs are CRM-only. |
+
+Empty or malformed `BOLDTRAIL_API_BASE_URL` falls back to the Back Office host. Re-test from Escrow → Re-check after both secrets are saved.
 
 ## Grok Bot
 

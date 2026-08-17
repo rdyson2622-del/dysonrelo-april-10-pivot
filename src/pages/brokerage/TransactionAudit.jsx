@@ -55,6 +55,16 @@ export default function TransactionAudit() {
     refetchInterval: 15000,
   });
 
+  const { data: boldtrailHealth } = useQuery({
+    queryKey: ['boldtrailHealthCheck'],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('boldtrailHealthCheck', {});
+      return res.data || res;
+    },
+    enabled: !!user,
+    retry: false,
+  });
+
   const runPull = async () => {
     if (!pullEscrow.trim()) return;
     setPulling(true);
@@ -96,6 +106,13 @@ export default function TransactionAudit() {
       </div>
 
       <BrokerageCommPill />
+
+      {boldtrailHealth && (
+        <p className="text-xs mb-4" style={{ color: boldtrailHealth.link_live ? '#22c55e' : '#f59e0b' }}>
+          BoldTrail: {boldtrailHealth.link_live ? 'link live' : (boldtrailHealth.next_steps?.[0] || 'secrets incomplete')}
+          {' · '}host {boldtrailHealth.resolved_base_url}
+        </p>
+      )}
 
       {/* Pull new analysis */}
       <div className="rounded-xl p-4 mb-6" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
