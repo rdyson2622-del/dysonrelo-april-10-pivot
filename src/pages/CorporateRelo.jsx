@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper } from 'lucide-react';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import { getFlow } from '@/lib/departmentWorkflows';
+import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
 
@@ -25,6 +28,9 @@ const PILLARS = [
 ];
 
 export default function CorporateRelo() {
+  const relocationFlow = getFlow('operations');
+  const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
+
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
 
@@ -43,6 +49,22 @@ export default function CorporateRelo() {
           style={{ fontSize: 'clamp(1.2rem, 3vw, 2.1rem)', letterSpacing: '0.12em', color: GOLD }}>
           WITH FULL REAL TIME TRANSPARENCY TO YOU AND YOUR EMPLOYEE BUT WITHOUT THE MANAGEMENT FEES.
         </h2>
+
+        {/* ── Relocation Solution Map ── */}
+        <div className="w-full max-w-5xl mx-auto mt-6 mb-2 rounded-2xl p-5"
+          style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+          <p className="text-[10px] font-black tracking-[0.3em] uppercase text-center mb-3 animate-pulse" style={{ color: GOLD }}>
+            ● Live Solution Map — The Relocation Process
+          </p>
+          <FlowRoadmapLine
+            stages={relocationFlow?.stages || []}
+            stageStatuses={relocationStatuses}
+            color={GOLD}
+            activeStageId={relocationActive}
+            onSelect={() => {}}
+          />
+        </div>
+
         <p className="text-lg leading-relaxed max-w-2xl" style={{ color: '#1a1a1a' }}>
           We save your company the relocation management costs charged by traditional corporate relocation companies.
           Instead, we share in the commission offered to the buying or selling agent in our national and international
