@@ -115,7 +115,7 @@ export default function Home() {
           {/* Title */}
           <div style={{
             color: GOLD,
-            fontSize: 'clamp(1.6rem, 4vw, 2.75rem)',
+            fontSize: 'clamp(1.36rem, 3.4vw, 2.34rem)',
             fontFamily: 'Cormorant Garamond, serif',
             fontWeight: 600,
             letterSpacing: '0.12em',
