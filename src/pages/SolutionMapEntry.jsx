@@ -190,10 +190,13 @@ export default function SolutionMapEntry() {
             {copy.title} {copy.titleAccent}
           </h1>
           {copy.subtitle && (
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-[18vh] leading-relaxed">
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
               {copy.subtitle}
             </p>
           )}
+
+          {/* Spacer — pushes pill down so it stands alone */}
+          <div className="h-[15vh]" />
 
           {/* ── Input bar ── */}
           <div className="max-w-2xl mx-auto flex items-center gap-3">
@@ -245,7 +248,10 @@ export default function SolutionMapEntry() {
             </button>
           </div>
 
-          <p className="mt-[6vh] text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
+          {/* Spacer — pushes copy below pill down so pill stands alone */}
+          <div className="h-[12vh]" />
+
+          <p className="text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
             If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.
           </p>
 
