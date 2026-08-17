@@ -117,13 +117,6 @@ export default function DnnStudioLanding() {
         ))}
       </div>
 
-      {/* ── Tagline under pills ── */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 text-center" style={{ bottom: '14%' }}>
-        <p className="text-[10px] font-black tracking-[0.3em] uppercase" style={{ color: 'rgba(212,175,55,0.7)' }}>
-          DNN Real Estate News · The Intelligence Environment
-        </p>
-      </div>
-
       {/* ── Bottom media player controls ── */}
       <div className="absolute bottom-0 left-0 right-0 z-20 px-6 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
         <div className="flex items-center gap-4 max-w-5xl mx-auto">
