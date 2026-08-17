@@ -245,7 +245,7 @@ export default function SolutionMapEntry() {
             </button>
           </div>
 
-          <p className="mt-8 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
+          <p className="mt-[10vh] text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
             If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.
           </p>
 
