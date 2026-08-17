@@ -138,6 +138,7 @@ import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
 import MasterShowSheet from './pages/MasterShowSheet';
 import SolutionMapEntry from './pages/SolutionMapEntry';
+import DnnStudioLanding from './pages/DnnStudioLanding';
 import EscrowManagement from './pages/wisdom/EscrowManagement';
 import ListingManagement from './pages/wisdom/ListingManagement';
 import AgentRecords from './pages/wisdom/AgentRecords';
@@ -188,8 +189,10 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
       <Route path="/broadcast-show" element={<BroadcastShow />} />
 
-      {/* Front door — simplified road map entry page (standalone, no sidebar) */}
-      <Route path="/" element={<SolutionMapEntry />} />
+      {/* Front door — DNN Studio landing with three universal pills (NEWS / RELOCATION / INTELLIGENCE) */}
+      <Route path="/" element={<DnnStudioLanding />} />
+      {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
+      <Route path="/solutions" element={<SolutionMapEntry />} />
 
       {/* Consumer Routes with Sidebar Layout */}
       {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
