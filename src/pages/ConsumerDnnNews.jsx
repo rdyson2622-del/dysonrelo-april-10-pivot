@@ -12,6 +12,7 @@ import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
 import DnnBroadcastArchive from '@/components/dnn/DnnBroadcastArchive';
+import DnnNewsSolutionMap from '@/components/dnn/DnnNewsSolutionMap';
 
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -589,6 +590,7 @@ export default function ConsumerDnnNews() {
       <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
         <FeaturedBroadcast />
         {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
+        <DnnNewsSolutionMap />
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>
