@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
+import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 
 const GOLD = '#D4AF37';
 
@@ -129,6 +130,9 @@ export default function FindAgent() {
         )}
 
 
+
+        {/* Solution Map — animated 4-step agent selection flow, shown above the problem box */}
+        <AgentSelectionSolutionMap />
 
         {/* Why Section — always shown */}
         <div className="space-y-6">
