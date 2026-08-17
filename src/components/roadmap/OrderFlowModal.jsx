@@ -11,19 +11,14 @@ const PRIORITIES = [
   { id: 'urgent', label: 'Urgent', color: '#ef4444' },
 ];
 
-const TIMEFRAMES = ['ASAP', 'This week', 'This month', 'Flexible'];
-
 /**
- * OrderFlowModal — the "order desk" for subscribers.
- * Pre-fills with the flow they clicked, lets them describe their specific need,
- * and creates a real SubscriberRoadmap record (status = requested).
- * The real record replaces dummies on the show sheet automatically.
+ * OrderFlowModal — compact "order desk" for subscribers.
+ * Creates a real SubscriberRoadmap record (status = requested).
  */
 export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
   const [title, setTitle] = useState(prefill?.title || '');
   const [requestText, setRequestText] = useState('');
   const [priority, setPriority] = useState(prefill?.priority || 'normal');
-  const [timeframe, setTimeframe] = useState('This week');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -41,7 +36,7 @@ export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
         title: title.trim(),
         desk_id: prefill?.desk_id || 'knowledge',
         desk_name: prefill?.desk_name || 'Knowledge & Research',
-        request_text: `${requestText.trim()}\n\nTimeframe: ${timeframe}`,
+        request_text: requestText.trim(),
         status: 'requested',
         priority,
         requested_at: new Date().toISOString(),
@@ -51,7 +46,7 @@ export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
       setTimeout(() => {
         onOrdered?.();
         onClose();
-      }, 1500);
+      }, 1200);
     } catch (e) {
       setError(e.message || 'Failed to submit request');
     }
@@ -60,116 +55,94 @@ export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }} onClick={onClose}>
-      <div className="w-full max-w-lg rounded-2xl p-6 max-h-[90vh] overflow-y-auto" style={{ background: '#111', border: `1px solid ${GOLD}40` }} onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-sm rounded-xl p-4" style={{ background: '#111', border: `1px solid ${GOLD}40` }} onClick={e => e.stopPropagation()}>
         {success ? (
-          <div className="text-center py-8">
-            <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: '#22c55e' }} />
-            <h3 className="text-xl font-serif text-white mb-1">Request Submitted!</h3>
-            <p className="text-sm text-gray-400">Your Solution Map item has been ordered. An AGI agent will pick it up shortly.</p>
+          <div className="text-center py-6">
+            <CheckCircle2 className="w-10 h-10 mx-auto mb-2" style={{ color: '#22c55e' }} />
+            <h3 className="text-base font-serif text-white mb-1">Request Submitted</h3>
+            <p className="text-xs text-gray-400">An AGI agent will pick it up shortly.</p>
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}18`, border: `1px solid ${GOLD}40` }}>
-                  <Zap className="w-4 h-4" style={{ color: GOLD }} />
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${GOLD}18`, border: `1px solid ${GOLD}40` }}>
+                  <Zap className="w-3.5 h-3.5" style={{ color: GOLD }} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Order Desk</p>
-                  <h3 className="text-lg font-serif text-white">Request This Flow</h3>
+                  <p className="text-[9px] font-black tracking-widest uppercase" style={{ color: GOLD }}>Order Desk</p>
+                  <h3 className="text-sm font-serif text-white leading-tight">Find A Solution</h3>
                 </div>
               </div>
               <button onClick={onClose} className="text-gray-500 hover:text-white">
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             {prefill?.desk_name && (
-              <div className="rounded-lg px-3 py-2 mb-4 text-xs flex items-center gap-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <span className="text-gray-500">Department:</span>
+              <div className="rounded-md px-2 py-1 mb-2.5 text-[10px] flex items-center gap-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <span className="text-gray-500">Dept:</span>
                 <span style={{ color: GOLD }}>{prefill.desk_name}</span>
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               <div>
-                <label className="text-[10px] font-black tracking-widest uppercase mb-1.5 block" style={{ color: 'rgba(255,255,255,0.4)' }}>What do you need?</label>
+                <label className="text-[9px] font-black tracking-widest uppercase mb-1 block" style={{ color: 'rgba(255,255,255,0.4)' }}>What do you need?</label>
                 <input
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   placeholder="e.g. Nashville City Guide"
-                  className="w-full px-4 py-3 rounded-lg text-sm text-white outline-none"
+                  className="w-full px-3 py-2 rounded-md text-sm text-white outline-none"
                   style={{ background: '#1a1a1a', border: `1px solid ${GOLD}25` }}
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-black tracking-widest uppercase mb-1.5 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Tell us the details</label>
+                <label className="text-[9px] font-black tracking-widest uppercase mb-1 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Details</label>
                 <textarea
                   value={requestText}
                   onChange={e => setRequestText(e.target.value)}
-                  placeholder="Describe your request — where, when, what you're looking for..."
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg text-sm text-white outline-none resize-none"
+                  placeholder="Where, when, what you're looking for..."
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-md text-sm text-white outline-none resize-none"
                   style={{ background: '#1a1a1a', border: `1px solid ${GOLD}25` }}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] font-black tracking-widest uppercase mb-1.5 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Priority</label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {PRIORITIES.map(p => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => setPriority(p.id)}
-                        className="text-[11px] px-2.5 py-1.5 rounded-lg font-bold transition-all"
-                        style={{
-                          background: priority === p.id ? `${p.color}18` : 'transparent',
-                          border: `1px solid ${priority === p.id ? p.color : 'rgba(255,255,255,0.12)'}`,
-                          color: priority === p.id ? p.color : '#888',
-                        }}
-                      >
-                        {p.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[10px] font-black tracking-widest uppercase mb-1.5 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Timeframe</label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {TIMEFRAMES.map(t => (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => setTimeframe(t)}
-                        className="text-[11px] px-2.5 py-1.5 rounded-lg font-bold transition-all"
-                        style={{
-                          background: timeframe === t ? `${GOLD}18` : 'transparent',
-                          border: `1px solid ${timeframe === t ? GOLD : 'rgba(255,255,255,0.12)'}`,
-                          color: timeframe === t ? GOLD : '#888',
-                        }}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
+              <div>
+                <label className="text-[9px] font-black tracking-widest uppercase mb-1 block" style={{ color: 'rgba(255,255,255,0.4)' }}>Priority</label>
+                <div className="flex flex-wrap gap-1">
+                  {PRIORITIES.map(p => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setPriority(p.id)}
+                      className="text-[10px] px-2 py-1 rounded-md font-bold transition-all"
+                      style={{
+                        background: priority === p.id ? `${p.color}18` : 'transparent',
+                        border: `1px solid ${priority === p.id ? p.color : 'rgba(255,255,255,0.12)'}`,
+                        color: priority === p.id ? p.color : '#888',
+                      }}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {error && <p className="text-xs" style={{ color: '#ef4444' }}>{error}</p>}
+              {error && <p className="text-[11px]" style={{ color: '#ef4444' }}>{error}</p>}
 
               <button
                 onClick={handleSubmit}
                 disabled={!title.trim() || !requestText.trim() || submitting}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-bold text-black transition-all disabled:opacity-40"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-bold text-black transition-all disabled:opacity-40"
                 style={{ background: GOLD }}
               >
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                 {submitting ? 'Submitting…' : 'Submit Request'}
               </button>
-              <p className="text-[10px] text-gray-500 text-center">We'll route this to the right AGI agent and add it to your Solution Map.</p>
+              <p className="text-[9px] text-gray-500 text-center">We'll route this to the right AGI agent.</p>
             </div>
           </>
         )}

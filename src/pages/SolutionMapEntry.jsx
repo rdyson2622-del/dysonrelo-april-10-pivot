@@ -243,7 +243,7 @@ export default function SolutionMapEntry() {
               onClick={handleSubmit}
               className="shrink-0 inline-flex items-center gap-2 px-5 py-[1.3rem] rounded-2xl gold-btn text-sm font-bold"
             >
-              Map My Route
+              Find A Solution
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
