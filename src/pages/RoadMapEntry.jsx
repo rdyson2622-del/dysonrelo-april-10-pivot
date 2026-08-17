@@ -247,7 +247,7 @@ export default function RoadMapEntry() {
           </div>
 
           <p className="text-center max-w-3xl mx-auto mt-4 mb-1" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
-            Dyson Real Estate Solutions is a one of a kind AGI intelligence environment that maps progress in real time.
+            Dyson Real Estate Solutions is a one of a kind AGI intelligence environment supported by 21 AI Assistants that map progress in real time.
           </p>
 
           <p className="mt-3" style={{ color: '#d8cab6', fontSize: '1.3125rem', lineHeight: 1.5 }}>
