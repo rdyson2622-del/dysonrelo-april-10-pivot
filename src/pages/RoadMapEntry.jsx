@@ -200,7 +200,7 @@ export default function RoadMapEntry() {
           {/* ── Input bar ── */}
           <p className="mb-3 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.</p>
           <div className="max-w-2xl mx-auto flex items-center gap-3">
-            <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#fcfcfc', border: '1px solid rgba(212,175,55,0.4)' }}>
+            <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#d8cab6', border: '1px solid rgba(212,175,55,0.4)' }}>
               <input
                 type="text"
                 value={inputValue}
@@ -210,9 +210,9 @@ export default function RoadMapEntry() {
               />
               {!inputValue && (
                 <div className="absolute inset-0 flex items-center px-6 overflow-hidden whitespace-nowrap pointer-events-none">
-                  <span className="inline-flex animate-marquee text-lg" style={{ color: '#999' }}>
-                    <span className="px-6">A listing · a stalled escrow · a buyer or seller problem · a contract issue · </span>
-                    <span className="px-6">A listing · a stalled escrow · a buyer or seller problem · a contract issue · </span>
+                  <span className="inline-flex animate-marquee text-lg" style={{ color: '#5a5a5a' }}>
+                    <span className="px-6">A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
+                    <span className="px-6">A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
                   </span>
                 </div>
               )}
