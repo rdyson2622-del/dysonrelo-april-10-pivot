@@ -220,8 +220,8 @@ export default function RoadMapEntry() {
                       { text: 'my benefits and issues in moving locally, nationally, or internationally', color: '#c2410c' },
                     ].flatMap((s, i, arr) => [
                       <span key={`a-${i}`} style={{ color: s.color }}>{s.text}</span>,
-                      i < arr.length - 1 ? <span key={`d-${i}`} style={{ color: '#5a5a5a' }}> · </span> : null,
-                      i === arr.length - 1 ? <span key={`e-${i}`} style={{ color: '#5a5a5a' }}> · </span> : null,
+                      i < arr.length - 1 ? <span key={`d-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
+                      i === arr.length - 1 ? <span key={`e-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
                     ])}
                     {[
                       { text: 'A listing', color: '#b8860b' },
@@ -232,8 +232,8 @@ export default function RoadMapEntry() {
                       { text: 'my benefits and issues in moving locally, nationally, or internationally', color: '#c2410c' },
                     ].flatMap((s, i, arr) => [
                       <span key={`b-${i}`} style={{ color: s.color }}>{s.text}</span>,
-                      i < arr.length - 1 ? <span key={`f-${i}`} style={{ color: '#5a5a5a' }}> · </span> : null,
-                      i === arr.length - 1 ? <span key={`g-${i}`} style={{ color: '#5a5a5a' }}> · </span> : null,
+                      i < arr.length - 1 ? <span key={`f-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
+                      i === arr.length - 1 ? <span key={`g-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
                     ])}
                   </span>
                 </div>
