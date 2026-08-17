@@ -178,25 +178,25 @@ export default function SolutionMapEntry() {
       </header>
 
       {/* ── Hero ── */}
-      <main className="flex-1 flex flex-col items-center px-6 pt-4 pb-12">
+      <main className="flex-1 flex flex-col items-center px-6 pt-2 pb-10">
         <div className="max-w-4xl w-full text-center">
-          <div className="flex justify-center mb-4">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
+          <div className="flex justify-center mb-2">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '64px', width: 'auto' }} />
           </div>
-          <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
+          <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>
-          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight" style={{ color: '#d8cab6' }}>
+          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-3 leading-tight" style={{ color: '#d8cab6' }}>
             {copy.title} {copy.titleAccent}
           </h1>
           {copy.subtitle && (
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base text-gray-400 max-w-2xl mx-auto leading-relaxed">
               {copy.subtitle}
             </p>
           )}
 
           {/* Spacer — pushes pill down so it stands alone */}
-          <div className="h-[15vh]" />
+          <div className="h-[3vh]" />
 
           {/* ── Input bar ── */}
           <div className="max-w-2xl mx-auto flex items-center gap-3">
@@ -249,19 +249,19 @@ export default function SolutionMapEntry() {
           </div>
 
           {/* Spacer — pushes copy below pill down so pill stands alone */}
-          <div className="h-[12vh]" />
+          <div className="h-[3vh]" />
 
-          <p className="text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
+          <p className="text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.0625rem', lineHeight: 1.4 }}>
             If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.
           </p>
 
-          <p className="mt-3" style={{ color: '#d8cab6', fontSize: '1.3125rem', lineHeight: 1.5 }}>
+          <p className="mt-2" style={{ color: '#d8cab6', fontSize: '1.0625rem', lineHeight: 1.4 }}>
             {selectedPill.tagline} · No commitment · We map it first, you decide later
           </p>
         </div>
 
         {/* ── Three live animated Solution Map demos ── */}
-        <div className="max-w-5xl w-full mt-10">
+        <div className="max-w-5xl w-full mt-6">
           <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
               ● Live Demo — Here's what your Solution Map looks like
