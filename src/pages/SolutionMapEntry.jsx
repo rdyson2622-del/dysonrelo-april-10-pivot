@@ -364,7 +364,7 @@ export default function SolutionMapEntry() {
         {/* ── Why Dyson First ── */}
         <div className="max-w-4xl w-full mt-16">
           <p className="text-[10px] font-black tracking-[0.3em] uppercase text-center mb-6" style={{ color: GOLD }}>
-            Why Dyson first
+            Why contact Dyson first
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {/* Agent First */}
