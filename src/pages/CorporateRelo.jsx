@@ -41,7 +41,7 @@ export default function CorporateRelo() {
         </h1>
         <h2 className="display-heading mb-8"
           style={{ fontSize: 'clamp(1.2rem, 3vw, 2.1rem)', letterSpacing: '0.12em', color: GOLD }}>
-          WITHOUT THE MANAGEMENT FEES.
+          WITH FULL REAL TIME TRANSPARENCY TO YOU AND YOUR EMPLOYEE BUT WITHOUT THE MANAGEMENT FEES.
         </h2>
         <p className="text-lg leading-relaxed max-w-2xl" style={{ color: '#1a1a1a' }}>
           We save your company the relocation management costs charged by traditional corporate relocation companies.
