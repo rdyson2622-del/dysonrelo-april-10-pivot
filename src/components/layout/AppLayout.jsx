@@ -9,7 +9,6 @@ import { ArrowLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
-import TransparencyProgressBanner from '../roadmap/TransparencyProgressBanner';
 import PortalAccessGuard from './PortalAccessGuard';
 import LayoutToggleButton from './LayoutToggleButton';
 import { useLayout } from '@/lib/LayoutContext';
@@ -78,7 +77,6 @@ export default function AppLayout() {
         )}
         {/* Main content */}
         <div className="flex-1 w-full overflow-auto pb-16 md:pb-0">
-          <TransparencyProgressBanner />
           <PortalAccessGuard>
             <Outlet />
           </PortalAccessGuard>
