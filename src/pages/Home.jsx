@@ -7,10 +7,13 @@ import ClientStory from '@/components/landing/ClientStory';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 export default function Home() {
   const headingRef = useRef(null);
+  const videoRef = useRef(null);
   const [headingVisible, setHeadingVisible] = useState(false);
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -113,14 +116,29 @@ export default function Home() {
           >
             <div className="rounded-2xl overflow-hidden mb-8" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
               <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 px-4 pt-4" style={{ color: GOLD }}>▶ WATCH THE WINDEANS' STORY</p>
-              <video
-                src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
-                controls
-                playsInline
-                preload="metadata"
-                className="w-full block"
-                style={{ aspectRatio: '16/9' }}
-              />
+              <div className="relative" style={{ aspectRatio: '16/9' }}>
+                <video
+                  ref={videoRef}
+                  src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
+                  controls
+                  playsInline
+                  preload="none"
+                  className="w-full block h-full"
+                  onPlay={() => setStarted(true)}
+                />
+                {!started && (
+                  <button
+                    onClick={() => { setStarted(true); videoRef.current?.play(); }}
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+                    style={{ background: '#000' }}
+                  >
+                    <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '45px', width: 'auto' }} />
+                    <span className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
+                      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="#000" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
+                    </span>
+                  </button>
+                )}
+              </div>
             </div>
             <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>THE SITUATION</p>
             <p className="text-white leading-relaxed mb-3" style={{ fontFamily: 'Georgia, serif', fontSize: '0.97rem' }}>
