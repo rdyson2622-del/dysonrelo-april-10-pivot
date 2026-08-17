@@ -12,13 +12,36 @@ const PILLS = [
   { label: 'INTELLIGENCE', path: '/solutions' },
 ];
 
+const ROLE_LABELS = {
+  hr: 'Corp Relo HR',
+  client: 'Client',
+  agent: 'Relo Agent',
+  referral_agent: 'Referral Agent',
+  vendor: 'Vendor',
+};
+
+const ROLE_HOMES = {
+  hr: '/corporate-relo',
+  client: '/home',
+  agent: '/find-agent',
+  referral_agent: '/partner-benefits',
+  vendor: '/search',
+};
+
 export default function DnnStudioLanding() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [activeRole, setActiveRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
 
   useEffect(() => {
     base44.auth.me().then(u => setUser(u)).catch(() => {});
+    const onRoleChange = () => setActiveRole(sessionStorage.getItem('dyson_role') || 'client');
+    window.addEventListener('dyson_role_change', onRoleChange);
+    return () => window.removeEventListener('dyson_role_change', onRoleChange);
   }, []);
+
+  const roleHome = ROLE_HOMES[activeRole] || '/home';
+  const roleLabel = ROLE_LABELS[activeRole] || 'Client';
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden" style={{ background: '#0A0B0F' }}>
@@ -40,13 +63,22 @@ export default function DnnStudioLanding() {
         </div>
         <div className="flex items-center gap-3">
           {user ? (
-            <button
-              onClick={() => navigate('/portal')}
-              className="text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}
-            >
-              Switch Portal
-            </button>
+            <>
+              <button
+                onClick={() => navigate('/portal')}
+                className="text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+                style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.4)' }}
+              >
+                Switch Portal
+              </button>
+              <button
+                onClick={() => navigate(roleHome)}
+                className="text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:scale-105"
+                style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
+              >
+                Enter {roleLabel} →
+              </button>
+            </>
           ) : (
             <>
               <button onClick={() => base44.auth.redirectToLogin()} className="text-xs text-gray-400 hover:text-white">Sign In</button>

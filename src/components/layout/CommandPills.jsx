@@ -5,11 +5,11 @@ const GOLD = '#D4AF37';
 
 const PORTAL_PILLS = [
   { label: 'ADMIN', emoji: '⚙️', role: 'admin', path: '/admin', isAdmin: true },
-  { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/corporate-relo' },
-  { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/home' },
-  { label: 'RELO AGENT', emoji: '⭐', role: 'agent', path: '/find-agent' },
-  { label: 'REFERRAL AGENT', emoji: '🤝', role: 'referral_agent', path: '/partner-benefits' },
-  { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/search' },
+  { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/', homePath: '/corporate-relo' },
+  { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/', homePath: '/home' },
+  { label: 'RELO AGENT', emoji: '⭐', role: 'agent', path: '/', homePath: '/find-agent' },
+  { label: 'REFERRAL AGENT', emoji: '🤝', role: 'referral_agent', path: '/', homePath: '/partner-benefits' },
+  { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/', homePath: '/search' },
 ];
 
 export default function CommandPills() {
@@ -18,8 +18,9 @@ export default function CommandPills() {
   const onAdmin = location.pathname.startsWith('/admin');
   const [activeRole, setActiveRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
 
-  const switchRole = (role, path) => {
+  const switchRole = (role, path, homePath) => {
     sessionStorage.setItem('dyson_role', role);
+    sessionStorage.setItem('dyson_role_home', homePath || '');
     setActiveRole(role);
     window.dispatchEvent(new Event('dyson_role_change'));
     navigate(path);
@@ -27,12 +28,12 @@ export default function CommandPills() {
 
   return (
     <div className="flex items-center gap-1" style={{ marginRight: '180px' }}>
-      {PORTAL_PILLS.map(({ label, emoji, role, path, isAdmin }) => {
+      {PORTAL_PILLS.map(({ label, emoji, role, path, isAdmin, homePath }) => {
         const isActive = isAdmin ? onAdmin : (!onAdmin && activeRole === role);
         return (
           <button
             key={role}
-            onClick={() => isAdmin ? navigate(path) : switchRole(role, path)}
+            onClick={() => isAdmin ? navigate(path) : switchRole(role, path, homePath)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-black tracking-[0.06em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
             style={{
               background: isActive ? '#000' : 'rgba(0,0,0,0.45)',
