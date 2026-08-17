@@ -65,6 +65,7 @@ export default function RelocationIntake() {
   const [agreedItems, setAgreedItems] = useState([]);
   const [signTiming, setSignTiming] = useState(null); // 'now' or 'after'
   const [scheduledCall, setScheduledCall] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -462,8 +463,9 @@ export default function RelocationIntake() {
         </div>
 
         {/* 6-Page Scroll Sequence — sits between the two black boxes */}
-        <ReloAgentScrollSequence />
+        <ReloAgentScrollSequence onPlanMove={() => { setShowForm(true); setTimeout(() => document.getElementById('about-you')?.scrollIntoView({ behavior: 'smooth' }), 100); }} />
 
+        {showForm && (<>
         {/* Form Card */}
         <motion.div
          key={step}
@@ -672,12 +674,13 @@ export default function RelocationIntake() {
                onClick={() => setShowScheduler(true)}
                className="gold-btn px-7 py-2.5 rounded-full text-base font-bold tracking-wide flex items-center gap-2">
                Schedule Intro Call <ArrowRight className="w-4 h-4" />
-             </button>
-           )}
-         </div>
-      </div>
-    </div>
-  );
+               </button>
+               )}
+               </div>
+               </>)}
+               </div>
+               </div>
+               );
 }
 
 function Field({ label, value, onChange, placeholder, type = 'text' }) {

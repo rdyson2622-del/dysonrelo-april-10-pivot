@@ -56,7 +56,7 @@ function SubTitle({ children }) {
   );
 }
 
-export default function ReloAgentScrollSequence() {
+export default function ReloAgentScrollSequence({ onPlanMove }) {
   return (
     <div>
       {/* ── PAGE 1: THE DYSON PROMISE ── */}
@@ -178,18 +178,19 @@ export default function ReloAgentScrollSequence() {
             Talk to Charlie right now. Share where you're moving and we'll take it from there — your relocation
             manager, your Gemini session, your plan. No hidden fees. Always free.
           </p>
-          <a
-            href="#about-you"
+          <button
+            onClick={onPlanMove}
             className="inline-block px-10 py-5 rounded-full font-black text-lg transition-all hover:scale-105 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, #e8c84a, #D4AF37)',
               color: '#000',
               boxShadow: '0 4px 14px rgba(212,175,55,0.3)',
-              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
             }}
           >
             Let's Plan My Relocation Move
-          </a>
+          </button>
         </div>
       </Page>
     </div>
