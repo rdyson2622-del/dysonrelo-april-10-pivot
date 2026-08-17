@@ -141,9 +141,7 @@ export default function RoadMapEntry() {
     <div className="min-h-screen bg-dyson-black text-white flex flex-col">
       {/* ── Header ── */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-serif gold-text-gradient">Dyson & Dyson</span>
-        </div>
+        <div />
         <div className="flex items-center gap-3">
           {user ? (
             <>
