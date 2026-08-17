@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
 
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 import {
@@ -103,6 +104,7 @@ export default function SolutionMapEntry() {
   const [user, setUser] = useState(null);
   const [selectedPill, setSelectedPill] = useState(PILLS[0]);
   const [inputValue, setInputValue] = useState('');
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -125,6 +127,15 @@ export default function SolutionMapEntry() {
   const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(relocationFlow?.stages);
   const exploreFlowDemo = EXPLORE_FLOW;
   const { statuses: exploreStatuses, activeStageId: exploreActive } = useAnimatedDemoStatuses(exploreFlowDemo?.stages);
+
+  const handleSubmit = () => {
+    if (!inputValue.trim()) return;
+    if (!user) {
+      base44.auth.redirectToLogin(window.location.pathname);
+      return;
+    }
+    setShowOrderModal(true);
+  };
 
   return (
     <div className="min-h-screen bg-dyson-black text-white flex flex-col">
@@ -194,6 +205,7 @@ export default function SolutionMapEntry() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                 className="relative z-10 w-full bg-transparent px-6 py-[1.3rem] text-black text-lg focus:outline-none transition-colors"
               />
               {!inputValue && (
@@ -227,6 +239,13 @@ export default function SolutionMapEntry() {
                 </div>
               )}
             </div>
+            <button
+              onClick={handleSubmit}
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-[1.3rem] rounded-2xl gold-btn text-sm font-bold"
+            >
+              Map My Route
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Spacer — pushes copy below pill down so pill stands alone */}
@@ -419,6 +438,23 @@ export default function SolutionMapEntry() {
         </div>
 
       </main>
+
+      {/* ── Order modal ── */}
+      {showOrderModal && (
+        <OrderFlowModal
+          prefill={{
+            title: inputValue,
+            desk_id: selectedPill.deskId === 'explore' ? 'knowledge' : selectedPill.deskId,
+            desk_name: selectedPill.deskName,
+          }}
+          onClose={() => setShowOrderModal(false)}
+          onOrdered={() => {
+            setShowOrderModal(false);
+            setInputValue('');
+            if (user) navigate('/master-show-sheet');
+          }}
+        />
+      )}
     </div>
   );
 }
