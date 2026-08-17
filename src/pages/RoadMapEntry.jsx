@@ -200,7 +200,7 @@ export default function RoadMapEntry() {
           {/* ── Input bar ── */}
           <p className="mb-3 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.</p>
           <div className="max-w-2xl mx-auto flex items-center gap-3">
-            <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#d8cab6', border: '1px solid rgba(212,175,55,0.4)' }}>
+            <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#d8cab6', border: '1px solid #D4AF37' }}>
               <input
                 type="text"
                 value={inputValue}
