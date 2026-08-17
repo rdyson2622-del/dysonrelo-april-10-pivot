@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper } from 'lucide-react';
-import CorporateReloQASection from '@/components/corporate/CorporateReloQASection';
-import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
@@ -50,19 +48,6 @@ export default function CorporateRelo() {
           Instead, we share in the commission offered to the buying or selling agent in our national and international
           networks — so your people land well, and your budget stays intact.
         </p>
-      </section>
-
-      {/* ── Charlie & Bob — DNN strategy lead-in ── */}
-      <PortalLeadInDuo />
-
-      {/* ── Video Q&A Briefing ── */}
-      <section className="px-8 md:px-16 pt-16 pb-44" style={{ background: '#0d0d0d' }}>
-        <p className="text-xs font-black tracking-[0.35em] uppercase mb-3 text-center" style={{ color: GOLD }}>THE HR BRIEFING</p>
-        <h2 className="display-heading text-center mb-10"
-          style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', letterSpacing: '0.12em', color: '#fff' }}>
-          ASK BOB DYSON DIRECTLY
-        </h2>
-        <CorporateReloQASection />
       </section>
 
       {/* ── Three Pillars ── */}
