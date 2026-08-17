@@ -26,7 +26,7 @@ export default function CommandPills() {
   };
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1" style={{ marginRight: '180px' }}>
       {PORTAL_PILLS.map(({ label, emoji, role, path, isAdmin }) => {
         const isActive = isAdmin ? onAdmin : (!onAdmin && activeRole === role);
         return (
