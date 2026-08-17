@@ -61,7 +61,7 @@ export default function Home() {
               Whether you need a full relocation managed end-to-end, or you're stuck in a deal that won't close — we have a path for you.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="/relo-management"
+              <a href="/relocation-intake"
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
                 style={{
                   background: 'rgba(0,0,0,0.5)',

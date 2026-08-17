@@ -18,7 +18,7 @@ export const PAGE_REGISTRY = {
   13: { name: 'DNN News',               path: '/dnn-news',                    section: 'Client' },
   14: { name: 'My Agent',               path: '/my-agent',                    section: 'Client' },
   15: { name: 'Financial Services',     path: '/financial-services',          section: 'Client' },
-  16: { name: 'Relo Management',        path: '/relo-management',             section: 'Client' },
+  16: { name: 'Relocation Intake',     path: '/relocation-intake',           section: 'Client' },
   17: { name: 'Bob Dyson',              path: '/bob-dyson',                   section: 'Public' },
   18: { name: 'AI Assistants',          path: '/ai-assistants',               section: 'Public' },
   19: { name: 'Solve My Story',         path: '/solve-my-story',              section: 'Public' },

@@ -96,7 +96,7 @@ export default function CorporateRelo() {
             style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000', boxShadow: '0 4px 14px rgba(212,175,55,0.3)' }}>
             <MessageCircle className="w-5 h-5" /> Talk to Charlie Now
           </Link>
-          <Link to="/relo-management"
+          <Link to="/relocation-intake"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-base transition-all hover:scale-105"
             style={{ border: `1px solid ${GOLD}`, color: GOLD }}>
             How We Manage a Move <ArrowRight className="w-4 h-4" />

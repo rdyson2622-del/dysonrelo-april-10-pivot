@@ -147,7 +147,7 @@ export default function VettedAgentsCity() {
           <p className="text-white text-sm leading-relaxed mb-4" style={{ fontFamily: 'Georgia, serif' }}>
             We manage the 8-phase logistics of your move — not just the transaction. Our team vets, selects, and monitors agents in {cityDisplay} so you don't have to.
           </p>
-          <a href="/relo-management"
+          <a href="/relocation-intake"
             className="inline-block px-8 py-3 rounded-full font-bold text-sm"
             style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
             Learn How We Work →

@@ -124,7 +124,7 @@ export default function ClientSidebar({ onToggle }) {
           <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
           SOLUTIONS
         </Link>
-        <Link to="/relo-management"
+        <Link to="/relocation-intake"
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
           style={{ color: GOLD }}>
           <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />

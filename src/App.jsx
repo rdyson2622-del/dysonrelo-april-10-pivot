@@ -84,7 +84,6 @@ import AdminDnnRevenue from './pages/AdminDnnRevenue';
 import AdminAgentVetting from './pages/AdminAgentVetting';
 import AdminLenderVetting from './pages/AdminLenderVetting';
 import AdminBureauStories from './pages/AdminBureauStories';
-import ReloManagement from './pages/ReloManagement';
 import ReloManagementVideoBg from './pages/ReloManagementVideoBg';
 import SolveMyStory from './pages/SolveMyStory';
 import AdminPRNAgentPlan from './pages/AdminPRNAgentPlan';
@@ -223,7 +222,7 @@ const AuthenticatedApp = () => {
         <Route path="/dnn-archive" element={<DnnBroadcastArchivePage />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
-        <Route path="/relo-management" element={<ReloManagement />} />
+        <Route path="/relo-management" element={<Navigate to="/relocation-intake" replace />} />
         <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
         <Route path="/Explainers" element={<Explainers />} />
