@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SolveMyStoryPresenter from '@/components/charlie/SolveMyStoryPresenter';
+import SolutionMapDemo from '@/components/solutionmap/SolutionMapDemo';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -111,6 +112,14 @@ export default function SolveMyStory() {
         <p className="mt-4 text-base" style={{ color: '#1a1a1a', maxWidth: '520px' }}>
           In 55 years, we've seen every real estate situation imaginable. Give us the details and our team will respond with a clear, actionable resolution — no sales pitch.
         </p>
+
+        {/* Interactive Solution Map */}
+        <div className="mt-8 w-full max-w-3xl">
+          <SolutionMapDemo
+            mapId="solve_my_story"
+            subtitle="Here's how your story gets solved — watch it move in real time."
+          />
+        </div>
       </div>
 
       {/* Form */}
