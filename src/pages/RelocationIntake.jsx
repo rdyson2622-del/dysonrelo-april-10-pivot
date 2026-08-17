@@ -431,7 +431,12 @@ export default function RelocationIntake() {
           </p>
           </motion.div>
 
-        {/* Insulation Factor — shown before form */}
+          {/* Solution Map — animated 8-step process line diagram */}
+          <div className="mb-10">
+          <RelocationIntakeSolutionMap />
+          </div>
+
+          {/* Insulation Factor — shown before form */}
         <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.35)' }}>
           <p className="text-base font-bold mb-3" style={{ color: '#D4AF37' }}>Why We Hand-Select Your Local Team</p>
           <p className="text-sm leading-relaxed mb-4 text-white">
@@ -452,11 +457,6 @@ export default function RelocationIntake() {
               <span className="text-sm leading-relaxed text-white">You will never be handed off to an unvetted stranger. Every agent we recommend has been screened and approved to insulate you from the "typical" industry experience.</span>
             </div>
           </div>
-        </div>
-
-        {/* Solution Map — animated 8-step process line diagram */}
-        <div className="mb-10">
-          <RelocationIntakeSolutionMap />
         </div>
 
         {/* Form Card */}
