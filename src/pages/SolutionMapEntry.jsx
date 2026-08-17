@@ -178,7 +178,7 @@ export default function SolutionMapEntry() {
       </header>
 
       {/* ── Hero ── */}
-      <main className="flex-1 flex flex-col items-center px-6 pt-8 pb-12">
+      <main className="flex-1 flex flex-col items-center px-6 pt-4 pb-12">
         <div className="max-w-4xl w-full text-center">
           <div className="flex justify-center mb-4">
             <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
@@ -190,7 +190,7 @@ export default function SolutionMapEntry() {
             {copy.title} {copy.titleAccent}
           </h1>
           {copy.subtitle && (
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-[18vh] leading-relaxed">
               {copy.subtitle}
             </p>
           )}
