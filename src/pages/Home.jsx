@@ -121,7 +121,7 @@ export default function Home() {
             letterSpacing: '0.12em',
             lineHeight: 1.15
           }}>
-            DYSON REAL ESTATE ISSUES & RELOCATION ROADMAPS
+            A DEEPER DIVE INTO OUR AGI INTELLIGENCE PLATFORM
           </div>
           <p className="font-black tracking-[0.3em] uppercase text-white mt-3" style={{ fontSize: '0.95rem' }}>
             ONE OF A KIND
