@@ -188,14 +188,14 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
       <Route path="/broadcast-show" element={<BroadcastShow />} />
 
-      {/* Front door — simplified road map entry page */}
+      {/* Front door — simplified road map entry page (standalone, no sidebar) */}
       <Route path="/" element={<SolutionMapEntry />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/Home" element={<Home />} />
 
       {/* Consumer Routes with Sidebar Layout */}
       {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
       <Route element={<AppLayout />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/relocation-intake" element={<RelocationIntake />} />
