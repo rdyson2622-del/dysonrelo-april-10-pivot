@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
 const GOLD = '#D4AF37';
 
@@ -39,10 +38,6 @@ export default function PortalLeadInDuo() {
 
   return (
     <>
-      {sequence && (
-        <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
-      )}
-
       <div className="flex justify-center py-8">
         <button
           onClick={playSequence}

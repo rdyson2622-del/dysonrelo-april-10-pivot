@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play } from 'lucide-react';
-import QADuoPresenter from '@/components/charlie/QADuoPresenter';
 
 const GOLD = '#D4AF37';
 
@@ -71,7 +70,6 @@ export default function CorporateReloQASection() {
           <span className="text-white font-semibold">{clip.question}</span>
         </button>
       ))}
-      {segments && <QADuoPresenter segments={segments} onClose={() => setSegments(null)} />}
     </div>
   );
 }

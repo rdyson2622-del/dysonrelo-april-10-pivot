@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper } from 'lucide-react';
 import CorporateReloQASection from '@/components/corporate/CorporateReloQASection';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
@@ -113,6 +114,7 @@ export default function CorporateRelo() {
         </p>
       </section>
 
+      <CharliePagePresenter pageKey="corporate-relo" />
     </div>
   );
 }
