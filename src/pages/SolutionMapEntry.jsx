@@ -427,20 +427,6 @@ export default function SolutionMapEntry() {
           </div>
         </div>
 
-        {/* ── Footer CTA ── */}
-        <div className="max-w-2xl w-full mt-16 text-center">
-          <p className="text-sm text-gray-400 mb-4">Ready to see your route?</p>
-          <button
-            onClick={handleSubmit}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl gold-btn text-base font-bold"
-          >
-            Map My Route
-            <ArrowRight className="w-5 h-5" />
-          </button>
-          <p className="text-[10px] text-gray-600 mt-4">
-            Dyson & Dyson Real Estate · The route before the agent
-          </p>
-        </div>
       </main>
 
       {/* ── Order modal ── */}
