@@ -19,7 +19,7 @@ export default function AppLayout() {
   const location = useLocation();
   const { landscape } = useLayout();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
