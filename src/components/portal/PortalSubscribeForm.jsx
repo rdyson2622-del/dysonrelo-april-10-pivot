@@ -25,7 +25,7 @@ export default function PortalSubscribeForm({ portalName, source, roleKey, dest 
     const user = await base44.auth.me();
     const assignedRole = user?.portal_role || roleKey;
     const assignedDest = {
-      client: '/home', agent: '/find-agent', referral_agent: '/partner-benefits',
+      client: '/', agent: '/find-agent', referral_agent: '/partner-benefits',
       vendor: '/search', hr: '/corporate-relo',
     }[assignedRole] || dest;
     if (!user?.portal_role) await base44.auth.updateMe({ portal_role: roleKey });
