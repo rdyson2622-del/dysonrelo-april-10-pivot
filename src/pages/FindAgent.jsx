@@ -165,9 +165,6 @@ export default function FindAgent() {
           })}
         </div>
 
-        {/* The 4-step process — animated Solution Map line diagram (replaces white-on-white text list) */}
-        <AgentSelectionSolutionMap />
-
         {/* Portal Subscribe */}
         <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
 
