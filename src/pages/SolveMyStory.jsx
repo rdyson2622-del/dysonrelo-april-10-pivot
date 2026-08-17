@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SolveMyStoryPresenter from '@/components/charlie/SolveMyStoryPresenter';
 import SolutionMapDemo from '@/components/solutionmap/SolutionMapDemo';
+import VoiceToTextButton from '@/components/ui/VoiceToTextButton';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -154,9 +155,15 @@ export default function SolveMyStory() {
           {/* Story */}
           <div className="rounded-2xl px-6 py-7"
             style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>
-              TELL US YOUR STORY *
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>
+                TELL US YOUR STORY *
+              </p>
+              <VoiceToTextButton
+                value={form.story}
+                onChange={(next) => setForm({ ...form, story: next })}
+              />
+            </div>
             <textarea
               required
               value={form.story}
