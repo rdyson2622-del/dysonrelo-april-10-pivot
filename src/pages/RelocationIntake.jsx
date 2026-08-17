@@ -6,6 +6,7 @@ import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Z
 import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -453,25 +454,23 @@ export default function RelocationIntake() {
           </div>
         </div>
 
-        {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-10">
-          {STEPS.map((label, i) => (
-            <React.Fragment key={i}>
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
-                  style={{
-                    background: i <= step ? GOLD : 'rgba(255,255,255,0.1)',
-                    color: i <= step ? '#000' : 'rgba(255,255,255,0.4)',
-                  }}>
-                  {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
-                </div>
-                <span className="text-sm hidden sm:block" style={{ color: i === step ? GOLD : 'rgba(255,255,255,0.4)' }}>{label}</span>
-              </div>
-              {i < STEPS.length - 1 && (
-                <div className="flex-1 h-px mb-5" style={{ background: i < step ? GOLD : 'rgba(255,255,255,0.15)', maxWidth: '60px' }} />
-              )}
-            </React.Fragment>
-          ))}
+        {/* Solution Map — 8-step process line diagram */}
+        <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
+            <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>Your Relocation Solution Map</span>
+          </div>
+          <FlowRoadmapLine
+            stages={STEPS.map((label, i) => ({ id: String(i), title: label }))}
+            stageStatuses={Object.fromEntries(STEPS.map((_, i) => {
+              const status = i < step ? 'completed' : i === step ? 'running' : 'pending';
+              return [String(i), { status }];
+            }))}
+            color={GOLD}
+            activeStageId={String(step)}
+            onSelect={() => {}}
+            compact
+          />
         </div>
 
         {/* Form Card */}
