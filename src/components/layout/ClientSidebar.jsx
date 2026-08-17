@@ -140,7 +140,7 @@ export default function ClientSidebar({ onToggle }) {
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
           style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
           <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          MY PROGRESS ROADMAP
+          MY PROGRESS SOLUTION MAP
         </Link>
         {isAgent && (
           <>
@@ -187,7 +187,7 @@ export default function ClientSidebar({ onToggle }) {
               </>
             )}
             <SuiteBox title="🏠 My Personal Real Estate">
-              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Solution Map" />
               <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
               <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
               <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
@@ -205,7 +205,7 @@ export default function ClientSidebar({ onToggle }) {
               )}
             </SuiteBox>
             <SuiteBox title="🏠 My Personal Real Estate">
-              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Solution Map" />
               <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
               <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
               <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
@@ -242,7 +242,7 @@ export default function ClientSidebar({ onToggle }) {
                 <div className="mt-2 mb-1 px-1">
                   <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: 'rgba(212,175,55,0.55)' }}>Relocation Services</p>
                 </div>
-                <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+                <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Solution Map" />
                 <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
 
                 {/* Real Estate Answers */}

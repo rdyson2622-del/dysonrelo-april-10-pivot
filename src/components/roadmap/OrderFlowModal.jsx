@@ -65,7 +65,7 @@ export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
           <div className="text-center py-8">
             <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: '#22c55e' }} />
             <h3 className="text-xl font-serif text-white mb-1">Request Submitted!</h3>
-            <p className="text-sm text-gray-400">Your roadmap item has been ordered. An AGI agent will pick it up shortly.</p>
+            <p className="text-sm text-gray-400">Your Solution Map item has been ordered. An AGI agent will pick it up shortly.</p>
           </div>
         ) : (
           <>
@@ -169,7 +169,7 @@ export default function OrderFlowModal({ prefill, onClose, onOrdered }) {
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                 {submitting ? 'Submitting…' : 'Submit Request'}
               </button>
-              <p className="text-[10px] text-gray-500 text-center">We'll route this to the right AGI agent and add it to your roadmap.</p>
+              <p className="text-[10px] text-gray-500 text-center">We'll route this to the right AGI agent and add it to your Solution Map.</p>
             </div>
           </>
         )}

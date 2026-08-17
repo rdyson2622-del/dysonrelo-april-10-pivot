@@ -39,7 +39,7 @@ const PILLS = [
   },
   {
     id: 'relocation',
-    label: 'Relocation Roadmap',
+    label: 'Relocation Solution Map',
     icon: Compass,
     deskId: 'operations',
     color: '#10b981',
@@ -259,7 +259,7 @@ export default function RoadMapEntry() {
         <div className="max-w-5xl w-full mt-10">
           <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
-              ● Live Demo — Here's what your Solution Roadmap looks like
+              ● Live Demo — Here's what your Solution Map looks like
             </span>
           </div>
 
