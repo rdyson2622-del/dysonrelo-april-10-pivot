@@ -197,7 +197,6 @@ const AuthenticatedApp = () => {
       {/* Consumer Routes with Sidebar Layout */}
       {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
       <Route element={<AppLayout />}>
-        <Route path="/portal-home" element={<RoadMapEntry />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/relocation-intake" element={<RelocationIntake />} />
