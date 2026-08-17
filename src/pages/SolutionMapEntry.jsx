@@ -76,7 +76,7 @@ const PORTAL_COPY = {
     eyebrow: 'The route before the referral',
     title: 'Real Estate Solutions',
     titleAccent: '',
-    subtitle: 'Got a client with a problem? We\'ll map the route before you refer them. Your client sees the roadmap. You keep the relationship. Dyson manages the move.',
+    subtitle: 'Got a client with a problem? We\'ll map the route before you refer them. Your client sees the Solution Map. You keep the relationship. Dyson manages the move.',
   },
   vendor: {
     eyebrow: 'The route before the pitch',
@@ -99,7 +99,7 @@ function getPortalCopy(user) {
   return PORTAL_COPY.consumer;
 }
 
-export default function RoadMapEntry() {
+export default function SolutionMapEntry() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [selectedPill, setSelectedPill] = useState(PILLS[0]);
@@ -120,7 +120,7 @@ export default function RoadMapEntry() {
   const { statuses, activeStageId } = useAnimatedDemoStatuses(flow?.stages);
   const copy = getPortalCopy(user);
 
-  // Two independent live roadmap demos — Issues + Relocation
+  // Two independent live Solution Map demos — Issues + Relocation
   const issuesFlow = getFlow('marketing');
   const relocationFlow = getFlow('operations');
   const { statuses: issuesStatuses, activeStageId: issuesActive } = useAnimatedDemoStatuses(issuesFlow?.stages);
@@ -255,7 +255,7 @@ export default function RoadMapEntry() {
           </p>
         </div>
 
-        {/* ── Three live animated roadmap demos ── */}
+        {/* ── Three live animated Solution Map demos ── */}
         <div className="max-w-5xl w-full mt-10">
           <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
@@ -300,7 +300,7 @@ export default function RoadMapEntry() {
                 }}
               >
                 <Compass className="w-3.5 h-3.5" />
-                Relocation Roadmap
+                Relocation Solution Map
               </button>
               <FlowRoadmapLine
                 stages={relocationFlow?.stages || []}
@@ -380,7 +380,7 @@ export default function RoadMapEntry() {
                 <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />You figure out the rest alone</li>
                 <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />Schools? Escrow? Movers? On you</li>
                 <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />One agent = one opinion</li>
-                <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />No solution map, no accountability</li>
+                <li className="flex items-start gap-2"><X className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#ef4444' }} />No Solution Map, no accountability</li>
               </ul>
             </div>
             {/* Dyson First */}
@@ -396,7 +396,7 @@ export default function RoadMapEntry() {
                 <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />We map the whole route first</li>
                 <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />Schools, escrow, movers, timing</li>
                 <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />Then you choose from 3–5 vetted agents</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />Real-time solution map you can watch</li>
+                <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />Real-time Solution Map you can watch</li>
                 <li className="flex items-start gap-2"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />We manage the move — the agent sells</li>
               </ul>
             </div>
@@ -417,7 +417,7 @@ export default function RoadMapEntry() {
             <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <Building2 className="w-5 h-5 mx-auto mb-2" style={{ color: '#f59e0b' }} />
               <p className="text-xs font-serif text-white">Agents</p>
-              <p className="text-[10px] text-gray-500 mt-1">Refer with a roadmap, keep the client</p>
+              <p className="text-[10px] text-gray-500 mt-1">Refer with a Solution Map, keep the client</p>
             </div>
             <div className="rounded-xl p-4 text-center" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <Star className="w-5 h-5 mx-auto mb-2" style={{ color: '#a78bfa' }} />

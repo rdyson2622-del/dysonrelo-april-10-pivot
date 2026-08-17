@@ -138,7 +138,7 @@ import AdminDispatchLog from './pages/AdminDispatchLog';
 import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
 import MasterShowSheet from './pages/MasterShowSheet';
-import RoadMapEntry from './pages/RoadMapEntry';
+import SolutionMapEntry from './pages/SolutionMapEntry';
 import EscrowManagement from './pages/wisdom/EscrowManagement';
 import ListingManagement from './pages/wisdom/ListingManagement';
 import AgentRecords from './pages/wisdom/AgentRecords';
@@ -190,7 +190,7 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
 
       {/* Front door — simplified road map entry page */}
-      <Route path="/" element={<RoadMapEntry />} />
+      <Route path="/" element={<SolutionMapEntry />} />
       <Route path="/home" element={<Home />} />
       <Route path="/Home" element={<Home />} />
 
