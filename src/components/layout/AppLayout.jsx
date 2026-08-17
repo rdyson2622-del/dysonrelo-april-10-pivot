@@ -5,7 +5,7 @@ import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
-import { ArrowLeft, Tv } from 'lucide-react';
+import { ArrowLeft, PanelLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
@@ -51,15 +51,16 @@ export default function AppLayout() {
           label="STUDIO"
         />
 
-        {/* Sidebar toggle — TV box icon to the right of STUDIO */}
+        {/* Sidebar toggle — always visible, reopens the sidebar when collapsed */}
         <button
           onClick={toggleSidebar}
-          aria-label="Toggle sidebar"
-          title="Toggle sidebar"
-          className="w-9 h-9 flex items-center justify-center rounded-lg transition-all hover:opacity-80"
-          style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.45)' }}
+          aria-label={sidebarOpen ? 'Collapse sidebar' : 'Show sidebar'}
+          title={sidebarOpen ? 'Collapse sidebar' : 'Show sidebar'}
+          className="flex items-center gap-1.5 text-xs font-bold tracking-wide px-3 py-2 rounded-lg transition-all hover:opacity-80"
+          style={{ background: sidebarOpen ? 'rgba(212,175,55,0.15)' : 'rgba(212,175,55,0.3)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.45)' }}
         >
-          <Tv className="w-4 h-4" />
+          <PanelLeft className="w-4 h-4" />
+          <span className="hidden sm:inline">{sidebarOpen ? 'HIDE PANEL' : 'SHOW PANEL'}</span>
         </button>
 
         {/* Landscape / Portrait toggle */}
