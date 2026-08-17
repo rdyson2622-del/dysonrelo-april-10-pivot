@@ -196,7 +196,6 @@ export default function SolutionMapEntry() {
           )}
 
           {/* ── Input bar ── */}
-          <p className="mb-3 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.</p>
           <div className="max-w-2xl mx-auto flex items-center gap-3">
             <div className="relative flex-1 rounded-2xl overflow-hidden" style={{ background: '#d8cab6', border: '1px solid #D4AF37' }}>
               <input
@@ -245,6 +244,10 @@ export default function SolutionMapEntry() {
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
+
+          <p className="mt-8 text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
+            If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.
+          </p>
 
           <p className="mt-3" style={{ color: '#d8cab6', fontSize: '1.3125rem', lineHeight: 1.5 }}>
             {selectedPill.tagline} · No commitment · We map it first, you decide later
