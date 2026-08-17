@@ -17,7 +17,7 @@ const STATUS_CONFIG = {
 export default function FlowRoadmapLine({ stages, stageStatuses, color, activeStageId, onSelect, compact = false }) {
   const m = compact
     ? { active: 18, normal: 14, iconA: 'w-2 h-2', iconN: 'w-1.5 h-1.5', labelW: 52, lineH: 20, title: 'text-[7px]', status: 'text-[5px]', margin: 'mb-2 mt-0.5' }
-    : { active: 42, normal: 34, iconA: 'w-5 h-5', iconN: 'w-4 h-4', labelW: 130, lineH: 52, title: 'text-xs', status: 'text-[8px]', margin: 'mb-10 mt-2' };
+    : { active: 42, normal: 34, iconA: 'w-5 h-5', iconN: 'w-4 h-4', labelW: 160, lineH: 52, title: 'text-sm', status: 'text-[11px]', margin: 'mb-12 mt-2' };
   const safeStages = stages || [];
   const safeStatuses = stageStatuses || {};
   const completedCount = safeStages.filter(s => safeStatuses[s.id]?.status === 'completed').length;
@@ -107,8 +107,8 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
                 {s.title}
               </p>
               {status === 'completed' && action?.duration_ms && (
-                <p className="text-[9px] text-gray-500 mt-0.5 flex items-center gap-0.5">
-                  <Clock className="w-2.5 h-2.5" />
+                <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-0.5">
+                  <Clock className="w-3 h-3" />
                   {(action.duration_ms / 1000).toFixed(1)}s
                 </p>
               )}
