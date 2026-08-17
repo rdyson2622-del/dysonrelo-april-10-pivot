@@ -147,7 +147,7 @@ export default function GeminiSession() {
                    <Zap className="w-4 h-4" />
                    <span className="text-xs font-bold tracking-[0.3em]">BEFORE WE BEGIN</span>
                  </div>
-                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                 <p className="text-sm" style={{ color: '#000000' }}>
                    You have two options — sign now and keep the momentum going, or sign after our call when you've had a chance to chat with the Dyson team. Both are totally fine.
                  </p>
                </div>
