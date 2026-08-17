@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets, waitUntil } from 'base44:runtime';
-import { resolveBrokerageId, computeDaysUntil } from '../../shared/boldtrailSync.ts';
+import { resolveBrokerageId, computeDaysUntil, resolveBoldtrailApiBase, fetchBoldtrailTransactions, boldtrailGetCollection } from '../../shared/boldtrailSync.ts';
 
 /**
  * Pull transaction documents for a given escrow # from BoldTrail, then run a
@@ -28,32 +28,21 @@ export default async function(req) {
     if (!token) {
       return Response.json({
         error: 'BOLDTRAIL_API_TOKEN not set',
-        hint: 'Generate an API token in BoldTrail (Lead Engine → Lead Dropbox → My API Tokens, All scope) and save it as BOLDTRAIL_API_TOKEN.',
+        hint: 'Paste the Wisdom BoldTrail Back Office API key (Admin → API settings) as BOLDTRAIL_API_TOKEN.',
       }, { status: 400 });
     }
-    const rawBase = (secrets.get('BOLDTRAIL_API_BASE_URL') || '').trim();
-    const baseUrl = (rawBase || 'https://api.boldtrail.com/v2').replace(/\/$/, '');
-    if (!/^https?:\/\//.test(baseUrl)) {
+    const resolved = resolveBoldtrailApiBase(secrets.get('BOLDTRAIL_API_BASE_URL'));
+    const pulled = await fetchBoldtrailTransactions(resolved.baseUrl, token, resolved.flavor);
+    if (!pulled.ok) {
       return Response.json({
-        error: 'BOLDTRAIL_API_BASE_URL is invalid',
-        hint: 'Set it to https://api.boldtrail.com/v2 (or the exact base from the BoldTrail developer portal). Current value is empty or malformed.',
-      }, { status: 400 });
-    }
-
-    // 1. Find the deal matching the escrow number
-    const dealsRes = await fetch(`${baseUrl}/deals`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-    });
-    if (!dealsRes.ok) {
-      return Response.json({
-        error: `BoldTrail API ${dealsRes.status}`,
-        detail: await dealsRes.text(),
+        error: `BoldTrail API ${pulled.status || 502}`,
+        detail: pulled.detail,
+        attempts: pulled.attempts,
       }, { status: 502 });
     }
-    const dealsBody = await dealsRes.json();
-    const deals = Array.isArray(dealsBody) ? dealsBody : (dealsBody.deals || dealsBody.data || []);
+    const deals = pulled.items;
     const deal = deals.find(d =>
-      String(d.id || d.transaction_id || d.escrow_number || '') === escrowNumber
+      String(d.id || d.transaction_id || d.escrow_number || d.externalId || '') === escrowNumber
     );
     if (!deal) {
       return Response.json({
@@ -62,23 +51,23 @@ export default async function(req) {
       }, { status: 404 });
     }
 
-    const propertyAddress = deal.property_address || deal.address || '';
+    const propertyAddress = deal.property_address || deal.address || deal.transactionName || '';
     const dealId = deal.id || deal.transaction_id || escrowNumber;
+    const docHost = pulled.host || resolved.baseUrl;
 
-    // 2. Attempt to fetch documents for the deal (best-effort — endpoint path varies)
+    // 2. Attempt to fetch documents (Back Office /transactions/:id/documents, then /deals)
     let docUrls = [];
-    try {
-      const docsRes = await fetch(`${baseUrl}/deals/${dealId}/documents`, {
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-      });
-      if (docsRes.ok) {
-        const docsBody = await docsRes.json();
-        const docs = Array.isArray(docsBody) ? docsBody : (docsBody.documents || docsBody.data || []);
-        docUrls = docs
-          .map(d => d.url || d.download_url || d.file_url || d.signed_url)
-          .filter(Boolean);
-      }
-    } catch { /* endpoint may not exist — proceed with deal-data-only analysis */ }
+    for (const docPath of [`/transactions/${dealId}/documents`, `/deals/${dealId}/documents`]) {
+      try {
+        const docs = await boldtrailGetCollection(docHost, token, docPath);
+        if (docs.ok) {
+          docUrls = docs.items
+            .map(d => d.url || d.download_url || d.file_url || d.signed_url)
+            .filter(Boolean);
+          if (docUrls.length > 0) break;
+        }
+      } catch { /* endpoint may not exist — proceed with deal-data-only analysis */ }
+    }
 
     // 3. Create the analysis record with status 'analyzing'
     const analysis = await base44.asServiceRole.entities.TransactionDocAnalysis.create({

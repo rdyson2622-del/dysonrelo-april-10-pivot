@@ -499,8 +499,21 @@ Conduit owns sync and hygiene. Sales owns the relationship. There is no Salesfor
 - Scout reads these objects; it does not create a parallel store
 - External CRM (if added later) syncs **from** these entities, not the other way around
 
+## BoldTrail (Wisdom Properties)
+
+Conduit owns the pipe. Secret **names** only — never commit values.
+
+| Secret | Paste this |
+| --- | --- |
+| \`BOLDTRAIL_API_BASE_URL\` | \`https://my.brokermint.com/api/v2\` |
+| \`BOLDTRAIL_API_TOKEN\` | Back Office API key (Admin → API settings). Not a Lead Engine JWT. |
+
+CRM Public API V2 is \`https://api.kvcore.com/v2/public\` (contacts only). \`api.boldtrail.com\` 403s. \`/v2/deals\` does not exist on the CRM host. Empty or malformed base-URL secrets fall back to Back Office in \`resolveBoldtrailApiBase\`.
+
+Functions: \`boldtrailHealthCheck\`, \`boldtrailSyncEscrow\`, \`boldtrailPullTransactionDocs\`. Re-test from \`/admin/wisdom/escrow\`.
+
 ## Related admin
-\`/admin/clients\`, \`/admin/communications\`, \`/admin/roster\`, \`/admin/dnn/subscribers\`, \`/admin/media-crm\`.`,
+\`/admin/clients\`, \`/admin/communications\`, \`/admin/roster\`, \`/admin/dnn/subscribers\`, \`/admin/media-crm\`, \`/admin/wisdom/escrow\`.`,
   },
 ];
 
