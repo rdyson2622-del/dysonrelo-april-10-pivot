@@ -138,6 +138,7 @@ import RoadMapToCompletion from './pages/RoadMapToCompletion';
 import Connect from './pages/Connect';
 import MasterShowSheet from './pages/MasterShowSheet';
 import SolutionMapEntry from './pages/SolutionMapEntry';
+import DnnStudioLanding from './pages/DnnStudioLanding';
 import EscrowManagement from './pages/wisdom/EscrowManagement';
 import ListingManagement from './pages/wisdom/ListingManagement';
 import AgentRecords from './pages/wisdom/AgentRecords';
@@ -337,6 +338,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
         <Route path="/admin/add-subscriber" element={<AdminAddSubscriber />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
+        <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
       </Route>
 
       {/* Brokerage Portal — subscriber view (Wisdom Properties = subscriber #1) */}

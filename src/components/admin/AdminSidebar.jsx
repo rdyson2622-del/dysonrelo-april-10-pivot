@@ -7,7 +7,7 @@ import {
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
-  FileSearch, ShoppingBag
+  FileSearch, ShoppingBag, Archive
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -166,6 +166,7 @@ const NAV_SECTIONS = [
     children: [
       { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
       { label: 'New Landing Page', path: '/admin/new-landing-page', icon: Globe },
+      { label: '📦 Archived Studio Landing', path: '/admin/archived/studio-landing', icon: Archive, highlight: true },
     ],
   },
   {
