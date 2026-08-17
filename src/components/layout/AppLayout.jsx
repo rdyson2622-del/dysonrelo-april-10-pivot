@@ -78,21 +78,21 @@ export default function AppLayout() {
         {/* ── ADMIN-ONLY COMMAND PILLS ── */}
         {isAdmin && <CommandPills />}
       </div>
-      {/* Content area — sidebar overlays content, never takes layout space */}
+      {/* Content area — sidebar takes layout space on desktop */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Main content — always full width */}
+        {/* Sidebar — permanent on desktop, takes layout space */}
+        {sidebarOpen && (
+          <div className="hidden md:block shrink-0 h-full">
+            <ClientSidebar onToggle={toggleSidebar} />
+          </div>
+        )}
+        {/* Main content */}
         <div className="flex-1 w-full overflow-auto pb-16 md:pb-0">
           <TransparencyProgressBanner />
           <PortalAccessGuard>
             <Outlet />
           </PortalAccessGuard>
         </div>
-        {/* Sidebar overlay — slides over content when toggled, hidden on mobile */}
-        {sidebarOpen && (
-          <div className="absolute top-0 left-0 h-full z-40 hidden md:block shadow-2xl">
-            <ClientSidebar onToggle={toggleSidebar} />
-          </div>
-        )}
       </div>
       <MobileBottomNav />
       <PageNumberBadge />
