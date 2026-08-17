@@ -427,7 +427,7 @@ export default function RelocationIntake() {
            In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
          </p>
           <p className="text-sm mt-4" style={{ color: '#000000', fontSize: '1.05rem', fontStyle: 'italic' }}>
-            "Our Best Practices seems like we are actually moving with you and ahead of you every step of the way, all the way through close of escrow and beyond."
+            "Our Best Practices makes it feel like we are actually moving with you and ahead of you every step of the way, all the way through close of escrow and beyond."
             <span className="block mt-1 not-italic font-bold" style={{ color: '#000000' }}>— Bob Dyson</span>
           </p>
           </motion.div>
