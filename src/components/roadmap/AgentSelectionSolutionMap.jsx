@@ -7,10 +7,10 @@ const GOLD = '#D4AF37';
 
 const FLOW = {
   stages: [
-    { id: 'profile',   title: 'Relocation Profile' },
-    { id: 'vetting',   title: 'Deep Market Vetting' },
-    { id: 'shortlist', title: 'Your Shortlist' },
-    { id: 'agreement', title: 'Buyer Broker Agreement' },
+    { id: 'profile',   title: 'Client Preferences' },
+    { id: 'vetting',   title: 'Deep Market Vetting of Multiple Agents' },
+    { id: 'shortlist', title: 'Client Short List and Selection' },
+    { id: 'agreement', title: 'Referral and Relo Management Agreement' },
   ],
 };
 
