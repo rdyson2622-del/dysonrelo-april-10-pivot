@@ -231,7 +231,7 @@ export default function MasterShowSheet() {
             <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-1" style={{ color: GOLD }}>
               {isModelMode ? 'Model Show Sheet' : 'Master Show Sheet'}
             </p>
-            <h1 className="text-3xl font-serif">Roadmaps Requested & Accomplished</h1>
+            <h1 className="text-3xl font-serif">Solutions Requested & Accomplished</h1>
             <p className="text-sm text-gray-400 mt-1">Every request, every AGI agent, every outcome — in one view.</p>
           </div>
           <div className="flex items-center gap-2">
