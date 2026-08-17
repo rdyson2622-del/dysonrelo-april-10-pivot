@@ -6,7 +6,7 @@ import { ArrowRight, ArrowLeft, CheckCircle2, MapPin, Users, Sparkles, Shield, Z
 import { base44 } from '@/api/base44Client';
 import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
-import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import RelocationIntakeSolutionMap from '@/components/roadmap/RelocationIntakeSolutionMap';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -454,23 +454,9 @@ export default function RelocationIntake() {
           </div>
         </div>
 
-        {/* Solution Map — 8-step process line diagram */}
-        <div className="rounded-2xl p-6 mb-10" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}>
-          <div className="flex items-center gap-2 mb-4">
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
-            <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>Your Relocation Solution Map</span>
-          </div>
-          <FlowRoadmapLine
-            stages={STEPS.map((label, i) => ({ id: String(i), title: label }))}
-            stageStatuses={Object.fromEntries(STEPS.map((_, i) => {
-              const status = i < step ? 'completed' : i === step ? 'running' : 'pending';
-              return [String(i), { status }];
-            }))}
-            color={GOLD}
-            activeStageId={String(step)}
-            onSelect={() => {}}
-            compact
-          />
+        {/* Solution Map — animated 8-step process line diagram */}
+        <div className="mb-10">
+          <RelocationIntakeSolutionMap />
         </div>
 
         {/* Form Card */}
