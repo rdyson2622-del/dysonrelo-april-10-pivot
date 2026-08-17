@@ -7,6 +7,7 @@ import {
   TrendingUp, Award, Zap, Sparkles, ArrowLeft, ExternalLink
 } from 'lucide-react';
 import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
+import RequestSolutionMap from '@/components/roadmap/RequestSolutionMap';
 
 const GOLD = '#D4AF37';
 
@@ -310,7 +311,12 @@ export default function MasterShowSheet() {
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {inFlight.map(item => <InFlightCard key={item.id} item={item} onOrder={setOrderModal} />)}
+                  {inFlight.map(item => (
+                    <div key={item.id}>
+                      <RequestSolutionMap item={item} />
+                      <InFlightCard item={item} onOrder={setOrderModal} />
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
