@@ -5,7 +5,7 @@ import FloatingCharlie from '../charlie/FloatingCharlie';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
-import { ArrowLeft, PanelLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import MobileBottomNav from './MobileBottomNav';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
@@ -46,22 +46,11 @@ export default function AppLayout() {
     <div className={`flex flex-col h-screen overflow-hidden ${landscape ? 'force-landscape' : ''}`} style={{ background: '#A9A9A9' }}>
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
+        {/* STUDIO HOME pill — toggles the sidebar (collapse/expand) */}
         <PortalHomeButton
-          onClick={() => navigate('/?choose=1')}
+          onClick={toggleSidebar}
           label="STUDIO"
         />
-
-        {/* Sidebar toggle — always visible, reopens the sidebar when collapsed */}
-        <button
-          onClick={toggleSidebar}
-          aria-label={sidebarOpen ? 'Collapse sidebar' : 'Show sidebar'}
-          title={sidebarOpen ? 'Collapse sidebar' : 'Show sidebar'}
-          className="flex items-center gap-1.5 text-xs font-bold tracking-wide px-3 py-2 rounded-lg transition-all hover:opacity-80"
-          style={{ background: sidebarOpen ? 'rgba(212,175,55,0.15)' : 'rgba(212,175,55,0.3)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.45)' }}
-        >
-          <PanelLeft className="w-4 h-4" />
-          <span className="hidden sm:inline">{sidebarOpen ? 'HIDE PANEL' : 'SHOW PANEL'}</span>
-        </button>
 
         {/* Landscape / Portrait toggle */}
         <LayoutToggleButton />
