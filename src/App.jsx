@@ -184,6 +184,9 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      {/* Root → Role Selector */}
+      <Route path="/" element={<Navigate to="/portal" replace />} />
+
       {/* Role Selector — standalone, no sidebar */}
       <Route path="/portal" element={<RoleSelector />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
