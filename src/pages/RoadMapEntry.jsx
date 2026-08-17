@@ -210,9 +210,11 @@ export default function RoadMapEntry() {
               />
               {!inputValue && (
                 <div className="absolute inset-0 flex items-center px-6 overflow-hidden whitespace-nowrap pointer-events-none">
-                  <span className="inline-flex animate-marquee text-lg" style={{ color: '#5a5a5a' }}>
-                    <span className="px-6">A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
-                    <span className="px-6">A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
+                  <span className="inline-flex animate-marquee text-lg">
+                    <span className="px-6" style={{ color: '#5a5a5a' }}>A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
+                    <span className="px-6" style={{ color: '#1a1a1a' }}>A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
+                    <span className="px-6" style={{ color: '#5a5a5a' }}>A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
+                    <span className="px-6" style={{ color: '#1a1a1a' }}>A listing · a stalled escrow · a buyer or seller issue · a contract concern · information on a better plan to list or buy with less stress · my benefits and issues in moving locally, nationally, or internationally · </span>
                   </span>
                 </div>
               )}
