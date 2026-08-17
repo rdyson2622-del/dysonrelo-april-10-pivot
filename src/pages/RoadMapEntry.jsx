@@ -226,7 +226,7 @@ export default function RoadMapEntry() {
         <div className="max-w-5xl w-full mt-10">
           <div className="flex flex-col items-center gap-2 mb-4">
             <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
-              ● Live Demo — Here's what your roadmap looks like
+              ● Live Demo — Here's what your Solution Roadmap looks like
             </span>
           </div>
 
