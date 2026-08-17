@@ -188,7 +188,7 @@ export default function RoadMapEntry() {
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>
-          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight text-white">
+          <h1 className="text-2xl md:text-3xl font-serif font-normal mb-5 leading-tight" style={{ color: '#d8cab6' }}>
             {copy.title} {copy.titleAccent}
           </h1>
           {copy.subtitle && (
