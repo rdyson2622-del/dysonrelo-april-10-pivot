@@ -5,11 +5,11 @@ const GOLD = '#D4AF37';
 
 const PORTAL_PILLS = [
   { label: 'ADMIN', emoji: '⚙️', role: 'admin', path: '/admin', isAdmin: true },
+  { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/corporate-relo' },
   { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/home' },
   { label: 'RELO AGENT', emoji: '⭐', role: 'agent', path: '/find-agent' },
   { label: 'REFERRAL AGENT', emoji: '🤝', role: 'referral_agent', path: '/partner-benefits' },
   { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/search' },
-  { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/corporate-relo' },
 ];
 
 export default function CommandPills() {
