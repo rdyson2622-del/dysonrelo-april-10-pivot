@@ -5,8 +5,23 @@ import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import EscrowIssueResolver from '@/components/brokerage/EscrowIssueResolver';
+import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 
 const GOLD = '#D4AF37';
+
+// Dummy escrow lifecycle — shown at the top so visitors see what a live
+// escrow Solution Map looks like before any real data is synced in.
+const DUMMY_ESCROW_FLOW = {
+  stages: [
+    { id: 'open',        title: 'Open Escrow',     plain: 'Deposit received' },
+    { id: 'inspect',     title: 'Inspection',      plain: 'Contingency window' },
+    { id: 'appraise',    title: 'Appraisal',       plain: 'Lender valuation' },
+    { id: 'loan',        title: 'Loan Approval',    plain: 'Underwriting clear' },
+    { id: 'ctc',         title: 'Clear to Close',   plain: 'Docs to title' },
+    { id: 'fund',        title: 'Funding',         plain: 'Lender funds' },
+    { id: 'close',       title: 'Closing',         plain: 'Keys handed over' },
+  ],
+};
 
 const STATUS_MAP = {
   pending: 'pending',
@@ -103,6 +118,9 @@ export default function EscrowManagement() {
           <h1 className="text-3xl font-serif text-white">Escrow Management</h1>
         </div>
       </div>
+
+      {/* Dummy escrow Solution Map — shows what a live escrow roadmap looks like */}
+      <DummyEscrowSolutionMap />
 
       {/* Communication pill — first thing under the heading */}
       <BrokerageCommPill />
@@ -278,6 +296,33 @@ export default function EscrowManagement() {
           onApplied={() => queryClient.invalidateQueries({ queryKey: ['escrowIssues'] })}
         />
       )}
+    </div>
+  );
+}
+
+function DummyEscrowSolutionMap() {
+  const { statuses, activeStageId } = useAnimatedDemoStatuses(DUMMY_ESCROW_FLOW.stages);
+  return (
+    <div className="rounded-xl p-4 mb-6" style={{ background: '#111', border: `1px solid ${GOLD}30` }}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
+            ● Live Solution Map — Escrow Lifecycle
+          </span>
+        </div>
+        <span className="text-[9px] text-gray-600 uppercase tracking-wider">Demo</span>
+      </div>
+      <FlowRoadmapLine
+        stages={DUMMY_ESCROW_FLOW.stages}
+        stageStatuses={statuses}
+        color={GOLD}
+        activeStageId={activeStageId}
+        onSelect={() => {}}
+        compact
+      />
+      <p className="text-[10px] text-gray-600 mt-2 text-center">
+        This is what each escrow's live roadmap looks like below once data is synced.
+      </p>
     </div>
   );
 }
