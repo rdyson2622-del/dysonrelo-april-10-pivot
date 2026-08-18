@@ -6,8 +6,12 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { LayoutProvider } from '@/lib/LayoutContext';
 import { Toaster } from "@/components/ui/toaster";
 import PageNotFound from './lib/PageNotFound';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import PageNumberBadge from './components/PageNumberBadge';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
 
 // Layout Imports
 import AdminLayout from './components/layout/AdminLayout';
@@ -152,18 +156,7 @@ import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
-
-  // Public routes — accessible without authentication (for LinkedIn/social media scraping & link previews)
-  const path = window.location.pathname;
-  if (path === '/broadcast-show' || path === '/broadcast-preview') {
-    return (
-      <Routes>
-        <Route path="/broadcast-show" element={<BroadcastShow />} />
-        <Route path="/broadcast-preview" element={<BroadcastPreview />} />
-      </Routes>
-    );
-  }
+  const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -173,31 +166,32 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
-  }
-
   return (
     <Routes>
-      {/* Root → Role Selector */}
-      <Route path="/" element={<Navigate to="/portal" replace />} />
+      {/* Public auth routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Role Selector — standalone, no sidebar */}
-      <Route path="/portal" element={<RoleSelector />} />
-      <Route path="/broadcast-preview" element={<BroadcastPreview />} />
+      {/* Public broadcast viewer pages (for social media link previews / scraping) */}
       <Route path="/broadcast-show" element={<BroadcastShow />} />
+      <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
-      {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
-      <Route path="/solutions" element={<SolutionMapEntry />} />
+      {/* Everything below requires authentication */}
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        {/* Root → Role Selector */}
+        <Route path="/" element={<Navigate to="/portal" replace />} />
 
-      {/* Consumer Routes with Sidebar Layout */}
-      {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
-      <Route element={<AppLayout />}>
+        {/* Role Selector — standalone, no sidebar */}
+        <Route path="/portal" element={<RoleSelector />} />
+
+        {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
+        <Route path="/solutions" element={<SolutionMapEntry />} />
+
+        {/* Consumer Routes with Sidebar Layout */}
+        {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
+        <Route element={<AppLayout />}>
         <Route path="/home" element={<Home />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -356,13 +350,14 @@ const AuthenticatedApp = () => {
         <Route path="/brokerage/luxury" element={<LuxuryPresence />} />
       </Route>
 
-      <Route path="/subscriber-setup" element={<SubscriberSetup />} />
-      <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
-      <Route path="/agent-landing" element={<AgentLanding />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/terms" element={<TermsOfService />} />
-      <Route path="/connect" element={<Connect />} />
-      <Route path="*" element={<PageNotFound />} />
+        <Route path="/subscriber-setup" element={<SubscriberSetup />} />
+        <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
+        <Route path="/agent-landing" element={<AgentLanding />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/connect" element={<Connect />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
     </Routes>
   );
 };
