@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Video, AlertTriangle } from 'lucide-react';
+import { Video, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
@@ -34,6 +34,7 @@ function firstUnfinishedStageId(stageStatuses) {
 
 export default function AdminExplainerVideos() {
   const queryClient = useQueryClient();
+  const [openScriptId, setOpenScriptId] = useState(null);
 
   const { data: explainers = [], isLoading } = useQuery({
     queryKey: ['dnnExplainers'],
@@ -99,6 +100,23 @@ export default function AdminExplainerVideos() {
                 activeStageId={firstUnfinishedStageId(explainer.stage_statuses)}
                 onSelect={(stageId) => handleCycleStage(explainer, stageId)}
               />
+
+              {/* Script panel — full approved script, verbatim, expandable */}
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <button
+                  onClick={() => setOpenScriptId(openScriptId === explainer.id ? null : explainer.id)}
+                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+                  style={{ color: GOLD }}
+                >
+                  {openScriptId === explainer.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                  Script
+                </button>
+                {openScriptId === explainer.id && (
+                  <div className="mt-3 rounded-lg p-4 whitespace-pre-wrap text-sm leading-relaxed text-gray-300" style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    {explainer.script ? explainer.script : <span className="text-gray-600 italic">No script saved yet.</span>}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

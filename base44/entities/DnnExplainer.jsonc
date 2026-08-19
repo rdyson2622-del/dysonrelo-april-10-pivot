@@ -28,6 +28,10 @@
       "default": "not_locked",
       "description": "Whether the approved script is locked"
     },
+    "script": {
+      "type": "string",
+      "description": "Full approved script text, verbatim, for Bob to review in Admin."
+    },
     "video_url": {
       "type": "string",
       "description": "Final rendered explainer video URL once Cut is complete"
