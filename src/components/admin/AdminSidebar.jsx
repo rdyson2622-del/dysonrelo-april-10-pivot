@@ -227,9 +227,6 @@ export default function AdminSidebar() {
   const [pageCode, setPageCode] = useState('');
   const [smsWidgetOpen, setSmsWidgetOpen] = useState(true);
   const [wisdomOpen, setWisdomOpen] = useState(false);
-  const [commandOpen, setCommandOpen] = useState(false);
-  const [workflowOpen, setWorkflowOpen] = useState(false);
-  const [roadmapOpen, setRoadmapOpen] = useState(false);
 
   // Sections that are always open by default (never collapsed on first visit)
   const DEFAULT_OPEN = new Set([]);
@@ -335,77 +332,50 @@ export default function AdminSidebar() {
 
       {/* Grok Specialist Command Center — top of sidebar */}
       <div className="px-3 pt-3 pb-2 shrink-0">
-        <button
-          onClick={() => setCommandOpen(v => !v)}
+        <Link
+          to="/admin/grok-command"
           className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
           style={{
-            background: commandOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
             color: '#D4AF37',
             border: '1px solid rgba(212,175,55,0.35)',
           }}
         >
           <Bot className="w-4 h-4 shrink-0" />
           <span className="text-center leading-tight">COMMAND<br/>CENTER</span>
-          {commandOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-        </button>
-        {commandOpen && (
-          <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
-            <Link to="/admin/grok-command" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/grok-command' ? '#D4AF37' : '#ccc' }}>
-              <Bot className="w-3 h-3 shrink-0" />
-              <span className="truncate">Open Command Center</span>
-            </Link>
-          </div>
-        )}
+        </Link>
       </div>
 
       {/* Master Workflow Atlas — directly under Command Center */}
       <div className="px-3 pb-2 shrink-0">
-        <button
-          onClick={() => setWorkflowOpen(v => !v)}
+        <Link
+          to="/admin/workflows"
           className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
           style={{
-            background: workflowOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
             color: '#D4AF37',
             border: '1px solid rgba(212,175,55,0.35)',
           }}
         >
           <GitBranch className="w-4 h-4 shrink-0" />
           <span className="text-center leading-tight">WORKFLOW<br/>ATLAS</span>
-          {workflowOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-        </button>
-        {workflowOpen && (
-          <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
-            <Link to="/admin/workflows" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname.startsWith('/admin/workflows') ? '#D4AF37' : '#ccc' }}>
-              <GitBranch className="w-3 h-3 shrink-0" />
-              <span className="truncate">Open Workflow Atlas</span>
-            </Link>
-          </div>
-        )}
+        </Link>
       </div>
 
       {/* Road Map to Completion — master one-glance dashboard */}
       <div className="px-3 pb-2 shrink-0">
-        <button
-          onClick={() => setRoadmapOpen(v => !v)}
+        <Link
+          to="/admin/roadmap"
           className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
           style={{
-            background: roadmapOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            background: location.pathname === '/admin/roadmap' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
             color: '#D4AF37',
             border: '1px solid rgba(212,175,55,0.35)',
           }}
         >
           <Map className="w-4 h-4 shrink-0" />
           <span className="text-center leading-tight">ROAD MAP<br/>TO COMPLETION</span>
-          {roadmapOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-        </button>
-        {roadmapOpen && (
-          <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
-            <Link to="/admin/roadmap" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/roadmap' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/roadmap' ? '#D4AF37' : '#ccc' }}>
-              <Map className="w-3 h-3 shrink-0" />
-              <span className="truncate">Open Road Map</span>
-            </Link>
-          </div>
-        )}
+        </Link>
       </div>
 
       {/* Wisdom Properties — escrow/listing/agent management suite */}
