@@ -61,6 +61,9 @@ export default function BroadcastShow() {
         <button onClick={() => window.location.href = '/'} className="text-xs underline" style={{ color: GOLD }}>
           Return Home
         </button>
+        <a href="/login" className="text-xs underline" style={{ color: GOLD }}>
+          Sign In
+        </a>
       </div>
     );
   }
@@ -155,6 +158,12 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
         <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>LIVE</span>
         <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
       </div>
+
+      {/* Sign In — this page is public; admins/subscribers need a manual way back in */}
+      <a href="/login" className="absolute bottom-4 left-4 z-30 px-3 py-1.5 rounded-lg text-[10px] font-black tracking-[0.15em] uppercase transition-all hover:scale-105"
+        style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}>
+        Sign In
+      </a>
 
       {showName && (
         <div className="absolute top-4 right-20 z-30 px-3 py-1.5 rounded-lg"
