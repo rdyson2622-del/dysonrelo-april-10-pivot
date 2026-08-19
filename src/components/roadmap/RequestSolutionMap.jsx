@@ -5,7 +5,7 @@ import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 const DESK_COLORS = Object.fromEntries(WORKFLOW_DESKS.map(d => [d.id, d.color]));
 
 /**
- * RequestSolutionMap — the REAL Solution Map for a subscriber's request.
+ * RequestSolutionMap — the REAL Roadmap for a subscriber's request.
  *
  * The animated dummy demo lives on the entry page (SolutionMapEntry) to
  * introduce the map and the process. Once the client subscribes — so we have
@@ -69,7 +69,7 @@ export default function RequestSolutionMap({ item }) {
     <div className="rounded-xl p-3 mb-2" style={{ background: '#0a0a0a', border: `1px solid ${color}30` }}>
       <div className="flex items-center gap-2 mb-1.5">
         <span className="text-[9px] font-black tracking-widest uppercase" style={{ color }}>
-          ● Your Solution Map
+          ● Your Roadmap
         </span>
         <span className="text-[9px] text-gray-500 ml-auto">{item.desk_name || deskId}</span>
       </div>

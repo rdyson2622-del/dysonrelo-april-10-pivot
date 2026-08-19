@@ -5,7 +5,7 @@ import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import { getSolutionMap } from '@/lib/solutionMaps';
 
 /**
- * SolutionMapDemo — reusable interactive Solution Map for any client page.
+ * SolutionMapDemo — reusable interactive Roadmap for any client page.
  *
  * Props:
  *   mapId     — key into SOLUTION_MAPS or a department flow id (required)
@@ -47,7 +47,7 @@ export default function SolutionMapDemo({
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-[10px] font-black tracking-[0.25em] uppercase animate-pulse" style={{ color: lineColor }}>
-              ● Live Solution Map
+              ● Live Roadmap
             </p>
             <h3 className="text-sm font-serif mt-0.5" style={{ color: '#fff' }}>{heading}</h3>
             {subtitle && <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{subtitle}</p>}

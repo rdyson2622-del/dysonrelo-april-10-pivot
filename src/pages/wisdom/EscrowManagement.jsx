@@ -10,7 +10,7 @@ import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 const GOLD = '#D4AF37';
 
 // Dummy escrow lifecycle — shown at the top so visitors see what a live
-// escrow Solution Map looks like before any real data is synced in.
+// escrow Roadmap looks like before any real data is synced in.
 const DUMMY_ESCROW_FLOW = {
   stages: [
     { id: 'open',        title: 'Open Escrow',     plain: 'Deposit received' },
@@ -119,7 +119,7 @@ export default function EscrowManagement() {
         </div>
       </div>
 
-      {/* Dummy escrow Solution Map — shows what a live escrow roadmap looks like */}
+      {/* Dummy escrow Roadmap — shows what a live escrow roadmap looks like */}
       <DummyEscrowSolutionMap />
 
       {/* Communication pill — first thing under the heading */}
@@ -307,7 +307,7 @@ function DummyEscrowSolutionMap() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black tracking-widest uppercase animate-pulse" style={{ color: GOLD }}>
-            ● Live Solution Map — Escrow Lifecycle
+            ● Live Roadmap — Escrow Lifecycle
           </span>
         </div>
         <span className="text-[9px] text-gray-600 uppercase tracking-wider">Demo</span>

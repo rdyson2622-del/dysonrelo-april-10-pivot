@@ -50,11 +50,11 @@ export default function CorporateRelo() {
           WITH FULL REAL TIME TRANSPARENCY TO YOU AND YOUR EMPLOYEE BUT WITHOUT THE MANAGEMENT FEES.
         </h2>
 
-        {/* ── Relocation Solution Map ── */}
+        {/* ── Relocation Roadmap ── */}
         <div className="w-full max-w-5xl mx-auto mt-6 mb-2 rounded-2xl p-5"
           style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase text-center mb-3 animate-pulse" style={{ color: GOLD }}>
-            ● Live Solution Map — The Relocation Process
+            ● Live Roadmap — The Relocation Process
           </p>
           <FlowRoadmapLine
             stages={relocationFlow?.stages || []}

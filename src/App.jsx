@@ -199,6 +199,7 @@ const AuthenticatedApp = () => {
 
         {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
         <Route path="/solutions" element={<SolutionMapEntry />} />
+        <Route path="/roadmaps" element={<SolutionMapEntry />} />
 
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}

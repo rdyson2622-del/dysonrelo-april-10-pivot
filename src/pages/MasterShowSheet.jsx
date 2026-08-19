@@ -240,7 +240,7 @@ export default function MasterShowSheet() {
               className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-lg text-black transition-all hover:scale-[1.03]"
               style={{ background: GOLD }}
             >
-              <Zap className="w-4 h-4" /> Request a Solution Map
+              <Zap className="w-4 h-4" /> Request a Roadmap
             </button>
             <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
               <ArrowLeft className="w-4 h-4" /> Back

@@ -42,7 +42,7 @@ export default function TransparencyProgressBanner() {
         </div>
         <p className="text-xs text-gray-300 flex-1 hidden sm:block leading-snug">
           <span className="font-bold" style={{ color: GOLD }}>Transparent Workflow:</span>{' '}
-          Every request is tracked on a live Solution Map — AGI agents work your request, flag issues, and report accomplishments in real time.
+          Every request is tracked on a live Roadmap — AGI agents work your request, flag issues, and report accomplishments in real time.
         </p>
         <p className="text-xs text-gray-300 flex-1 sm:hidden">
           <span className="font-bold" style={{ color: GOLD }}>Track your progress</span>
@@ -52,7 +52,7 @@ export default function TransparencyProgressBanner() {
           className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg text-black transition-all hover:scale-[1.03] shrink-0"
           style={{ background: GOLD }}
         >
-          View My Solution Map
+          View My Roadmap
           <ArrowRight className="w-3 h-3" />
         </Link>
         <button

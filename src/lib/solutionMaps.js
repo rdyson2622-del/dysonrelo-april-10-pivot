@@ -1,5 +1,5 @@
 /**
- * Solution Map definitions — consumer-facing flows for client portal pages.
+ * Roadmap definitions — consumer-facing flows for client portal pages.
  * Internal desk flows live in departmentWorkflows.js; these are the
  * lighter, visitor-facing versions (like EXPLORE_FLOW in RoadMapEntry).
  *
@@ -8,12 +8,12 @@
 
 import { getFlow } from '@/lib/departmentWorkflows';
 
-// ── Consumer-facing Solution Maps (not tied to an internal desk) ──
+// ── Consumer-facing Roadmaps (not tied to an internal desk) ──
 
 export const SOLUTION_MAPS = {
   // The signature landing flow — issue resolution
   solve_my_story: {
-    title: 'Your Solution Map',
+    title: 'Your Roadmap',
     color: '#D4AF37',
     stages: [
       { id: 'tell',      title: 'Tell Us',      plain: 'You share your real estate story.' },
@@ -25,7 +25,7 @@ export const SOLUTION_MAPS = {
 
   // Full relocation lifecycle
   relocation: {
-    title: 'Your Relocation Solution Map',
+    title: 'Your Relocation Roadmap',
     color: '#10b981',
     stages: [
       { id: 'intake',    title: 'Intake',      plain: 'Tell us where, when, and what matters.' },

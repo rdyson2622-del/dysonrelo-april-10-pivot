@@ -8,7 +8,7 @@ const GOLD = '#D4AF37';
 const DNN_COLOR = '#38bdf8';
 
 /**
- * DnnNewsSolutionMap — a live animated Solution Map showing the DNN News
+ * DnnNewsSolutionMap — a live animated Roadmap showing the DNN News
  * production flow (Write → Render → Publish → Audience). Displayed on the
  * consumer DNN News page above the briefs so visitors see how each story
  * is produced before it reaches them.
@@ -25,7 +25,7 @@ export default function DnnNewsSolutionMap() {
         <div className="flex items-center gap-2 mb-2">
           <Newspaper className="w-4 h-4" style={{ color: DNN_COLOR }} />
           <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: DNN_COLOR }}>
-            DNN News Solution Map
+            DNN News Roadmap
           </span>
           <span className="text-[9px] font-bold tracking-widest uppercase animate-pulse ml-auto" style={{ color: GOLD }}>
             ● Live

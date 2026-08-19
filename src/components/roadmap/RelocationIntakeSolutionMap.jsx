@@ -49,7 +49,7 @@ export default function RelocationIntakeSolutionMap() {
           ● Live Demo
         </span>
       </div>
-      <h3 className="text-lg font-bold mb-5" style={{ color: GOLD }}>Your Relocation Solution Map</h3>
+      <h3 className="text-lg font-bold mb-5" style={{ color: GOLD }}>Your Relocation Roadmap</h3>
 
       <FlowRoadmapLine
         stages={FLOW.stages}
