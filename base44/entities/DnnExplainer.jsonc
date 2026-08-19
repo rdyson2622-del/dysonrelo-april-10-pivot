@@ -1,0 +1,89 @@
+{
+  "name": "DnnExplainer",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Explainer title (e.g. 'Agent / Broker / TC Explainer')"
+    },
+    "explainer_type": {
+      "type": "string",
+      "enum": [
+        "agent_broker_tc",
+        "broker_wisdom"
+      ],
+      "description": "Which explainer track this is"
+    },
+    "presenters": {
+      "type": "string",
+      "default": "Charlie + Bob",
+      "description": "Who presents this explainer"
+    },
+    "script_status": {
+      "type": "string",
+      "enum": [
+        "not_locked",
+        "locked"
+      ],
+      "default": "not_locked",
+      "description": "Whether the approved script is locked"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Final rendered explainer video URL once Cut is complete"
+    },
+    "post_url": {
+      "type": "string",
+      "description": "Site route this explainer posts to (e.g. /AgentExplainer or the broker explainer slot)"
+    },
+    "stage_statuses": {
+      "type": "object",
+      "description": "Map of stage id -> { status, notes }. status is one of pending, running, completed, flagged. Drives the Roadmap line."
+    },
+    "red_light_notified": {
+      "type": "string",
+      "enum": [
+        "none",
+        "agent_notified",
+        "client_notified"
+      ],
+      "default": "none",
+      "description": "Two-tier red light escalation: appropriate agent/broker/TC is notified first; client is only notified if unresolved."
+    },
+    "marketing_send_approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Bob's separate manual go-ahead to send this explainer to marketing. Never fires automatically."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes on this explainer job"
+    }
+  },
+  "required": [
+    "title",
+    "explainer_type"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

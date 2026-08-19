@@ -111,6 +111,7 @@ import AdminLeadHandoff from './pages/AdminLeadHandoff';
 import DnnStudioDashboard from './pages/DnnStudioDashboard';
 import AdminRecruitingBroadcast from './pages/AdminRecruitingBroadcast';
 import DnnScriptReview from './pages/DnnScriptReview';
+import AdminExplainerVideos from './pages/AdminExplainerVideos';
 import DnnVideoPreview from './pages/DnnVideoPreview';
 import AdminShowPipeline from './pages/AdminShowPipeline';
 import AdminScriptStudio from './pages/AdminScriptStudio';
@@ -313,6 +314,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/studio" element={<DnnStudioDashboard />} />
         <Route path="/admin/dnn/recruiting" element={<AdminRecruitingBroadcast />} />
         <Route path="/admin/dnn/script-review" element={<DnnScriptReview />} />
+        <Route path="/admin/dnn/explainer-videos" element={<AdminExplainerVideos />} />
         <Route path="/admin/dnn/video-preview" element={<DnnVideoPreview />} />
         <Route path="/admin/dnn/show-pipeline" element={<AdminShowPipeline />} />
         <Route path="/admin/dnn/script-studio" element={<AdminScriptStudio />} />
