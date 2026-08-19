@@ -178,13 +178,16 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
-      {/* Public marketing/legal pages — no auth required */}
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/terms" element={<TermsOfService />} />
-      <Route path="/subscribe" element={<Subscribe />} />
-      <Route path="/relocation-intake" element={<RelocationIntake />} />
-      <Route path="/RelocationIntake" element={<RelocationIntake />} />
-      <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
+      {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
+          so the admin top command bar (access to every portal) shows automatically. */}
+      <Route element={<AppLayout />}>
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/relocation-intake" element={<RelocationIntake />} />
+        <Route path="/RelocationIntake" element={<RelocationIntake />} />
+        <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
+      </Route>
 
       {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
       <Route path="/" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Navigate to="/broadcast-show" replace />} />
