@@ -178,11 +178,19 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
+      {/* Public marketing/legal pages — no auth required */}
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/subscribe" element={<Subscribe />} />
+      <Route path="/relocation-intake" element={<RelocationIntake />} />
+      <Route path="/RelocationIntake" element={<RelocationIntake />} />
+      <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
+
+      {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
+      <Route path="/" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Navigate to="/broadcast-show" replace />} />
+
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        {/* Root → Role Selector */}
-        <Route path="/" element={<Navigate to="/portal" replace />} />
-
         {/* Role Selector — standalone, no sidebar */}
         <Route path="/portal" element={<RoleSelector />} />
 
@@ -196,8 +204,6 @@ const AuthenticatedApp = () => {
         <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/relocation-intake" element={<RelocationIntake />} />
-        <Route path="/RelocationIntake" element={<RelocationIntake />} />
         <Route path="/relocation-roadmap" element={<RelocationRoadmap />} />
         <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/gemini" element={<GeminiSession />} />
@@ -227,9 +233,7 @@ const AuthenticatedApp = () => {
         <Route path="/explainers" element={<Explainers />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
-        <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
-        <Route path="/subscribe" element={<Subscribe />} />
       <Route path="/master-show-sheet" element={<MasterShowSheet />} />
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
@@ -353,8 +357,6 @@ const AuthenticatedApp = () => {
         <Route path="/subscriber-setup" element={<SubscriberSetup />} />
         <Route path="/relo-management-video-bg" element={<ReloManagementVideoBg />} />
         <Route path="/agent-landing" element={<AgentLanding />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
         <Route path="/connect" element={<Connect />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
