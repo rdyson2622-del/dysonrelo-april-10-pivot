@@ -427,6 +427,77 @@ export default function AdminSidebar() {
         )}
       </div>
 
+      {/* DNN NEWS AND INTELLIGENCE — pinned near top, just below Wisdom Properties */}
+      {(() => {
+        const section = NAV_SECTIONS.find(s => s.key === 'dnn');
+        const isOpen = openSections[section.key];
+        const hasActive = getSectionPaths(section).some(p => location.pathname === p || location.pathname.startsWith(p));
+        const SectionIcon = section.icon;
+        const sectionColor = section.color || '#D4AF37';
+        const borderColor = 'rgba(212,175,55,0.2)';
+        return (
+          <div className="px-3 pb-2 shrink-0">
+            <button
+              onClick={() => toggleSection(section.key)}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all group"
+              style={{ background: hasActive && !isOpen ? 'rgba(212,175,55,0.06)' : 'transparent' }}
+            >
+              <div className="flex items-center gap-2">
+                {SectionIcon && <SectionIcon className="w-3.5 h-3.5" style={{ color: sectionColor }} />}
+                <span className="text-xs font-bold tracking-[0.2em] truncate" style={{ color: sectionColor }}>
+                  {section.label}
+                </span>
+                {hasActive && !isOpen && (
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: sectionColor }} />
+                )}
+              </div>
+              {isOpen
+                ? <ChevronDown className="w-3 h-3 opacity-60" style={{ color: sectionColor }} />
+                : <ChevronRightIcon className="w-3 h-3 opacity-40" style={{ color: sectionColor }} />
+              }
+            </button>
+            {isOpen && (
+              <div className="mt-0.5 ml-2 pl-3 pb-1 space-y-0.5 border-l" style={{ borderColor }}>
+                {section.children.map((child, ci) => {
+                  if (child.isCommsBadge) {
+                    return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
+                  }
+                  if (child.isHeader) {
+                    return (
+                      <div key={ci} className="px-3 pt-3 pb-1">
+                        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>{child.label}</span>
+                      </div>
+                    );
+                  }
+                  const isActive = location.pathname === child.path;
+                  const childColor = section.color || '#D4AF37';
+                  return (
+                    <Link
+                      key={`${child.path}-${ci}`}
+                      to={child.path}
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
+                      style={{
+                        background: child.highlight ? 'rgba(212,175,55,0.15)' : (isActive ? `${childColor}22` : 'transparent'),
+                        color: child.highlight ? GOLD : (child.indent ? '#ffffff' : (isActive ? childColor : '#ccc')),
+                        border: child.highlight ? `1px solid rgba(212,175,55,0.4)` : 'none',
+                        marginLeft: child.indent ? '8px' : '0',
+                        fontSize: child.indent ? '12px' : '14px',
+                        paddingTop: child.indent ? '4px' : undefined,
+                        paddingBottom: child.indent ? '4px' : undefined,
+                        fontWeight: child.highlight ? 900 : undefined,
+                      }}
+                    >
+                      <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />
+                      <span className="truncate">{child.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
       {/* Recent Grok Dispatches — live feed from the Command Center */}
       <AdminDispatchWidget />
 
@@ -547,7 +618,7 @@ export default function AdminSidebar() {
 
       {/* Collapsible Sections */}
       <nav className="py-2 px-3 space-y-0.5 flex-1">
-        {NAV_SECTIONS.map(section => {
+        {NAV_SECTIONS.filter(s => s.key !== 'dnn').map(section => {
           const isOpen = openSections[section.key];
           const hasActive = getSectionPaths(section).some(p => location.pathname === p || location.pathname.startsWith(p));
           const SectionIcon = section.icon;
