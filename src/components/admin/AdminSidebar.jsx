@@ -439,22 +439,16 @@ export default function AdminSidebar() {
           <div className="px-3 pb-2 shrink-0">
             <button
               onClick={() => toggleSection(section.key)}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all group"
-              style={{ background: hasActive && !isOpen ? 'rgba(212,175,55,0.06)' : 'transparent' }}
+              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+              style={{
+                background: isOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+                color: '#D4AF37',
+                border: '1px solid rgba(212,175,55,0.35)',
+              }}
             >
-              <div className="flex items-center gap-2">
-                {SectionIcon && <SectionIcon className="w-3.5 h-3.5" style={{ color: sectionColor }} />}
-                <span className="text-xs font-bold tracking-[0.2em] truncate" style={{ color: sectionColor }}>
-                  {section.label}
-                </span>
-                {hasActive && !isOpen && (
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: sectionColor }} />
-                )}
-              </div>
-              {isOpen
-                ? <ChevronDown className="w-3 h-3 opacity-60" style={{ color: sectionColor }} />
-                : <ChevronRightIcon className="w-3 h-3 opacity-40" style={{ color: sectionColor }} />
-              }
+              {SectionIcon && <SectionIcon className="w-4 h-4 shrink-0" />}
+              <span className="text-center leading-tight tracking-[0.15em]">{section.label}</span>
+              {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
             </button>
             {isOpen && (
               <div className="mt-0.5 ml-2 pl-3 pb-1 space-y-0.5 border-l" style={{ borderColor }}>
