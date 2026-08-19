@@ -198,7 +198,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
           </div>
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>THE COMPLETE RELOCATION PROCESS</p>
           <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.62rem, 3.6vw, 2.7rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
-            {city ? `Your ${city} Solution Map` : 'Your Relocation Solution Map'}
+            {city ? `Your ${city} Roadmap` : 'Your Relocation Roadmap'}
           </h1>
           {isAgentPortal && (
             <div className="rounded-xl p-4 max-w-2xl mx-auto mb-4" style={{ background: 'rgba(212,175,55,0.08)', border: `1px solid ${GOLD}44` }}>
