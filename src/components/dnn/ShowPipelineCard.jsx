@@ -106,6 +106,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
+  // Friction/STOP indicator — same red light used across other roadmaps on the
+  // site to flag where a SOP/human needs to step in before the show can advance.
+  const hasFriction = show.status === 'failed' || someClipsFailed || !!show.errorMessage;
 
   // Open the full-screen studio preview — always stop the inline preview
   // video first so we don't get two audio tracks playing simultaneously.
@@ -215,20 +218,21 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               const StageIcon = stage.icon;
               const isDone = i < stageIndex;
               const isActive = i === stageIndex;
-              const isFuture = i > stageIndex;
+              const isStuck = isActive && hasFriction;
               return (
                 <React.Fragment key={stage.key}>
                   <div className="flex flex-col items-center shrink-0" style={{ minWidth: '90px' }}>
                     <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
                       style={{
-                        background: isDone ? 'rgba(74,222,128,0.15)' : isActive ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
-                        border: `1.5px solid ${isDone ? 'rgba(74,222,128,0.4)' : isActive ? GOLD : 'rgba(255,255,255,0.1)'}`,
+                        background: isStuck ? 'rgba(239,68,68,0.18)' : isDone ? 'rgba(74,222,128,0.15)' : isActive ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
+                        border: `1.5px solid ${isStuck ? '#ef4444' : isDone ? 'rgba(74,222,128,0.4)' : isActive ? GOLD : 'rgba(255,255,255,0.1)'}`,
+                        boxShadow: isStuck ? '0 0 10px #ef4444' : 'none',
                       }}>
-                      {isDone ? <CheckCircle className="w-4 h-4 text-green-400" /> : <StageIcon className="w-4 h-4" style={{ color: isActive ? GOLD : '#666' }} />}
+                      {isStuck ? <XCircle className="w-4 h-4" style={{ color: '#ef4444' }} /> : isDone ? <CheckCircle className="w-4 h-4 text-green-400" /> : <StageIcon className="w-4 h-4" style={{ color: isActive ? GOLD : '#666' }} />}
                     </div>
                     <p className="text-[8px] font-bold tracking-wide uppercase mt-1.5 text-center leading-tight"
-                      style={{ color: isDone ? '#4ade80' : isActive ? GOLD : '#555' }}>
-                      {stage.label}
+                      style={{ color: isStuck ? '#ef4444' : isDone ? '#4ade80' : isActive ? GOLD : '#555' }}>
+                      {isStuck ? 'STOP' : stage.label}
                     </p>
                     <p className="text-[7px] text-center leading-tight mt-0.5 text-slate-500">
                       {stage.producer}
