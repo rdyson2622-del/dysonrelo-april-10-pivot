@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import {
   RefreshCw, Play, CheckCircle, XCircle, Clock, Edit3, Sparkles,
   Film, Clapperboard, Layers, FileText, ChevronDown, ChevronRight,
-  Send, Trash2, Download
+  Send, Trash2, Download, Ban
 } from 'lucide-react';
 import DistributionPanel from '@/components/dnn/DistributionPanel';
 import AgentDistributionModal from '@/components/dnn/AgentDistributionModal';
@@ -92,6 +92,24 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
     setDownloading(false);
   };
 
+  const [stopping, setStopping] = useState(false);
+  const isActivelyRendering = show.status === 'rendering' || show.status === 'processing';
+
+  const handleStopRendering = async () => {
+    if (!confirm(`Stop rendering ${show.show_name || 'Show ' + (show.show_number || '?')} now?\n\nThis halts any in-progress render/stitch and marks the show as stopped.`)) return;
+    setStopping(true);
+    try {
+      await base44.entities.DnnBroadcast.update(show.id, {
+        status: 'failed',
+        errorMessage: 'Manually stopped by admin.',
+      });
+      onRefresh();
+    } catch (e) {
+      setResult({ success: false, error: e.message });
+    }
+    setStopping(false);
+  };
+
   const handleDelete = async () => {
     if (!confirm(`Delete ${show.show_name || 'Show ' + (show.show_number || '?')} permanently?\n\nBroadcast date: ${show.broadcast_date}\n\nThis cannot be undone.`)) return;
     setDeleting(true);
@@ -166,6 +184,16 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Stop Rendering — manual kill switch for a stuck/runaway render */}
+          {isActivelyRendering && (
+            <button onClick={(e) => { e.stopPropagation(); handleStopRendering(); }} disabled={stopping}
+              title="Stop this show's rendering/stitching immediately"
+              className="flex items-center gap-1 text-[9px] font-bold px-2.5 py-1 rounded-full text-white transition-all hover:scale-105 disabled:opacity-50"
+              style={{ background: 'rgba(239,68,68,0.2)', border: '1px solid rgba(239,68,68,0.5)', color: '#f87171' }}>
+              {stopping ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Ban className="w-3 h-3" />}
+              {stopping ? 'Stopping…' : '⛔ Stop Rendering'}
+            </button>
+          )}
           {/* Rerun button — re-dispatch through n8n with corrected scene order */}
           <button onClick={() => {
             if (!confirm(`Rerun ${show.show_name || 'Show ' + (show.show_number || '?')}?\n\nThis will clear the current video and re-dispatch through n8n with corrected scene ordering (intro → content → outro).`)) return;
