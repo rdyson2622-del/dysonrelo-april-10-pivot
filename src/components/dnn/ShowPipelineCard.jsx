@@ -395,8 +395,8 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                   <Edit3 className="w-3 h-3" /> Edit
                 </button>
               </div>
-              <div className="rounded-lg p-3 max-h-32 overflow-y-auto" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <p className="text-[11px] text-slate-400 whitespace-pre-wrap line-clamp-6">{show.script}</p>
+              <div className="rounded-lg p-3 max-h-48 overflow-y-auto" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <p className="text-[11px] text-slate-400 whitespace-pre-wrap">{show.script}</p>
               </div>
             </div>
           )}
