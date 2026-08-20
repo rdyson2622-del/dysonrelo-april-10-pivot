@@ -61,14 +61,21 @@ export async function createAndDispatchBroadcast(base44, opts) {
   // 2. Fire the n8n webhook with the broadcast_id + pipeline indicator.
   //    scene_order tells n8n the EXACT order to generate + stitch the 3 scenes.
   //    Without this, n8n may stitch scenes out of order (e.g. content before intro).
+  //    background tells Higgsfield the exact DNN studio backdrop to render
+  //    against: Charlie seated at the anchor desk (left), Bob standing (right).
+  const STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
   const payload = {
     broadcast_id: broadcast.id,
     prompt_topics: promptTopics,
     pipeline: 'higgsfield_11labs',
+    background: {
+      url: STUDIO_BACKGROUND_URL,
+      description: 'DNN studio set: Charlie Simmons seated at the anchor desk on the LEFT, Bob Dyson standing in the studio on the RIGHT',
+    },
     scene_order: [
-      { scene: 1, field: 'intro_script', speaker: 'charlie', label: 'Intro / Opening', instruction: 'Charlie opens the show and introduces the headlines' },
-      { scene: 2, field: 'content_script', speaker: 'bob', label: 'Main Content', instruction: 'Bob explains the news story in depth' },
-      { scene: 3, field: 'outro_script', speaker: 'charlie', label: 'Outro / Closing', instruction: 'Charlie closes the show and signs off' },
+      { scene: 1, field: 'intro_script', speaker: 'charlie', label: 'Intro / Opening', position: 'seated at desk, left', instruction: 'Charlie opens the show and introduces the headlines' },
+      { scene: 2, field: 'content_script', speaker: 'bob', label: 'Main Content', position: 'standing, right', instruction: 'Bob explains the news story in depth' },
+      { scene: 3, field: 'outro_script', speaker: 'charlie', label: 'Outro / Closing', position: 'seated at desk, left', instruction: 'Charlie closes the show and signs off' },
     ],
   };
 

@@ -55,16 +55,24 @@ export default async function(req) {
       errorMessage: null,
     });
 
-    // Re-fire the n8n webhook with explicit scene ordering
+    // Re-fire the n8n webhook with explicit scene ordering + the exact
+    // DNN studio backdrop (Charlie seated at the anchor desk on the LEFT,
+    // Bob standing in the studio on the RIGHT) so Higgsfield renders every
+    // scene against the correct set instead of a default/black background.
+    const STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
     const payload = {
       broadcast_id: broadcastId,
       prompt_topics: broadcast.prompt_topics || broadcast.headlines?.join(' | ') || "Today's top relocation and real estate market headlines",
       pipeline: 'higgsfield_11labs',
       rerun: true,
+      background: {
+        url: STUDIO_BACKGROUND_URL,
+        description: 'DNN studio set: Charlie Simmons seated at the anchor desk on the LEFT, Bob Dyson standing in the studio on the RIGHT',
+      },
       scene_order: [
-        { scene: 1, field: 'intro_script', speaker: 'charlie', label: 'Intro / Opening', instruction: 'Charlie opens the show and introduces the headlines' },
-        { scene: 2, field: 'content_script', speaker: 'bob', label: 'Main Content', instruction: 'Bob explains the news story in depth' },
-        { scene: 3, field: 'outro_script', speaker: 'charlie', label: 'Outro / Closing', instruction: 'Charlie closes the show and signs off' },
+        { scene: 1, field: 'intro_script', speaker: 'charlie', label: 'Intro / Opening', position: 'seated at desk, left', instruction: 'Charlie opens the show and introduces the headlines' },
+        { scene: 2, field: 'content_script', speaker: 'bob', label: 'Main Content', position: 'standing, right', instruction: 'Bob explains the news story in depth' },
+        { scene: 3, field: 'outro_script', speaker: 'charlie', label: 'Outro / Closing', position: 'seated at desk, left', instruction: 'Charlie closes the show and signs off' },
       ],
     };
 
