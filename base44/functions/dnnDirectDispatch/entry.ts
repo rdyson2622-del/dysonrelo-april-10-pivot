@@ -25,6 +25,12 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
+// DNN Studio backdrop — Charlie seated at the desk (left), Bob standing in the
+// studio (right). Same background image used everywhere else on the site
+// (composited social MP4 + in-browser preview) so the raw HeyGen render now
+// matches the studio set instead of a plain black background.
+const STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+
 /**
  * Clean script text for HeyGen TTS.
  * HeyGen's TTS engine goes SILENT on em-dashes, smart quotes, and bullet
@@ -89,14 +95,19 @@ Deno.serve(async (req) => {
     // HeyGen stitches all scenes into one MP4.
     const video_inputs = [];
 
+    // Studio backdrop for every scene. Charlie sits at the desk on the LEFT
+    // (negative x offset), Bob stands in the studio on the RIGHT (positive x
+    // offset) — matching the DNN set layout stored in the Higgsfield library.
+    const studioBg = { type: 'image', url: STUDIO_BACKGROUND_URL };
+
     if (intro) {
       video_inputs.push({
         character: {
           type: 'avatar',
           avatar_id: CHARLIE_AVATAR_ID,
           avatar_style: 'normal',
-          scale: 1.0,
-          offset: { x: 0, y: 0.18 },
+          scale: 0.85,
+          offset: { x: -0.28, y: 0.18 },
         },
         voice: {
           type: 'text',
@@ -104,7 +115,7 @@ Deno.serve(async (req) => {
           input_text: intro,
           speed: 1.05,
         },
-        background: { type: 'color', value: '#0d0d0d' },
+        background: studioBg,
       });
     }
 
@@ -113,6 +124,8 @@ Deno.serve(async (req) => {
         character: {
           type: 'talking_photo',
           talking_photo_id: BOB_TALKING_PHOTO_ID,
+          scale: 0.85,
+          offset: { x: 0.28, y: 0.1 },
         },
         voice: {
           type: 'text',
@@ -121,7 +134,7 @@ Deno.serve(async (req) => {
           emotion: 'Excited',
           speed: 1.12,
         },
-        background: { type: 'color', value: '#0d0d0d' },
+        background: studioBg,
       });
     }
 
@@ -131,8 +144,8 @@ Deno.serve(async (req) => {
           type: 'avatar',
           avatar_id: CHARLIE_AVATAR_ID,
           avatar_style: 'normal',
-          scale: 1.0,
-          offset: { x: 0, y: 0.18 },
+          scale: 0.85,
+          offset: { x: -0.28, y: 0.18 },
         },
         voice: {
           type: 'text',
@@ -140,7 +153,7 @@ Deno.serve(async (req) => {
           input_text: outro,
           speed: 1.05,
         },
-        background: { type: 'color', value: '#0d0d0d' },
+        background: studioBg,
       });
     }
 
