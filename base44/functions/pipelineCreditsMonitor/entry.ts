@@ -61,7 +61,8 @@ export default async function(req) {
         const res = await fetch('https://api.heygen.com/v2/user/remaining_quota', {
           headers: { 'X-Api-Key': heygenKey },
         });
-        const data = await res.json();
+        const raw = await res.json();
+        const data = raw?.data ?? raw;
         if (res.ok) {
           const remaining = Number(data?.remaining_quota ?? 0);
           const plan = Number(data?.details?.plan_credit ?? 0);
@@ -73,7 +74,7 @@ export default async function(req) {
             error: null,
           };
         } else {
-          heygen.error = data?.error?.message || 'HeyGen request failed';
+          heygen.error = raw?.error?.message || 'HeyGen request failed';
         }
       } else {
         heygen.error = 'HEYGEN_API_KEY not set';
