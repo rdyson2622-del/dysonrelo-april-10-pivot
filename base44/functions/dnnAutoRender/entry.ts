@@ -143,10 +143,12 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    const HEYGEN_API_KEY = Deno.env.get('HEYGEN_API_KEY');
-    if (!HEYGEN_API_KEY) {
-      return Response.json({ error: 'HEYGEN_API_KEY not set' }, { status: 500 });
-    }
+    // HARD BLOCK: this function dispatches straight to HeyGen. DNN broadcasts
+    // must render exclusively through the Higgsfield + 11 Labs n8n pipeline —
+    // permanently disabled to stop unordered HeyGen spend.
+    return Response.json({
+      error: 'HeyGen rendering is disabled. DNN broadcasts render exclusively through the Higgsfield + 11 Labs pipeline (dnnDailyVideoPipeline / dnnRerunShow).',
+    }, { status: 403 });
 
     const articles = await base44.asServiceRole.entities.DnnArticle.filter(
       { production_status: 'approved_for_render', render_requested: true },

@@ -216,23 +216,18 @@ ${digest}`,
       return { started: clips.length };
     };
 
-    if (action === 'run') {
-      const gen = await generateScript();
-      if (gen.error) return Response.json({ success: false, ...gen });
-      const r = await startRender(gen.record);
-      return Response.json({ success: !r.error, broadcastId: gen.record.id, ...r });
+    // HARD BLOCK: 'run' and 'render' dispatch straight to HeyGen. DNN broadcasts
+    // must render exclusively through the Higgsfield + 11 Labs n8n pipeline —
+    // these actions are permanently disabled to stop unordered HeyGen spend.
+    if (action === 'run' || action === 'render') {
+      return Response.json({
+        error: 'HeyGen rendering is disabled. DNN broadcasts render exclusively through the Higgsfield + 11 Labs pipeline (dnnDailyVideoPipeline / dnnRerunShow).',
+      }, { status: 403 });
     }
 
     if (action === 'generate') {
       const gen = await generateScript();
       return Response.json({ success: !gen.error, ...gen });
-    }
-
-    if (action === 'render') {
-      const arr = await Broadcasts.filter({ broadcast_date: today, status: 'script_ready' });
-      if (arr.length === 0) return Response.json({ success: false, error: 'No script_ready broadcast for today' });
-      const r = await startRender(arr[0]);
-      return Response.json({ success: !r.error, broadcastId: arr[0].id, ...r });
     }
 
     if (action === 'check') {
