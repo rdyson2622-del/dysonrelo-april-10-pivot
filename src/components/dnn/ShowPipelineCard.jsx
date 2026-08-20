@@ -106,6 +106,10 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
 
   const currentStage = getShowStage(show);
   const stageIndex = getStageIndex(currentStage);
+  const clips = show.clips || [];
+  const allClipsRendered = clips.length > 0 && clips.every(c => c.videoUrl);
+  const someClipsRendering = clips.some(c => c.status === 'rendering');
+  const someClipsFailed = clips.some(c => c.status === 'failed');
   // Friction/STOP indicator — same red light used across other roadmaps on the
   // site to flag where a SOP/human needs to step in before the show can advance.
   const hasFriction = show.status === 'failed' || someClipsFailed || !!show.errorMessage;
@@ -142,11 +146,6 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
     }
     setBusy(null);
   };
-
-  const clips = show.clips || [];
-  const allClipsRendered = clips.length > 0 && clips.every(c => c.videoUrl);
-  const someClipsRendering = clips.some(c => c.status === 'rendering');
-  const someClipsFailed = clips.some(c => c.status === 'failed');
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.2)' }}>
