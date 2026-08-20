@@ -24,12 +24,12 @@ function extractBullets(script) {
 const GOLD = '#D4AF37';
 
 const STAGES = [
-  { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected' },
-  { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video' },
-  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4' },
-  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets' },
-  { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents' },
+  { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected', producer: 'Base44 Daily News Library' },
+  { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close', producer: 'Base44 Script Review' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video', producer: 'Higgsfield + ElevenLabs' },
+  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4', producer: 'n8n' },
+  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets', producer: 'Base44 /broadcast-show' },
+  { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents', producer: 'Communications Hub (off for practice)' },
 ];
 
 function getShowStage(show) {
@@ -229,6 +229,9 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                     <p className="text-[8px] font-bold tracking-wide uppercase mt-1.5 text-center leading-tight"
                       style={{ color: isDone ? '#4ade80' : isActive ? GOLD : '#555' }}>
                       {stage.label}
+                    </p>
+                    <p className="text-[7px] text-center leading-tight mt-0.5 text-slate-500">
+                      {stage.producer}
                     </p>
                   </div>
                   {i < STAGES.length - 1 && (
