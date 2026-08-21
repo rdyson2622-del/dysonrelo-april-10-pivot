@@ -202,6 +202,11 @@ const AuthenticatedApp = () => {
         <Route path="/solutions" element={<SolutionMapEntry />} />
         <Route path="/roadmaps" element={<SolutionMapEntry />} />
 
+        {/* Corporate Relo / HR portal — standalone, distinct portal with its own in-page
+            nav/CTAs. Must NOT inherit the Client sidebar (AppLayout) or the Admin sidebar
+            (AdminLayout) — it is its own portal. */}
+        <Route path="/corporate-relo" element={<CorporateRelo />} />
+
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
         <Route element={<AppLayout />}>
@@ -232,7 +237,6 @@ const AuthenticatedApp = () => {
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
         <Route path="/relo-management" element={<Navigate to="/relocation-intake" replace />} />
-        <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/bob-dyson" element={<BobDyson />} />
         <Route path="/Explainers" element={<Explainers />} />
         <Route path="/explainers" element={<Explainers />} />
