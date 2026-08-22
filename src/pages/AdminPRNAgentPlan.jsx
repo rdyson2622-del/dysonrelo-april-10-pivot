@@ -468,7 +468,7 @@ export default function AdminPRNAgentPlan() {
         <div className="mb-10">
           <p className="text-xs font-black tracking-[0.3em] mb-1" style={{ color: GOLD }}>PRIVATE REFERRAL NETWORK</p>
           <h1 className="font-black text-3xl tracking-tight mb-1" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
-            PRN Agent Business Plan
+            The Private Referral Network (PRN)
           </h1>
           <p className="text-sm" style={{ color: '#6b5c45' }}>
             Internal strategy document — agent involvement, subscription model, and revenue architecture.
