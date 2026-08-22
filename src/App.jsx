@@ -188,6 +188,10 @@ const AuthenticatedApp = () => {
         <Route path="/relocation-intake" element={<RelocationIntake />} />
         <Route path="/RelocationIntake" element={<RelocationIntake />} />
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
+        {/* Corporate Relo / HR portal — PUBLIC (cold HR visitors, no login redirect).
+            Public AppLayout is the pattern for cold visitors; it must NOT inherit the
+            Client sidebar content or the Admin sidebar (AdminLayout) — it is its own portal. */}
+        <Route path="/corporate-relo" element={<CorporateRelo />} />
       </Route>
 
       {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
@@ -201,11 +205,6 @@ const AuthenticatedApp = () => {
         {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
         <Route path="/solutions" element={<SolutionMapEntry />} />
         <Route path="/roadmaps" element={<SolutionMapEntry />} />
-
-        {/* Corporate Relo / HR portal — standalone, distinct portal with its own in-page
-            nav/CTAs. Must NOT inherit the Client sidebar (AppLayout) or the Admin sidebar
-            (AdminLayout) — it is its own portal. */}
-        <Route path="/corporate-relo" element={<CorporateRelo />} />
 
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
