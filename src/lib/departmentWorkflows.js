@@ -198,7 +198,7 @@ export const DEPARTMENT_FLOWS = {
         title: 'Put them on the roster',
         plain: 'Master partner roster and agent subscribe. No lead is released until they are on the list.',
         pages: [
-          { label: 'Master Partner Roster', path: '/admin/roster' },
+          { label: 'Top Relocation Agent Prospects for affiliation with Dyson Relo', path: '/admin/roster' },
           { label: 'Agent Subscribe (public)', path: '/agent-subscribe' },
         ],
       },
