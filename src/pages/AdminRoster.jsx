@@ -212,7 +212,7 @@ export default function AdminRoster() {
           <div>
             <p className="text-xs font-black tracking-[0.3em] mb-1" style={{ color: GOLD }}>PRN ADMIN</p>
             <h1 className="font-black text-2xl" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
-              Master Partner Roster
+              Top Relocation Agent Prospects for affiliation with Dyson Relo
             </h1>
             <p className="text-sm mt-1" style={{ color: '#6b5c45' }}>
               {partners.length} agents across {Object.keys(partners.reduce((a, p) => ({ ...a, [p.city]: 1 }), {})).length} cities
