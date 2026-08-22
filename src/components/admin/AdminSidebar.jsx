@@ -117,7 +117,7 @@ const NAV_SECTIONS = [
       { label: '↳ Contact Info', path: '/admin/communications', icon: MessageCircle, indent: true },
       { label: 'Private Referral Network (PRN)', isHeader: true },
       { label: 'Agents', path: '/admin/referrals', icon: UserCheck },
-      { label: '↳ PRN Agent Business Plan', path: '/admin/prn-agent-plan', icon: FileText, indent: true },
+      { label: '↳ The Private Referral Network (PRN)', path: '/admin/prn-agent-plan', icon: FileText, indent: true },
       { label: '↳ Top Relocation Agent Prospects for affiliation with Dyson Relo', path: '/admin/roster', icon: List, indent: true },
       { label: '↳ Active Relocation Agents', path: '/admin/active-relocation-agents', icon: UserCheck, indent: true, highlight: true },
       { label: '↳ Sending Agent Tracker', path: '/admin/sending-agents', icon: ArrowRight, indent: true },
