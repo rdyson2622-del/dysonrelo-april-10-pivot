@@ -1,0 +1,61 @@
+{
+  "name": "ActiveRelocationAgent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Agent's full name"
+    },
+    "brokerage": {
+      "type": "string",
+      "description": "Brokerage name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Agent's phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Agent's email"
+    },
+    "status": {
+      "type": "string",
+      "default": "Relocation Agent Subscriber",
+      "description": "Affiliate status label (e.g. 'Relocation Agent Subscriber')"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about this affiliate"
+    },
+    "joined_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this agent joined as an active relocation affiliate"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

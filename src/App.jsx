@@ -155,6 +155,7 @@ import TransactionAudit from './pages/brokerage/TransactionAudit';
 import BuyingClients from './pages/wisdom/BuyingClients';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
+import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -305,6 +306,7 @@ const AuthenticatedApp = () => {
         <Route path="/solve-my-story" element={<SolveMyStory />} />
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
+        <Route path="/admin/active-relocation-agents" element={<AdminActiveRelocationAgents />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
