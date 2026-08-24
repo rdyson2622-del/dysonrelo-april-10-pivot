@@ -22,18 +22,19 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
 const HEYGEN_API = 'https://api.heygen.com';
 
-// Charlie Simmons — studio anchor avatar
-const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
+// Charlie Simmons — talking-photo of Charlie ALREADY seated at the real studio
+// desk (background baked into the same image). CHARLIE_AVATAR_ID was a static
+// talking-photo mistakenly used with type 'avatar' + a separate "background"
+// image — HeyGen can't strip a talking-photo's own baked-in backdrop, so it
+// rendered as a visible box with a mismatched background layered underneath.
+// Fix: use a talking_photo whose source image already IS the studio scene, so
+// there is only one layer and nothing to composite.
+const CHARLIE_TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 
 // Bob Dyson — remote correspondent talking photo
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
-
-// DNN Studio backdrop — Charlie seated at the desk, with camera/lighting
-// equipment on the floor so the studio reads as active/staffed, not vacant.
-// Used for the intro/outro scenes where only Charlie is on set.
-const STUDIO_CHARLIE_ONLY_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a417fc491_generated_image.png';
 
 // Same studio, but with an empty "screened-in" monitor box to the right of
 // the desk, plus camera/lighting equipment on the floor. Used for Bob's
@@ -104,20 +105,18 @@ Deno.serve(async (req) => {
     // HeyGen stitches all scenes into one MP4.
     const video_inputs = [];
 
-    // Intro/outro use the Charlie-only studio (Bob is off set entirely).
-    // The content scene swaps in the studio-with-box background and shrinks
+    // Content scene swaps in the studio-with-box background and shrinks
     // Bob's character down to sit inside that box, like a remote feed.
-    const charlieOnlyBg = { type: 'image', url: STUDIO_CHARLIE_ONLY_URL };
     const bobBoxBg = { type: 'image', url: STUDIO_WITH_BOB_BOX_URL };
 
     if (intro) {
       video_inputs.push({
         character: {
-          type: 'avatar',
-          avatar_id: CHARLIE_AVATAR_ID,
-          avatar_style: 'normal',
+          type: 'talking_photo',
+          talking_photo_id: CHARLIE_TALKING_PHOTO_ID,
           scale: 1,
           offset: { x: 0, y: 0 },
+          talking_photo_style: 'square',
         },
         voice: {
           type: 'text',
@@ -125,7 +124,6 @@ Deno.serve(async (req) => {
           input_text: intro,
           speed: 1.05,
         },
-        background: charlieOnlyBg,
       });
     }
 
@@ -151,11 +149,11 @@ Deno.serve(async (req) => {
     if (outro) {
       video_inputs.push({
         character: {
-          type: 'avatar',
-          avatar_id: CHARLIE_AVATAR_ID,
-          avatar_style: 'normal',
+          type: 'talking_photo',
+          talking_photo_id: CHARLIE_TALKING_PHOTO_ID,
           scale: 1,
           offset: { x: 0, y: 0 },
+          talking_photo_style: 'square',
         },
         voice: {
           type: 'text',
@@ -163,7 +161,6 @@ Deno.serve(async (req) => {
           input_text: outro,
           speed: 1.05,
         },
-        background: charlieOnlyBg,
       });
     }
 
