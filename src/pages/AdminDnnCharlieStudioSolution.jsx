@@ -1,7 +1,6 @@
 import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import LockedPageSourceViewer from '@/components/dnn/LockedPageSourceViewer';
-import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
 
 const GOLD = '#D4AF37';
 
@@ -81,8 +80,21 @@ export default function AdminDnnCharlieStudioSolution() {
         </p>
 
 
-        {/* ── 10-second proof render, before a full show dispatch ── */}
-        <CharlieDeskTestRender />
+        {/* REJECTED archive */}
+        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: '#ef4444' }}>
+          REJECTED Archive — Do NOT Use As Locked Master
+        </p>
+        <div className="rounded-xl p-5 mb-8" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.3)' }}>
+          <p className="text-sm mb-3" style={{ color: '#ddd' }}>
+            Empty plate + PiP Charlie (bookshelf / other sets) — the Charlie-in-a-box trail. Archived for the record only. NEVER the Broadcast Show hero/background and NEVER a LOCKED MASTER.
+          </p>
+          <ul className="space-y-2 text-sm" style={{ color: '#ddd' }}>
+            <li>• <strong style={{ color: '#ef4444' }}>REJECTED_PIP_TRAIL_MP4</strong>: <code>56c7be606_test-heygen-single-mp4-format-studio.mp4</code> — 1920x1080 but PiP Charlie / empty-plate trail. NOT DNN_CHARLIE_DESK_STUDIO.</li>
+            <li>• <strong style={{ color: '#ef4444' }}>REJECTED_TALKING_PHOTO_ID</strong>: <code>72730cc3f5774167811efc2dbda1d1d6</code></li>
+            <li>• <strong style={{ color: '#ef4444' }}>REJECTED empty-plate PiP composite</strong> — Charlie inset in a picture-in-picture box over an empty studio plate.</li>
+            <li>• <strong style={{ color: '#ef4444' }}>REJECTED_ULTRAWIDE</strong>: <code>47405e279_DNNSTUDIOANDLANDINGPAGE00.png</code></li>
+          </ul>
+        </div>
 
         {/* ── Code record ── */}
         <LockedPageSourceViewer
