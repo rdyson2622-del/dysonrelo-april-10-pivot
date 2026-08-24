@@ -1,25 +1,33 @@
 import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import LockedPageSourceViewer from '@/components/dnn/LockedPageSourceViewer';
 
 const GOLD = '#D4AF37';
 
 // ══════════════════════════════════════════════════════════════════════
-// ✅ PERMANENT RECORD — DNN Studio Broadcast: Charlie-in-a-Box, SOLVED.
-// This page exists so this solution is NEVER "rediscovered" or redone.
-// If Charlie's studio look is ever questioned again, send them HERE.
+// ✅ LOCKED — DNN_CHARLIE_DESK_STUDIO (the ONLY approved studio look)
+// Full 16:9 desk broadcast: Charlie seated in-frame at the curved DNN
+// desk, US map wall behind him, gold DNN branding, side walls in frame.
+// This page exists so this exact look is NEVER "rediscovered" or redone.
 // ══════════════════════════════════════════════════════════════════════
-// Locked clean master — no baked-in white margins (replaces the bad 985182147 test render)
-const TEST_RENDER_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
-const TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
+const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+const DNN_CHARLIE_DESK_STUDIO_MP4 = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
 
-const CODE_SAMPLE = `// HeyGen dispatch — Charlie segment (studio background baked into the photo)
+// ❌ REJECTED — empty studio plate + Charlie composited as a small PiP box
+// in front of a bookshelf set. Do NOT use this asset for Page #3 or any
+// public landing page again.
+const REJECTED_TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
+
+const CODE_SAMPLE = `// HeyGen dispatch — Charlie segment (DNN_CHARLIE_DESK_STUDIO look)
+// Charlie fills the full 16:9 frame, seated at the curved DNN desk,
+// US map wall + gold DNN branding behind him. Studio is baked into
+// the source still/MP4 — nothing composited at render time.
 const payload = {
   video_inputs: [
     {
       character: {
         type: "talking_photo",
-        talking_photo_id: "${TALKING_PHOTO_ID}", // Charlie, seated at DNN desk, studio bg baked in
+        talking_photo_id: CHARLIE_DESK_STUDIO_TALKING_PHOTO_ID, // desk-in-frame look, NOT the bookshelf PiP asset
       },
       voice: {
         type: "text",
@@ -45,39 +53,59 @@ export default function AdminDnnCharlieStudioSolution() {
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
           <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
-            Page #3 — DNN Charlie Studio Broadcast: SOLVED (Permanent Record)
+            Page #3 — DNN_CHARLIE_DESK_STUDIO: LOCKED (Permanent Record)
           </p>
         </div>
 
         {/* ── Plain English explanation ── */}
         <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.3)' }}>
-          <h2 className="text-white font-bold mb-3">In Plain English — What We Do and Why It Works</h2>
+          <h2 className="text-white font-bold mb-3">In Plain English — The ONE Approved Studio Look</h2>
           <ul className="space-y-2 text-sm" style={{ color: '#ddd' }}>
-            <li>• Charlie's DNN studio broadcasts do NOT use transparent/alpha video layering. HeyGen's "talking photo" avatars do not support real-time transparency compositing — that path was tried and abandoned.</li>
-            <li>• Instead, we use a "talking photo" asset where the DNN studio desk background is already baked directly into the source photo of Charlie. HeyGen just animates (lip-syncs) that still photo — there is nothing to composite at render time.</li>
-            <li>• The verified working asset ID is <code style={{ color: GOLD }}>{TALKING_PHOTO_ID}</code>. This is the ONLY Charlie asset that should be used for studio broadcasts.</li>
-            <li>• This is the exact same "Charlie-in-a-box" method already used successfully across the explainer video library — we did not invent anything new, we located and reused the proven asset.</li>
-            <li>• The test render below was dispatched straight to the HeyGen API using this asset and came back "completed" — proof this method works end-to-end.</li>
+            <li>• The only approved look is <strong style={{ color: GOLD }}>DNN Charlie Desk Studio</strong>: full 16:9 frame, Charlie seated in-frame at the curved DNN desk, US map wall behind him, gold DNN branding, side walls visible.</li>
+            <li>• Locked masters: the still <code style={{ color: GOLD }}>0f55…png</code> and the MP4 <code style={{ color: GOLD }}>56c7…mp4</code> below. Both show Charlie in-frame at the desk — full-bleed, no letterboxing.</li>
+            <li>• This is the ONLY version allowed on the public landing page and Page #3. It is full-bleed only — never inset in a box.</li>
           </ul>
         </div>
 
-        {/* ── Proof: working test render ── */}
+        {/* ── Rejected asset warning ── */}
+        <div className="rounded-xl p-5 mb-6 flex items-start gap-3" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.4)' }}>
+          <XCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
+          <div>
+            <p className="text-sm font-bold mb-1" style={{ color: '#ef4444' }}>REJECTED — Do Not Use</p>
+            <p className="text-sm" style={{ color: '#ddd' }}>
+              talking_photo_id <code style={{ color: '#ef4444' }}>{REJECTED_TALKING_PHOTO_ID}</code> — this is an empty studio plate with Charlie composited as a small picture-in-picture box in front of a bookshelf set. It is NOT the desk-in-frame look and must never be used on Page #3 or any public landing page again.
+            </p>
+          </div>
+        </div>
+
+        {/* ── Locked master: still ── */}
         <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
-          Proof — Working Test Render
+          Locked Master — Primary Still (0f55…png)
+        </p>
+        <img
+          src={DNN_CHARLIE_DESK_STUDIO_STILL}
+          alt="DNN Charlie Desk Studio — locked master still"
+          className="w-full aspect-video rounded-xl mb-8 object-contain"
+          style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
+        />
+
+        {/* ── Locked master: MP4 ── */}
+        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
+          Locked Master — Broadcast MP4 (56c7…mp4)
         </p>
         <video
-          src={TEST_RENDER_VIDEO}
+          src={DNN_CHARLIE_DESK_STUDIO_MP4}
           controls
           className="w-full aspect-video rounded-xl mb-2 object-cover"
           style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
         />
         <p className="text-[11px] text-gray-500 mb-8">
-          Rendered via HeyGen talking_photo_id {TALKING_PHOTO_ID} — studio background baked into the source photo, no transparency required.
+          DNN_CHARLIE_DESK_STUDIO — Charlie in-frame at the curved desk, full 16:9, no compositing at render time.
         </p>
 
         {/* ── Code record ── */}
         <LockedPageSourceViewer
-          title="Locked Code: HeyGen Dispatch Method for Charlie Studio Segments"
+          title="Locked Code: HeyGen Dispatch Method for DNN_CHARLIE_DESK_STUDIO"
           filePath="base44/functions/dnnDirectDispatch/entry.ts (Charlie block)"
           code={CODE_SAMPLE}
         />
