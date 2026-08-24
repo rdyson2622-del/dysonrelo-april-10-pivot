@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, X, Volume2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -16,9 +15,6 @@ const GOLD = '#D4AF37';
 // ══════════════════════════════════════════════════════════════════════════
 const STUDIO_BG = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
-
-// 10-second HeyGen proof render — Charlie test clip, posted here for review only.
-const HEYGEN_TEST_CLIP = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/202d15260_charlie-desk-test.mp4";
 
 const PILLS = [
   { label: 'NEWS',         path: '/dnn-news' },
@@ -46,16 +42,6 @@ export default function DnnStudioLanding() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [activeRole, setActiveRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
-  const [isPlayingWithSound, setIsPlayingWithSound] = useState(false);
-  const videoRef = useRef(null);
-
-  const handlePlayWithSound = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = false;
-    v.play();
-    setIsPlayingWithSound(true);
-  };
 
   useEffect(() => {
     base44.auth.me().then(u => setUser(u)).catch(() => {});
@@ -69,32 +55,12 @@ export default function DnnStudioLanding() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden" style={{ background: '#0A0B0F' }}>
-      {/* ── Studio background — HeyGen test render as the full-screen hero video ── */}
-      <video
-        ref={videoRef}
-        src={HEYGEN_TEST_CLIP}
-        poster={STUDIO_BG}
-        autoPlay
-        loop
-        muted
-        playsInline
+      {/* ── Studio background — locked 16:9 static still (DO NOT REPLACE) ── */}
+      <img
+        src={STUDIO_BG}
+        alt="DNN Real Estate News Studio"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Click-to-unmute overlay — browsers block autoplay with sound, so Charlie's
-          voice only starts once the visitor explicitly opts in. */}
-      {!isPlayingWithSound && (
-        <button
-          onClick={handlePlayWithSound}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-black tracking-widest uppercase transition-all hover:scale-105"
-          style={{
-            background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
-            color: '#000',
-            boxShadow: '0 4px 20px rgba(212,175,55,0.5)',
-          }}
-        >
-          <Volume2 className="w-4 h-4" /> Tap for Sound
-        </button>
-      )}
       {/* Subtle dark gradient for pill legibility at the bottom */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,11,15,0.85) 0%, rgba(10,11,15,0.25) 35%, transparent 60%)' }} />
 
@@ -152,22 +118,6 @@ export default function DnnStudioLanding() {
             {pill.label}
           </button>
         ))}
-      </div>
-
-      {/* ── Bottom media player controls ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 pl-6 pr-40 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
-        <div className="flex items-center gap-4 max-w-5xl mx-auto">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: GOLD }}>1</div>
-          <div className="flex-1 h-1 rounded-full relative" style={{ background: 'rgba(255,255,255,0.15)' }}>
-            <div className="absolute top-0 left-0 h-full rounded-full" style={{ width: '35%', background: GOLD }} />
-            <div className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full" style={{ left: 'calc(35% - 6px)', background: GOLD, boxShadow: '0 0 8px rgba(212,175,55,0.6)' }} />
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <button className="text-gray-400 hover:text-white transition-colors"><X className="w-4 h-4" /></button>
-            <button className="hover:opacity-80 transition-opacity" style={{ color: GOLD }}><Play className="w-5 h-5" /></button>
-            <button className="text-gray-400 hover:text-white transition-colors"><Volume2 className="w-4 h-4" /></button>
-          </div>
-        </div>
       </div>
     </div>
   );
