@@ -9,8 +9,6 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/67bc7aa5a_generated_image.png';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/80129619f_Screenshot2026-08-01at31026PM.png';
-const CHARLIE_DESK_LOOP = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/e0a8183a8_Charlie_Desk_Loop.mp4';
-const BOB_BOX_LOOP = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/db1069616_Bob_Box_Loop.mp4';
 
 const PATHS = [
   {
@@ -117,35 +115,15 @@ export default function RoleSelector() {
     <div className="bg-black">
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section className="relative w-full h-screen overflow-hidden">
-        <video
-          src={CHARLIE_DESK_LOOP}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-contain"
-        />
-        {/* Bob — enters in a small correspondent box, positioned right of center */}
         <div
-          className="absolute rounded-xl overflow-hidden"
+          className="absolute inset-0"
           style={{
-            top: '20%',
-            right: '14%',
-            width: '13%',
-            aspectRatio: '9 / 16',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            backgroundImage: `url(${STUDIO_WITH_ANCHORS})`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
-        >
-          <video
-            src={BOB_BOX_LOOP}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          />
-        </div>
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
 
         {/* Three pills — direct routing to News / Relocation / Intelligence */}
