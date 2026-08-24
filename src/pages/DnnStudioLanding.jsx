@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
+import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
 
 const GOLD = '#D4AF37';
 
@@ -118,6 +119,9 @@ export default function DnnStudioLanding() {
           Active Video Test Page — Review &amp; Suggest Changes Here
         </p>
         <CharlieDeskTestRender />
+        <div className="mt-6">
+          <BobStandingTestRender />
+        </div>
       </div>
     </div>
   );
