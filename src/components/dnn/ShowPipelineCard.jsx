@@ -26,7 +26,7 @@ const GOLD = '#D4AF37';
 const STAGES = [
   { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected', producer: 'Base44 Daily News Library' },
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close', producer: 'Base44 Script Review' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video', producer: 'Higgsfield + ElevenLabs' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video', producer: 'HeyGen' },
   { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4', producer: 'n8n' },
   { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets', producer: 'Base44 /broadcast-show' },
   { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents', producer: 'Communications Hub (off for practice)' },
@@ -211,7 +211,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {show.pipeline === 'higgsfield_11labs' && (
             <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
-              ⚡ HIGGSFIELD + 11 LABS
+              ⚡ HEYGEN
             </span>
           )}
           {/* Stage badge */}
@@ -303,7 +303,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold"
                 style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                Rendering in Higgsfield + 11 Labs — n8n will callback automatically
+                Rendering in HeyGen — n8n will callback automatically
               </div>
             )}
 
