@@ -137,6 +137,29 @@ export default function Admin() {
           </Link>
         </motion.div>
 
+        {/* TEMPORARY — DNN studio background review (remove after Bob approves) */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 rounded-2xl p-5"
+          style={{ background: '#000', border: `2px solid ${GOLD}` }}
+        >
+          <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>FOR REVIEW — NEW STUDIO BACKGROUNDS</p>
+          <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Clean single-scene backgrounds, no box-in-a-box, no clutter. Charlie's box sits left of center, Bob's box sits right of center — both with margin from the sidebars.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Charlie — box left</p>
+              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6267555cc_generated_image.png" alt="Charlie studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
+            </div>
+            <div>
+              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Bob — box right</p>
+              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/900ad0fdf_generated_image.png" alt="Bob studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
+            </div>
+          </div>
+        </motion.div>
+
         {/* Summary Dashboard Charts */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
