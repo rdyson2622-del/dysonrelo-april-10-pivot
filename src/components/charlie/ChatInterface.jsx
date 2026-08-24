@@ -52,6 +52,7 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
   const [tab, setTab] = useState('chat');
   const [profile, setProfile] = useState(initialProfile);
   const [bobAnswers, setBobAnswers] = useState([]);
+  const [knowledgeBase, setKnowledgeBase] = useState([]);
 
   // Load Bob Dyson's pre-rendered video answers (FAQ page clips + answer library)
   useEffect(() => {
@@ -64,6 +65,13 @@ export default function ChatInterface({ expanded = false, onToggleExpand, onClos
         ...lib.filter(c => c.videoUrl).map(c => ({ question: c.question, videoUrl: c.videoUrl })),
       ]);
     });
+  }, []);
+
+  // Load Charlie's approved knowledge base — only entries admins have approved
+  // are used to ground factual answers. Anything not covered gets escalated
+  // instead of guessed, so Charlie never invents an answer.
+  useEffect(() => {
+    base44.entities.CharlieKnowledgeBase.filter({ is_active: true }).then(setKnowledgeBase).catch(() => setKnowledgeBase([]));
   }, []);
 
   // Load existing client profile from DB on mount
