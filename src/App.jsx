@@ -145,6 +145,7 @@ import MasterShowSheet from './pages/MasterShowSheet';
 import SolutionMapEntry from './pages/SolutionMapEntry';
 import DnnStudioLanding from './pages/DnnStudioLanding';
 import AdminDnnStudioLandingSource from './pages/AdminDnnStudioLandingSource';
+import AdminDnnCharlieStudioSolution from './pages/AdminDnnCharlieStudioSolution';
 import EscrowManagement from './pages/wisdom/EscrowManagement';
 import ListingManagement from './pages/wisdom/ListingManagement';
 import AgentRecords from './pages/wisdom/AgentRecords';
@@ -353,6 +354,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
+        <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />
       </Route>
 
       {/* Brokerage Portal — subscriber view (Wisdom Properties = subscriber #1) */}
