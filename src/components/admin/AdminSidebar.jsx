@@ -38,6 +38,7 @@ const NAV_SECTIONS = [
     color: '#D4AF37',
     children: [
       { label: '✅ DNN Studio Landing Page (VERIFIED 16:9)', path: '/admin/archived/studio-landing', icon: Archive, highlight: true },
+      { label: '🔒 Locked Source Code (Studio Landing)', path: '/admin/dnn/studio-landing-source', icon: FileCheck, highlight: true },
       { label: '🎬 Video Preview & Blast', path: '/admin/dnn/video-preview', icon: Video },
       { label: '📚 Daily News Library', path: '/admin/dnn/daily-library', icon: Library, highlight: true },
       { label: '🎬 Show Production Pipeline', path: '/admin/dnn/show-pipeline', icon: Clapperboard },
