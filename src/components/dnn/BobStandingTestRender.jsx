@@ -85,8 +85,8 @@ export default function BobStandingTestRender() {
           <video
             src={videoUrl}
             controls
-            className="w-full aspect-video rounded-xl mb-2 object-contain"
-            style={{ border: `1px solid ${GOLD}`, background: '#000' }}
+            className="w-full rounded-xl mb-2"
+            style={{ border: `1px solid ${GOLD}`, background: '#000', maxHeight: '70vh' }}
           />
           <p className="text-[11px] text-gray-500 mb-3">
             Review Bob's look, lipsync, and idle motion before pasting these IDs into Page #3.
