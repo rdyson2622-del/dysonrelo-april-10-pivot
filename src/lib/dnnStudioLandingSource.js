@@ -124,12 +124,6 @@ export default function DnnStudioLanding() {
         ))}
       </div>
 
-      {/* ── Locked asset reference panel — permanent record of the correct URL ── */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-lg text-center" style={{ background: 'rgba(0,0,0,0.75)', border: \`1px solid \${GOLD}\` }}>
-        <p className="text-[9px] font-black tracking-widest uppercase" style={{ color: GOLD }}>🔒 Locked Studio Asset</p>
-        <code className="text-[10px] text-gray-300 break-all">{STUDIO_BG}</code>
-      </div>
-
       {/* ── Bottom media player controls ── */}
       <div className="absolute bottom-0 left-0 right-0 z-20 px-6 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
         <div className="flex items-center gap-4 max-w-5xl mx-auto">
