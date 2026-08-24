@@ -14,7 +14,6 @@ const GOLD = '#D4AF37';
 // If the studio image ever looks wrong anywhere in the app again, the fix
 // is to point that component at THIS constant — never generate a new one.
 // ══════════════════════════════════════════════════════════════════════════
-const STUDIO_BG = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const PILLS = [
@@ -55,16 +54,7 @@ export default function DnnStudioLanding() {
   const roleLabel = ROLE_LABELS[activeRole] || 'Client';
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden" style={{ background: '#0A0B0F' }}>
-      {/* ── Studio background — locked 16:9 static still (DO NOT REPLACE) ── */}
-      <img
-        src={STUDIO_BG}
-        alt="DNN Real Estate News Studio"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      {/* Subtle dark gradient for pill legibility at the bottom */}
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,11,15,0.85) 0%, rgba(10,11,15,0.25) 35%, transparent 60%)' }} />
-
+    <div className="relative min-h-screen w-full" style={{ background: '#0A0B0F' }}>
       {/* ── Top bar ── */}
       <header className="relative z-10 flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
@@ -100,8 +90,8 @@ export default function DnnStudioLanding() {
         </div>
       </header>
 
-      {/* ── Three gold pills — centered, ~20% up from bottom ── */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5" style={{ bottom: '20%' }}>
+      {/* ── Nav pills ── */}
+      <div className="relative z-10 flex items-center justify-center gap-3 sm:gap-5 py-6">
         {PILLS.map((pill) => (
           <button
             key={pill.label}
@@ -121,8 +111,9 @@ export default function DnnStudioLanding() {
         ))}
       </div>
 
-      {/* ── Active Video Test Panel — run/review HeyGen test renders live here ── */}
-      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-10 pt-[70vh]">
+      {/* ── Active Video Test Panel — the ONLY studio visual on this page.
+          No separate background still behind it — that was the box-in-a-box bug. ── */}
+      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-10">
         <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
           Active Video Test Page — Review &amp; Suggest Changes Here
         </p>
