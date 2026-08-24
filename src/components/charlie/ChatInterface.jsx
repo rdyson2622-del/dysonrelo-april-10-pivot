@@ -231,14 +231,18 @@ Always acknowledge what they asked first. Then answer it. Then, if appropriate, 
         .map(m => `${m.role === 'user' ? 'User' : 'Charlie'}: ${m.content}`)
         .join('\n');
 
-      const prompt = `${CHARLIE_SYSTEM_PROMPT}
+      const kbContext = knowledgeBase.length
+        ? `\n\nAPPROVED ANSWERS — treat these as ground truth and prefer them whenever the topic matches:\n${knowledgeBase.map(k => `Q: ${k.question}\nA: ${k.answer}`).join('\n\n')}`
+        : '';
+
+      const prompt = `${CHARLIE_SYSTEM_PROMPT}${kbContext}
 
 Recent conversation:
 ${conversationHistory}
 
 User just said: "${messageText}"
 
-Respond as Charlie. Remember: acknowledge first, then answer directly.
+Respond as Charlie. Remember: acknowledge first, then answer directly. For general real estate, city, or market questions not covered by an approved answer above, use current, accurate information — don't guess or make things up.
 
 ALSO: Bob Dyson has personally recorded video answers to these known questions:
 ${bobAnswers.map((q, i) => `${i}. ${q.question}`).join('\n')}
@@ -246,6 +250,8 @@ Be GENEROUS with matching: if the user's question covers the same topic or would
 
       const res = await base44.integrations.Core.InvokeLLM({
         prompt,
+        model: 'gemini_3_flash',
+        add_context_from_internet: true,
         response_json_schema: {
           type: 'object',
           properties: {
