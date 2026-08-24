@@ -69,7 +69,7 @@ export default function AdminDnnCharlieStudioSolution() {
             src={TEST_RENDER_VIDEO}
             controls
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ transform: 'scale(1.4)' }}
+            style={{ transform: 'scale(1.269)' }}
           />
         </div>
         <p className="text-[11px] text-gray-500 mb-8">
