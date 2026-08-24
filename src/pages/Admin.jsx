@@ -144,18 +144,18 @@ export default function Admin() {
           className="mb-8 rounded-2xl p-5"
           style={{ background: '#000', border: `2px solid ${GOLD}` }}
         >
-          <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>FOR REVIEW — CURRENT STUDIO LOOK</p>
+          <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>FOR REVIEW — EMPTY STUDIO BACKGROUNDS (no baked-in person)</p>
           <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            This is exactly what dnnDirectDispatch renders now. Charlie fills the whole frame seated at the desk (no box) for intro/outro — Bob stays in his correspondent box for the content segment. Camera and lighting equipment added on the studio floor so it doesn't look vacant.
+            The previous backgrounds had a person already baked into the image, which is why Charlie looked boxed-in on top of himself. These two are completely empty sets — HeyGen composites the live avatar on top of these at render time.
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Charlie — full frame at desk, intro/outro</p>
-              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a417fc491_generated_image.png" alt="Charlie studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
+              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Empty desk — Charlie's intro/outro background</p>
+              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/8e02d59d1_generated_image.png" alt="Empty studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
             </div>
             <div>
-              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Bob — correspondent box, content segment</p>
-              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/b226068fd_generated_image.png" alt="Bob studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
+              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Empty desk + empty box — Bob's content background</p>
+              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/332384ab8_generated_image.png" alt="Empty studio background with box" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
             </div>
           </div>
         </motion.div>
