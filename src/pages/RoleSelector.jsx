@@ -124,6 +124,7 @@ export default function RoleSelector() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ transform: 'scale(1.6)' }}
         />
         {/* Bob — real avatar, in his own correspondent box */}
         <div
