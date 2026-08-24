@@ -19,7 +19,8 @@ const HEYGEN_API = 'https://api.heygen.com';
 
 const BOB_AVATAR_ID = '52db97a6c48545f5a3e9f14614c28af6';
 const BOB_VOICE_ID = '2e2785a64da54895b2cd3b744bf7ca26';
-const TEST_SCRIPT = "Hey there, I'm Bob Dyson, reporting live for the Dyson News Network.";
+const STAGE_STILL = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
+const TEST_SCRIPT = "This is Bob Dyson with DNN Real Estate News. Solutions that move families forward.";
 
 Deno.serve(async (req) => {
   try {
@@ -66,6 +67,7 @@ Deno.serve(async (req) => {
             },
           },
         ],
+        background: { type: 'image', url: STAGE_STILL },
         dimension: { width: 1920, height: 1080 },
       }),
     });
