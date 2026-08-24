@@ -4,7 +4,17 @@ import { Play, X, Volume2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
-const STUDIO_BG = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/47405e279_DNNSTUDIOANDLANDINGPAGE00.png";
+
+// ══════════════════════════════════════════════════════════════════════════
+// ⚠️ CANONICAL DNN STUDIO BACKGROUND — DO NOT REPLACE, DO NOT REGENERATE ⚠️
+// This is the ONE VERIFIED correct studio still: real photo, Charlie seated
+// at the desk with laptop + "DNN Real Estate News" US-map backdrop, Bob
+// standing to the right in frame, native 16:9 (no cropping/AI needed).
+// This exact URL is also used live on the RoleSelector hero (/portal).
+// If the studio image ever looks wrong anywhere in the app again, the fix
+// is to point that component at THIS constant — never generate a new one.
+// ══════════════════════════════════════════════════════════════════════════
+const STUDIO_BG = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const PILLS = [

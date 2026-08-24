@@ -188,8 +188,8 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
           onClick={togglePlay}
           onEnded={handleEnded}
           onPlay={e => { document.querySelectorAll('video').forEach(v => { try { if (v !== e.currentTarget && !v.paused) v.pause(); } catch (_) {} }); }}
-          className={`w-full h-full object-cover ${started ? 'opacity-100' : 'opacity-0'}`}
-          style={composited ? {} : { transform: 'scale(1.18)' }}
+          className={`w-full h-full object-contain ${started ? 'opacity-100' : 'opacity-0'}`}
+          style={{}}
         />
         {!started && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ background: '#000' }}>
