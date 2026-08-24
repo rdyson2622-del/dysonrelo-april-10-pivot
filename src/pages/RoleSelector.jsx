@@ -124,7 +124,7 @@ export default function RoleSelector() {
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-contain bg-black"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Bob — real avatar, in his own correspondent box */}
         <div
