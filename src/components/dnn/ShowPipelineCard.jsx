@@ -24,12 +24,12 @@ function extractBullets(script) {
 const GOLD = '#D4AF37';
 
 const STAGES = [
-  { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles accumulated + stories selected', producer: 'Base44 Daily News Library' },
-  { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie open → Bob answer → Charlie close', producer: 'Base44 Script Review' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Render pipeline renders the video', producer: 'HeyGen' },
-  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'Clips combined into one MP4', producer: 'n8n' },
-  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show with DNN background + whiteboard bullets', producer: 'Base44 /broadcast-show' },
-  { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Post to social, subscribers, agents', producer: 'Communications Hub (off for practice)' },
+  { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles + stories · Producer: Base44 Daily News Library + Gemini', producer: 'Base44 Daily News Library + Gemini' },
+  { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie intro+news → Bob box solutions → Charlie outro · Producer: Base44 Script Review / Gemini', producer: 'Base44 Script Review / Gemini' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen multi-scene (Charlie desk + Bob in box) · Producer: HeyGen', producer: 'HeyGen' },
+  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'One multi-scene MP4 · Producer: HeyGen', producer: 'HeyGen' },
+  { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show · Producer: Base44 /broadcast-show', producer: 'Base44 /broadcast-show' },
+  { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Social/SMS/email · Producer: Base44 Communications Hub (off until Bob says)', producer: 'Base44 Communications Hub (off until Bob says)' },
 ];
 
 function getShowStage(show) {

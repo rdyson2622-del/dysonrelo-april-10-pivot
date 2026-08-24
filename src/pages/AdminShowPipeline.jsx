@@ -26,7 +26,7 @@ export default function AdminShowPipeline() {
     try {
       const res = await base44.functions.invoke('dnnDailyVideoPipeline', {});
       if (res.data?.success) {
-        setRefreshMsg('✓ Higgsfield + 11 Labs show dispatched — n8n is generating');
+        setRefreshMsg('✓ HeyGen show dispatched — generating');
       } else {
         setRefreshMsg(`✗ ${res.data?.error || 'Dispatch failed'}`);
       }
@@ -106,7 +106,7 @@ export default function AdminShowPipeline() {
             <button onClick={handleGenerate} disabled={generating}
               className="flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg text-black transition-opacity disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, #818cf8, #6366f1)' }}
-              title="Generate a new daily show using the Higgsfield + 11 Labs pipeline">
+              title="Generate a new daily show using the HeyGen pipeline">
               {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
               {generating ? 'Dispatching…' : '⚡ Generate Daily Show'}
             </button>
