@@ -155,7 +155,7 @@ export default function DnnStudioLanding() {
       </div>
 
       {/* ── Bottom media player controls ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 px-6 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
+      <div className="absolute bottom-0 left-0 right-0 z-20 pl-6 pr-40 py-3" style={{ background: 'rgba(10,11,15,0.75)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
         <div className="flex items-center gap-4 max-w-5xl mx-auto">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0" style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.4)', color: GOLD }}>1</div>
           <div className="flex-1 h-1 rounded-full relative" style={{ background: 'rgba(255,255,255,0.15)' }}>
