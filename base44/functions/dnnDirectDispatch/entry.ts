@@ -30,15 +30,17 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
-// DNN Studio backdrop — Charlie seated at the desk, studio otherwise empty.
+// DNN Studio backdrop — Charlie seated at the desk, with camera/lighting
+// equipment on the floor so the studio reads as active/staffed, not vacant.
 // Used for the intro/outro scenes where only Charlie is on set.
-const STUDIO_CHARLIE_ONLY_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/8c2b3fff5_generated_image.png';
+const STUDIO_CHARLIE_ONLY_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a417fc491_generated_image.png';
 
 // Same studio, but with an empty "screened-in" monitor box to the right of
-// the desk. Used for Bob's scene — Bob is not physically in the studio, he's
-// off-site/in the field, so his talking-photo character is scaled down and
-// positioned to sit inside that box, like a remote correspondent feed.
-const STUDIO_WITH_BOB_BOX_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/84030da79_generated_image.png';
+// the desk, plus camera/lighting equipment on the floor. Used for Bob's
+// scene — Bob is not physically in the studio, he's off-site/in the field,
+// so his talking-photo character is scaled down and positioned to sit
+// inside that box, like a remote correspondent feed.
+const STUDIO_WITH_BOB_BOX_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/b226068fd_generated_image.png';
 
 /**
  * Clean script text for HeyGen TTS.
