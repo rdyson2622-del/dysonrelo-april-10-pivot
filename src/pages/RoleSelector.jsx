@@ -9,7 +9,8 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/67bc7aa5a_generated_image.png';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/80129619f_Screenshot2026-08-01at31026PM.png';
-const CHARLIE_HERO_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f0ea8e711_charlie_role_selector_hero_v6.mp4';
+const CHARLIE_HERO_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/4db61fdfa_charlie_role_selector_hero_v5.mp4';
+const BOB_BOX_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/d7a425fd6_bob_role_selector_box_v2.mp4';
 
 const PATHS = [
   {
@@ -124,6 +125,27 @@ export default function RoleSelector() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         />
+        {/* Bob — real avatar, in his own correspondent box */}
+        <div
+          className="absolute rounded-xl overflow-hidden"
+          style={{
+            top: '15%',
+            right: '13%',
+            width: '13%',
+            aspectRatio: '16 / 9',
+            border: `2px solid ${GOLD}`,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+          }}
+        >
+          <video
+            src={BOB_BOX_VIDEO}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
 
         {/* Three pills — direct routing to News / Relocation / Intelligence */}
