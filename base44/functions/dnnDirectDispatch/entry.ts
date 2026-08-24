@@ -8,9 +8,10 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
  * render request (3 video_inputs → 1 stitched MP4, rendered by HeyGen itself
  * — not three separate clips stitched afterward).
  *
- * Scene layout: Charlie at the studio desk (intro + outro), Bob in a
- * correspondent box (content/solutions segment, since Bob's avatar is not
- * in the studio but in the office/field).
+ * Scene layout: Charlie fills the full frame seated at the studio desk
+ * (intro + outro) — no separate box, he IS the scene, with the studio as
+ * his live backdrop. Bob stays in a correspondent box (content/solutions
+ * segment, since Bob's avatar is not in the studio but in the office/field).
  *
  * On success, stores the heygen_video_id and flips status → "rendering".
  * Poll with heygenCheckVideo / dnnVideoPoller for completion.
@@ -113,8 +114,8 @@ Deno.serve(async (req) => {
           type: 'avatar',
           avatar_id: CHARLIE_AVATAR_ID,
           avatar_style: 'normal',
-          scale: 0.9,
-          offset: { x: -0.05, y: 0.15 },
+          scale: 1,
+          offset: { x: 0, y: 0 },
         },
         voice: {
           type: 'text',
@@ -151,8 +152,8 @@ Deno.serve(async (req) => {
           type: 'avatar',
           avatar_id: CHARLIE_AVATAR_ID,
           avatar_style: 'normal',
-          scale: 0.9,
-          offset: { x: -0.05, y: 0.15 },
+          scale: 1,
+          offset: { x: 0, y: 0 },
         },
         voice: {
           type: 'text',
