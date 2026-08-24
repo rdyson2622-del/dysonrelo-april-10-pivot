@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
 
 const GOLD = '#D4AF37';
 
@@ -118,6 +119,14 @@ export default function DnnStudioLanding() {
             {pill.label}
           </button>
         ))}
+      </div>
+
+      {/* ── Active Video Test Panel — run/review HeyGen test renders live here ── */}
+      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-10 pt-[70vh]">
+        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
+          Active Video Test Page — Review &amp; Suggest Changes Here
+        </p>
+        <CharlieDeskTestRender />
       </div>
     </div>
   );
