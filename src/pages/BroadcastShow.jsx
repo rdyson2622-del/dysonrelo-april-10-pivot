@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { X, Loader2, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 export default function BroadcastShow() {
@@ -26,11 +26,11 @@ export default function BroadcastShow() {
         if (ready) {
           setBroadcast(ready);
         } else {
-          /* stay on page */;
+          window.location.href = '/dnn-news';
           return;
         }
       } catch (_) {
-        /* stay on page */;
+        window.location.href = '/dnn-news';
         return;
       } finally {
         setLoaded(true);
@@ -49,17 +49,19 @@ export default function BroadcastShow() {
   if (!loaded) {
     return (
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#000' }}>
-        <div className="w-8 h-8 border-4 border-slate-700 border-t-yellow-500 rounded-full animate-spin" />
+        <img src={HERO_STILL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain" style={{ aspectRatio: '16/9' }} />
       </div>
     );
   }
 
   if (!canPlay) {
     return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-        <div className="relative w-full h-full">
-          <img src={HERO_IMAGE} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain" style={{ background: '#000' }} />
-        </div>
+      <div className="fixed inset-0 flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
+        <img src={HERO_STILL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain" style={{ aspectRatio: '16/9' }} />
+        <p className="text-xs text-slate-500">No broadcast available at this time.</p>
+        <button onClick={() => window.location.href = '/'} className="text-xs underline" style={{ color: GOLD }}>
+          Return Home
+        </button>
       </div>
     );
   }
@@ -140,7 +142,6 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      <img src={HERO_IMAGE} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain z-0" style={{ background: '#000' }} />
       {/* Close */}
       <button onClick={() => window.location.href = '/'} aria-label="Close"
         className="absolute top-4 right-4 z-30 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -165,25 +166,13 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
 
       {/* Single always-mounted <video> — full-frame for composited, centered box for raw.
           src is set via ref, NEVER via React prop, so re-renders can't reload it. */}
-      <div className={composited ? "absolute inset-0 z-10" : "absolute overflow-hidden"}
-        style={composited
-          ? { background: '#000' }
-          : {
-              width: 'clamp(220px, 30vw, 420px)',
-              aspectRatio: '16/9',
-              bottom: '10vh',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              borderRadius: '12px',
-              border: `2px solid ${GOLD}`,
-              boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
-              background: '#000',
-              zIndex: 10,
-            }}>
+      <div className={"absolute inset-0 z-10"}
+        style={{ background: '#000' }}>
         <video
           ref={videoRef}
           playsInline
           preload="auto"
+          poster={HERO_STILL}
           loop={false}
           onClick={togglePlay}
           onEnded={handleEnded}
@@ -193,7 +182,7 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
         />
         {!started && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ background: '#000' }}>
-            <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
+            <img src={HERO_STILL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain" style={{ aspectRatio: '16/9' }} />
           </div>
         )}
       </div>
