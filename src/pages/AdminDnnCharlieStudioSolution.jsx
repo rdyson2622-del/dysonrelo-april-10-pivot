@@ -67,7 +67,7 @@ export default function AdminDnnCharlieStudioSolution() {
         <video
           src={TEST_RENDER_VIDEO}
           controls
-          className="w-full rounded-xl mb-2"
+          className="w-full rounded-xl mb-2 aspect-video object-cover"
           style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
         />
         <p className="text-[11px] text-gray-500 mb-8">
