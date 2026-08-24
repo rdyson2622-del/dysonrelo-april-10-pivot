@@ -1,15 +1,19 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
 /**
- * dnnDirectDispatch — bypasses n8n W1 script generation.
+ * dnnDirectDispatch — dispatches a DNN broadcast directly to HeyGen.
  *
  * Reads the stored intro_script / content_script / outro_script from a
  * DnnBroadcast record and dispatches them as a SINGLE multi-scene HeyGen
- * render request (3 video_inputs → 1 stitched MP4).
+ * render request (3 video_inputs → 1 stitched MP4, rendered by HeyGen itself
+ * — not three separate clips stitched afterward).
+ *
+ * Scene layout: Charlie at the studio desk (intro + outro), Bob in a
+ * correspondent box (content/solutions segment, since Bob's avatar is not
+ * in the studio but in the office/field).
  *
  * On success, stores the heygen_video_id and flips status → "rendering".
- * n8n W2 (or the existing n8nBroadcastCallback) will receive the completion
- * webhook from HeyGen and flip status → "ready" with the final videoUrl.
+ * Poll with heygenCheckVideo / dnnVideoPoller for completion.
  *
  * Payload: { broadcast_id: string }
  * Auth: admin session.
@@ -62,12 +66,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // HARD BLOCK: DNN broadcasts must ONLY render through the Higgsfield + 11 Labs
-    // n8n pipeline (dnnDailyVideoPipeline / dnnRerunShow). This function dispatches
-    // directly to HeyGen and is permanently disabled to stop unordered HeyGen spend.
-    return Response.json({
-      error: 'Direct HeyGen dispatch is disabled. DNN broadcasts render exclusively through the Higgsfield + 11 Labs pipeline (dnnDailyVideoPipeline / dnnRerunShow).',
-    }, { status: 403 });
+    const heygenKey = Deno.env.get('HEYGEN_API_KEY');
+    if (!heygenKey) return Response.json({ error: 'HEYGEN_API_KEY not configured' }, { status: 500 });
 
     const body = await req.json().catch(() => ({}));
     const { broadcast_id } = body;
@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
-        'X-Api-Key': HEYGEN_API_KEY,
+        'X-Api-Key': heygenKey,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
