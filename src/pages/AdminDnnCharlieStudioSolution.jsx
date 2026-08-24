@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import LockedPageSourceViewer from '@/components/dnn/LockedPageSourceViewer';
+import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
 
 const GOLD = '#D4AF37';
 
@@ -79,6 +80,9 @@ export default function AdminDnnCharlieStudioSolution() {
           DNN_CHARLIE_DESK_STUDIO — Charlie in-frame at the curved desk, full 16:9. This is the ONLY confirmed LOCKED master until a true desk-in-frame MP4 (idle_wide_1080) is located.
         </p>
 
+
+        {/* ── 10-second proof render, before a full show dispatch ── */}
+        <CharlieDeskTestRender />
 
         {/* ── Code record ── */}
         <LockedPageSourceViewer
