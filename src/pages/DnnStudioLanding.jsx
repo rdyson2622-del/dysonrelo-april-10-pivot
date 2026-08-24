@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play, X, Volume2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -46,6 +46,16 @@ export default function DnnStudioLanding() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [activeRole, setActiveRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
+  const [isPlayingWithSound, setIsPlayingWithSound] = useState(false);
+  const videoRef = useRef(null);
+
+  const handlePlayWithSound = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = false;
+    v.play();
+    setIsPlayingWithSound(true);
+  };
 
   useEffect(() => {
     base44.auth.me().then(u => setUser(u)).catch(() => {});
@@ -61,6 +71,7 @@ export default function DnnStudioLanding() {
     <div className="relative min-h-screen w-full overflow-hidden" style={{ background: '#0A0B0F' }}>
       {/* ── Studio background — HeyGen test render as the full-screen hero video ── */}
       <video
+        ref={videoRef}
         src={HEYGEN_TEST_CLIP}
         poster={STUDIO_BG}
         autoPlay
@@ -69,6 +80,21 @@ export default function DnnStudioLanding() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
       />
+      {/* Click-to-unmute overlay — browsers block autoplay with sound, so Charlie's
+          voice only starts once the visitor explicitly opts in. */}
+      {!isPlayingWithSound && (
+        <button
+          onClick={handlePlayWithSound}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-black tracking-widest uppercase transition-all hover:scale-105"
+          style={{
+            background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
+            color: '#000',
+            boxShadow: '0 4px 20px rgba(212,175,55,0.5)',
+          }}
+        >
+          <Volume2 className="w-4 h-4" /> Tap for Sound
+        </button>
+      )}
       {/* Subtle dark gradient for pill legibility at the bottom */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,11,15,0.85) 0%, rgba(10,11,15,0.25) 35%, transparent 60%)' }} />
 
