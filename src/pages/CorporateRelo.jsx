@@ -7,6 +7,7 @@ import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
 
 const GOLD = '#D4AF37';
 
@@ -218,6 +219,10 @@ export default function CorporateRelo() {
           Instead, we share in the commission offered to the buying or selling agent in our national and international
           networks — so your people land well, and your budget stays intact.
         </p>
+
+        <div className="w-full max-w-3xl mx-auto mt-10">
+          <IssueRequestSolutionMap context="corporate_relo" />
+        </div>
       </section>
 
       {/* ── Three Pillars — each with matching Q clip upper-left in the card ── */}
