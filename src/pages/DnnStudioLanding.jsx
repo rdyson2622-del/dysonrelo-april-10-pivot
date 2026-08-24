@@ -59,10 +59,15 @@ export default function DnnStudioLanding() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden" style={{ background: '#0A0B0F' }}>
-      {/* ── Studio background ── */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${STUDIO_BG})` }}
+      {/* ── Studio background — HeyGen test render as the full-screen hero video ── */}
+      <video
+        src={HEYGEN_TEST_CLIP}
+        poster={STUDIO_BG}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
       />
       {/* Subtle dark gradient for pill legibility at the bottom */}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,11,15,0.85) 0%, rgba(10,11,15,0.25) 35%, transparent 60%)' }} />
@@ -121,17 +126,6 @@ export default function DnnStudioLanding() {
             {pill.label}
           </button>
         ))}
-      </div>
-
-      {/* ── HeyGen test clip — posted for review ── */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 w-full max-w-md px-4">
-        <p className="text-center text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>HeyGen Test Render — For Review</p>
-        <video
-          src={HEYGEN_TEST_CLIP}
-          controls
-          className="w-full rounded-xl"
-          style={{ border: `1px solid ${GOLD}` }}
-        />
       </div>
 
       {/* ── Bottom media player controls ── */}
