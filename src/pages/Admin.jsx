@@ -137,27 +137,24 @@ export default function Admin() {
           </Link>
         </motion.div>
 
-        {/* TEMPORARY — DNN studio background review (remove after Bob approves) */}
+        {/* ══════════════════════════════════════════════════════════════
+            🔒 LOCKED — CANONICAL DNN STUDIO 16:9 ASSET. DO NOT REPLACE.
+            This is the ONE verified real studio photo (Charlie at desk,
+            Bob in frame, native 16:9). Same URL used on /portal hero.
+            ══════════════════════════════════════════════════════════════ */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 rounded-2xl p-5"
           style={{ background: '#000', border: `2px solid ${GOLD}` }}
         >
-          <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>FOR REVIEW — EMPTY STUDIO BACKGROUNDS (no baked-in person)</p>
-          <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            The previous backgrounds had a person already baked into the image, which is why Charlie looked boxed-in on top of himself. These two are completely empty sets — HeyGen composites the live avatar on top of these at render time.
-          </p>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Empty desk — Charlie's intro/outro background</p>
-              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/8e02d59d1_generated_image.png" alt="Empty studio background" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
-            </div>
-            <div>
-              <p className="text-xs font-bold mb-2" style={{ color: '#fff' }}>Empty desk + empty box — Bob's content background</p>
-              <img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/332384ab8_generated_image.png" alt="Empty studio background with box" className="w-full rounded-xl" style={{ border: '1px solid rgba(212,175,55,0.3)' }} />
-            </div>
-          </div>
+          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>🔒 LOCKED DNN STUDIO (16:9 VERIFIED)</p>
+          <img
+            src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png"
+            alt="DNN Real Estate News Studio"
+            className="w-full rounded-xl"
+            style={{ border: '1px solid rgba(212,175,55,0.3)' }}
+          />
         </motion.div>
 
         {/* Summary Dashboard Charts */}
