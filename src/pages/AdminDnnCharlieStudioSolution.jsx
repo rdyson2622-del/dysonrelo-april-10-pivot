@@ -81,6 +81,36 @@ export default function AdminDnnCharlieStudioSolution() {
         </p>
 
 
+
+        {/* ── LOCKED — idle_wide_1080 (second locked asset in this section) ── */}
+        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
+          Locked Master — idle_wide_1080 (1920x1080)
+        </p>
+        <div className="rounded-xl p-4 mb-8" style={{ border: '1px solid rgba(212,175,55,0.3)', background: 'rgba(212,175,55,0.04)' }}>
+          <p className="text-[12px]" style={{ color: '#ddd' }}>
+            <code style={{ color: GOLD }}>idle_wide_1080.png</code> — 1920x1080 desk-in-frame wide idle plate.
+            Part of DNN_CHARLIE_DESK_STUDIO. Source of record:{' '}
+            <code style={{ color: GOLD }}>/workspace/dnn-articles/2026-08-21-tampa-sample/idle_wide_1080.png</code>.
+            Upload to media.base44 when needed; use for full-bleed landing.
+          </p>
+        </div>
+
+        {/* ── REJECTED ARCHIVE — never label any of these LOCKED MASTER ── */}
+        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: '#ef4444' }}>
+          Rejected Archive — NOT DNN_CHARLIE_DESK_STUDIO
+        </p>
+        <div className="rounded-xl p-5 mb-8" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.35)' }}>
+          <ul className="space-y-2 text-sm" style={{ color: '#ddd' }}>
+            <li>• <strong style={{ color: '#ef4444' }}>Empty plate + PiP Charlie</strong> (bookshelf / other sets) — the Charlie-in-a-box trail. REJECTED.</li>
+            <li>• <strong style={{ color: '#ef4444' }}>talking_photo_id</strong> <code>72730cc3f5774167811efc2dbda1d1d6</code> — REJECTED avatar asset.</li>
+            <li>• <strong style={{ color: '#ef4444' }}>56c7 MP4</strong> (<code>56c7be606_test-heygen-single-mp4-format-studio.mp4</code>) — 1920x1080 but PiP Charlie / empty-plate trail. This is a PiP trail artifact, <strong>NOT the locked master</strong>. Never used as live hero.</li>
+            <li>• <strong style={{ color: '#ef4444' }}>Ultrawide 47405</strong> (<code>47405e279_DNNSTUDIOANDLANDINGPAGE00.png</code>) — wrong aspect. REJECTED.</li>
+          </ul>
+          <p className="text-[11px] mt-3" style={{ color: '#999' }}>
+            No LOCKED MASTER label may appear on any PiP or 56c7 design.
+          </p>
+        </div>
+
         {/* ── 10-second proof render, before a full show dispatch ── */}
         <CharlieDeskTestRender />
 
