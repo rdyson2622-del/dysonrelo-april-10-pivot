@@ -16,17 +16,9 @@ import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
  */
 
 const HEYGEN_API = 'https://api.heygen.com';
-const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 
 const BOB_AVATAR_ID = '52db97a6c48545f5a3e9f14614c28af6';
 const BOB_VOICE_ID = '2e2785a64da54895b2cd3b744bf7ca26';
-
-// ⚠️ ONLY approved background — the LOCKED DNN Charlie Desk Studio still.
-// Never substitute any other studio/stock background (e.g. the white-panel
-// set) for Bob or any other avatar. This still gets uploaded to HeyGen as an
-// asset each dispatch and passed as an explicit background override so
-// HeyGen can never fall back to the avatar's own default backdrop.
-const DNN_CHARLIE_DESK_STUDIO_STILL = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
 
 // "Dyson" is spelled phonetically here so HeyGen's TTS says it correctly
 // (rhymes with "ice on" — like the vacuum brand), not "DIS-in" or "DIE-zon".
@@ -56,39 +48,13 @@ Deno.serve(async (req) => {
     }
 
     // ── action: 'dispatch' (default) ──
-    // 1. Upload the LOCKED studio still to HeyGen as an asset so we get a
-    // valid image_asset_id — HeyGen's background override does not accept
-    // arbitrary external URLs, only its own asset ids. This is the ONLY
-    // background asset ever used here.
-    const imgRes = await fetch(DNN_CHARLIE_DESK_STUDIO_STILL);
-    if (!imgRes.ok) {
-      return Response.json({ error: 'Failed to download DNN Charlie Desk Studio still' }, { status: 500 });
-    }
-    const imgBuf = await imgRes.arrayBuffer();
-    const contentType = imgRes.headers.get('content-type') || 'image/png';
-
-    const assetUploadRes = await fetch(`${HEYGEN_UPLOAD_API}/v1/asset`, {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': heygenKey,
-        'Content-Type': contentType,
-      },
-      body: imgBuf,
-    });
-    const assetUploadText = await assetUploadRes.text();
-    let assetUploadData;
-    try { assetUploadData = JSON.parse(assetUploadText); } catch (_) {
-      return Response.json({ error: 'HeyGen asset upload returned non-JSON', raw: assetUploadText.slice(0, 300) }, { status: 500 });
-    }
-
-    const imageAssetId = assetUploadData?.data?.id;
-    if (!assetUploadRes.ok || !imageAssetId) {
-      return Response.json({ error: 'HeyGen studio background asset upload failed', detail: assetUploadData }, { status: 500 });
-    }
-
-    // 2. Dispatch the render with the studio still forced as the explicit
-    // background — this overrides Bob's own default backdrop (the white
-    // panel set) completely.
+    // Bob's avatar_id already renders as a full-frame character (its own
+    // baked-in scene). Layering a SECOND background image on top of that
+    // (as a prior version of this function did) produced a "box in a box"
+    // — the avatar's own frame nested inside our injected studio image.
+    // Fix: dispatch the avatar + voice ONLY, with no background override,
+    // exactly like removing a stale layer instead of stacking a new one
+    // on top of it.
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -108,7 +74,6 @@ Deno.serve(async (req) => {
               voice_id: BOB_VOICE_ID,
               input_text: TEST_SCRIPT,
             },
-            background: { type: 'image', image_asset_id: imageAssetId },
           },
         ],
         dimension: { width: 1920, height: 1080 },
