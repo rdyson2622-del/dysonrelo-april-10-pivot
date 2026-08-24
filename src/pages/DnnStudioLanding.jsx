@@ -17,6 +17,9 @@ const GOLD = '#D4AF37';
 const STUDIO_BG = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png";
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
+// 10-second HeyGen proof render — Charlie test clip, posted here for review only.
+const HEYGEN_TEST_CLIP = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/202d15260_charlie-desk-test.mp4";
+
 const PILLS = [
   { label: 'NEWS',         path: '/dnn-news' },
   { label: 'RELOCATION',   path: '/relocation-intake' },
@@ -118,6 +121,17 @@ export default function DnnStudioLanding() {
             {pill.label}
           </button>
         ))}
+      </div>
+
+      {/* ── HeyGen test clip — posted for review ── */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 w-full max-w-md px-4">
+        <p className="text-center text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>HeyGen Test Render — For Review</p>
+        <video
+          src={HEYGEN_TEST_CLIP}
+          controls
+          className="w-full rounded-xl"
+          style={{ border: `1px solid ${GOLD}` }}
+        />
       </div>
 
       {/* ── Bottom media player controls ── */}
