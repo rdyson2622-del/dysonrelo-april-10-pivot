@@ -99,13 +99,6 @@ export default function DnnStudioLanding() {
         </div>
       </header>
 
-      {/* ── Hero title ── */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 text-center" style={{ bottom: '30%' }}>
-        <h1 className="text-3xl sm:text-5xl font-black tracking-[0.15em] text-white" style={{ textShadow: '0 2px 24px rgba(0,0,0,0.85)' }}>
-          DNN REAL ESTATE NEWS
-        </h1>
-      </div>
-
       {/* ── Three gold pills — centered, ~20% up from bottom ── */}
       <div className="absolute left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5" style={{ bottom: '20%' }}>
         {PILLS.map((pill) => (
@@ -125,6 +118,12 @@ export default function DnnStudioLanding() {
             {pill.label}
           </button>
         ))}
+      </div>
+
+      {/* ── Locked asset reference panel — permanent record of the correct URL ── */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-lg text-center" style={{ background: 'rgba(0,0,0,0.75)', border: `1px solid ${GOLD}` }}>
+        <p className="text-[9px] font-black tracking-widest uppercase" style={{ color: GOLD }}>🔒 Locked Studio Asset</p>
+        <code className="text-[10px] text-gray-300 break-all">{STUDIO_BG}</code>
       </div>
 
       {/* ── Bottom media player controls ── */}
