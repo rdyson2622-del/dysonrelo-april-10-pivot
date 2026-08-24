@@ -44,6 +44,18 @@ Deno.serve(async (req) => {
     if (body.action === 'status') {
       if (!body.video_id) return Response.json({ error: 'video_id is required' }, { status: 400 });
       const result = await checkHeygenStatus(heygenKey, body.video_id);
+      // HeyGen's temp signed URL expires in a few days — re-upload to permanent
+      // Base44 storage so the last completed test video keeps working on reload.
+      if (result.status === 'completed' && result.videoUrl) {
+        try {
+          const videoRes = await fetch(result.videoUrl);
+          const videoBuf = await videoRes.arrayBuffer();
+          const blob = new Blob([videoBuf], { type: 'video/mp4' });
+          const file = new File([blob], `charlie_desk_test_${body.video_id}.mp4`, { type: 'video/mp4' });
+          const uploadRes = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+          result.videoUrl = uploadRes.file_url;
+        } catch (_) { /* fall back to the temp HeyGen URL if re-upload fails */ }
+      }
       return Response.json(result);
     }
 
