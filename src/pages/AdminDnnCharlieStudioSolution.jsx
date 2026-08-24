@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import LockedPageSourceViewer from '@/components/dnn/LockedPageSourceViewer';
 
 const GOLD = '#D4AF37';
@@ -14,13 +14,6 @@ const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69
 // idle_wide_1080 — true desk-in-frame MP4 master. Not yet located/uploaded.
 // Do NOT substitute 56c7 for this slot — it is REJECTED (see below).
 const DNN_CHARLIE_DESK_STUDIO_IDLE_WIDE_1080 = null;
-
-// ❌ REJECTED — empty studio plate (wide shot, no one at the desk) with
-// Charlie composited as a small PiP box in front of a bookshelf set.
-// This is NOT the DNN Charlie Desk Studio look. Do not use on Page #3
-// or any public landing page again.
-const REJECTED_TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
-const REJECTED_PIP_MP4 = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
 
 const CODE_SAMPLE = `// HeyGen dispatch — Charlie segment (DNN_CHARLIE_DESK_STUDIO look)
 // Charlie fills the full 16:9 frame, seated at the curved DNN desk,
@@ -66,7 +59,7 @@ export default function AdminDnnCharlieStudioSolution() {
           <h2 className="text-white font-bold mb-3">In Plain English — The ONE Approved Studio Look</h2>
           <ul className="space-y-2 text-sm" style={{ color: '#ddd' }}>
             <li>• The only approved look is <strong style={{ color: GOLD }}>DNN Charlie Desk Studio</strong>: full 16:9 frame, Charlie seated in-frame at the curved DNN desk, US map wall behind him, gold DNN branding, side walls visible.</li>
-            <li>• Locked master: the still <code style={{ color: GOLD }}>0f55…png</code> below — full-bleed, no letterboxing. The 56c7 MP4 is REJECTED and no longer shown as a locked master.</li>
+            <li>• Locked master: the still <code style={{ color: GOLD }}>0f55…png</code> below — full-bleed, no letterboxing.</li>
             <li>• This is the ONLY version allowed on the public landing page and Page #3. It is full-bleed only — never inset in a box.</li>
             <li>• Production plan: the next DNN news show render must match this still exactly — same desk-in-frame composition, US map wall, and gold branding — with no PiP box and no bookshelf set.</li>
           </ul>
@@ -86,25 +79,6 @@ export default function AdminDnnCharlieStudioSolution() {
           DNN_CHARLIE_DESK_STUDIO — Charlie in-frame at the curved desk, full 16:9. This is the ONLY confirmed LOCKED master until a true desk-in-frame MP4 (idle_wide_1080) is located.
         </p>
 
-        {/* ── Rejected asset warning — swapped the bad MP4 for the locked still ── */}
-        <div className="rounded-xl p-5 mb-8 flex items-start gap-3" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.4)' }}>
-          <XCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
-          <div className="w-full">
-            <p className="text-sm font-bold mb-1" style={{ color: '#ef4444' }}>REJECTED — Do Not Use (talking_photo / 56c7 PiP trail)</p>
-            <p className="text-sm mb-3" style={{ color: '#ddd' }}>
-              talking_photo_id <code style={{ color: '#ef4444' }}>{REJECTED_TALKING_PHOTO_ID}</code> — this was an empty studio plate (wide shot, no one at the desk) with Charlie composited as a small picture-in-picture box in front of a bookshelf set. It is NOT the DNN Charlie Desk Studio look. The 56c7 MP4 has been pulled from this page entirely — shown below is the locked still it must be re-rendered to match.
-            </p>
-            <img
-              src={DNN_CHARLIE_DESK_STUDIO_STILL}
-              alt="Target look for the next MP4 render — must match this still exactly"
-              className="w-full aspect-video rounded-xl object-contain opacity-90"
-              style={{ border: '1px solid rgba(239,68,68,0.4)', background: '#000' }}
-            />
-            <p className="text-[11px] text-gray-500 mt-2">
-              Next production target: render Charlie's news show MP4 in this exact desk-in-frame composition — same desk, US map wall, and gold branding as the still above. No PiP, no bookshelf set.
-            </p>
-          </div>
-        </div>
 
         {/* ── Code record ── */}
         <LockedPageSourceViewer
