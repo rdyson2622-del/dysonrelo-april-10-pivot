@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { X, Loader2, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+const HERO_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 export default function BroadcastShow() {
@@ -25,11 +26,11 @@ export default function BroadcastShow() {
         if (ready) {
           setBroadcast(ready);
         } else {
-          window.location.href = '/dnn-news';
+          /* stay on page */;
           return;
         }
       } catch (_) {
-        window.location.href = '/dnn-news';
+        /* stay on page */;
         return;
       } finally {
         setLoaded(true);
@@ -55,12 +56,10 @@ export default function BroadcastShow() {
 
   if (!canPlay) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center gap-4" style={{ background: '#000' }}>
-        <img src={DNN_LOGO} alt="DNN" className="h-12 w-auto opacity-80" />
-        <p className="text-xs text-slate-500">No broadcast available at this time.</p>
-        <button onClick={() => window.location.href = '/'} className="text-xs underline" style={{ color: GOLD }}>
-          Return Home
-        </button>
+      <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+        <div className="relative w-full h-full">
+          <img src={HERO_IMAGE} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain" style={{ background: '#000' }} />
+        </div>
       </div>
     );
   }
@@ -141,6 +140,7 @@ function FullFramePlayer({ videoUrl, showName, composited }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
+      <img src={HERO_IMAGE} alt="DNN Studio" className="absolute inset-0 w-full h-full object-contain z-0" style={{ background: '#000' }} />
       {/* Close */}
       <button onClick={() => window.location.href = '/'} aria-label="Close"
         className="absolute top-4 right-4 z-30 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
