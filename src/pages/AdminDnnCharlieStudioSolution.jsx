@@ -9,7 +9,8 @@ const GOLD = '#D4AF37';
 // This page exists so this solution is NEVER "rediscovered" or redone.
 // If Charlie's studio look is ever questioned again, send them HERE.
 // ══════════════════════════════════════════════════════════════════════
-const TEST_RENDER_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/985182147_charlie-studio-test-render.mp4';
+// Locked clean master — no baked-in white margins (replaces the bad 985182147 test render)
+const TEST_RENDER_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
 const TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
 
 const CODE_SAMPLE = `// HeyGen dispatch — Charlie segment (studio background baked into the photo)
@@ -64,14 +65,12 @@ export default function AdminDnnCharlieStudioSolution() {
         <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
           Proof — Working Test Render
         </p>
-        <div className="w-full aspect-video rounded-xl mb-2 overflow-hidden relative" style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}>
-          <video
-            src={TEST_RENDER_VIDEO}
-            controls
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ transform: 'scale(1.269)' }}
-          />
-        </div>
+        <video
+          src={TEST_RENDER_VIDEO}
+          controls
+          className="w-full aspect-video rounded-xl mb-2 object-cover"
+          style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
+        />
         <p className="text-[11px] text-gray-500 mb-8">
           Rendered via HeyGen talking_photo_id {TALKING_PHOTO_ID} — studio background baked into the source photo, no transparency required.
         </p>
