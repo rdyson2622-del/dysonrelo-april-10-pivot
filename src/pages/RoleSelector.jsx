@@ -118,6 +118,7 @@ export default function RoleSelector() {
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section className="relative w-full h-screen overflow-hidden">
         <video
+          key={CHARLIE_HERO_VIDEO}
           src={CHARLIE_HERO_VIDEO}
           autoPlay
           loop
@@ -138,6 +139,7 @@ export default function RoleSelector() {
           }}
         >
           <video
+            key={BOB_BOX_VIDEO}
             src={BOB_BOX_VIDEO}
             autoPlay
             loop
