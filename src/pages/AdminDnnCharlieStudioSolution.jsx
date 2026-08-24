@@ -11,12 +11,16 @@ const GOLD = '#D4AF37';
 // This page exists so this exact look is NEVER "rediscovered" or redone.
 // ══════════════════════════════════════════════════════════════════════
 const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
-const DNN_CHARLIE_DESK_STUDIO_MP4 = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
+// idle_wide_1080 — true desk-in-frame MP4 master. Not yet located/uploaded.
+// Do NOT substitute 56c7 for this slot — it is REJECTED (see below).
+const DNN_CHARLIE_DESK_STUDIO_IDLE_WIDE_1080 = null;
 
-// ❌ REJECTED — empty studio plate + Charlie composited as a small PiP box
-// in front of a bookshelf set. Do NOT use this asset for Page #3 or any
-// public landing page again.
+// ❌ REJECTED — empty studio plate (wide shot, no one at the desk) with
+// Charlie composited as a small PiP box in front of a bookshelf set.
+// This is NOT the DNN Charlie Desk Studio look. Do not use on Page #3
+// or any public landing page again.
 const REJECTED_TALKING_PHOTO_ID = '72730cc3f5774167811efc2dbda1d1d6';
+const REJECTED_PIP_MP4 = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/56c7be606_test-heygen-single-mp4-format-studio.mp4';
 
 const CODE_SAMPLE = `// HeyGen dispatch — Charlie segment (DNN_CHARLIE_DESK_STUDIO look)
 // Charlie fills the full 16:9 frame, seated at the curved DNN desk,
@@ -67,41 +71,36 @@ export default function AdminDnnCharlieStudioSolution() {
           </ul>
         </div>
 
-        {/* ── Rejected asset warning ── */}
-        <div className="rounded-xl p-5 mb-6 flex items-start gap-3" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.4)' }}>
-          <XCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
-          <div>
-            <p className="text-sm font-bold mb-1" style={{ color: '#ef4444' }}>REJECTED — Do Not Use</p>
-            <p className="text-sm" style={{ color: '#ddd' }}>
-              talking_photo_id <code style={{ color: '#ef4444' }}>{REJECTED_TALKING_PHOTO_ID}</code> — this is an empty studio plate with Charlie composited as a small picture-in-picture box in front of a bookshelf set. It is NOT the desk-in-frame look and must never be used on Page #3 or any public landing page again.
-            </p>
-          </div>
-        </div>
-
-        {/* ── Locked master: still ── */}
+        {/* ── Locked master: still (ONLY confirmed desk-in-frame asset) ── */}
         <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
           Locked Master — Primary Still (0f55…png)
         </p>
         <img
           src={DNN_CHARLIE_DESK_STUDIO_STILL}
           alt="DNN Charlie Desk Studio — locked master still"
-          className="w-full aspect-video rounded-xl mb-8 object-contain"
-          style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
-        />
-
-        {/* ── Locked master: MP4 ── */}
-        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
-          Locked Master — Broadcast MP4 (56c7…mp4)
-        </p>
-        <video
-          src={DNN_CHARLIE_DESK_STUDIO_MP4}
-          controls
-          className="w-full aspect-video rounded-xl mb-2 object-cover"
+          className="w-full aspect-video rounded-xl mb-2 object-contain"
           style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}
         />
         <p className="text-[11px] text-gray-500 mb-8">
-          DNN_CHARLIE_DESK_STUDIO — Charlie in-frame at the curved desk, full 16:9, no compositing at render time.
+          DNN_CHARLIE_DESK_STUDIO — Charlie in-frame at the curved desk, full 16:9. This is the ONLY confirmed LOCKED master until a true desk-in-frame MP4 (idle_wide_1080) is located.
         </p>
+
+        {/* ── Rejected asset warning ── */}
+        <div className="rounded-xl p-5 mb-8 flex items-start gap-3" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.4)' }}>
+          <XCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
+          <div className="w-full">
+            <p className="text-sm font-bold mb-1" style={{ color: '#ef4444' }}>REJECTED — Do Not Use (talking_photo / 56c7 PiP trail)</p>
+            <p className="text-sm mb-3" style={{ color: '#ddd' }}>
+              talking_photo_id <code style={{ color: '#ef4444' }}>{REJECTED_TALKING_PHOTO_ID}</code> and the MP4 below — this is an empty studio plate (wide shot, no one at the desk) with Charlie composited as a small picture-in-picture box in front of a bookshelf set. It is NOT the DNN Charlie Desk Studio look and must never be used on Page #3 or any public landing page again.
+            </p>
+            <video
+              src={REJECTED_PIP_MP4}
+              controls
+              className="w-full aspect-video rounded-xl opacity-60"
+              style={{ border: '1px solid rgba(239,68,68,0.4)', background: '#000' }}
+            />
+          </div>
+        </div>
 
         {/* ── Code record ── */}
         <LockedPageSourceViewer
