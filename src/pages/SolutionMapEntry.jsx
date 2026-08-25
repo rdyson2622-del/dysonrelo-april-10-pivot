@@ -68,25 +68,25 @@ function getFlowForPill(pill) {
 const PORTAL_COPY = {
   consumer: {
     eyebrow: 'The route before the agent',
-    title: 'Real Estate Solutions',
+    title: '"Real Time" Real Estate Solutions',
     titleAccent: '',
     subtitle: 'Tell us what needs fixing. We\'ll map the route — schools, escrow, movers, timing — before you talk to anyone. Then you choose your agent from 3–5 vetted options.',
   },
   agent: {
     eyebrow: 'The route before the referral',
-    title: 'Real Estate Solutions',
+    title: '"Real Time" Real Estate Solutions',
     titleAccent: '',
     subtitle: 'Got a client with a problem? We\'ll map the route before you refer them. Your client sees the Roadmap. You keep the relationship. Dyson manages the move.',
   },
   vendor: {
     eyebrow: 'The route before the pitch',
-    title: 'Real Estate Solutions',
+    title: '"Real Time" Real Estate Solutions',
     titleAccent: '',
     subtitle: 'Got a client who needs help? We\'ll map the route before you pitch your service. Lenders, title, movers — we connect you when the client is ready.',
   },
   admin: {
     eyebrow: 'Your front door',
-    title: 'Real Estate Solutions',
+    title: '"Real Time" Real Estate Solutions',
     titleAccent: '',
     subtitle: '',
   },
