@@ -19,7 +19,15 @@ export default function PortalIntelligenceRail() {
   const location = useLocation();
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div
+      className="fixed top-3 right-3 z-40 flex items-center gap-1.5 px-2 py-1.5 rounded-full"
+      style={{
+        background: 'rgba(10,10,10,0.85)',
+        border: `1px solid ${GOLD}`,
+        boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+        backdropFilter: 'blur(8px)',
+      }}
+    >
       {BOXES.map(({ label, path, icon: Icon }) => {
         const isActive = location.pathname.toLowerCase() === path.toLowerCase();
         return (
@@ -27,7 +35,7 @@ export default function PortalIntelligenceRail() {
             key={label}
             onClick={() => navigate(path)}
             title={label}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all hover:scale-105 active:scale-95"
             style={{
               background: isActive ? 'rgba(212,175,55,0.22)' : 'rgba(212,175,55,0.1)',
               border: `1px solid ${isActive ? GOLD : 'rgba(212,175,55,0.35)'}`,

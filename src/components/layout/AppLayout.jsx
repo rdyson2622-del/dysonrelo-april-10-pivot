@@ -65,12 +65,12 @@ export default function AppLayout() {
 
         <div className="flex-1" />
 
-        {/* ── PERSISTENT NEWS / RELOCATION / INTELLIGENCE RAIL — every logged-in page ── */}
-        <PortalIntelligenceRail />
-
         {/* ── ADMIN-ONLY COMMAND PILLS ── */}
         {isAdmin && <CommandPills />}
       </div>
+
+      {/* ── PERSISTENT NEWS / RELOCATION / INTELLIGENCE RAIL — floating top-right, every logged-in page ── */}
+      <PortalIntelligenceRail />
       {/* Content area — sidebar takes layout space on desktop */}
       <div className="flex flex-1 overflow-hidden relative">
         {/* Sidebar — permanent on desktop, takes layout space */}
