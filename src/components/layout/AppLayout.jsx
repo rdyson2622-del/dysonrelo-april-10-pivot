@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import FloatingCharlie from '../charlie/FloatingCharlie';
 import TalkToUsPill from '../portal/TalkToUsPill';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
@@ -35,13 +34,10 @@ export default function AppLayout() {
     return () => window.removeEventListener('dyson_role_change', onRoleChange);
   }, []);
 
-  // First rollout of the shared "Talk to us" pill — Client portal only.
-  // Other portals keep the FloatingCharlie bubble until this is rolled out further.
-  const isClientPortal = !isAdmin
-    && !['agent', 'vendor', 'referral_agent', 'hr'].includes(portalRole)
-    && location.pathname !== '/corporate-relo';
-  
-  // Don't show FloatingCharlie on pages that already have embedded chat
+  // "Talk to us" pill is now the universal floating widget — every portal,
+  // every page. Small, non-interrupting, bottom-center, with the Plan of
+  // Action roadmap strip stacked above it.
+  // Don't show it on pages that already have embedded chat
   const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news'].some(path => 
      location.pathname.startsWith(path)
    );
@@ -102,7 +98,7 @@ export default function AppLayout() {
       </div>
       <MobileBottomNav />
       <PageNumberBadge />
-      {!hideFloatingCharlie && (isClientPortal ? <TalkToUsPill /> : <FloatingCharlie />)}
+      {!hideFloatingCharlie && <TalkToUsPill />}
       <PWAInstallPrompt />
     </div>
   );
