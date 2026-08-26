@@ -252,6 +252,13 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
             </button>
           </div>
           <RequestRoadmapCard item={result} />
+          <p className="text-xs mt-3 leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+            {result.user_id
+              ? "You're logged in, so this is saved to your account — our team has been notified and will follow up there."
+              : result.email
+              ? `We've saved this under ${result.email} — our team has been notified and will follow up soon.`
+              : <>We don't have a way to reach you on this one — call us at (858) 353-1200 to talk it through, or send a new request with your email so we can follow up.</>}
+          </p>
         </div>
       )}
     </div>
