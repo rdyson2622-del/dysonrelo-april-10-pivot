@@ -57,7 +57,7 @@ export default function Transparency() {
         </div>
 
         {/* Charlie explainer — fixed, centered under the 4-box NEWS/RELOCATION/INTELLIGENCE/TRANSPARENCY rail */}
-        <div className="fixed z-30 flex justify-center" style={{ top: '132px', right: '12px', width: '386px' }}>
+        <div className="fixed z-30 flex justify-center" style={{ top: '152px', right: '12px', width: '386px' }}>
           <button
             type="button"
             onClick={() => content?.video_url && window.open(content.video_url, '_blank')}
@@ -79,7 +79,7 @@ export default function Transparency() {
         </div>
 
         {/* Visual sample roadmap — shows what "every milestone visible to everyone" looks like */}
-        <div className="rounded-xl p-6 mb-8 mt-10" style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(255,255,255,0.03)' }}>
+        <div className="rounded-xl p-6 mb-8 mt-24" style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(255,255,255,0.03)' }}>
           <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-4" style={{ color: GOLD }}>Sample Roadmap — Everyone Sees This</p>
           <FlowRoadmapLine
             stages={SAMPLE_STAGES}
