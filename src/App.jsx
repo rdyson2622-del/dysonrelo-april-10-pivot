@@ -160,6 +160,7 @@ import AdminAddSubscriber from './pages/AdminAddSubscriber';
 import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
 import AdminAgreementSubmissions from './pages/AdminAgreementSubmissions';
 import AgreementFillForm from './pages/AgreementFillForm';
+import AdminEntryPortal from './pages/AdminEntryPortal';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -358,6 +359,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/add-subscriber" element={<AdminAddSubscriber />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
         <Route path="/admin/agreement-submissions" element={<AdminAgreementSubmissions />} />
+        <Route path="/admin/entry-portal" element={<AdminEntryPortal />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

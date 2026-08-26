@@ -1,0 +1,47 @@
+{
+  "name": "EntryPortalContent",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "Coming Soon",
+      "description": "Large headline text overlaid on the studio hero for first-time, unsubscribed visitors."
+    },
+    "subheadline": {
+      "type": "string",
+      "description": "Optional smaller line shown under the headline."
+    },
+    "cta_label": {
+      "type": "string",
+      "description": "Optional call-to-action button label (e.g. 'Get Started'). Leave blank to hide the button."
+    },
+    "cta_url": {
+      "type": "string",
+      "description": "Where the CTA button links to (e.g. /subscribe)."
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this content is currently shown to visitors."
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
 import PortalAccessGuard from './PortalAccessGuard';
 import LayoutToggleButton from './LayoutToggleButton';
+import PortalIntelligenceRail from './PortalIntelligenceRail';
 import { useLayout } from '@/lib/LayoutContext';
 
 export default function AppLayout() {
@@ -63,6 +64,9 @@ export default function AppLayout() {
         </button>
 
         <div className="flex-1" />
+
+        {/* ── PERSISTENT NEWS / RELOCATION / INTELLIGENCE RAIL — every logged-in page ── */}
+        <PortalIntelligenceRail />
 
         {/* ── ADMIN-ONLY COMMAND PILLS ── */}
         {isAdmin && <CommandPills />}
