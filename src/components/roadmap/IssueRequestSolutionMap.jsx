@@ -87,7 +87,7 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
   };
 
   const needsContact = !user;
-  const canSubmit = text.trim() && (!needsContact || (contactName.trim() && contactEmail.trim()));
+  const canSubmit = text.trim();
 
   const handleSubmit = async () => {
     if (!canSubmit || submitting) return;
@@ -204,8 +204,8 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', minHeight: '190px' }}
           />
           {needsContact && (
-            <p className="text-[10px] mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              We ask for your name and email so we can follow up — skip this by logging in.
+            <p className="text-[10px] mt-1.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Sharing your name and email just helps us follow up with your roadmap — it's optional, and never required to send your message. Prefer to talk it through privately? Call us at (858) 353-1200.
             </p>
           )}
 
