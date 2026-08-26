@@ -46,12 +46,15 @@ export default function BroadcastShow() {
         />
       </div>
 
-      {/* Coming Soon banner — bottom 10% of the landing page */}
+      {/* Coming Soon — imposed directly over bottom 10% of the studio image */}
       <div
-        className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center"
-        style={{ height: '10%', background: '#faf7f0', borderTop: `2px solid ${GOLD}` }}
+        className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center pointer-events-none"
+        style={{ height: '10%' }}
       >
-        <span className="text-lg sm:text-2xl font-black tracking-[0.2em] uppercase" style={{ color: '#0a0a0a' }}>
+        <span
+          className="text-2xl sm:text-4xl font-black tracking-[0.25em] uppercase"
+          style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
+        >
           Coming Soon
         </span>
       </div>

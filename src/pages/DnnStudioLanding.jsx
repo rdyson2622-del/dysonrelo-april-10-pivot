@@ -130,10 +130,13 @@ export default function DnnStudioLanding() {
             className="w-full h-auto"
           />
           <div
-            className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center"
-            style={{ height: '10%', background: '#faf7f0', borderTop: `2px solid ${GOLD}` }}
+            className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center pointer-events-none"
+            style={{ height: '10%' }}
           >
-            <span className="text-sm sm:text-xl font-black tracking-[0.2em] uppercase" style={{ color: '#0a0a0a' }}>
+            <span
+              className="text-lg sm:text-2xl font-black tracking-[0.25em] uppercase"
+              style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
+            >
               Coming Soon
             </span>
           </div>
