@@ -129,6 +129,14 @@ export default function DnnStudioLanding() {
             alt="DNN Real Estate News Studio"
             className="w-full h-auto"
           />
+          <div
+            className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center"
+            style={{ height: '10%', background: '#faf7f0', borderTop: `2px solid ${GOLD}` }}
+          >
+            <span className="text-sm sm:text-xl font-black tracking-[0.2em] uppercase" style={{ color: '#0a0a0a' }}>
+              Coming Soon
+            </span>
+          </div>
         </div>
       </div>
     </div>
