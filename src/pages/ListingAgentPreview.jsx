@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Loader2, MapPin } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import AgentRoadmapSandbox from '@/components/guestpass/AgentRoadmapSandbox';
 import SoftGateModal from '@/components/guestpass/SoftGateModal';
 import AskCharliePill from '@/components/guestpass/AskCharliePill';
+import ListingDetailsCard from '@/components/guestpass/ListingDetailsCard';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -68,18 +69,16 @@ export default function ListingAgentPreview() {
           Your Agent Portal Preview
         </p>
         <h1 className="text-3xl font-serif text-white text-center mb-2">
-          Relocation Support Preview for {prospect.agent_name}
+          Congrats on the New Listing, {prospect.agent_name.split(' ')[0]}!
         </h1>
-        <p className="text-center text-white/60 mb-2 max-w-xl mx-auto">
-          We built this sandbox to show you how Dyson &amp; Dyson manages incoming luxury buyers for your listings
-          {prospect.referral_fee_offered ? <>, while protecting your <strong style={{ color: GOLD }}>{prospect.referral_fee_offered}</strong></> : ''}.
+        <p className="text-center text-white/60 mb-8 max-w-xl mx-auto">
+          Your local business is always 100% yours — we only step in on the out-of-area side, when a client is
+          relocating outside {prospect.city || 'your market'}. In those cases, we connect them with a vetted agent in
+          their new city{prospect.referral_fee_offered ? <> and protect your <strong style={{ color: GOLD }}>{prospect.referral_fee_offered}</strong></> : ''}, so
+          it's a win for your client and for you.
         </p>
-        {prospect.listing_address && (
-          <p className="text-center text-white/50 mb-8 flex items-center justify-center gap-1.5 text-sm">
-            <MapPin className="w-4 h-4" /> {prospect.listing_address}{prospect.city ? `, ${prospect.city}` : ''}
-            {prospect.listing_value ? ` · $${Number(prospect.listing_value).toLocaleString()}` : ''}
-          </p>
-        )}
+
+        <ListingDetailsCard prospect={prospect} />
 
         <AgentRoadmapSandbox city={prospect.city} onGate={() => setGateOpen(true)} />
 
@@ -88,7 +87,8 @@ export default function ListingAgentPreview() {
             <p className="text-sm text-white/80">Thanks — we've got that noted and will follow up with a call shortly.</p>
           ) : (
             <form onSubmit={handleSubmit}>
-              <p className="text-sm font-semibold text-white mb-2">Where is your client moving?</p>
+              <p className="text-sm font-semibold text-white mb-1">Only if your client is leaving the area — where are they headed?</p>
+              <p className="text-xs text-white/40 mb-2">If they're staying local, there's nothing to send — that business is all yours.</p>
               <input
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}

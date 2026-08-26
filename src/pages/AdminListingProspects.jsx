@@ -10,7 +10,7 @@ function makeToken() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
-const EMPTY = { agent_name: '', brokerage: '', city: '', listing_address: '', listing_value: '', referral_fee_offered: '30% referral fee' };
+const EMPTY = { agent_name: '', brokerage: '', city: '', listing_address: '', listing_value: '', photo_url: '', bedrooms: '', bathrooms: '', sqft: '', listing_description: '', referral_fee_offered: '30% referral fee' };
 
 /**
  * AdminListingProspects — quick-entry tool for the daily MLS calling list
@@ -34,6 +34,9 @@ export default function AdminListingProspects() {
     await base44.entities.ListingProspect.create({
       ...form,
       listing_value: form.listing_value ? Number(form.listing_value) : undefined,
+      bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
+      bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
+      sqft: form.sqft ? Number(form.sqft) : undefined,
       token: makeToken(),
     });
     setForm(EMPTY);
@@ -63,6 +66,11 @@ export default function AdminListingProspects() {
         <input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} placeholder="City" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <input value={form.listing_address} onChange={e => setForm(f => ({ ...f, listing_address: e.target.value }))} placeholder="Listing address" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <input value={form.listing_value} onChange={e => setForm(f => ({ ...f, listing_value: e.target.value }))} placeholder="Listing value ($)" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+        <input value={form.photo_url} onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))} placeholder="Listing photo URL" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+        <input value={form.bedrooms} onChange={e => setForm(f => ({ ...f, bedrooms: e.target.value }))} placeholder="Beds" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+        <input value={form.bathrooms} onChange={e => setForm(f => ({ ...f, bathrooms: e.target.value }))} placeholder="Baths" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+        <input value={form.sqft} onChange={e => setForm(f => ({ ...f, sqft: e.target.value }))} placeholder="Sq Ft" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
+        <input value={form.listing_description} onChange={e => setForm(f => ({ ...f, listing_description: e.target.value }))} placeholder="Listing highlights" className="col-span-2 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <input value={form.referral_fee_offered} onChange={e => setForm(f => ({ ...f, referral_fee_offered: e.target.value }))} placeholder="Referral fee terms" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
         <button type="submit" className="col-span-2 md:col-span-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold" style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
           <Plus className="w-4 h-4" /> Add &amp; Generate Link

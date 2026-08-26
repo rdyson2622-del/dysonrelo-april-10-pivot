@@ -26,13 +26,33 @@
       "type": "number",
       "description": "Listing price (target: $3.5M+)"
     },
+    "photo_url": {
+      "type": "string",
+      "description": "Photo of the listing, shown back to the agent on their preview page"
+    },
+    "bedrooms": {
+      "type": "number",
+      "description": "Bedrooms on the listing"
+    },
+    "bathrooms": {
+      "type": "number",
+      "description": "Bathrooms on the listing"
+    },
+    "sqft": {
+      "type": "number",
+      "description": "Square footage of the listing"
+    },
+    "listing_description": {
+      "type": "string",
+      "description": "Short description/highlights of the listing shown on the preview page"
+    },
     "referral_fee_offered": {
       "type": "string",
       "description": "Referral fee terms to mention to this agent (e.g. '30% referral fee')"
     },
     "client_destination": {
       "type": "string",
-      "description": "Where the agent's client is moving to/from \u2014 captured from the preview page or the follow-up call"
+      "description": "Where the agent's client is moving to/from (only relevant if they're leaving the area) \u2014 captured from the preview page or the follow-up call"
     },
     "status": {
       "type": "string",
