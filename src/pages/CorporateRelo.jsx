@@ -159,9 +159,16 @@ export default function CorporateRelo() {
         className="px-8 md:px-16 pt-16 pb-14"
         style={{ background: '#ede0cc', borderBottom: '1px solid rgba(212,175,55,0.12)' }}
       >
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start gap-8">
-          {intro && <SectionAvatar clip={intro} label="Intro · Charlie / Bob" />}
-          <div className={`flex-1 text-center ${intro ? 'md:text-left' : ''}`}>
+        {/* Intro avatar — fixed, centered just under the "Ask About Your Move"
+            pill (docked top-left of the page), a little lower than the pill
+            itself so it never crowds the headline text. */}
+        {intro && (
+          <div className="fixed z-40 hidden md:block" style={{ top: '160px', left: '351px', transform: 'translateX(-50%)' }}>
+            <SectionAvatar clip={intro} label="Intro · Charlie / Bob" />
+          </div>
+        )}
+        <div className="max-w-5xl mx-auto">
+          <div className="flex-1 text-center">
             <div
               className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
               style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}
