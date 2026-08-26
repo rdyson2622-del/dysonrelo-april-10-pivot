@@ -47,7 +47,7 @@ export default function AdminListingProspects() {
           <div key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-xl" style={{ background: '#161616', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div className="min-w-0">
               <p className="text-sm text-white font-semibold truncate">{p.agent_name} <span className="text-white/40">· {p.brokerage}</span></p>
-              <p className="text-xs text-white/50 truncate">{p.listing_address}{p.city ? `, ${p.city}` : ''} {p.listing_value ? `· $${Number(p.listing_value).toLocaleString()}` : ''}</p>
+              <p className="text-xs text-white truncate">{p.listing_address}{p.city ? `, ${p.city}` : ''} {p.listing_value ? `· $${Number(p.listing_value).toLocaleString()}` : ''}</p>
               <div className="flex items-center gap-3 mt-1">
                 {p.agent_phone && <a href={`tel:${p.agent_phone}`} className="flex items-center gap-1 text-xs" style={{ color: GOLD }}><Phone className="w-3 h-3" /> {p.agent_phone}</a>}
                 {p.agent_email && <a href={`mailto:${p.agent_email}`} className="flex items-center gap-1 text-xs" style={{ color: GOLD }}><Mail className="w-3 h-3" /> {p.agent_email}</a>}
@@ -61,7 +61,7 @@ export default function AdminListingProspects() {
             </div>
           </div>
         ))}
-        {prospects.length === 0 && <p className="text-sm text-white/40">No prospects added yet.</p>}
+        {prospects.length === 0 && <p className="text-sm text-white">No prospects added yet.</p>}
       </div>
     </div>
   );

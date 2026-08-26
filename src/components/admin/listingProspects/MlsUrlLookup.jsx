@@ -54,7 +54,7 @@ export default function MlsUrlLookup({ onImported }) {
       <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-2 flex items-center gap-2" style={{ color: GOLD }}>
         <Link2 className="w-3.5 h-3.5" /> Paste MLS Listing Link
       </p>
-      <p className="text-xs text-white/50 mb-2">We pull the listing details and the listing agent's name, phone &amp; email automatically — no typing required.</p>
+      <p className="text-xs text-white mb-2">We pull the listing details and the listing agent's name, phone &amp; email automatically — no typing required.</p>
       <div className="flex gap-2">
         <input
           value={url}

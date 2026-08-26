@@ -61,7 +61,7 @@ export default function BulkImportPanel({ onImported }) {
       <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-2 flex items-center gap-2" style={{ color: GOLD }}>
         <UploadCloud className="w-3.5 h-3.5" /> Bulk Import — Paste Today's List
       </p>
-      <p className="text-xs text-white/50 mb-2">One agent per line: Name, Brokerage, City, Listing Address, Listing Value, Referral Fee</p>
+      <p className="text-xs text-white mb-2">One agent per line: Name, Brokerage, City, Listing Address, Listing Value, Referral Fee</p>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
