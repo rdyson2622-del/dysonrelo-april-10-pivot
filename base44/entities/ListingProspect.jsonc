@@ -30,6 +30,14 @@
       "type": "string",
       "description": "Photo of the listing, shown back to the agent on their preview page"
     },
+    "agent_phone": {
+      "type": "string",
+      "description": "Listing agent's phone number, for admin outreach (call/text)"
+    },
+    "agent_email": {
+      "type": "string",
+      "description": "Listing agent's email, for admin outreach"
+    },
     "bedrooms": {
       "type": "number",
       "description": "Bedrooms on the listing"

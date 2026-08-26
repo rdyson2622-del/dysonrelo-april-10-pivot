@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Plus, Copy, Check, MapPin } from 'lucide-react';
+import { Copy, Check, MapPin, Phone, Mail } from 'lucide-react';
 import BulkImportPanel from '@/components/admin/listingProspects/BulkImportPanel';
+import MlsUrlLookup from '@/components/admin/listingProspects/MlsUrlLookup';
 
 const GOLD = '#D4AF37';
 
-function makeToken() {
-  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-}
-
-const EMPTY = { agent_name: '', brokerage: '', city: '', listing_address: '', listing_value: '', photo_url: '', bedrooms: '', bathrooms: '', sqft: '', listing_description: '', referral_fee_offered: '30% referral fee' };
-
 /**
- * AdminListingProspects — quick-entry tool for the daily MLS calling list
- * (~20/day). Each entry instantly generates a personalized preview link
- * (name, listing, brokerage, city pre-filled) to text/email or pull up live
- * on the call.
+ * AdminListingProspects — daily MLS calling list. Paste a single MLS
+ * listing URL and everything else (listing details + agent name/phone/
+ * email) is pulled automatically, generating a personalized preview link.
  */
 export default function AdminListingProspects() {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState(EMPTY);
   const [copiedId, setCopiedId] = useState(null);
 
   const { data: prospects = [] } = useQuery({
@@ -28,20 +21,7 @@ export default function AdminListingProspects() {
     queryFn: () => base44.entities.ListingProspect.list('-created_date', 100),
   });
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    if (!form.agent_name.trim()) return;
-    await base44.entities.ListingProspect.create({
-      ...form,
-      listing_value: form.listing_value ? Number(form.listing_value) : undefined,
-      bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
-      bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
-      sqft: form.sqft ? Number(form.sqft) : undefined,
-      token: makeToken(),
-    });
-    setForm(EMPTY);
-    queryClient.invalidateQueries({ queryKey: ['listingProspects'] });
-  };
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ['listingProspects'] });
 
   const linkFor = (token) => `${window.location.origin}/agent-preview/${token}`;
 
@@ -58,24 +38,9 @@ export default function AdminListingProspects() {
       </p>
       <h1 className="text-2xl font-serif text-white mb-4">MLS Listing Agent Outreach</h1>
 
-      <BulkImportPanel onImported={() => queryClient.invalidateQueries({ queryKey: ['listingProspects'] })} />
+      <MlsUrlLookup onImported={refresh} />
 
-      <form onSubmit={handleAdd} className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-2xl mb-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}30` }}>
-        <input value={form.agent_name} onChange={e => setForm(f => ({ ...f, agent_name: e.target.value }))} placeholder="Agent name*" className="col-span-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.brokerage} onChange={e => setForm(f => ({ ...f, brokerage: e.target.value }))} placeholder="Brokerage" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} placeholder="City" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.listing_address} onChange={e => setForm(f => ({ ...f, listing_address: e.target.value }))} placeholder="Listing address" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.listing_value} onChange={e => setForm(f => ({ ...f, listing_value: e.target.value }))} placeholder="Listing value ($)" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.photo_url} onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))} placeholder="Listing photo URL" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.bedrooms} onChange={e => setForm(f => ({ ...f, bedrooms: e.target.value }))} placeholder="Beds" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.bathrooms} onChange={e => setForm(f => ({ ...f, bathrooms: e.target.value }))} placeholder="Baths" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.sqft} onChange={e => setForm(f => ({ ...f, sqft: e.target.value }))} placeholder="Sq Ft" type="number" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.listing_description} onChange={e => setForm(f => ({ ...f, listing_description: e.target.value }))} placeholder="Listing highlights" className="col-span-2 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <input value={form.referral_fee_offered} onChange={e => setForm(f => ({ ...f, referral_fee_offered: e.target.value }))} placeholder="Referral fee terms" className="bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
-        <button type="submit" className="col-span-2 md:col-span-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold" style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-          <Plus className="w-4 h-4" /> Add &amp; Generate Link
-        </button>
-      </form>
+      <BulkImportPanel onImported={refresh} />
 
       <div className="space-y-2">
         {prospects.map(p => (
@@ -83,6 +48,10 @@ export default function AdminListingProspects() {
             <div className="min-w-0">
               <p className="text-sm text-white font-semibold truncate">{p.agent_name} <span className="text-white/40">· {p.brokerage}</span></p>
               <p className="text-xs text-white/50 truncate">{p.listing_address}{p.city ? `, ${p.city}` : ''} {p.listing_value ? `· $${Number(p.listing_value).toLocaleString()}` : ''}</p>
+              <div className="flex items-center gap-3 mt-1">
+                {p.agent_phone && <a href={`tel:${p.agent_phone}`} className="flex items-center gap-1 text-xs" style={{ color: GOLD }}><Phone className="w-3 h-3" /> {p.agent_phone}</a>}
+                {p.agent_email && <a href={`mailto:${p.agent_email}`} className="flex items-center gap-1 text-xs" style={{ color: GOLD }}><Mail className="w-3 h-3" /> {p.agent_email}</a>}
+              </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full" style={{ color: GOLD, border: `1px solid ${GOLD}40` }}>{p.status}</span>
