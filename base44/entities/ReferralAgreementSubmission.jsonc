@@ -1,0 +1,144 @@
+{
+  "name": "ReferralAgreementSubmission",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "Unique token used in the public fill-out link"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "corporate_sponsor": {
+      "type": "string"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "origin_market": {
+      "type": "string"
+    },
+    "destination_market": {
+      "type": "string"
+    },
+    "referral_fee_pct": {
+      "type": "number",
+      "default": 25
+    },
+    "relocation_fee_pct": {
+      "type": "number",
+      "default": 25
+    },
+    "special_commitments": {
+      "type": "string"
+    },
+    "admin_email": {
+      "type": "string",
+      "description": "Email of the admin who created this submission, notified on completion"
+    },
+    "referring_broker_name": {
+      "type": "string"
+    },
+    "referring_broker_license": {
+      "type": "string"
+    },
+    "referring_agent_name": {
+      "type": "string"
+    },
+    "referring_agent_license": {
+      "type": "string"
+    },
+    "referring_company": {
+      "type": "string"
+    },
+    "referring_email": {
+      "type": "string"
+    },
+    "referring_phone": {
+      "type": "string"
+    },
+    "referring_signature_name": {
+      "type": "string"
+    },
+    "referring_signed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "referring_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "sent_referring_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sent_referring_email": {
+      "type": "string"
+    },
+    "receiving_broker_name": {
+      "type": "string"
+    },
+    "receiving_broker_license": {
+      "type": "string"
+    },
+    "receiving_agent_name": {
+      "type": "string"
+    },
+    "receiving_agent_license": {
+      "type": "string"
+    },
+    "receiving_company": {
+      "type": "string"
+    },
+    "receiving_email": {
+      "type": "string"
+    },
+    "receiving_phone": {
+      "type": "string"
+    },
+    "receiving_signature_name": {
+      "type": "string"
+    },
+    "receiving_signed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "receiving_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "sent_receiving_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sent_receiving_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "token"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
