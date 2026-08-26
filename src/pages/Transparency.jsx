@@ -4,7 +4,7 @@ import { ShieldCheck, Play } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
-const CHARLIE_HEADSHOT = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a0f097ef2_generated_image.png';
+const CHARLIE_HEADSHOT = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/94a10d6e0_Screenshot2026-08-26at71908AM.png';
 
 // Dummy sample roadmap — visually shows what "every milestone visible to everyone" means.
 const SAMPLE_STAGES = [
@@ -44,7 +44,7 @@ export default function Transparency() {
   return (
     <div className="min-h-screen px-6 py-16" style={{ background: '#0A0B0F' }}>
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-start justify-between gap-6 mb-4">
+        <div className="flex items-start justify-between gap-16 mb-4">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
