@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Sparkles, MapPin, TrendingUp } from 'lucide-react';
+import { Loader2, MapPin } from 'lucide-react';
+import AgentRoadmapSandbox from '@/components/guestpass/AgentRoadmapSandbox';
+import SoftGateModal from '@/components/guestpass/SoftGateModal';
+import AskCharliePill from '@/components/guestpass/AskCharliePill';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -20,6 +23,7 @@ export default function ListingAgentPreview() {
   const [destination, setDestination] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
 
   useEffect(() => {
     base44.functions.invoke('listingProspectPreview', { action: 'get', token })
@@ -64,36 +68,20 @@ export default function ListingAgentPreview() {
           Your Agent Portal Preview
         </p>
         <h1 className="text-3xl font-serif text-white text-center mb-2">
-          Hi {prospect.agent_name.split(' ')[0]}, congrats on the new listing
+          Relocation Support Preview for {prospect.agent_name}
         </h1>
+        <p className="text-center text-white/60 mb-2 max-w-xl mx-auto">
+          We built this sandbox to show you how Dyson &amp; Dyson manages incoming luxury buyers for your listings
+          {prospect.referral_fee_offered ? <>, while protecting your <strong style={{ color: GOLD }}>{prospect.referral_fee_offered}</strong></> : ''}.
+        </p>
         {prospect.listing_address && (
-          <p className="text-center text-white/60 mb-8 flex items-center justify-center gap-1.5">
+          <p className="text-center text-white/50 mb-8 flex items-center justify-center gap-1.5 text-sm">
             <MapPin className="w-4 h-4" /> {prospect.listing_address}{prospect.city ? `, ${prospect.city}` : ''}
             {prospect.listing_value ? ` · $${Number(prospect.listing_value).toLocaleString()}` : ''}
           </p>
         )}
 
-        <div className="rounded-2xl p-6 mb-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
-          <p className="text-sm text-white/80 leading-relaxed mb-4">
-            We manage the entire relocation for buyers moving in or out of {prospect.city || 'your market'} —
-            keeping you, and your commission timeline, completely in the loop while we handle the logistics.
-            Here's a preview of what your Agent Portal tracks the moment you're on board:
-          </p>
-          <div className="space-y-2">
-            {['Live relocation roadmap for your client', 'Milestone alerts (escrow, movers, closing)', 'Direct messaging with our team, no back-and-forth calls'].map((line, i) => (
-              <div key={i} className="flex items-start gap-2 text-sm text-white">
-                <Sparkles className="w-4 h-4 shrink-0 mt-0.5" style={{ color: GOLD }} /> {line}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {prospect.referral_fee_offered && (
-          <div className="rounded-2xl p-4 mb-6 flex items-center gap-3" style={{ background: 'rgba(212,175,55,0.1)', border: `1px solid ${GOLD}` }}>
-            <TrendingUp className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
-            <p className="text-sm text-white">As a preferred partner on this deal, we're offering a <strong style={{ color: GOLD }}>{prospect.referral_fee_offered}</strong>.</p>
-          </div>
-        )}
+        <AgentRoadmapSandbox city={prospect.city} onGate={() => setGateOpen(true)} />
 
         <div className="rounded-2xl p-6" style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)' }}>
           {submitted ? (
@@ -120,6 +108,9 @@ export default function ListingAgentPreview() {
           )}
         </div>
       </div>
+
+      <SoftGateModal open={gateOpen} onClose={() => setGateOpen(false)} claimUrl="/agent-subscribe" />
+      <AskCharliePill agentName={prospect.agent_name} city={prospect.city} />
     </div>
   );
 }
