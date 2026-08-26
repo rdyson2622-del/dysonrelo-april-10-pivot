@@ -7,6 +7,7 @@ import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText,
   Brain, AlertTriangle, Sparkles, TrendingUp
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import AdminSearchPill from '@/components/admin/AdminSearchPill';
 
 const GOLD = '#D4AF37';
 
@@ -118,6 +119,19 @@ function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
 }
 
 export default function Admin() {
+  const [search, setSearch] = React.useState('');
+  const q = search.trim().toLowerCase();
+  const filteredSections = q
+    ? adminSections
+        .map(section => ({
+          ...section,
+          modules: section.modules.filter(m =>
+            m.name.toLowerCase().includes(q) || m.description.toLowerCase().includes(q)
+          ),
+        }))
+        .filter(section => section.modules.length > 0)
+    : adminSections;
+
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-6xl mx-auto">
@@ -128,6 +142,7 @@ export default function Admin() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
+          <AdminSearchPill value={search} onChange={setSearch} />
           <Link
             to="/admin/workflows"
             className="inline-flex items-center gap-2 mt-4 text-sm px-4 py-2 rounded-xl"
@@ -263,7 +278,7 @@ export default function Admin() {
         </motion.div>
 
         {/* Admin Sections */}
-        {adminSections.map((section, sectionIdx) => (
+        {filteredSections.map((section, sectionIdx) => (
           <motion.div
             key={section.heading}
             initial={{ opacity: 0, y: 20 }}
