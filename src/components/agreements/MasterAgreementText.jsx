@@ -9,18 +9,22 @@ const S = ({ n, title, children }) => (
   </section>
 );
 
-const Blank = ({ w = 'w-56' }) => <span className={`inline-block border-b border-black ${w} align-bottom`}>&nbsp;</span>;
+const Blank = ({ w = 'w-56', value }) => (
+  value
+    ? <span className={`inline-block border-b border-black ${w} align-bottom font-semibold`}>{value}</span>
+    : <span className={`inline-block border-b border-black ${w} align-bottom`}>&nbsp;</span>
+);
 
-const SigBlock = ({ role }) => (
+const SigBlock = ({ role, data }) => (
   <div className="mb-6 break-inside-avoid">
     <p className="font-bold text-xs uppercase tracking-wide mb-3">{role}</p>
     <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-xs">
-      <p>Signature: <Blank /></p>
-      <p>Date: <Blank w="w-32" /></p>
-      <p>Printed Name: <Blank /></p>
-      <p>License No.: <Blank w="w-40" /></p>
-      <p>Brokerage / Company: <Blank /></p>
-      <p>Email / Phone: <Blank w="w-40" /></p>
+      <p>Signature: {data?.signature ? <span className="font-semibold italic">{data.signature}</span> : <Blank />}</p>
+      <p>Date: <Blank w="w-32" value={data?.date} /></p>
+      <p>Printed Name: <Blank value={data?.name} /></p>
+      <p>License No.: <Blank w="w-40" value={data?.license} /></p>
+      <p>Brokerage / Company: <Blank value={data?.company} /></p>
+      <p>Email / Phone: <Blank w="w-40" value={data?.contact} /></p>
     </div>
   </div>
 );
@@ -29,7 +33,7 @@ const SigBlock = ({ role }) => (
  * MasterAgreementText — full text of the D&D Master Referral &
  * Relocation Management Agreement (print-ready).
  */
-export default function MasterAgreementText() {
+export default function MasterAgreementText({ data = {} }) {
   return (
     <div className="bg-white text-black px-10 py-12 max-w-4xl mx-auto" style={{ fontFamily: 'Georgia, serif' }}>
 
@@ -46,12 +50,12 @@ export default function MasterAgreementText() {
       <section className="mb-6 text-[13px] leading-relaxed space-y-2">
         <p>
           This Master Referral &amp; Relocation Management Agreement (the &ldquo;Agreement&rdquo;) is entered into as of
-          <Blank w="w-40" /> (the &ldquo;Effective Date&rdquo;), by and among:
+          <Blank w="w-40" value={data.effective_date} /> (the &ldquo;Effective Date&rdquo;), by and among:
         </p>
         <p><strong>(a) The Dyson &amp; Dyson Companies, Inc.</strong>, a licensed California real estate broker, DRE #02303118 (&ldquo;D&amp;D&rdquo; or the &ldquo;Relocation Management Broker&rdquo;);</p>
-        <p><strong>(b) Referring Broker:</strong> <Blank />, License No. <Blank w="w-32" />, and <strong>Referring Agent:</strong> <Blank />, License No. <Blank w="w-32" /> (collectively, the &ldquo;Referring Party&rdquo;); and</p>
-        <p><strong>(c) Receiving Broker:</strong> <Blank />, License No. <Blank w="w-32" />, and <strong>Receiving Agent:</strong> <Blank />, License No. <Blank w="w-32" /> (collectively, the &ldquo;Receiving Party&rdquo;).</p>
-        <p><strong>Regarding the Client:</strong> <Blank /> (the &ldquo;Client&rdquo;), and where applicable the Client&rsquo;s employer or its Human Resources department (the &ldquo;Corporate Sponsor&rdquo;).</p>
+        <p><strong>(b) Referring Broker:</strong> <Blank value={data.referring_broker_name} />, License No. <Blank w="w-32" value={data.referring_broker_license} />, and <strong>Referring Agent:</strong> <Blank value={data.referring_agent_name} />, License No. <Blank w="w-32" value={data.referring_agent_license} /> (collectively, the &ldquo;Referring Party&rdquo;); and</p>
+        <p><strong>(c) Receiving Broker:</strong> <Blank value={data.receiving_broker_name} />, License No. <Blank w="w-32" value={data.receiving_broker_license} />, and <strong>Receiving Agent:</strong> <Blank value={data.receiving_agent_name} />, License No. <Blank w="w-32" value={data.receiving_agent_license} /> (collectively, the &ldquo;Receiving Party&rdquo;).</p>
+        <p><strong>Regarding the Client:</strong> <Blank value={data.client_name} /> (the &ldquo;Client&rdquo;), and where applicable the Client&rsquo;s employer or its Human Resources department (the &ldquo;Corporate Sponsor&rdquo;).</p>
       </section>
 
       {/* Recitals */}
@@ -176,26 +180,51 @@ export default function MasterAgreementText() {
         <h3 className="font-bold text-sm tracking-wide uppercase mb-4">Signatures</h3>
         <p className="text-[13px] mb-6">By signing below, each party acknowledges having read, understood, and agreed to all terms of this Agreement, including the separate and independent nature of the Referral Fee and the Relocation Management Fee.</p>
         <SigBlock role="The Dyson & Dyson Companies, Inc. — Broker (DRE #02303118)" />
-        <SigBlock role="Referring Broker" />
-        <SigBlock role="Referring Agent" />
-        <SigBlock role="Receiving Broker" />
-        <SigBlock role="Receiving Agent" />
+        <SigBlock role="Referring Broker" data={{
+          name: data.referring_broker_name, license: data.referring_broker_license, company: data.referring_company,
+          contact: [data.referring_email, data.referring_phone].filter(Boolean).join(' / '),
+          signature: data.referring_signature_name,
+          date: data.referring_signed_at ? new Date(data.referring_signed_at).toLocaleDateString() : ''
+        }} />
+        <SigBlock role="Referring Agent" data={{
+          name: data.referring_agent_name, license: data.referring_agent_license, company: data.referring_company,
+          contact: [data.referring_email, data.referring_phone].filter(Boolean).join(' / '),
+          signature: data.referring_signature_name,
+          date: data.referring_signed_at ? new Date(data.referring_signed_at).toLocaleDateString() : ''
+        }} />
+        <SigBlock role="Receiving Broker" data={{
+          name: data.receiving_broker_name, license: data.receiving_broker_license, company: data.receiving_company,
+          contact: [data.receiving_email, data.receiving_phone].filter(Boolean).join(' / '),
+          signature: data.receiving_signature_name,
+          date: data.receiving_signed_at ? new Date(data.receiving_signed_at).toLocaleDateString() : ''
+        }} />
+        <SigBlock role="Receiving Agent" data={{
+          name: data.receiving_agent_name, license: data.receiving_agent_license, company: data.receiving_company,
+          contact: [data.receiving_email, data.receiving_phone].filter(Boolean).join(' / '),
+          signature: data.receiving_signature_name,
+          date: data.receiving_signed_at ? new Date(data.receiving_signed_at).toLocaleDateString() : ''
+        }} />
       </section>
 
       {/* Exhibit A */}
       <section className="mt-10 break-inside-avoid">
         <h3 className="font-bold text-sm tracking-wide uppercase mb-3">Exhibit A — Transaction &amp; Fee Worksheet</h3>
         <div className="text-[13px] leading-loose space-y-2">
-          <p>Client Name: <Blank /></p>
-          <p>Corporate Sponsor (if any): <Blank /></p>
-          <p>Origin Market: <Blank w="w-44" /> &nbsp;&nbsp; Destination Market: <Blank w="w-44" /></p>
+          <p>Client Name: <Blank value={data.client_name} /></p>
+          <p>Corporate Sponsor (if any): <Blank value={data.corporate_sponsor} /></p>
+          <p>Origin Market: <Blank w="w-44" value={data.origin_market} /> &nbsp;&nbsp; Destination Market: <Blank w="w-44" value={data.destination_market} /></p>
           <p>Covered Transaction(s): ☐ Sale of existing home &nbsp; ☐ Purchase of new home &nbsp; ☐ Both</p>
-          <p>Referral Fee: <Blank w="w-16" />% of Gross Commission (default 25%)</p>
-          <p>Relocation Management Fee: <Blank w="w-16" />% of Gross Commission (default 25%)</p>
+          <p>Referral Fee: <Blank w="w-16" value={data.referral_fee_pct ? String(data.referral_fee_pct) : ''} />% of Gross Commission (default 25%)</p>
+          <p>Relocation Management Fee: <Blank w="w-16" value={data.relocation_fee_pct ? String(data.relocation_fee_pct) : ''} />% of Gross Commission (default 25%)</p>
           <p>Special Commitments of Receiving Party made at signing:</p>
-          <p><Blank w="w-full" /></p>
-          <p><Blank w="w-full" /></p>
-          <p><Blank w="w-full" /></p>
+          {data.special_commitments
+            ? <p className="whitespace-pre-wrap">{data.special_commitments}</p>
+            : (<>
+                <p><Blank w="w-full" /></p>
+                <p><Blank w="w-full" /></p>
+                <p><Blank w="w-full" /></p>
+              </>)
+          }
         </div>
       </section>
     </div>
