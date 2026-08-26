@@ -15,6 +15,7 @@ import { PAGE_REGISTRY } from '@/lib/pageRegistry';
 import AdminCommsBadge from '@/components/admin/AdminCommsBadge';
 import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
 import AdminDispatchWidget from '@/components/admin/AdminDispatchWidget';
+import AdminSidebarSearch, { buildSearchIndex } from '@/components/admin/AdminSidebarSearch';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
@@ -334,6 +335,9 @@ export default function AdminSidebar() {
           <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
         </div>
       </div>
+
+      {/* Sidebar Search — searches every link in every nav section below */}
+      <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
       {/* Grok Specialist Command Center — top of sidebar */}
       <div className="px-3 pt-3 pb-2 shrink-0">
