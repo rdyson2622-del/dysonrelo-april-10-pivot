@@ -27,6 +27,7 @@ const NAV_SECTIONS = [
     children: [
       { isCommsBadge: true },
       { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
+      { label: '🧭 Role Selector Page', path: '/portal?choose=1', icon: Map, highlight: true },
       { label: '🏢 Brokerage Portal (Wisdom)', path: '/brokerage', icon: Building2, highlight: true },
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
       { label: '🚪 6th Portal: Entry Page (First-Time Visitor)', path: '/admin/entry-portal', icon: DoorOpen, highlight: true },
