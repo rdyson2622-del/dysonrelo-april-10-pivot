@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
-import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
 
 const GOLD = '#D4AF37';
+
+// ══════════════════════════════════════════════════════════════════════════
+// ⚠️ CANONICAL DNN STUDIO BACKGROUND — DO NOT REPLACE, DO NOT REGENERATE ⚠️
+// Verified real studio still: Charlie seated at desk with laptop + "DNN Real
+// Estate News" US-map backdrop, Bob standing to the right in frame, native
+// 16:9. Same URL used on Admin.jsx and BroadcastShow.jsx.
+// ══════════════════════════════════════════════════════════════════════════
+const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 
 // ══════════════════════════════════════════════════════════════════════════
 // ⚠️ CANONICAL DNN STUDIO BACKGROUND — DO NOT REPLACE, DO NOT REGENERATE ⚠️
@@ -112,15 +118,17 @@ export default function DnnStudioLanding() {
         ))}
       </div>
 
-      {/* ── Active Video Test Panel — the ONLY studio visual on this page.
-          No separate background still behind it — that was the box-in-a-box bug. ── */}
-      <div className="relative z-10 max-w-3xl mx-auto px-6 pb-10">
-        <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
-          Active Video Test Page — Review &amp; Suggest Changes Here
-        </p>
-        <CharlieDeskTestRender />
-        <div className="mt-6">
-          <BobStandingTestRender />
+      {/* ── Locked DNN Studio hero — the ONLY studio visual on this page ── */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10">
+        <div className="relative rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
+          <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
+          </span>
+          <img
+            src={STUDIO_STILL}
+            alt="DNN Real Estate News Studio"
+            className="w-full h-auto"
+          />
         </div>
       </div>
     </div>
