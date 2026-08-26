@@ -45,7 +45,15 @@ export default function AdminSidebarSearch({ items }) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return uniqueItems.filter(i => i.label.toLowerCase().includes(q)).slice(0, 8);
+    // Matches either way: typing a short keyword finds labels containing it,
+    // and pasting a long instruction/paragraph that mentions a page's label
+    // still finds that page (the query contains the label).
+    return uniqueItems
+      .filter(i => {
+        const label = i.label.toLowerCase();
+        return label.includes(q) || (label.length > 3 && q.includes(label));
+      })
+      .slice(0, 8);
   }, [query, uniqueItems]);
 
   const goTo = (path) => {
