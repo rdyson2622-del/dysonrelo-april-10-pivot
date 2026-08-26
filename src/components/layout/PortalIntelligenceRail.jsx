@@ -20,8 +20,11 @@ export default function PortalIntelligenceRail() {
 
   return (
     <div
-      className="fixed top-3 right-3 z-40 flex items-center gap-1.5 px-2 py-1.5 rounded-full"
+      className="fixed z-40 flex items-center justify-end gap-1.5 px-2 py-1.5 rounded-full"
       style={{
+        top: '60px',
+        right: '12px',
+        width: '15%',
         background: 'rgba(10,10,10,0.85)',
         border: `1px solid ${GOLD}`,
         boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
