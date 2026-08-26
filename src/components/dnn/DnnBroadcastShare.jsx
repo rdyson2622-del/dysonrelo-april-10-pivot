@@ -25,7 +25,7 @@ export default function DnnBroadcastShare({ broadcast, url, isAdmin, onClose }) 
   const title = broadcast.headlines?.[0] || broadcast.show_name || 'DNN Broadcast';
   const showName = broadcast.show_name || 'DNN Broadcast';
 
-  const shareText = `📡 ${showName} — DNN Intelligence Bureau\n\n${title}\n\nWatch the full studio broadcast:\n${url}\n\n— Dyson & Dyson Real Estate Concierge`;
+  const shareText = `📡 ${showName} — DNN Intelligence Bureau\n\n${title}\n\nWatch the full studio broadcast:\n${url}\n\n— The Dyson & Dyson Companies, Inc · CA DRE #02303118`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(url);

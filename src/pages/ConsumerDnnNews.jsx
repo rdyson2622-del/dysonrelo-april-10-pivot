@@ -704,7 +704,7 @@ export default function ConsumerDnnNews() {
             <div className="h-px w-16" style={{ background: 'rgba(212,175,55,0.2)' }} />
           </div>
           <p className="text-xs tracking-widest uppercase" style={{ color: '#1a1a1a' }}>DNN Intelligence Bureau · AI-generated · For informational purposes only</p>
-          <p className="text-xs mt-1" style={{ color: '#1a1a1a' }}>Dyson & Dyson Real Estate Concierge · CA DRE #02303118</p>
+          <p className="text-xs mt-1" style={{ color: '#1a1a1a' }}>The Dyson & Dyson Companies, Inc · CA DRE #02303118</p>
         </div>
       </div>
 

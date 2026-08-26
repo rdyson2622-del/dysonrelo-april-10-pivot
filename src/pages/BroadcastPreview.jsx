@@ -130,7 +130,7 @@ export default function BroadcastPreview() {
           <span className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Free · Daily · Subscribe Now</span>
         </div>
         <p className="text-[10px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          Dyson &amp; Dyson Real Estate · CA DRE #02303118
+          The Dyson &amp; Dyson Companies, Inc · CA DRE #02303118
         </p>
       </div>
     </div>

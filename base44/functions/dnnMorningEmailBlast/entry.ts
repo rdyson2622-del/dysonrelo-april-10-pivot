@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
       </p>
     </div>
     <div class="footer">
-      <p>Dyson &amp; Dyson Real Estate Concierge · CA DRE #02303118</p>
+      <p>The Dyson &amp; Dyson Companies, Inc · CA DRE #02303118</p>
       <p>You're receiving this because you subscribed to DNN Intelligence.</p>
       <p><a href="mailto:info@dysonanddyson.com">Unsubscribe</a></p>
     </div>

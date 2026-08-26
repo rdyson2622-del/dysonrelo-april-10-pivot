@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       <a href="https://dysonrelo.com" style="background: linear-gradient(135deg, #e8c84a, #D4AF37); color: #000; font-weight: 900; font-size: 14px; padding: 14px 32px; text-decoration: none; border-radius: 8px; letter-spacing: 0.05em; font-family: Arial, sans-serif;">READ THE FULL BRIEF →</a>
     </div>
     <p style="color: #4b5563; font-size: 11px; text-align: center; font-family: Arial, sans-serif; border-top: 1px solid #1f2937; padding-top: 16px; margin: 0;">
-      DNN Intelligence Bureau · Dyson & Dyson Real Estate Concierge<br/>
+      DNN Intelligence Bureau · The Dyson & Dyson Companies, Inc · CA DRE #02303118<br/>
       You're receiving this because you're in our Power Base subscriber list.<br/>
       <a href="https://dysonrelo.com" style="color: #D4AF37;">Unsubscribe</a>
     </p>
