@@ -82,9 +82,10 @@ export default function TalkToUsPill() {
         )}
       </AnimatePresence>
 
-      {/* The pill itself — always there, bottom-center, small, its label
-          tailored to the portal the visitor is currently in. */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+      {/* The pill itself — docked upper-left, right where the drawer slides
+          out from, so it never fights with scrolling page copy. Its label
+          is tailored to the portal the visitor is currently in. */}
+      <div className="fixed top-20 left-6 z-50">
         <button
           onClick={() => setIsOpen(v => !v)}
           className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:scale-105 active:scale-95"
