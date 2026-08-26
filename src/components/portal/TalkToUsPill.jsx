@@ -55,12 +55,12 @@ export default function TalkToUsPill() {
               style={{ background: 'rgba(0,0,0,0.5)' }}
             />
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: '-100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.25 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[420px] max-w-[90vw] flex flex-col"
-              style={{ background: '#0d0d0d', borderLeft: `1px solid ${GOLD}55`, boxShadow: '-8px 0 30px rgba(0,0,0,0.5)' }}
+              className="fixed top-0 left-0 bottom-0 z-50 w-[420px] max-w-[90vw] flex flex-col"
+              style={{ background: '#0d0d0d', borderRight: `1px solid ${GOLD}55`, boxShadow: '8px 0 30px rgba(0,0,0,0.5)' }}
             >
               <div className="shrink-0 flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
                 <p className="text-xs font-black tracking-widest uppercase flex items-center gap-2" style={{ color: GOLD }}>
