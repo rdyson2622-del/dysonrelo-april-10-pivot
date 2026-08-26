@@ -47,6 +47,11 @@ Deno.serve(async (req) => {
       const content = data?.message_content || '(no message)';
       const type = data?.communication_type?.toUpperCase() || 'MSG';
       alertText = `🔔 DYSON RELO ALERT\nNew ${type} from: ${recipientName}\n"${content.slice(0, 120)}${content.length > 120 ? '...' : ''}"\n\nCheck the communication log now.`;
+    } else if (event?.entity_name === 'RealEstateRequest') {
+      const name = data?.full_name || data?.email || 'Someone';
+      const portal = data?.portal_role || data?.context || 'general';
+      const content = data?.request_text || '(no message)';
+      alertText = `🔔 DYSON RELO ALERT\nNew "Talk to us" request from: ${name} (${portal})\n"${content.slice(0, 120)}${content.length > 120 ? '...' : ''}"\n\nCheck admin now.`;
     } else {
       // Generic / manual call
       alertText = payload?.message || '🔔 New activity in Dyson Relo — check your admin panel.';

@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { waitUntil } from 'base44:runtime';
+
+const VALID_CONTEXTS = ['corporate_relo', 'general', 'client_portal', 'agent_portal', 'vendor_portal', 'brokerage_portal'];
+const VALID_PORTAL_ROLES = ['client', 'agent', 'referral_agent', 'vendor', 'hr', 'brokerage_admin', 'general'];
 
 /**
  * realEstateIssueRoadmap — a visitor (client or HR manager) describes a real
@@ -19,23 +23,35 @@ export default async function(req) {
 
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
-    const { request_text, full_name, email, context } = body || {};
+    const { request_text, full_name, email, context, portal_role, audience } = body || {};
 
     if (!request_text || !request_text.trim()) {
       return Response.json({ error: 'request_text is required' }, { status: 400 });
     }
 
+    const user = await base44.auth.me().catch(() => null);
     const startedAt = Date.now();
 
     const record = await base44.asServiceRole.entities.RealEstateRequest.create({
-      full_name: full_name || '',
-      email: email || '',
-      context: context === 'corporate_relo' ? 'corporate_relo' : 'general',
+      full_name: full_name || user?.full_name || '',
+      email: email || user?.email || '',
+      user_id: user?.id || '',
+      portal_role: VALID_PORTAL_ROLES.includes(portal_role) ? portal_role : 'general',
+      context: VALID_CONTEXTS.includes(context) ? context : 'general',
       request_text: request_text.trim(),
       status: 'processing',
     });
 
-    const prompt = `You are a senior real estate relocation expert at Dyson & Dyson. Someone just described the following real estate issue or request. Give them an immediate, confident, practical response and a short roadmap of the steps we will take to handle it.
+    // Notify admins immediately by text — don't wait on the LLM roadmap.
+    waitUntil(
+      base44.asServiceRole.functions.invoke('notifyAdmin', {
+        event: { entity_name: 'RealEstateRequest' },
+        data: record,
+      }).catch(() => {})
+    );
+
+    const audienceLine = audience ? `They are ${audience}.` : '';
+    const prompt = `You are a senior real estate relocation expert at Dyson & Dyson. ${audienceLine} Someone just described the following real estate issue or request. Give them an immediate, confident, practical response and a short roadmap of the steps we will take to handle it.
 
 REQUEST: "${request_text.trim()}"
 

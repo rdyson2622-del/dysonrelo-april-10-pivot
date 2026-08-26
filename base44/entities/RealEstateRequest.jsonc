@@ -10,11 +10,33 @@
       "type": "string",
       "description": "Email of the person submitting the request (optional)"
     },
+    "user_id": {
+      "type": "string",
+      "description": "Logged-in user's ID, if any \u2014 ties this request to their personal communication history."
+    },
+    "portal_role": {
+      "type": "string",
+      "enum": [
+        "client",
+        "agent",
+        "referral_agent",
+        "vendor",
+        "hr",
+        "brokerage_admin",
+        "general"
+      ],
+      "default": "general",
+      "description": "Which portal this request came from \u2014 tells the LLM who its audience is."
+    },
     "context": {
       "type": "string",
       "enum": [
         "corporate_relo",
-        "general"
+        "general",
+        "client_portal",
+        "agent_portal",
+        "vendor_portal",
+        "brokerage_portal"
       ],
       "default": "general",
       "description": "Where this request came from (e.g. the Corporate Relo / HR page)"
