@@ -184,6 +184,9 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
+      {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
+      <Route path="/agreement-fill" element={<AgreementFillForm />} />
+
       {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
           so the admin top command bar (access to every portal) shows automatically. */}
       <Route element={<AppLayout />}>
@@ -354,6 +357,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
         <Route path="/admin/add-subscriber" element={<AdminAddSubscriber />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
+        <Route path="/admin/agreement-submissions" element={<AdminAgreementSubmissions />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />
