@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { ShieldCheck, Play } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
@@ -61,15 +61,10 @@ export default function Transparency() {
           <button
             type="button"
             onClick={() => content?.video_url && window.open(content.video_url, '_blank')}
-            className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 transition-all hover:scale-105 active:scale-95"
+            className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95"
             aria-label="Watch Charlie's Transparency explainer"
           >
-            <span className="absolute inset-0 rounded-full overflow-hidden" style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
-              <img src={CHARLIE_HEADSHOT} alt="Charlie — Dyson AI Concierge" className="w-full h-full object-cover" />
-            </span>
-            <span className="absolute bottom-1 right-1 w-9 h-9 rounded-full flex items-center justify-center" style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
-              <Play className="w-4 h-4 ml-0.5" style={{ color: '#000' }} />
-            </span>
+            <img src={CHARLIE_HEADSHOT} alt="Charlie — Dyson AI Concierge" className="w-full h-full object-cover" />
             {!content?.video_url && (
               <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] text-white/50">
                 Video coming soon
