@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Plus, Copy, Check, MapPin } from 'lucide-react';
+import BulkImportPanel from '@/components/admin/listingProspects/BulkImportPanel';
 
 const GOLD = '#D4AF37';
 
@@ -53,6 +54,8 @@ export default function AdminListingProspects() {
         <MapPin className="w-3.5 h-3.5" /> MLS Listing Agent Outreach
       </p>
       <h1 className="text-2xl font-serif text-white mb-4">Daily prospect list &amp; preview links</h1>
+
+      <BulkImportPanel onImported={() => queryClient.invalidateQueries({ queryKey: ['listingProspects'] })} />
 
       <form onSubmit={handleAdd} className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-2xl mb-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}30` }}>
         <input value={form.agent_name} onChange={e => setForm(f => ({ ...f, agent_name: e.target.value }))} placeholder="Agent name*" className="col-span-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }} />
