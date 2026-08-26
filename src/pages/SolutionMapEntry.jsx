@@ -140,7 +140,7 @@ export default function SolutionMapEntry() {
   return (
     <div className="min-h-screen bg-dyson-black text-white flex flex-col">
       {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+      <header className="flex items-center justify-between px-6 py-4 pt-28 border-b border-white/5">
         <div />
         <div className="flex items-center gap-3">
           {user ? (
