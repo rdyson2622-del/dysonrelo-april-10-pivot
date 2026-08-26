@@ -1,0 +1,90 @@
+{
+  "name": "ListingProspect",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "Unique token used in the public preview link (e.g. /agent-preview/:token)"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Listing agent's name"
+    },
+    "brokerage": {
+      "type": "string",
+      "description": "Agent's brokerage"
+    },
+    "city": {
+      "type": "string",
+      "description": "City of the listing"
+    },
+    "listing_address": {
+      "type": "string",
+      "description": "Street address of the new MLS listing"
+    },
+    "listing_value": {
+      "type": "number",
+      "description": "Listing price (target: $3.5M+)"
+    },
+    "referral_fee_offered": {
+      "type": "string",
+      "description": "Referral fee terms to mention to this agent (e.g. '30% referral fee')"
+    },
+    "client_destination": {
+      "type": "string",
+      "description": "Where the agent's client is moving to/from \u2014 captured from the preview page or the follow-up call"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "contacted",
+        "previewed",
+        "responded",
+        "converted",
+        "declined"
+      ],
+      "default": "queued",
+      "description": "Outreach lifecycle for this prospect"
+    },
+    "call_notes": {
+      "type": "string",
+      "description": "Internal notes from the follow-up call"
+    },
+    "contacted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "previewed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the agent first opened their preview page"
+    }
+  },
+  "required": [
+    "token",
+    "agent_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

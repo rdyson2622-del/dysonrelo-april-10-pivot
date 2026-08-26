@@ -165,6 +165,8 @@ import Transparency from './pages/Transparency';
 import AdminTransparency from './pages/AdminTransparency';
 import AdminTalkToUsPreview from './pages/AdminTalkToUsPreview';
 import AdminTalkToUsRequests from './pages/AdminTalkToUsRequests';
+import AdminListingProspects from './pages/AdminListingProspects';
+import ListingAgentPreview from './pages/ListingAgentPreview';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -191,6 +193,9 @@ const AuthenticatedApp = () => {
 
       {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
       <Route path="/agreement-fill" element={<AgreementFillForm />} />
+
+      {/* Public personalized listing-agent preview — sent/shown to MLS listing agents, no login required */}
+      <Route path="/agent-preview/:token" element={<ListingAgentPreview />} />
 
       {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
           so the admin top command bar (access to every portal) shows automatically. */}
@@ -368,6 +373,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/transparency" element={<AdminTransparency />} />
         <Route path="/admin/talk-to-us-preview" element={<AdminTalkToUsPreview />} />
         <Route path="/admin/talk-to-us-requests" element={<AdminTalkToUsRequests />} />
+        <Route path="/admin/listing-prospects" element={<AdminListingProspects />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

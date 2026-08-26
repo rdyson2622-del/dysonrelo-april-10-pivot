@@ -7,7 +7,7 @@ import {
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
-  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck
+  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -33,6 +33,7 @@ const NAV_SECTIONS = [
       { label: '🚪 6th Portal: Entry Page (First-Time Visitor)', path: '/admin/entry-portal', icon: DoorOpen, highlight: true },
       { label: '🛡️ Transparency Explainer Page', path: '/admin/transparency', icon: ShieldCheck, highlight: true },
       { label: '💬 Talk To Us — Request Library', path: '/admin/talk-to-us-requests', icon: MessageCircle, highlight: true },
+      { label: '📋 MLS Listing Agent Outreach', path: '/admin/listing-prospects', icon: MapPin, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
