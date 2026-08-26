@@ -23,8 +23,8 @@ export default function PortalIntelligenceRail() {
 
   return (
     <div
-      className="fixed z-40 flex items-start justify-end gap-2 flex-wrap"
-      style={{ top: '60px', right: '12px', width: '17%' }}
+      className="fixed z-40 flex items-start justify-end gap-1.5"
+      style={{ top: '60px', right: '12px' }}
     >
       {BOXES.map(({ label, path, icon: Icon }) => {
         const isActive = location.pathname.toLowerCase() === path.toLowerCase();
@@ -33,18 +33,18 @@ export default function PortalIntelligenceRail() {
             key={label}
             onClick={() => navigate(path)}
             title={label}
-            className="flex flex-col items-center justify-center gap-1 transition-all hover:scale-105 active:scale-95"
+            className="flex flex-col items-center justify-center gap-1.5 shrink-0 px-1 transition-all hover:scale-105 active:scale-95"
             style={{
-              width: '56px',
-              height: '52px',
+              width: '92px',
+              height: '68px',
               background: isActive ? 'rgba(212,175,55,0.25)' : '#0a0a0a',
               border: `2px solid ${GOLD}`,
               borderRadius: '2px',
               boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
             }}
           >
-            <Icon className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
-            <span className="text-[7.5px] font-black tracking-[0.06em] leading-tight text-center" style={{ color: GOLD }}>{label}</span>
+            <Icon className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
+            <span className="text-[9px] font-black tracking-[0.05em] leading-tight text-center whitespace-nowrap" style={{ color: GOLD }}>{label}</span>
           </button>
         );
       })}
