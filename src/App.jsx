@@ -214,13 +214,13 @@ const AuthenticatedApp = () => {
         {/* Role Selector — standalone, no sidebar */}
         <Route path="/portal" element={<RoleSelector />} />
 
-        {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) */}
-        <Route path="/solutions" element={<SolutionMapEntry />} />
-        <Route path="/roadmaps" element={<SolutionMapEntry />} />
-
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
         <Route element={<AppLayout />}>
+        {/* Solution Map entry — the "ask anything" intelligence page (INTELLIGENCE pill) — now inside
+            AppLayout so it gets the persistent floating NEWS/RELOCATION/INTELLIGENCE/TRANSPARENCY rail. */}
+        <Route path="/solutions" element={<SolutionMapEntry />} />
+        <Route path="/roadmaps" element={<SolutionMapEntry />} />
         <Route path="/home" element={<Home />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
