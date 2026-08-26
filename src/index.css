@@ -130,6 +130,25 @@
   }
 }
 
+/* Print fix: the app shell uses fixed-height/overflow-auto containers
+   (h-screen, overflow-hidden, overflow-auto) so long printable content
+   (like agreements) gets clipped to a single page. Force them to expand
+   to their full natural height when printing. */
+@media print {
+  html, body, #root {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .h-screen {
+    height: auto !important;
+  }
+  .overflow-hidden,
+  .overflow-auto,
+  .overflow-y-auto {
+    overflow: visible !important;
+  }
+}
+
 /* Charlie chat input placeholder */
 .charlie-input::placeholder {
   color: #fff !important;
