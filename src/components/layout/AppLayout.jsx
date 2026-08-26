@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import FloatingCharlie from '../charlie/FloatingCharlie';
+import TalkToUsPill from '../portal/TalkToUsPill';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
@@ -20,12 +21,25 @@ export default function AppLayout() {
   const { landscape } = useLayout();
   const [isAdmin, setIsAdmin] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [portalRole, setPortalRole] = useState(() => sessionStorage.getItem('dyson_role'));
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
   useEffect(() => {
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const onRoleChange = () => setPortalRole(sessionStorage.getItem('dyson_role'));
+    window.addEventListener('dyson_role_change', onRoleChange);
+    return () => window.removeEventListener('dyson_role_change', onRoleChange);
+  }, []);
+
+  // First rollout of the shared "Talk to us" pill — Client portal only.
+  // Other portals keep the FloatingCharlie bubble until this is rolled out further.
+  const isClientPortal = !isAdmin
+    && !['agent', 'vendor', 'referral_agent', 'hr'].includes(portalRole)
+    && location.pathname !== '/corporate-relo';
   
   // Don't show FloatingCharlie on pages that already have embedded chat
   const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news'].some(path => 
@@ -88,7 +102,7 @@ export default function AppLayout() {
       </div>
       <MobileBottomNav />
       <PageNumberBadge />
-      {!hideFloatingCharlie && <FloatingCharlie />}
+      {!hideFloatingCharlie && (isClientPortal ? <TalkToUsPill /> : <FloatingCharlie />)}
       <PWAInstallPrompt />
     </div>
   );
