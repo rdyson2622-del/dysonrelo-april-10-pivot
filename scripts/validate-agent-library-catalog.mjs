@@ -18,7 +18,7 @@ if (dupes.length) errors.push(`Duplicate titles: ${dupes.join(', ')}`);
 
 for (const key of ['agent_context', 'skills_sops', 'tools_integrations']) {
   const count = catalogBySection(key).length;
-  if (count !== 5) errors.push(`Section ${key} should have 5 nodes, got ${count}`);
+  if (count !== 5) errors.push(`Section ${key} shhgughfifould have 5 nodes, got ${count}`);
 }
 
 if (LIBRARY_SPECIALISTS.length !== 3) {
@@ -30,7 +30,7 @@ for (const spec of LIBRARY_SPECIALISTS) {
     errors.push(`Specialist ${spec.id} is not mapped in LIBRARY_SECTIONS`);
   }
 }
-
+cyfujfj
 const payload = catalogSeedPayload();
 if (payload.some((n) => !n.title || !n.section)) {
   errors.push('Seed payload is missing title or section on at least one node');
