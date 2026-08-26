@@ -44,20 +44,20 @@ export default function Transparency() {
   return (
     <div className="min-h-screen px-6 py-16" style={{ background: '#0A0B0F' }}>
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-start justify-between gap-16 mb-4">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
-              <h1 className="text-3xl sm:text-4xl font-black tracking-widest uppercase" style={{ color: GOLD }}>
-                {content?.headline || 'Transparency'}
-              </h1>
-            </div>
-            <p className="text-white/80 text-lg">
-              {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for every issue and every objective, whichever of our six portals brought you here.'}
-            </p>
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-4">
+            <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
+            <h1 className="text-3xl sm:text-4xl font-black tracking-widest uppercase" style={{ color: GOLD }}>
+              {content?.headline || 'Transparency'}
+            </h1>
           </div>
+          <p className="text-white/80 text-lg">
+            {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for every issue and every objective, whichever of our six portals brought you here.'}
+          </p>
+        </div>
 
-          {/* Charlie explainer — circular gold-ring photo with play button */}
+        {/* Charlie explainer — fixed, centered under the 4-box NEWS/RELOCATION/INTELLIGENCE/TRANSPARENCY rail */}
+        <div className="fixed z-30 flex justify-center" style={{ top: '132px', right: '12px', width: '386px' }}>
           <button
             type="button"
             onClick={() => content?.video_url && window.open(content.video_url, '_blank')}
