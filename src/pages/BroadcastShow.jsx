@@ -22,7 +22,7 @@
       {/* LOCKED hero: PRIMARY STILL only, full-bleed contain on black */}
       <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
         <img
-          src={HERO_STILL}
+          src={HERO_ST
           alt="DNN Charlie Desk Studio"
           className="absolute inset-0 w-full h-full object-contain"
           style={{ background: '#000', transform: 'none' }}
