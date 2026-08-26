@@ -516,6 +516,7 @@ export default function AdminSidebar() {
             { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
             { label: 'VENDOR', role: 'vendor', emoji: '🔧' },
             { label: 'CORP RELO HR', role: 'corporate_hr', emoji: '🏢', path: '/corporate-relo' },
+            { label: 'FIRST-TIME VISITOR', role: 'first_time_visitor', emoji: '👋', path: '/broadcast-show' },
           ].map(({ label, role, emoji, path }) => (
             <button
               key={role}
