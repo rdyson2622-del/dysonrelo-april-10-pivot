@@ -163,7 +163,7 @@ export default function CorporateRelo() {
             pill (docked top-left of the page), a little lower than the pill
             itself so it never crowds the headline text. */}
         {intro && (
-          <div className="fixed z-40 hidden md:block" style={{ top: '160px', left: '351px', transform: 'translateX(-50%)' }}>
+          <div className="fixed z-40 hidden md:block" style={{ top: '160px', left: '311px', transform: 'translateX(-50%)' }}>
             <SectionAvatar clip={intro} label="Intro · Charlie / Bob" />
           </div>
         )}
