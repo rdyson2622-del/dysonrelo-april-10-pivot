@@ -178,41 +178,44 @@ export default function RoleSelector() {
       {/* ── Path Selection ── */}
       <section className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
 
-        <div className="w-full max-w-7xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {visiblePaths.map((path, i) => {
             const Icon = path.icon;
             return (
               <button
                 key={i}
                 onClick={() => handleSelect(path)}
-                className="group flex flex-col items-start text-left p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+                className="group flex flex-col items-start text-left p-7 rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                 style={{
+                  minHeight: '260px',
                   background: path.featured
-                    ? 'linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.05) 100%)'
-                    : 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%)',
-                  border: `1px solid ${path.featured ? 'rgba(212,175,55,0.55)' : 'rgba(255,255,255,0.22)'}`,
-                  boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+                    ? 'linear-gradient(135deg, rgba(212,175,55,0.22) 0%, rgba(212,175,55,0.06) 100%)'
+                    : 'linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 100%)',
+                  border: `2px solid ${path.featured ? 'rgba(212,175,55,0.7)' : 'rgba(255,255,255,0.28)'}`,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.8)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(212,175,55,0.2)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = path.featured ? 'rgba(212,175,55,0.7)' : 'rgba(255,255,255,0.28)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5)'; }}
               >
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-all"
-                  style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.3)` }}>
-                  <Icon className="w-4 h-4" style={{ color: GOLD }} />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all"
+                  style={{ background: 'rgba(212,175,55,0.14)', border: `1px solid rgba(212,175,55,0.4)` }}>
+                  <Icon className="w-5 h-5" style={{ color: GOLD }} />
                 </div>
 
-                <span className="text-[8px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: GOLD }}>
+                <span className="text-[10px] font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
                   {path.badge}
                 </span>
 
                 <h2 className="text-white font-bold leading-snug mb-3"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.05rem' }}>
+                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem' }}>
                   {path.label}
                 </h2>
 
-                <p className="text-[11px] leading-relaxed mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <p className="text-[13px] leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {path.sub}
                 </p>
 
-                <div className="mt-auto flex items-center gap-2 text-[11px] font-bold transition-all group-hover:gap-3"
+                <div className="mt-auto flex items-center gap-2 text-xs font-bold transition-all group-hover:gap-3"
                   style={{ color: GOLD }}>
                   Enter <span>→</span>
                 </div>
