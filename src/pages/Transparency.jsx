@@ -23,10 +23,10 @@ const SAMPLE_STATUSES = {
 };
 
 const DEFAULT_BULLETS = [
-  'Every milestone in your transaction is visible in real time — not just to you, but to every participant who touches it: agents, brokers, lenders, title, escrow.',
-  "What's live today: your Dyson & Dyson team and agents keep this roadmap current on every assignment we take on.",
-  "What we're building toward: lenders, title, and escrow are invited to view — and, as integrations mature, to update — so nothing waits on a phone call.",
-  'Every friction point we uncover along the way is logged and reused, so the next move benefits from lessons learned on the last one.',
+  "Whatever brought you here — a relocation, a lien, a cloud on title, a listing, a referral, a vendor job, or a housing need — every milestone in that issue is visible in real time to everyone touching it: you, our team, agents, brokers, lenders, title, escrow.",
+  "What's live today: your Dyson & Dyson team keeps a live roadmap current on every client, agent, vendor, and corporate account we take on — across all six portals.",
+  "What we're building toward: lenders, title, escrow, and every partner network are invited to view — and, as integrations mature, to update — so nothing waits on a phone call.",
+  'Every friction point we uncover along the way is logged and reused, so the next person — in any portal, with any need — benefits from lessons learned on the last one.',
 ];
 
 export default function Transparency() {
@@ -53,7 +53,7 @@ export default function Transparency() {
               </h1>
             </div>
             <p className="text-white/80 text-lg">
-              {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for you and everyone working your move.'}
+              {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for every issue and every objective, whichever of our six portals brought you here.'}
             </p>
           </div>
 
