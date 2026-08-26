@@ -57,6 +57,8 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
   const portal = getTalkToUsPortal(portalRole);
   const [user, setUser] = useState(null);
   const [text, setText] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [buildingStatuses, setBuildingStatuses] = useState(null);
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -84,8 +86,11 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
     setText('');
   };
 
+  const needsContact = !user;
+  const canSubmit = text.trim() && (!needsContact || (contactName.trim() && contactEmail.trim()));
+
   const handleSubmit = async () => {
-    if (!text.trim() || submitting) return;
+    if (!canSubmit || submitting) return;
     setSubmitting(true);
     setError('');
     setResult(null);
@@ -105,6 +110,8 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
         context: portal.context,
         portal_role: portalRole,
         audience: portal.audience,
+        full_name: needsContact ? contactName.trim() : undefined,
+        email: needsContact ? contactEmail.trim() : undefined,
       });
       if (res.data?.success) {
         setBuildingStatuses({ received: 'completed', understood: 'completed', roadmap: 'completed', ready: 'completed' });
@@ -167,6 +174,26 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
 
       {!result && (
         <>
+          {needsContact && (
+            <div className="flex gap-2 mb-2">
+              <input
+                value={contactName}
+                onChange={(e) => setContactName(e.target.value)}
+                placeholder="Your name"
+                disabled={submitting}
+                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+              />
+              <input
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder="Your email"
+                disabled={submitting}
+                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+              />
+            </div>
+          )}
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -176,10 +203,15 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
             className="w-full bg-transparent text-sm text-white resize-none outline-none rounded-lg p-3 placeholder-stone-500"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', minHeight: '190px' }}
           />
+          {needsContact && (
+            <p className="text-[10px] mt-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              We ask for your name and email so we can follow up — skip this by logging in.
+            </p>
+          )}
 
           <button
             onClick={handleSubmit}
-            disabled={submitting || !text.trim()}
+            disabled={submitting || !canSubmit}
             className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-40"
             style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
           >
@@ -194,9 +226,14 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
 
       {error && <p className="text-xs mt-2" style={{ color: '#ef4444' }}>{error}</p>}
 
-      {/* The hidden roadmap — appears the instant a request is sent */}
+      {/* Human acknowledgment first — buys time while the roadmap builds */}
       {buildingStatuses && (
         <div className="mt-4">
+          <div className="rounded-lg p-3 mb-3" style={{ background: `${GOLD}12`, border: `1px solid ${GOLD}40` }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              Thanks — we've received your request and understand the issue. We're building your roadmap now and will follow up shortly with next steps and options.
+            </p>
+          </div>
           <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: GOLD }}>
             We're On It
           </p>
