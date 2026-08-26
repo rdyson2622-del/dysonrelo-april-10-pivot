@@ -104,7 +104,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
       <button
         onClick={openAndSpeak}
         aria-label="Hear Charlie explain this page"
-        className={`${inline ? 'absolute' : 'fixed'} z-40 ${positionClass || `${topOffsetClass || 'top-16 md:top-[4.5rem]'} right-3 md:right-5`} w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95`}
+        className={`${inline ? 'absolute' : 'fixed'} z-40 ${positionClass || `${topOffsetClass || 'top-32 md:top-36'} right-3 md:right-5`} w-[126px] h-[126px] md:w-36 md:h-36 transition-all hover:scale-105 active:scale-95`}
       >
         <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
           style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
@@ -139,7 +139,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
 
   /* ── Expanded: rectangular video box pinned upper-right, page stays visible ── */
   return (
-    <div className="fixed top-20 right-4 md:top-24 md:right-6 z-50">
+    <div className="fixed top-32 right-4 md:top-36 md:right-6 z-50">
       <div
         className="relative rounded-xl overflow-hidden"
         style={{
