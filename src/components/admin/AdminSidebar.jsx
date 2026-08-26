@@ -32,6 +32,7 @@ const NAV_SECTIONS = [
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
       { label: '🚪 6th Portal: Entry Page (First-Time Visitor)', path: '/admin/entry-portal', icon: DoorOpen, highlight: true },
       { label: '🛡️ Transparency Explainer Page', path: '/admin/transparency', icon: ShieldCheck, highlight: true },
+      { label: '💬 Talk To Us — Request Library', path: '/admin/talk-to-us-requests', icon: MessageCircle, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
     ],
   },
