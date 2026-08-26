@@ -56,7 +56,7 @@ export default function AdminListingProspects() {
       <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1 flex items-center gap-2" style={{ color: GOLD }}>
         <MapPin className="w-3.5 h-3.5" /> MLS Listing Agent Outreach
       </p>
-      <h1 className="text-2xl font-serif text-white mb-4">Daily prospect list &amp; preview links</h1>
+      <h1 className="text-2xl font-serif text-white mb-4">MLS Listing Agent Outreach</h1>
 
       <BulkImportPanel onImported={() => queryClient.invalidateQueries({ queryKey: ['listingProspects'] })} />
 
