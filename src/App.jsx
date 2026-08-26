@@ -163,6 +163,7 @@ import AgreementFillForm from './pages/AgreementFillForm';
 import AdminEntryPortal from './pages/AdminEntryPortal';
 import Transparency from './pages/Transparency';
 import AdminTransparency from './pages/AdminTransparency';
+import AdminTalkToUsPreview from './pages/AdminTalkToUsPreview';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -364,6 +365,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/agreement-submissions" element={<AdminAgreementSubmissions />} />
         <Route path="/admin/entry-portal" element={<AdminEntryPortal />} />
         <Route path="/admin/transparency" element={<AdminTransparency />} />
+        <Route path="/admin/talk-to-us-preview" element={<AdminTalkToUsPreview />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />
