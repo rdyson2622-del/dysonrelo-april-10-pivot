@@ -36,24 +36,33 @@ export default function Transparency() {
           {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for you and everyone working your move.'}
         </p>
 
-        <div className="rounded-xl overflow-hidden mb-10" style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000' }}>
-          {content?.video_url ? (
-            <video src={content.video_url} controls className="w-full aspect-video" />
-          ) : (
-            <div className="w-full aspect-video flex items-center justify-center">
-              <span className="text-sm text-white/50">Charlie's Transparency explainer video — coming soon</span>
-            </div>
-          )}
-        </div>
+        <div className="flex flex-col sm:flex-row gap-6 mb-4">
+          <div className="rounded-xl overflow-hidden shrink-0 relative" style={{ border: '1px solid rgba(212,175,55,0.3)', background: '#000', width: '180px', height: '180px' }}>
+            {content?.video_url ? (
+              <video src={content.video_url} controls className="w-full h-full object-cover" />
+            ) : (
+              <>
+                <img
+                  src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a0f097ef2_generated_image.png"
+                  alt="Charlie — Dyson AI Concierge"
+                  className="w-full h-full object-cover"
+                />
+                <span className="absolute bottom-0 left-0 right-0 py-1 text-center text-[10px] text-white/70 bg-black/70">
+                  Explainer video coming soon
+                </span>
+              </>
+            )}
+          </div>
 
-        <ul className="space-y-4">
-          {bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-3 text-white/90">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GOLD }} />
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
+          <ul className="flex-1 space-y-4">
+            {bullets.map((b, i) => (
+              <li key={i} className="flex items-start gap-3 text-white/90">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GOLD }} />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
