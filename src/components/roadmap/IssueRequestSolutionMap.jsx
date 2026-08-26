@@ -142,7 +142,7 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
       {/* Library of discussions — this visitor's own request history */}
       {history.length > 0 && (
         <div className="mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <p className="text-[9px] font-black tracking-widest uppercase mb-2 flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-[9px] font-black tracking-widest uppercase mb-2 flex items-center gap-1.5 text-white">
             <History className="w-3 h-3" /> Your Requests
           </p>
           <div className="flex gap-1.5 overflow-x-auto pb-1">
@@ -181,7 +181,7 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
                 onChange={(e) => setContactName(e.target.value)}
                 placeholder="Your name"
                 disabled={submitting}
-                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-white"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
               />
               <input
@@ -189,7 +189,7 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
                 onChange={(e) => setContactEmail(e.target.value)}
                 placeholder="Your email"
                 disabled={submitting}
-                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+                className="flex-1 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-white"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
               />
             </div>
@@ -200,11 +200,11 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
             placeholder={portal.placeholder}
             rows={8}
             disabled={submitting}
-            className="w-full bg-transparent text-sm text-white resize-none outline-none rounded-lg p-3 placeholder-stone-500"
+            className="w-full bg-transparent text-sm text-white resize-none outline-none rounded-lg p-3 placeholder-white"
             style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', minHeight: '190px' }}
           />
           {needsContact && (
-            <p className="text-[10px] mt-1.5 leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-[10px] mt-1.5 leading-relaxed text-white">
               Sharing your name and email just helps us follow up with your roadmap — it's optional, and never required to send your message. Prefer to talk it through privately? Call us at (858) 353-1200.
             </p>
           )}
@@ -252,7 +252,7 @@ export default function IssueRequestSolutionMap({ portalRole = 'general' }) {
             </button>
           </div>
           <RequestRoadmapCard item={result} />
-          <p className="text-xs mt-3 leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <p className="text-xs mt-3 leading-relaxed text-white">
             {result.user_id
               ? "You're logged in, so this is saved to your account — our team has been notified and will follow up there."
               : result.email
