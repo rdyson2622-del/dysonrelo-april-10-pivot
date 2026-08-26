@@ -158,6 +158,8 @@ import BuyingClients from './pages/wisdom/BuyingClients';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
 import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
+import AdminAgreementSubmissions from './pages/AdminAgreementSubmissions';
+import AgreementFillForm from './pages/AgreementFillForm';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
