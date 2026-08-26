@@ -45,6 +45,16 @@ export default function BroadcastShow() {
           style={{ background: '#000', transform: 'none' }}
         />
       </div>
+
+      {/* Coming Soon banner — bottom 10% of the landing page */}
+      <div
+        className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-center"
+        style={{ height: '10%', background: '#faf7f0', borderTop: `2px solid ${GOLD}` }}
+      >
+        <span className="text-lg sm:text-2xl font-black tracking-[0.2em] uppercase" style={{ color: '#0a0a0a' }}>
+          Coming Soon
+        </span>
+      </div>
     </div>
   );
 }
