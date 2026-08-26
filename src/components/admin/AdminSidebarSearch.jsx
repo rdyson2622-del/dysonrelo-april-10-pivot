@@ -54,33 +54,47 @@ export default function AdminSidebarSearch({ items }) {
     setOpen(false);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && results.length > 0) {
+      e.preventDefault();
+      goTo(results[0].path);
+    } else if (e.key === 'Escape') {
+      setQuery('');
+      setOpen(false);
+    }
+  };
+
   return (
-    <div ref={boxRef} className="px-3 pt-2 pb-2 relative shrink-0 z-20">
-      <div
-        onClick={() => inputRef.current?.focus()}
+    <div ref={boxRef} className="px-3 pt-2 pb-2 relative shrink-0 z-30">
+      <label
+        htmlFor="admin-sidebar-search-input"
         className="flex items-center gap-2 px-3 py-2 rounded-full cursor-text transition-all"
         style={{
-          background: 'rgba(212,175,55,0.1)',
+          background: 'rgba(212,175,55,0.12)',
           border: `1.5px solid ${open || query ? GOLD : 'rgba(212,175,55,0.45)'}`,
+          boxShadow: open ? '0 0 0 2px rgba(212,175,55,0.2)' : 'none',
         }}
       >
         <Search className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
         <input
+          id="admin-sidebar-search-input"
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
           placeholder="Search admin…"
           autoComplete="off"
-          className="w-full bg-transparent text-sm outline-none border-none text-white placeholder:text-white/50"
+          className="w-full bg-transparent text-sm outline-none border-none text-white placeholder:text-white/50 relative z-10"
+          style={{ pointerEvents: 'auto' }}
         />
         {query && (
-          <button type="button" onClick={(e) => { e.stopPropagation(); setQuery(''); setOpen(false); }}>
+          <button type="button" onClick={(e) => { e.preventDefault(); setQuery(''); setOpen(false); inputRef.current?.focus(); }}>
             <X className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.5)' }} />
           </button>
         )}
-      </div>
+      </label>
 
       {open && query && (
         <div className="absolute left-3 right-3 mt-1 rounded-xl overflow-hidden z-50"
