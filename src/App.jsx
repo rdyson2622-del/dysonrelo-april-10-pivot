@@ -161,6 +161,8 @@ import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
 import AdminAgreementSubmissions from './pages/AdminAgreementSubmissions';
 import AgreementFillForm from './pages/AgreementFillForm';
 import AdminEntryPortal from './pages/AdminEntryPortal';
+import Transparency from './pages/Transparency';
+import AdminTransparency from './pages/AdminTransparency';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -201,6 +203,7 @@ const AuthenticatedApp = () => {
             Public AppLayout is the pattern for cold visitors; it must NOT inherit the
             Client sidebar content or the Admin sidebar (AdminLayout) — it is its own portal. */}
         <Route path="/corporate-relo" element={<CorporateRelo />} />
+        <Route path="/transparency" element={<Transparency />} />
       </Route>
 
       {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
@@ -360,6 +363,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
         <Route path="/admin/agreement-submissions" element={<AdminAgreementSubmissions />} />
         <Route path="/admin/entry-portal" element={<AdminEntryPortal />} />
+        <Route path="/admin/transparency" element={<AdminTransparency />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

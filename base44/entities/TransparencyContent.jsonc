@@ -1,0 +1,50 @@
+{
+  "name": "TransparencyContent",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "Transparency",
+      "description": "Main headline on the public /transparency explainer page."
+    },
+    "subheadline": {
+      "type": "string",
+      "description": "Supporting line under the headline."
+    },
+    "bullets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Bullet points explaining the Transparency principle (obstacles, commitments, friction-reuse)."
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Charlie explainer video URL for this page."
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this content is currently shown to visitors."
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
