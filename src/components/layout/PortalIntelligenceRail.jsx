@@ -26,8 +26,8 @@ export default function PortalIntelligenceRail() {
   // Tablet+ gets a smaller version so it never overflows the viewport.
   return (
     <div
-      className="hidden sm:flex fixed z-40 items-start justify-end gap-1 sm:gap-1.5"
-      style={{ top: '56px', right: '8px' }}
+      className="hidden sm:flex fixed z-40 items-start justify-end gap-2"
+      style={{ top: '60px', right: '10px' }}
     >
       {BOXES.map(({ label, path, icon: Icon }) => {
         const isActive = location.pathname.toLowerCase() === path.toLowerCase();
@@ -36,18 +36,18 @@ export default function PortalIntelligenceRail() {
             key={label}
             onClick={() => navigate(path)}
             title={label}
-            className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 shrink-0 px-1 transition-all hover:scale-105 active:scale-95"
+            className="flex flex-col items-center justify-center gap-1 shrink-0 px-1.5 transition-all hover:scale-105 active:scale-95"
             style={{
-              width: '68px',
-              height: '52px',
+              minWidth: '78px',
+              height: '56px',
               background: isActive ? 'rgba(212,175,55,0.25)' : '#0a0a0a',
               border: `2px solid ${GOLD}`,
               borderRadius: '2px',
               boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
             }}
           >
-            <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" style={{ color: GOLD }} />
-            <span className="text-[7px] sm:text-[9px] font-black tracking-[0.05em] leading-tight text-center whitespace-nowrap" style={{ color: GOLD }}>{label}</span>
+            <Icon className="w-4 h-4 shrink-0" style={{ color: GOLD }} />
+            <span className="text-[8px] font-black tracking-[0.02em] leading-tight text-center" style={{ color: GOLD }}>{label}</span>
           </button>
         );
       })}
