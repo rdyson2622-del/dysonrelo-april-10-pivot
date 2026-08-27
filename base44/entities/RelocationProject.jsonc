@@ -61,6 +61,11 @@
     "notes": {
       "type": "string",
       "description": "Internal notes on this project"
+    },
+    "is_dummy": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, this is a placeholder sample record showing agents/admins what a project looks like. Hidden automatically once real projects exist."
     }
   },
   "required": [
@@ -86,6 +91,9 @@
         },
         {
           "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.is_dummy": true
         },
         {
           "user_condition": {

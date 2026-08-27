@@ -13,7 +13,12 @@ export default function RelocationProjectCard({ project, onClick }) {
       style={{ background: '#161616', border: '1px solid rgba(255,255,255,0.08)' }}
     >
       <div className="flex items-start justify-between gap-3 mb-2">
-        <p className="font-bold text-base text-white truncate">{project.clientName}</p>
+        <p className="font-bold text-base text-white truncate flex items-center gap-2">
+          {project.clientName}
+          {project.is_dummy && (
+            <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}>SAMPLE</span>
+          )}
+        </p>
         <span className="flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full shrink-0"
           style={{ background: `${cfg.color}22`, color: cfg.color, border: `1px solid ${cfg.color}55` }}>
           <Icon className="w-3 h-3" /> {cfg.label}

@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Plus, TrendingUp, Clock, Home } from 'lucide-react';
 import RelocationProjectCard from '@/components/agentPortal/RelocationProjectCard';
 import AddRelocationProjectModal from '@/components/agentPortal/AddRelocationProjectModal';
+import AgentPortalGuide from '@/components/agentPortal/AgentPortalGuide';
 import { GOLD } from '@/components/agentPortal/relocationProjectStatus';
 
 /**
@@ -17,10 +18,14 @@ export default function AgentCommandCenter() {
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: allProjects = [], isLoading } = useQuery({
     queryKey: ['relocationProjects'],
     queryFn: () => base44.entities.RelocationProject.list('-created_date', 200),
   });
+
+  // Sample/dummy project is a model to follow — hide it once real projects exist.
+  const hasRealProjects = allProjects.some(p => !p.is_dummy);
+  const projects = hasRealProjects ? allProjects.filter(p => !p.is_dummy) : allProjects;
 
   const active = projects.filter(p => p.status !== 'closed');
   const pendingEscrows = projects.filter(p => p.status === 'in_escrow');
@@ -59,6 +64,8 @@ export default function AgentCommandCenter() {
             </div>
           ))}
         </div>
+
+        <AgentPortalGuide />
 
         {/* Pipeline */}
         {isLoading ? (
