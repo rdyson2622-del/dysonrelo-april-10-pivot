@@ -31,7 +31,7 @@ export default function PortalChoiceSelector() {
         Get Started
       </p>
       <h2 className="text-center mb-6 text-lg sm:text-xl font-bold" style={{ color: '#fff' }}>
-        Select a portal that fits you?
+        Enter a portal that best fits you?
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {PATHS.map((path) => (
