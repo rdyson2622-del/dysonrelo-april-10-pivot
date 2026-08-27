@@ -1,5 +1,5 @@
 import React from 'react';
-import { Newspaper, TrendingUp, Users, Mic2 } from 'lucide-react';
+import { Newspaper, TrendingUp, Users, Mic2, Building2 } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
@@ -19,6 +19,11 @@ const COVERAGE = [
     icon: Users,
     title: 'Agent & Broker Intel',
     desc: 'Who is producing, who is vetted, and what is happening inside the brokerages we work with — the intelligence side of the news.',
+  },
+  {
+    icon: Building2,
+    title: 'Corporate Relocations',
+    desc: 'What major employers and transferees need to know as relocation activity shifts across markets.',
   },
 ];
 
@@ -42,7 +47,7 @@ export default function NewsUnderConstructionInfo() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-14">
           {COVERAGE.map((c) => (
             <div
               key={c.title}
@@ -61,6 +66,38 @@ export default function NewsUnderConstructionInfo() {
           ))}
         </div>
 
+        {/* Meet the Anchors */}
+        <div className="text-center mb-12">
+          <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>
+            Meet the Anchors
+          </p>
+          <div className="flex items-center justify-center gap-10">
+            <div>
+              <div
+                className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-2 text-lg font-black"
+                style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}`, color: GOLD }}
+              >
+                C
+              </div>
+              <p className="text-sm font-bold text-white">Charlie</p>
+              <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>Lead Anchor</p>
+            </div>
+            <div>
+              <div
+                className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-2 text-lg font-black"
+                style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}`, color: GOLD }}
+              >
+                B
+              </div>
+              <p className="text-sm font-bold text-white">Bob</p>
+              <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>Market Correspondent</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-center text-sm font-semibold mb-4" style={{ color: '#fff' }}>
+          Get notified the moment we go live. Join the intelligence list.
+        </p>
         <PortalSubscribeForm
           portalName="DNN Daily News"
           source="Broadcast Show Under Construction"

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import NewsUnderConstructionInfo from '@/components/dnn/NewsUnderConstructionInfo';
+import CoreFourPillars from '@/components/dnn/CoreFourPillars';
 
 const GOLD = '#D4AF37';
 const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
@@ -14,7 +15,7 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 
 export default function BroadcastShow() {
   const navigate = useNavigate();
-  const [content, setContent] = useState({ headline: 'Temporarily Under Construction', subheadline: 'Returning Soon', cta_label: '', cta_url: '' });
+  const [content, setContent] = useState({ headline: 'Daily AI-Anchored Real Estate News', subheadline: 'Launching Soon', cta_label: '', cta_url: '' });
 
   useEffect(() => {
     base44.entities.EntryPortalContent.list().then(rows => {
@@ -64,7 +65,7 @@ export default function BroadcastShow() {
             className="text-2xl sm:text-4xl font-black tracking-[0.25em] uppercase text-center pointer-events-none"
             style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
           >
-            {content.headline || 'Temporarily Under Construction'}
+            {content.headline || 'Daily AI-Anchored Real Estate News'}
           </span>
           {content.subheadline && (
             <span className="text-sm sm:text-base font-medium text-center pointer-events-none" style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
@@ -83,7 +84,8 @@ export default function BroadcastShow() {
         </div>
       </div>
 
-      {/* Scrollable info panel — tells first-timers what the News department covers */}
+      {/* Scrollable info panel — Core Four instant pitch, then the News deep dive */}
+      <CoreFourPillars />
       <NewsUnderConstructionInfo />
     </div>
   );
