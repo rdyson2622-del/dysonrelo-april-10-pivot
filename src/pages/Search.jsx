@@ -11,7 +11,12 @@ export default function Search() {
   const [location, setLocation] = useState('');
 
   const buildSearchUrl = (platform) => {
-    if (!location.trim()) return '#';
+    const homepages = {
+      zillow: 'https://www.zillow.com/',
+      realtor: 'https://www.realtor.com/',
+      redfin: 'https://www.redfin.com/',
+    };
+    if (!location.trim()) return homepages[platform] || '#';
     const query = encodeURIComponent(location);
     const urls = {
       zillow: `https://www.zillow.com/homes/for_sale/?searchQueryState={%22usersSearchTerm%22:%22${query}%22}`,
@@ -22,9 +27,7 @@ export default function Search() {
   };
 
   const handleSearch = (platform) => {
-    if (location.trim()) {
-      window.open(buildSearchUrl(platform), '_blank');
-    }
+    window.open(buildSearchUrl(platform), '_blank');
   };
 
   return (
@@ -57,24 +60,21 @@ export default function Search() {
             <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={() => handleSearch('zillow')}
-                disabled={!location.trim()}
-                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2"
                 style={{ background: GOLD, color: '#000' }}
               >
                 Zillow <ExternalLink className="w-3 h-3" />
               </button>
               <button
                 onClick={() => handleSearch('realtor')}
-                disabled={!location.trim()}
-                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2"
                 style={{ background: GOLD, color: '#000' }}
               >
                 Realtor <ExternalLink className="w-3 h-3" />
               </button>
               <button
                 onClick={() => handleSearch('redfin')}
-                disabled={!location.trim()}
-                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="py-3 px-4 rounded-lg font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2"
                 style={{ background: GOLD, color: '#000' }}
               >
                 Redfin <ExternalLink className="w-3 h-3" />
