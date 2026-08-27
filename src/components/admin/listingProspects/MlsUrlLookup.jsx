@@ -16,6 +16,7 @@ function makeToken() {
  */
 export default function MlsUrlLookup({ onImported }) {
   const [url, setUrl] = useState('');
+  const [repName, setRepName] = useState(() => localStorage.getItem('dyson_last_rep') || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -38,9 +39,11 @@ export default function MlsUrlLookup({ onImported }) {
       }
       await base44.entities.ListingProspect.create({
         ...listing,
+        rep_name: repName.trim() || undefined,
         referral_fee_offered: '30% referral fee',
         token: makeToken(),
       });
+      if (repName.trim()) localStorage.setItem('dyson_last_rep', repName.trim());
       setUrl('');
       onImported?.();
     } catch (e) {
@@ -55,6 +58,14 @@ export default function MlsUrlLookup({ onImported }) {
         <Link2 className="w-3.5 h-3.5" /> Paste MLS Listing Link
       </p>
       <p className="text-xs text-white mb-2">We pull the listing details and the listing agent's name, phone &amp; email automatically — no typing required.</p>
+      <input
+        value={repName}
+        onChange={(e) => setRepName(e.target.value)}
+        placeholder="Brought in by (e.g. Marcos)"
+        disabled={loading}
+        className="w-full mb-2 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+      />
       <div className="flex gap-2">
         <input
           value={url}

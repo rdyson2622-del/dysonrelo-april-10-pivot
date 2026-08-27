@@ -18,6 +18,10 @@
       "type": "string",
       "description": "Agent's DRE / real estate license number"
     },
+    "rep_name": {
+      "type": "string",
+      "description": "The Dyson & Dyson representative who sourced/brought in this listing agent relationship (e.g. 'Marcos')"
+    },
     "city": {
       "type": "string",
       "description": "City of the listing"

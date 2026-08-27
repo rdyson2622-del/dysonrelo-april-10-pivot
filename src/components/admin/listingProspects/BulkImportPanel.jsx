@@ -41,6 +41,7 @@ function parseRows(text) {
  */
 export default function BulkImportPanel({ onImported }) {
   const [text, setText] = useState('');
+  const [repName, setRepName] = useState(() => localStorage.getItem('dyson_last_rep') || '');
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -49,7 +50,9 @@ export default function BulkImportPanel({ onImported }) {
     if (rows.length === 0) return;
     setImporting(true);
     setResult(null);
-    await base44.entities.ListingProspect.bulkCreate(rows);
+    const withRep = repName.trim() ? rows.map(r => ({ ...r, rep_name: repName.trim() })) : rows;
+    await base44.entities.ListingProspect.bulkCreate(withRep);
+    if (repName.trim()) localStorage.setItem('dyson_last_rep', repName.trim());
     setResult(rows.length);
     setText('');
     setImporting(false);
@@ -62,6 +65,14 @@ export default function BulkImportPanel({ onImported }) {
         <UploadCloud className="w-3.5 h-3.5" /> Bulk Import — Paste Today's List
       </p>
       <p className="text-xs text-white mb-2">One agent per line: Name, Brokerage, City, Listing Address, Listing Value, Referral Fee</p>
+      <input
+        value={repName}
+        onChange={(e) => setRepName(e.target.value)}
+        placeholder="Brought in by (e.g. Marcos) — applies to this whole batch"
+        disabled={importing}
+        className="w-full mb-2 bg-transparent text-sm text-white outline-none rounded-lg p-2.5 placeholder-stone-500"
+        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+      />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}

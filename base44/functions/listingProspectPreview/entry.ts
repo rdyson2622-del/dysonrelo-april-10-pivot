@@ -3,11 +3,41 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 // Public endpoint (no login) — powers the personalized listing-agent preview
 // page. "get" looks up a prospect by their unique token and marks it viewed.
 // "submit_destination" saves the client's move destination the agent enters,
-// so it's ready for the follow-up call.
+// so it's ready for the follow-up call. "admin_send_email" (admin-only) emails
+// the magic link to the listing agent.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const { action, token, client_destination } = await req.json();
+    const { action, token, client_destination, prospect_id } = await req.json();
+
+    if (action === 'admin_send_email') {
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      if (!prospect_id) return Response.json({ error: 'Missing prospect_id' }, { status: 400 });
+
+      const prospect = await base44.asServiceRole.entities.ListingProspect.get(prospect_id);
+      if (!prospect) return Response.json({ error: 'Not found' }, { status: 404 });
+      if (!prospect.agent_email) return Response.json({ error: 'No email on file for this agent' }, { status: 400 });
+
+      const origin = req.headers.get('origin') || req.headers.get('referer') || '';
+      const baseUrl = origin ? new URL(origin).origin : '';
+      const previewUrl = `${baseUrl}/agent-preview/${prospect.token}`;
+      const listingLabel = [prospect.listing_address, prospect.city].filter(Boolean).join(', ');
+
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: prospect.agent_email,
+        subject: `Congrats on ${listingLabel || 'the new listing'} — a free resource for your client`,
+        body: `Hi ${prospect.agent_name},\n\nCongratulations on your new listing${listingLabel ? ` at ${listingLabel}` : ''}!\n\nWe've put together a short preview showing how we can help — completely free — if your client is relocating out of the area. We vet the destination agent for you and protect your referral fee.\n\nTake a look here: ${previewUrl}\n\nBest,\n${prospect.rep_name || 'The Dyson & Dyson Team'}`,
+        from_name: prospect.rep_name ? `${prospect.rep_name} — Dyson & Dyson` : 'Dyson & Dyson',
+      });
+
+      await base44.asServiceRole.entities.ListingProspect.update(prospect.id, {
+        status: prospect.status === 'queued' ? 'contacted' : prospect.status,
+        contacted_at: new Date().toISOString(),
+      });
+
+      return Response.json({ success: true });
+    }
 
     if (!token) return Response.json({ error: 'Missing token' }, { status: 400 });
 
@@ -80,6 +110,7 @@ export default async function(req) {
         dre_number: prospect.dre_number,
         agent_phone: prospect.agent_phone,
         agent_email: prospect.agent_email,
+        rep_name: prospect.rep_name,
       },
     });
   } catch (error) {
