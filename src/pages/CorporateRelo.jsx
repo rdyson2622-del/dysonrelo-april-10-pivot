@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper, Play } from 'lucide-react';
@@ -146,6 +146,13 @@ export default function CorporateRelo() {
     queryFn: () => base44.entities.CorporateReloClip.list(),
   });
 
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const intro = clips.find((c) => c.kind === 'intro' && clipReady(c));
   const qas = clips
     .filter((c) => c.kind === 'qa' && clipReady(c))
@@ -164,7 +171,7 @@ export default function CorporateRelo() {
         {/* Intro avatar — fixed, centered just under the "Ask About Your Move"
             pill (docked top-left of the page), a little lower than the pill
             itself so it never crowds the headline text. */}
-        {intro && (
+        {intro && scrolled && (
           <div className="fixed z-40 hidden md:block" style={{ top: '160px', left: '311px', transform: 'translateX(-50%)' }}>
             <SectionAvatar clip={intro} label="Intro · Charlie / Bob" />
           </div>
