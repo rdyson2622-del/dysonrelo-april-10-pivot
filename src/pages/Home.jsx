@@ -7,6 +7,7 @@ import ClientStory from '@/components/landing/ClientStory';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
+import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -50,6 +51,11 @@ export default function Home() {
         {/* ── SEARCH ACROSS ALL PLATFORMS ── */}
         <div className="w-full mt-8 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
           <PropertyPlatformSearch />
+        </div>
+
+        {/* ── FIND A PRO ── */}
+        <div className="w-full mt-6 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
+          <FindAProWidget />
         </div>
 
         {/* ── MARKETING BRIDGE ── */}
