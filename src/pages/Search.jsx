@@ -5,6 +5,7 @@ import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import VendorBenefits from '@/components/portal/VendorBenefits';
 import VendorAreaVettingForm from '@/components/portal/VendorAreaVettingForm';
+import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 
 const GOLD = '#D4AF37';
 
@@ -27,6 +28,10 @@ export default function Search() {
           <PortalLeadInDuo />
 
           <VendorBenefits />
+
+          <div className="rounded-2xl px-6 py-8 mb-10" style={{ background: '#0d0d0d' }}>
+            <PropertyPlatformSearch />
+          </div>
 
           <div className="max-w-xl mx-auto text-left">
             <VendorAreaVettingForm />

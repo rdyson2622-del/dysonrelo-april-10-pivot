@@ -5,6 +5,7 @@ import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import FindAProWidget from '@/components/portal/FindAProWidget';
+import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 
 const GOLD = '#D4AF37';
 
@@ -122,6 +123,11 @@ export default function SendingAgentLanding() {
             vs. 40–50% skimmed by corporate relo divisions — with zero fee protection for you.
           </p>
         </div>
+      </div>
+
+      {/* Property Search Across Platforms */}
+      <div className="px-6 py-8 max-w-3xl mx-auto rounded-2xl" style={{ background: '#000' }}>
+        <PropertyPlatformSearch />
       </div>
 
       {/* Vendor Network — quick access for referred clients */}

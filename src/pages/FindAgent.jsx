@@ -7,6 +7,7 @@ import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import FindAProWidget from '@/components/portal/FindAProWidget';
+import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 
 const GOLD = '#D4AF37';
 
@@ -166,6 +167,11 @@ export default function FindAgent() {
               </motion.div>
             );
           })}
+        </div>
+
+        {/* Property Search Across Platforms */}
+        <div className="rounded-3xl p-8" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <PropertyPlatformSearch />
         </div>
 
         {/* Client Support Utilities — quick vendor access for agents managing a move */}
