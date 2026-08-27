@@ -29,7 +29,7 @@ export default function BroadcastShow() {
     >
       {/* Close */}
       <button
-        onClick={() => { window.location.href = '/'; }}
+        onClick={() => navigate('/')}
         aria-label="Close"
         className="absolute top-4 right-4 z-30 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
         style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}
