@@ -9,7 +9,7 @@ const PORTAL_PILLS = [
   { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/corporate-relo' },
   { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/home' },
   { label: 'RELO AGENT', emoji: '⭐', role: 'agent', path: '/find-agent' },
-  { label: 'REFERRAL AGENT', emoji: '🤝', role: 'referral_agent', path: '/partner-benefits' },
+  { label: 'INACTIVE LICENSED AGENTS', emoji: '🤝', role: 'referral_agent', path: '/partner-benefits' },
   { label: 'VENDOR', emoji: '🔧', role: 'vendor', path: '/search' },
 ];
 

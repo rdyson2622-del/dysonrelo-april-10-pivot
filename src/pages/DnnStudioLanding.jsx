@@ -42,7 +42,7 @@ const ROLE_LABELS = {
   hr: 'Corp Relo HR',
   client: 'Client',
   agent: 'Relo Agent',
-  referral_agent: 'Referral Agent',
+  referral_agent: 'Inactive Licensed Agents',
   vendor: 'Vendor',
 };
 

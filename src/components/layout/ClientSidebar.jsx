@@ -95,7 +95,7 @@ export default function ClientSidebar({ onToggle }) {
   const PORTAL_LABELS = {
     client: 'CLIENT PORTAL',
     agent: 'RELOCATION AGENT PORTAL',
-    referral_agent: 'REFERRAL AGENT PORTAL',
+    referral_agent: 'INACTIVE LICENSED AGENTS PORTAL',
     vendor: 'VENDOR PORTAL',
   };
   const portalLabel = location.pathname === '/corporate-relo'
