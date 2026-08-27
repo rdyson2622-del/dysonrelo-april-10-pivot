@@ -54,6 +54,16 @@
     "destinationAgentEmail": {
       "type": "string"
     },
+    "tcName": {
+      "type": "string",
+      "description": "Name of the Transaction Coordinator who secured this deal"
+    },
+    "tcPhone": {
+      "type": "string"
+    },
+    "tcEmail": {
+      "type": "string"
+    },
     "sendingAgentId": {
       "type": "string",
       "description": "User ID of the sending/relo agent who owns this project"

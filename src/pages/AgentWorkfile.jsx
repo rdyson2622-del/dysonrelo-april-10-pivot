@@ -90,6 +90,21 @@ export default function AgentWorkfile() {
               )}
             </div>
 
+            <div className="rounded-2xl p-5" style={{ background: '#161616', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-3 flex items-center gap-2" style={{ color: GOLD }}>
+                <UserCheck className="w-3.5 h-3.5" /> Transaction Coordinator
+              </p>
+              {project.tcName ? (
+                <>
+                  <p className="text-sm text-white font-semibold mb-1">{project.tcName}</p>
+                  {project.tcPhone && <a href={`tel:${project.tcPhone}`} className="flex items-center gap-1.5 text-xs mb-1" style={{ color: GOLD }}><Phone className="w-3 h-3" /> {project.tcPhone}</a>}
+                  {project.tcEmail && <a href={`mailto:${project.tcEmail}`} className="flex items-center gap-1.5 text-xs" style={{ color: GOLD }}><Mail className="w-3 h-3" /> {project.tcEmail}</a>}
+                </>
+              ) : (
+                <p className="text-sm text-white/50">No Transaction Coordinator assigned yet.</p>
+              )}
+            </div>
+
             {project.projectedReferralFee > 0 && (
               <div className="rounded-2xl p-5" style={{ background: '#161616', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-1" style={{ color: GOLD }}>Projected Referral Fee</p>
