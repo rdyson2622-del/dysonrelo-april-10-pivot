@@ -128,7 +128,7 @@ export default function DnnStudioLanding() {
               <button
                 key={pill.label}
                 onClick={() => navigate(pill.path)}
-                className="flex-1 md:flex-none flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm sm:text-base font-black tracking-[0.14em] transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                className="flex-1 md:flex-none flex flex-col items-center justify-center gap-2 px-2 py-6 text-[10px] sm:text-xs font-black tracking-[0.08em] text-center leading-tight transition-all hover:scale-[1.03] active:scale-95"
                 style={{
                   background: '#0a0a0a',
                   border: `1.5px solid ${GOLD}`,
