@@ -14,7 +14,7 @@ const GOLD = '#D4AF37';
 const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 // Animated silent placeholder — real HeyGen render of Charlie at the DNN desk (Show 2),
 // muted + looped so visitors see movement/life in the studio while the daily show is finished.
-const STUDIO_LOOP_VIDEO = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/7f480fe74_broadcast-show-replace.mp4';
+const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f22ec4070_charlie-desk-loop.mp4';
 
 // ══════════════════════════════════════════════════════════════════════════
 // ⚠️ CANONICAL DNN STUDIO BACKGROUND — DO NOT REPLACE, DO NOT REGENERATE ⚠️
