@@ -9,6 +9,7 @@ import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
+import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 
@@ -238,6 +239,13 @@ export default function CorporateRelo() {
 
         <div className="w-full max-w-3xl mx-auto mt-10">
           <IssueRequestSolutionMap context="corporate_relo" />
+        </div>
+
+        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+          <FindAProWidget
+            label="Employee Relocation Support Utilities"
+            subtitle="Your transferee needs a mover, inspector, or contractor right now? These national platforms are ready today."
+          />
         </div>
       </section>
 

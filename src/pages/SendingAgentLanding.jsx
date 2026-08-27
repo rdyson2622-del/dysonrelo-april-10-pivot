@@ -4,6 +4,7 @@ import { Shield, DollarSign, Truck, ArrowRight, CheckCircle, Phone } from 'lucid
 import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
+import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 
@@ -121,6 +122,14 @@ export default function SendingAgentLanding() {
             vs. 40–50% skimmed by corporate relo divisions — with zero fee protection for you.
           </p>
         </div>
+      </div>
+
+      {/* Vendor Network — quick access for referred clients */}
+      <div className="px-6 py-4 max-w-3xl mx-auto">
+        <FindAProWidget
+          label="Vendor Network"
+          subtitle="Your referred client needs a mover, inspector, or contractor at the destination? Point them here."
+        />
       </div>
 
       {/* Charlie & Bob — DNN strategy lead-in */}

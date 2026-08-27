@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Newspaper, MapPin, Sparkles, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 
@@ -154,6 +155,10 @@ export default function DnnStudioLanding() {
         <p className="text-center mt-2 text-sm sm:text-base italic" style={{ color: GOLD }}>
           — Bob Dyson
         </p>
+
+        <div className="mt-12 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
+          <FindAProWidget />
+        </div>
       </div>
     </div>
   );
