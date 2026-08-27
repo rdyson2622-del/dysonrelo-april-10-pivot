@@ -27,6 +27,7 @@ const PILLS = [
   { label: 'NEWS',         path: '/broadcast-show' },
   { label: 'RELOCATION',   path: '/relocation-intake' },
   { label: 'INTELLIGENCE', path: '/solutions' },
+  { label: 'TRANSPARENCY', path: '/transparency' },
 ];
 
 const ROLE_LABELS = {
@@ -130,6 +131,13 @@ export default function DnnStudioLanding() {
             className="w-full h-auto"
           />
         </div>
+
+        <p
+          className="text-center mt-6 text-sm sm:text-base font-semibold tracking-wide"
+          style={{ color: GOLD }}
+        >
+          A lifetime real estate working site — built to improve your opportunities in real estate, every step of the way.
+        </p>
       </div>
     </div>
   );
