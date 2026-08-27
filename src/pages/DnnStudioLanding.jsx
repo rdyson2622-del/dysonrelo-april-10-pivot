@@ -142,7 +142,10 @@ export default function DnnStudioLanding() {
           "We provide a lifetime workspace designed to maximize your real estate opportunities.
         </p>
         <p className="text-center mt-1 text-lg sm:text-xl italic font-semibold tracking-wide" style={{ color: GOLD }}>
-          No sales pitches, just real-time solutions and a clear path to execute results." — Bob Dyson
+          No sales pitches, just real-time solutions and a clear path to execute results."
+        </p>
+        <p className="text-center mt-2 text-sm sm:text-base italic" style={{ color: GOLD }}>
+          — Bob Dyson
         </p>
       </div>
     </div>
