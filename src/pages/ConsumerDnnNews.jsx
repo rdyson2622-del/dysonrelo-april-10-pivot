@@ -578,7 +578,7 @@ export default function ConsumerDnnNews() {
           style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#1a1a1a', lineHeight: 1.05 }}>
           REAL ESTATE NEWS
           <br />
-          <span style={{ color: '#D4AF37' }}>SOLUTIONS</span>
+          WITH <span style={{ color: '#D4AF37' }}>SOLUTIONS</span>
         </h1>
         <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
