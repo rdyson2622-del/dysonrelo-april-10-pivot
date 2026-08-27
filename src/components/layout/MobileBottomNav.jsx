@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, LayoutDashboard, Newspaper, MessageCircle, Map } from 'lucide-react';
+import { Home, LayoutDashboard, Newspaper, MessageCircle, Map, Sparkles, ShieldCheck } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -12,12 +12,14 @@ export default function MobileBottomNav() {
     { label: 'Dashboard', path: '/dashboard',             Icon: LayoutDashboard },
     { label: 'Roadmap',   path: '/RelocationRoadmap',     Icon: Map },
     { label: 'DNN News',  path: '/dnn-news',              Icon: Newspaper },
+    { label: 'Intel',     path: '/solutions',              Icon: Sparkles },
+    { label: 'Transp.',   path: '/transparency',           Icon: ShieldCheck },
     { label: 'Messages',  path: '/communications-explainer', Icon: MessageCircle },
   ];
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center gap-1 px-2 overflow-x-auto"
       style={{
         background: '#0d0d0d',
         borderTop: '1px solid rgba(212,175,55,0.25)',
@@ -32,11 +34,11 @@ export default function MobileBottomNav() {
           <Link
             key={path}
             to={path}
-            className="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl"
+            className="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-xl shrink-0"
             style={{ color: active ? GOLD : 'rgba(255,255,255,0.45)' }}
           >
             <Icon className="w-5 h-5" style={{ strokeWidth: active ? 2.5 : 1.8 }} />
-            <span className="text-[10px] font-semibold tracking-wide">{label}</span>
+            <span className="text-[9px] font-semibold tracking-wide whitespace-nowrap">{label}</span>
           </Link>
         );
       })}
