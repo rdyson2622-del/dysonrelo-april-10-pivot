@@ -139,7 +139,7 @@ export default function DnnStudioLanding() {
           className="text-center mt-6 text-sm sm:text-base font-semibold tracking-wide"
           style={{ color: GOLD }}
         >
-          The lifetime real estate working site built to improve your opportunities from your first move to your last.
+          A lifetime real estate workspace designed to maximize your opportunities. No sales pitches, just real-time solutions.
         </p>
       </div>
     </div>
