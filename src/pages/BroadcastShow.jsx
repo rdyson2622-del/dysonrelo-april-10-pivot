@@ -11,6 +11,9 @@ import CoreFourPillars from '@/components/dnn/CoreFourPillars';
 
 const GOLD = '#D4AF37';
 const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+// Animated silent placeholder — real HeyGen render of Charlie at the DNN desk (Show 2),
+// muted + looped so visitors see the anchor moving while the daily show is finished.
+const HERO_LOOP_VIDEO = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/7f480fe74_broadcast-show-replace.mp4';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 export default function BroadcastShow() {
@@ -49,9 +52,13 @@ export default function BroadcastShow() {
 
       {/* LOCKED hero: PRIMARY STILL only, full-bleed contain on black */}
       <div className="relative w-full" style={{ background: '#000', height: '100vh' }}>
-        <img
-          src={HERO_STILL}
-          alt="DNN Charlie Desk Studio"
+        <video
+          src={HERO_LOOP_VIDEO}
+          poster={HERO_STILL}
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute inset-0 w-full h-full object-contain"
           style={{ background: '#000', transform: 'none' }}
         />

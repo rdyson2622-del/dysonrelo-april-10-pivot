@@ -12,6 +12,9 @@ const GOLD = '#D4AF37';
 // 16:9. Same URL used on Admin.jsx and BroadcastShow.jsx.
 // ══════════════════════════════════════════════════════════════════════════
 const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+// Animated silent placeholder — real HeyGen render of Charlie at the DNN desk (Show 2),
+// muted + looped so visitors see movement/life in the studio while the daily show is finished.
+const STUDIO_LOOP_VIDEO = 'https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/7f480fe74_broadcast-show-replace.mp4';
 
 // ══════════════════════════════════════════════════════════════════════════
 // ⚠️ CANONICAL DNN STUDIO BACKGROUND — DO NOT REPLACE, DO NOT REGENERATE ⚠️
@@ -107,9 +110,13 @@ export default function DnnStudioLanding() {
             <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
             </span>
-            <img
-              src={STUDIO_STILL}
-              alt="DNN Real Estate News Studio"
+            <video
+              src={STUDIO_LOOP_VIDEO}
+              poster={STUDIO_STILL}
+              autoPlay
+              loop
+              muted
+              playsInline
               className="w-full h-full object-cover"
             />
           </div>
