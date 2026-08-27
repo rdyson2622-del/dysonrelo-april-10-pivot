@@ -210,30 +210,28 @@ export default function SolutionMapEntry() {
               />
               {!inputValue && (
                 <div className="absolute inset-0 flex items-center px-6 overflow-hidden whitespace-nowrap pointer-events-none">
-                  <span className="inline-flex animate-marquee text-lg whitespace-nowrap">
+                  <span className="inline-flex animate-marquee text-lg whitespace-nowrap" style={{ color: '#000' }}>
                     {[
-                      { text: 'A listing', color: '#b8860b' },
-                      { text: 'a stalled escrow', color: '#b91c1c' },
-                      { text: 'a buyer or seller issue', color: '#15803d' },
-                      { text: 'a contract concern', color: '#1d4ed8' },
-                      { text: 'information on a better plan to list or buy with less stress', color: '#7c3aed' },
-                      { text: 'my benefits and issues in moving locally, nationally, or internationally', color: '#c2410c' },
-                    ].flatMap((s, i, arr) => [
-                      <span key={`a-${i}`} style={{ color: s.color }}>{s.text}</span>,
-                      i < arr.length - 1 ? <span key={`d-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
-                      i === arr.length - 1 ? <span key={`e-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
+                      'A listing',
+                      'a stalled escrow',
+                      'a buyer or seller issue',
+                      'a contract concern',
+                      'information on a better plan to list or buy with less stress',
+                      'my benefits and issues in moving locally, nationally, or internationally',
+                    ].flatMap((text, i, arr) => [
+                      <span key={`a-${i}`}>{text}</span>,
+                      <span key={`d-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>,
                     ])}
                     {[
-                      { text: 'A listing', color: '#b8860b' },
-                      { text: 'a stalled escrow', color: '#b91c1c' },
-                      { text: 'a buyer or seller issue', color: '#15803d' },
-                      { text: 'a contract concern', color: '#1d4ed8' },
-                      { text: 'information on a better plan to list or buy with less stress', color: '#7c3aed' },
-                      { text: 'my benefits and issues in moving locally, nationally, or internationally', color: '#c2410c' },
-                    ].flatMap((s, i, arr) => [
-                      <span key={`b-${i}`} style={{ color: s.color }}>{s.text}</span>,
-                      i < arr.length - 1 ? <span key={`f-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
-                      i === arr.length - 1 ? <span key={`g-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span> : null,
+                      'A listing',
+                      'a stalled escrow',
+                      'a buyer or seller issue',
+                      'a contract concern',
+                      'information on a better plan to list or buy with less stress',
+                      'my benefits and issues in moving locally, nationally, or internationally',
+                    ].flatMap((text, i, arr) => [
+                      <span key={`b-${i}`}>{text}</span>,
+                      <span key={`f-${i}`} style={{ color: '#5a5a5a' }}>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>,
                     ])}
                   </span>
                 </div>
