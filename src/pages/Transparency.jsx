@@ -48,7 +48,7 @@ export default function Transparency() {
           <div className="flex items-center gap-3 mb-4">
             <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
             <h1 className="text-3xl sm:text-4xl font-black tracking-widest uppercase" style={{ color: GOLD }}>
-              {content?.headline || 'Transparency'}
+              {content?.headline || 'Transparency'} <span className="text-xl sm:text-2xl">With Solutions</span>
             </h1>
           </div>
           <p className="text-white/80 text-lg">
