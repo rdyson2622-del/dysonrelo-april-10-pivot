@@ -27,7 +27,7 @@ const PATHS = [
     label: 'I am an Active Real Estate Agent or Broker',
     sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
     badge: 'RELOCATION AGENT NETWORK',
-    dest: '/find-agent',
+    dest: '/agent-command-center',
     roleKey: 'agent',
   },
   {

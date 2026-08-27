@@ -1,0 +1,118 @@
+{
+  "name": "RelocationProject",
+  "type": "object",
+  "properties": {
+    "clientName": {
+      "type": "string",
+      "description": "Relocating client's full name"
+    },
+    "originAddress": {
+      "type": "string",
+      "description": "Address of the home the client is selling"
+    },
+    "originListingPrice": {
+      "type": "string",
+      "description": "Asking or estimated price of the origin listing"
+    },
+    "destinationMetro": {
+      "type": "string",
+      "description": "Metro area / city the client is relocating to"
+    },
+    "destinationCriteria": {
+      "type": "string",
+      "description": "Destination search criteria \u2014 price range, school district, commute, property type"
+    },
+    "targetMoveDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Target move date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "needs_destination_agent",
+        "agent_vetting_in_progress",
+        "agent_assigned",
+        "house_hunting",
+        "in_escrow",
+        "closed"
+      ],
+      "default": "needs_destination_agent",
+      "description": "Current stage of the relocation pipeline"
+    },
+    "projectedReferralFee": {
+      "type": "number",
+      "description": "Projected gross referral commission on this deal"
+    },
+    "destinationAgentName": {
+      "type": "string",
+      "description": "Name of the vetted destination agent assigned to this client"
+    },
+    "destinationAgentPhone": {
+      "type": "string"
+    },
+    "destinationAgentEmail": {
+      "type": "string"
+    },
+    "sendingAgentId": {
+      "type": "string",
+      "description": "User ID of the sending/relo agent who owns this project"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes on this project"
+    }
+  },
+  "required": [
+    "clientName"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.sendingAgentId": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.sendingAgentId": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

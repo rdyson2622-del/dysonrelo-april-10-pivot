@@ -167,6 +167,8 @@ import AdminTalkToUsPreview from './pages/AdminTalkToUsPreview';
 import AdminTalkToUsRequests from './pages/AdminTalkToUsRequests';
 import AdminListingProspects from './pages/AdminListingProspects';
 import ListingAgentPreview from './pages/ListingAgentPreview';
+import AgentCommandCenter from './pages/AgentCommandCenter';
+import AgentWorkfile from './pages/AgentWorkfile';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -268,6 +270,8 @@ const AuthenticatedApp = () => {
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
       <Route path="/master-show-sheet" element={<MasterShowSheet />} />
+      <Route path="/agent-command-center" element={<AgentCommandCenter />} />
+      <Route path="/agent-workfile/:id" element={<AgentWorkfile />} />
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
