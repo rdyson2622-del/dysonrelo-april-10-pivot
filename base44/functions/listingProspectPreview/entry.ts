@@ -23,6 +23,37 @@ export default async function(req) {
       return Response.json({ success: true });
     }
 
+    // "claim" — the agent just set a password and verified their email on
+    // the frontend (register + OTP). This converts their temporary preview
+    // profile into a permanent Relo Agent partner record, with their
+    // current listing noted so it's ready as their first active project.
+    if (action === 'claim') {
+      await base44.asServiceRole.entities.ListingProspect.update(prospect.id, { status: 'converted' });
+
+      const listingLabel = [prospect.listing_address, prospect.city].filter(Boolean).join(', ');
+      const partnerPayload = {
+        agent_name: prospect.agent_name,
+        email: prospect.agent_email,
+        phone: prospect.agent_phone,
+        brokerage: prospect.brokerage,
+        dre_number: prospect.dre_number,
+        status: 'active',
+        notes: `Claimed via listing preview${listingLabel ? ' — ' + listingLabel : ''}`,
+        onboarded_at: new Date().toISOString(),
+      };
+
+      if (prospect.agent_email) {
+        const existing = await base44.asServiceRole.entities.PartnerAgent.filter({ email: prospect.agent_email });
+        if (existing[0]) {
+          await base44.asServiceRole.entities.PartnerAgent.update(existing[0].id, partnerPayload);
+        } else {
+          await base44.asServiceRole.entities.PartnerAgent.create(partnerPayload);
+        }
+      }
+
+      return Response.json({ success: true, listing_label: listingLabel });
+    }
+
     // Default: "get" — return only the display fields, mark as previewed
     if (prospect.status === 'queued' || prospect.status === 'contacted') {
       await base44.asServiceRole.entities.ListingProspect.update(prospect.id, {
@@ -46,6 +77,9 @@ export default async function(req) {
         listing_description: prospect.listing_description,
         referral_fee_offered: prospect.referral_fee_offered,
         client_destination: prospect.client_destination,
+        dre_number: prospect.dre_number,
+        agent_phone: prospect.agent_phone,
+        agent_email: prospect.agent_email,
       },
     });
   } catch (error) {

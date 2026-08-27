@@ -22,6 +22,7 @@ export default async function(req) {
           agent_name: { type: 'string' },
           agent_phone: { type: 'string' },
           agent_email: { type: 'string' },
+          dre_number: { type: 'string' },
           brokerage: { type: 'string' },
           city: { type: 'string' },
           listing_address: { type: 'string' },

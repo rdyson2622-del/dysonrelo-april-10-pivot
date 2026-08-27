@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Agent's brokerage"
     },
+    "dre_number": {
+      "type": "string",
+      "description": "Agent's DRE / real estate license number"
+    },
     "city": {
       "type": "string",
       "description": "City of the listing"
