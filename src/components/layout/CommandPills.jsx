@@ -5,7 +5,7 @@ const GOLD = '#D4AF37';
 
 const PORTAL_PILLS = [
   { label: 'ADMIN', emoji: '⚙️', role: 'admin', path: '/admin', isAdmin: true },
-  { label: 'FIRST-TIME VISITOR', emoji: '👋', role: 'first_time_visitor', path: '/broadcast-show' },
+  { label: 'FIRST-TIME VISITOR', emoji: '👋', role: 'first_time_visitor', path: '/studio-landing' },
   { label: 'CORP RELO HR', emoji: '🏢', role: 'hr', path: '/corporate-relo' },
   { label: 'CLIENT', emoji: '🏠', role: 'client', path: '/home' },
   { label: 'RELO AGENT', emoji: '⭐', role: 'agent', path: '/find-agent' },
