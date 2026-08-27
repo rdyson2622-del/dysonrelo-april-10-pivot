@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { ShieldCheck } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import LiveLedgerFeed from '@/components/transparency/LiveLedgerFeed';
 
 const GOLD = '#D4AF37';
 const CHARLIE_HEADSHOT = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/94a10d6e0_Screenshot2026-08-26at71908AM.png';
@@ -94,6 +95,8 @@ export default function Transparency() {
             </li>
           ))}
         </ul>
+
+        <LiveLedgerFeed />
       </div>
     </div>
   );
