@@ -10,6 +10,7 @@ const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef05
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 const STUDIO_WITH_ANCHORS = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/80129619f_Screenshot2026-08-01at31026PM.png';
 const DNN_STUDIO_PHOTO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f22ec4070_charlie-desk-loop.mp4';
 
 const PATHS = [
   {
@@ -116,9 +117,13 @@ export default function RoleSelector() {
     <div className="bg-black">
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section className="relative w-full h-screen overflow-hidden">
-        <img
-          src={DNN_STUDIO_PHOTO}
-          alt="DNN Real Estate News Studio"
+        <video
+          src={STUDIO_LOOP_VIDEO}
+          poster={DNN_STUDIO_PHOTO}
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute inset-0 w-full h-full object-contain bg-black"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none" />
