@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Newspaper, MapPin, Sparkles, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -24,10 +25,10 @@ const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const PILLS = [
-  { label: 'NEWS',         path: '/broadcast-show' },
-  { label: 'RELOCATION',   path: '/relocation-intake' },
-  { label: 'INTELLIGENCE', path: '/solutions' },
-  { label: 'TRANSPARENCY', path: '/transparency' },
+  { label: 'NEWS',         path: '/broadcast-show',     icon: Newspaper },
+  { label: 'RELOCATION',   path: '/relocation-intake',  icon: MapPin },
+  { label: 'INTELLIGENCE', path: '/solutions',          icon: Sparkles },
+  { label: 'TRANSPARENCY', path: '/transparency',       icon: ShieldCheck },
 ];
 
 const ROLE_LABELS = {
@@ -100,7 +101,7 @@ export default function DnnStudioLanding() {
 
       {/* ── Studio hero (left) + rectangular nav boxes (right) ── */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-1 pb-10">
-        <div className="flex flex-col md:flex-row items-stretch gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
           {/* Locked DNN Studio hero — the ONLY studio visual on this page */}
           <div className="flex-1 relative rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
             <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
@@ -113,22 +114,21 @@ export default function DnnStudioLanding() {
             />
           </div>
 
-          {/* Rectangular nav boxes — same box style seen on later pages */}
-          <div className="flex flex-row md:flex-col gap-3 md:w-56">
+          {/* Square nav boxes — matches the box style used on all other pages, centered beside the studio box */}
+          <div className="flex flex-row md:flex-col justify-center gap-3 md:w-56">
             {PILLS.map((pill) => (
               <button
                 key={pill.label}
                 onClick={() => navigate(pill.path)}
-                className="flex-1 md:flex-none px-4 py-5 rounded-xl text-sm sm:text-base font-black tracking-[0.14em] transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                className="flex-1 md:flex-none flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm sm:text-base font-black tracking-[0.14em] transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
                 style={{
-                  background: 'rgba(197,160,89,0.18)',
+                  background: '#0a0a0a',
                   border: `1.5px solid ${GOLD}`,
                   color: GOLD,
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
                   boxShadow: `0 0 24px rgba(212,175,55,0.35), inset 0 0 12px rgba(212,175,55,0.08)`,
                 }}
               >
+                <pill.icon className="w-5 h-5" style={{ color: GOLD }} />
                 {pill.label}
               </button>
             ))}
@@ -136,10 +136,13 @@ export default function DnnStudioLanding() {
         </div>
 
         <p
-          className="text-center mt-6 text-sm sm:text-base font-semibold tracking-wide"
+          className="text-center mt-8 text-lg sm:text-xl italic font-semibold tracking-wide"
           style={{ color: GOLD }}
         >
-          A lifetime real estate workspace designed to maximize your opportunities. No sales pitches, just real-time solutions.
+          "A lifetime real estate workspace designed to maximize your opportunities. No sales pitches, just real-time solutions."
+        </p>
+        <p className="text-center mt-2 text-sm sm:text-base italic" style={{ color: GOLD }}>
+          — Bob Dyson
         </p>
       </div>
     </div>
