@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import NewsUnderConstructionInfo from '@/components/dnn/NewsUnderConstructionInfo';
 
 const GOLD = '#D4AF37';
 const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
@@ -23,15 +24,12 @@ export default function BroadcastShow() {
   }, []);
 
   return (
-    <div
-      className="fixed inset-0 z-[200] flex items-center justify-center"
-      style={{ background: '#000', overflow: 'hidden' }}
-    >
+    <div className="min-h-screen w-full" style={{ background: '#000' }}>
       {/* Close */}
       <button
         onClick={() => navigate('/')}
         aria-label="Close"
-        className="absolute top-4 right-4 z-30 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
+        className="fixed top-4 right-4 z-30 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
         style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${GOLD}`, color: GOLD }}
       >
         <X className="w-6 h-6" />
@@ -39,7 +37,7 @@ export default function BroadcastShow() {
 
       {/* DNN bug */}
       <div
-        className="absolute top-4 left-4 z-30 flex items-center gap-2 px-3 py-1.5 rounded-lg"
+        className="fixed top-4 left-4 z-30 flex items-center gap-2 px-3 py-1.5 rounded-lg"
         style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(212,175,55,0.4)' }}
       >
         <img src={DNN_LOGO} alt="DNN" className="h-5 w-auto" />
@@ -49,41 +47,44 @@ export default function BroadcastShow() {
       </div>
 
       {/* LOCKED hero: PRIMARY STILL only, full-bleed contain on black */}
-      <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
+      <div className="relative w-full" style={{ background: '#000', height: '100vh' }}>
         <img
           src={HERO_STILL}
           alt="DNN Charlie Desk Studio"
           className="absolute inset-0 w-full h-full object-contain"
           style={{ background: '#000', transform: 'none' }}
         />
+
+        {/* Editable headline/subheadline/CTA — imposed over bottom of the studio image */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-center gap-2 px-4"
+          style={{ height: '16%' }}
+        >
+          <span
+            className="text-2xl sm:text-4xl font-black tracking-[0.25em] uppercase text-center pointer-events-none"
+            style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
+          >
+            {content.headline || 'Temporarily Under Construction'}
+          </span>
+          {content.subheadline && (
+            <span className="text-sm sm:text-base font-medium text-center pointer-events-none" style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
+              {content.subheadline}
+            </span>
+          )}
+          {content.cta_label && content.cta_url && (
+            <button
+              onClick={() => navigate(content.cta_url)}
+              className="mt-1 px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase transition-all hover:scale-105 pointer-events-auto"
+              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
+            >
+              {content.cta_label}
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Editable headline/subheadline/CTA — imposed over bottom of the studio image */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-center gap-2 px-4"
-        style={{ height: '16%' }}
-      >
-        <span
-          className="text-2xl sm:text-4xl font-black tracking-[0.25em] uppercase text-center pointer-events-none"
-          style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
-        >
-          {content.headline || 'Temporarily Under Construction'}
-        </span>
-        {content.subheadline && (
-          <span className="text-sm sm:text-base font-medium text-center pointer-events-none" style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
-            {content.subheadline}
-          </span>
-        )}
-        {content.cta_label && content.cta_url && (
-          <button
-            onClick={() => navigate(content.cta_url)}
-            className="mt-1 px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase transition-all hover:scale-105 pointer-events-auto"
-            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
-          >
-            {content.cta_label}
-          </button>
-        )}
-      </div>
+      {/* Scrollable info panel — tells first-timers what the News department covers */}
+      <NewsUnderConstructionInfo />
     </div>
   );
 }
