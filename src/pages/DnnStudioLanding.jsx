@@ -98,38 +98,41 @@ export default function DnnStudioLanding() {
         </div>
       </header>
 
-      {/* ── Nav pills ── */}
-      <div className="relative z-10 flex items-center justify-center gap-3 sm:gap-5 py-6">
-        {PILLS.map((pill) => (
-          <button
-            key={pill.label}
-            onClick={() => navigate(pill.path)}
-            className="px-6 sm:px-10 py-3 sm:py-4 rounded-full text-sm sm:text-base font-black tracking-[0.18em] transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-            style={{
-              background: 'rgba(197,160,89,0.18)',
-              border: `1.5px solid ${GOLD}`,
-              color: GOLD,
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              boxShadow: `0 0 24px rgba(212,175,55,0.35), inset 0 0 12px rgba(212,175,55,0.08)`,
-            }}
-          >
-            {pill.label}
-          </button>
-        ))}
-      </div>
+      {/* ── Studio hero (left) + rectangular nav boxes (right) ── */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-1 pb-10">
+        <div className="flex flex-col md:flex-row items-stretch gap-4">
+          {/* Locked DNN Studio hero — the ONLY studio visual on this page */}
+          <div className="flex-1 relative rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
+            <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
+            </span>
+            <img
+              src={STUDIO_STILL}
+              alt="DNN Real Estate News Studio"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-      {/* ── Locked DNN Studio hero — the ONLY studio visual on this page ── */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10">
-        <div className="relative rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
-          <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
-          </span>
-          <img
-            src={STUDIO_STILL}
-            alt="DNN Real Estate News Studio"
-            className="w-full h-auto"
-          />
+          {/* Rectangular nav boxes — same box style seen on later pages */}
+          <div className="flex flex-row md:flex-col gap-3 md:w-56">
+            {PILLS.map((pill) => (
+              <button
+                key={pill.label}
+                onClick={() => navigate(pill.path)}
+                className="flex-1 md:flex-none px-4 py-5 rounded-xl text-sm sm:text-base font-black tracking-[0.14em] transition-all hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                style={{
+                  background: 'rgba(197,160,89,0.18)',
+                  border: `1.5px solid ${GOLD}`,
+                  color: GOLD,
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  boxShadow: `0 0 24px rgba(212,175,55,0.35), inset 0 0 12px rgba(212,175,55,0.08)`,
+                }}
+              >
+                {pill.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <p
