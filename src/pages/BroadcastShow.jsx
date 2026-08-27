@@ -13,7 +13,7 @@ const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c
 
 export default function BroadcastShow() {
   const navigate = useNavigate();
-  const [content, setContent] = useState({ headline: 'Coming Soon', subheadline: '', cta_label: '', cta_url: '' });
+  const [content, setContent] = useState({ headline: 'Temporarily Under Construction', subheadline: 'Returning Soon', cta_label: '', cta_url: '' });
 
   useEffect(() => {
     base44.entities.EntryPortalContent.list().then(rows => {
@@ -67,7 +67,7 @@ export default function BroadcastShow() {
           className="text-2xl sm:text-4xl font-black tracking-[0.25em] uppercase text-center pointer-events-none"
           style={{ color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}
         >
-          {content.headline || 'Coming Soon'}
+          {content.headline || 'Temporarily Under Construction'}
         </span>
         {content.subheadline && (
           <span className="text-sm sm:text-base font-medium text-center pointer-events-none" style={{ color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
