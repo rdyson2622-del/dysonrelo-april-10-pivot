@@ -6,6 +6,7 @@ import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import VendorBenefits from '@/components/portal/VendorBenefits';
 import VendorAreaVettingForm from '@/components/portal/VendorAreaVettingForm';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
+import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 
@@ -31,6 +32,13 @@ export default function Search() {
 
           <div className="rounded-2xl px-6 py-8 mb-10" style={{ background: '#0d0d0d' }}>
             <PropertyPlatformSearch />
+          </div>
+
+          <div className="rounded-2xl px-6 py-8 mb-10" style={{ background: '#0d0d0d' }}>
+            <FindAProWidget
+              label="National Vendor Utilities"
+              subtitle="This is where your business gets placed once vetted — visible to clients across every portal."
+            />
           </div>
 
           <div className="max-w-xl mx-auto text-left">
