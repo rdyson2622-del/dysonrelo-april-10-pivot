@@ -423,7 +423,7 @@ export default function RelocationIntake() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>DYSON & DYSON CONCIERGE</p>
          <h1 className="display-heading mb-3" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', letterSpacing: '0.18em', color: '#1a1a1a' }}>
-           Let us share how we plan our clients move either locally or around the world
+           Client Moves
          </h1>
          <p className="text-sm" style={{ color: '#D4AF37', fontSize: '1.12rem' }}>
            In order for our AI and Human teams to provide a deep learning model for you, we first need to understand your objectives in all areas of your residential relocation. Please tell us about your plans to move and we'll build your personalized plan — completely free.
