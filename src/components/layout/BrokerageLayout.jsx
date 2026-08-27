@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
+import PortalIntelligenceRail from '@/components/layout/PortalIntelligenceRail';
 
 const GOLD = '#D4AF37';
 
@@ -171,9 +172,17 @@ export default function BrokerageLayout() {
 
       {/* ── Main ── */}
       <main className="flex-1 overflow-auto">
+        <PortalIntelligenceRail />
         {/* Top bar */}
         <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 sticky top-0 z-10" style={{ background: '#0a0a0a' }}>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition-all hover:opacity-80"
+              style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back
+            </button>
             <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: GOLD }}>
               Broker/Agent Portal
             </span>

@@ -9,6 +9,7 @@ import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
+import PortalIntelligenceRail from './PortalIntelligenceRail';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -53,6 +54,7 @@ export default function AdminLayout() {
       )}
 
       <main className="flex-1 w-full overflow-auto relative" style={{ background: '#ede0cc' }}>
+        <PortalIntelligenceRail />
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[260px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
