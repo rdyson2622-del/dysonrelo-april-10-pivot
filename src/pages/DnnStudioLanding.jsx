@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import FindAProWidget from '@/components/portal/FindAProWidget';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import LockedToolsDrawer from '@/components/portal/LockedToolsDrawer';
+import PortalChoiceSelector from '@/components/portal/PortalChoiceSelector';
 
 const GOLD = '#D4AF37';
 
@@ -159,6 +160,10 @@ export default function DnnStudioLanding() {
         </p>
 
         <div className="mt-12 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
+          <PortalChoiceSelector />
+        </div>
+
+        <div className="mt-6 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
           <FindAProWidget />
         </div>
 
