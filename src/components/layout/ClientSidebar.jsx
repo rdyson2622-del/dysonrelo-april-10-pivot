@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, Archive, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight
+  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight, ClipboardList
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -144,6 +144,12 @@ export default function ClientSidebar({ onToggle }) {
         </Link>
         {isAgent && (
           <>
+            <Link to="/agent-command-center"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: '#000', background: GOLD }}>
+              <ClipboardList className="w-3.5 h-3.5 shrink-0" style={{ color: '#000' }} />
+              AGENT COMMAND CENTER
+            </Link>
             <button
               onClick={() => setShowSendingModal(true)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10 text-left"

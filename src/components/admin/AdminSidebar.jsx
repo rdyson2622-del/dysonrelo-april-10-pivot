@@ -7,7 +7,7 @@ import {
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
-  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin
+  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -390,6 +390,22 @@ export default function AdminSidebar() {
         >
           <Map className="w-4 h-4 shrink-0" />
           <span className="text-center leading-tight">ROAD MAP<br/>TO COMPLETION</span>
+        </Link>
+      </div>
+
+      {/* Agent Command Center — our client-tracking mechanism, pinned near top */}
+      <div className="px-3 pb-2 shrink-0">
+        <Link
+          to="/agent-command-center"
+          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+          style={{
+            background: location.pathname.startsWith('/agent-command-center') || location.pathname.startsWith('/agent-workfile') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <ClipboardList className="w-4 h-4 shrink-0" />
+          <span className="text-center leading-tight">AGENT COMMAND<br/>CENTER</span>
         </Link>
       </div>
 
