@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { ArrowLeft, MapPin, ArrowRight, UserCheck, Phone, Mail } from 'lucide-react';
 import LiveActionLedgerPlaceholder from '@/components/agentPortal/LiveActionLedgerPlaceholder';
+import RelocationMilestoneRoadmap from '@/components/agentPortal/RelocationMilestoneRoadmap';
 import { GOLD, STATUS_CONFIG, statusConfig } from '@/components/agentPortal/relocationProjectStatus';
 
 /**
@@ -52,6 +53,10 @@ export default function AgentWorkfile() {
               <option key={key} value={key} style={{ background: '#111', color: '#fff' }}>{c.label}</option>
             ))}
           </select>
+        </div>
+
+        <div className="mb-6">
+          <RelocationMilestoneRoadmap status={project.status} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
