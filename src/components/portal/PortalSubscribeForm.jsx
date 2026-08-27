@@ -43,6 +43,9 @@ export default function PortalSubscribeForm({ portalName, source, roleKey, dest 
         <p className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.65)' }}>
           Subscribe once and this portal becomes your home page — you'll skip the landing page on every return visit.
         </p>
+        <p className="text-xs font-bold mt-1" style={{ color: 'rgba(0,0,0,0.75)' }}>
+          Subscribe for news at no cost to you.
+        </p>
       </div>
 
       {done ? (
