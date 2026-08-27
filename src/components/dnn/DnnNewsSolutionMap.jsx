@@ -20,25 +20,27 @@ export default function DnnNewsSolutionMap() {
   if (!flow) return null;
 
   return (
-    <div className="mb-8">
-      <div className="rounded-xl p-3 sm:p-4 mx-auto" style={{ background: '#1a1a1a', border: `1px solid rgba(56,189,248,0.30)`, maxWidth: '420px' }}>
-        <div className="flex items-center gap-2 mb-2">
-          <Newspaper className="w-4 h-4" style={{ color: DNN_COLOR }} />
-          <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: DNN_COLOR }}>
-            DNN News Roadmap
-          </span>
-          <span className="text-[9px] font-bold tracking-widest uppercase animate-pulse ml-auto" style={{ color: GOLD }}>
-            ● Live
-          </span>
+    <div className="mb-16 flex justify-center">
+      <div style={{ transform: 'scale(1.25)', transformOrigin: 'top center' }}>
+        <div className="rounded-xl p-3 sm:p-4 mx-auto" style={{ background: '#1a1a1a', border: `1px solid rgba(56,189,248,0.30)`, maxWidth: '420px' }}>
+          <div className="flex items-center gap-2 mb-2">
+            <Newspaper className="w-4 h-4" style={{ color: DNN_COLOR }} />
+            <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: DNN_COLOR }}>
+              DNN News Roadmap
+            </span>
+            <span className="text-[9px] font-bold tracking-widest uppercase animate-pulse ml-auto" style={{ color: GOLD }}>
+              ● Live
+            </span>
+          </div>
+          <FlowRoadmapLine
+            stages={flow.stages}
+            stageStatuses={statuses}
+            color={DNN_COLOR}
+            activeStageId={activeStageId}
+            onSelect={() => {}}
+            compact
+          />
         </div>
-        <FlowRoadmapLine
-          stages={flow.stages}
-          stageStatuses={statuses}
-          color={DNN_COLOR}
-          activeStageId={activeStageId}
-          onSelect={() => {}}
-          compact
-        />
       </div>
     </div>
   );
