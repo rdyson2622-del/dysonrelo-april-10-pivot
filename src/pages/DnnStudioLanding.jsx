@@ -24,7 +24,7 @@ const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const PILLS = [
-  { label: 'NEWS',         path: '/dnn-news' },
+  { label: 'NEWS',         path: '/broadcast-show' },
   { label: 'RELOCATION',   path: '/relocation-intake' },
   { label: 'INTELLIGENCE', path: '/solutions' },
 ];

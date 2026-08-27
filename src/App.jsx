@@ -191,6 +191,12 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
+      {/* Public studio landing page — the actual front door for first-time
+          visitors (has working NEWS/RELOCATION/INTELLIGENCE pills). The
+          "Coming Soon" broadcast placeholder now lives BEHIND this page
+          (via the NEWS pill), not in front of it. */}
+      <Route path="/studio-landing" element={<DnnStudioLanding />} />
+
       {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
       <Route path="/agreement-fill" element={<AgreementFillForm />} />
 
@@ -214,7 +220,7 @@ const AuthenticatedApp = () => {
       </Route>
 
       {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
-      <Route path="/" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Navigate to="/broadcast-show" replace />} />
+      <Route path="/" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Navigate to="/studio-landing" replace />} />
 
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
