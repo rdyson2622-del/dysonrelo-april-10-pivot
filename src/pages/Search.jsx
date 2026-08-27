@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
+import VendorBenefits from '@/components/portal/VendorBenefits';
+import VendorAreaVettingForm from '@/components/portal/VendorAreaVettingForm';
 
 const GOLD = '#D4AF37';
 
@@ -23,6 +25,12 @@ export default function Search() {
 
           {/* Charlie & Bob — DNN strategy lead-in */}
           <PortalLeadInDuo />
+
+          <VendorBenefits />
+
+          <div className="max-w-xl mx-auto text-left">
+            <VendorAreaVettingForm />
+          </div>
 
           <div className="mt-12 max-w-xl mx-auto text-left">
             <PortalSubscribeForm portalName="Vendor Utility" source="Vendor Portal" roleKey="vendor" dest="/search" />

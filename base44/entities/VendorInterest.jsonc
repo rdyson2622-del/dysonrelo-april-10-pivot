@@ -1,0 +1,80 @@
+{
+  "name": "VendorInterest",
+  "type": "object",
+  "properties": {
+    "vendor_name": {
+      "type": "string",
+      "description": "Contact person's name"
+    },
+    "company": {
+      "type": "string",
+      "description": "Vendor company name"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "title_company",
+        "lender",
+        "inspector",
+        "mover",
+        "stager",
+        "photographer",
+        "contractor",
+        "insurance",
+        "cleaning",
+        "landscaping",
+        "other"
+      ],
+      "default": "other",
+      "description": "Type of service this vendor provides"
+    },
+    "areas_served": {
+      "type": "string",
+      "description": "Cities/towns or regions this vendor covers"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional details from the vendor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "vetting",
+        "vetted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Rapid vetting lifecycle"
+    }
+  },
+  "required": [
+    "vendor_name",
+    "service_type",
+    "areas_served"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
