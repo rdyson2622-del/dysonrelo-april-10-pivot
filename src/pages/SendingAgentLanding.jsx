@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Shield, DollarSign, Truck, ArrowRight, CheckCircle, Phone } from 'lucide-react';
 import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 
 const GOLD = '#D4AF37';
 
@@ -55,6 +56,8 @@ export default function SendingAgentLanding() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d' }}>
+
+      <StudioHeroBanner />
 
       {/* Hero */}
       <div className="px-6 py-16 text-center" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>

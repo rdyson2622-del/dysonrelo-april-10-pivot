@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -36,7 +37,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col" style={{ background: '#0a0a0a' }}>
-      {/* ── Top: Solution Map entry page ── */}
+      {/* ── Top: shared DNN Studio hero ── */}
+      <StudioHeroBanner />
+
+      {/* ── Solution Map entry page ── */}
       <SolutionMapEntry />
 
       {/* ── Scrollable following sections ── */}

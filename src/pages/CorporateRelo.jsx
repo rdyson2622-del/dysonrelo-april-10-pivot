@@ -8,6 +8,7 @@ import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 
 const GOLD = '#D4AF37';
 
@@ -154,6 +155,7 @@ export default function CorporateRelo() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
+      <StudioHeroBanner />
       {/* ── Hero + Intro avatar (upper left) ── */}
       <section
         className="px-8 md:px-16 pt-16 pb-14"

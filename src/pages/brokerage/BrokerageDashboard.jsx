@@ -6,6 +6,7 @@ import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import BrokerageCommandPill from '@/components/brokerage/BrokerageCommandPill';
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import {
   Shield, Building2, Users, Megaphone, Star, ArrowRight,
   AlertTriangle, CheckCircle2, Clock, Loader2
@@ -158,6 +159,7 @@ export default function BrokerageDashboard() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#0a0a0a' }}>
+      <StudioHeroBanner />
       {/* ── Hero ── */}
       <div className="flex-1 flex flex-col items-center px-6 pt-10 pb-8">
         <div className="max-w-4xl w-full text-center">

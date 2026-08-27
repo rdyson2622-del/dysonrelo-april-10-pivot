@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 
 const GOLD = '#D4AF37';
 
@@ -28,6 +29,7 @@ export default function Search() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#000' }}>
+      <StudioHeroBanner />
       <main className="flex-1 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
