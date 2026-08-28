@@ -195,13 +195,6 @@ function SingleVideoPlayer({ videoUrl, status, composited, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      {/* Studio background — only for raw (non-composited) video.
-          The composited MP4 already has the studio set + whiteboard baked in,
-          so we play it full-frame instead of overlaying a second background. */}
-      {!composited && (
-        <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
-      )}
-
       {/* Close button */}
       <button onClick={onClose} aria-label="Close"
         className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -217,50 +210,21 @@ function SingleVideoPlayer({ videoUrl, status, composited, onClose }) {
         <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#ef4444' }} />
       </div>
 
-      {/* Video — full-frame when composited (studio bg + whiteboard baked in),
-          or in a black-backed framed box over the studio set when raw. */}
-      {composited ? (
-        <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
-          <video
-            ref={videoRef}
-            src={videoUrl}
-            playsInline
-            preload="auto"
-            loop={false}
-            onClick={togglePlay}
-            onEnded={handleEnded}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ) : (
-        <div
-          className="absolute overflow-hidden"
-          style={{
-            width: 'clamp(220px, 30vw, 420px)',
-            aspectRatio: '16/9',
-            bottom: '10vh',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            borderRadius: '12px',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 14px 40px rgba(0,0,0,0.7)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        >
-          <video
-            ref={videoRef}
-            src={videoUrl}
-            playsInline
-            preload="auto"
-            loop={false}
-            onClick={togglePlay}
-            onEnded={handleEnded}
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(1.18)' }}
-          />
-        </div>
-      )}
+      {/* Video — always full-frame. Each rendered clip's talking_photo already
+          bakes in its own full studio scene (Charlie's desk, Bob's backdrop),
+          so no separate background image or floating box is needed. */}
+      <div className="absolute inset-0 z-10" style={{ background: '#000' }}>
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          playsInline
+          preload="auto"
+          loop={false}
+          onClick={togglePlay}
+          onEnded={handleEnded}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       {/* Tap for sound overlay when muted but playing */}
       {playing && muted && (
@@ -383,9 +347,6 @@ function SegmentPlayer({ segments, onClose }) {
   const visibleBullets = hasBullets
     ? seg.bullets.slice(bulletPage * bulletsPerPage, (bulletPage + 1) * bulletsPerPage)
     : [];
-  const previousCharlie = isBob
-    ? [...segments.slice(0, idx)].reverse().find(segment => segment.speaker === 'charlie')
-    : null;
   const headerLabel = isSting ? 'DNN' : (SPEAKER_LABELS[seg.speaker] || 'DNN');
 
   const handleTimeUpdate = (event) => {
@@ -397,12 +358,11 @@ function SegmentPlayer({ segments, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ background: '#000', overflow: 'hidden' }}>
-      {/* Background layer */}
-      {isSting ? (
-        <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
-      ) : (
+      {/* Background layer — each clip's talking_photo already bakes in its own
+          full studio/backdrop scene, so no separate background image is needed. */}
+      <div className="absolute inset-0" style={{ zIndex: 0, background: '#000' }} />
+      {!isSting && (
         <>
-          <img src={STUDIO_BG_URL} alt="" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
           {hasBullets && (
             <div className="absolute left-[3vw] top-[14vh] z-[5] w-[58vw] max-w-2xl max-h-[58vh] translate-x-[27%] overflow-y-auto rounded-xl p-4 md:p-6"
               style={{ background: '#f5f0e8', border: `3px solid ${GOLD}`, boxShadow: '0 14px 40px rgba(0,0,0,0.55)' }}>
@@ -454,34 +414,8 @@ function SegmentPlayer({ segments, onClose }) {
         </div>
       )}
 
-      {/* Keep Charlie visible while Bob is speaking */}
-      {previousCharlie && (
-        <div
-          className="absolute overflow-hidden"
-          style={{
-            width: 'clamp(200px, 28vw, 360px)',
-            aspectRatio: '16/9',
-            bottom: '8px',
-            left: '4px',
-            borderRadius: '10px',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        >
-          <video
-            src={previousCharlie.src}
-            muted
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(1.18)' }}
-          />
-        </div>
-      )}
-
-      {/* Active video element */}
+      {/* Active video element — always full-frame. Each clip's talking_photo
+          already bakes in its own full studio/backdrop scene. */}
       {isSting ? (
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden" style={{ zIndex: 10, background: '#000' }}>
           <video
@@ -496,22 +430,7 @@ function SegmentPlayer({ segments, onClose }) {
           />
         </div>
       ) : (
-        <div
-          className="absolute cursor-pointer overflow-hidden"
-          onClick={togglePlay}
-          style={{
-            width: 'clamp(200px, 28vw, 360px)',
-            aspectRatio: '16/9',
-            bottom: '8px',
-            left: seg.speaker === 'charlie' ? '4px' : 'auto',
-            right: seg.speaker === 'bob' ? '4px' : 'auto',
-            borderRadius: '10px',
-            border: `2px solid ${GOLD}`,
-            boxShadow: '0 12px 36px rgba(0,0,0,0.7)',
-            background: '#000',
-            zIndex: 10,
-          }}
-        >
+        <div className="absolute inset-0 cursor-pointer overflow-hidden" onClick={togglePlay} style={{ zIndex: 10, background: '#000' }}>
           <video
             key={seg.src + idx}
             ref={videoRef}
@@ -519,8 +438,7 @@ function SegmentPlayer({ segments, onClose }) {
             playsInline
             onEnded={handleEnded}
             onTimeUpdate={handleTimeUpdate}
-            className="w-full h-full object-cover transition-all duration-300"
-            style={{ transform: 'scale(1.18)' }}
+            className="w-full h-full object-cover"
           />
         </div>
       )}
