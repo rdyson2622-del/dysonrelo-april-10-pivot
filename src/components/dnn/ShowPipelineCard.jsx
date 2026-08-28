@@ -261,7 +261,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                       style={{ color: isStuck ? '#ef4444' : isDone ? '#4ade80' : isActive ? GOLD : '#555' }}>
                       {isStuck ? 'STOP' : stage.label}
                     </p>
-                    <p className="text-[7px] text-center leading-tight mt-0.5 text-slate-500">
+                    <p className="text-[14px] text-center leading-tight mt-0.5 text-slate-500">
                       {stage.producer}
                     </p>
                   </div>
