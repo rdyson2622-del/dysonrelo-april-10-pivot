@@ -216,13 +216,21 @@ ${digest}`,
       return { started: clips.length };
     };
 
-    // HARD BLOCK: 'run' and 'render' dispatch straight to HeyGen. DNN broadcasts
-    // must render exclusively through the Higgsfield + 11 Labs n8n pipeline —
-    // these actions are permanently disabled to stop unordered HeyGen spend.
-    if (action === 'run' || action === 'render') {
-      return Response.json({
-        error: 'HeyGen rendering is disabled. DNN broadcasts render exclusively through the Higgsfield + 11 Labs pipeline (dnnDailyVideoPipeline / dnnRerunShow).',
-      }, { status: 403 });
+    // Back on the trusted, direct HeyGen pipeline — reliable, fast (minutes,
+    // not hours), one show after another. n8n/Higgsfield is no longer used
+    // for Daily News.
+    if (action === 'run') {
+      const gen = await generateScript();
+      if (gen.error) return Response.json({ success: false, error: gen.error });
+      const startRes = await startRender(gen.record);
+      return Response.json({ success: !startRes.error, ...startRes, broadcast_id: gen.record.id });
+    }
+
+    if (action === 'render') {
+      const existing = await Broadcasts.filter({ broadcast_date: today, status: 'script_ready' });
+      if (existing.length === 0) return Response.json({ error: 'No script_ready broadcast for today' }, { status: 400 });
+      const startRes = await startRender(existing[0]);
+      return Response.json({ success: !startRes.error, ...startRes, broadcast_id: existing[0].id });
     }
 
     if (action === 'generate') {

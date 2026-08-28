@@ -24,9 +24,9 @@ export default function AdminShowPipeline() {
     setGenerating(true);
     setRefreshMsg(null);
     try {
-      const res = await base44.functions.invoke('dnnDailyVideoPipeline', {});
+      const res = await base44.functions.invoke('dnnMorningBroadcast', { action: 'run' });
       if (res.data?.success) {
-        setRefreshMsg('✓ HeyGen show dispatched — generating');
+        setRefreshMsg('✓ HeyGen show dispatched — rendering');
       } else {
         setRefreshMsg(`✗ ${res.data?.error || 'Dispatch failed'}`);
       }
