@@ -89,7 +89,7 @@ export default function AdminShowPipeline() {
   return (
     <div className="min-h-screen" style={{ background: '#0a0a0a' }}>
       {/* Header */}
-      <div className="sticky top-0 z-20 px-6 py-4 flex items-center justify-between"
+      <div className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between"
         style={{ background: '#1a1a1a', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <div className="flex items-center gap-3">
           <img src={DNN_LOGO} alt="DNN" className="h-8 w-auto" />
