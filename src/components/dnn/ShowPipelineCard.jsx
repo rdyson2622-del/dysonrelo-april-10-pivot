@@ -284,11 +284,22 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
             )}
 
             {currentStage === 'script' && (
-              <button onClick={onEditScript}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
-                style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
-                <Edit3 className="w-3.5 h-3.5" /> Edit Script
-              </button>
+              <>
+                <button onClick={() => {
+                  if (!confirm(`Send ${show.show_name || 'this show'} to HeyGen for rendering now?\n\nThis will use HeyGen render credits.`)) return;
+                  handleAction('render', 'Render');
+                }} disabled={busy === 'render'}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-black transition-all disabled:opacity-50"
+                  style={{ background: busy === 'render' ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}>
+                  {busy === 'render' ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                  {busy === 'render' ? 'Sending…' : 'Confirm & Send to HeyGen'}
+                </button>
+                <button onClick={onEditScript}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all"
+                  style={{ background: '#333', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <Edit3 className="w-3.5 h-3.5" /> Edit Script
+                </button>
+              </>
             )}
 
             {currentStage === 'render' && show.status === 'processing' && (
