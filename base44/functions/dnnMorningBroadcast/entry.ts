@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 /**
  * dnnMorningBroadcast — nightly DNN Morning Broadcast, tag-team edition.
@@ -181,15 +182,16 @@ ${digest}`,
     // Charlie clip in this broadcast.
     const renderClip = async (clip, charlieTalkingPhotoId) => {
       const isCharlie = clip.role === 'charlie';
+      const sanitizedScript = sanitizeVoiceScript(clip.script);
       const videoInput = isCharlie
         ? {
-            character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId },
-            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 0.92 },
+            character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
+            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 0.92 },
             background: { type: 'color', value: '#0d0d0d' },
           }
         : {
-            character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
-            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 0.92 },
+            character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 1, offset: { x: 0, y: 0 } },
+            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 0.92 },
             background: { type: 'color', value: '#0d0d0d' },
           };
 

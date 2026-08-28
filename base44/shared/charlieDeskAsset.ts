@@ -13,8 +13,16 @@
 // the studio floor. Do not swap this URL without regenerating a Charlie-only
 // still first; the old asset (352681ac5_generated_image.png) has Bob baked
 // into the background and must never be reused.
+//
+// This still is pre-cropped/resized to EXACTLY 1280x720 (the render canvas
+// size). The source AI image was square (1024x1024) — uploaded as-is, HeyGen
+// mapped it 1:1 at "scale: 1" onto the 16:9 canvas, which pillarboxed it into
+// a small centered box ("Charlie in a box") instead of filling the frame.
+// Pre-matching the still's pixel dimensions to the canvas guarantees scale:1
+// fills the entire frame with zero pillarboxing. Do not swap this URL for a
+// non-16:9 image without re-running cropCharlieDeskToWidescreen first.
 export const CHARLIE_DESK_STILL_URL =
-  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d886e8e7e_generated_image.png';
+  'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/b79e52377_charlie_desk_widescreen_1280x720.png';
 
 const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 
