@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
+import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 
 /**
  * dnnMorningBroadcast — nightly DNN Morning Broadcast, tag-team edition.
@@ -16,11 +17,9 @@ import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
  *   { action: "render" }  → start renders for today's script_ready broadcast
  */
 
-const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
 
 Deno.serve(async (req) => {
   try {
@@ -175,11 +174,16 @@ ${digest}`,
       return { record };
     };
 
-    const renderClip = async (clip) => {
+    // Charlie is a talking_photo of the locked, Bob-free desk still (same
+    // asset uploaded fresh for the proven "Charlie Speaking at the Desk"
+    // preview render) — never the mismatched avatar_id, which is what caused
+    // the layout drift. Uploaded once per render job and reused for every
+    // Charlie clip in this broadcast.
+    const renderClip = async (clip, charlieTalkingPhotoId) => {
       const isCharlie = clip.role === 'charlie';
       const videoInput = isCharlie
         ? {
-            character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.3, offset: { x: 0, y: 0.18 } },
+            character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId },
             voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
             background: { type: 'color', value: '#0d0d0d' },
           }
@@ -203,10 +207,21 @@ ${digest}`,
     const startRender = async (record) => {
       const clips = [...(record.clips || [])];
       if (clips.length === 0) return { error: 'No clips on this broadcast' };
+
+      let charlieTalkingPhotoId = null;
+      if (clips.some(c => c.role === 'charlie' && !c.videoUrl)) {
+        try {
+          charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
+        } catch (e) {
+          await Broadcasts.update(record.id, { status: 'failed', errorMessage: e.message });
+          return { error: e.message };
+        }
+      }
+
       const errors = [];
       for (let i = 0; i < clips.length; i++) {
         if (clips[i].videoUrl) continue;
-        const r = await renderClip(clips[i]);
+        const r = await renderClip(clips[i], charlieTalkingPhotoId);
         if (r.error) {
           clips[i] = { ...clips[i], status: 'failed' };
           errors.push(r.error);

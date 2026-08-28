@@ -20,13 +20,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  *
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
-const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 import { blockIfN8n } from '../../shared/n8nGuard.ts';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
+import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -93,12 +93,18 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Build video_inputs — one per clip, preserving each clip's character/voice/background
+      // Build video_inputs — one per clip. Charlie uses the locked, Bob-free
+      // desk still uploaded fresh as a talking_photo (same asset proven on the
+      // "Charlie Speaking at the Desk" preview render) — never avatar_id.
+      let charlieTalkingPhotoId = null;
+      if (clips.some(c => c.role === 'charlie')) {
+        charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
+      }
       const videoInputs = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
         return isCharlie
           ? {
-              character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.3, offset: { x: 0, y: 0.18 } },
+              character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId },
               voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
               background: { type: 'color', value: '#0d0d0d' },
             }

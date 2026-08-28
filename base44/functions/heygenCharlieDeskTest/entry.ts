@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
+import { CHARLIE_DESK_STILL_URL, uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 
 /**
  * heygenCharlieDeskTest — 10-second proof render for the DNN Charlie Desk
@@ -20,11 +21,6 @@ import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 const HEYGEN_API = 'https://api.heygen.com';
 const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 
-// Charlie ALONE at the desk — no standing Bob in frame. Bob now only appears
-// in his own separate "outside casual" box segment (heygenBobDeskTest),
-// cut in right after Charlie tosses to him. Never go back to the old still
-// with Bob standing in the background.
-const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/352681ac5_generated_image.png';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const TEST_SCRIPT = 'Good morning, this is Charlie with your Dyson News Network daily real estate intelligence report.';
 
@@ -64,32 +60,13 @@ Deno.serve(async (req) => {
     }
 
     // ── action: 'dispatch' (default) ──
-    // 1. Download the locked desk still.
-    const imgRes = await fetch(DNN_CHARLIE_DESK_STUDIO_STILL);
-    if (!imgRes.ok) {
-      return Response.json({ error: 'Failed to download DNN Charlie Desk Studio still' }, { status: 500 });
-    }
-    const imgBuf = await imgRes.arrayBuffer();
-    const contentType = imgRes.headers.get('content-type') || 'image/png';
-
-    // 2. Upload it to HeyGen as a fresh talking photo asset.
-    const uploadRes = await fetch(`${HEYGEN_UPLOAD_API}/v1/talking_photo`, {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': heygenKey,
-        'Content-Type': contentType,
-      },
-      body: imgBuf,
-    });
-    const uploadText = await uploadRes.text();
-    let uploadData;
-    try { uploadData = JSON.parse(uploadText); } catch (_) {
-      return Response.json({ error: 'HeyGen upload returned non-JSON', raw: uploadText.slice(0, 300) }, { status: 500 });
-    }
-
-    const talkingPhotoId = uploadData?.data?.talking_photo_id;
-    if (!uploadRes.ok || !talkingPhotoId) {
-      return Response.json({ error: 'HeyGen talking photo upload failed', detail: uploadData }, { status: 500 });
+    // 1 & 2. Upload the shared, locked Charlie-only desk still to HeyGen as a
+    // fresh talking photo asset (same helper used by the production pipeline).
+    let talkingPhotoId;
+    try {
+      talkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
+    } catch (e) {
+      return Response.json({ error: e.message }, { status: 500 });
     }
 
     // 3. Dispatch the 10-second test render on the new asset. No scale/offset/
