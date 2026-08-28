@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'HeyGen multi-input render failed', details: data }, { status: 502 });
       }
 
-      await Broadcasts.update(broadcast.id, { heygenId: videoId });
+      await Broadcasts.update(broadcast.id, { heygenId: videoId, errorMessage: '' });
 
       return Response.json({
         success: true,
