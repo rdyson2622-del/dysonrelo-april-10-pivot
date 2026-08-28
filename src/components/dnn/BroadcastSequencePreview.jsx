@@ -5,12 +5,16 @@ const GOLD = '#D4AF37';
 const CHARLIE_CACHE_KEY = 'dnn_charlie_desk_test_last_video';
 const BOB_CACHE_KEY = 'dnn_bob_desk_test_last_video';
 
+// Same confirmed clean render used as the default in BobStandingTestRender —
+// so the sequence preview works even before a fresh Bob test has been run.
+const BOB_KNOWN_GOOD_VIDEO_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/198c52f99_vetdesk_6a52839606e00cdc06b05e2d_bob.mp4';
+
 // Plays Charlie's desk clip, then automatically cuts to Bob's box clip —
 // a quick preview of the toss: Charlie alone at the desk, Bob entering
 // right after for his own segment.
 export default function BroadcastSequencePreview() {
   const charlieUrl = (() => { try { return JSON.parse(localStorage.getItem(CHARLIE_CACHE_KEY))?.videoUrl; } catch (_) { return null; } })();
-  const bobUrl = (() => { try { return JSON.parse(localStorage.getItem(BOB_CACHE_KEY))?.videoUrl; } catch (_) { return null; } })();
+  const bobUrl = (() => { try { return JSON.parse(localStorage.getItem(BOB_CACHE_KEY))?.videoUrl; } catch (_) { return null; } })() || BOB_KNOWN_GOOD_VIDEO_URL;
   const [playing, setPlaying] = useState(null); // null | 'charlie' | 'bob'
   const videoRef = useRef(null);
 
