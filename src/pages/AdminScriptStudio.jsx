@@ -7,6 +7,7 @@ import {
   AlertCircle, Loader, Edit3, Trash2
 } from 'lucide-react';
 import ScriptStudioPreview from '@/components/dnn/ScriptStudioPreview';
+import NationalNewsScriptBox from '@/components/dnn/NationalNewsScriptBox';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -197,6 +198,9 @@ export default function AdminScriptStudio() {
       </div>
 
       <div className="max-w-[1800px] mx-auto px-4 py-4 space-y-4">
+        {/* ── Row 0: Today's National Stories — script box for tonight's edits ── */}
+        <NationalNewsScriptBox />
+
         {/* ── Row 1: Visual Previews — horizontal across the top ── */}
         <div>
           <div className="flex items-center gap-2 mb-2">

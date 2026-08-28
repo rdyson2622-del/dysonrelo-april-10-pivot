@@ -17,7 +17,7 @@ export default function NationalNewsScriptBox() {
     setError(null);
     try {
       const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `Find 4 NATIONAL real estate news stories from TODAY. National only — no local/regional/single-city stories. For each, write a short broadcast-ready script phrase (2-3 sentences, spoken tone, suitable for a news anchor) covering the headline.`,
+        prompt: `Find 4 NATIONAL real estate news stories from TODAY. National only — no local/regional/single-city stories. For each, write a short broadcast-ready script (2-3 sentences, spoken tone, suitable for news anchor Charlie) covering the headline, then end with ONE natural toss-line handing off to co-anchor Bob so Charlie doesn't have to write a new toss every time. Vary the toss style across the 4 scripts using patterns like: "Bob's in the field working with our clients today...Bob?", "Bob's in Del Mar today...Bob?", "Bob's in Washington D.C. today...Bob?" — pick a plausible city/context per story. Keep each toss-line short and reusable.`,
         add_context_from_internet: true,
         model: 'gemini_3_flash',
         response_json_schema: {
