@@ -5,6 +5,7 @@ import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } f
 import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
 import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
 import BroadcastSequencePreview from '@/components/dnn/BroadcastSequencePreview';
+import NationalNewsScriptBox from '@/components/dnn/NationalNewsScriptBox';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -270,6 +271,7 @@ export default function DnnVideoPreview() {
           <BobStandingTestRender />
         </div>
         <BroadcastSequencePreview />
+        <NationalNewsScriptBox />
       </div>
 
       {/* Grid */}
