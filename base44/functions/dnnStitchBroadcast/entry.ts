@@ -146,12 +146,15 @@ Deno.serve(async (req) => {
       }
 
       const results = [];
-      const FIVE_MINUTES = 5 * 60 * 1000;
+      // Multi-input stitched renders (3 clips combined) take longer than a
+      // single clip render — align the timeout with the platform's 20-minute
+      // render watchdog standard instead of the old 5-minute cutoff, which
+      // was killing renders that were still legitimately in HeyGen's queue.
+      const TWENTY_MINUTES = 20 * 60 * 1000;
       for (const broadcast of pending) {
-        // 5-minute timeout: abort stuck stitching renders
-        if (Date.now() - new Date(broadcast.updated_date).getTime() > FIVE_MINUTES) {
-          await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: 'Stitching render timed out after 5 minutes' });
-          results.push({ id: broadcast.id, status: 'timeout', error: 'Stitching render timed out after 5 minutes' });
+        if (Date.now() - new Date(broadcast.updated_date).getTime() > TWENTY_MINUTES) {
+          await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: 'Stitching render timed out after 20 minutes' });
+          results.push({ id: broadcast.id, status: 'timeout', error: 'Stitching render timed out after 20 minutes' });
           continue;
         }
 
