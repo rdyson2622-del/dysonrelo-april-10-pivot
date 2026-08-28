@@ -43,7 +43,29 @@ export default function BroadcastSequencePreview() {
         Charlie alone at the desk, then cuts straight to Bob in his outside casual box the moment Charlie finishes.
       </p>
 
-      {playing ? (
+      {playing === 'bob' ? (
+        // Bob's toss — shown inside a smaller boxed frame (not full-frame like
+        // Charlie's desk shot) so the handoff visually reads as "cutting to
+        // Bob in his box", the way a real broadcast cuts to a remote guest.
+        <div className="rounded-xl mb-3 flex items-center justify-center p-6" style={{ background: '#000', border: `1px solid ${GOLD}`, minHeight: '360px' }}>
+          <div className="relative" style={{ width: '60%' }}>
+            <div className="absolute -top-3 left-3 px-2 py-0.5 rounded text-[10px] font-black tracking-widest uppercase z-10"
+              style={{ background: GOLD, color: '#000' }}>
+              Bob Dyson
+            </div>
+            <video
+              key={src}
+              ref={videoRef}
+              src={src}
+              autoPlay
+              controls
+              onEnded={handleEnded}
+              className="w-full rounded-lg"
+              style={{ border: '2px solid #fff', background: '#000' }}
+            />
+          </div>
+        </div>
+      ) : playing === 'charlie' ? (
         <video
           key={src}
           ref={videoRef}

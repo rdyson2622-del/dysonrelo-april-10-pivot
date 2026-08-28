@@ -58,12 +58,22 @@ export default function CharlieDeskTestRender() {
       </p>
 
       {videoUrl && (
-        <video
-          src={videoUrl}
-          controls
-          className="w-full rounded-xl mb-3"
-          style={{ border: `1px solid ${GOLD}`, background: '#000', maxHeight: '70vh' }}
-        />
+        <div className="relative mb-3">
+          <video
+            key={videoUrl}
+            src={videoUrl}
+            controls
+            className="w-full rounded-xl"
+            style={{ border: `1px solid ${GOLD}`, background: '#000', maxHeight: '70vh', opacity: (state === 'dispatching' || state === 'polling') ? 0.35 : 1 }}
+          />
+          {(state === 'dispatching' || state === 'polling') && (
+            <div className="absolute inset-0 flex items-center justify-center rounded-xl" style={{ background: 'rgba(0,0,0,0.4)' }}>
+              <span className="flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: '#000', color: GOLD, border: `1px solid ${GOLD}` }}>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Old take shown — rendering fresh video...
+              </span>
+            </div>
+          )}
+        </div>
       )}
 
       {state === 'idle' && !videoUrl && (
