@@ -26,8 +26,8 @@ const GOLD = '#D4AF37';
 const STAGES = [
   { key: 'content', label: 'Content & Stories', icon: FileText, desc: 'Articles + stories · Producer: Base44 Daily News Library + Gemini', producer: 'Base44 Daily News Library + Gemini' },
   { key: 'script', label: 'Script Generation', icon: Sparkles, desc: 'Charlie intro+news → Bob box solutions → Charlie outro · Producer: Base44 Script Review / Gemini', producer: 'Base44 Script Review / Gemini' },
-  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'HeyGen multi-scene (Charlie desk + Bob in box) · Producer: HeyGen', producer: 'HeyGen' },
-  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'One multi-scene MP4 · Producer: HeyGen', producer: 'HeyGen' },
+  { key: 'render', label: 'Clip Rendering', icon: Clapperboard, desc: 'Higgsfield + 11 Labs multi-scene (Charlie desk + Bob in box), dispatched via n8n · Producer: n8n', producer: 'n8n' },
+  { key: 'stitch', label: 'Stitching', icon: Film, desc: 'One multi-scene MP4, stitched by n8n · Producer: n8n', producer: 'n8n' },
   { key: 'ready', label: 'Studio Preview', icon: Layers, desc: 'Preview full show · Producer: Base44 /broadcast-show', producer: 'Base44 /broadcast-show' },
   { key: 'distribution', label: 'Distribution', icon: Send, desc: 'Social/SMS/email · Producer: Base44 Communications Hub (off until Bob says)', producer: 'Base44 Communications Hub (off until Bob says)' },
 ];
@@ -211,7 +211,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
           {show.pipeline === 'higgsfield_11labs' && (
             <span className="text-[9px] font-black tracking-widest uppercase px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', border: '1px solid rgba(99,102,241,0.3)' }}>
-              ⚡ HEYGEN
+              ⚡ N8N
             </span>
           )}
           {/* Stage badge */}
