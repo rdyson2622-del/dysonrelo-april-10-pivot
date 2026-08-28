@@ -52,9 +52,9 @@ export default function BobStandingTestRender() {
 
   return (
     <div className="rounded-xl p-5" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.3)' }}>
-      <h2 className="text-white font-bold mb-2">Bob — New Look &amp; Voice</h2>
+      <h2 className="text-white font-bold mb-2">Bob — Outside Casual Box (proven explainer look)</h2>
       <p className="text-sm mb-4" style={{ color: '#ddd' }}>
-        Last completed proof render on the new Bob avatar look (52db97a6...) and voice (2e2785a6...).
+        Bob's own segment, cut in separately from Charlie's desk shots — same talking-photo look already proven across the explainer videos. No studio background, no pillarboxing.
       </p>
 
       {videoUrl && (
