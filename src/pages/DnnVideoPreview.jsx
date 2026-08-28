@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } from 'lucide-react';
+import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
+import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -254,6 +256,18 @@ export default function DnnVideoPreview() {
           ⚠️ The 6 AM auto-blast is <strong>paused</strong>. Watch each video below, then click "Post Broadcast to LinkedIn" or "Post to Facebook" only on the ones you approve.
           Videos still rendering will appear automatically as they complete (page refreshes every 30s).
         </p>
+      </div>
+
+      {/* Reliable format proof — the proven desk (Charlie) + boxed remote (Bob) HeyGen renders.
+          Click "Re-render" on either card to dispatch a fresh practice take. */}
+      <div className="px-6 pt-6">
+        <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>
+          Proven Format — Daily News Desk Renders
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+          <CharlieDeskTestRender />
+          <BobStandingTestRender />
+        </div>
       </div>
 
       {/* Grid */}
