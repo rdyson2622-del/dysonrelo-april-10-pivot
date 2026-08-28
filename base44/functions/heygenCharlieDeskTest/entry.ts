@@ -92,6 +92,7 @@ Deno.serve(async (req) => {
               type: 'text',
               voice_id: CHARLIE_VOICE_ID,
               input_text: TEST_SCRIPT,
+              speed: 0.92,
             },
           },
         ],
