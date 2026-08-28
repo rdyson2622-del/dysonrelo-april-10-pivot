@@ -345,23 +345,70 @@ export default function AdminSidebar() {
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
-      {/* Grok Specialist Command Center — top of sidebar */}
-      <div className="px-3 pt-3 pb-2 shrink-0">
-        <Link
-          to="/admin/grok-command"
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname === '/admin/grok-command' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Bot className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">COMMAND<br/>CENTER</span>
-        </Link>
-      </div>
+      {/* DNN NEWS AND INTELLIGENCE — top of sidebar */}
+      {(() => {
+        const section = NAV_SECTIONS.find(s => s.key === 'dnn');
+        const isOpen = openSections[section.key];
+        const SectionIcon = section.icon;
+        const borderColor = 'rgba(212,175,55,0.2)';
+        return (
+          <div className="px-3 pt-3 pb-2 shrink-0">
+            <button
+              onClick={() => toggleSection(section.key)}
+              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
+              style={{
+                background: isOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+                color: '#D4AF37',
+                border: '1px solid rgba(212,175,55,0.35)',
+              }}
+            >
+              {SectionIcon && <SectionIcon className="w-4 h-4 shrink-0" />}
+              <span className="text-center leading-tight tracking-[0.15em]">{section.label}</span>
+              {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
+            </button>
+            {isOpen && (
+              <div className="mt-0.5 ml-2 pl-3 pb-1 space-y-0.5 border-l" style={{ borderColor }}>
+                {section.children.map((child, ci) => {
+                  if (child.isCommsBadge) {
+                    return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
+                  }
+                  if (child.isHeader) {
+                    return (
+                      <div key={ci} className="px-3 pt-3 pb-1">
+                        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>{child.label}</span>
+                      </div>
+                    );
+                  }
+                  const isActive = location.pathname === child.path;
+                  const childColor = section.color || '#D4AF37';
+                  return (
+                    <Link
+                      key={`${child.path}-${ci}`}
+                      to={child.path}
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
+                      style={{
+                        background: child.highlight ? 'rgba(212,175,55,0.15)' : (isActive ? `${childColor}22` : 'transparent'),
+                        color: child.highlight ? GOLD : (child.indent ? '#ffffff' : (isActive ? childColor : '#ccc')),
+                        border: child.highlight ? `1px solid rgba(212,175,55,0.4)` : 'none',
+                        marginLeft: child.indent ? '8px' : '0',
+                        fontSize: child.indent ? '12px' : '14px',
+                        paddingTop: child.indent ? '4px' : undefined,
+                        paddingBottom: child.indent ? '4px' : undefined,
+                        fontWeight: child.highlight ? 900 : undefined,
+                      }}
+                    >
+                      <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />
+                      <span className="truncate">{child.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
-      {/* Master Workflow Atlas — directly under Command Center */}
+      {/* Master Workflow Atlas — directly under DNN News and Intelligence */}
       <div className="px-3 pb-2 shrink-0">
         <Link
           to="/admin/workflows"
@@ -475,71 +522,6 @@ export default function AdminSidebar() {
           </div>
         )}
       </div>
-
-      {/* DNN NEWS AND INTELLIGENCE — pinned near top, just below Wisdom Properties */}
-      {(() => {
-        const section = NAV_SECTIONS.find(s => s.key === 'dnn');
-        const isOpen = openSections[section.key];
-        const hasActive = getSectionPaths(section).some(p => location.pathname === p || location.pathname.startsWith(p));
-        const SectionIcon = section.icon;
-        const sectionColor = section.color || '#D4AF37';
-        const borderColor = 'rgba(212,175,55,0.2)';
-        return (
-          <div className="px-3 pb-2 shrink-0">
-            <button
-              onClick={() => toggleSection(section.key)}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-              style={{
-                background: isOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-                color: '#D4AF37',
-                border: '1px solid rgba(212,175,55,0.35)',
-              }}
-            >
-              {SectionIcon && <SectionIcon className="w-4 h-4 shrink-0" />}
-              <span className="text-center leading-tight tracking-[0.15em]">{section.label}</span>
-              {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-            </button>
-            {isOpen && (
-              <div className="mt-0.5 ml-2 pl-3 pb-1 space-y-0.5 border-l" style={{ borderColor }}>
-                {section.children.map((child, ci) => {
-                  if (child.isCommsBadge) {
-                    return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
-                  }
-                  if (child.isHeader) {
-                    return (
-                      <div key={ci} className="px-3 pt-3 pb-1">
-                        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>{child.label}</span>
-                      </div>
-                    );
-                  }
-                  const isActive = location.pathname === child.path;
-                  const childColor = section.color || '#D4AF37';
-                  return (
-                    <Link
-                      key={`${child.path}-${ci}`}
-                      to={child.path}
-                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
-                      style={{
-                        background: child.highlight ? 'rgba(212,175,55,0.15)' : (isActive ? `${childColor}22` : 'transparent'),
-                        color: child.highlight ? GOLD : (child.indent ? '#ffffff' : (isActive ? childColor : '#ccc')),
-                        border: child.highlight ? `1px solid rgba(212,175,55,0.4)` : 'none',
-                        marginLeft: child.indent ? '8px' : '0',
-                        fontSize: child.indent ? '12px' : '14px',
-                        paddingTop: child.indent ? '4px' : undefined,
-                        paddingBottom: child.indent ? '4px' : undefined,
-                        fontWeight: child.highlight ? 900 : undefined,
-                      }}
-                    >
-                      <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />
-                      <span className="truncate">{child.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })()}
 
       {/* Recent Grok Dispatches — live feed from the Command Center */}
       <AdminDispatchWidget />
