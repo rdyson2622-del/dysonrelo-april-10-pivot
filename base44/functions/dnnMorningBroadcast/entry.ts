@@ -62,8 +62,11 @@ Deno.serve(async (req) => {
       let openScript, bobAnswer, closeScript;
 
       if (activeTemplate) {
-        // Use saved template for open/close — only generate Bob's answer fresh
-        const storyTeasers = top.slice(0, 4).map((a, i) => `Story ${i + 1}: ${a.headline}`).join('. ');
+        // Use saved template for open/close — the broadcast is built around ONE
+        // lead story (not a rundown of every headline), so Charlie's open teases
+        // that single story and Bob's segment stays on that exact same topic.
+        const leadStory = top[0];
+        const storyTeasers = leadStory.headline;
         openScript = activeTemplate.open_script_template
           .replace(/{DATE}/g, dateSpoken)
           .replace(/{STORY_TEASERS}/g, storyTeasers);
@@ -72,7 +75,10 @@ Deno.serve(async (req) => {
         const bobResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
           prompt: `You are writing Bob Dyson's segment for the DNN Real Estate News Broadcast for ${dateSpoken}.
 
-Bob answers Charlie's question about the most relocation-relevant story from today's digest in 80-120 words.
+Bob answers Charlie's question about today's lead story below, in 80-120 words. Stay on this exact story only — do not reference or mix in any of the other stories in the digest.
+
+LEAD STORY: ${leadStory.headline}
+${(leadStory.body || '').slice(0, 800)}
 
 CRITICAL TONE RULES FOR BOB — KINDER AND SOFTER:
 - Bob NEVER talks down to the viewer or gives directives like "you need to", "you should", "you must", "do this", "don't do that."
