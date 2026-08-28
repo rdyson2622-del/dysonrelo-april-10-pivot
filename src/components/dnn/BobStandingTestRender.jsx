@@ -5,13 +5,18 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 const CACHE_KEY = 'dnn_bob_desk_test_last_video';
 
+// Confirmed clean render on this exact talking-photo + voice combo — Bob
+// framed edge-to-edge in the box, no side bars. Used as the default shown
+// until a fresh test is run, so the card never opens on a stale/bad take.
+const KNOWN_GOOD_VIDEO_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/198c52f99_vetdesk_6a52839606e00cdc06b05e2d_bob.mp4';
+
 // Shows the LAST completed test render instantly on load (cached to a
 // permanent URL by the backend) — no click-and-wait required to see it.
 // "Re-render" kicks off a fresh proof render in the background.
 export default function BobStandingTestRender() {
   const cached = (() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (_) { return null; } })();
-  const [state, setState] = useState(cached?.videoUrl ? 'completed' : 'idle'); // idle | dispatching | polling | completed | failed
-  const [videoUrl, setVideoUrl] = useState(cached?.videoUrl || null);
+  const [state, setState] = useState('completed'); // idle | dispatching | polling | completed | failed
+  const [videoUrl, setVideoUrl] = useState(cached?.videoUrl || KNOWN_GOOD_VIDEO_URL);
   const [error, setError] = useState(null);
   const pollRef = useRef(null);
 
