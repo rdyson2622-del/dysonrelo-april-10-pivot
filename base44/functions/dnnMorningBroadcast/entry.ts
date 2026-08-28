@@ -184,12 +184,12 @@ ${digest}`,
       const videoInput = isCharlie
         ? {
             character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId },
-            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
+            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 0.92 },
             background: { type: 'color', value: '#0d0d0d' },
           }
         : {
             character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
-            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 1.12 },
+            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.script, emotion: 'Excited', speed: 0.92 },
             background: { type: 'color', value: '#0d0d0d' },
           };
 
