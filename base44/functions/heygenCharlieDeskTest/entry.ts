@@ -20,7 +20,11 @@ import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 const HEYGEN_API = 'https://api.heygen.com';
 const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 
-const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+// Charlie ALONE at the desk — no standing Bob in frame. Bob now only appears
+// in his own separate "outside casual" box segment (heygenBobDeskTest),
+// cut in right after Charlie tosses to him. Never go back to the old still
+// with Bob standing in the background.
+const DNN_CHARLIE_DESK_STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/352681ac5_generated_image.png';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const TEST_SCRIPT = 'Good morning, this is Charlie with your Dyson News Network daily real estate intelligence report.';
 
