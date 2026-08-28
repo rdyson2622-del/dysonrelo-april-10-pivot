@@ -5,13 +5,18 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 const CACHE_KEY = 'dnn_charlie_desk_test_last_video';
 
+// Confirmed-clean render on the corrected, Bob-free desk still (fixed after
+// the old asset had Bob baked into the background). Saved here permanently
+// as the default so this card always opens on the good take, on any device.
+const KNOWN_GOOD_VIDEO_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/8af00344b_charlie_desk_test_3810a319126145c2aed3389b193dca9b.mp4';
+
 // Shows the LAST completed test render instantly on load (cached to a
 // permanent URL by the backend) — no click-and-wait required to see it.
 // "Re-render" kicks off a fresh 10-second proof render in the background.
 export default function CharlieDeskTestRender() {
   const cached = (() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (_) { return null; } })();
-  const [state, setState] = useState(cached?.videoUrl ? 'completed' : 'idle'); // idle | dispatching | polling | completed | failed
-  const [videoUrl, setVideoUrl] = useState(cached?.videoUrl || null);
+  const [state, setState] = useState('completed'); // idle | dispatching | polling | completed | failed
+  const [videoUrl, setVideoUrl] = useState(cached?.videoUrl || KNOWN_GOOD_VIDEO_URL);
   const [error, setError] = useState(null);
   const pollRef = useRef(null);
 
