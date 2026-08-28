@@ -220,10 +220,21 @@ ${digest}`,
     // not hours), one show after another. n8n/Higgsfield is no longer used
     // for Daily News.
     if (action === 'run') {
-      const gen = await generateScript();
-      if (gen.error) return Response.json({ success: false, error: gen.error });
-      const startRes = await startRender(gen.record);
-      return Response.json({ success: !startRes.error, ...startRes, broadcast_id: gen.record.id });
+      // If today's show already has an audited/edited script sitting at
+      // script_ready, render THAT instead of silently regenerating a fresh
+      // script from the raw articles (which would wipe any manual edits).
+      const existingToday = await Broadcasts.filter({ broadcast_date: today });
+      const existingReady = existingToday.find(b => b.status === 'script_ready');
+      let record;
+      if (existingReady) {
+        record = existingReady;
+      } else {
+        const gen = await generateScript();
+        if (gen.error) return Response.json({ success: false, error: gen.error });
+        record = gen.record;
+      }
+      const startRes = await startRender(record);
+      return Response.json({ success: !startRes.error, ...startRes, broadcast_id: record.id });
     }
 
     if (action === 'render') {
