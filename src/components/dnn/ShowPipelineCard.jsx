@@ -423,7 +423,7 @@ export default function ShowPipelineCard({ show, onEditScript, onRefresh }) {
                 </button>
               </div>
               <div className="rounded-lg p-3 max-h-48 overflow-y-auto" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <p className="text-[11px] text-slate-400 whitespace-pre-wrap">{show.script}</p>
+                <p className="text-[19px] text-slate-400 whitespace-pre-wrap">{show.script}</p>
               </div>
             </div>
           )}
