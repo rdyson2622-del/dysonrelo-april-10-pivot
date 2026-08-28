@@ -179,7 +179,7 @@ ${digest}`,
       const isCharlie = clip.role === 'charlie';
       const videoInput = isCharlie
         ? {
-            character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.0, offset: { x: 0, y: 0.18 } },
+            character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal', scale: 1.3, offset: { x: 0, y: 0.18 } },
             voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.script, speed: 1.05 },
             background: { type: 'color', value: '#0d0d0d' },
           }
