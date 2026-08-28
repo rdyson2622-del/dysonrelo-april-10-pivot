@@ -69,9 +69,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: e.message }, { status: 500 });
     }
 
-    // 3. Dispatch the 10-second test render on the new asset. No scale/offset/
-    // talking_photo_style overrides — the source image already IS the full
-    // desk-in-frame scene, so it must render exactly as-is, full 16:9.
+    // 3. Dispatch the 10-second test render on the new asset. The still is
+    // pre-cropped to exactly 1280x720 (same canvas size used in production),
+    // and scale:1 / offset:0,0 are set explicitly so it fills the frame with
+    // zero pillarboxing — matching the production render settings exactly.
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -84,6 +85,8 @@ Deno.serve(async (req) => {
             character: {
               type: 'talking_photo',
               talking_photo_id: talkingPhotoId,
+              scale: 1,
+              offset: { x: 0, y: 0 },
             },
             voice: {
               type: 'text',
@@ -92,7 +95,7 @@ Deno.serve(async (req) => {
             },
           },
         ],
-        dimension: { width: 1920, height: 1080 },
+        dimension: { width: 1280, height: 720 },
       }),
     });
 
