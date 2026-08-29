@@ -40,18 +40,18 @@ function Box({ label, videoUrl, active, onEnded, playing, idleImages }) {
     <div className="absolute" style={{ bottom: '4%', left: label === 'CHARLIE SIMMONS' ? '3%' : undefined, right: label === 'BOB DYSON' ? '3%' : undefined, width: '19.5%' }}>
       <div className="rounded-lg overflow-hidden" style={{ border: `2px solid ${active ? GOLD : 'rgba(212,175,55,0.4)'}`, boxShadow: '0 10px 40px rgba(0,0,0,0.7)', background: '#000' }}>
         <div className="w-full overflow-hidden" style={{ aspectRatio: '9 / 16', background: '#000' }}>
-          {playing && videoUrl ? (
+          {idleImages?.length && !playing ? (
+            <BlinkLoop images={idleImages} />
+          ) : videoUrl ? (
             <video
               key={videoUrl}
               src={videoUrl}
-              autoPlay
+              autoPlay={playing}
               playsInline
               muted={!active}
               onEnded={active ? onEnded : undefined}
               className="w-full h-full block object-cover"
             />
-          ) : idleImages?.length ? (
-            <BlinkLoop images={idleImages} />
           ) : (
             <div className="w-full h-full" />
           )}
