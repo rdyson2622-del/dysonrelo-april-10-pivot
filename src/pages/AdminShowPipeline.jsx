@@ -6,7 +6,7 @@ import {
   FileText, Clapperboard, Film, CheckCircle, XCircle, Clock, Edit3,
   Sparkles, Layers, Plus, Loader2
 } from 'lucide-react';
-import ShowPipelineCard from '@/components/dnn/ShowPipelineCard';
+import Shard1ScriptReviewCard from '@/components/dnn/Shard1ScriptReviewCard';
 import ScriptEditorModal from '@/components/dnn/ScriptEditorModal';
 
 const GOLD = '#D4AF37';
@@ -76,10 +76,10 @@ export default function AdminShowPipeline() {
     setRefreshing(false);
   };
 
-  // Fetch all broadcasts (newest first)
+  // Fetch all articles — this is the live pipeline (direct HeyGen render), newest first
   const { data: broadcasts = [], isLoading } = useQuery({
     queryKey: ['showPipelineBroadcasts'],
-    queryFn: () => base44.entities.DnnBroadcast.list('-broadcast_date', 50),
+    queryFn: () => base44.entities.DnnArticle.list('-generated_date', 50),
     refetchInterval: 15000,
     enabled: isAdmin,
   });
@@ -132,12 +132,11 @@ export default function AdminShowPipeline() {
           </div>
         ) : (
           <div className="space-y-4">
-            {broadcasts.map(show => (
-              <ShowPipelineCard
-                key={show.id}
-                show={show}
-                onEditScript={() => setEditingShow(show)}
-                onRefresh={() => queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] })}
+            {broadcasts.map(article => (
+              <Shard1ScriptReviewCard
+                key={article.id}
+                article={article}
+                onChanged={() => queryClient.invalidateQueries({ queryKey: ['showPipelineBroadcasts'] })}
               />
             ))}
           </div>
