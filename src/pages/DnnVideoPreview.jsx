@@ -6,6 +6,13 @@ import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
 import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
 import BroadcastSequencePreview from '@/components/dnn/BroadcastSequencePreview';
 import NationalNewsScriptBox from '@/components/dnn/NationalNewsScriptBox';
+import DnnStudioComposite from '@/components/dnn/DnnStudioComposite';
+
+// Plain black-background solo clips — QA Duo pattern (already proven on the
+// Roadmap and Vetting Desk pages) — used to preview the studio composite
+// layout without needing a fresh HeyGen render.
+const CHARLIE_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/2201470a5_roadmap_6a52cbc75ead5c9873240ccf_charlie.mp4';
+const BOB_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/198c52f99_vetdesk_6a52839606e00cdc06b05e2d_bob.mp4';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -272,6 +279,11 @@ export default function DnnVideoPreview() {
         </div>
         <BroadcastSequencePreview />
         <NationalNewsScriptBox />
+
+        <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 mt-6" style={{ color: GOLD }}>
+          Studio Composite — Charlie &amp; Bob over the DNN Studio backdrop
+        </p>
+        <DnnStudioComposite charlieVideoUrl={CHARLIE_PLAIN_CLIP} bobVideoUrl={BOB_PLAIN_CLIP} />
       </div>
 
       {/* Grid */}
