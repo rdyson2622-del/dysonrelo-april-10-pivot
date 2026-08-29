@@ -10,14 +10,21 @@
  * large black bars on both sides — the exact "two famous black bars" bug.
  *
  * Fix (same approach already proven for Charlie): pre-crop/resize the source
- * to the EXACT render canvas pixel size (1280x720, top-anchored so Bob's
- * face stays in frame), then upload that widescreen still to HeyGen fresh
- * as a talking_photo for every render job. scale:1 then maps it 1:1 onto
- * the full frame with zero pillarboxing.
+ * to the EXACT render canvas pixel size (1280x720), then upload that
+ * widescreen still to HeyGen fresh as a talking_photo for every render job.
+ * scale:1 then maps it 1:1 onto the full frame with zero pillarboxing.
+ *
+ * v3 UPDATE: the previous v2 crop center-cropped a narrow 1023px-wide
+ * portrait selfie down to 16:9, which mathematically only leaves ~575px of
+ * vertical room — landing on an extreme, distorted face-only close-up
+ * ("huge teeth" bug). Replaced with a properly composed head-and-shoulders
+ * photo (visible chest/shoulders + headroom) cropped from a wider, correctly
+ * framed source, so Bob's face is proportionate on screen instead of filling
+ * the entire frame.
  */
 
 export const BOB_OUTSIDE_STILL_URL =
-  'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/1e3876db9_bob_outside_widescreen_1280x720_v2.png';
+  'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/5c0b65f3a_charlie_desk_widescreen_1280x720.png';
 
 const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 
