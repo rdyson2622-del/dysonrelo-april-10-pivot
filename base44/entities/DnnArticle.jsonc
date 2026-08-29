@@ -16,11 +16,15 @@
     },
     "video_url": {
       "type": "string",
-      "description": "Optional video URL (YouTube, Vimeo, Loom, etc.)"
+      "description": "Legacy single-clip video URL (older single-avatar render path). New renders use render_clips instead."
     },
     "thumbnail_url": {
       "type": "string",
       "description": "Thumbnail image URL for the video"
+    },
+    "render_clips": {
+      "type": "object",
+      "description": "Per-scene HeyGen render tracking for the 3-clip studio broadcast (Charlie opens, Bob reports, Charlie closes). Shape: { opening: {heygen_id, video_url, status}, body: {heygen_id, video_url, status}, closing: {heygen_id, video_url, status} }. status is one of rendering, completed, failed."
     },
     "production_status": {
       "type": "string",
@@ -135,7 +139,7 @@
     },
     "heygen_video_id": {
       "type": "string",
-      "description": "HeyGen video job ID for the current render"
+      "description": "Legacy single-clip HeyGen video job ID. New renders use render_clips instead."
     },
     "last_render_error": {
       "type": "string",

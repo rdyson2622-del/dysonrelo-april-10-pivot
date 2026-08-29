@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2, History, RotateCcw } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import DnnArticleBroadcastPlayer from '@/components/dnn/DnnArticleBroadcastPlayer';
 
 const PIPELINE_STAGES = [
   { id: 'review', title: 'Script Review', who: 'Base44 — admin edits & saves script' },
@@ -224,11 +225,17 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
 
-          {/* Finished video — front and center, impossible to miss when ready */}
-          {article.video_url && !article.video_url.startsWith('heygen:pending:') && (
+          {/* Finished video — front and center, impossible to miss when ready.
+              New render_clips (Charlie opens / Bob reports / Charlie closes,
+              composited over the real studio backdrop) takes priority;
+              legacy single-clip video_url is shown as a fallback for older
+              articles rendered before the 3-clip studio player existed. */}
+          {article.render_clips ? (
+            <DnnArticleBroadcastPlayer renderClips={article.render_clips} />
+          ) : article.video_url && !article.video_url.startsWith('heygen:pending:') && (
             <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
               <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
-                ▶ Finished Video
+                ▶ Finished Video (legacy single clip)
               </div>
               <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
             </div>

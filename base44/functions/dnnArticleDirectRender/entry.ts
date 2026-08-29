@@ -1,30 +1,77 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
-import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
-import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 /**
  * dnnArticleDirectRender
  *
  * Direct in-app HeyGen render for DnnArticle — no n8n involved anywhere.
- * Uses the same LOCKED Charlie desk talking_photo asset + voice already
- * proven in heygenCharlieDeskTest, so this reproduces the approved look.
  *
- * action: 'dispatch' (default) — { article_id } — admin only. Builds the
- *   full anchor script from the article's edited/generated scenes, renders
- *   it on Charlie's desk still, stores heygen_video_id, sets production_status
- *   to 'rendering'.
+ * Uses the PROVEN "QA Duo" pattern already working elsewhere (lenderRender,
+ * vettingDeskQARender, roadmapQARender): Charlie is a real HeyGen AVATAR
+ * (not a stock desk photo), Bob is his talking_photo — both rendered as
+ * separate solid-black-background clips. The studio backdrop + two boxes
+ * are composited entirely client-side (DnnArticleBroadcastPlayer), never by
+ * HeyGen — so HeyGen is never asked to bake in a background or a second
+ * person.
+ *
+ * Three clips per article: Charlie opens, Bob reports the story, Charlie
+ * closes — stored in render_clips = { opening, body, closing }, each
+ * { heygen_id, video_url, status }.
+ *
+ * action: 'dispatch' (default) — { article_id } — admin only.
  * action: 'poll' — no auth (called by scheduled automation) — checks every
- *   article in 'rendering' against HeyGen, downloads + stores the finished
- *   MP4, flips status to 'complete' or 'failed'.
+ *   rendering clip against HeyGen, downloads + stores finished MP4s, flips
+ *   production_status to 'complete' once all three clips are done.
  */
 
 const HEYGEN_API = 'https://api.heygen.com';
+const CHARLIE_AVATAR_ID = '41f40b894f6944188c7908253b12e921';
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
+const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
+const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
+const VOICE_SPEED = 0.8;
 
 function pick(edited, generated) {
   if (edited !== undefined && edited !== null && String(edited).trim() !== '') return edited;
   return generated || '';
+}
+
+async function startClip(heygenKey, role, script) {
+  const character = role === 'bob'
+    ? { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID }
+    : { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' };
+  const voiceId = role === 'bob' ? BOB_VOICE_ID : CHARLIE_VOICE_ID;
+
+  const res = await fetch(`${HEYGEN_API}/v2/video/generate`, {
+    method: 'POST',
+    headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      video_inputs: [{
+        character,
+        voice: { type: 'text', voice_id: voiceId, input_text: script, speed: VOICE_SPEED },
+        background: { type: 'color', value: '#000000' },
+      }],
+      dimension: { width: 1280, height: 720 },
+    }),
+  });
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch (_) {
+    throw new Error(`HeyGen render returned non-JSON: ${text.slice(0, 300)}`);
+  }
+  const videoId = data?.data?.video_id;
+  if (!res.ok || !videoId) {
+    throw new Error(`HeyGen render job failed: ${JSON.stringify(data)}`);
+  }
+  return videoId;
+}
+
+async function checkClip(heygenKey, videoId) {
+  const res = await fetch(`${HEYGEN_API}/v1/video_status.get?video_id=${encodeURIComponent(videoId)}`, {
+    headers: { 'X-Api-Key': heygenKey },
+  });
+  const data = await res.json();
+  return { status: data?.data?.status, videoUrl: data?.data?.video_url, error: data?.data?.error?.message };
 }
 
 Deno.serve(async (req) => {
@@ -46,40 +93,51 @@ Deno.serve(async (req) => {
       );
       const results = [];
       for (const article of rendering) {
-        if (!article.heygen_video_id) continue;
-        try {
-          const { status, videoUrl, error } = await checkHeygenStatus(HEYGEN_API_KEY, article.heygen_video_id);
-          if (status === 'completed' && videoUrl) {
-            let savedUrl = videoUrl;
-            try {
-              const vidRes = await fetch(videoUrl);
-              if (vidRes.ok) {
-                const buf = await vidRes.arrayBuffer();
-                const file = new File([buf], `dnn_article_${article.id}.mp4`, { type: 'video/mp4' });
-                const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
-                if (up?.file_url) savedUrl = up.file_url;
-              }
-            } catch (_) { /* keep the HeyGen CDN url as fallback */ }
-
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              video_url: savedUrl,
-              production_status: 'complete',
-              video_completed_at: new Date().toISOString(),
-            });
-            results.push({ article_id: article.id, status: 'complete' });
-          } else if (status === 'failed') {
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              production_status: 'failed',
-              last_render_error: error || 'HeyGen render failed',
-            });
-            results.push({ article_id: article.id, status: 'failed' });
-          } else {
-            results.push({ article_id: article.id, status: 'pending' });
+        const clips = article.render_clips || {};
+        let changed = false;
+        let anyFailed = false;
+        for (const key of ['opening', 'body', 'closing']) {
+          const clip = clips[key];
+          if (!clip || clip.status !== 'rendering' || !clip.heygen_id) continue;
+          try {
+            const { status, videoUrl, error } = await checkClip(HEYGEN_API_KEY, clip.heygen_id);
+            if (status === 'completed' && videoUrl) {
+              let savedUrl = videoUrl;
+              try {
+                const vidRes = await fetch(videoUrl);
+                if (vidRes.ok) {
+                  const buf = await vidRes.arrayBuffer();
+                  const file = new File([buf], `dnn_article_${article.id}_${key}.mp4`, { type: 'video/mp4' });
+                  const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+                  if (up?.file_url) savedUrl = up.file_url;
+                }
+              } catch (_) { /* keep HeyGen CDN url as fallback */ }
+              clips[key] = { ...clip, video_url: savedUrl, status: 'completed' };
+              changed = true;
+            } else if (status === 'failed') {
+              clips[key] = { ...clip, status: 'failed', error: error || 'HeyGen render failed' };
+              anyFailed = true;
+              changed = true;
+            }
+          } catch (e) {
+            results.push({ article_id: article.id, clip: key, error: e.message });
           }
-        } catch (e) {
-          results.push({ article_id: article.id, error: e.message });
+          await new Promise((r) => setTimeout(r, 300));
         }
-        await new Promise((r) => setTimeout(r, 300));
+
+        if (changed) {
+          const allDone = ['opening', 'body', 'closing'].every((k) => clips[k]?.status === 'completed');
+          const update = { render_clips: clips };
+          if (anyFailed) {
+            update.production_status = 'failed';
+            update.last_render_error = Object.values(clips).map((c) => c?.error).filter(Boolean).join(' | ') || 'One or more clips failed';
+          } else if (allDone) {
+            update.production_status = 'complete';
+            update.video_completed_at = new Date().toISOString();
+          }
+          await base44.asServiceRole.entities.DnnArticle.update(article.id, update);
+          results.push({ article_id: article.id, status: update.production_status || 'rendering' });
+        }
       }
       return Response.json({ checked: results.length, results });
     }
@@ -94,54 +152,38 @@ Deno.serve(async (req) => {
     const article = await base44.asServiceRole.entities.DnnArticle.get(article_id);
     if (!article) return Response.json({ error: 'Article not found' }, { status: 404 });
 
-    const fullScript = pick(article.edited_full_script, article.generated_full_script) ||
-      [
-        pick(article.edited_opening_script, article.generated_opening_script),
-        pick(article.edited_body_script, article.generated_body_script),
-        pick(article.edited_closing_script, article.generated_closing_script),
-      ].filter(Boolean).join(' ');
+    const openingScript = sanitizeVoiceScript(pick(article.edited_opening_script, article.generated_opening_script)).slice(0, 1500);
+    const bodyScript = sanitizeVoiceScript(pick(article.edited_body_script, article.generated_body_script) || article.body).slice(0, 2500);
+    const closingScript = sanitizeVoiceScript(pick(article.edited_closing_script, article.generated_closing_script)).slice(0, 1500);
 
-    if (!fullScript.trim()) return Response.json({ error: 'No script text found on this article' }, { status: 400 });
+    if (!openingScript && !bodyScript && !closingScript) {
+      return Response.json({ error: 'No script text found on this article' }, { status: 400 });
+    }
 
-    const cleanScript = sanitizeVoiceScript(fullScript).slice(0, 4500);
-
-    let talkingPhotoId;
     try {
-      talkingPhotoId = await uploadCharlieDeskTalkingPhoto(HEYGEN_API_KEY);
+      const [openingId, bodyId, closingId] = await Promise.all([
+        openingScript ? startClip(HEYGEN_API_KEY, 'charlie', openingScript) : Promise.resolve(null),
+        bodyScript ? startClip(HEYGEN_API_KEY, 'bob', bodyScript) : Promise.resolve(null),
+        closingScript ? startClip(HEYGEN_API_KEY, 'charlie', closingScript) : Promise.resolve(null),
+      ]);
+
+      const render_clips = {
+        opening: openingId ? { heygen_id: openingId, status: 'rendering' } : null,
+        body: bodyId ? { heygen_id: bodyId, status: 'rendering' } : null,
+        closing: closingId ? { heygen_id: closingId, status: 'rendering' } : null,
+      };
+
+      await base44.asServiceRole.entities.DnnArticle.update(article_id, {
+        production_status: 'rendering',
+        render_clips,
+        last_render_error: null,
+        video_url: null,
+      });
+
+      return Response.json({ success: true, render_clips });
     } catch (e) {
       return Response.json({ error: e.message }, { status: 500 });
     }
-
-    const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
-      method: 'POST',
-      headers: { 'X-Api-Key': HEYGEN_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        video_inputs: [{
-          character: { type: 'talking_photo', talking_photo_id: talkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-          voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: cleanScript, speed: 0.8 },
-        }],
-        dimension: { width: 1280, height: 720 },
-      }),
-    });
-
-    const renderText = await renderRes.text();
-    let renderData;
-    try { renderData = JSON.parse(renderText); } catch (_) {
-      return Response.json({ error: 'HeyGen render returned non-JSON', raw: renderText.slice(0, 300) }, { status: 500 });
-    }
-    if (!renderRes.ok || !renderData?.data?.video_id) {
-      return Response.json({ error: 'HeyGen render job failed', detail: renderData }, { status: 500 });
-    }
-
-    const videoId = renderData.data.video_id;
-    await base44.asServiceRole.entities.DnnArticle.update(article_id, {
-      production_status: 'rendering',
-      heygen_video_id: videoId,
-      last_render_error: null,
-      video_url: null,
-    });
-
-    return Response.json({ success: true, video_id: videoId });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
