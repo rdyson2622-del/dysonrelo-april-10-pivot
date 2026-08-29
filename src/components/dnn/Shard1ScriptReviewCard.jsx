@@ -224,6 +224,16 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
 
+          {/* Finished video — front and center, impossible to miss when ready */}
+          {article.video_url && !article.video_url.startsWith('heygen:pending:') && (
+            <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
+              <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
+                ▶ Finished Video
+              </div>
+              <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
+            </div>
+          )}
+
           {/* Show Production Pipeline roadmap — where this article sits right now */}
           <FlowRoadmapLine
             stages={PIPELINE_STAGES}
