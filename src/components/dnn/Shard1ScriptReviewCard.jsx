@@ -1,6 +1,36 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2, History, RotateCcw } from 'lucide-react';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+
+const PIPELINE_STAGES = [
+  { id: 'review', title: 'Script Review' },
+  { id: 'approved', title: 'Approved' },
+  { id: 'rendering', title: 'Rendering' },
+  { id: 'complete', title: 'Complete' },
+];
+
+// Maps an article's production_status onto the 4-stage roadmap line above.
+function getPipelineStatuses(article) {
+  const s = article.production_status;
+  if (s === 'complete') {
+    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'completed' }, complete: { status: 'completed' } };
+  }
+  if (s === 'failed') {
+    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'flagged', flag_reason: article.last_render_error || 'Render failed' }, complete: { status: 'pending' } };
+  }
+  if (s === 'rendering') {
+    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'running' }, complete: { status: 'pending' } };
+  }
+  if (s === 'approved_for_render' || s === 'pending') {
+    return { review: { status: 'completed' }, approved: { status: 'running' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+  }
+  if (s === 'needs_revision') {
+    return { review: { status: 'flagged', flag_reason: 'Needs revision' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+  }
+  // new, script_generated, pending_review, none
+  return { review: { status: 'running' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+}
 
 const STATUS_STYLES = {
   new: { label: 'New', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)' },
@@ -65,9 +95,9 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   // Before overwriting anything, snapshot whatever is CURRENTLY saved on the
   // article (its live edited_* values) into edit_history — so a save can
   // never silently destroy a prior version. History is capped at the last 20.
-  const persist = async (extra, successText) => {
+  const persist = async (extra, successText, startText) => {
     setSaving(true);
-    setMsg(null);
+    setMsg({ type: 'pending', text: startText || 'Working…' });
     try {
       const current = await base44.entities.DnnArticle.get(article.id);
       const snapshot = {
@@ -93,12 +123,13 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
     setMsg({ type: 'success', text: `Restored the ${new Date(snap.saved_at).toLocaleString()} version into the fields below — click Save Corrections to keep it.` });
   };
 
-  const handleSave = () => persist({}, 'Corrections saved.');
+  const handleSave = () => persist({}, 'Corrections saved.', 'Received — saving your corrections…');
 
   const handleApprove = () =>
     persist(
       { admin_approved: true, render_requested: true, production_status: 'approved_for_render' },
-      'Approved for render — n8n will pick this up.'
+      'Approved for render — n8n will pick this up.',
+      'Received — submitting for render…'
     );
 
   const handleRerender = () =>
@@ -111,25 +142,28 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         video_url: null,
         last_render_error: null,
       },
-      'Re-render requested (version ' + ((article.render_version || 0) + 1) + ').'
+      'Re-render requested (version ' + ((article.render_version || 0) + 1) + ').',
+      'Received — requesting re-render…'
     );
 
   const handleRepublish = () =>
     persist(
       { status: 'published', published_date: new Date().toISOString() },
-      'Saved & republished to DNN News.'
+      'Saved & republished to DNN News.',
+      'Received — saving & republishing…'
     );
 
   const handleNeedsRevision = () =>
     persist(
       { admin_approved: false, render_requested: false, production_status: 'needs_revision' },
-      'Marked as needs revision.'
+      'Marked as needs revision.',
+      'Received — flagging for revision…'
     );
 
   const handleDelete = async () => {
     if (!confirm(`Delete this article permanently?\n\n"${article.headline}"\n\nThis cannot be undone.`)) return;
     setSaving(true);
-    setMsg(null);
+    setMsg({ type: 'pending', text: 'Received — deleting…' });
     try {
       await base44.entities.DnnArticle.delete(article.id);
       setMsg({ type: 'success', text: 'Article deleted.' });
@@ -165,6 +199,16 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
       {expanded && (
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
+
+          {/* Show Production Pipeline roadmap — where this article sits right now */}
+          <FlowRoadmapLine
+            stages={PIPELINE_STAGES}
+            stageStatuses={getPipelineStatuses(article)}
+            color="#D4AF37"
+            activeStageId={null}
+            onSelect={() => {}}
+            compact
+          />
 
           {/* Complete Broadcast Script — editable (opening + body + closing) */}
           <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
@@ -215,14 +259,16 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             </button>
           </div>
 
-          {/* Save/error feedback — right under the buttons so it's never missed */}
+          {/* Save/error feedback — right under the buttons so it's never missed.
+              Shows instantly on click ("Received…") then flips to success/error. */}
           {msg && (
-            <div className="rounded-lg px-3 py-2.5 text-sm font-bold" style={{
-              background: msg.type === 'success' ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.15)',
-              border: `1px solid ${msg.type === 'success' ? 'rgba(74,222,128,0.4)' : 'rgba(248,113,113,0.4)'}`,
-              color: msg.type === 'success' ? '#4ade80' : '#f87171',
+            <div className="rounded-lg px-3 py-2.5 text-sm font-bold flex items-center gap-2" style={{
+              background: msg.type === 'success' ? 'rgba(74,222,128,0.15)' : msg.type === 'pending' ? 'rgba(96,165,250,0.15)' : 'rgba(248,113,113,0.15)',
+              border: `1px solid ${msg.type === 'success' ? 'rgba(74,222,128,0.4)' : msg.type === 'pending' ? 'rgba(96,165,250,0.4)' : 'rgba(248,113,113,0.4)'}`,
+              color: msg.type === 'success' ? '#4ade80' : msg.type === 'pending' ? '#60a5fa' : '#f87171',
             }}>
-              {msg.type === 'success' ? '✓ ' : '✗ '}{msg.text}
+              {msg.type === 'pending' ? <Loader className="w-3.5 h-3.5 animate-spin shrink-0" /> : <span>{msg.type === 'success' ? '✓' : '✗'}</span>}
+              {msg.text}
             </div>
           )}
 
