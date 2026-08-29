@@ -125,15 +125,39 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
 
   const handleSave = () => persist({}, 'Corrections saved.', 'Received — saving your corrections…');
 
+  // Approve/re-render now dispatch straight to HeyGen in-app (dnnArticleDirectRender) —
+  // no n8n involved. A scheduled poll (every 5 min) picks up completion.
+  const dispatchDirectRender = async (extra, startText, successPrefix) => {
+    setSaving(true);
+    setMsg({ type: 'pending', text: startText });
+    try {
+      const current = await base44.entities.DnnArticle.get(article.id);
+      const snapshot = {
+        saved_at: new Date().toISOString(),
+        opening: current.edited_opening_script || '',
+        body: current.edited_body_script || '',
+        closing: current.edited_closing_script || '',
+      };
+      const nextHistory = [...(current.edit_history || []), snapshot].slice(-20);
+      await base44.entities.DnnArticle.update(article.id, { ...draft, ...extra, edit_history: nextHistory });
+      const res = await base44.functions.invoke('dnnArticleDirectRender', { article_id: article.id });
+      setMsg({ type: 'success', text: `${successPrefix} HeyGen job ${res.data.video_id} — rendering now, checked automatically every 5 min.` });
+      onChanged?.();
+    } catch (e) {
+      setMsg({ type: 'error', text: e.response?.data?.error || e.message || 'Render failed to start' });
+    }
+    setSaving(false);
+  };
+
   const handleApprove = () =>
-    persist(
+    dispatchDirectRender(
       { admin_approved: true, render_requested: true, production_status: 'approved_for_render' },
-      'Approved for render — n8n will pick this up.',
-      'Received — submitting for render…'
+      'Received — rendering directly with HeyGen…',
+      'Approved and rendering started —'
     );
 
   const handleRerender = () =>
-    persist(
+    dispatchDirectRender(
       {
         admin_approved: true,
         render_requested: true,
@@ -142,8 +166,8 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         video_url: null,
         last_render_error: null,
       },
-      'Re-render requested (version ' + ((article.render_version || 0) + 1) + ').',
-      'Received — requesting re-render…'
+      'Received — requesting re-render…',
+      `Re-render v${(article.render_version || 0) + 1} started —`
     );
 
   const handleRepublish = () =>
