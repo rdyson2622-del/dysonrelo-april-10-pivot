@@ -2,18 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Play, RefreshCw, Send, CheckCircle, XCircle, Clock, Globe, Linkedin } from 'lucide-react';
-import CharlieDeskTestRender from '@/components/dnn/CharlieDeskTestRender';
-import BobStandingTestRender from '@/components/dnn/BobStandingTestRender';
-import BroadcastSequencePreview from '@/components/dnn/BroadcastSequencePreview';
-import NationalNewsScriptBox from '@/components/dnn/NationalNewsScriptBox';
-import DnnStudioComposite from '@/components/dnn/DnnStudioComposite';
-
-// Plain black-background solo clips — QA Duo pattern (already proven on the
-// Roadmap and Vetting Desk pages) — used to preview the studio composite
-// layout without needing a fresh HeyGen render.
-const CHARLIE_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/2201470a5_roadmap_6a52cbc75ead5c9873240ccf_charlie.mp4';
-const BOB_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/198c52f99_vetdesk_6a52839606e00cdc06b05e2d_bob.mp4';
-
 const GOLD = '#D4AF37';
 const DNN_LOGO = "https://qtrypzzcjebvfcihihnt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const DNN_STUDIO_IMAGE = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/fe0a2ddb0_dnn_studio_1200x627.png";
@@ -265,25 +253,6 @@ export default function DnnVideoPreview() {
           ⚠️ The 6 AM auto-blast is <strong>paused</strong>. Watch each video below, then click "Post Broadcast to LinkedIn" or "Post to Facebook" only on the ones you approve.
           Videos still rendering will appear automatically as they complete (page refreshes every 30s).
         </p>
-      </div>
-
-      {/* Reliable format proof — the proven desk (Charlie) + boxed remote (Bob) HeyGen renders.
-          Click "Re-render" on either card to dispatch a fresh practice take. */}
-      <div className="px-6 pt-6">
-        <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>
-          Proven Format — Daily News Desk Renders
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-          <CharlieDeskTestRender />
-          <BobStandingTestRender />
-        </div>
-        <BroadcastSequencePreview />
-        <NationalNewsScriptBox />
-
-        <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 mt-6" style={{ color: GOLD }}>
-          Studio Composite — Charlie &amp; Bob over the DNN Studio backdrop
-        </p>
-        <DnnStudioComposite charlieVideoUrl={CHARLIE_PLAIN_CLIP} bobVideoUrl={BOB_PLAIN_CLIP} />
       </div>
 
       {/* Grid */}
