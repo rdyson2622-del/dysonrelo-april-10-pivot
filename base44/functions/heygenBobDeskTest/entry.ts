@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
+import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
 
 /**
  * heygenBobDeskTest — short proof render of Bob in his PROVEN "outside casual"
@@ -21,7 +22,6 @@ import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 
 const HEYGEN_API = 'https://api.heygen.com';
 
-const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 // "Dyson" is spelled phonetically here so HeyGen's TTS says it correctly
@@ -64,7 +64,10 @@ Deno.serve(async (req) => {
     }
 
     // ── action: 'dispatch' (default) ── Bob's proven talking-photo look,
-    // solid dark background, no studio compositing, no pillarboxing.
+    // solid dark background, no studio compositing. Uses a fresh widescreen
+    // (1280x720) upload of Bob's still every time — the original portrait
+    // (1023x1537) source caused the pillarbox black-bar bug.
+    const bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -76,7 +79,9 @@ Deno.serve(async (req) => {
           {
             character: {
               type: 'talking_photo',
-              talking_photo_id: BOB_TALKING_PHOTO_ID,
+              talking_photo_id: bobTalkingPhotoId,
+              scale: 1,
+              offset: { x: 0, y: 0 },
             },
             voice: {
               type: 'text',
@@ -105,7 +110,7 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       video_id: renderData.data.video_id,
-      talking_photo_id: BOB_TALKING_PHOTO_ID,
+      talking_photo_id: bobTalkingPhotoId,
       script: TEST_SCRIPT,
     });
   } catch (error) {

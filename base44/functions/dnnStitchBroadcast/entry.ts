@@ -21,12 +21,12 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
  * Auth: admin session OR x-pipeline-secret (n8n).
  */
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
-const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 import { blockIfN8n } from '../../shared/n8nGuard.ts';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 Deno.serve(async (req) => {
@@ -98,8 +98,12 @@ Deno.serve(async (req) => {
       // desk still uploaded fresh as a talking_photo (same asset proven on the
       // "Charlie Speaking at the Desk" preview render) — never avatar_id.
       let charlieTalkingPhotoId = null;
+      let bobTalkingPhotoId = null;
       if (clips.some(c => c.role === 'charlie')) {
         charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
+      }
+      if (clips.some(c => c.role === 'bob')) {
+        bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
       }
       const videoInputs = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
@@ -111,7 +115,7 @@ Deno.serve(async (req) => {
               background: { type: 'color', value: '#0d0d0d' },
             }
           : {
-              character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 1, offset: { x: 0, y: 0 } },
+              character: { type: 'talking_photo', talking_photo_id: bobTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
               voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 0.92 },
               background: { type: 'color', value: '#0d0d0d' },
             };

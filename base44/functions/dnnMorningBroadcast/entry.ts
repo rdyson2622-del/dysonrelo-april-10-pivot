@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 /**
@@ -19,7 +20,6 @@ import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
  */
 
 const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
-const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 Deno.serve(async (req) => {
@@ -180,7 +180,7 @@ ${digest}`,
     // preview render) — never the mismatched avatar_id, which is what caused
     // the layout drift. Uploaded once per render job and reused for every
     // Charlie clip in this broadcast.
-    const renderClip = async (clip, charlieTalkingPhotoId) => {
+    const renderClip = async (clip, charlieTalkingPhotoId, bobTalkingPhotoId) => {
       const isCharlie = clip.role === 'charlie';
       const sanitizedScript = sanitizeVoiceScript(clip.script);
       const videoInput = isCharlie
@@ -190,7 +190,7 @@ ${digest}`,
             background: { type: 'color', value: '#0d0d0d' },
           }
         : {
-            character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 1, offset: { x: 0, y: 0 } },
+            character: { type: 'talking_photo', talking_photo_id: bobTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
             voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 0.92 },
             background: { type: 'color', value: '#0d0d0d' },
           };
@@ -211,19 +211,23 @@ ${digest}`,
       if (clips.length === 0) return { error: 'No clips on this broadcast' };
 
       let charlieTalkingPhotoId = null;
-      if (clips.some(c => c.role === 'charlie' && !c.videoUrl)) {
-        try {
+      let bobTalkingPhotoId = null;
+      try {
+        if (clips.some(c => c.role === 'charlie' && !c.videoUrl)) {
           charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
-        } catch (e) {
-          await Broadcasts.update(record.id, { status: 'failed', errorMessage: e.message });
-          return { error: e.message };
         }
+        if (clips.some(c => c.role === 'bob' && !c.videoUrl)) {
+          bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
+        }
+      } catch (e) {
+        await Broadcasts.update(record.id, { status: 'failed', errorMessage: e.message });
+        return { error: e.message };
       }
 
       const errors = [];
       for (let i = 0; i < clips.length; i++) {
         if (clips[i].videoUrl) continue;
-        const r = await renderClip(clips[i], charlieTalkingPhotoId);
+        const r = await renderClip(clips[i], charlieTalkingPhotoId, bobTalkingPhotoId);
         if (r.error) {
           clips[i] = { ...clips[i], status: 'failed' };
           errors.push(r.error);
