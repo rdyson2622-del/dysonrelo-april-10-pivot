@@ -160,12 +160,12 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
           <div className="flex flex-wrap gap-2">
             <button onClick={handleSave} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
+              style={{ background: '#fff', color: '#000', border: '1px solid #fff' }}>
               {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Save Corrections
             </button>
             <button onClick={handleRepublish} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80"
-              style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.35)' }}>
+              style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000', border: '1px solid #D4AF37' }}>
               {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />} Save & Republish
             </button>
             <button onClick={handleApprove} disabled={saving}
@@ -225,7 +225,13 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
 
           {/* Message */}
           {msg && (
-            <p className="text-xs" style={{ color: msg.type === 'success' ? '#4ade80' : '#f87171' }}>{msg.text}</p>
+            <div className="rounded-lg px-3 py-2 text-xs font-bold" style={{
+              background: msg.type === 'success' ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.15)',
+              border: `1px solid ${msg.type === 'success' ? 'rgba(74,222,128,0.4)' : 'rgba(248,113,113,0.4)'}`,
+              color: msg.type === 'success' ? '#4ade80' : '#f87171',
+            }}>
+              {msg.type === 'success' ? '✓ ' : ''}{msg.text}
+            </div>
           )}
         </div>
       )}
