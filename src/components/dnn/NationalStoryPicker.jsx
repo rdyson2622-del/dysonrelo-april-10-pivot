@@ -106,7 +106,7 @@ For each story return: headline (under 12 words), dateline (e.g. "WASHINGTON —
               <p className="text-[11px] text-slate-400 leading-relaxed mb-3 flex-1">{story.summary}</p>
               <button onClick={() => handlePick(story, i)} disabled={buildingIdx !== null}
                 className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
-                style={{ background: buildingIdx === i ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}>
+                style={{ background: buildingIdx === i ? '#666' : 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: buildingIdx === i ? '#fff' : '#000' }}>
                 {buildingIdx === i ? (
                   <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Building Script...</>
                 ) : (
