@@ -215,6 +215,17 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             </button>
           </div>
 
+          {/* Save/error feedback — right under the buttons so it's never missed */}
+          {msg && (
+            <div className="rounded-lg px-3 py-2.5 text-sm font-bold" style={{
+              background: msg.type === 'success' ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.15)',
+              border: `1px solid ${msg.type === 'success' ? 'rgba(74,222,128,0.4)' : 'rgba(248,113,113,0.4)'}`,
+              color: msg.type === 'success' ? '#4ade80' : '#f87171',
+            }}>
+              {msg.type === 'success' ? '✓ ' : '✗ '}{msg.text}
+            </div>
+          )}
+
           {/* Edit History — every previous saved version, newest first, restorable */}
           {showHistory && (
             <div className="rounded-lg p-3 space-y-2 max-h-64 overflow-y-auto" style={{ background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.2)' }}>
@@ -267,17 +278,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             <Field label="Pronunciation Notes" value={draft.pronunciation_notes} onChange={set('pronunciation_notes')} rows={2} placeholder="e.g. 'Dyson = DYE-son', 'Camas = KAM-us'" />
             <Field label="Correction Notes (internal)" value={draft.correction_notes} onChange={set('correction_notes')} rows={2} />
           </div>
-
-          {/* Message */}
-          {msg && (
-            <div className="rounded-lg px-3 py-2 text-xs font-bold" style={{
-              background: msg.type === 'success' ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.15)',
-              border: `1px solid ${msg.type === 'success' ? 'rgba(74,222,128,0.4)' : 'rgba(248,113,113,0.4)'}`,
-              color: msg.type === 'success' ? '#4ade80' : '#f87171',
-            }}>
-              {msg.type === 'success' ? '✓ ' : ''}{msg.text}
-            </div>
-          )}
         </div>
       )}
     </div>
