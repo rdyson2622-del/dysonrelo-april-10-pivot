@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, RefreshCw, Loader, Library, Video, FileText, CheckCircle, Save, Wand2 } from 'lucide-react';
 import Shard1ScriptReviewCard from '@/components/dnn/Shard1ScriptReviewCard';
+import NationalStoryPicker from '@/components/dnn/NationalStoryPicker';
 
 const DNN_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
 const GOLD = '#D4AF37';
@@ -142,6 +143,9 @@ export default function AdminDailyNewsLibrary() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+        {/* National story picker — 3 real choices, builds a real (non-practice) article ready for edit + approve */}
+        <NationalStoryPicker onCreated={refetch} />
+
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
