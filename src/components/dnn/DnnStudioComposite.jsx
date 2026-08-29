@@ -35,7 +35,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
 
       {/* Charlie box — lower left, black background behind him only */}
       {charlieVideoUrl && (
-        <div className="absolute" style={{ bottom: '4%', left: '3%', width: '15%' }}>
+        <div className="absolute" style={{ bottom: '4%', left: '3%', width: '19.5%' }}>
           <div
             className="rounded-lg overflow-hidden"
             style={{
@@ -64,7 +64,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
 
       {/* Bob box — lower right, black background behind him only */}
       {bobVideoUrl && (
-        <div className="absolute" style={{ bottom: '4%', right: '3%', width: '15%' }}>
+        <div className="absolute" style={{ bottom: '4%', right: '3%', width: '19.5%' }}>
           <div
             className="rounded-lg overflow-hidden"
             style={{
