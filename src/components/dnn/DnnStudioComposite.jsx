@@ -1,5 +1,8 @@
 import React from 'react';
-const DNN_STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f7a3ecc1_generated_image.png';
+// Canonical DNN studio background — locked reference stored in Admin Page #3
+// (src/lib/dnnStudioLandingSource.js). Never swap this URL without updating
+// that source of truth first.
+const DNN_STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 
 const GOLD = '#D4AF37';
 
@@ -31,7 +34,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
 
       {/* Charlie box — lower left, black background behind him only */}
       {charlieVideoUrl && (
-        <div className="absolute" style={{ bottom: '4%', left: '3%', width: '27%' }}>
+        <div className="absolute" style={{ bottom: '4%', left: '3%', width: '15%' }}>
           <div
             className="rounded-lg overflow-hidden"
             style={{
@@ -40,7 +43,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
               background: '#000',
             }}
           >
-            <div className="w-full overflow-hidden" style={{ aspectRatio: '16 / 9', background: '#000' }}>
+            <div className="w-full overflow-hidden" style={{ aspectRatio: '9 / 16', background: '#000' }}>
               <video
                 src={charlieVideoUrl}
                 autoPlay
@@ -60,7 +63,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
 
       {/* Bob box — lower right, black background behind him only */}
       {bobVideoUrl && (
-        <div className="absolute" style={{ bottom: '4%', right: '3%', width: '27%' }}>
+        <div className="absolute" style={{ bottom: '4%', right: '3%', width: '15%' }}>
           <div
             className="rounded-lg overflow-hidden"
             style={{
@@ -69,7 +72,7 @@ export default function DnnStudioComposite({ charlieVideoUrl, bobVideoUrl, activ
               background: '#000',
             }}
           >
-            <div className="w-full overflow-hidden" style={{ aspectRatio: '16 / 9', background: '#000' }}>
+            <div className="w-full overflow-hidden" style={{ aspectRatio: '9 / 16', background: '#000' }}>
               <video
                 src={bobVideoUrl}
                 autoPlay
