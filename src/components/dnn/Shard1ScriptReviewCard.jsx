@@ -4,10 +4,10 @@ import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, Chevr
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const PIPELINE_STAGES = [
-  { id: 'review', title: 'Script Review', who: 'Base44 (admin edit)' },
-  { id: 'approved', title: 'Approved', who: 'Base44 (dispatch)' },
-  { id: 'rendering', title: 'Rendering', who: 'HeyGen' },
-  { id: 'complete', title: 'Complete', who: 'Base44 (storage)' },
+  { id: 'review', title: 'Script Review', who: 'Base44 — admin edits & saves script' },
+  { id: 'approved', title: 'Approved', who: 'Base44 — dispatches job to HeyGen' },
+  { id: 'rendering', title: 'Rendering', who: 'HeyGen renders — Base44 polls every 5 min' },
+  { id: 'complete', title: 'Complete', who: 'Base44 — downloads & stores final MP4' },
 ];
 
 // Maps an article's production_status onto the 4-stage roadmap line above.
