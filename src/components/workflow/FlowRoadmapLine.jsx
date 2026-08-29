@@ -107,7 +107,7 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
                 {s.title}
               </p>
               {s.who && (
-                <p className="text-[9px] mt-0.5 tracking-wide uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <p className="text-[10px] mt-0.5 tracking-wide uppercase font-bold" style={{ color: '#ffffff' }}>
                   {s.who}
                 </p>
               )}
