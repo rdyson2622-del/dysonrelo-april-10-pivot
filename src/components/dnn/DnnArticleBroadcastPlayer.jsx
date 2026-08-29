@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PlayCircle } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -7,41 +7,16 @@ const GOLD = '#D4AF37';
 const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/16260cf0d_generated_image.png';
 
 // While waiting to play, Bob's box would otherwise freeze on his video's raw
-// first frame (mid-squint, looks broken). Instead we loop a gentle "blink"
-// crossfade between eyes-squinting and eyes-open stills so he looks alive.
-const BOB_IDLE_IMAGES = [
-  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/44f8388c9_Screenshot2026-08-29at23042PM.png',
-  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a29e55201_generated_image.png',
-];
+// first frame (mid-squint, looks broken). Replaced with a single eyes-open still.
+const BOB_IDLE_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a29e55201_generated_image.png';
 
-function BlinkLoop({ images }) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % images.length), 2800);
-    return () => clearInterval(t);
-  }, [images]);
-  return (
-    <div className="relative w-full h-full">
-      {images.map((src, idx) => (
-        <img
-          key={src}
-          src={src}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-          style={{ opacity: idx === i ? 1 : 0 }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Box({ label, videoUrl, active, onEnded, playing, idleImages }) {
+function Box({ label, videoUrl, active, onEnded, playing, idleImage }) {
   return (
     <div className="absolute" style={{ bottom: '4%', left: label === 'CHARLIE SIMMONS' ? '3%' : undefined, right: label === 'BOB DYSON' ? '3%' : undefined, width: '19.5%' }}>
       <div className="rounded-lg overflow-hidden" style={{ border: `2px solid ${active ? GOLD : 'rgba(212,175,55,0.4)'}`, boxShadow: '0 10px 40px rgba(0,0,0,0.7)', background: '#000' }}>
         <div className="w-full overflow-hidden" style={{ aspectRatio: '9 / 16', background: '#000' }}>
-          {idleImages?.length && !playing ? (
-            <BlinkLoop images={idleImages} />
+          {idleImage && !playing ? (
+            <img src={idleImage} alt="" className="w-full h-full object-cover" />
           ) : videoUrl ? (
             <video
               key={videoUrl}
@@ -102,7 +77,7 @@ export default function DnnArticleBroadcastPlayer({ renderClips }) {
       <div className="relative w-full aspect-video overflow-hidden" style={{ background: '#000' }}>
         <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <Box label="CHARLIE SIMMONS" videoUrl={charlieSrc} active={activeSpeaker === 'charlie'} playing={!!stage} onEnded={handleEnded} />
-        <Box label="BOB DYSON" videoUrl={bodyClip} active={activeSpeaker === 'bob'} playing={!!stage} onEnded={handleEnded} idleImages={BOB_IDLE_IMAGES} />
+        <Box label="BOB DYSON" videoUrl={bodyClip} active={activeSpeaker === 'bob'} playing={!!stage} onEnded={handleEnded} idleImage={BOB_IDLE_IMAGE} />
       </div>
     </div>
   );
