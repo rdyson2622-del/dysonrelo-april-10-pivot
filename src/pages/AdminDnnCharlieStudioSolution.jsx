@@ -1,8 +1,30 @@
 import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import LockedPageSourceViewer from '@/components/dnn/LockedPageSourceViewer';
+import DnnStudioComposite from '@/components/dnn/DnnStudioComposite';
 
 const GOLD = '#D4AF37';
+
+// Plain black-background solo clips — QA Duo pattern (roadmapQARender /
+// vettingDeskQARender). These already exist, no fresh HeyGen render needed
+// to review this layout.
+const CHARLIE_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/2201470a5_roadmap_6a52cbc75ead5c9873240ccf_charlie.mp4';
+const BOB_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/198c52f99_vetdesk_6a52839606e00cdc06b05e2d_bob.mp4';
+
+const COMPOSITE_CODE_SAMPLE = `// DnnStudioComposite.jsx — the ONLY place the studio look is assembled
+// 1. HeyGen renders Charlie and Bob as two separate solo clips,
+//    solid black background only — never a studio image, never both
+//    people in one render.
+// 2. The studio backdrop is a static image, placed full-frame behind
+//    both boxes with plain CSS/DOM layering (no canvas, no chroma-key).
+// 3. Each box uses object-cover on a 16:9 container so the already
+//    16:9 solid-black render fills edge-to-edge — zero pillarboxing.
+
+<div className="relative w-full aspect-video">
+  <img src={DNN_STUDIO_BACKGROUND_URL} className="absolute inset-0 object-cover" />
+  <video src={charlieVideoUrl} className="absolute ... object-cover" /> {/* lower-left */}
+  <video src={bobVideoUrl} className="absolute ... object-cover" />     {/* lower-right */}
+</div>`;
 
 // ══════════════════════════════════════════════════════════════════════
 // ✅ PERMANENT RECORD — DNN Studio Broadcast: Charlie-in-a-Box, SOLVED.
@@ -81,6 +103,51 @@ export default function AdminDnnCharlieStudioSolution() {
           filePath="base44/functions/dnnDirectDispatch/entry.ts (Charlie block)"
           code={CODE_SAMPLE}
         />
+
+        {/* ══════════════════════════════════════════════════════════════ */}
+        {/* NEW — Daily News production method, LOCKED 8/29                */}
+        {/* ══════════════════════════════════════════════════════════════ */}
+        <div className="mt-12 pt-8" style={{ borderTop: `2px solid ${GOLD}` }}>
+          <div className="flex items-center gap-2 mb-4">
+            <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
+            <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
+              Daily News Production Method — LOCKED (replaces the tag-team stitching pipeline)
+            </p>
+          </div>
+
+          <div className="rounded-xl p-5 mb-6" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.3)' }}>
+            <h2 className="text-white font-bold mb-3">Answering the question: is the studio backdrop done by us, or by HeyGen?</h2>
+            <p className="text-sm mb-3" style={{ color: '#ddd' }}>
+              <strong>Done entirely on our side.</strong> HeyGen never sees, renders, or knows about the studio image at all.
+              HeyGen's only job is to render Charlie and Bob as two separate, simple, solo talking clips on a plain solid
+              black background — the exact "QA Duo" method already proven on the Roadmap and Vetting Desk pages, used
+              successfully for over two months. The studio backdrop image is a plain static picture we place full-frame
+              behind both of them, and each of their boxes is placed with ordinary CSS positioning on top of it — no
+              canvas tricks, no chroma-key, no transparency layering, no HeyGen "background" parameter.
+            </p>
+            <p className="text-sm" style={{ color: '#ddd' }}>
+              That's the whole point of going back to this method: the less HeyGen has to do beyond "one person talking
+              on a black background," the fewer chances it has to get something wrong. Everything you're seeing below —
+              the studio, the box positions, the black fill behind each of them — is 100% our code, so it will look
+              identical every single time, regardless of what HeyGen does or doesn't get right that day.
+            </p>
+          </div>
+
+          <p className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: GOLD }}>
+            Live Review — Charlie lower-left, Bob lower-right, our studio backdrop
+          </p>
+          <DnnStudioComposite charlieVideoUrl={CHARLIE_PLAIN_CLIP} bobVideoUrl={BOB_PLAIN_CLIP} />
+          <p className="text-[11px] text-gray-500 mt-2 mb-8">
+            Both clips above are existing plain black-background solo renders (no new HeyGen render was needed to build
+            this preview) — proof the box/backdrop layout works with whatever solo clips the daily pipeline produces.
+          </p>
+
+          <LockedPageSourceViewer
+            title="Locked Code: Studio Composite (src/components/dnn/DnnStudioComposite.jsx)"
+            filePath="src/components/dnn/DnnStudioComposite.jsx"
+            code={COMPOSITE_CODE_SAMPLE}
+          />
+        </div>
       </div>
     </div>
   );
