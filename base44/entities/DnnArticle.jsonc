@@ -88,6 +88,28 @@
       "type": "string",
       "description": "Admin-edited lower-third text"
     },
+    "edit_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "saved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "opening": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "closing": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Snapshot of the previous edited_opening/body/closing_script values taken automatically right before every save, so no edit is ever silently lost. Most recent snapshot is last in the array."
+    },
     "pronunciation_notes": {
       "type": "string",
       "description": "Admin pronunciation guidance for HeyGen/TTS"

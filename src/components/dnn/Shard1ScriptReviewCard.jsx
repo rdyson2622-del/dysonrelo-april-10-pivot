@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2 } from 'lucide-react';
+import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2, History, RotateCcw } from 'lucide-react';
 
 const STATUS_STYLES = {
   new: { label: 'New', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)' },
@@ -48,6 +48,7 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   const [expanded, setExpanded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Editable draft — falls back to generated values so admin starts from AI output
   const [draft, setDraft] = useState({
@@ -61,11 +62,22 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   const st = STATUS_STYLES[article.production_status] || STATUS_STYLES.none;
   const set = (k) => (v) => setDraft((d) => ({ ...d, [k]: v }));
 
+  // Before overwriting anything, snapshot whatever is CURRENTLY saved on the
+  // article (its live edited_* values) into edit_history — so a save can
+  // never silently destroy a prior version. History is capped at the last 20.
   const persist = async (extra, successText) => {
     setSaving(true);
     setMsg(null);
     try {
-      await base44.entities.DnnArticle.update(article.id, { ...draft, ...extra });
+      const current = await base44.entities.DnnArticle.get(article.id);
+      const snapshot = {
+        saved_at: new Date().toISOString(),
+        opening: current.edited_opening_script || '',
+        body: current.edited_body_script || '',
+        closing: current.edited_closing_script || '',
+      };
+      const nextHistory = [...(current.edit_history || []), snapshot].slice(-20);
+      await base44.entities.DnnArticle.update(article.id, { ...draft, ...extra, edit_history: nextHistory });
       setMsg({ type: 'success', text: successText });
       onChanged?.();
     } catch (e) {
@@ -73,6 +85,12 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleRestoreSnapshot = (snap) => {
+    setDraft((d) => ({ ...d, edited_opening_script: snap.opening, edited_body_script: snap.body, edited_closing_script: snap.closing }));
+    setShowHistory(false);
+    setMsg({ type: 'success', text: `Restored the ${new Date(snap.saved_at).toLocaleString()} version into the fields below — click Save Corrections to keep it.` });
   };
 
   const handleSave = () => persist({}, 'Corrections saved.');
@@ -183,12 +201,39 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
               style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.35)' }}>
               <AlertTriangle className="w-3 h-3" /> Mark Needs Revision
             </button>
+            {article.edit_history?.length > 0 && (
+              <button onClick={() => setShowHistory((s) => !s)}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold hover:opacity-80"
+                style={{ background: 'rgba(96,165,250,0.12)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}>
+                <History className="w-3 h-3" /> Edit History ({article.edit_history.length})
+              </button>
+            )}
             <button onClick={handleDelete} disabled={saving}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50 hover:opacity-80 ml-auto"
               style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
               {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />} Delete
             </button>
           </div>
+
+          {/* Edit History — every previous saved version, newest first, restorable */}
+          {showHistory && (
+            <div className="rounded-lg p-3 space-y-2 max-h-64 overflow-y-auto" style={{ background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.2)' }}>
+              <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#60a5fa' }}>Previous Saved Versions</p>
+              {[...(article.edit_history || [])].reverse().map((snap, i) => (
+                <div key={i} className="rounded-lg p-2 flex items-start justify-between gap-2" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-slate-500">{new Date(snap.saved_at).toLocaleString()}</p>
+                    <p className="text-xs text-slate-300 truncate">{snap.opening?.slice(0, 80) || '(empty)'}</p>
+                  </div>
+                  <button onClick={() => handleRestoreSnapshot(snap)}
+                    className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold shrink-0 hover:opacity-80"
+                    style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
+                    <RotateCcw className="w-3 h-3" /> Restore
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Source content */}
           <ReadOnly label="Source Article Body" value={article.body} />
