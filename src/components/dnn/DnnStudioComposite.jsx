@@ -1,8 +1,9 @@
 import React from 'react';
-// Canonical DNN studio background — locked reference stored in Admin Page #3
-// (src/lib/dnnStudioLandingSource.js). Never swap this URL without updating
-// that source of truth first.
-const DNN_STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+// Empty DNN studio backdrop — NO people baked in. The 0f55cd52a still used
+// elsewhere in the app (landing page hero) already has Charlie and Bob
+// painted into it, which double-exposes them once the live video boxes are
+// layered on top — never reuse that asset here.
+const DNN_STUDIO_BACKGROUND_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/16260cf0d_generated_image.png';
 
 const GOLD = '#D4AF37';
 
