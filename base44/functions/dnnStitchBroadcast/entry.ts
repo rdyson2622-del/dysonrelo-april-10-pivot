@@ -175,7 +175,12 @@ Deno.serve(async (req) => {
         if (status === 'completed' && videoUrl) {
           const vidRes = await fetch(videoUrl);
           if (!vidRes.ok) {
-            results.push({ id: broadcast.id, status: 'download_failed' });
+            // Don't silently retry the same (likely expired) URL forever —
+            // clear heygenId so the admin sees a clear failure and can hit
+            // "Start Stitching" again to get a fresh render.
+            const errMsg = `HeyGen reported the stitched video as ready, but downloading it failed (HTTP ${vidRes.status}). Click Start Stitching to retry.`;
+            await Broadcasts.update(broadcast.id, { heygenId: '', errorMessage: errMsg });
+            results.push({ id: broadcast.id, status: 'download_failed', error: errMsg });
             continue;
           }
           const buf = await vidRes.arrayBuffer();
