@@ -106,6 +106,11 @@ export default function FlowRoadmapLine({ stages, stageStatuses, color, activeSt
               >
                 {s.title}
               </p>
+              {s.who && (
+                <p className="text-[9px] mt-0.5 tracking-wide uppercase" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  {s.who}
+                </p>
+              )}
               {status === 'completed' && action?.duration_ms && (
                 <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-0.5">
                   <Clock className="w-3 h-3" />
