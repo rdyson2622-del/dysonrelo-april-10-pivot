@@ -38,7 +38,7 @@ export default function AdminDnnCharlieStudioSolution() {
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle2 className="w-5 h-5" style={{ color: GOLD }} />
           <p className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>
-            Daily News Production Method — LOCKED (replaces the tag-team stitching pipeline)
+            Locked Approved Studio Look
           </p>
         </div>
 
