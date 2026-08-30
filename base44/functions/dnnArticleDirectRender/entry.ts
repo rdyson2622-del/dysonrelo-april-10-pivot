@@ -30,6 +30,7 @@ const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_TALKING_PHOTO_ID = '31b79a86784e495090472af2e7b9407c';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 const VOICE_SPEED = 0.8;
+const CLIP_TIMEOUT_MINUTES = 15;
 
 function pick(edited, generated) {
   if (edited !== undefined && edited !== null && String(edited).trim() !== '') return edited;
@@ -86,16 +87,21 @@ Deno.serve(async (req) => {
 
     // ── action: 'poll' — scheduled automation, checks all rendering articles ──
     if (body.action === 'poll') {
+      // Oldest-updated first — stuck articles otherwise sink to the bottom of
+      // a '-updated_date' sort and never get re-checked (or timed out) once
+      // enough newer renders pile up ahead of them in the 50-record window.
       const rendering = await base44.asServiceRole.entities.DnnArticle.filter(
         { production_status: 'rendering' },
-        '-updated_date',
+        'updated_date',
         50
       );
+      const timeoutCutoff = Date.now() - CLIP_TIMEOUT_MINUTES * 60 * 1000;
       const results = [];
       for (const article of rendering) {
         const clips = article.render_clips || {};
         let changed = false;
         let anyFailed = false;
+        const stale = new Date(article.updated_date || article.created_date).getTime() < timeoutCutoff;
         for (const key of ['opening', 'body', 'closing']) {
           const clip = clips[key];
           if (!clip || clip.status !== 'rendering' || !clip.heygen_id) continue;
@@ -116,6 +122,12 @@ Deno.serve(async (req) => {
               changed = true;
             } else if (status === 'failed') {
               clips[key] = { ...clip, status: 'failed', error: error || 'HeyGen render failed' };
+              anyFailed = true;
+              changed = true;
+            } else if (stale) {
+              // Never completed or failed on HeyGen's side within the timeout
+              // window — stop polling it forever and free up the queue.
+              clips[key] = { ...clip, status: 'failed', error: `Timed out after ${CLIP_TIMEOUT_MINUTES} min with no HeyGen response` };
               anyFailed = true;
               changed = true;
             }

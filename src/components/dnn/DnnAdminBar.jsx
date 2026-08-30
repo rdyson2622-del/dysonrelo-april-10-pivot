@@ -40,7 +40,7 @@ function ArticleForm({ initial = {}, onSave, onCancel, saving }) {
       headline: form.headline,
       dateline: form.dateline,
       body: form.body,
-      video_urcsssal: form.video_url || undefined,
+      video_url: form.video_url || undefined,
       trigger_type: form.trigger_type,
       status: form.status,
       tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
