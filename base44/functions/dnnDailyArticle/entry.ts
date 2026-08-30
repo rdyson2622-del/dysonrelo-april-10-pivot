@@ -148,6 +148,47 @@ Return JSON:
     }
   });
 
+  // Step 3: Generate the three broadcast scene scripts (opening, body, closing)
+  // so they appear pre-filled in the Script Review card, matching the national pipeline.
+  const sceneResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
+    prompt: `You are writing a 3-scene DNN broadcast script for a single news story.
+Charlie Simmons is the anchor (opens and closes). Bob Dyson is the expert (delivers the news story).
+
+Based on this article about ${market.city}, ${market.state}:
+HEADLINE: ${result.headline}
+BODY: ${result.body}
+
+Write three scripts:
+
+SCENE 1 — OPENING (Charlie, 60-80 words):
+Charlie opens the show. DNN-branded, cinematic, sets up the story. Greet viewers, tease the headline, hand off to Bob.
+
+SCENE 2 — NEWS STORY (Bob, 120-160 words):
+Bob delivers the story conversationally, as if talking to Charlie and the viewer. Plain spoken, warm, expert but not stiff. End by tossing back to Charlie.
+
+SCENE 3 — CLOSING (Charlie, 40-60 words):
+Charlie closes the show. Dyson and Dyson branded outro. Thank Bob, sign off, tease tomorrow.
+
+ALSO: LOWER_THIRD — a short chyron text for this story (under 40 chars).
+
+CRITICAL RULES:
+- PLAIN LANGUAGE: 8th-grade reading level. Short sentences (under 20 words). Everyday words.
+- Bob NEVER says "That's a great question" or "Absolutely."
+- Natural spoken language. Contractions. Direct address. No bullet points, no headers.
+- FORMATTING: Never use em-dashes, en-dashes, smart quotes, or bullet characters. Only plain commas, periods, straight quotes. HeyGen goes SILENT on em-dashes or smart punctuation.
+
+Return JSON with exactly: opening_script, body_script, closing_script, lower_third_text.`,
+    response_json_schema: {
+      type: 'object',
+      properties: {
+        opening_script: { type: 'string' },
+        body_script: { type: 'string' },
+        closing_script: { type: 'string' },
+        lower_third_text: { type: 'string' },
+      }
+    }
+  });
+
   await base44.asServiceRole.entities.DnnArticle.create({
     headline: result.headline,
     dateline: market.dateline,
@@ -158,6 +199,10 @@ Return JSON:
     tags: result.tags || [market.city.toLowerCase()],
     trigger_type,
     interview_qa: qaResult?.qa || [],
+    generated_opening_script: sceneResult?.opening_script || '',
+    generated_body_script: sceneResult?.body_script || '',
+    generated_closing_script: sceneResult?.closing_script || '',
+    generated_lower_third_text: sceneResult?.lower_third_text || '',
     status: 'published',
     generated_date: new Date().toISOString(),
     published_date: new Date().toISOString(),
