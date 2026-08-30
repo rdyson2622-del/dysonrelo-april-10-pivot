@@ -279,6 +279,9 @@ Deno.serve(async (req) => {
 
     // ── COMBINED RENDER: ONE HeyGen generate → ONE mp4 (Charlie intro, Bob solutions, Charlie out) ──
     const startCombinedRender = async (clip, preloadedClips = null) => {
+      // Cancel stale pending/queued HeyGen jobs FIRST, before anything else.
+      const cancelled = await clearPendingHeygen(heygenKey);
+
       const clips = preloadedClips || (await Clips.list());
       let videoInputs = buildCombinedInputs(clips, clip);
 
@@ -290,8 +293,6 @@ Deno.serve(async (req) => {
           return { error: 'Not enough script text to build a combined render' };
         }
       }
-
-      const cancelled = await clearPendingHeygen(heygenKey);
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
@@ -403,3 +404,4 @@ Deno.serve(async (req) => {
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
+
