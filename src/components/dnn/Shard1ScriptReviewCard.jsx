@@ -75,8 +75,10 @@ function ReadOnly({ label, value }) {
   );
 }
 
+const ACTIVE_STATUSES = ['approved_for_render', 'pending', 'rendering', 'failed'];
+
 export default function Shard1ScriptReviewCard({ article, onChanged }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(ACTIVE_STATUSES.includes(article.production_status));
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
