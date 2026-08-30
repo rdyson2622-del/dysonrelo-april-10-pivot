@@ -10,4 +10,4 @@
  * failure path entirely for anything backdrop-related.
  */
 export const DNN_STUDIO_BACKGROUND_URL =
-  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f7a3ecc1_generated_image.png';
+  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d17c5e2ac_STUDIOBACKDROP.jpg';

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { PlayCircle } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-// Same locked, real studio photo backdrop used everywhere else (landing page,
-// DnnStudioComposite) — no baked-in AI stock photo of a stranger at a desk.
-const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/16260cf0d_generated_image.png';
+// DNN studio set backdrop (gold-trimmed anchor desk + national map wall) —
+// same image used behind both Charlie's and Bob's boxes.
+const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d17c5e2ac_STUDIOBACKDROP.jpg';
 
 // While waiting to play, Bob's box would otherwise freeze on his video's raw
 // first frame (mid-squint, looks broken). Replaced with a single eyes-open still.

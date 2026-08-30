@@ -1,30 +1,30 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
+import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 import { CHARLIE_INTRO_URL, CHARLIE_OUTRO_URL } from '../../shared/charlieBookends.ts';
 
 /**
  * dnnArticleDirectRender — the "Sandwich" pipeline.
  *
- * HeyGen only ever renders ONE clip: Bob's middle news segment. Charlie's
- * opening and closing are static, pre-recorded MP4s (charlieBookends.ts) —
- * never sent to HeyGen. Once Bob's HeyGen clip completes, the three files
- * (Charlie_Intro.mp4 + Bob_Generated_Segment.mp4 + Charlie_Outro.mp4) are
- * stitched server-side via Creatomate into one combined MP4, which is what
- * lands on the article's video_url for the Show Production Pipeline player.
+ * HeyGen renders exactly TWO clips per article: Charlie's toss (presents the
+ * story, hands off to Bob) and Bob's answer (the solution/analysis). Both are
+ * boxed over the DNN studio backdrop in the in-app preview (render_clips.opening
+ * / render_clips.body — see DnnArticleBroadcastPlayer). Charlie's static
+ * pre-recorded Intro/Outro (charlieBookends.ts) bookend the whole thing — never
+ * sent to HeyGen. Once both clips complete, all four files (Intro + Charlie
+ * toss + Bob answer + Outro) are stitched server-side via Creatomate into one
+ * combined MP4, which lands on the article's video_url for distribution.
  *
- * This replaces the old combined-scene HeyGen render (Charlie open/close +
- * Bob body all sent to HeyGen together) — that approach caused multi-scene
- * render errors and burned more HeyGen credits per article than necessary.
- *
- * action: 'dispatch' (default) — { article_id } — admin only. Starts Bob's
- *   HeyGen render only.
+ * action: 'dispatch' (default) — { article_id } — admin only. Starts Charlie's
+ *   toss + Bob's answer HeyGen renders.
  * action: 'poll' — no auth (scheduled automation only; currently paused —
  *   run manually via the Refresh button). Advances rendering articles
- *   through: HeyGen (Bob) → Creatomate (stitch) → complete.
+ *   through: HeyGen (Charlie + Bob) → Creatomate (stitch) → complete.
  */
 
 const HEYGEN_API = 'https://api.heygen.com';
+const CHARLIE_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 const RENDER_TIMEOUT_MINUTES = 15;
 
@@ -33,22 +33,22 @@ function pick(edited, generated) {
   return generated || '';
 }
 
-function bobScene(text, talkingPhotoId) {
+function presenterScene(text, talkingPhotoId, voiceId, emotion) {
   return {
     character: { type: 'talking_photo', talking_photo_id: talkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-    voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: text, emotion: 'Excited', speed: 0.92 },
+    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: voiceId === CHARLIE_VOICE_ID ? 0.8 : 0.92 },
     background: { type: 'color', value: '#0d0d0d' },
   };
 }
 
-async function startBobRender(heygenKey, text, talkingPhotoId) {
+async function startRender(heygenKey, scene, title) {
   const res = await fetch(`${HEYGEN_API}/v2/video/generate`, {
     method: 'POST',
     headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      video_inputs: [bobScene(text, talkingPhotoId)],
+      video_inputs: [scene],
       dimension: { width: 1280, height: 720 },
-      title: 'DNN Article — Bob segment (Sandwich pipeline)',
+      title,
     }),
   });
   const text2 = await res.text();
@@ -69,7 +69,7 @@ async function checkHeygen(heygenKey, videoId) {
   return { status: data?.data?.status, videoUrl: data?.data?.video_url, error: data?.data?.error?.message };
 }
 
-async function startStitch(creatomateKey, bobVideoUrl) {
+async function startStitch(creatomateKey, clipUrls) {
   const res = await fetch('https://api.creatomate.com/v2/renders', {
     method: 'POST',
     headers: { Authorization: `Bearer ${creatomateKey}`, 'Content-Type': 'application/json' },
@@ -78,11 +78,7 @@ async function startStitch(creatomateKey, bobVideoUrl) {
       width: 1280,
       height: 720,
       frame_rate: 30,
-      elements: [
-        { type: 'video', track: 1, source: CHARLIE_INTRO_URL },
-        { type: 'video', track: 1, source: bobVideoUrl },
-        { type: 'video', track: 1, source: CHARLIE_OUTRO_URL },
-      ],
+      elements: clipUrls.map((source) => ({ type: 'video', track: 1, source })),
     }),
   });
   const data = await res.json();
@@ -109,7 +105,7 @@ Deno.serve(async (req) => {
     const HEYGEN_API_KEY = Deno.env.get('HEYGEN_API_KEY');
     if (!HEYGEN_API_KEY) return Response.json({ error: 'HEYGEN_API_KEY not set' }, { status: 500 });
 
-    // ── action: 'poll' ── advances rendering articles through HeyGen (Bob) → Creatomate (stitch) → complete
+    // ── action: 'poll' ── advances rendering articles through HeyGen (Charlie + Bob) → Creatomate (stitch) → complete
     if (body.action === 'poll') {
       const CREATOMATE_KEY = Deno.env.get('CREATOMATE');
       const rendering = await base44.asServiceRole.entities.DnnArticle.filter(
@@ -122,10 +118,11 @@ Deno.serve(async (req) => {
 
       for (const article of rendering) {
         const stale = new Date(article.updated_date || article.created_date).getTime() < timeoutCutoff;
-        const stitchRenderId = article.render_clips?.creatomate_render_id;
+        const clips = article.render_clips || {};
+        const stitchRenderId = clips.creatomate_render_id;
 
         try {
-          // ── Phase 2: Creatomate stitch in progress ──
+          // ── Phase 3: Creatomate stitch (Intro + Charlie + Bob + Outro) in progress ──
           if (stitchRenderId) {
             if (!CREATOMATE_KEY) throw new Error('CREATOMATE not configured');
             const { status, url, error } = await checkStitch(CREATOMATE_KEY, stitchRenderId);
@@ -144,7 +141,6 @@ Deno.serve(async (req) => {
                 video_url: savedUrl,
                 production_status: 'complete',
                 video_completed_at: new Date().toISOString(),
-                render_clips: null,
                 heygen_video_id: null,
               });
               results.push({ article_id: article.id, status: 'complete' });
@@ -164,22 +160,48 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // ── Phase 1: HeyGen rendering Bob's segment ──
-          if (!article.heygen_video_id) continue; // nothing left to poll for this article
-          const { status, videoUrl, error } = await checkHeygen(HEYGEN_API_KEY, article.heygen_video_id);
-          if (status === 'completed' && videoUrl) {
+          // ── Phase 1 & 2: HeyGen rendering Charlie's toss and Bob's answer ──
+          const opening = clips.opening || {};
+          const bodyClip = clips.body || {};
+          if (!opening.heygen_id && !bodyClip.heygen_id) continue; // nothing to poll for this article
+
+          const nextClips = { ...clips, opening: { ...opening }, body: { ...bodyClip } };
+          let changed = false;
+
+          if (opening.heygen_id && !opening.video_url) {
+            const { status, videoUrl, error } = await checkHeygen(HEYGEN_API_KEY, opening.heygen_id);
+            if (status === 'completed' && videoUrl) {
+              nextClips.opening = { ...opening, video_url: videoUrl, status: 'completed' };
+              changed = true;
+            } else if (status === 'failed') {
+              throw new Error(error || "Charlie's toss render failed");
+            }
+          }
+          if (bodyClip.heygen_id && !bodyClip.video_url) {
+            const { status, videoUrl, error } = await checkHeygen(HEYGEN_API_KEY, bodyClip.heygen_id);
+            if (status === 'completed' && videoUrl) {
+              nextClips.body = { ...bodyClip, video_url: videoUrl, status: 'completed' };
+              changed = true;
+            } else if (status === 'failed') {
+              throw new Error(error || "Bob's answer render failed");
+            }
+          }
+
+          const bothDone = nextClips.opening.video_url && nextClips.body.video_url;
+          if (bothDone) {
             if (!CREATOMATE_KEY) throw new Error('CREATOMATE not configured — cannot stitch bookends');
-            const renderId = await startStitch(CREATOMATE_KEY, videoUrl);
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              render_clips: { creatomate_render_id: renderId, bob_video_url: videoUrl },
-            });
+            const renderId = await startStitch(CREATOMATE_KEY, [
+              CHARLIE_INTRO_URL,
+              nextClips.opening.video_url,
+              nextClips.body.video_url,
+              CHARLIE_OUTRO_URL,
+            ]);
+            nextClips.creatomate_render_id = renderId;
+            await base44.asServiceRole.entities.DnnArticle.update(article.id, { render_clips: nextClips });
             results.push({ article_id: article.id, status: 'stitching' });
-          } else if (status === 'failed') {
-            await base44.asServiceRole.entities.DnnArticle.update(article.id, {
-              production_status: 'failed',
-              last_render_error: error || 'HeyGen render failed',
-            });
-            results.push({ article_id: article.id, status: 'failed' });
+          } else if (changed) {
+            await base44.asServiceRole.entities.DnnArticle.update(article.id, { render_clips: nextClips });
+            results.push({ article_id: article.id, status: 'partial' });
           } else if (stale) {
             await base44.asServiceRole.entities.DnnArticle.update(article.id, {
               production_status: 'failed',
@@ -219,20 +241,33 @@ Deno.serve(async (req) => {
     if (!bodyScript) {
       return Response.json({ error: 'No news segment script found on this article' }, { status: 400 });
     }
+    const tossScript = sanitizeVoiceScript(
+      pick(article.edited_opening_script, article.generated_opening_script) ||
+      `Here's a look at today's story: ${article.headline}. For what this means if you're relocating, let's bring in real estate veteran Bob Dyson.`
+    ).slice(0, 1500);
 
     try {
-      const bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(HEYGEN_API_KEY);
-      const videoId = await startBobRender(HEYGEN_API_KEY, bodyScript, bobTalkingPhotoId);
+      const [charlieTalkingPhotoId, bobTalkingPhotoId] = await Promise.all([
+        uploadCharlieDeskTalkingPhoto(HEYGEN_API_KEY),
+        uploadBobOutsideTalkingPhoto(HEYGEN_API_KEY),
+      ]);
+      const [charlieVideoId, bobVideoId] = await Promise.all([
+        startRender(HEYGEN_API_KEY, presenterScene(tossScript, charlieTalkingPhotoId, CHARLIE_VOICE_ID), 'DNN Article — Charlie toss (Sandwich pipeline)'),
+        startRender(HEYGEN_API_KEY, presenterScene(bodyScript, bobTalkingPhotoId, BOB_VOICE_ID, 'Excited'), 'DNN Article — Bob segment (Sandwich pipeline)'),
+      ]);
 
       await base44.asServiceRole.entities.DnnArticle.update(article_id, {
         production_status: 'rendering',
-        heygen_video_id: videoId,
-        render_clips: null,
+        heygen_video_id: null,
+        render_clips: {
+          opening: { heygen_id: charlieVideoId, status: 'rendering' },
+          body: { heygen_id: bobVideoId, status: 'rendering' },
+        },
         last_render_error: null,
         video_url: null,
       });
 
-      return Response.json({ success: true, video_id: videoId });
+      return Response.json({ success: true, charlie_video_id: charlieVideoId, bob_video_id: bobVideoId });
     } catch (e) {
       return Response.json({ error: e.message }, { status: 500 });
     }
