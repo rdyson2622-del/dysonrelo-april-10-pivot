@@ -132,12 +132,8 @@ export default function AdminShowPipeline() {
           </div>
         ) : (
           <div className="space-y-4">
-            {[...broadcasts].sort((a, b) => {
-              const activeOrder = { rendering: 0, approved_for_render: 0, pending: 0, failed: 1 };
-              const aActive = activeOrder[a.production_status] ?? 2;
-              const bActive = activeOrder[b.production_status] ?? 2;
-              return aActive - bActive;
-            }).map(article => (
+            {/* Pure recency order — most recently generated show always at the top, permanently. */}
+            {[...broadcasts].sort((a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)).map(article => (
               <Shard1ScriptReviewCard
                 key={article.id}
                 article={article}
