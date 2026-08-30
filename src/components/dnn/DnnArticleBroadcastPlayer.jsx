@@ -10,6 +10,16 @@ const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050
 // first frame (mid-squint, looks broken). Replaced with a single eyes-open still.
 const BOB_IDLE_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a29e55201_generated_image.png';
 
+// Splits a script's text into short bullet lines for the on-screen overlay.
+function toBullets(text) {
+  if (!text) return [];
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 5);
+}
+
 function Box({ label, videoUrl, active, onEnded, playing, idleImage }) {
   return (
     <div className="absolute" style={{ bottom: '4%', left: label === 'CHARLIE SIMMONS' ? '3%' : undefined, right: label === 'BOB DYSON' ? '3%' : undefined, width: '19.5%' }}>
@@ -44,7 +54,7 @@ function Box({ label, videoUrl, active, onEnded, playing, idleImage }) {
  * reports, Charlie closes) over the real studio backdrop with both presenter
  * boxes always visible, matching the locked studio composite look.
  */
-export default function DnnArticleBroadcastPlayer({ renderClips }) {
+export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
   const [stage, setStage] = useState(null); // null | 'opening' | 'body' | 'closing'
   const opening = renderClips?.opening?.video_url;
   const bodyClip = renderClips?.body?.video_url;
@@ -55,6 +65,7 @@ export default function DnnArticleBroadcastPlayer({ renderClips }) {
 
   const charlieSrc = stage === 'closing' ? closing : opening;
   const activeSpeaker = stage === 'body' ? 'bob' : (stage ? 'charlie' : null);
+  const bullets = stage ? toBullets(scripts?.[stage]) : [];
 
   const handleEnded = () => {
     if (stage === 'opening') setStage(bodyClip ? 'body' : (closing ? 'closing' : null));
@@ -76,6 +87,18 @@ export default function DnnArticleBroadcastPlayer({ renderClips }) {
       </div>
       <div className="relative w-full aspect-video overflow-hidden" style={{ background: '#000' }}>
         <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        {bullets.length > 0 && (
+          <div className="absolute left-[3%] right-[26%] top-[6%] rounded-lg px-4 py-3" style={{ background: 'rgba(10,10,10,0.72)', border: `1.5px solid ${GOLD}` }}>
+            <ul className="space-y-1.5">
+              {bullets.map((b, i) => (
+                <li key={i} className="text-white text-sm leading-snug flex gap-2">
+                  <span style={{ color: GOLD }}>●</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <Box label="CHARLIE SIMMONS" videoUrl={charlieSrc} active={activeSpeaker === 'charlie'} playing={!!stage} onEnded={handleEnded} />
         <Box label="BOB DYSON" videoUrl={bodyClip} active={activeSpeaker === 'bob'} playing={!!stage} onEnded={handleEnded} idleImage={BOB_IDLE_IMAGE} />
       </div>

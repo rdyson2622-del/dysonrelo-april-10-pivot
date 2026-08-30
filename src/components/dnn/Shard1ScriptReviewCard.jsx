@@ -245,7 +245,14 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
               legacy single-clip video_url is shown as a fallback for older
               articles rendered before the 3-clip studio player existed. */}
           {article.render_clips ? (
-            <DnnArticleBroadcastPlayer renderClips={article.render_clips} />
+            <DnnArticleBroadcastPlayer
+              renderClips={article.render_clips}
+              scripts={{
+                opening: article.edited_opening_script || article.generated_opening_script,
+                body: article.edited_body_script || article.generated_body_script,
+                closing: article.edited_closing_script || article.generated_closing_script,
+              }}
+            />
           ) : article.video_url && !article.video_url.startsWith('heygen:pending:') && (
             <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
               <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
