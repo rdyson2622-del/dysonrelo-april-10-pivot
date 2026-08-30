@@ -16,10 +16,15 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  *   { action: "checkCombined", clipId }       → poll a combined render
  *   { action: "startAllCombined" }            → combined-render all approved Q&A clips
  *
- * COMBINED RENDER: Charlie's question + Bob's answer are submitted as a single
- * HeyGen API call with two video_inputs. One render job, one video file, one
- * credit charge — instead of two separate renders. This is the standard going
- * forward for all Q&A pipelines (see Business Plan v8.0).
+ * COMBINED RENDER: ONE HeyGen /v2/video/generate call with three sequential
+ * video_inputs — Charlie intro, Bob solutions, Charlie out. One render job, one
+ * video file, one credit charge.
+ *
+ * COMPLETE = one single combinedVideoUrl (.mp4). Three separate clips is NOT
+ * Complete. Any pending / waiting / queued / processing HeyGen leftovers are
+ * cancelled by clearPendingHeygen() immediately before every generate, so stale
+ * jobs cannot clog the queue. This is the standard going forward for all Q&A
+ * pipelines (see Business Plan v8.0).
  *
  * Auth: admin session.
  */
@@ -193,34 +198,119 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, checked: results });
     }
 
-    // ── COMBINED RENDER: Charlie + Bob in a single HeyGen API call ──
-    const startCombinedRender = async (clip) => {
-      if (!clip.charlieScript || !clip.bobScript) return { error: 'Both charlieScript and bobScript required' };
-      const videoInputs = [
-        {
-          character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' },
-          voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: clip.charlieScript },
-          background: { type: 'color', value: '#0d0d0d' },
-        },
-        {
-          character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
-          voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: clip.bobScript, emotion: 'Excited', speed: 1.12 },
-          background: { type: 'color', value: '#0d0d0d' },
-        },
-      ];
+    // ── Cancel any pending/queued HeyGen jobs so leftovers don't clog the queue ──
+    const clearPendingHeygen = async (key) => {
+      const cancelled = [];
+      try {
+        let token = null;
+        for (let page = 0; page < 5; page++) {
+          const url = `https://api.heygen.com/v1/video.list?limit=50${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+          const listRes = await fetch(url, { headers: { 'X-Api-Key': key } });
+          const listData = await listRes.json().catch(() => ({}));
+          const videos = listData?.data?.videos || listData?.data?.list || [];
+          for (const v of videos) {
+            const st = String(v?.status || '').toLowerCase();
+            if (!['pending', 'waiting', 'queued', 'processing'].includes(st)) continue; // never touch completed/failed
+            const id = v?.video_id || v?.id;
+            if (!id) continue;
+            try {
+              // video delete only — never avatar/look delete endpoints
+              let del = await fetch(`https://api.heygen.com/v1/video.delete?video_id=${encodeURIComponent(id)}`, {
+                method: 'DELETE',
+                headers: { 'X-Api-Key': key },
+              });
+              if (!del.ok) {
+                del = await fetch(`https://api.heygen.com/v3/videos/${encodeURIComponent(id)}`, {
+                  method: 'DELETE',
+                  headers: { 'X-Api-Key': key },
+                });
+              }
+              if (del.ok) cancelled.push(id);
+            } catch (_e) { /* swallow per-item errors — a missed cancel must not abort the generate */ }
+          }
+          token = listData?.data?.token || null;
+          if (!token) break;
+        }
+      } catch (_e) { /* listing failure must not abort the generate */ }
+      return cancelled;
+    };
+
+    const charlieScene = (text) => ({
+      character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID, avatar_style: 'normal' },
+      voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: text },
+      background: { type: 'color', value: '#0d0d0d' },
+    });
+
+    const bobScene = (text) => ({
+      character: { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID },
+      voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: text, emotion: 'Excited' },
+      background: { type: 'color', value: '#0d0d0d' },
+    });
+
+    // Build the three sequential scenes: Charlie intro → Bob solutions → Charlie out
+    const buildCombinedInputs = (clips, clip) => {
+      const all = Array.isArray(clips) ? clips : [];
+      const videoInputs = [];
+
+      const introClip = clip?.kind === 'intro' ? clip : all.find((c) => c.kind === 'intro' && c.charlieScript);
+      const introText = introClip?.charlieScript;
+      if (introText) videoInputs.push(charlieScene(introText));
+
+      const qaClips = all.filter((c) => c.kind === 'qa' && c.bobScript);
+      let bobText = '';
+      if (clip?.kind === 'qa' && clip.bobScript) {
+        bobText = clip.bobScript;
+      } else if (qaClips.length === 1) {
+        bobText = qaClips[0].bobScript;
+      } else if (qaClips.length > 1) {
+        bobText = qaClips
+          .slice()
+          .sort((a, b) => (a.faqIndex ?? 0) - (b.faqIndex ?? 0))
+          .map((c) => c.bobScript)
+          .join('\n');
+      }
+      if (bobText) videoInputs.push(bobScene(bobText));
+
+      const outroClip = all.find((c) => c.kind === 'outro' && c.charlieScript);
+      if (outroClip?.charlieScript) videoInputs.push(charlieScene(outroClip.charlieScript));
+
+      return videoInputs;
+    };
+
+    // ── COMBINED RENDER: ONE HeyGen generate → ONE mp4 (Charlie intro, Bob solutions, Charlie out) ──
+    const startCombinedRender = async (clip, preloadedClips) => {
+      // Cancel stale pending/queued HeyGen jobs FIRST, before anything else.
+      const cancelled = await clearPendingHeygen(heygenKey);
+
+      const clips = preloadedClips || (await Clips.list());
+      let videoInputs = buildCombinedInputs(clips, clip);
+
+      if (videoInputs.length < 2) {
+        // fallback: keep the old 2-input behavior so the current single Q&A still works
+        if (clip?.charlieScript && clip?.bobScript) {
+          videoInputs = [charlieScene(clip.charlieScript), bobScene(clip.bobScript)];
+        } else {
+          return { error: 'Not enough script text to build a combined render' };
+        }
+      }
+
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
         headers: { 'X-Api-Key': heygenKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ video_inputs: videoInputs, dimension: { width: 1280, height: 720 } }),
+        body: JSON.stringify({
+          video_inputs: videoInputs,
+          dimension: { width: 1280, height: 720 },
+          title: 'ONE MP4 — three sequential scenes: Charlie intro, Bob solutions, Charlie out',
+        }),
       });
       const data = await res.json();
       const videoId = data?.data?.video_id;
       if (!res.ok || !videoId) {
         await Clips.update(clip.id, { combinedStatus: 'failed', errorMessage: JSON.stringify(data?.error || data) });
-        return { error: data };
+        return { error: data, cancelled };
       }
       await Clips.update(clip.id, { combinedHeygenId: videoId, combinedStatus: 'rendering' });
-      return { videoId };
+      return { videoId, scenes: videoInputs.length, cancelled };
     };
 
     const checkCombinedRender = async (clip) => {
@@ -274,16 +364,12 @@ Deno.serve(async (req) => {
 
     if (action === 'startAllCombined') {
       const clips = await Clips.list();
-      const results = [];
-      for (const clip of clips) {
-        if (clip.kind === 'qa' && clip.charlieScript && clip.bobScript
-            && clip.scriptStatus === 'approved'
-            && clip.combinedStatus !== 'completed' && clip.combinedStatus !== 'rendering') {
-          const r = await startCombinedRender(clip);
-          results.push({ clipId: clip.id, faqIndex: clip.faqIndex, ...r });
-        }
-      }
-      return Response.json({ success: true, started: results });
+      // ONE generate for the whole set — not a loop of Q&As.
+      const target = clips.find((c) => c.kind === 'qa' && c.bobScript)
+        || clips.find((c) => c.kind === 'intro' && c.charlieScript);
+      if (!target) return Response.json({ success: false, error: 'No clip with script text found' }, { status: 400 });
+      const r = await startCombinedRender(target, clips);
+      return Response.json({ success: !r.error, clipId: target.id, ...r });
     }
 
     if (action === 'checkAllCombined') {
@@ -318,3 +404,4 @@ Deno.serve(async (req) => {
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
+
