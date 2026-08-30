@@ -227,6 +227,18 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
         <div className="px-4 pb-4 space-y-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="pt-4" />
 
+          {/* Show Production Pipeline roadmap — always the first element in the
+              expanded card, above everything else, so milestones/lights are
+              never buried below the video or script blocks. */}
+          <FlowRoadmapLine
+            stages={PIPELINE_STAGES}
+            stageStatuses={getPipelineStatuses(article)}
+            color="#D4AF37"
+            activeStageId={null}
+            onSelect={() => {}}
+            compact
+          />
+
           {/* Finished video — front and center, impossible to miss when ready.
               New render_clips (Charlie opens / Bob reports / Charlie closes,
               composited over the real studio backdrop) takes priority;
@@ -242,16 +254,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
               <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
             </div>
           )}
-
-          {/* Show Production Pipeline roadmap — where this article sits right now */}
-          <FlowRoadmapLine
-            stages={PIPELINE_STAGES}
-            stageStatuses={getPipelineStatuses(article)}
-            color="#D4AF37"
-            activeStageId={null}
-            onSelect={() => {}}
-            compact
-          />
 
           {/* Complete Broadcast Script — editable (opening + body + closing) */}
           <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
