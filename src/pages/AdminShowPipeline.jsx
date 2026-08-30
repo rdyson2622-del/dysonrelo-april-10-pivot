@@ -132,8 +132,9 @@ export default function AdminShowPipeline() {
           </div>
         ) : (
           <div className="space-y-4">
-            {/* Pure recency order — most recently generated show always at the top, permanently. */}
-            {[...broadcasts].sort((a, b) => new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)).map(article => (
+            {/* Pure recency order by last activity — a show you just approved/rendered
+                jumps to the top immediately since its updated_date just changed. */}
+            {[...broadcasts].sort((a, b) => new Date(b.updated_date || b.generated_date || b.created_date) - new Date(a.updated_date || a.generated_date || a.created_date)).map(article => (
               <Shard1ScriptReviewCard
                 key={article.id}
                 article={article}
