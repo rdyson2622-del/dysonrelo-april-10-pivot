@@ -278,12 +278,16 @@ Deno.serve(async (req) => {
     };
 
     // ── COMBINED RENDER: ONE HeyGen generate → ONE mp4 (Charlie intro, Bob solutions, Charlie out) ──
-    const startCombinedRender = async (clip, preloadedClips = null) => {
-      // Cancel stale pending/queued HeyGen jobs FIRST, before anything else.
-      const cancelled = await clearPendingHeygen(heygenKey);
-
+    const startCombinedRender = async (clip, preloadedClips = null, overlay = null) => {
       const clips = preloadedClips || (await Clips.list());
-      let videoInputs = buildCombinedInputs(clips, clip);
+      let videoInputs = [];
+      if (overlay && (overlay.introScript || overlay.bobScript || overlay.outroScript)) {
+        if (overlay.introScript) videoInputs.push(charlieScene(overlay.introScript));
+        if (overlay.bobScript) videoInputs.push(bobScene(overlay.bobScript));
+        if (overlay.outroScript) videoInputs.push(charlieScene(overlay.outroScript));
+      } else {
+        videoInputs = buildCombinedInputs(clips, clip);
+      }
 
       if (videoInputs.length < 2) {
         // fallback: keep the old 2-input behavior so the current single Q&A still works
@@ -293,6 +297,8 @@ Deno.serve(async (req) => {
           return { error: 'Not enough script text to build a combined render' };
         }
       }
+
+      const cancelled = await clearPendingHeygen(heygenKey);
 
       const res = await fetch('https://api.heygen.com/v2/video/generate', {
         method: 'POST',
@@ -340,15 +346,18 @@ Deno.serve(async (req) => {
     };
 
     if (action === 'startCombined') {
-      const { clipId } = body;
+      const { clipId, introScript, bobScript, outroScript } = body;
+      const overlay = (introScript || bobScript || outroScript)
+        ? { introScript, bobScript, outroScript }
+        : null;
       if (!clipId) return Response.json({ error: 'clipId required' }, { status: 400 });
       const arr = await Clips.filter({ id: clipId });
       const clip = arr?.[0];
       if (!clip) return Response.json({ error: 'Clip not found' }, { status: 404 });
-      if (clip.scriptStatus !== 'approved') {
+      if (!overlay && clip.scriptStatus !== 'approved') {
         return Response.json({ success: false, error: 'Script must be approved before rendering' }, { status: 400 });
       }
-      const r = await startCombinedRender(clip);
+      const r = await startCombinedRender(clip, null, overlay);
       return Response.json({ success: !r.error, ...r });
     }
 
@@ -404,4 +413,3 @@ Deno.serve(async (req) => {
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
-
