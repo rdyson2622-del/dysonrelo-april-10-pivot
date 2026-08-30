@@ -240,11 +240,20 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
           />
 
           {/* Finished video — front and center, impossible to miss when ready.
-              New render_clips (Charlie opens / Bob reports / Charlie closes,
-              composited over the real studio backdrop) takes priority;
-              legacy single-clip video_url is shown as a fallback for older
-              articles rendered before the 3-clip studio player existed. */}
-          {article.render_clips ? (
+              The FINAL stitched MP4 (video_url) already has the real Grok
+              intro/outro + Charlie's toss + Bob's answer baked in correctly by
+              Creatomate — it always takes priority once it exists. The raw
+              render_clips compositor below is only a mid-render preview (it
+              never includes the intro/outro and has no true audio/video sync),
+              so it must never be shown once the real finished video is ready. */}
+          {article.video_url && !article.video_url.startsWith('heygen:pending:') ? (
+            <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
+              <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
+                ▶ Finished Broadcast
+              </div>
+              <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
+            </div>
+          ) : article.render_clips && (article.render_clips.opening?.video_url || article.render_clips.body?.video_url) && (
             <DnnArticleBroadcastPlayer
               renderClips={article.render_clips}
               scripts={{
@@ -253,13 +262,6 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
                 closing: article.edited_closing_script || article.generated_closing_script,
               }}
             />
-          ) : article.video_url && !article.video_url.startsWith('heygen:pending:') && (
-            <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
-              <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
-                ▶ Finished Video (legacy single clip)
-              </div>
-              <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
-            </div>
           )}
 
           {/* Complete Broadcast Script — editable (opening + body + closing) */}
