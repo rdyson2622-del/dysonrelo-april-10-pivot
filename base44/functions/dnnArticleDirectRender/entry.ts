@@ -3,6 +3,7 @@ import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 import { CHARLIE_INTRO_URL, CHARLIE_OUTRO_URL } from '../../shared/charlieBookends.ts';
+import { DNN_STUDIO_BACKGROUND_URL } from '../../shared/dnnStudioBackground.ts';
 
 /**
  * dnnArticleDirectRender — the "Sandwich" pipeline.
@@ -69,22 +70,45 @@ async function checkHeygen(heygenKey, videoId) {
   return { status: data?.data?.status, videoUrl: data?.data?.video_url, error: data?.data?.error?.message };
 }
 
-async function startStitch(creatomateKey, clipUrls) {
+// Builds the studio composite: Track 1 is the DNN backdrop, spanning the
+// entire composition (no time/duration set — Creatomate stretches an image
+// with no explicit duration to match the longest track). Track 2 is a
+// SEQUENTIAL overlay (auto-placed one after another, in array order, since
+// none of these clips overlap in time): the Grok intro plays full-frame
+// (covering the backdrop), then Charlie's clip is scaled + anchored into a
+// gold-bordered box over the visible backdrop, then Bob's clip into a second
+// box, then the Grok outro plays full-frame again. Charlie and Bob never
+// overlap in time, so they safely share one auto-sequenced track instead of
+// requiring hardcoded second-by-second offsets across separate tracks (which
+// we don't have — the clip durations aren't known until Creatomate renders).
+function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
+  const BOX = { width: '30%', height: '75%', y: '50%', y_anchor: '50%', fit: 'cover', border_radius: '10px', border_width: '4px', border_color: '#D4AF37', shadow_color: 'rgba(0,0,0,0.7)', shadow_blur: '1.2vmin' };
+  return [
+    { type: 'image', track: 1, source: DNN_STUDIO_BACKGROUND_URL, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+    { type: 'video', track: 2, source: introUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+    { type: 'video', track: 2, source: charlieUrl, ...BOX, x: '20%', x_anchor: '50%' },
+    { type: 'video', track: 2, source: bobUrl, ...BOX, x: '80%', x_anchor: '50%' },
+    { type: 'video', track: 2, source: outroUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+  ];
+}
+
+async function startStitch(creatomateKey, clips) {
+  const payload = {
+    output_format: 'mp4',
+    width: 1280,
+    height: 720,
+    frame_rate: 30,
+    elements: buildStudioComposite(clips),
+  };
   const res = await fetch('https://api.creatomate.com/v2/renders', {
     method: 'POST',
     headers: { Authorization: `Bearer ${creatomateKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      output_format: 'mp4',
-      width: 1280,
-      height: 720,
-      frame_rate: 30,
-      elements: clipUrls.map((source) => ({ type: 'video', track: 1, source })),
-    }),
+    body: JSON.stringify(payload),
   });
   const data = await res.json();
   const render = Array.isArray(data) ? data[0] : data;
   if (!res.ok || !render?.id) throw new Error(`Creatomate stitch failed to start: ${JSON.stringify(data)}`);
-  return render.id;
+  return { renderId: render.id, payload };
 }
 
 async function checkStitch(creatomateKey, renderId) {
@@ -190,12 +214,13 @@ Deno.serve(async (req) => {
           const bothDone = nextClips.opening.video_url && nextClips.body.video_url;
           if (bothDone) {
             if (!CREATOMATE_KEY) throw new Error('CREATOMATE not configured — cannot stitch bookends');
-            const renderId = await startStitch(CREATOMATE_KEY, [
-              CHARLIE_INTRO_URL,
-              nextClips.opening.video_url,
-              nextClips.body.video_url,
-              CHARLIE_OUTRO_URL,
-            ]);
+            const { renderId, payload } = await startStitch(CREATOMATE_KEY, {
+              introUrl: CHARLIE_INTRO_URL,
+              charlieUrl: nextClips.opening.video_url,
+              bobUrl: nextClips.body.video_url,
+              outroUrl: CHARLIE_OUTRO_URL,
+            });
+            console.log('Creatomate stitch payload:', JSON.stringify(payload));
             nextClips.creatomate_render_id = renderId;
             await base44.asServiceRole.entities.DnnArticle.update(article.id, { render_clips: nextClips });
             results.push({ article_id: article.id, status: 'stitching' });
