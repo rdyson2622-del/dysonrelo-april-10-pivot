@@ -37,9 +37,10 @@ function pick(edited, generated) {
 function presenterScene(text, character, voiceId, emotion) {
   return {
     character,
-    // 1.15 was tested and confirmed to sound rushed/garbled — reverted to
-    // standard 1.0 speed per direct feedback on the rendered output.
-    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.0 },
+    // No hardcoded speed override — this was forcing a speed different from
+    // whatever the admin configured for this voice directly in HeyGen.
+    // Omitting "speed" lets HeyGen use the voice's own default/configured speed.
+    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion },
     background: { type: 'color', value: '#0d0d0d' },
   };
 }
