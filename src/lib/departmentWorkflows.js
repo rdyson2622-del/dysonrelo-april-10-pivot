@@ -113,6 +113,14 @@ export const DEPARTMENT_FLOWS = {
         ],
       },
       {
+        id: 'pending_sales',
+        title: 'Pending Sales Campaign',
+        plain: 'When a $3.5M+ MLS listing goes into escrow, the listing agent gets a personalized preview link pitching our destination-vetting referral service. Listings sourced via Wisdom Properties IDX access (all markets). Outreach emails rotate across dysonrelo.com sub-addresses (bob@/partners@/network@/hello@), capped ~40/day each, sent via Resend to protect sender reputation.',
+        pages: [
+          { label: 'MLS Listing Agent Outreach', path: '/admin/listing-prospects' },
+        ],
+      },
+      {
         id: 'press',
         title: 'PR & landing',
         plain: 'Press kit, pitch tracker, and new landing pages. Same brand voice as Canon. Not a second outreach machine.',
