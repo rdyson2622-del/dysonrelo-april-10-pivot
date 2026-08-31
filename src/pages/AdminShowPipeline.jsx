@@ -76,10 +76,14 @@ export default function AdminShowPipeline() {
     setRefreshing(false);
   };
 
-  // Fetch all articles — this is the live pipeline (direct HeyGen render), newest first
+  // Fetch all articles — this is the live pipeline (direct HeyGen render).
+  // LOCKED: sorted by -updated_date directly in the query itself (not
+  // generated_date, and not a client-side re-sort) so ANY new render/approve/
+  // edit action — which always bumps updated_date — puts that show at the
+  // TOP of the list. Do not change this sort back to generated_date.
   const { data: broadcasts = [], isLoading } = useQuery({
     queryKey: ['showPipelineBroadcasts'],
-    queryFn: () => base44.entities.DnnArticle.list('-generated_date', 50),
+    queryFn: () => base44.entities.DnnArticle.list('-updated_date', 50),
     refetchInterval: 15000,
     enabled: isAdmin,
   });
@@ -132,9 +136,9 @@ export default function AdminShowPipeline() {
           </div>
         ) : (
           <div className="space-y-4">
-            {/* Pure recency order by last activity — a show you just approved/rendered
-                jumps to the top immediately since its updated_date just changed. */}
-            {[...broadcasts].sort((a, b) => new Date(b.updated_date || b.generated_date || b.created_date) - new Date(a.updated_date || a.generated_date || a.created_date)).map(article => (
+            {/* Order comes straight from the -updated_date query above — do not
+                re-sort here, that's what caused the "not at the top" drift before. */}
+            {broadcasts.map(article => (
               <Shard1ScriptReviewCard
                 key={article.id}
                 article={article}
