@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { sendViaResend } from '../../shared/resendEmail.ts';
 
 // Public endpoint (no login) — powers the personalized listing-agent preview
 // page. "get" looks up a prospect by their unique token and marks it viewed.
@@ -26,11 +27,31 @@ export default async function(req) {
 
       const market = prospect.city || 'your market';
 
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      const senderName = prospect.rep_name ? `${prospect.rep_name} — Dyson Relo` : 'Dyson Relo';
+      const emailHtml = `
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1a1a1a;max-width:600px;">
+          <p>Hi ${prospect.agent_name},</p>
+          <p>Congratulations on getting your listing into escrow${listingLabel ? ` at ${listingLabel}` : ''}! Navigating a transaction like this in ${market} takes serious expertise, and getting it under contract is a huge win.</p>
+          <p>As your sellers prepare for their next chapter, I want to share a strategy that top-producing agents use to maximize their outbound referrals.</p>
+          <p>When your clients are moving out of the area, sending them directly to an unknown agent leaves their experience — and your reputation — up to chance. By routing your referrals through Dyson Relo, you guarantee a premium, white-glove experience for your client while significantly increasing your own compensation.</p>
+          <p>Here is why agents in our network prefer using a dedicated relocation company over direct agent-to-agent handoffs:</p>
+          <p><strong>Higher Referral Compensation:</strong> You earn a larger referral fee than standard broker-to-broker splits.</p>
+          <p><strong>End-to-End Move Management:</strong> We act as a full-service concierge, managing your client's entire relocation process — from moving logistics to destination settling — so you don't have to.</p>
+          <p><strong>Complete Transparency:</strong> You are never left in the dark. We keep you strictly in the loop from the moment they leave your market until they close in their new one.</p>
+          <p>Take a moment to review the DysonRelo platform here: <a href="${previewUrl}">${previewUrl}</a></p>
+          <p>Joining our network also means you become eligible to receive pre-qualified, inbound buyer leads moving into your territory.</p>
+          <p>If your current escrow clients are relocating out of the area, I would love to connect for five minutes this week to discuss how we can manage their move and secure your referral fee.</p>
+          <p>Best regards,<br>${prospect.rep_name || 'The Dyson Relo Team'}<br>Dyson Relo</p>
+          <hr style="border:none;border-top:1px solid #ddd;margin:24px 0;">
+          <p style="font-size:11px;color:#888;">The Dyson &amp; Dyson Companies, Inc · CA DRE #02303118<br>
+          You are receiving this because of your public MLS listing activity. <a href="mailto:info@dysonanddyson.com?subject=Unsubscribe">Unsubscribe</a></p>
+        </div>`;
+
+      await sendViaResend({
         to: prospect.agent_email,
         subject: `Congratulations on your recent escrow — take a look at DysonRelo`,
-        body: `Hi ${prospect.agent_name},\n\nCongratulations on getting your listing into escrow${listingLabel ? ` at ${listingLabel}` : ''}! Navigating a transaction like this in ${market} takes serious expertise, and getting it under contract is a huge win.\n\nAs your sellers prepare for their next chapter, I want to share a strategy that top-producing agents use to maximize their outbound referrals.\n\nWhen your clients are moving out of the area, sending them directly to an unknown agent leaves their experience — and your reputation — up to chance. By routing your referrals through Dyson Relo, you guarantee a premium, white-glove experience for your client while significantly increasing your own compensation.\n\nHere is why agents in our network prefer using a dedicated relocation company over direct agent-to-agent handoffs:\n\nHigher Referral Compensation: You earn a larger referral fee than standard broker-to-broker splits.\n\nEnd-to-End Move Management: We act as a full-service concierge, managing your client's entire relocation process — from moving logistics to destination settling — so you don't have to.\n\nComplete Transparency: You are never left in the dark. We keep you strictly in the loop from the moment they leave your market until they close in their new one.\n\nTake a moment to review the DysonRelo platform here: ${previewUrl}\n\nJoining our network also means you become eligible to receive pre-qualified, inbound buyer leads moving into your territory.\n\nIf your current escrow clients are relocating out of the area, I would love to connect for five minutes this week to discuss how we can manage their move and secure your referral fee.\n\nBest regards,\n${prospect.rep_name || 'The Dyson Relo Team'}\nDyson Relo`,
-        from_name: prospect.rep_name ? `${prospect.rep_name} — Dyson Relo` : 'Dyson Relo',
+        html: emailHtml,
+        from: `${senderName} <bob@dysonrelo.com>`,
       });
 
       await base44.asServiceRole.entities.ListingProspect.update(prospect.id, {
