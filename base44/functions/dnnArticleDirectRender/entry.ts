@@ -37,9 +37,9 @@ function pick(edited, generated) {
 function presenterScene(text, character, voiceId, emotion) {
   return {
     character,
-    // speed 1.0 was tested and confirmed still sluggish/"drunk" on this voice —
-    // 1.15 is the correction. Do not drop this back to 1.0.
-    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.15 },
+    // 1.15 was tested and confirmed to sound rushed/garbled — reverted to
+    // standard 1.0 speed per direct feedback on the rendered output.
+    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.0 },
     background: { type: 'color', value: '#0d0d0d' },
   };
 }
