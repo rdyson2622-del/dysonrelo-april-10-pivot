@@ -7,7 +7,7 @@ import {
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
-  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList
+  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList, Megaphone
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -623,6 +623,22 @@ export default function AdminSidebar() {
         >
           <Plug className="w-4 h-4" />
           🔌 Connect AI Assistant
+        </Link>
+      </div>
+
+      {/* Marketing Campaigns Hub — always visible */}
+      <div className="px-3 pt-1 pb-1">
+        <Link
+          to="/admin/marketing-campaigns-hub"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
+          style={{
+            background: location.pathname === '/admin/marketing-campaigns-hub' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
+            color: '#D4AF37',
+            border: '1px solid rgba(212,175,55,0.35)',
+          }}
+        >
+          <Megaphone className="w-4 h-4" />
+          🎯 Marketing Campaigns Hub
         </Link>
       </div>
 
