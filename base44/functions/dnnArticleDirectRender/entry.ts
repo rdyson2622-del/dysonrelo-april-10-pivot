@@ -37,7 +37,7 @@ function pick(edited, generated) {
 function presenterScene(text, talkingPhotoId, voiceId, emotion) {
   return {
     character: { type: 'talking_photo', talking_photo_id: talkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: voiceId === CHARLIE_VOICE_ID ? 0.8 : 0.92 },
+    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.0 },
     background: { type: 'color', value: '#0d0d0d' },
   };
 }
