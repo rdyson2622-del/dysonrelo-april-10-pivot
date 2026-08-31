@@ -64,7 +64,8 @@ export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
   if (!hasAny) return null;
 
   const charlieSrc = stage === 'closing' ? closing : opening;
-  const activeSpeaker = stage === 'body' ? 'bob' : (stage ? 'charlie' : null);
+  const isCharlieStage = stage === 'opening' || stage === 'closing';
+  const isBobStage = stage === 'body';
   const bullets = stage ? toBullets(scripts?.[stage]) : [];
 
   const handleEnded = () => {
@@ -86,7 +87,22 @@ export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
         )}
       </div>
       <div className="relative w-full aspect-video overflow-hidden" style={{ background: '#000' }}>
-        <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        {/* Charlie plays full-screen 16:9 in his own native studio shot — no backdrop, no box */}
+        {isCharlieStage && charlieSrc ? (
+          <video
+            key={charlieSrc}
+            src={charlieSrc}
+            autoPlay
+            playsInline
+            onEnded={handleEnded}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : isBobStage ? (
+          <>
+            <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <Box label="BOB DYSON" videoUrl={bodyClip} active playing onEnded={handleEnded} idleImage={BOB_IDLE_IMAGE} />
+          </>
+        ) : null}
         {bullets.length > 0 && (
           <div className="absolute left-[3%] right-[26%] top-[6%] rounded-lg px-4 py-3" style={{ background: 'rgba(10,10,10,0.72)', border: `1.5px solid ${GOLD}` }}>
             <ul className="space-y-1.5">
@@ -99,8 +115,6 @@ export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
             </ul>
           </div>
         )}
-        <Box label="CHARLIE SIMMONS" videoUrl={charlieSrc} active={activeSpeaker === 'charlie'} playing={!!stage} onEnded={handleEnded} />
-        <Box label="BOB DYSON" videoUrl={bodyClip} active={activeSpeaker === 'bob'} playing={!!stage} onEnded={handleEnded} idleImage={BOB_IDLE_IMAGE} />
       </div>
     </div>
   );
