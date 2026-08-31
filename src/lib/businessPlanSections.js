@@ -1262,6 +1262,40 @@ Cold B2B outreach at volume requires domain reputation hygiene. Rather than hamm
 Each address is capped at ~40 sends/day, giving ~150-200 emails/day of safe sending capacity without any new domain purchase. The system automatically picks the least-used address under its daily cap for every send.
 
 ────────────────────────────────
+THE SCRIPT (Outreach Email)
+────────────────────────────────
+Subject: Congratulations on your recent escrow — take a look at DysonRelo
+
+Hi [Agent Name],
+
+Congratulations on getting your listing into escrow[at Listing Address, City]! Navigating a transaction like this in [market] takes serious expertise, and getting it under contract is a huge win.
+
+As your sellers prepare for their next chapter, I want to share a strategy that top-producing agents use to maximize their outbound referrals.
+
+When your clients are moving out of the area, sending them directly to an unknown agent leaves their experience — and your reputation — up to chance. By routing your referrals through Dyson Relo, you guarantee a premium, white-glove experience for your client while significantly increasing your own compensation.
+
+Here is why agents in our network prefer using a dedicated relocation company over direct agent-to-agent handoffs:
+
+Higher Referral Compensation: You earn a larger referral fee than standard broker-to-broker splits.
+
+End-to-End Move Management: We act as a full-service concierge, managing your client's entire relocation process — from moving logistics to destination settling — so you don't have to.
+
+Complete Transparency: You are never left in the dark. We keep you strictly in the loop from the moment they leave your market until they close in their new one.
+
+Take a moment to review the DysonRelo platform here: [personalized preview link]
+
+Joining our network also means you become eligible to receive pre-qualified, inbound buyer leads moving into your territory.
+
+If your current escrow clients are relocating out of the area, I would love to connect for five minutes this week to discuss how we can manage their move and secure your referral fee.
+
+Best regards,
+[Rep Name or "The Dyson Relo Team"]
+Dyson Relo
+
+The Dyson & Dyson Companies, Inc · CA DRE #02303118
+You are receiving this because of your public MLS listing activity. [Unsubscribe]
+
+────────────────────────────────
 COMPLIANCE
 ────────────────────────────────
 Every outreach email includes the legally required business address (The Dyson & Dyson Companies, Inc · CA DRE #02303118) and a working unsubscribe path, per CAN-SPAM.`
