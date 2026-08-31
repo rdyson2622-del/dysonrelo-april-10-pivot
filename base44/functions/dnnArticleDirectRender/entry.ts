@@ -89,13 +89,19 @@ async function checkHeygen(heygenKey, videoId) {
 // unset is what caused the intro and outro to render on top of each other at
 // the front instead of bookending the piece — never omit this again.
 function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
-  const BOX = { width: '30%', height: '75%', y: '50%', y_anchor: '50%', fit: 'cover', border_radius: '10px', border_width: '4px', border_color: '#D4AF37', shadow_color: 'rgba(0,0,0,0.7)', shadow_blur: '1.2vmin' };
+  // Charlie already renders full-frame in his own studio background (native
+  // HeyGen avatar shot) — he must NEVER be boxed over the DNN backdrop, he
+  // plays fullscreen exactly like the intro/outro bookends. Only Bob (a
+  // talking_photo with a plain background) gets boxed over the studio
+  // backdrop on track 1.
+  const BOB_BOX = { width: '30%', height: '75%', y: '50%', y_anchor: '50%', fit: 'cover', border_radius: '10px', border_width: '4px', border_color: '#D4AF37', shadow_color: 'rgba(0,0,0,0.7)', shadow_blur: '1.2vmin' };
+  const FULLSCREEN = { width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' };
   return [
     { type: 'image', track: 1, source: DNN_STUDIO_BACKGROUND_URL, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
-    { type: 'video', track: 2, time: 0, source: introUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
-    { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...BOX, x: '20%', x_anchor: '50%' },
-    { type: 'video', track: 2, time: 'auto', source: bobUrl, ...BOX, x: '80%', x_anchor: '50%' },
-    { type: 'video', track: 2, time: 'auto', source: outroUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+    { type: 'video', track: 2, time: 0, source: introUrl, ...FULLSCREEN },
+    { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...FULLSCREEN },
+    { type: 'video', track: 2, time: 'auto', source: bobUrl, ...BOB_BOX, x: '80%', x_anchor: '50%' },
+    { type: 'video', track: 2, time: 'auto', source: outroUrl, ...FULLSCREEN },
   ];
 }
 
