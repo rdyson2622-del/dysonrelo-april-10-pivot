@@ -19,6 +19,8 @@ export default function AdminListingProspects() {
   const [copiedId, setCopiedId] = useState(null);
   const [emailingId, setEmailingId] = useState(null);
   const [emailedId, setEmailedId] = useState(null);
+  const [batchSending, setBatchSending] = useState(false);
+  const [batchProgress, setBatchProgress] = useState(null);
 
   const { data: prospects = [] } = useQuery({
     queryKey: ['listingProspects'],
@@ -49,12 +51,45 @@ export default function AdminListingProspects() {
     setEmailingId(null);
   };
 
+  // Sends to the next 5 queued agents (with an email on file), pausing 5
+  // seconds between sends to protect deliverability/sender reputation.
+  const sendBatch = async () => {
+    const batch = prospects.filter(p => p.status === 'queued' && p.agent_email).slice(0, 5);
+    if (batch.length === 0 || batchSending) return;
+    setBatchSending(true);
+    for (let i = 0; i < batch.length; i++) {
+      setBatchProgress(`Sending ${i + 1} of ${batch.length}…`);
+      try {
+        await base44.functions.invoke('listingProspectPreview', { action: 'admin_send_email', prospect_id: batch[i].id });
+      } catch (e) {
+        console.error(e);
+      }
+      if (i < batch.length - 1) await new Promise(r => setTimeout(r, 5000));
+    }
+    setBatchProgress(null);
+    setBatchSending(false);
+    refresh();
+  };
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1 flex items-center gap-2" style={{ color: GOLD }}>
         <MapPin className="w-3.5 h-3.5" /> MLS Listing Agent Outreach
       </p>
       <h1 className="text-2xl font-serif text-white mb-4">MLS Listing Agent Outreach</h1>
+
+      <div className="flex items-center gap-3 mb-4">
+        <button
+          onClick={sendBatch}
+          disabled={batchSending || prospects.filter(p => p.status === 'queued' && p.agent_email).length === 0}
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold disabled:opacity-40"
+          style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
+        >
+          {batchSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          Send Next 5 Queued
+        </button>
+        {batchProgress && <span className="text-xs text-white/60">{batchProgress}</span>}
+      </div>
 
       <MlsUrlLookup onImported={refresh} />
 
