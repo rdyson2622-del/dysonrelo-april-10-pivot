@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PlayCircle } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -56,17 +56,34 @@ function Box({ label, videoUrl, active, onEnded, playing, idleImage }) {
  */
 export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
   const [stage, setStage] = useState(null); // null | 'opening' | 'body' | 'closing'
+  const videoRef = useRef(null);
   const opening = renderClips?.opening?.video_url;
   const bodyClip = renderClips?.body?.video_url;
   const closing = renderClips?.closing?.video_url;
-
-  const hasAny = opening || bodyClip || closing;
-  if (!hasAny) return null;
 
   const charlieSrc = stage === 'closing' ? closing : opening;
   const isCharlieStage = stage === 'opening' || stage === 'closing';
   const isBobStage = stage === 'body';
   const bullets = stage ? toBullets(scripts?.[stage]) : [];
+
+  // Browsers block autoplay of unmuted video unless explicitly kicked off by
+  // .play() — the `autoPlay` attribute alone was silently failing (blank
+  // black frame, never advancing). Explicitly play on every stage change,
+  // falling back to muted playback if unmuted autoplay is refused.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!isCharlieStage || !charlieSrc || !el) return;
+    const p = el.play();
+    if (p?.catch) {
+      p.catch(() => {
+        el.muted = true;
+        el.play().catch(() => {});
+      });
+    }
+  }, [stage, charlieSrc, isCharlieStage]);
+
+  const hasAny = opening || bodyClip || closing;
+  if (!hasAny) return null;
 
   const handleEnded = () => {
     if (stage === 'opening') setStage(bodyClip ? 'body' : (closing ? 'closing' : null));
@@ -90,10 +107,11 @@ export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
         {/* Charlie plays full-screen 16:9 in his own native studio shot — no backdrop, no box */}
         {isCharlieStage && charlieSrc ? (
           <video
+            ref={videoRef}
             key={charlieSrc}
             src={charlieSrc}
-            autoPlay
             playsInline
+            controls
             onEnded={handleEnded}
             className="absolute inset-0 w-full h-full object-cover"
           />
