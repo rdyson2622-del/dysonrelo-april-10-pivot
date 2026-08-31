@@ -1,139 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { PlayCircle } from 'lucide-react';
+import React from 'react';
 
 const GOLD = '#D4AF37';
-// DNN studio set backdrop (gold-trimmed anchor desk + national map wall) —
-// same image used behind both Charlie's and Bob's boxes.
-const STUDIO_BG = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/d17c5e2ac_STUDIOBACKDROP.jpg';
-
-// While waiting to play, Bob's box would otherwise freeze on his video's raw
-// first frame (mid-squint, looks broken). Replaced with a single eyes-open still.
-const BOB_IDLE_IMAGE = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a29e55201_generated_image.png';
-
-// Splits a script's text into short bullet lines for the on-screen overlay.
-function toBullets(text) {
-  if (!text) return [];
-  return text
-    .split(/(?<=[.!?])\s+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .slice(0, 5);
-}
-
-function Box({ label, videoUrl, active, onEnded, playing, idleImage }) {
-  return (
-    <div className="absolute" style={{ bottom: '4%', left: label === 'CHARLIE SIMMONS' ? '3%' : undefined, right: label === 'BOB DYSON' ? '3%' : undefined, width: '19.5%' }}>
-      <div className="rounded-lg overflow-hidden" style={{ border: `2px solid ${active ? GOLD : 'rgba(212,175,55,0.4)'}`, boxShadow: '0 10px 40px rgba(0,0,0,0.7)', background: '#000' }}>
-        <div className="w-full overflow-hidden" style={{ aspectRatio: '9 / 16', background: '#000' }}>
-          {idleImage && !playing ? (
-            <img src={idleImage} alt="" className="w-full h-full object-cover" />
-          ) : videoUrl ? (
-            <video
-              key={videoUrl}
-              src={videoUrl}
-              autoPlay={playing}
-              playsInline
-              muted={!active}
-              onEnded={active ? onEnded : undefined}
-              className="w-full h-full block object-cover"
-            />
-          ) : (
-            <div className="w-full h-full" />
-          )}
-        </div>
-        <div className="px-2 py-1" style={{ background: '#0d0d0d', borderTop: '1px solid rgba(212,175,55,0.3)' }}>
-          <span className="text-[9px] font-black tracking-[0.15em] uppercase" style={{ color: GOLD }}>{label}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /**
- * DnnArticleBroadcastPlayer — plays the 3-clip broadcast (Charlie opens, Bob
- * reports, Charlie closes) over the real studio backdrop with both presenter
- * boxes always visible, matching the locked studio composite look.
+ * DnnArticleBroadcastPlayer — no compositing, no autoplay tricks. Just shows
+ * each rendered HeyGen clip as a plain video box with native controls.
  */
-export default function DnnArticleBroadcastPlayer({ renderClips, scripts }) {
-  const [stage, setStage] = useState(null); // null | 'opening' | 'body' | 'closing'
-  const videoRef = useRef(null);
-  const opening = renderClips?.opening?.video_url;
-  const bodyClip = renderClips?.body?.video_url;
-  const closing = renderClips?.closing?.video_url;
+export default function DnnArticleBroadcastPlayer({ renderClips }) {
+  const clips = [
+    { key: 'opening', label: 'CHARLIE — OPENING', url: renderClips?.opening?.video_url },
+    { key: 'body', label: 'BOB — SEGMENT', url: renderClips?.body?.video_url },
+    { key: 'closing', label: 'CHARLIE — CLOSING', url: renderClips?.closing?.video_url },
+  ].filter((c) => c.url);
 
-  const charlieSrc = stage === 'closing' ? closing : opening;
-  const isCharlieStage = stage === 'opening' || stage === 'closing';
-  const isBobStage = stage === 'body';
-  const bullets = stage ? toBullets(scripts?.[stage]) : [];
-
-  // Browsers block autoplay of unmuted video unless explicitly kicked off by
-  // .play() — the `autoPlay` attribute alone was silently failing (blank
-  // black frame, never advancing). Explicitly play on every stage change,
-  // falling back to muted playback if unmuted autoplay is refused.
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!isCharlieStage || !charlieSrc || !el) return;
-    const p = el.play();
-    if (p?.catch) {
-      p.catch(() => {
-        el.muted = true;
-        el.play().catch(() => {});
-      });
-    }
-  }, [stage, charlieSrc, isCharlieStage]);
-
-  const hasAny = opening || bodyClip || closing;
-  if (!hasAny) return null;
-
-  const handleEnded = () => {
-    if (stage === 'opening') setStage(bodyClip ? 'body' : (closing ? 'closing' : null));
-    else if (stage === 'body') setStage(closing ? 'closing' : null);
-    else setStage(null);
-  };
-
-  const start = () => setStage(opening ? 'opening' : (bodyClip ? 'body' : 'closing'));
+  if (clips.length === 0) return null;
 
   return (
-    <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #4ade80', background: '#000' }}>
-      <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase flex items-center justify-between" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
-        <span>▶ Finished Broadcast — Studio Preview</span>
-        {!stage && (
-          <button onClick={start} className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold" style={{ background: GOLD, color: '#000' }}>
-            <PlayCircle className="w-3 h-3" /> Play
-          </button>
-        )}
-      </div>
-      <div className="relative w-full aspect-video overflow-hidden" style={{ background: '#000' }}>
-        {/* Charlie plays full-screen 16:9 in his own native studio shot — no backdrop, no box */}
-        {isCharlieStage && charlieSrc ? (
-          <video
-            ref={videoRef}
-            key={charlieSrc}
-            src={charlieSrc}
-            playsInline
-            controls
-            onEnded={handleEnded}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ) : isBobStage ? (
-          <>
-            <img src={STUDIO_BG} alt="" className="absolute inset-0 w-full h-full object-cover" />
-            <Box label="BOB DYSON" videoUrl={bodyClip} active playing onEnded={handleEnded} idleImage={BOB_IDLE_IMAGE} />
-          </>
-        ) : null}
-        {bullets.length > 0 && (
-          <div className="absolute left-[3%] right-[26%] top-[6%] rounded-lg px-4 py-3" style={{ background: 'rgba(10,10,10,0.72)', border: `1.5px solid ${GOLD}` }}>
-            <ul className="space-y-1.5">
-              {bullets.map((b, i) => (
-                <li key={i} className="text-white text-sm leading-snug flex gap-2">
-                  <span style={{ color: GOLD }}>●</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+    <div className="space-y-3">
+      {clips.map((clip) => (
+        <div key={clip.key} className="rounded-lg overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
+          <div className="px-3 py-1.5 text-[10px] font-black tracking-widest uppercase" style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
+            {clip.label}
           </div>
-        )}
-      </div>
+          <video src={clip.url} controls playsInline className="w-full max-h-[420px] bg-black" />
+        </div>
+      ))}
     </div>
   );
 }
