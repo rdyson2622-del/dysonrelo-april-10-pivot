@@ -113,7 +113,7 @@ SCENE 1 — OPENING (Charlie, 60-80 words):
 Charlie opens the show. DNN-branded, cinematic, sets up the story. Greet viewers, tease the headline, hand off to Bob. Include the clone bit lightly — Charlie can deadpan one line about being the AI clone of the real Charlie.
 
 SCENE 2 — NEWS STORY (Bob, 120-160 words):
-Bob delivers the story conversationally, as if talking to Charlie and the viewer. Plain spoken, warm, expert but not stiff. Include one light clone meta-moment. End by tossing back to Charlie.
+Bob delivers the story conversationally, as if talking to Charlie and the viewer. Plain spoken, warm, expert but not stiff. Include one light clone meta-moment. End on his own final point/insight — NEVER toss back to Charlie ("back to you, Charlie") and NEVER add a sign-off like "thanks for watching." The broadcast cuts straight from Bob's segment to a separate closing video, so his script must just end naturally on his last piece of insight.
 
 SCENE 3 — CLOSING (Charlie, 40-60 words):
 Charlie closes the show. Dyson and Dyson branded outro. Thank Bob, sign off, tease tomorrow. One light clone beat if it fits naturally.
