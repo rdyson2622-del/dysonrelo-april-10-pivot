@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { sendViaResend } from '../../shared/resendEmail.ts';
+import { pickOutreachSender } from '../../shared/outreachSenders.ts';
 
 // Public endpoint (no login) — powers the personalized listing-agent preview
 // page. "get" looks up a prospect by their unique token and marks it viewed.
@@ -27,7 +28,11 @@ export default async function(req) {
 
       const market = prospect.city || 'your market';
 
-      const senderName = prospect.rep_name ? `${prospect.rep_name} — Dyson Relo` : 'Dyson Relo';
+      const sender = await pickOutreachSender(base44);
+      if (!sender) {
+        return Response.json({ error: 'Daily sending cap reached across all sender addresses. Try again tomorrow.' }, { status: 429 });
+      }
+      const senderName = prospect.rep_name ? `${prospect.rep_name} — Dyson Relo` : sender.label;
       const emailHtml = `
         <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1a1a1a;max-width:600px;">
           <p>Hi ${prospect.agent_name},</p>
@@ -51,12 +56,13 @@ export default async function(req) {
         to: prospect.agent_email,
         subject: `Congratulations on your recent escrow — take a look at DysonRelo`,
         html: emailHtml,
-        from: `${senderName} <bob@dysonrelo.com>`,
+        from: `${senderName} <${sender.email}>`,
       });
 
       await base44.asServiceRole.entities.ListingProspect.update(prospect.id, {
         status: prospect.status === 'queued' ? 'contacted' : prospect.status,
         contacted_at: new Date().toISOString(),
+        sent_from: sender.email,
       });
 
       return Response.json({ success: true });

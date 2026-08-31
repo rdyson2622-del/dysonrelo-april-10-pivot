@@ -91,6 +91,10 @@
       "type": "string",
       "format": "date-time"
     },
+    "sent_from": {
+      "type": "string",
+      "description": "Which rotating outreach sender address (bob@/partners@/network@/hello@dysonrelo.com) this email was sent from"
+    },
     "previewed_at": {
       "type": "string",
       "format": "date-time",
