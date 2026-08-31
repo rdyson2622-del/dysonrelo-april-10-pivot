@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
-import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { CHARLIE_AVATAR_ID } from '../../shared/charlieAvatar.ts';
 import { CHARLIE_INTRO_URL, CHARLIE_OUTRO_URL } from '../../shared/charlieBookends.ts';
 import { DNN_STUDIO_BACKGROUND_URL } from '../../shared/dnnStudioBackground.ts';
 
@@ -34,9 +34,9 @@ function pick(edited, generated) {
   return generated || '';
 }
 
-function presenterScene(text, talkingPhotoId, voiceId, emotion) {
+function presenterScene(text, character, voiceId, emotion) {
   return {
-    character: { type: 'talking_photo', talking_photo_id: talkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
+    character,
     // speed 1.0 was tested and confirmed still sluggish/"drunk" on this voice —
     // 1.15 is the correction. Do not drop this back to 1.0.
     voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.15 },
@@ -279,10 +279,11 @@ Deno.serve(async (req) => {
     ).slice(0, 1500);
 
     try {
-      const charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(HEYGEN_API_KEY);
+      const charlieCharacter = { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID };
+      const bobCharacter = { type: 'talking_photo', talking_photo_id: BOB_TALKING_PHOTO_ID, scale: 1, offset: { x: 0, y: 0 } };
       const [charlieVideoId, bobVideoId] = await Promise.all([
-        startRender(HEYGEN_API_KEY, presenterScene(tossScript, charlieTalkingPhotoId, CHARLIE_VOICE_ID), 'DNN Article — Charlie toss (Sandwich pipeline)'),
-        startRender(HEYGEN_API_KEY, presenterScene(bodyScript, BOB_TALKING_PHOTO_ID, BOB_VOICE_ID, 'Excited'), 'DNN Article — Bob segment (Sandwich pipeline)'),
+        startRender(HEYGEN_API_KEY, presenterScene(tossScript, charlieCharacter, CHARLIE_VOICE_ID), 'DNN Article — Charlie toss (Sandwich pipeline)'),
+        startRender(HEYGEN_API_KEY, presenterScene(bodyScript, bobCharacter, BOB_VOICE_ID, 'Excited'), 'DNN Article — Bob segment (Sandwich pipeline)'),
       ]);
 
       await base44.asServiceRole.entities.DnnArticle.update(article_id, {

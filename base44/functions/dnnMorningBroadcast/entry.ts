@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
-import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { CHARLIE_AVATAR_ID } from '../../shared/charlieAvatar.ts';
 import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
@@ -175,17 +175,15 @@ ${digest}`,
       return { record };
     };
 
-    // Charlie is a talking_photo of the locked, Bob-free desk still (same
-    // asset uploaded fresh for the proven "Charlie Speaking at the Desk"
-    // preview render) — never the mismatched avatar_id, which is what caused
-    // the layout drift. Uploaded once per render job and reused for every
-    // Charlie clip in this broadcast.
-    const renderClip = async (clip, charlieTalkingPhotoId, bobTalkingPhotoId) => {
+    // Charlie uses HeyGen's own "Ruben" library avatar (avatar_id) — the
+    // previous desk-still talking_photo was confirmed to be the wrong
+    // likeness entirely. Bob still uses his locked talking_photo asset.
+    const renderClip = async (clip, bobTalkingPhotoId) => {
       const isCharlie = clip.role === 'charlie';
       const sanitizedScript = sanitizeVoiceScript(clip.script);
       const videoInput = isCharlie
         ? {
-            character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
+            character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID },
             voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 1.0 },
             background: { type: 'color', value: '#0d0d0d' },
           }
@@ -210,24 +208,15 @@ ${digest}`,
       const clips = [...(record.clips || [])];
       if (clips.length === 0) return { error: 'No clips on this broadcast' };
 
-      let charlieTalkingPhotoId = null;
       let bobTalkingPhotoId = null;
-      try {
-        if (clips.some(c => c.role === 'charlie' && !c.videoUrl)) {
-          charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
-        }
-        if (clips.some(c => c.role === 'bob' && !c.videoUrl)) {
-          bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
-        }
-      } catch (e) {
-        await Broadcasts.update(record.id, { status: 'failed', errorMessage: e.message });
-        return { error: e.message };
+      if (clips.some(c => c.role === 'bob' && !c.videoUrl)) {
+        bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
       }
 
       const errors = [];
       for (let i = 0; i < clips.length; i++) {
         if (clips[i].videoUrl) continue;
-        const r = await renderClip(clips[i], charlieTalkingPhotoId, bobTalkingPhotoId);
+        const r = await renderClip(clips[i], bobTalkingPhotoId);
         if (r.error) {
           clips[i] = { ...clips[i], status: 'failed' };
           errors.push(r.error);

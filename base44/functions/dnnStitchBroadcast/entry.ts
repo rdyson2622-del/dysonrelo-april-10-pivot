@@ -25,7 +25,7 @@ const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 
 import { blockIfN8n } from '../../shared/n8nGuard.ts';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
-import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
+import { CHARLIE_AVATAR_ID } from '../../shared/charlieAvatar.ts';
 import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
@@ -94,14 +94,10 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Broadcast has no clips' }, { status: 400 });
       }
 
-      // Build video_inputs — one per clip. Charlie uses the locked, Bob-free
-      // desk still uploaded fresh as a talking_photo (same asset proven on the
-      // "Charlie Speaking at the Desk" preview render) — never avatar_id.
-      let charlieTalkingPhotoId = null;
+      // Build video_inputs — one per clip. Charlie uses HeyGen's own "Ruben"
+      // library avatar (avatar_id) — the previous desk-still talking_photo
+      // was confirmed to be the wrong likeness entirely.
       let bobTalkingPhotoId = null;
-      if (clips.some(c => c.role === 'charlie')) {
-        charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
-      }
       if (clips.some(c => c.role === 'bob')) {
         bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
       }
@@ -110,7 +106,7 @@ Deno.serve(async (req) => {
         const sanitizedScript = sanitizeVoiceScript(clip.script);
         return isCharlie
           ? {
-              character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
+              character: { type: 'avatar', avatar_id: CHARLIE_AVATAR_ID },
               voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 1.0 },
               background: { type: 'color', value: '#0d0d0d' },
             }
