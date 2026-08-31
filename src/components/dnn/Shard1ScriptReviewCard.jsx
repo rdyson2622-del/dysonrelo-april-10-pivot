@@ -268,12 +268,21 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
             />
           )}
 
-          {/* Complete Broadcast Script — editable (opening + body + closing) */}
+          {/* Complete Broadcast Script — editable. Only Charlie's toss and Bob's
+              solution are actual HeyGen scripts — Scene 1 (Grok intro) and
+              Scene 4 (Grok outro) are pre-rendered bookend videos with no
+              script text, so they're shown as static notes, not text fields,
+              to avoid confusion about where copy actually belongs. */}
           <div className="rounded-lg p-4 space-y-3" style={{ background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.25)' }}>
             <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#D4AF37' }}>Complete Broadcast Script — Editable</p>
-            <Field label="Scene 1 — Opening" value={draft.edited_opening_script} onChange={set('edited_opening_script')} rows={4} />
-            <Field label="Scene 2 — News Story" value={draft.edited_body_script} onChange={set('edited_body_script')} rows={6} />
-            <Field label="Scene 3 — Closing" value={draft.edited_closing_script} onChange={set('edited_closing_script')} rows={4} />
+            <div className="rounded-lg px-3 py-2 text-[11px] text-slate-500 italic" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.1)' }}>
+              Scene 1 — Opening: pre-rendered Grok intro video bookend. No script — nothing to edit here.
+            </div>
+            <Field label="Scene 2 — Charlie's Toss (HeyGen)" value={draft.edited_opening_script} onChange={set('edited_opening_script')} rows={4} />
+            <Field label="Scene 3 — Bob's Solution (HeyGen)" value={draft.edited_body_script} onChange={set('edited_body_script')} rows={6} />
+            <div className="rounded-lg px-3 py-2 text-[11px] text-slate-500 italic" style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.1)' }}>
+              Scene 4 — Closing: pre-rendered Grok outro video bookend. No script — nothing to edit here.
+            </div>
           </div>
 
           {/* Action buttons */}
@@ -371,9 +380,9 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
           {/* Generated (read-only reference) */}
           <div className="rounded-lg p-3 space-y-3" style={{ background: 'rgba(96,165,250,0.04)', border: '1px solid rgba(96,165,250,0.15)' }}>
             <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#60a5fa' }}>AI-Generated (reference)</p>
-            <ReadOnly label="Generated Opening (Scene 1 — DNN Open)" value={article.generated_opening_script} />
-            <ReadOnly label="Generated Body (Scene 2 — News Story)" value={article.generated_body_script} />
-            <ReadOnly label="Generated Closing (Scene 3 — Dyson Outro)" value={article.generated_closing_script} />
+            <ReadOnly label="Generated — Scene 2, Charlie's Toss" value={article.generated_opening_script} />
+            <ReadOnly label="Generated — Scene 3, Bob's Solution" value={article.generated_body_script} />
+            <ReadOnly label="Generated Closing (unused — Scene 4 is a static Grok video, not this text)" value={article.generated_closing_script} />
           </div>
 
           {/* Editable fields */}
