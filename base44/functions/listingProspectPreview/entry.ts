@@ -26,8 +26,8 @@ export default async function(req) {
 
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: prospect.agent_email,
-        subject: `Congrats on ${listingLabel || 'the new listing'} — a free resource for your client`,
-        body: `Hi ${prospect.agent_name},\n\nCongratulations on your new listing${listingLabel ? ` at ${listingLabel}` : ''}!\n\nWe've put together a short preview showing how we can help — completely free — if your client is relocating out of the area. We vet the destination agent for you and protect your referral fee.\n\nTake a look here: ${previewUrl}\n\nBest,\n${prospect.rep_name || 'The Dyson & Dyson Team'}`,
+        subject: `Congrats on ${listingLabel || 'the new listing'} — keep your referral fee (and your client) protected`,
+        body: `Hi ${prospect.agent_name},\n\nCongratulations on your pending sale${listingLabel ? ` at ${listingLabel}` : ''}!\n\nIf your client is relocating out of the area, here's the difference between handing them off to a random agent versus referring them through us:\n\n- A higher referral fee than most direct agent-to-agent splits\n- We personally vet and manage the destination agent on your behalf\n- We manage your client's entire move from start to close — inspections, timelines, the whole transition\n- You stay in the loop the entire time, so the relationship (and your reputation) stays intact\n\nTake a look at what we've prepared for you here: ${previewUrl}\n\nBest,\n${prospect.rep_name || 'The Dyson & Dyson Team'}`,
         from_name: prospect.rep_name ? `${prospect.rep_name} — Dyson & Dyson` : 'Dyson & Dyson',
       });
 
