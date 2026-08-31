@@ -83,11 +83,15 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   const [msg, setMsg] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
 
-  // Editable draft — falls back to generated values so admin starts from AI output
+  // Editable draft — falls back to generated values so admin starts from AI
+  // output. Uses a blank-string-aware fallback (not ??) because a saved-but-
+  // empty edited_* field ('') is NOT nullish, so ?? was leaving the boxes
+  // blank instead of falling back to the generated script.
+  const fallback = (edited, generated) => (edited && edited.trim() !== '' ? edited : (generated || ''));
   const [draft, setDraft] = useState({
-    edited_opening_script: article.edited_opening_script ?? article.generated_opening_script ?? '',
-    edited_body_script: article.edited_body_script ?? article.generated_body_script ?? article.body ?? '',
-    edited_closing_script: article.edited_closing_script ?? article.generated_closing_script ?? '',
+    edited_opening_script: fallback(article.edited_opening_script, article.generated_opening_script),
+    edited_body_script: fallback(article.edited_body_script, article.generated_body_script || article.body),
+    edited_closing_script: fallback(article.edited_closing_script, article.generated_closing_script),
     pronunciation_notes: article.pronunciation_notes ?? '',
     correction_notes: article.correction_notes ?? '',
   });
