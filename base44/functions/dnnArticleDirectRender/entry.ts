@@ -37,7 +37,9 @@ function pick(edited, generated) {
 function presenterScene(text, talkingPhotoId, voiceId, emotion) {
   return {
     character: { type: 'talking_photo', talking_photo_id: talkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.0 },
+    // speed 1.0 was tested and confirmed still sluggish/"drunk" on this voice —
+    // 1.15 is the correction. Do not drop this back to 1.0.
+    voice: { type: 'text', voice_id: voiceId, input_text: text, emotion, speed: 1.15 },
     background: { type: 'color', value: '#0d0d0d' },
   };
 }
