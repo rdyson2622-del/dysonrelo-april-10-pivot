@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
-import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
+import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 /**
@@ -186,12 +186,12 @@ ${digest}`,
       const videoInput = isCharlie
         ? {
             character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 0.8 },
+            voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 1.0 },
             background: { type: 'color', value: '#0d0d0d' },
           }
         : {
             character: { type: 'talking_photo', talking_photo_id: bobTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 0.92 },
+            voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 1.0 },
             background: { type: 'color', value: '#0d0d0d' },
           };
 
@@ -217,7 +217,7 @@ ${digest}`,
           charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
         }
         if (clips.some(c => c.role === 'bob' && !c.videoUrl)) {
-          bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
+          bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
         }
       } catch (e) {
         await Broadcasts.update(record.id, { status: 'failed', errorMessage: e.message });

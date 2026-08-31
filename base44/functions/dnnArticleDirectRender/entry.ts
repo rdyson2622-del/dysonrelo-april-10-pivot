@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
-import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
+import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
 import { CHARLIE_INTRO_URL, CHARLIE_OUTRO_URL } from '../../shared/charlieBookends.ts';
 import { DNN_STUDIO_BACKGROUND_URL } from '../../shared/dnnStudioBackground.ts';
@@ -81,14 +81,19 @@ async function checkHeygen(heygenKey, videoId) {
 // overlap in time, so they safely share one auto-sequenced track instead of
 // requiring hardcoded second-by-second offsets across separate tracks (which
 // we don't have — the clip durations aren't known until Creatomate renders).
+// CRITICAL: every element on track 2 gets an EXPLICIT time: 'auto' — this is
+// the only way to force Creatomate to play them strictly one after another
+// (intro fully finishes, THEN Charlie, THEN Bob, THEN outro). Leaving "time"
+// unset is what caused the intro and outro to render on top of each other at
+// the front instead of bookending the piece — never omit this again.
 function buildStudioComposite({ introUrl, charlieUrl, bobUrl, outroUrl }) {
   const BOX = { width: '30%', height: '75%', y: '50%', y_anchor: '50%', fit: 'cover', border_radius: '10px', border_width: '4px', border_color: '#D4AF37', shadow_color: 'rgba(0,0,0,0.7)', shadow_blur: '1.2vmin' };
   return [
     { type: 'image', track: 1, source: DNN_STUDIO_BACKGROUND_URL, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
-    { type: 'video', track: 2, source: introUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
-    { type: 'video', track: 2, source: charlieUrl, ...BOX, x: '20%', x_anchor: '50%' },
-    { type: 'video', track: 2, source: bobUrl, ...BOX, x: '80%', x_anchor: '50%' },
-    { type: 'video', track: 2, source: outroUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+    { type: 'video', track: 2, time: 0, source: introUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
+    { type: 'video', track: 2, time: 'auto', source: charlieUrl, ...BOX, x: '20%', x_anchor: '50%' },
+    { type: 'video', track: 2, time: 'auto', source: bobUrl, ...BOX, x: '80%', x_anchor: '50%' },
+    { type: 'video', track: 2, time: 'auto', source: outroUrl, width: '100%', height: '100%', x: '50%', y: '50%', fit: 'cover' },
   ];
 }
 
@@ -272,13 +277,10 @@ Deno.serve(async (req) => {
     ).slice(0, 1500);
 
     try {
-      const [charlieTalkingPhotoId, bobTalkingPhotoId] = await Promise.all([
-        uploadCharlieDeskTalkingPhoto(HEYGEN_API_KEY),
-        uploadBobOutsideTalkingPhoto(HEYGEN_API_KEY),
-      ]);
+      const charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(HEYGEN_API_KEY);
       const [charlieVideoId, bobVideoId] = await Promise.all([
         startRender(HEYGEN_API_KEY, presenterScene(tossScript, charlieTalkingPhotoId, CHARLIE_VOICE_ID), 'DNN Article — Charlie toss (Sandwich pipeline)'),
-        startRender(HEYGEN_API_KEY, presenterScene(bodyScript, bobTalkingPhotoId, BOB_VOICE_ID, 'Excited'), 'DNN Article — Bob segment (Sandwich pipeline)'),
+        startRender(HEYGEN_API_KEY, presenterScene(bodyScript, BOB_TALKING_PHOTO_ID, BOB_VOICE_ID, 'Excited'), 'DNN Article — Bob segment (Sandwich pipeline)'),
       ]);
 
       await base44.asServiceRole.entities.DnnArticle.update(article_id, {

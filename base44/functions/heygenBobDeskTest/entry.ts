@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
-import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
+import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 
 /**
  * heygenBobDeskTest — short proof render of Bob in his PROVEN "outside casual"
@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
     // solid dark background, no studio compositing. Uses a fresh widescreen
     // (1280x720) upload of Bob's still every time — the original portrait
     // (1023x1537) source caused the pillarbox black-bar bug.
-    const bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
+    const bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
     const renderRes = await fetch(`${HEYGEN_API}/v2/video/generate`, {
       method: 'POST',
       headers: {
@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
               voice_id: BOB_VOICE_ID,
               input_text: TEST_SCRIPT,
               emotion: 'Excited',
-              speed: 1.12,
+              speed: 1.0,
             },
             background: { type: 'color', value: '#0d0d0d' },
           },

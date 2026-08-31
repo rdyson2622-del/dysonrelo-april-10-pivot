@@ -26,7 +26,7 @@ const BOB_VOICE_ID = '147b8f5713024fb9afc106f266e47482';
 import { blockIfN8n } from '../../shared/n8nGuard.ts';
 import { checkHeygenStatus } from '../../shared/heygenStatus.ts';
 import { uploadCharlieDeskTalkingPhoto } from '../../shared/charlieDeskAsset.ts';
-import { uploadBobOutsideTalkingPhoto } from '../../shared/bobOutsideAsset.ts';
+import { BOB_TALKING_PHOTO_ID } from '../../shared/bobOutsideAsset.ts';
 import { sanitizeVoiceScript } from '../../shared/sanitizeVoiceScript.ts';
 
 Deno.serve(async (req) => {
@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
         charlieTalkingPhotoId = await uploadCharlieDeskTalkingPhoto(heygenKey);
       }
       if (clips.some(c => c.role === 'bob')) {
-        bobTalkingPhotoId = await uploadBobOutsideTalkingPhoto(heygenKey);
+        bobTalkingPhotoId = BOB_TALKING_PHOTO_ID;
       }
       const videoInputs = clips.map(clip => {
         const isCharlie = clip.role === 'charlie';
@@ -111,12 +111,12 @@ Deno.serve(async (req) => {
         return isCharlie
           ? {
               character: { type: 'talking_photo', talking_photo_id: charlieTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-              voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 0.8 },
+              voice: { type: 'text', voice_id: CHARLIE_VOICE_ID, input_text: sanitizedScript, speed: 1.0 },
               background: { type: 'color', value: '#0d0d0d' },
             }
           : {
               character: { type: 'talking_photo', talking_photo_id: bobTalkingPhotoId, scale: 1, offset: { x: 0, y: 0 } },
-              voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 0.92 },
+              voice: { type: 'text', voice_id: BOB_VOICE_ID, input_text: sanitizedScript, emotion: 'Excited', speed: 1.0 },
               background: { type: 'color', value: '#0d0d0d' },
             };
       });
