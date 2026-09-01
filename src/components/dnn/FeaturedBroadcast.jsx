@@ -252,7 +252,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
         {!started && (
           <button onClick={startPlay} aria-label="Play studio show"
             className="absolute inset-0 w-full h-full flex items-center justify-center group"
-            style={{ background: '#000' }}>
+            style={{ background: 'rgba(0,0,0,0.25)' }}>
             <div className={`rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${useComposited ? 'w-16 h-16' : 'w-14 h-14'}`}
               style={{ background: GOLD, boxShadow: '0 0 40px rgba(212,175,55,0.4)' }}>
               <Play className={useComposited ? 'w-7 h-7 ml-1' : 'w-6 h-6 ml-1'} fill="black" style={{ color: '#000' }} />
