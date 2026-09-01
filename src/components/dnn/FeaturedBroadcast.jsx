@@ -226,7 +226,7 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
           React to create a second video element. */}
       <div className={useComposited ? "absolute inset-0 z-10" : "absolute overflow-hidden"}
         style={useComposited
-          ? { background: '#000' }
+          ? { background: started ? '#000' : 'transparent' }
           : {
               width: 'clamp(200px, 34%, 380px)',
               aspectRatio: '16/9',
