@@ -5,6 +5,7 @@ import { getFlow } from '@/lib/departmentWorkflows';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import OrderFlowModal from '@/components/roadmap/OrderFlowModal';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 import {
@@ -139,6 +140,8 @@ export default function SolutionMapEntry() {
 
   return (
     <div className="min-h-screen bg-dyson-black text-white flex flex-col">
+      <CharliePagePresenter pageKey="solution-map-entry" />
+
       {/* ── Header ── */}
       <header className="flex items-center justify-between px-6 py-4 pt-28 border-b border-white/5">
         <div />
