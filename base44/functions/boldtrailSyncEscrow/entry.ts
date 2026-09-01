@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
-import { mapDealToMilestones, upsertEscrowMilestone, resolveBrokerageId, brokermintUrl } from '../../shared/boldtrailSync.ts';
+import { mapDealToMilestones, upsertEscrowMilestone, upsertEscrowRecord, resolveBrokerageId, brokermintUrl, toISODate } from '../../shared/boldtrailSync.ts';
 
 /**
  * Direct Brokermint (BoldTrail BackOffice) API sync — builds the per-escrow
@@ -65,6 +65,19 @@ export default async function(req) {
       });
       if (!detailRes.ok) { skipped++; continue; }
       const deal = await detailRes.json();
+
+      // Key-dates summary record (Acceptance/Closing date) — agent names are
+      // left for manual entry since Brokermint's API doesn't expose them.
+      try {
+        await upsertEscrowRecord(base44, {
+          escrow_number: String(id),
+          brokerage_id: brokerageId,
+          property_address: [deal.address, deal.city, deal.state].filter(Boolean).join(", "),
+          acceptance_date: toISODate(deal.acceptance_date),
+          closing_date: toISODate(deal.closing_date),
+          last_synced_at: new Date().toISOString(),
+        });
+      } catch { /* best-effort */ }
 
       const milestones = mapDealToMilestones(deal, deal.client_id, brokerageId);
       if (milestones.length === 0) { skipped++; continue; }

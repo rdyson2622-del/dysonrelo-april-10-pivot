@@ -5,6 +5,7 @@ import { Shield, RefreshCw, Mail, Webhook, Database, AlertTriangle, CheckCircle2
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import EscrowIssueResolver from '@/components/brokerage/EscrowIssueResolver';
+import EscrowKeyDetailsPanel from '@/components/brokerage/EscrowKeyDetailsPanel';
 import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
 
 const GOLD = '#D4AF37';
@@ -275,10 +276,18 @@ export default function EscrowManagement() {
                         if (ms) setResolver({ escrow: esc, milestone: ms });
                       }}
                     />
+                    <div onClick={e => e.stopPropagation()}>
+                      <EscrowKeyDetailsPanel escrowNumber={esc.number} propertyAddress={esc.address} brokerageId={brokerage?.id} />
+                    </div>
                   </div>
                 )}
                 {isSelected && stages.length === 0 && (
-                  <p className="px-4 pb-4 text-xs text-gray-500">No milestones tracked for this escrow yet.</p>
+                  <div className="px-4 pb-4">
+                    <p className="text-xs text-gray-500 mb-2">No milestones tracked for this escrow yet.</p>
+                    <div onClick={e => e.stopPropagation()}>
+                      <EscrowKeyDetailsPanel escrowNumber={esc.number} propertyAddress={esc.address} brokerageId={brokerage?.id} />
+                    </div>
+                  </div>
                 )}
               </div>
             );

@@ -1,0 +1,97 @@
+{
+  "name": "EscrowRecord",
+  "type": "object",
+  "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "The Brokerage entity ID this record belongs to. Set by the sync function."
+    },
+    "escrow_number": {
+      "type": "string",
+      "description": "Brokermint transaction / escrow number \u2014 unique key for this record."
+    },
+    "property_address": {
+      "type": "string",
+      "description": "Property address for this escrow"
+    },
+    "acceptance_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Contract acceptance date, synced from Brokermint. Never overwritten if edited_acceptance_date is set."
+    },
+    "closing_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Closing date, synced from Brokermint. Never overwritten if edited_closing_date is set."
+    },
+    "edited_acceptance_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Admin override for acceptance date. Local to Base44 only \u2014 never written back to Brokermint."
+    },
+    "edited_closing_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Admin override for closing date. Local to Base44 only \u2014 never written back to Brokermint."
+    },
+    "listing_agent_name": {
+      "type": "string",
+      "description": "Listing agent's name. Brokermint's API doesn't expose agent names, so this is entered manually in Base44 and never synced back to Brokermint."
+    },
+    "buyer_agent_name": {
+      "type": "string",
+      "description": "Buyer's agent name. Brokermint's API doesn't expose agent names, so this is entered manually in Base44 and never synced back to Brokermint."
+    },
+    "last_synced_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this record was last refreshed from Brokermint."
+    }
+  },
+  "required": [
+    "escrow_number"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

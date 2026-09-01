@@ -108,6 +108,22 @@ export function mapDealToMilestones(deal, client_id, brokerage_id) {
 }
 
 /**
+ * Upsert an EscrowRecord (the per-escrow key-dates summary used by the
+ * roadmap/detail cards) — match by escrow_number. Never overwrites an
+ * edited_* admin override field; those are Base44-only and are never sent
+ * back to Brokermint.
+ */
+export async function upsertEscrowRecord(base44, record) {
+  const { escrow_number } = record;
+  if (!escrow_number) throw new Error("upsertEscrowRecord requires escrow_number");
+  const existing = await base44.asServiceRole.entities.EscrowRecord.filter({ escrow_number });
+  if (existing && existing.length > 0) {
+    return await base44.asServiceRole.entities.EscrowRecord.update(existing[0].id, record);
+  }
+  return await base44.asServiceRole.entities.EscrowRecord.create(record);
+}
+
+/**
  * Confirmed working Brokermint (BoldTrail BackOffice) REST endpoint.
  * Auth is via account_id + api_key query params, not a Bearer token.
  */

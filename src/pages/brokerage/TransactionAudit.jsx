@@ -7,6 +7,8 @@ import {
   FileText, Clock, Radio
 } from 'lucide-react';
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
+import EscrowKeyDetailsPanel from '@/components/brokerage/EscrowKeyDetailsPanel';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
 
@@ -52,6 +54,13 @@ export default function TransactionAudit() {
     queryKey: ['transactionDocAnalyses'],
     queryFn: () => base44.entities.TransactionDocAnalysis.list('-analyzed_at', 100),
     refetchInterval: 15000,
+  });
+
+  // Milestones power the per-transaction roadmap shown in each expanded card
+  const { data: milestones = [] } = useQuery({
+    queryKey: ['escrowMilestones'],
+    queryFn: () => base44.entities.EscrowMilestone.list('-due_date', 500),
+    refetchInterval: 30000,
   });
 
   // Automatic sync — pulls every Brokermint transaction and audits any that
@@ -153,6 +162,19 @@ export default function TransactionAudit() {
             const hotspots = a.friction_hotspots || [];
             const deadlines = a.extracted_deadlines || [];
             const sigs = a.signature_requirements || [];
+            const escMilestones = milestones
+              .filter(m => m.escrow_number === a.escrow_number)
+              .sort((x, y) => new Date(x.due_date) - new Date(y.due_date));
+            const roadmapStages = escMilestones.map(m => ({
+              id: m.id,
+              title: m.milestone_name || m.milestone_type.replace(/_/g, ' '),
+              plain: m.due_date ? new Date(m.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
+            }));
+            const roadmapStatuses = {};
+            escMilestones.forEach(m => {
+              const map = { pending: 'pending', in_progress: 'running', completed: 'completed', waived: 'completed', at_risk: 'flagged', failed: 'flagged' };
+              roadmapStatuses[m.id] = { status: map[m.status] || 'pending' };
+            });
             return (
               <div
                 key={a.id}
@@ -197,6 +219,20 @@ export default function TransactionAudit() {
                 </div>
 
                 {/* Expanded report */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 border-t border-white/5 space-y-4 pt-3" onClick={e => e.stopPropagation()}>
+                    {/* Live roadmap + key details — always shown regardless of audit status */}
+                    <div>
+                      {roadmapStages.length > 0 ? (
+                        <FlowRoadmapLine stages={roadmapStages} stageStatuses={roadmapStatuses} color={GOLD} activeStageId={null} onSelect={() => {}} compact />
+                      ) : (
+                        <p className="text-[10px] text-gray-600 mb-2">No milestones synced for this escrow yet.</p>
+                      )}
+                      <EscrowKeyDetailsPanel escrowNumber={a.escrow_number} propertyAddress={a.property_address} brokerageId={brokerage?.id} />
+                    </div>
+                  </div>
+                )}
+
                 {isExpanded && a.status === 'analyzed' && (
                   <div className="px-4 pb-4 border-t border-white/5 space-y-4">
                     {/* Terms summary */}
