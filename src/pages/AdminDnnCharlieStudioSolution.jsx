@@ -16,6 +16,11 @@ const BOB_PLAIN_CLIP = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/fil
 const LOCKED_BACKDROP_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/16260cf0d_generated_image.png';
 const LOCKED_BOX_WIDTH_PCT = '19.5%'; // 15% base size + 30% bump, approved 8/29
 
+// ✅ Latest real finished show produced through the Creatomate pipeline using
+// this locked look — San Diego, locked 9/1.
+const LATEST_FINISHED_SHOW_URL = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/75165cedb_san-diego-housing-inventory-remains-constrained-amid-sustained-price-resilience.mp4';
+const LATEST_FINISHED_SHOW_HEADLINE = 'San Diego Housing Inventory Remains Constrained Amid Sustained Price Resilience';
+
 const COMPOSITE_CODE_SAMPLE = `// DnnStudioComposite.jsx — the ONLY place the studio look is assembled
 // 1. HeyGen renders Charlie and Bob as two separate solo clips,
 //    solid black background only — never a studio image, never both
@@ -84,6 +89,14 @@ export default function AdminDnnCharlieStudioSolution() {
             filePath="src/components/dnn/DnnStudioComposite.jsx"
             code={COMPOSITE_CODE_SAMPLE}
           />
+
+          <p className="text-xs font-black tracking-[0.2em] uppercase mb-3 mt-8" style={{ color: GOLD }}>
+            ✅ Latest Finished Show Using This Locked Format — San Diego, locked 9/1
+          </p>
+          <div className="rounded-xl overflow-hidden mb-2" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
+            <video src={LATEST_FINISHED_SHOW_URL} controls className="w-full" style={{ display: 'block' }} />
+          </div>
+          <p className="text-[11px] text-gray-500 mb-8">{LATEST_FINISHED_SHOW_HEADLINE}</p>
         </div>
       </div>
     </div>
