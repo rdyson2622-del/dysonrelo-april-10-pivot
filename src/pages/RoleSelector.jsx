@@ -132,7 +132,7 @@ export default function RoleSelector() {
         <div className="absolute left-0 right-0 flex items-center justify-center gap-8 md:gap-16 px-6"
           style={{ bottom: '18%' }}>
           {[
-            { word: 'News', dest: '/broadcast-show', sub: "Today's Clips" },
+            { word: 'News', dest: '/dnn-news', sub: "Today's Clips" },
             { word: 'Relocation', dest: '/relocation-intake', sub: 'Free Access' },
             { word: 'Intelligence', dest: '/real-estate-answers', sub: 'Tell Your Story' },
           ].map((pill) => (
