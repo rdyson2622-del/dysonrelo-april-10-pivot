@@ -191,11 +191,12 @@ function InlineStudioPlayer({ videoUrl, showName, composited }) {
   return (
     <div className="relative w-full overflow-hidden rounded-2xl"
       style={{ aspectRatio: '16/9', background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-      {/* Network studio background — only for the raw (non-composited) video.
-          The composited MP4 already has the studio set baked in, so we play it
-          full-frame instead of overlaying a second background (which caused the
-          "doubled" studio look on the news page). */}
-      {!useComposited && (
+      {/* Network studio background — for the raw (non-composited) video it's the
+          permanent backdrop behind the boxed clip. For a composited video (studio
+          already baked in) it's shown ONLY before playback starts, as a placeholder
+          poster instead of a plain black box — the video itself covers it once
+          playing (it's on a higher z-index), so there's no "doubled" studio look. */}
+      {(!useComposited || !started) && (
         <img src={STUDIO_BG_URL} alt="DNN Studio" className="absolute inset-0 w-full h-full object-cover" style={{ zIndex: 0 }} />
       )}
 
