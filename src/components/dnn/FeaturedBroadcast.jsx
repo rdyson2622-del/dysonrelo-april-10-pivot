@@ -5,7 +5,7 @@ import { Play, Pause, Volume2, VolumeX, Radio } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 // Exact same studio background used by DnnNewsBroadcastPlayer (Preview Studio Show)
-const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/5f493d29d_generated_image.png';
+const STUDIO_BG_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/80129619f_Screenshot2026-08-01at31026PM.png';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 
 /**
