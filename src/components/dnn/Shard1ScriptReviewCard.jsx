@@ -7,30 +7,52 @@ import DnnArticleBroadcastPlayer from '@/components/dnn/DnnArticleBroadcastPlaye
 const PIPELINE_STAGES = [
   { id: 'review', title: 'Script Review', who: 'Base44 — admin edits & saves script' },
   { id: 'approved', title: 'Approved', who: 'Base44 — dispatches job to HeyGen' },
-  { id: 'rendering', title: 'Rendering', who: 'HeyGen renders — Base44 polls every 5 min' },
+  { id: 'rendering', title: 'Rendering', who: 'HeyGen renders Charlie + Bob clips' },
+  { id: 'stitching', title: 'Stitching', who: 'Creatomate bakes Intro + Charlie + Bob + Outro' },
   { id: 'complete', title: 'Complete', who: 'Base44 — downloads & stores final MP4' },
 ];
 
-// Maps an article's production_status onto the 4-stage roadmap line above.
+// Maps an article's actual render_clips/production_status onto the 5-stage
+// roadmap above. Uses render_clips (not just the coarse production_status)
+// so the line actually moves as Charlie's clip, Bob's clip, and the
+// Creatomate stitch each individually complete — instead of sitting frozen
+// on "Rendering" for the entire multi-stage process.
 function getPipelineStatuses(article) {
   const s = article.production_status;
+  const clips = article.render_clips || {};
+  const openingDone = !!clips.opening?.video_url;
+  const bodyDone = !!clips.body?.video_url;
+  const stitching = !!clips.creatomate_render_id;
+
   if (s === 'complete') {
-    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'completed' }, complete: { status: 'completed' } };
+    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'completed' }, stitching: { status: 'completed' }, complete: { status: 'completed' } };
   }
   if (s === 'failed') {
-    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'flagged', flag_reason: article.last_render_error || 'Render failed' }, complete: { status: 'pending' } };
+    const stageId = stitching ? 'stitching' : 'rendering';
+    const base = { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: stitching ? 'completed' : 'flagged' }, stitching: { status: stitching ? 'flagged' : 'pending' }, complete: { status: 'pending' } };
+    base[stageId] = { status: 'flagged', flag_reason: article.last_render_error || 'Render failed' };
+    return base;
   }
   if (s === 'rendering') {
-    return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'running' }, complete: { status: 'pending' } };
+    if (stitching) {
+      return { review: { status: 'completed' }, approved: { status: 'completed' }, rendering: { status: 'completed' }, stitching: { status: 'running' }, complete: { status: 'pending' } };
+    }
+    return {
+      review: { status: 'completed' },
+      approved: { status: 'completed' },
+      rendering: { status: 'running', flag_reason: `Charlie ${openingDone ? 'done' : 'rendering'} · Bob ${bodyDone ? 'done' : 'rendering'}` },
+      stitching: { status: 'pending' },
+      complete: { status: 'pending' },
+    };
   }
   if (s === 'approved_for_render' || s === 'pending') {
-    return { review: { status: 'completed' }, approved: { status: 'running' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+    return { review: { status: 'completed' }, approved: { status: 'running' }, rendering: { status: 'pending' }, stitching: { status: 'pending' }, complete: { status: 'pending' } };
   }
   if (s === 'needs_revision') {
-    return { review: { status: 'flagged', flag_reason: 'Needs revision' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+    return { review: { status: 'flagged', flag_reason: 'Needs revision' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, stitching: { status: 'pending' }, complete: { status: 'pending' } };
   }
   // new, script_generated, pending_review, none
-  return { review: { status: 'running' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, complete: { status: 'pending' } };
+  return { review: { status: 'running' }, approved: { status: 'pending' }, rendering: { status: 'pending' }, stitching: { status: 'pending' }, complete: { status: 'pending' } };
 }
 
 const STATUS_STYLES = {
