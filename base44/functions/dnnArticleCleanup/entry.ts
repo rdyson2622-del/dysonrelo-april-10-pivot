@@ -18,6 +18,12 @@ Deno.serve(async (req) => {
     const toDelete = oldArticles.filter(a => {
       // Never delete pinned/featured articles (e.g. the standalone DNN Intelligence Report video)
       if ((a.tags || []).includes('featured')) return false;
+      // NEVER delete a finished show or one with any video attached — this
+      // cleanup is only meant to clear out stale drafts/failed test runs,
+      // not a completed broadcast that's been published/distributed.
+      if (a.production_status === 'complete') return false;
+      if (a.video_url || a.render_clips?.opening?.video_url || a.render_clips?.body?.video_url) return false;
+      if (a.status === 'blasted' || a.status === 'published') return false;
       const generated = new Date(a.generated_date || a.created_date);
       return generated < new Date(twoDaysAgo);
     });
