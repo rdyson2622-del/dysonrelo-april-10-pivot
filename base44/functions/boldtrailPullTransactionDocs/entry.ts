@@ -1,9 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets, waitUntil } from 'base44:runtime';
-import { resolveBrokerageId, computeDaysUntil } from '../../shared/boldtrailSync.ts';
+import { resolveBrokerageId, computeDaysUntil, brokermintUrl } from '../../shared/boldtrailSync.ts';
 
 /**
- * Pull transaction documents for a given escrow # from BoldTrail, then run a
+ * Pull transaction documents for a given escrow # from Brokermint (BoldTrail BackOffice), then run a
  * real-time LLM audit (deadlines, signatures, friction hotspots) and persist a
  * TransactionDocAnalysis record. Critical/high hotspots also spawn EscrowMilestone
  * internal alerts so they surface in the Escrow alert banner.
@@ -24,29 +24,22 @@ export default async function(req) {
     }
     const brokerageId = body.brokerage_id || await resolveBrokerageId(base44);
 
-    const token = secrets.get('BOLDTRAIL_API_TOKEN');
-    if (!token) {
+    const accountId = secrets.get('BROKERMINT_ACCOUNT_ID');
+    const apiKey = secrets.get('BROKERMINT_API_KEY');
+    if (!accountId || !apiKey) {
       return Response.json({
-        error: 'BOLDTRAIL_API_TOKEN not set',
-        hint: 'Generate an API token in BoldTrail (Lead Engine → Lead Dropbox → My API Tokens, All scope) and save it as BOLDTRAIL_API_TOKEN.',
-      }, { status: 400 });
-    }
-    const rawBase = (secrets.get('BOLDTRAIL_API_BASE_URL') || '').trim();
-    const baseUrl = (rawBase || 'https://api.boldtrail.com/v2').replace(/\/$/, '');
-    if (!/^https?:\/\//.test(baseUrl)) {
-      return Response.json({
-        error: 'BOLDTRAIL_API_BASE_URL is invalid',
-        hint: 'Set it to https://api.boldtrail.com/v2 (or the exact base from the BoldTrail developer portal). Current value is empty or malformed.',
+        error: 'BROKERMINT_ACCOUNT_ID / BROKERMINT_API_KEY not set',
+        hint: 'Get your account ID and API key from Brokermint support and save them as secrets.',
       }, { status: 400 });
     }
 
-    // 1. Find the deal matching the escrow number
-    const dealsRes = await fetch(`${baseUrl}/deals`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+    // 1. Find the transaction matching the escrow number (Brokermint transaction id)
+    const dealsRes = await fetch(brokermintUrl('/transactions', accountId, apiKey), {
+      headers: { 'Accept': 'application/json' },
     });
     if (!dealsRes.ok) {
       return Response.json({
-        error: `BoldTrail API ${dealsRes.status}`,
+        error: `Brokermint API ${dealsRes.status}`,
         detail: await dealsRes.text(),
       }, { status: 502 });
     }
@@ -57,28 +50,16 @@ export default async function(req) {
     );
     if (!deal) {
       return Response.json({
-        error: `No BoldTrail deal found for escrow #${escrowNumber}`,
-        hint: 'Confirm the escrow number matches a deal ID in BoldTrail BackOffice.',
+        error: `No Brokermint transaction found for escrow #${escrowNumber}`,
+        hint: 'Confirm the escrow number matches a transaction ID in Brokermint.',
       }, { status: 404 });
     }
 
     const propertyAddress = deal.property_address || deal.address || '';
-    const dealId = deal.id || deal.transaction_id || escrowNumber;
 
-    // 2. Attempt to fetch documents for the deal (best-effort — endpoint path varies)
-    let docUrls = [];
-    try {
-      const docsRes = await fetch(`${baseUrl}/deals/${dealId}/documents`, {
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-      });
-      if (docsRes.ok) {
-        const docsBody = await docsRes.json();
-        const docs = Array.isArray(docsBody) ? docsBody : (docsBody.documents || docsBody.data || []);
-        docUrls = docs
-          .map(d => d.url || d.download_url || d.file_url || d.signed_url)
-          .filter(Boolean);
-      }
-    } catch { /* endpoint may not exist — proceed with deal-data-only analysis */ }
+    // Brokermint's basic API tier has no documents endpoint — proceed with
+    // transaction-data-only analysis.
+    const docUrls = [];
 
     // 3. Create the analysis record with status 'analyzing'
     const analysis = await base44.asServiceRole.entities.TransactionDocAnalysis.create({

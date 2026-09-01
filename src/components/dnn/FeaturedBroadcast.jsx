@@ -18,8 +18,9 @@ export default function FeaturedBroadcast() {
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['featuredNewsBroadcast'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-show_number', 20),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchInterval: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   // Direct-render pipeline (Show Production Pipeline) finishes shows as
@@ -28,8 +29,9 @@ export default function FeaturedBroadcast() {
   const { data: completedArticles = [] } = useQuery({
     queryKey: ['featuredNewsArticle'],
     queryFn: () => base44.entities.DnnArticle.filter({ production_status: 'complete' }, '-updated_date', 5),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchInterval: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   // Lock the featured broadcast on FIRST resolve. A background refetch (e.g.

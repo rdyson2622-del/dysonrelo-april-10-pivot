@@ -1,16 +1,12 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
-import { mapDealToMilestones, upsertEscrowMilestone, resolveBrokerageId } from '../../shared/boldtrailSync.ts';
+import { mapDealToMilestones, upsertEscrowMilestone, resolveBrokerageId, brokermintUrl } from '../../shared/boldtrailSync.ts';
 
 /**
- * Option A — Direct BoldTrail API sync.
- * Polls the BoldTrail Deals API and upserts EscrowMilestone records.
- * Admin-only. Invoke manually or via a scheduled automation.
- *
- * NOTE: BoldTrail's public V2 API is in beta. The exact endpoint paths
- * are confirmed in the developer portal (developer.insiderealestate.com/publicv2).
- * This function uses BOLDTRAIL_API_BASE_URL + /deals as the default and
- * will work once your token + base URL are confirmed.
+ * Direct Brokermint (BoldTrail BackOffice) API sync.
+ * Polls the Brokermint Transactions API (my.brokermint.com/api/v2) and
+ * upserts EscrowMilestone records. Admin-only. Invoke manually or via a
+ * scheduled automation.
  */
 export default async function(req) {
   try {
@@ -19,33 +15,21 @@ export default async function(req) {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (user.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
 
-    const token = secrets.get('BOLDTRAIL_API_TOKEN');
-    if (!token) {
+    const accountId = secrets.get('BROKERMINT_ACCOUNT_ID');
+    const apiKey = secrets.get('BROKERMINT_API_KEY');
+    if (!accountId || !apiKey) {
       return Response.json({
-        error: 'BOLDTRAIL_API_TOKEN not set',
-        hint: 'Generate an API token in BoldTrail: Lead Engine → Lead Dropbox → My API Tokens (All scope), then save it as the BOLDTRAIL_API_TOKEN secret.',
-      }, { status: 400 });
-    }
-    const rawBase = (secrets.get('BOLDTRAIL_API_BASE_URL') || '').trim();
-    const baseUrl = (rawBase || 'https://api.boldtrail.com/v2').replace(/\/$/, '');
-    if (!/^https?:\/\//.test(baseUrl)) {
-      return Response.json({
-        error: 'BOLDTRAIL_API_BASE_URL is invalid',
-        hint: 'Set it to https://api.boldtrail.com/v2 (or the exact base from the BoldTrail developer portal). Current value is empty or malformed.',
+        error: 'BROKERMINT_ACCOUNT_ID / BROKERMINT_API_KEY not set',
+        hint: 'Get your account ID and API key from Brokermint support and save them as secrets.',
       }, { status: 400 });
     }
 
-    const url = new URL(`${baseUrl}/deals`);
-    url.searchParams.set('status', 'active');
-    const res = await fetch(url.toString(), {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-      },
+    const res = await fetch(brokermintUrl('/transactions', accountId, apiKey), {
+      headers: { 'Accept': 'application/json' },
     });
     if (!res.ok) {
       return Response.json({
-        error: `BoldTrail API ${res.status}`,
+        error: `Brokermint API ${res.status}`,
         detail: await res.text(),
       }, { status: 502 });
     }
@@ -71,7 +55,7 @@ export default async function(req) {
 
     return Response.json({
       status: 'ok',
-      source: 'boldtrail_api',
+      source: 'brokermint_api',
       deals_pulled: deals.length,
       milestones_created: created,
       milestones_updated: updated,

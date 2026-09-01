@@ -93,6 +93,19 @@ export function mapDealToMilestones(deal, client_id, brokerage_id) {
 }
 
 /**
+ * Confirmed working Brokermint (BoldTrail BackOffice) REST endpoint.
+ * Auth is via account_id + api_key query params, not a Bearer token.
+ */
+export const BROKERMINT_BASE_URL = "https://my.brokermint.com/api/v2";
+
+export function brokermintUrl(path, accountId, apiKey) {
+  const url = new URL(`${BROKERMINT_BASE_URL}${path}`);
+  url.searchParams.set("account_id", accountId);
+  url.searchParams.set("api_key", apiKey);
+  return url.toString();
+}
+
+/**
  * Map an API Nation webhook payload (transaction event) to a single milestone.
  * API Nation payloads vary; we extract what we can defensively.
  */

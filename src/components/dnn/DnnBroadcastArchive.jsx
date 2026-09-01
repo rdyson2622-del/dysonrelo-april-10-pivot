@@ -39,7 +39,9 @@ export default function DnnBroadcastArchive({ limit, showViewAll }) {
   const { data: broadcasts = [], isLoading } = useQuery({
     queryKey: ['dnnBroadcastArchive'],
     queryFn: () => base44.entities.DnnBroadcast.filter({ status: 'completed' }, '-show_number', 80),
-    staleTime: 60 * 1000,
+    staleTime: 0,
+    refetchInterval: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const withVideo = broadcasts.filter(b => {
