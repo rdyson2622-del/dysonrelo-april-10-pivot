@@ -498,7 +498,11 @@ export default function AdminSidebar() {
             </Link>
             <Link to="/admin/wisdom/audit" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/audit' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/audit' ? '#D4AF37' : '#ccc' }}>
               <FileSearch className="w-3 h-3 shrink-0" />
-              <span className="truncate">Doc Audit</span>
+              <span className="truncate">Doc Audit (Escrow #)</span>
+            </Link>
+            <Link to="/admin/compliance-review" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/compliance-review' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/compliance-review' ? '#D4AF37' : '#ccc' }}>
+              <ShieldCheck className="w-3 h-3 shrink-0" />
+              <span className="truncate">Upload Files for AI Review</span>
             </Link>
             <Link to="/admin/wisdom/listings" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/listings' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/listings' ? '#D4AF37' : '#ccc' }}>
               <Home className="w-3 h-3 shrink-0" />
