@@ -8,6 +8,7 @@ import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
 import InterviewSegment from '@/components/dnn/InterviewSegment';
 import ArticleReaderModal from '@/components/dnn/ArticleReaderModal';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
@@ -575,8 +576,9 @@ export default function ConsumerDnnNews() {
       </div>
 
       {/* Hero */}
-      <div className="w-full px-8 md:px-16 py-14 text-center"
+      <div className="relative w-full px-8 md:px-16 py-14 text-center"
         style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#ede0cc' }}>
+        <CharliePagePresenter pageKey="dnn-news" inline positionClass="top-6 right-6" />
         <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
           style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
           <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
