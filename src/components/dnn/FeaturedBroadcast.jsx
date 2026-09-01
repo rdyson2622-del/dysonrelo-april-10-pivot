@@ -22,6 +22,16 @@ export default function FeaturedBroadcast() {
     refetchOnWindowFocus: false,
   });
 
+  // Direct-render pipeline (Show Production Pipeline) finishes shows as
+  // DnnArticle records, not DnnBroadcast — fall back to the newest completed
+  // one so a finished show actually appears here instead of nothing/stale.
+  const { data: completedArticles = [] } = useQuery({
+    queryKey: ['featuredNewsArticle'],
+    queryFn: () => base44.entities.DnnArticle.filter({ production_status: 'complete' }, '-updated_date', 5),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
   // Lock the featured broadcast on FIRST resolve. A background refetch (e.g.
   // the Creatomate composite finishing ~60s later) swaps compositedVideoUrl
   // from a pending placeholder to a real URL, which changes the playUrl prop
@@ -44,6 +54,18 @@ export default function FeaturedBroadcast() {
           showName: f.show_name,
           composited: !!f.compositedVideoUrl && playUrl === f.compositedVideoUrl,
           headline: f.headlines?.[0],
+        };
+      }
+    }
+    if (!lockedRef.current) {
+      const a = completedArticles.find(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
+      if (a) {
+        lockedRef.current = {
+          id: a.id,
+          playUrl: a.video_url,
+          showName: null,
+          composited: true, // the stitched MP4 already has the studio backdrop baked in
+          headline: a.headline,
         };
       }
     }
