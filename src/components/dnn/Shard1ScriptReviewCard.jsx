@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2, History, RotateCcw } from 'lucide-react';
+import { Save, CheckCircle, RefreshCw, AlertTriangle, Loader, ChevronDown, ChevronUp, Play, Send, Trash2, History, RotateCcw, Copy, Check } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import DnnArticleBroadcastPlayer from '@/components/dnn/DnnArticleBroadcastPlayer';
 
@@ -104,6 +104,13 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`${article.headline}\n${article.video_url}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Editable draft — falls back to generated values so admin starts from AI
   // output. Uses a blank-string-aware fallback (not ??) because a saved-but-
@@ -278,6 +285,17 @@ export default function Shard1ScriptReviewCard({ article, onChanged }) {
                 ▶ Finished Broadcast
               </div>
               <video src={article.video_url} controls className="w-full max-h-[420px] bg-black" />
+              <div className="p-3 flex items-center gap-2" style={{ background: '#111' }}>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-white truncate">{article.headline}</p>
+                  <p className="text-[10px] text-slate-500 truncate">{article.video_url}</p>
+                </div>
+                <button onClick={handleCopyLink}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 hover:opacity-80"
+                  style={{ background: copied ? 'rgba(74,222,128,0.15)' : 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)' }}>
+                  {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copied ? 'Copied' : 'Copy Name & Link'}
+                </button>
+              </div>
             </div>
           ) : article.render_clips && (article.render_clips.opening?.video_url || article.render_clips.body?.video_url) && (
             <DnnArticleBroadcastPlayer
