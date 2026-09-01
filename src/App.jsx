@@ -220,6 +220,7 @@ const AuthenticatedApp = () => {
             Client sidebar content or the Admin sidebar (AdminLayout) — it is its own portal. */}
         <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/transparency" element={<Transparency />} />
+        <Route path="/dnn-news" element={<ConsumerDnnNews />} />
       </Route>
 
       {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
@@ -259,7 +260,6 @@ const AuthenticatedApp = () => {
         <Route path="/FindAgent" element={<FindAgent />} />
         <Route path="/find-agent" element={<FindAgent />} />
         <Route path="/media" element={<MediaRoom />} />
-        <Route path="/dnn-news" element={<ConsumerDnnNews />} />
         <Route path="/dnn-archive" element={<DnnBroadcastArchivePage />} />
         <Route path="/my-agent" element={<MyAgent />} />
         <Route path="/financial-services" element={<FinancialServices />} />
