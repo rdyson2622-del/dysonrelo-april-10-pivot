@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 
 const PORTAL_HOMES = {
   client: '/home',
-  agent: '/find-agent',
+  agent: '/agent-command-center',
   referral_agent: '/partner-benefits',
   vendor: '/search',
   hr: '/corporate-relo',
@@ -16,6 +16,7 @@ const PORTAL_ROUTES = {
   '/relocation-intake': 'client',
   '/subscribe': 'client',
   '/find-agent': 'agent',
+  '/agent-command-center': 'agent',
   '/agent-subscribe': 'agent',
   '/agent-invited-clients': 'agent',
   '/national-directory': 'agent',
@@ -43,7 +44,7 @@ export default function PortalAccessGuard({ children }) {
         sessionStorage.setItem('dyson_role', assigned);
         window.dispatchEvent(new Event('dyson_role_change'));
       }
-      const requested = location.pathname.startsWith('/vetted-agents/')
+      const requested = (location.pathname.startsWith('/vetted-agents/') || location.pathname.startsWith('/agent-workfile'))
         ? 'agent'
         : PORTAL_ROUTES[location.pathname.toLowerCase()];
       if (assigned && requested && requested !== assigned) {
