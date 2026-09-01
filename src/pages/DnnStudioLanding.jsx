@@ -32,7 +32,7 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
 const PILLS = [
-  { label: 'NEWS',         path: '/broadcast-show',     icon: Newspaper },
+  { label: 'NEWS',         path: '/dnn-news',           icon: Newspaper },
   { label: 'RELOCATION',   path: '/relocation-intake',  icon: MapPin },
   { label: 'INTELLIGENCE', path: '/solutions',          icon: Sparkles },
   { label: 'TRANSPARENCY', path: '/transparency',       icon: ShieldCheck },
