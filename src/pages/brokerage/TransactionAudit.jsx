@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import {
   FileSearch, Loader2, AlertTriangle, ShieldCheck, PenLine, CalendarClock,
   Flame, ArrowRight, CheckCircle2, XCircle, ChevronDown, ChevronUp, RefreshCw,
-  FileText, Clock
+  FileText, Clock, Radio
 } from 'lucide-react';
 import BrokerageCommPill from '@/components/brokerage/BrokerageCommPill';
 
@@ -27,9 +27,8 @@ const STATUS_META = {
 export default function TransactionAudit() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
-  const [pulling, setPulling] = useState(false);
-  const [pullEscrow, setPullEscrow] = useState('');
-  const [pullResult, setPullResult] = useState(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
@@ -55,21 +54,20 @@ export default function TransactionAudit() {
     refetchInterval: 15000,
   });
 
-  const runPull = async () => {
-    if (!pullEscrow.trim()) return;
-    setPulling(true);
-    setPullResult(null);
+  // Automatic sync — pulls every Brokermint transaction and audits any that
+  // don't have an analysis yet. Runs on a schedule (every 10 min); this
+  // button just forces an immediate pass instead of waiting for the next tick.
+  const runSync = async () => {
+    setSyncing(true);
+    setSyncResult(null);
     try {
-      const res = await base44.functions.invoke('boldtrailPullTransactionDocs', {
-        escrow_number: pullEscrow.trim(),
-        brokerage_id: brokerage?.id,
-      });
-      setPullResult({ ok: true, data: res.data });
+      const res = await base44.functions.invoke('boldtrailAutoAuditAll', {});
+      setSyncResult({ ok: true, data: res.data });
       queryClient.invalidateQueries({ queryKey: ['transactionDocAnalyses'] });
     } catch (e) {
-      setPullResult({ ok: false, error: e.message });
+      setSyncResult({ ok: false, error: e.message });
     }
-    setPulling(false);
+    setSyncing(false);
   };
 
   // Summary stats for the broker report
@@ -97,39 +95,32 @@ export default function TransactionAudit() {
 
       <BrokerageCommPill />
 
-      {/* Pull new analysis */}
-      <div className="rounded-xl p-4 mb-6" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
-        <div className="flex items-center gap-2 mb-3">
-          <RefreshCw className="w-4 h-4" style={{ color: GOLD }} />
-          <span className="text-sm font-serif text-white">Pull & Audit New Transaction Docs</span>
+      {/* Automatic sync status */}
+      <div className="rounded-xl p-4 mb-6 flex items-center justify-between gap-4" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.2)' }}>
+        <div className="flex items-center gap-2">
+          <Radio className="w-4 h-4 animate-pulse" style={{ color: '#22c55e' }} />
+          <div>
+            <span className="text-sm font-serif text-white block">Auto-Sync Active</span>
+            <span className="text-xs text-gray-500">Every Brokermint transaction is pulled automatically every 10 minutes and audited by AI — no manual entry needed.</span>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <input
-            value={pullEscrow}
-            onChange={e => setPullEscrow(e.target.value)}
-            placeholder="Escrow # (e.g. 25-12345)"
-            className="flex-1 px-3 py-2 rounded-lg text-sm text-white outline-none"
-            style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)' }}
-            onKeyDown={e => e.key === 'Enter' && runPull()}
-          />
-          <button
-            onClick={runPull}
-            disabled={pulling || !pullEscrow.trim()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
-            style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
-          >
-            {pulling ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSearch className="w-4 h-4" />}
-            {pulling ? 'Pulling & Analyzing…' : 'Pull + Audit'}
-          </button>
-        </div>
-        {pullResult && (
-          <p className="text-xs mt-2" style={{ color: pullResult.ok ? '#22c55e' : '#ef4444' }}>
-            {pullResult.ok
-              ? `✓ ${pullResult.data.message || 'Docs pulled — analysis queued. Refresh in ~30s to see results.'}`
-              : `✗ ${pullResult.error}`}
-          </p>
-        )}
+        <button
+          onClick={runSync}
+          disabled={syncing}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all disabled:opacity-50 shrink-0"
+          style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.35)', color: GOLD }}
+        >
+          {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+          {syncing ? 'Syncing…' : 'Sync Now'}
+        </button>
       </div>
+      {syncResult && (
+        <p className="text-xs mb-6 -mt-3" style={{ color: syncResult.ok ? '#22c55e' : '#ef4444' }}>
+          {syncResult.ok
+            ? `✓ ${syncResult.data.new_audits_queued} new transaction${syncResult.data.new_audits_queued !== 1 ? 's' : ''} queued for AI audit (${syncResult.data.backlog_remaining} still in backlog).`
+            : `✗ ${syncResult.error}`}
+        </p>
+      )}
 
       {/* Report stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -148,7 +139,7 @@ export default function TransactionAudit() {
         <div className="rounded-xl p-8 text-center" style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
           <FileText className="w-10 h-10 mx-auto mb-3 text-gray-600" />
           <p className="text-gray-400 text-sm mb-2">No document audits yet.</p>
-          <p className="text-gray-600 text-xs">Enter an escrow # above to pull transaction docs from BoldTrail and run a real-time LLM audit. Results appear here automatically.</p>
+          <p className="text-gray-600 text-xs">Transactions are pulled from Brokermint and audited by AI automatically every 10 minutes. Click "Sync Now" above to run it immediately.</p>
         </div>
       ) : (
         <div className="space-y-3">

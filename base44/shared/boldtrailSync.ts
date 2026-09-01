@@ -106,6 +106,156 @@ export function brokermintUrl(path, accountId, apiKey) {
 }
 
 /**
+ * Runs the LLM friction/deadline audit for a single Brokermint deal and
+ * persists the result onto its TransactionDocAnalysis record. Shared by the
+ * manual single-escrow pull (boldtrailPullTransactionDocs) and the automatic
+ * all-transactions sync (boldtrailAutoAuditAll) so both stay in lockstep.
+ * Uses asServiceRole throughout so it works with or without a logged-in user
+ * (scheduled automations have no user session).
+ */
+export async function runTransactionDocAudit(base44, analysisId, escrowNumber, propertyAddress, deal, docUrls, brokerageId) {
+  try {
+    const schema = {
+      type: "object",
+      properties: {
+        terms_summary: { type: "string" },
+        extracted_deadlines: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              label: { type: "string" },
+              date: { type: "string", format: "date" },
+              responsible_party: { type: "string" },
+              days_from_acceptance: { type: "number" },
+            },
+          },
+        },
+        signature_requirements: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              party: { type: "string" },
+              document_section: { type: "string" },
+              deadline_date: { type: "string", format: "date" },
+              status: { type: "string", enum: ["pending", "signed", "missing", "unknown"] },
+            },
+          },
+        },
+        friction_hotspots: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              hotspot_type: { type: "string", enum: ["tight_deadline", "missing_signature", "contingency_gap", "lending_risk", "title_risk", "ambiguous_term", "unusual_clause", "other"] },
+              description: { type: "string" },
+              severity: { type: "string", enum: ["low", "medium", "high", "critical"] },
+              related_deadline: { type: "string" },
+              recommended_action: { type: "string" },
+            },
+          },
+        },
+      },
+    };
+
+    const dealContext = [
+      `Escrow #: ${escrowNumber}`,
+      `Property: ${propertyAddress || "—"}`,
+      `Escrow company: ${deal.escrow_company || deal.title_company || "—"}`,
+      `Acceptance date: ${deal.acceptance_date || deal.contract_date || "—"}`,
+      `Closing date: ${deal.closing_date || deal.expected_close_date || "—"}`,
+      `Inspection date: ${deal.inspection_date || "—"}`,
+      `Inspection contingency date: ${deal.inspection_contingency_date || "—"}`,
+      `Appraisal date: ${deal.appraisal_date || "—"}`,
+      `Loan approval date: ${deal.loan_approval_date || "—"}`,
+      `Contingency release date: ${deal.contingency_release_date || "—"}`,
+      `Clear to close date: ${deal.clear_to_close_date || "—"}`,
+      `Funding date: ${deal.funding_date || "—"}`,
+      `Purchase price: ${deal.purchase_price || deal.price || "—"}`,
+      `Financing type: ${deal.financing_type || "—"}`,
+    ].join("\n");
+
+    const prompt = `You are an expert real estate transaction auditor and managing broker reviewer.
+Analyze the following escrow transaction${docUrls.length > 0 ? " and the attached documents (RPA, counters, addenda)" : ""}.
+Identify every deadline, signature requirement, and friction hotspot that could cause a missed deadline or failed close.
+
+Transaction data:
+${dealContext}
+
+Return a JSON object with:
+- terms_summary: plain-English summary of key terms (price, contingency lengths, financing type, special clauses)
+- extracted_deadlines: every deadline found (label, date, responsible_party, days_from_acceptance)
+- signature_requirements: parties who must sign and by when (status: pending/signed/missing/unknown)
+- friction_hotspots: proactive risks (tight_deadline, missing_signature, contingency_gap, lending_risk, title_risk, ambiguous_term, unusual_clause, other) with severity (low/medium/high/critical), description, related_deadline, and recommended_action
+
+Be specific and actionable. Flag tight deadlines and any gaps between contingencies.`;
+
+    const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt,
+      file_urls: docUrls.length > 0 ? docUrls : undefined,
+      response_json_schema: schema,
+    });
+
+    const result = llmRes?.data || llmRes || {};
+
+    const hotspots = Array.isArray(result.friction_hotspots) ? result.friction_hotspots : [];
+    const severityWeight = { low: 1, medium: 3, high: 7, critical: 12 };
+    const raw = hotspots.reduce((s, h) => s + (severityWeight[h.severity] || 1), 0);
+    const hotspotScore = Math.min(100, raw * 3);
+
+    await base44.asServiceRole.entities.TransactionDocAnalysis.update(analysisId, {
+      terms_summary: result.terms_summary || "",
+      extracted_deadlines: result.extracted_deadlines || [],
+      signature_requirements: result.signature_requirements || [],
+      friction_hotspots: hotspots,
+      hotspot_score: hotspotScore,
+      analyzed_at: new Date().toISOString(),
+      status: "analyzed",
+    });
+
+    const alertMilestoneIds = [];
+    const deadlines = result.extracted_deadlines || [];
+    for (const h of hotspots.filter(h => h.severity === "high" || h.severity === "critical")) {
+      const related = deadlines.find(d => d.label === h.related_deadline);
+      const dueDate = related?.date || deal.closing_date || new Date().toISOString().slice(0, 10);
+      try {
+        const saved = await base44.asServiceRole.entities.EscrowMilestone.create({
+          brokerage_id: brokerageId,
+          escrow_number: escrowNumber,
+          property_address: propertyAddress,
+          milestone_type: "other",
+          milestone_name: `FRICTION: ${String(h.hotspot_type || "audit_flag").replace(/_/g, " ")}`,
+          due_date: typeof dueDate === "string" ? dueDate.slice(0, 10) : new Date(dueDate).toISOString().slice(0, 10),
+          responsible_party: "client_action",
+          description: h.description || "Friction hotspot flagged by document audit",
+          status: "at_risk",
+          alert_tier: "internal",
+          alert_status: "raised",
+          extracted_from: "doc_audit_llm",
+          notes: h.recommended_action || "",
+          days_until_due: computeDaysUntil(dueDate),
+        });
+        if (saved?.id) alertMilestoneIds.push(saved.id);
+      } catch { /* best-effort */ }
+    }
+
+    if (alertMilestoneIds.length > 0) {
+      await base44.asServiceRole.entities.TransactionDocAnalysis.update(analysisId, {
+        alert_milestone_ids: alertMilestoneIds,
+      });
+    }
+  } catch (error) {
+    try {
+      await base44.asServiceRole.entities.TransactionDocAnalysis.update(analysisId, {
+        status: "failed",
+        error_message: error?.message || "Unknown analysis error",
+      });
+    } catch { /* best-effort */ }
+  }
+}
+
+/**
  * Map an API Nation webhook payload (transaction event) to a single milestone.
  * API Nation payloads vary; we extract what we can defensively.
  */
