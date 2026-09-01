@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X, Headphones } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Globe, ChevronDown, ChevronUp, Bell, Share2, BookOpen, TrendingUp, Shield, DollarSign, ChevronRight, Mail, MessageSquare, Copy, Check, X, Headphones, Newspaper, MapPin, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import DnnAdminBar from '@/components/dnn/DnnAdminBar';
 import TalkingHead from '@/components/avatar/TalkingHead';
 import { useTalkingHead } from '@/hooks/useTalkingHead';
@@ -469,8 +469,15 @@ function VideoThumbnail({ article, isAdmin, onEdit, onDelete }) {
 
 // --- Main Page ---
 // v2
+const HERO_PILLS = [
+  { label: 'NEWS', path: '/dnn-news', icon: Newspaper },
+  { label: 'RELOCATION', path: '/relocation-intake', icon: MapPin },
+  { label: 'INTELLIGENCE', path: '/solutions', icon: Sparkles },
+];
+
 export default function ConsumerDnnNews() {
   const { talkingHeadProps, speak, loading: talkLoading, dismiss } = useTalkingHead();
+  const navigate = useNavigate();
 
   const HARDCODED_VIDEO = {
     id: '__hardcoded__',
@@ -583,6 +590,19 @@ export default function ConsumerDnnNews() {
         <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
+
+        <div className="flex items-center justify-center gap-3">
+          {HERO_PILLS.map(({ label, path, icon: Icon }) => (
+            <button
+              key={label}
+              onClick={() => navigate(path)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black tracking-widest transition-all hover:scale-105 active:scale-95"
+              style={{ background: '#1a1a1a', border: '1.5px solid #D4AF37', color: '#D4AF37' }}
+            >
+              <Icon className="w-3.5 h-3.5" /> {label}
+            </button>
+          ))}
+        </div>
 
       </div>
 
