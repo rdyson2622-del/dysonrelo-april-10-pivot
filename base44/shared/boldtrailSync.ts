@@ -53,42 +53,57 @@ export function computeDaysUntil(dueDate) {
 }
 
 /**
- * Map a BoldTrail Deal object (from the Deals API) to EscrowMilestone records.
- * A single deal typically yields several milestones (inspection, appraisal, close, etc.)
- * depending on which dates the deal exposes.
+ * Convert a Brokermint date value (epoch millis number, or date string) to
+ * a plain YYYY-MM-DD string. Returns null if missing/invalid.
+ */
+export function toISODate(v) {
+  if (!v) return null;
+  const d = new Date(v);
+  if (isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Map a Brokermint transaction DETAIL object (from GET /transactions/:id) to
+ * EscrowMilestone records. Brokermint doesn't track granular escrow steps
+ * (inspection/appraisal/loan approval) generically — it exposes acceptance,
+ * listing, buyer-agreement, and closing dates, which is what we map here.
  */
 export function mapDealToMilestones(deal, client_id, brokerage_id) {
   const milestones = [];
+  const address = deal.address ? [deal.address, deal.city, deal.state].filter(Boolean).join(", ") : (deal.property_address || "");
   const base = {
     brokerage_id: brokerage_id || null,
     client_id: client_id || "boldtrail_import",
-    property_address: deal.property_address || deal.address || "",
-    escrow_company: deal.escrow_company || deal.title_company || "BoldTrail",
-    escrow_number: deal.id || deal.transaction_id || deal.escrow_number,
+    property_address: address,
+    escrow_company: deal.escrow_company || deal.title_company || "Brokermint",
+    escrow_number: String(deal.id || deal.transaction_id || deal.escrow_number),
     extracted_from: "boldtrail_api",
   };
+  const isClosed = deal.status === "closed" || !!deal.closed_at;
 
-  const pushIf = (due_date, milestone_type, milestone_name, responsible_party, description) => {
+  const pushIf = (rawDate, milestone_type, milestone_name, responsible_party, description) => {
+    const due_date = toISODate(rawDate);
     if (!due_date) return;
     milestones.push({
       ...base,
       milestone_type,
       milestone_name,
-      due_date: typeof due_date === "string" ? due_date.slice(0, 10) : new Date(due_date).toISOString().slice(0, 10),
+      due_date,
       responsible_party,
       description,
-      status: "pending",
+      status: isClosed ? "completed" : "pending",
     });
   };
 
-  pushIf(deal.inspection_date, "inspection", "Inspection", "inspector", "Property inspection scheduled");
-  pushIf(deal.inspection_contingency_date, "inspection_contingency_release", "Inspection Contingency Release", "buyer", "Inspection contingency deadline");
-  pushIf(deal.appraisal_date, "appraisal", "Appraisal", "appraiser", "Property appraisal");
-  pushIf(deal.loan_approval_date, "loan_approval", "Loan Approval", "lender", "Loan approval / clear to close");
-  pushIf(deal.contingency_release_date, "release_of_contingencies", "Release of Contingencies", "buyer", "All contingencies released");
-  pushIf(deal.clear_to_close_date, "clear_to_close", "Clear to Close", "lender", "Lender clear to close issued");
+  pushIf(deal.listing_date, "other", "Listing Date", "escrow_company", "Property listed");
+  pushIf(deal.acceptance_date, "other", "Contract Acceptance", "buyer", "Purchase agreement accepted");
+  pushIf(deal.buyer_agreement_date, "other", "Buyer Agreement Signed", "buyer", "Buyer representation agreement signed");
+  pushIf(deal.buyer_expiration_date, "other", "Buyer Agreement Expiration", "buyer", "Buyer agreement expires");
+  pushIf(deal.expiration_date, "other", "Listing Expiration", "escrow_company", "Listing agreement expires");
   pushIf(deal.closing_date || deal.expected_close_date, "closing_date", "Closing Date", "escrow_company", "Scheduled closing date");
-  pushIf(deal.funding_date, "funding", "Funding", "escrow_company", "Loan funding");
+  pushIf(deal.closed_at, "funding", "Transaction Closed", "escrow_company", "Transaction marked closed in Brokermint");
+  pushIf(deal.commissions_finalized_at, "other", "Commission Finalized", "escrow_company", "Commission finalized");
   return milestones;
 }
 

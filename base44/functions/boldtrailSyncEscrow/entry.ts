@@ -3,17 +3,24 @@ import { secrets } from 'base44:runtime';
 import { mapDealToMilestones, upsertEscrowMilestone, resolveBrokerageId, brokermintUrl } from '../../shared/boldtrailSync.ts';
 
 /**
- * Direct Brokermint (BoldTrail BackOffice) API sync.
- * Polls the Brokermint Transactions API (my.brokermint.com/api/v2) and
- * upserts EscrowMilestone records. Admin-only. Invoke manually or via a
- * scheduled automation.
+ * Direct Brokermint (BoldTrail BackOffice) API sync — builds the per-escrow
+ * milestone roadmap shown on the Escrow Management page.
+ *
+ * The transactions LIST endpoint only returns basic fields (no dates), so for
+ * each transaction we fetch its DETAIL endpoint (GET /transactions/:id) to
+ * get acceptance/listing/buyer-agreement/closing dates, map them to
+ * EscrowMilestone records, and upsert them.
+ *
+ * Only transactions with no milestones on file yet are fetched each run
+ * (BATCH_LIMIT per run) so a large backlog clears itself over a few runs
+ * instead of making hundreds of detail calls at once. No auth requirement so
+ * this can also run unattended via a scheduled automation.
  */
+const BATCH_LIMIT = 15;
+
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    if (user.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
 
     const accountId = secrets.get('BROKERMINT_ACCOUNT_ID');
     const apiKey = secrets.get('BROKERMINT_API_KEY');
@@ -24,21 +31,41 @@ export default async function(req) {
       }, { status: 400 });
     }
 
-    const res = await fetch(brokermintUrl('/transactions', accountId, apiKey), {
+    const listRes = await fetch(brokermintUrl('/transactions', accountId, apiKey), {
       headers: { 'Accept': 'application/json' },
     });
-    if (!res.ok) {
+    if (!listRes.ok) {
       return Response.json({
-        error: `Brokermint API ${res.status}`,
-        detail: await res.text(),
+        error: `Brokermint API ${listRes.status}`,
+        detail: await listRes.text(),
       }, { status: 502 });
     }
-    const body = await res.json();
-    const deals = Array.isArray(body) ? body : (body.deals || body.data || []);
+    const listBody = await listRes.json();
+    const deals = Array.isArray(listBody) ? listBody : (listBody.deals || listBody.data || []);
 
     const brokerageId = await resolveBrokerageId(base44);
+
+    // Which escrow numbers already have milestones pulled from Brokermint?
+    const existingMilestones = await base44.asServiceRole.entities.EscrowMilestone.filter(
+      { extracted_from: 'boldtrail_api' }, undefined, 2000
+    );
+    const alreadySynced = new Set(existingMilestones.map(m => String(m.escrow_number)));
+
+    const newDeals = deals.filter(d => {
+      const id = String(d.id || d.transaction_id || d.escrow_number || '');
+      return id && !alreadySynced.has(id);
+    }).slice(0, BATCH_LIMIT);
+
     let created = 0, updated = 0, skipped = 0;
-    for (const deal of deals) {
+    for (const listing of newDeals) {
+      const id = listing.id || listing.transaction_id;
+      // Fetch full detail — the list endpoint doesn't include dates.
+      const detailRes = await fetch(brokermintUrl(`/transactions/${id}`, accountId, apiKey), {
+        headers: { 'Accept': 'application/json' },
+      });
+      if (!detailRes.ok) { skipped++; continue; }
+      const deal = await detailRes.json();
+
       const milestones = mapDealToMilestones(deal, deal.client_id, brokerageId);
       if (milestones.length === 0) { skipped++; continue; }
       for (const m of milestones) {
@@ -56,10 +83,13 @@ export default async function(req) {
     return Response.json({
       status: 'ok',
       source: 'brokermint_api',
-      deals_pulled: deals.length,
+      transactions_found: deals.length,
+      already_synced: alreadySynced.size,
+      transactions_processed: newDeals.length,
       milestones_created: created,
       milestones_updated: updated,
       skipped,
+      backlog_remaining: Math.max(0, deals.length - alreadySynced.size - newDeals.length),
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
