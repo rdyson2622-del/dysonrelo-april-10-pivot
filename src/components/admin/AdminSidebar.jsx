@@ -36,6 +36,7 @@ const NAV_SECTIONS = [
       { label: '💬 Talk To Us — Request Library', path: '/admin/talk-to-us-requests', icon: MessageCircle, highlight: true },
       { label: '📋 MLS Listing Agent Outreach', path: '/admin/listing-prospects', icon: MapPin, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
+      { label: '📤 Quick Send (Page/Video → SMS or Email)', path: '/admin/quick-send', icon: Send, highlight: true },
     ],
   },
   {

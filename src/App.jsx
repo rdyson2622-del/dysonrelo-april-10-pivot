@@ -170,6 +170,7 @@ import ListingAgentPreview from './pages/ListingAgentPreview';
 import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
 import AdminMarketingCampaignsHub from './pages/AdminMarketingCampaignsHub';
+import AdminQuickSend from './pages/AdminQuickSend';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -386,6 +387,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/talk-to-us-requests" element={<AdminTalkToUsRequests />} />
         <Route path="/admin/listing-prospects" element={<AdminListingProspects />} />
         <Route path="/admin/marketing-campaigns-hub" element={<AdminMarketingCampaignsHub />} />
+        <Route path="/admin/quick-send" element={<AdminQuickSend />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />
