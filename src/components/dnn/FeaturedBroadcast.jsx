@@ -40,34 +40,36 @@ export default function FeaturedBroadcast() {
   // and triggers a delayed "second run" of the audio. By freezing the
   // selection (id + url + layout) for the entire page session, the player
   // props never change mid-playback — no remount, no src swap, no duplicate.
+  // Whichever finished MOST RECENTLY wins — a broadcast can't get permanently
+  // stuck as "featured" once a newer show (article or broadcast) completes.
   const lockedRef = useRef(null);
   if (!lockedRef.current) {
-    const f = broadcasts.find(b =>
+    const bestBroadcast = broadcasts.find(b =>
       (b.compositedVideoUrl || b.videoUrl) &&
       (b.distribution || []).some(d => d.channel === 'in_app_news' && d.status === 'sent')
     );
-    if (f) {
-      const compUrl = f.compositedVideoUrl;
-      const playUrl = (compUrl && !String(compUrl).startsWith('creatomate:pending:')) ? compUrl : f.videoUrl;
+    const bestArticle = completedArticles.find(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
+    const broadcastTime = bestBroadcast ? new Date(bestBroadcast.updated_date).getTime() : -1;
+    const articleTime = bestArticle ? new Date(bestArticle.updated_date).getTime() : -1;
+
+    if (bestArticle && articleTime >= broadcastTime) {
+      lockedRef.current = {
+        id: bestArticle.id,
+        playUrl: bestArticle.video_url,
+        showName: null,
+        composited: true, // the stitched MP4 already has the studio backdrop baked in
+        headline: bestArticle.headline,
+      };
+    } else if (bestBroadcast) {
+      const compUrl = bestBroadcast.compositedVideoUrl;
+      const playUrl = (compUrl && !String(compUrl).startsWith('creatomate:pending:')) ? compUrl : bestBroadcast.videoUrl;
       if (playUrl) {
         lockedRef.current = {
-          id: f.id,
+          id: bestBroadcast.id,
           playUrl,
-          showName: f.show_name,
-          composited: !!f.compositedVideoUrl && playUrl === f.compositedVideoUrl,
-          headline: f.headlines?.[0],
-        };
-      }
-    }
-    if (!lockedRef.current) {
-      const a = completedArticles.find(a => a.video_url && !a.video_url.startsWith('heygen:pending:'));
-      if (a) {
-        lockedRef.current = {
-          id: a.id,
-          playUrl: a.video_url,
-          showName: null,
-          composited: true, // the stitched MP4 already has the studio backdrop baked in
-          headline: a.headline,
+          showName: bestBroadcast.show_name,
+          composited: !!bestBroadcast.compositedVideoUrl && playUrl === bestBroadcast.compositedVideoUrl,
+          headline: bestBroadcast.headlines?.[0],
         };
       }
     }
