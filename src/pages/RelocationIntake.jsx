@@ -8,6 +8,7 @@ import IntroCallScheduler from '@/components/intake/IntroCallScheduler';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
 import RelocationIntakeSolutionMap from '@/components/roadmap/RelocationIntakeSolutionMap';
 import ReloAgentScrollSequence from '@/components/intake/ReloAgentScrollSequence';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const SERVICE_AGREEMENTS = [
   'I understand this service is completely FREE to me as the buyer — agent compensation is handled separately.',
@@ -417,6 +418,8 @@ export default function RelocationIntake() {
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
       </nav>
+
+      <CharliePagePresenter pageKey="relocation-intake" />
 
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
