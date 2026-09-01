@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from 'base44:runtime';
-import { mapDealToMilestones, upsertEscrowMilestone, upsertEscrowRecord, resolveBrokerageId, brokermintUrl, toISODate } from '../../shared/boldtrailSync.ts';
+import { mapDealToMilestones, upsertEscrowMilestone, upsertEscrowRecord, resolveBrokerageId, brokermintUrl, toISODate, dealIsOnOrAfterCutoff, SYNC_CUTOFF_DATE } from '../../shared/boldtrailSync.ts';
 
 /**
  * Direct Brokermint (BoldTrail BackOffice) API sync — builds the per-escrow
@@ -45,11 +45,11 @@ export default async function(req) {
 
     const brokerageId = await resolveBrokerageId(base44);
 
-    // Which escrow numbers already have milestones pulled from Brokermint?
-    const existingMilestones = await base44.asServiceRole.entities.EscrowMilestone.filter(
-      { extracted_from: 'boldtrail_api' }, undefined, 2000
-    );
-    const alreadySynced = new Set(existingMilestones.map(m => String(m.escrow_number)));
+    // Which escrow numbers have already been checked/pulled? Uses EscrowRecord
+    // (not EscrowMilestone) so pre-cutoff transactions — which get a record but
+    // no milestones — are never re-fetched on later runs.
+    const existingRecords = await base44.asServiceRole.entities.EscrowRecord.list('-created_date', 5000);
+    const alreadySynced = new Set(existingRecords.map(r => String(r.escrow_number)));
 
     const newDeals = deals.filter(d => {
       const id = String(d.id || d.transaction_id || d.escrow_number || '');
@@ -66,6 +66,22 @@ export default async function(req) {
       if (!detailRes.ok) { skipped++; continue; }
       const deal = await detailRes.json();
 
+      // Skip anything listed/sold before the cutoff — still write a marker
+      // EscrowRecord so this transaction is never re-checked on future runs.
+      if (!dealIsOnOrAfterCutoff(deal)) {
+        try {
+          await upsertEscrowRecord(base44, {
+            escrow_number: String(id),
+            brokerage_id: brokerageId,
+            property_address: [deal.address, deal.city, deal.state].filter(Boolean).join(", "),
+            before_cutoff: true,
+            last_synced_at: new Date().toISOString(),
+          });
+        } catch { /* best-effort */ }
+        skipped++;
+        continue;
+      }
+
       // Key-dates summary record (Acceptance/Closing date) — agent names are
       // left for manual entry since Brokermint's API doesn't expose them.
       try {
@@ -75,6 +91,7 @@ export default async function(req) {
           property_address: [deal.address, deal.city, deal.state].filter(Boolean).join(", "),
           acceptance_date: toISODate(deal.acceptance_date),
           closing_date: toISODate(deal.closing_date),
+          before_cutoff: false,
           last_synced_at: new Date().toISOString(),
         });
       } catch { /* best-effort */ }
@@ -96,6 +113,7 @@ export default async function(req) {
     return Response.json({
       status: 'ok',
       source: 'brokermint_api',
+      cutoff_date: SYNC_CUTOFF_DATE,
       transactions_found: deals.length,
       already_synced: alreadySynced.size,
       transactions_processed: newDeals.length,

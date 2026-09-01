@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets, waitUntil } from 'base44:runtime';
-import { resolveBrokerageId, brokermintUrl, runTransactionDocAudit } from '../../shared/boldtrailSync.ts';
+import { resolveBrokerageId, brokermintUrl, runTransactionDocAudit, dealIsOnOrAfterCutoff, SYNC_CUTOFF_DATE } from '../../shared/boldtrailSync.ts';
 
 /**
  * boldtrailAutoAuditAll — fully automatic real-time document audit.
@@ -54,9 +54,37 @@ export default async function(req) {
     }).slice(0, BATCH_LIMIT);
 
     const queued = [];
-    for (const deal of newDeals) {
-      const escrowNumber = String(deal.id || deal.transaction_id || deal.escrow_number);
+    let excludedBeforeCutoff = 0;
+    for (const listDeal of newDeals) {
+      const escrowNumber = String(listDeal.id || listDeal.transaction_id || listDeal.escrow_number);
+
+      // Fetch full detail — the list endpoint doesn't reliably include dates,
+      // and we need accurate dates to enforce the sync cutoff.
+      const detailRes = await fetch(brokermintUrl(`/transactions/${escrowNumber}`, accountId, apiKey), {
+        headers: { 'Accept': 'application/json' },
+      });
+      const deal = detailRes.ok ? await detailRes.json() : listDeal;
       const propertyAddress = deal.property_address || deal.address || '';
+
+      if (!dealIsOnOrAfterCutoff(deal)) {
+        // Write a lightweight "checked, excluded" record so this transaction
+        // is never re-fetched on future runs — no LLM call needed.
+        await base44.asServiceRole.entities.TransactionDocAnalysis.create({
+          brokerage_id: brokerageId,
+          escrow_number: escrowNumber,
+          property_address: propertyAddress,
+          doc_type: 'combined',
+          doc_name: `Escrow ${escrowNumber} — ${propertyAddress || 'BoldTrail'}`,
+          doc_file_urls: [],
+          status: 'analyzed',
+          terms_summary: `Excluded from audit — transaction dated before the ${SYNC_CUTOFF_DATE} sync cutoff.`,
+          hotspot_score: 0,
+          analyzed_at: new Date().toISOString(),
+        });
+        excludedBeforeCutoff++;
+        continue;
+      }
+
       const analysis = await base44.asServiceRole.entities.TransactionDocAnalysis.create({
         brokerage_id: brokerageId,
         escrow_number: escrowNumber,
@@ -73,11 +101,13 @@ export default async function(req) {
 
     return Response.json({
       status: 'ok',
+      cutoff_date: SYNC_CUTOFF_DATE,
       transactions_found: deals.length,
       already_audited: alreadyAudited.size,
       new_audits_queued: queued.length,
+      excluded_before_cutoff: excludedBeforeCutoff,
       queued_escrow_numbers: queued,
-      backlog_remaining: Math.max(0, deals.length - alreadyAudited.size - queued.length),
+      backlog_remaining: Math.max(0, deals.length - alreadyAudited.size - queued.length - excludedBeforeCutoff),
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

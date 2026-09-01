@@ -124,6 +124,27 @@ export async function upsertEscrowRecord(base44, record) {
 }
 
 /**
+ * Cutoff date for the Brokermint sync — transactions listed or sold before
+ * this date are never pulled into Base44. Checks every date field Brokermint
+ * exposes (listing, acceptance, closing/expected-close, closed_at); the deal
+ * qualifies if ANY of them falls on or after the cutoff. A deal with no
+ * usable dates at all is excluded (can't be confirmed as 2026+).
+ */
+export const SYNC_CUTOFF_DATE = "2026-01-01";
+
+export function dealIsOnOrAfterCutoff(deal, cutoff = SYNC_CUTOFF_DATE) {
+  const dateFields = ["listing_date", "acceptance_date", "closing_date", "expected_close_date", "closed_at"];
+  const cutoffTime = new Date(cutoff).getTime();
+  for (const f of dateFields) {
+    const v = deal?.[f];
+    if (!v) continue;
+    const t = new Date(v).getTime();
+    if (!isNaN(t) && t >= cutoffTime) return true;
+  }
+  return false;
+}
+
+/**
  * Confirmed working Brokermint (BoldTrail BackOffice) REST endpoint.
  * Auth is via account_id + api_key query params, not a Bearer token.
  */

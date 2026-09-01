@@ -46,6 +46,11 @@
       "type": "string",
       "format": "date-time",
       "description": "When this record was last refreshed from Brokermint."
+    },
+    "before_cutoff": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this transaction was listed and sold before the Jan 1, 2026 sync cutoff \u2014 its milestones/details were never pulled in. Kept as a marker so the sync doesn't keep re-checking it every run."
     }
   },
   "required": [
