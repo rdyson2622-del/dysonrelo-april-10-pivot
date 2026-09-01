@@ -1,6 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Newspaper, MapPin, Sparkles } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+
+const PILLS = [
+  { label: 'NEWS', path: '/dnn-news', icon: Newspaper },
+  { label: 'RELOCATION', path: '/relocation-intake', icon: MapPin },
+  { label: 'INTELLIGENCE', path: '/solutions', icon: Sparkles },
+];
 
 // ══════════════════════════════════════════════════════════════════════════
 // ⚠️ CANONICAL DNN STUDIO ASSETS — DO NOT REPLACE, DO NOT REGENERATE ⚠️
@@ -17,6 +25,7 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
  * NOT duplicated here.
  */
 export default function StudioHeroBanner() {
+  const navigate = useNavigate();
   return (
     <div className="w-full px-4 sm:px-6 pt-6 pb-8" style={{ background: '#0A0B0F' }}>
       <div className="max-w-6xl mx-auto">
@@ -44,6 +53,19 @@ export default function StudioHeroBanner() {
         <p className="text-center mt-2 text-sm italic" style={{ color: GOLD }}>
           — Bob Dyson
         </p>
+
+        <div className="flex items-center justify-center gap-3 mt-6">
+          {PILLS.map(({ label, path, icon: Icon }) => (
+            <button
+              key={label}
+              onClick={() => navigate(path)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black tracking-widest transition-all hover:scale-105 active:scale-95"
+              style={{ background: '#0a0a0a', border: `1.5px solid ${GOLD}`, color: GOLD }}
+            >
+              <Icon className="w-3.5 h-3.5" /> {label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
