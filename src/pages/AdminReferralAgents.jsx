@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload, Phone, MessageSquare, Mail, Video, FileText, Workflow, Users, FileSignature } from 'lucide-react';
+import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload, Phone, MessageSquare, Mail, Video, FileText, Workflow, Users, FileSignature, Radio } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const BLANK = {
@@ -151,6 +151,11 @@ export default function AdminReferralAgents() {
             className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
             style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
             <Users className="w-3.5 h-3.5" style={{ color: GOLD }} /> Contact List
+          </a>
+          <a href="/admin/internal-communications"
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
+            style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+            <Radio className="w-3.5 h-3.5" style={{ color: GOLD }} /> Internal Comms
           </a>
         </div>
 
