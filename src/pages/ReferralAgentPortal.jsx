@@ -14,7 +14,7 @@ export default function ReferralAgentPortal() {
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
-    base44.entities.ActiveRelocationAgent.filter({ portal_slug: slug }, '-created_date', 1)
+    base44.entities.ReferralAgent.filter({ portal_slug: slug }, '-created_date', 1)
       .then((res) => setAgent(res?.[0] || null))
       .finally(() => setLoading(false));
   }, [slug]);
@@ -22,7 +22,7 @@ export default function ReferralAgentPortal() {
   const confirmLicense = async () => {
     if (!agent) return;
     setConfirming(true);
-    const updated = await base44.entities.ActiveRelocationAgent.update(agent.id, {
+    const updated = await base44.entities.ReferralAgent.update(agent.id, {
       license_confirmed_by_agent_at: new Date().toISOString(),
       license_status: 'active',
     });

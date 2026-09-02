@@ -158,6 +158,7 @@ import BuyingClients from './pages/wisdom/BuyingClients';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
 import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
+import AdminReferralAgents from './pages/AdminReferralAgents';
 import AdminAgreementSubmissions from './pages/AdminAgreementSubmissions';
 import AgreementFillForm from './pages/AgreementFillForm';
 import AdminEntryPortal from './pages/AdminEntryPortal';
@@ -341,6 +342,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
         <Route path="/admin/active-relocation-agents" element={<AdminActiveRelocationAgents />} />
+        <Route path="/admin/referral-agents" element={<AdminReferralAgents />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
