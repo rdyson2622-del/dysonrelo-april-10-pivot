@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send, Megaphone, CalendarClock } from 'lucide-react';
+import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send, Megaphone, CalendarClock, PlayCircle } from 'lucide-react';
 import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
 import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
 import ReferralSectionExplainer from '@/components/referral/ReferralSectionExplainer';
@@ -96,6 +96,47 @@ function ContactSubmitForm({ agent, slug }) {
                   style={{ background: `${STATUS_COLORS[c.invite_status || 'not_invited']}15`, border: `1px solid ${STATUS_COLORS[c.invite_status || 'not_invited']}60`, color: STATUS_COLORS[c.invite_status || 'not_invited'] }}>
                   {(c.invite_status || 'not_invited').replace('_', ' ')}
                 </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CharlieExplainsSection() {
+  const [content, setContent] = useState(null);
+
+  useEffect(() => {
+    base44.entities.ReferralAgentExplainerContent.list('-created_date', 1)
+      .then((res) => setContent(res?.[0] || null));
+  }, []);
+
+  return (
+    <div id="charlie-explains" className="mt-8 pt-2">
+      <h2 className="text-2xl font-serif text-white text-center mb-2 flex items-center justify-center gap-2">
+        <PlayCircle className="w-5 h-5" style={{ color: GOLD }} /> Charlie Explains It
+      </h2>
+      <div className="rounded-2xl p-6" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
+        <p className="text-sm text-gray-300 leading-relaxed mb-4">
+          A quick walkthrough from Charlie, our AI concierge, on how the opportunity and referral process work together — watch below, then jump into your forms whenever you're ready.
+        </p>
+        {content?.video_url ? (
+          <div className="rounded-xl overflow-hidden mb-4" style={{ border: `2px solid ${GOLD}` }}>
+            <video src={content.video_url} controls className="w-full" style={{ display: 'block' }} />
+          </div>
+        ) : (
+          <div className="rounded-xl p-4 mb-4 text-center text-xs text-gray-500" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${GOLD}20` }}>
+            Charlie's video walkthrough is coming soon.
+          </div>
+        )}
+        {content?.bullets?.length > 0 && (
+          <div className="space-y-2">
+            {content.bullets.map((b, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: GOLD }} />
+                <p className="text-sm text-gray-200 leading-relaxed">{b}</p>
               </div>
             ))}
           </div>
@@ -217,6 +258,8 @@ export default function ReferralAgentPortal() {
         <div id="process" className="mt-8 pt-2">
           <ReferralSectionExplainer sectionKey="process" fallbackHeadline="The Referral Process" fallbackItems={PROCESS_FALLBACK} />
         </div>
+
+        <CharlieExplainsSection />
 
         <div id="forms" className="mt-8 pt-2">
           <ReferralSectionExplainer sectionKey="forms" fallbackHeadline="Your Referral Forms" fallbackItems={FORMS_FALLBACK} />

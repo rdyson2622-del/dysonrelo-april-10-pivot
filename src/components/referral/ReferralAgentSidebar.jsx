@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Sparkles, Workflow, FileSignature, Send, Megaphone, X } from 'lucide-react';
+import { Sparkles, FileSignature, Send, Megaphone, X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -21,8 +21,7 @@ export default function ReferralAgentSidebar({ slug }) {
   const portalBase = agentSlug ? `/referral-agent/${agentSlug}` : null;
 
   const items = [
-    { key: 'opportunity', label: 'Opportunity', icon: Sparkles, path: portalBase ? `${portalBase}#opportunity` : '/referral-agent-explainer' },
-    { key: 'process', label: 'Process', icon: Workflow, path: portalBase ? `${portalBase}#process` : '/referral-process' },
+    { key: 'opportunity', label: 'Opportunity & Process', icon: Sparkles, path: portalBase ? `${portalBase}#opportunity` : '/referral-agent-explainer' },
     { key: 'forms', label: 'Forms', icon: FileSignature, path: portalBase ? `${portalBase}#forms` : '/referral-forms' },
     { key: 'contacts', label: 'Refer Contacts', icon: Send, path: portalBase ? `${portalBase}#contacts` : null },
     { key: 'campaign', label: 'Campaign', icon: Megaphone, path: portalBase ? `${portalBase}#campaign` : null },
