@@ -27,6 +27,35 @@
       "default": "Relocation Agent Subscriber",
       "description": "Affiliate status label (e.g. 'Relocation Agent Subscriber')"
     },
+    "dre_license_number": {
+      "type": "string",
+      "description": "California DRE license number"
+    },
+    "license_exp_date": {
+      "type": "string",
+      "format": "date",
+      "description": "DRE license expiration date \u2014 used to trigger renewal alerts"
+    },
+    "renewal_alert_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the last renewal-reminder alert was sent, so alerts don't repeat"
+    },
+    "initial_welcome_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the initial subscriber welcome/re-introduction message was sent to this agent"
+    },
+    "news_subscriber": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this agent receives approved DNN news sends"
+    },
+    "weekly_update_subscriber": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this agent receives the weekly recap email"
+    },
     "notes": {
       "type": "string",
       "description": "Internal notes about this affiliate"
