@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, Archive, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight, ClipboardList
+  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight, ClipboardList,
+  Sparkles, Workflow, FileSignature, Send
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -87,6 +88,7 @@ export default function ClientSidebar({ onToggle }) {
 
   // Agent/Vendor suites only appear when that portal pill is explicitly active
   const isAgent = userRole === 'agent' || portalRole === 'agent';
+  const isReferralAgent = portalRole === 'referral_agent';
   const isVendor = (userRole === 'vendor' || portalRole === 'vendor') && !isAgent;
   const isAdmin = userRole === 'admin';
   // Pure client: no professional path selected
@@ -118,30 +120,61 @@ export default function ClientSidebar({ onToggle }) {
 
       {/* ── Two Core Value Links ── */}
       <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-        <Link to="/home"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-          style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-          <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          SOLUTIONS
-        </Link>
-        <Link to="/relocation-intake"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-          style={{ color: GOLD }}>
-          <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          RELOCATION SERVICES
-        </Link>
-        <Link to="/real-estate-answers"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-          style={{ color: GOLD }}>
-          <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          REAL ESTATE ANSWERS
-        </Link>
-        <Link to="/master-show-sheet"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-          style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-          <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-          MY PROGRESS ROADMAP
-        </Link>
+        {isReferralAgent ? (
+          <>
+            <Link to="/referral-agent-explainer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              OPPORTUNITY
+            </Link>
+            <Link to="/referral-process"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <Workflow className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              PROCESS
+            </Link>
+            <Link to="/referral-forms"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <FileSignature className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              FORMS
+            </Link>
+            <Link to="/admin/referral-agent-contacts"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Send className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              REFER CONTACTS
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/home"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              SOLUTIONS
+            </Link>
+            <Link to="/relocation-intake"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              RELOCATION SERVICES
+            </Link>
+            <Link to="/real-estate-answers"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              REAL ESTATE ANSWERS
+            </Link>
+            <Link to="/master-show-sheet"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              MY PROGRESS ROADMAP
+            </Link>
+          </>
+        )}
         {isAgent && (
           <>
             <Link to="/agent-command-center"
