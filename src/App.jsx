@@ -169,6 +169,8 @@ import AdminTalkToUsRequests from './pages/AdminTalkToUsRequests';
 import AdminListingProspects from './pages/AdminListingProspects';
 import ListingAgentPreview from './pages/ListingAgentPreview';
 import ReferralAgentPortal from './pages/ReferralAgentPortal';
+import ReferralAgentExplainer from './pages/ReferralAgentExplainer';
+import AdminReferralAgentExplainer from './pages/AdminReferralAgentExplainer';
 import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
 import AdminMarketingCampaignsHub from './pages/AdminMarketingCampaignsHub';
@@ -211,6 +213,9 @@ const AuthenticatedApp = () => {
 
       {/* Public personal referral agent portal — sent to each onboarding referral agent, no login required */}
       <Route path="/referral-agent/:slug" element={<ReferralAgentPortal />} />
+
+      {/* Public referral agent opportunity explainer — video + pitch, no login required */}
+      <Route path="/referral-agent-explainer" element={<ReferralAgentExplainer />} />
 
       {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
           so the admin top command bar (access to every portal) shows automatically. */}
@@ -343,6 +348,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/roster" element={<AdminRoster />} />
         <Route path="/admin/active-relocation-agents" element={<AdminActiveRelocationAgents />} />
         <Route path="/admin/referral-agents" element={<AdminReferralAgents />} />
+        <Route path="/admin/referral-agent-explainer" element={<AdminReferralAgentExplainer />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />

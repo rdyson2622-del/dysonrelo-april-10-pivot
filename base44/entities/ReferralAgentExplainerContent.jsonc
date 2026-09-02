@@ -1,0 +1,62 @@
+{
+  "name": "ReferralAgentExplainerContent",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "default": "Your Referral Opportunity",
+      "description": "Main headline on the public referral-agent explainer page."
+    },
+    "subheadline": {
+      "type": "string",
+      "description": "Supporting line under the headline."
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Explainer video URL (MP4) shown at the top of the page."
+    },
+    "bullets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Value proposition bullet points explaining the referral opportunity."
+    },
+    "fee_summary": {
+      "type": "string",
+      "description": "Plain-English summary of the referral fee structure."
+    },
+    "cta_label": {
+      "type": "string",
+      "description": "Optional call-to-action button label."
+    },
+    "cta_url": {
+      "type": "string",
+      "description": "Where the CTA button links to."
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this content is currently shown to visitors."
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload } from 'lucide-react';
+import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload, Phone, MessageSquare, Mail, Video } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const BLANK = {
@@ -108,11 +108,18 @@ export default function AdminReferralAgents() {
               {agents.length} referral-only affiliates — they don't list or sell, they only refer buyers/sellers to our full-time affiliate agents for a referral fee. Click "Portal" to preview each agent's individual page.
             </p>
           </div>
-          <button onClick={() => setAdding(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
-            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-            <Plus className="w-4 h-4" /> Add Referral Agent
-          </button>
+          <div className="flex items-center gap-2">
+            <a href="/admin/referral-agent-explainer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
+              style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+              <Video className="w-4 h-4" style={{ color: GOLD }} /> Edit Explainer
+            </a>
+            <button onClick={() => setAdding(true)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
+              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+              <Plus className="w-4 h-4" /> Add Referral Agent
+            </button>
+          </div>
         </div>
 
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
@@ -158,12 +165,27 @@ export default function AdminReferralAgents() {
                         <td className="px-3 py-3 whitespace-nowrap" style={{ color: '#4a3a28' }}>{agent.license_exp_date || '—'}</td>
                         <td className="px-3 py-3 max-w-[180px]" style={{ color: '#6b5c45' }}>{agent.notes || '—'}</td>
                         <td className="px-3 py-3">
-                          <div className="flex gap-2 items-center">
+                          <div className="flex gap-1.5 items-center">
                             {agent.portal_slug && (
-                              <a href={`/referral-agent/${agent.portal_slug}`} target="_blank" rel="noreferrer"
+                              <a href={`/referral-agent/${agent.portal_slug}`} target="_blank" rel="noreferrer" title="View their portal"
                                 className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full"
                                 style={{ background: `${GOLD}15`, border: `1px solid ${GOLD}40`, color: GOLD }}>
                                 <ExternalLink className="w-3 h-3" /> Portal
+                              </a>
+                            )}
+                            {agent.phone && (
+                              <>
+                                <a href={`tel:${agent.phone}`} title="Call">
+                                  <Phone className="w-3.5 h-3.5" style={{ color: '#2563eb' }} />
+                                </a>
+                                <a href={`sms:${agent.phone}`} title="Text">
+                                  <MessageSquare className="w-3.5 h-3.5" style={{ color: '#16a34a' }} />
+                                </a>
+                              </>
+                            )}
+                            {agent.email && (
+                              <a href={`mailto:${agent.email}`} title="Email">
+                                <Mail className="w-3.5 h-3.5" style={{ color: '#9333ea' }} />
                               </a>
                             )}
                             <button onClick={() => setEditingId(agent.id)}><Edit2 className="w-3.5 h-3.5" style={{ color: GOLD }} /></button>
