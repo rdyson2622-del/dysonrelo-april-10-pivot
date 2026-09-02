@@ -5,7 +5,7 @@ import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload } from '
 
 const GOLD = '#D4AF37';
 const BLANK = {
-  name: '', preferred_name: '', portal_slug: '', photo_url: '', brokerage: '', city: '',
+  name: '', preferred_name: '', portal_slug: '', photo_url: '', brokerage: 'The Dyson & Dyson Companies, Inc', city: '',
   phone: '', email: '', dre_license_number: '', license_exp_date: '',
   status: 'Referral Agent Subscriber', notes: '', joined_at: '',
 };

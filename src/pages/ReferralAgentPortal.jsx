@@ -62,7 +62,7 @@ export default function ReferralAgentPortal() {
             )}
             <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-1" style={{ color: GOLD }}>Referral Agent Portal</p>
             <h1 className="text-2xl font-serif text-white">{agent.preferred_name || agent.name}</h1>
-            <p className="text-sm text-gray-400 mt-1">{agent.brokerage || 'Wisdom Properties'} {agent.city ? `· ${agent.city}` : ''}</p>
+            <p className="text-sm text-gray-400 mt-1">{agent.brokerage || 'The Dyson & Dyson Companies, Inc'} {agent.city ? `· ${agent.city}` : ''}</p>
           </div>
 
           <div className="p-8 space-y-5">
