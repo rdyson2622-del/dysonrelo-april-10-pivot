@@ -4,7 +4,7 @@ import {
   MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
   Newspaper, Archive, DollarSign, Shield, Fingerprint,
   CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight, ClipboardList,
-  Sparkles, Workflow, FileSignature, Send
+  Sparkles, Workflow, FileSignature, Send, UserCog
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -126,25 +126,36 @@ export default function ClientSidebar({ onToggle }) {
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
               style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
               <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              OPPORTUNITY
+              OPPORTUNITIES
             </Link>
             <Link to="/referral-process"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
               style={{ color: GOLD }}>
               <Workflow className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              PROCESS
+              THE REFERRAL PROCESS
             </Link>
             <Link to="/referral-forms"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
               style={{ color: GOLD }}>
               <FileSignature className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              FORMS
+              REFERRAL FORMS
             </Link>
             <Link to="/admin/referral-agent-contacts"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
               style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
               <Send className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              REFER CONTACTS
+              MY REFERRAL CONTACTS
+            </Link>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide opacity-40 cursor-not-allowed"
+              style={{ color: GOLD }}>
+              <UserCog className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              MY DYSON RELO MEMBERS
+            </div>
+            <Link to="/communications-explainer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              COMMUNICATION HUB
             </Link>
           </>
         ) : (
