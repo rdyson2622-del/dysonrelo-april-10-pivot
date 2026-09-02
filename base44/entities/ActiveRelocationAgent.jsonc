@@ -6,6 +6,22 @@
       "type": "string",
       "description": "Agent's full name"
     },
+    "preferred_name": {
+      "type": "string",
+      "description": "First name/nickname the agent prefers to be addressed by in outreach"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Agent headshot shown on their portal profile"
+    },
+    "portal_slug": {
+      "type": "string",
+      "description": "URL slug for this agent's personal portal page (e.g. jane-doe)"
+    },
+    "target_territories": {
+      "type": "string",
+      "description": "Residential territories/markets this agent works, for referral matching"
+    },
     "brokerage": {
       "type": "string",
       "description": "Brokerage name"
@@ -35,6 +51,27 @@
       "type": "string",
       "format": "date",
       "description": "DRE license expiration date \u2014 used to trigger renewal alerts"
+    },
+    "license_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "suspended",
+        "unverified"
+      ],
+      "default": "unverified",
+      "description": "Current DRE license status. Starts unverified until the agent confirms it or we check the DRE registry."
+    },
+    "license_confirmed_by_agent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the agent logged in and confirmed their license number/expiration date is accurate \u2014 required before relying on it for compliance tracking, since some records may be stale."
+    },
+    "last_dre_audit_check": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time the DRE public registry was checked against this record"
     },
     "renewal_alert_sent_at": {
       "type": "string",
