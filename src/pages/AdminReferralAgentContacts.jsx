@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Users, Trash2, Phone, Mail } from 'lucide-react';
+import { Users, Trash2, Phone, Mail, X } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const STATUS_OPTIONS = ['not_invited', 'invited', 'subscribed', 'declined'];
@@ -9,11 +9,16 @@ const STATUS_COLORS = { not_invited: '#888', invited: '#D4AF37', subscribed: '#2
 
 export default function AdminReferralAgentContacts() {
   const qc = useQueryClient();
+  const urlParams = new URLSearchParams(window.location.search);
+  const agentIdFilter = urlParams.get('agent_id');
 
   const { data: contacts = [], isLoading } = useQuery({
     queryKey: ['referralAgentContacts'],
     queryFn: () => base44.entities.ReferralAgentContact.list('-created_date', 500),
   });
+
+  const filtered = agentIdFilter ? contacts.filter((c) => c.referral_agent_id === agentIdFilter) : contacts;
+  const filteredAgentName = agentIdFilter ? filtered[0]?.referral_agent_name : null;
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.ReferralAgentContact.update(id, data),
@@ -38,9 +43,20 @@ export default function AdminReferralAgentContacts() {
         <h1 className="font-black text-2xl flex items-center gap-2 mb-2" style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
           <Users className="w-6 h-6" style={{ color: GOLD }} /> Referral Agent Contact List
         </h1>
-        <p className="text-sm mb-6" style={{ color: '#6b5c45' }}>
-          Friends & clients each referral agent has asked us to invite as their reserved subscribers — reserved for personalized, agent-branded daily news delivery.
+        <p className="text-sm mb-4" style={{ color: '#6b5c45' }}>
+          Friends & clients each referral agent has asked us to invite as their reserved subscribers — this is the same file used for mailing outreach and tracking referral fee payouts.
         </p>
+
+        {agentIdFilter && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold" style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+              Showing only: {filteredAgentName || 'this agent'}
+            </span>
+            <a href="/admin/referral-agent-contacts" className="flex items-center gap-1 text-xs font-bold" style={{ color: GOLD }}>
+              <X className="w-3.5 h-3.5" /> Clear filter
+            </a>
+          </div>
+        )}
 
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
           <div style={{ background: '#fff8ee', overflowX: 'auto' }}>
@@ -55,10 +71,10 @@ export default function AdminReferralAgentContacts() {
               <tbody>
                 {isLoading ? (
                   <tr><td colSpan={7} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
-                ) : contacts.length === 0 ? (
+                ) : filtered.length === 0 ? (
                   <tr><td colSpan={7} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No contacts submitted yet.</td></tr>
                 ) : (
-                  contacts.map((c) => (
+                  filtered.map((c) => (
                     <tr key={c.id} className="border-b text-sm" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
                       <td className="px-3 py-3 font-bold" style={{ color: '#1a1a1a' }}>{c.referral_agent_name || '—'}</td>
                       <td className="px-3 py-3" style={{ color: '#1a1a1a' }}>{c.contact_name}</td>

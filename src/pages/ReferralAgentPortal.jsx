@@ -20,10 +20,22 @@ const FORMS_FALLBACK = [
   'No MLS paperwork, no listing agreements — you never take on transaction liability.',
 ];
 
+const STATUS_COLORS = { not_invited: '#888', invited: GOLD, subscribed: '#22c55e', declined: '#dc2626' };
+
 function ContactSubmitForm({ agent, slug }) {
   const [form, setForm] = useState({ contact_name: '', contact_phone: '', contact_email: '', relationship_notes: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [loadingContacts, setLoadingContacts] = useState(true);
+
+  const loadContacts = () => {
+    base44.functions.invoke('getReferralAgentContacts', { referral_agent_id: agent.id })
+      .then((res) => setContacts(res.data?.contacts || []))
+      .finally(() => setLoadingContacts(false));
+  };
+
+  useEffect(() => { loadContacts(); }, [agent.id]);
 
   const submit = async () => {
     if (!form.contact_name) return;
@@ -37,6 +49,7 @@ function ContactSubmitForm({ agent, slug }) {
     setForm({ contact_name: '', contact_phone: '', contact_email: '', relationship_notes: '' });
     setSubmitting(false);
     setSubmitted(true);
+    loadContacts();
   };
 
   return (
@@ -62,6 +75,32 @@ function ContactSubmitForm({ agent, slug }) {
         style={{ background: GOLD, color: '#000' }}>
         <Send className="w-4 h-4" /> {submitting ? 'Submitting…' : 'Submit Contact'}
       </button>
+
+      <div className="mt-6 pt-5" style={{ borderTop: `1px solid ${GOLD}25` }}>
+        <p className="text-xs font-black tracking-wide uppercase mb-3" style={{ color: GOLD }}>
+          Your Referred Contacts {contacts.length > 0 ? `(${contacts.length})` : ''}
+        </p>
+        {loadingContacts ? (
+          <p className="text-xs text-gray-500">Loading…</p>
+        ) : contacts.length === 0 ? (
+          <p className="text-xs text-gray-500">You haven't referred anyone yet — add your first contact above.</p>
+        ) : (
+          <div className="space-y-2">
+            {contacts.map((c) => (
+              <div key={c.id} className="flex items-center justify-between gap-3 rounded-lg px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <div className="min-w-0">
+                  <p className="text-sm text-white truncate">{c.contact_name}</p>
+                  <p className="text-[11px] text-gray-500 truncate">{c.contact_phone || c.contact_email || '—'}</p>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0"
+                  style={{ background: `${STATUS_COLORS[c.invite_status || 'not_invited']}15`, border: `1px solid ${STATUS_COLORS[c.invite_status || 'not_invited']}60`, color: STATUS_COLORS[c.invite_status || 'not_invited'] }}>
+                  {(c.invite_status || 'not_invited').replace('_', ' ')}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

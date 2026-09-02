@@ -98,6 +98,15 @@ export default function AdminReferralAgents() {
     queryFn: () => base44.entities.ReferralAgent.list('-joined_at', 500),
   });
 
+  const { data: allContacts = [] } = useQuery({
+    queryKey: ['referralAgentContacts'],
+    queryFn: () => base44.entities.ReferralAgentContact.list('-created_date', 1000),
+  });
+  const contactCountByAgent = allContacts.reduce((acc, c) => {
+    if (c.referral_agent_id) acc[c.referral_agent_id] = (acc[c.referral_agent_id] || 0) + 1;
+    return acc;
+  }, {});
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.ReferralAgent.create(data),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['referralAgents'] }); setAdding(false); },
@@ -164,7 +173,7 @@ export default function AdminReferralAgents() {
             <table className="w-full text-xs">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                  {['Photo', 'Agreement', 'Name', 'Preferred', 'Portal Slug', 'Brokerage', 'Phone', 'Email', 'DRE #', 'License Exp', 'Notes', ''].map((h) => (
+                  {['Photo', 'Agreement', 'Name', 'Preferred', 'Portal Slug', 'Brokerage', 'Phone', 'Email', 'DRE #', 'License Exp', 'Contacts', 'Notes', ''].map((h) => (
                     <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -174,9 +183,9 @@ export default function AdminReferralAgents() {
                   <AgentForm initial={BLANK} onCancel={() => setAdding(false)} onSave={(data) => createMutation.mutate(data)} />
                 )}
                 {isLoading ? (
-                  <tr><td colSpan={12} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
+                  <tr><td colSpan={13} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
                 ) : agents.length === 0 && !adding ? (
-                  <tr><td colSpan={12} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No referral agents yet.</td></tr>
+                  <tr><td colSpan={13} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No referral agents yet.</td></tr>
                 ) : (
                   agents.map((agent) =>
                     editingId === agent.id ? (
@@ -211,6 +220,13 @@ export default function AdminReferralAgents() {
                         <td className="px-3 py-3" style={{ color: '#4a3a28' }}>{agent.email || '—'}</td>
                         <td className="px-3 py-3" style={{ color: '#4a3a28' }}>{agent.dre_license_number || '—'}</td>
                         <td className="px-3 py-3 whitespace-nowrap" style={{ color: '#4a3a28' }}>{agent.license_exp_date || '—'}</td>
+                        <td className="px-3 py-3">
+                          <a href={`/admin/referral-agent-contacts?agent_id=${agent.id}`}
+                            className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full w-fit"
+                            style={{ background: contactCountByAgent[agent.id] ? `${GOLD}15` : 'rgba(0,0,0,0.05)', border: `1px solid ${GOLD}40`, color: GOLD }}>
+                            <Users className="w-3 h-3" /> {contactCountByAgent[agent.id] || 0}
+                          </a>
+                        </td>
                         <td className="px-3 py-3 max-w-[180px]" style={{ color: '#6b5c45' }}>{agent.notes || '—'}</td>
                         <td className="px-3 py-3">
                           <div className="flex gap-1.5 items-center">
