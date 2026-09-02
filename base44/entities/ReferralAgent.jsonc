@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Agent headshot shown on their portal profile"
     },
+    "agreement_file_url": {
+      "type": "string",
+      "description": "Signed Independent Contractor Agreement with The Dyson & Dyson Companies, Inc \u2014 uploaded file, viewable with one click from the admin roster."
+    },
     "portal_slug": {
       "type": "string",
       "description": "URL slug for this agent's personal referral portal page (e.g. jane-doe)"

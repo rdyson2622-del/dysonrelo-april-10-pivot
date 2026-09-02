@@ -1,11 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2 } from 'lucide-react';
+import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send } from 'lucide-react';
 import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
 import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
+import ReferralSectionExplainer from '@/components/referral/ReferralSectionExplainer';
 
 const GOLD = '#D4AF37';
+const PROCESS_FALLBACK = [
+  'You introduce us to your client before they leave — one text or email is all it takes.',
+  'We match them with a vetted, full-time relocation agent in their destination market.',
+  'Your client gets full concierge support: agent matching, city guides, and move coordination.',
+  'When they close, your referral fee is paid — no listing work or liability on your end.',
+];
+const FORMS_FALLBACK = [
+  'Independent Contractor Agreement with The Dyson & Dyson Companies, Inc — signed once at onboarding.',
+  'DRE license number and expiration confirmed by you above.',
+  'No MLS paperwork, no listing agreements — you never take on transaction liability.',
+];
+
+function ContactSubmitForm({ agent, slug }) {
+  const [form, setForm] = useState({ contact_name: '', contact_phone: '', contact_email: '', relationship_notes: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const submit = async () => {
+    if (!form.contact_name) return;
+    setSubmitting(true);
+    await base44.entities.ReferralAgentContact.create({
+      ...form,
+      referral_agent_id: agent.id,
+      referral_agent_name: agent.name,
+      referral_agent_slug: slug,
+    });
+    setForm({ contact_name: '', contact_phone: '', contact_email: '', relationship_notes: '' });
+    setSubmitting(false);
+    setSubmitted(true);
+  };
+
+  return (
+    <div className="rounded-2xl p-6" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
+      <p className="text-sm text-gray-300 mb-4">
+        Give us the names of friends or clients you'd like invited as your reserved subscribers — they can receive daily real estate news personally delivered by you, on your own branded D&D agent page.
+      </p>
+      {submitted && (
+        <p className="text-xs mb-3" style={{ color: '#22c55e' }}>✓ Thank you — we'll reach out to them on your behalf.</p>
+      )}
+      <div className="grid gap-2 mb-3">
+        <input placeholder="Contact name" value={form.contact_name} onChange={(e) => setForm((f) => ({ ...f, contact_name: e.target.value }))}
+          className="w-full text-sm px-3 py-2 rounded-lg outline-none bg-black/30 text-white" style={{ border: `1px solid ${GOLD}40` }} />
+        <input placeholder="Phone" value={form.contact_phone} onChange={(e) => setForm((f) => ({ ...f, contact_phone: e.target.value }))}
+          className="w-full text-sm px-3 py-2 rounded-lg outline-none bg-black/30 text-white" style={{ border: `1px solid ${GOLD}40` }} />
+        <input placeholder="Email" value={form.contact_email} onChange={(e) => setForm((f) => ({ ...f, contact_email: e.target.value }))}
+          className="w-full text-sm px-3 py-2 rounded-lg outline-none bg-black/30 text-white" style={{ border: `1px solid ${GOLD}40` }} />
+        <textarea placeholder="Who are they? (optional)" value={form.relationship_notes} onChange={(e) => setForm((f) => ({ ...f, relationship_notes: e.target.value }))}
+          rows={2} className="w-full text-sm px-3 py-2 rounded-lg outline-none resize-none bg-black/30 text-white" style={{ border: `1px solid ${GOLD}40` }} />
+      </div>
+      <button onClick={submit} disabled={submitting || !form.contact_name}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
+        style={{ background: GOLD, color: '#000' }}>
+        <Send className="w-4 h-4" /> {submitting ? 'Submitting…' : 'Submit Contact'}
+      </button>
+    </div>
+  );
+}
 
 export default function ReferralAgentPortal() {
   const { slug } = useParams();
@@ -49,7 +107,16 @@ export default function ReferralAgentPortal() {
   return (
     <div className="min-h-screen px-6 py-12" style={{ background: '#0a0a0a' }}>
       <div className="max-w-2xl mx-auto">
-        <div className="rounded-2xl overflow-hidden" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
+        <div className="flex items-center justify-center gap-2 mb-6 flex-wrap sticky top-2 z-10">
+          {[['#opportunity', 'Opportunity'], ['#process', 'Process'], ['#forms', 'Forms'], ['#contacts', 'Refer Contacts']].map(([href, label]) => (
+            <a key={href} href={href}
+              className="px-3 py-1.5 rounded-full text-[10px] font-black tracking-wide uppercase"
+              style={{ background: '#111', border: `1px solid ${GOLD}50`, color: GOLD }}>
+              {label}
+            </a>
+          ))}
+        </div>
+        <div id="opportunity" className="rounded-2xl overflow-hidden" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
           <div className="p-8 text-center" style={{ borderBottom: `1px solid ${GOLD}30` }}>
             {agent.photo_url ? (
               <img src={agent.photo_url} alt={agent.name} className="w-28 h-28 rounded-full object-cover mx-auto mb-4"
@@ -113,6 +180,21 @@ export default function ReferralAgentPortal() {
               )}
             </div>
           </div>
+        </div>
+
+        <div id="process" className="mt-8 pt-2">
+          <ReferralSectionExplainer sectionKey="process" fallbackHeadline="The Referral Process" fallbackItems={PROCESS_FALLBACK} />
+        </div>
+
+        <div id="forms" className="mt-8 pt-2">
+          <ReferralSectionExplainer sectionKey="forms" fallbackHeadline="Your Referral Forms" fallbackItems={FORMS_FALLBACK} />
+        </div>
+
+        <div id="contacts" className="mt-8 pt-2">
+          <h2 className="text-2xl font-serif text-white text-center mb-2 flex items-center justify-center gap-2">
+            <Users className="w-5 h-5" style={{ color: GOLD }} /> Refer Your Contacts
+          </h2>
+          <ContactSubmitForm agent={agent} slug={slug} />
         </div>
       </div>
     </div>

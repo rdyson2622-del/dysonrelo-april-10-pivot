@@ -1,0 +1,80 @@
+{
+  "name": "ReferralAgentContact",
+  "type": "object",
+  "properties": {
+    "referral_agent_id": {
+      "type": "string",
+      "description": "The ReferralAgent entity ID this contact was submitted by"
+    },
+    "referral_agent_name": {
+      "type": "string",
+      "description": "Denormalized referral agent name, for display in the admin contact list"
+    },
+    "referral_agent_slug": {
+      "type": "string",
+      "description": "Denormalized referral agent portal_slug"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Name of the friend/contact the agent wants invited"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Contact's phone number"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Contact's email"
+    },
+    "relationship_notes": {
+      "type": "string",
+      "description": "Agent's note on who this person is / why they'd be a good fit"
+    },
+    "invite_status": {
+      "type": "string",
+      "enum": [
+        "not_invited",
+        "invited",
+        "subscribed",
+        "declined"
+      ],
+      "default": "not_invited",
+      "description": "Where this contact is in the personal-branded-news invitation flow"
+    },
+    "invited_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When we sent this contact their invitation"
+    },
+    "subscribed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this contact subscribed to the personalized D&D agent news"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Internal admin notes on this contact"
+    }
+  },
+  "required": [
+    "contact_name"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

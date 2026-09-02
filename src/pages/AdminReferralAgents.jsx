@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload, Phone, MessageSquare, Mail, Video } from 'lucide-react';
+import { Plus, Edit2, Check, X, Trash2, Handshake, ExternalLink, Upload, Phone, MessageSquare, Mail, Video, FileText, Workflow, Users, FileSignature } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const BLANK = {
-  name: '', preferred_name: '', portal_slug: '', photo_url: '', brokerage: 'The Dyson & Dyson Companies, Inc', city: '',
+  name: '', preferred_name: '', portal_slug: '', photo_url: '', agreement_file_url: '', brokerage: 'The Dyson & Dyson Companies, Inc', city: '',
   phone: '', email: '', dre_license_number: '', license_exp_date: '',
   status: 'Referral Agent Subscriber', notes: '', joined_at: '',
 };
@@ -23,6 +23,15 @@ function AgentForm({ initial, onSave, onCancel }) {
     setUploading(false);
   };
 
+  const handleAgreementUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setForm((f) => ({ ...f, agreement_file_url: file_url }));
+    setUploading(false);
+  };
+
   return (
     <tr style={{ background: 'rgba(212,175,55,0.06)' }}>
       <td className="px-3 py-2">
@@ -33,6 +42,13 @@ function AgentForm({ initial, onSave, onCancel }) {
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
           </label>
         </div>
+      </td>
+      <td className="px-3 py-2">
+        <label className="flex items-center gap-1 text-[10px] cursor-pointer" style={{ color: GOLD }}>
+          <Upload className="w-3 h-3" /> {form.agreement_file_url ? 'Replace' : 'Upload'}
+          <input type="file" accept=".pdf,image/*" className="hidden" onChange={handleAgreementUpload} />
+        </label>
+        {form.agreement_file_url && <a href={form.agreement_file_url} target="_blank" rel="noreferrer" className="text-[10px] underline block mt-0.5" style={{ color: GOLD }}>View current</a>}
       </td>
       {['name', 'preferred_name', 'portal_slug', 'brokerage', 'phone', 'email', 'dre_license_number'].map((field) => (
         <td key={field} className="px-3 py-2">
@@ -108,18 +124,34 @@ export default function AdminReferralAgents() {
               {agents.length} referral-only affiliates — they don't list or sell, they only refer buyers/sellers to our full-time affiliate agents for a referral fee. Click "Portal" to preview each agent's individual page.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <a href="/admin/referral-agent-explainer"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
-              style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
-              <Video className="w-4 h-4" style={{ color: GOLD }} /> Edit Explainer
-            </a>
-            <button onClick={() => setAdding(true)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02]"
-              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-              <Plus className="w-4 h-4" /> Add Referral Agent
-            </button>
-          </div>
+          <button onClick={() => setAdding(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-[1.02] shrink-0"
+            style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
+            <Plus className="w-4 h-4" /> Add Referral Agent
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 mb-6 flex-wrap">
+          <a href="/admin/referral-agent-explainer"
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
+            style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+            <Video className="w-3.5 h-3.5" style={{ color: GOLD }} /> Opportunity Explainer
+          </a>
+          <a href="/admin/referral-sections"
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
+            style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+            <FileText className="w-3.5 h-3.5" style={{ color: GOLD }} /> Referral Forms
+          </a>
+          <a href="/admin/referral-sections"
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
+            style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+            <Workflow className="w-3.5 h-3.5" style={{ color: GOLD }} /> Referral Process
+          </a>
+          <a href="/admin/referral-agent-contacts"
+            className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs transition-all hover:scale-[1.02]"
+            style={{ background: '#fff8ee', border: `1px solid ${GOLD}60`, color: '#1a1a1a' }}>
+            <Users className="w-3.5 h-3.5" style={{ color: GOLD }} /> Contact List
+          </a>
         </div>
 
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.25)' }}>
@@ -127,7 +159,7 @@ export default function AdminReferralAgents() {
             <table className="w-full text-xs">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                  {['Photo', 'Name', 'Preferred', 'Portal Slug', 'Brokerage', 'Phone', 'Email', 'DRE #', 'License Exp', 'Notes', ''].map((h) => (
+                  {['Photo', 'Agreement', 'Name', 'Preferred', 'Portal Slug', 'Brokerage', 'Phone', 'Email', 'DRE #', 'License Exp', 'Notes', ''].map((h) => (
                     <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -137,9 +169,9 @@ export default function AdminReferralAgents() {
                   <AgentForm initial={BLANK} onCancel={() => setAdding(false)} onSave={(data) => createMutation.mutate(data)} />
                 )}
                 {isLoading ? (
-                  <tr><td colSpan={11} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
+                  <tr><td colSpan={12} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
                 ) : agents.length === 0 && !adding ? (
-                  <tr><td colSpan={11} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No referral agents yet.</td></tr>
+                  <tr><td colSpan={12} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No referral agents yet.</td></tr>
                 ) : (
                   agents.map((agent) =>
                     editingId === agent.id ? (
@@ -153,6 +185,17 @@ export default function AdminReferralAgents() {
                           ) : (
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold"
                               style={{ background: `${GOLD}20`, color: GOLD }}>{agent.name?.[0] || '?'}</div>
+                          )}
+                        </td>
+                        <td className="px-3 py-3">
+                          {agent.agreement_file_url ? (
+                            <a href={agent.agreement_file_url} target="_blank" rel="noreferrer" title="View signed agreement"
+                              className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full w-fit"
+                              style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.4)', color: '#16a34a' }}>
+                              <FileSignature className="w-3 h-3" /> Signed
+                            </a>
+                          ) : (
+                            <span className="text-[10px]" style={{ color: '#a89478' }}>—</span>
                           )}
                         </td>
                         <td className="px-3 py-3 font-bold" style={{ color: '#1a1a1a' }}>{agent.name}</td>

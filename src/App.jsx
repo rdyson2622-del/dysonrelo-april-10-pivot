@@ -171,6 +171,10 @@ import ListingAgentPreview from './pages/ListingAgentPreview';
 import ReferralAgentPortal from './pages/ReferralAgentPortal';
 import ReferralAgentExplainer from './pages/ReferralAgentExplainer';
 import AdminReferralAgentExplainer from './pages/AdminReferralAgentExplainer';
+import ReferralProcessExplainer from './pages/ReferralProcessExplainer';
+import ReferralFormsExplainer from './pages/ReferralFormsExplainer';
+import AdminReferralSections from './pages/AdminReferralSections';
+import AdminReferralAgentContacts from './pages/AdminReferralAgentContacts';
 import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
 import AdminMarketingCampaignsHub from './pages/AdminMarketingCampaignsHub';
@@ -216,6 +220,8 @@ const AuthenticatedApp = () => {
 
       {/* Public referral agent opportunity explainer — video + pitch, no login required */}
       <Route path="/referral-agent-explainer" element={<ReferralAgentExplainer />} />
+      <Route path="/referral-process" element={<ReferralProcessExplainer />} />
+      <Route path="/referral-forms" element={<ReferralFormsExplainer />} />
 
       {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
           so the admin top command bar (access to every portal) shows automatically. */}
@@ -349,6 +355,8 @@ const AuthenticatedApp = () => {
         <Route path="/admin/active-relocation-agents" element={<AdminActiveRelocationAgents />} />
         <Route path="/admin/referral-agents" element={<AdminReferralAgents />} />
         <Route path="/admin/referral-agent-explainer" element={<AdminReferralAgentExplainer />} />
+        <Route path="/admin/referral-sections" element={<AdminReferralSections />} />
+        <Route path="/admin/referral-agent-contacts" element={<AdminReferralAgentContacts />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />
         <Route path="/admin/sending-agents" element={<SendingAgentDashboard />} />
