@@ -167,6 +167,7 @@ import AdminTalkToUsPreview from './pages/AdminTalkToUsPreview';
 import AdminTalkToUsRequests from './pages/AdminTalkToUsRequests';
 import AdminListingProspects from './pages/AdminListingProspects';
 import ListingAgentPreview from './pages/ListingAgentPreview';
+import ReferralAgentPortal from './pages/ReferralAgentPortal';
 import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
 import AdminMarketingCampaignsHub from './pages/AdminMarketingCampaignsHub';
@@ -206,6 +207,9 @@ const AuthenticatedApp = () => {
 
       {/* Public personalized listing-agent preview — sent/shown to MLS listing agents, no login required */}
       <Route path="/agent-preview/:token" element={<ListingAgentPreview />} />
+
+      {/* Public personal referral agent portal — sent to each onboarding referral agent, no login required */}
+      <Route path="/referral-agent/:slug" element={<ReferralAgentPortal />} />
 
       {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
           so the admin top command bar (access to every portal) shows automatically. */}
