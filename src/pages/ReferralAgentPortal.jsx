@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send } from 'lucide-react';
+import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send, Megaphone, CalendarClock } from 'lucide-react';
 import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
 import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
 import ReferralSectionExplainer from '@/components/referral/ReferralSectionExplainer';
@@ -227,6 +227,23 @@ export default function ReferralAgentPortal() {
             <Users className="w-5 h-5" style={{ color: GOLD }} /> Refer Your Contacts
           </h2>
           <ContactSubmitForm agent={agent} slug={slug} />
+        </div>
+
+        <div id="campaign" className="mt-8 pt-2">
+          <h2 className="text-2xl font-serif text-white text-center mb-2 flex items-center justify-center gap-2">
+            <Megaphone className="w-5 h-5" style={{ color: GOLD }} /> Weekly Invite Campaign
+          </h2>
+          <div className="rounded-2xl p-6" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
+            <div className="flex items-start gap-2 mb-3">
+              <CalendarClock className="w-4 h-4 shrink-0 mt-0.5" style={{ color: GOLD }} />
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Turn in your contacts above by <span className="font-bold text-white">every Thursday</span> — we send them a personalized invitation to your branded D&D news page over the weekend, growing your subscriber base every week.
+              </p>
+            </div>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Every contact you refer is logged to your name. If any of them becomes a client, you'll be paid your referral fee — no extra paperwork on your end.
+            </p>
+          </div>
         </div>
       </div>
     </div>

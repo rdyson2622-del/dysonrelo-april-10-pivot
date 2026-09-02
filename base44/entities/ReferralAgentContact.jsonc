@@ -54,6 +54,26 @@
     "admin_notes": {
       "type": "string",
       "description": "Internal admin notes on this contact"
+    },
+    "referral_fee_status": {
+      "type": "string",
+      "enum": [
+        "not_applicable",
+        "pending",
+        "owed",
+        "paid"
+      ],
+      "default": "not_applicable",
+      "description": "Tracks whether this contact turned into a paying client lead, so the referring agent's fee can be tracked and paid. not_applicable=no lead yet, pending=became a lead but deal not closed, owed=deal closed & fee due, paid=fee paid out."
+    },
+    "referral_fee_amount": {
+      "type": "number",
+      "description": "Referral fee amount owed/paid to the referring agent for this contact, once they become a client lead"
+    },
+    "became_client_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this contact converted into an actual client lead (triggers referral fee tracking)"
     }
   },
   "required": [

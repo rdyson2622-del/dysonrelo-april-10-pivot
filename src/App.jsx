@@ -175,6 +175,7 @@ import ReferralProcessExplainer from './pages/ReferralProcessExplainer';
 import ReferralFormsExplainer from './pages/ReferralFormsExplainer';
 import AdminReferralSections from './pages/AdminReferralSections';
 import AdminReferralAgentContacts from './pages/AdminReferralAgentContacts';
+import AdminReferralWeeklyCampaign from './pages/AdminReferralWeeklyCampaign';
 import AdminInternalCommunications from './pages/AdminInternalCommunications';
 import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
@@ -358,6 +359,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/referral-agent-explainer" element={<AdminReferralAgentExplainer />} />
         <Route path="/admin/referral-sections" element={<AdminReferralSections />} />
         <Route path="/admin/referral-agent-contacts" element={<AdminReferralAgentContacts />} />
+        <Route path="/admin/referral-weekly-campaign" element={<AdminReferralWeeklyCampaign />} />
         <Route path="/admin/internal-communications" element={<AdminInternalCommunications />} />
         <Route path="/admin/affiliate-recruiting" element={<AdminAffiliateRecruiting />} />
         <Route path="/admin/bob-dyson-contacts" element={<AdminBobDysonContacts />} />

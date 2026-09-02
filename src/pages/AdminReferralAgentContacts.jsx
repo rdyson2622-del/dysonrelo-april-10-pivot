@@ -6,6 +6,8 @@ import { Users, Trash2, Phone, Mail, X } from 'lucide-react';
 const GOLD = '#D4AF37';
 const STATUS_OPTIONS = ['not_invited', 'invited', 'subscribed', 'declined'];
 const STATUS_COLORS = { not_invited: '#888', invited: '#D4AF37', subscribed: '#22c55e', declined: '#dc2626' };
+const FEE_OPTIONS = ['not_applicable', 'pending', 'owed', 'paid'];
+const FEE_COLORS = { not_applicable: '#888', pending: '#D4AF37', owed: '#dc2626', paid: '#22c55e' };
 
 export default function AdminReferralAgentContacts() {
   const qc = useQueryClient();
@@ -36,6 +38,16 @@ export default function AdminReferralAgentContacts() {
     updateMutation.mutate({ id: contact.id, data });
   };
 
+  const setFeeStatus = (contact, referral_fee_status) => {
+    const data = { referral_fee_status };
+    if (referral_fee_status !== 'not_applicable' && !contact.became_client_at) data.became_client_at = new Date().toISOString();
+    updateMutation.mutate({ id: contact.id, data });
+  };
+
+  const setFeeAmount = (contact, value) => {
+    updateMutation.mutate({ id: contact.id, data: { referral_fee_amount: value === '' ? null : Number(value) } });
+  };
+
   return (
     <div className="min-h-screen px-6 py-8" style={{ background: '#ede0cc' }}>
       <div className="max-w-5xl mx-auto">
@@ -63,16 +75,16 @@ export default function AdminReferralAgentContacts() {
             <table className="w-full text-xs">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
-                  {['Referred By', 'Contact', 'Phone', 'Email', 'Notes', 'Status', ''].map((h) => (
+                  {['Referred By', 'Contact', 'Phone', 'Email', 'Notes', 'Status', 'Referral Fee', ''].map((h) => (
                     <th key={h} className="px-3 py-2 text-left font-black tracking-wide" style={{ color: GOLD, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
-                  <tr><td colSpan={7} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
+                  <tr><td colSpan={8} className="px-3 py-6 text-center" style={{ color: GOLD }}>Loading…</td></tr>
                 ) : filtered.length === 0 ? (
-                  <tr><td colSpan={7} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No contacts submitted yet.</td></tr>
+                  <tr><td colSpan={8} className="px-3 py-6 text-center" style={{ color: '#6b5c45' }}>No contacts submitted yet.</td></tr>
                 ) : (
                   filtered.map((c) => (
                     <tr key={c.id} className="border-b text-sm" style={{ borderColor: 'rgba(212,175,55,0.12)' }}>
@@ -95,6 +107,19 @@ export default function AdminReferralAgentContacts() {
                           style={{ background: `${STATUS_COLORS[c.invite_status || 'not_invited']}15`, border: `1px solid ${STATUS_COLORS[c.invite_status || 'not_invited']}60`, color: STATUS_COLORS[c.invite_status || 'not_invited'] }}>
                           {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
                         </select>
+                      </td>
+                      <td className="px-3 py-3">
+                        <div className="flex items-center gap-1.5">
+                          <select value={c.referral_fee_status || 'not_applicable'} onChange={(e) => setFeeStatus(c, e.target.value)}
+                            className="text-[11px] font-bold px-2 py-1 rounded-full outline-none"
+                            style={{ background: `${FEE_COLORS[c.referral_fee_status || 'not_applicable']}15`, border: `1px solid ${FEE_COLORS[c.referral_fee_status || 'not_applicable']}60`, color: FEE_COLORS[c.referral_fee_status || 'not_applicable'] }}>
+                            {FEE_OPTIONS.map((s) => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+                          </select>
+                          <input type="number" placeholder="$" defaultValue={c.referral_fee_amount ?? ''}
+                            onBlur={(e) => setFeeAmount(c, e.target.value)}
+                            className="w-16 text-[11px] px-1.5 py-1 rounded-lg outline-none"
+                            style={{ background: '#fff', border: `1px solid ${GOLD}40`, color: '#1a1a1a' }} />
+                        </div>
                       </td>
                       <td className="px-3 py-3">
                         <button onClick={() => { if (window.confirm(`Remove ${c.contact_name}?`)) deleteMutation.mutate(c.id); }}>
