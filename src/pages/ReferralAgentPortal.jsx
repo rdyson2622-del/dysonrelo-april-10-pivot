@@ -65,11 +65,9 @@ export default function ReferralAgentPortal() {
             <p className="text-sm text-gray-400 mt-1">{agent.brokerage || 'Wisdom Properties'} {agent.city ? `· ${agent.city}` : ''}</p>
           </div>
 
-          <div className="p-8 space-y-4">
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Welcome, {agent.preferred_name || agent.name}. This is your personal Dyson & Dyson Relocation Network portal —
-              your hub for referral opportunities, market broadcasts, and compliance tracking.
-            </p>
+          <div className="p-8 space-y-5">
+            <AgentOpportunityPitch preferredName={agent.preferred_name || agent.name} />
+            <ClientExperiencePreview />
 
             <div className="grid gap-2">
               {agent.phone && (
