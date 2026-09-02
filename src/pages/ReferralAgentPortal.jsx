@@ -5,6 +5,7 @@ import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send } fr
 import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
 import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
 import ReferralSectionExplainer from '@/components/referral/ReferralSectionExplainer';
+import ReferralAgentSidebar from '@/components/referral/ReferralAgentSidebar';
 
 const GOLD = '#D4AF37';
 const PROCESS_FALLBACK = [
@@ -105,17 +106,9 @@ export default function ReferralAgentPortal() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-12" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen px-6 py-12 md:pl-64" style={{ background: '#0a0a0a' }}>
+      <ReferralAgentSidebar slug={slug} />
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-center gap-2 mb-6 flex-wrap sticky top-2 z-10">
-          {[['#opportunity', 'Opportunity'], ['#process', 'Process'], ['#forms', 'Forms'], ['#contacts', 'Refer Contacts']].map(([href, label]) => (
-            <a key={href} href={href}
-              className="px-3 py-1.5 rounded-full text-[10px] font-black tracking-wide uppercase"
-              style={{ background: '#111', border: `1px solid ${GOLD}50`, color: GOLD }}>
-              {label}
-            </a>
-          ))}
-        </div>
         <div id="opportunity" className="rounded-2xl overflow-hidden" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
           <div className="p-8 text-center" style={{ borderBottom: `1px solid ${GOLD}30` }}>
             {agent.photo_url ? (
