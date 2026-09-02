@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2 } from 'lucide-react';
+import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
+import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
 
 const GOLD = '#D4AF37';
 
