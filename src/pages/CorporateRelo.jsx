@@ -397,6 +397,11 @@ export default function CorporateRelo() {
         <SolveMyStory hideCharlie />
 
         <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Real Time Real Estate Solutions</p>
+        </div>
+        <SolutionMapEntry hideCharliePresenter />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
           <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Real Estate News</p>
         </div>
         <ConsumerDnnNews hidePills />
