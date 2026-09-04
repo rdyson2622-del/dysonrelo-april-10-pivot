@@ -179,34 +179,24 @@ export default function ClientSidebar({ onToggle }) {
               City Guide
             </Link>
             <Link to="/real-estate-answers"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              REAL ESTATE ANSWERS
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Real Estate Answers
             </Link>
             <Link to="/communications-explainer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              COMMUNICATION HUB
-            </Link>
-            <Link to="/CityGuide"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              CITY GUIDES
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Communication Hub
             </Link>
             <Link to="/solve-my-story"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              SOLVE MY STORY
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Solve My Story
             </Link>
             <Link to="/dnn-news"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Newspaper className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              REAL ESTATE NEWS
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Real Estate News
             </Link>
           </>
         ) : (
