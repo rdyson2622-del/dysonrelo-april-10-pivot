@@ -38,7 +38,7 @@ export default function AppLayout() {
   // every page. Small, non-interrupting, bottom-center, with the Plan of
   // Action roadmap strip stacked above it.
   // Don't show it on pages that already have embedded chat
-  const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news'].some(path => 
+  const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news', '/corporate-relo'].some(path => 
      location.pathname.startsWith(path)
    );
 
