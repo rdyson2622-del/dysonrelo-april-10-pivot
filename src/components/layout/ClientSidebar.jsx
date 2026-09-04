@@ -91,6 +91,7 @@ export default function ClientSidebar({ onToggle }) {
   const isReferralAgent = portalRole === 'referral_agent';
   const isVendor = (userRole === 'vendor' || portalRole === 'vendor') && !isAgent;
   const isAdmin = userRole === 'admin';
+  const isHR = location.pathname === '/corporate-relo';
   // Pure client: no professional path selected
   const isClientOnly = !isAgent && !isVendor;
 
@@ -156,6 +157,61 @@ export default function ClientSidebar({ onToggle }) {
               style={{ color: GOLD }}>
               <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
               COMMUNICATION HUB
+            </Link>
+          </>
+        ) : isHR ? (
+          <>
+            <Link to="/relocation-intake"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              RELOCATION SERVICES
+            </Link>
+            <Link to="/RelocationRoadmap"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              My Roadmap
+            </Link>
+            <Link to="/CityGuide"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              City Guide
+            </Link>
+            <Link to="/real-estate-answers"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              REAL ESTATE ANSWERS
+            </Link>
+            <Link to="/master-show-sheet"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              MY PROGRESS ROADMAP
+            </Link>
+            <Link to="/communications-explainer"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              COMMUNICATION HUB
+            </Link>
+            <Link to="/CityGuide"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              CITY GUIDES
+            </Link>
+            <Link to="/solve-my-story"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD }}>
+              <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              SOLVE MY STORY
+            </Link>
+            <Link to="/dnn-news"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <Newspaper className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+              REAL ESTATE NEWS
             </Link>
           </>
         ) : (
