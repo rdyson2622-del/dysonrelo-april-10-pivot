@@ -168,15 +168,6 @@ export default function CorporateRelo() {
     return () => observer.disconnect();
   }, []);
 
-  const { data: articles = [] } = useQuery({
-    queryKey: ['corporateReloDnnBrief'],
-    queryFn: () => base44.entities.DnnArticle.filter(
-      { status: 'published' }, '-generated_date', 1
-    ),
-  });
-  const brief = articles[0] || null;
-  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
   const intro = clips.find((c) => c.kind === 'intro' && clipReady(c));
   const qas = clips
     .filter((c) => c.kind === 'qa' && clipReady(c))
@@ -445,25 +436,6 @@ export default function CorporateRelo() {
         <SolutionMapEntry />
       </section>
 
-      {/* ── DNN MORNING BRIEF CORNER CARD ── */}
-      {brief && (
-        <Link to="/dnn-news"
-          className="hidden md:block fixed bottom-6 right-6 max-w-xs rounded-2xl px-4 py-3 transition-all hover:scale-105 z-40"
-          style={{
-            background: '#111',
-            border: `1px solid rgba(212,175,55,0.3)`,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-          }}>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: GOLD }} />
-            <p className="text-[9px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>
-              DNN Morning Brief · {today}
-            </p>
-          </div>
-          <p className="text-white text-xs font-semibold leading-snug line-clamp-2">{brief.headline}</p>
-          <p className="text-[10px] mt-1.5 font-bold" style={{ color: GOLD }}>Read full brief →</p>
-        </Link>
-      )}
     </div>
   );
 }
