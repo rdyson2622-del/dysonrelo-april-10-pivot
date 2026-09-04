@@ -548,8 +548,8 @@ export default function ConsumerDnnNews({ hidePills = false }) {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
-  // Corp HR embed (hidePills) only shows the first row of briefs
-  const textArticles = hidePills ? allArticles.slice(0, 3) : allArticles;
+  // Corp HR embed (hidePills) only shows the first row of 4 briefs
+  const textArticles = hidePills ? allArticles.slice(0, 4) : allArticles;
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
@@ -643,7 +643,7 @@ export default function ConsumerDnnNews({ hidePills = false }) {
             {/* Text briefs — flex-1 to fill available space */}
             <div className="flex-1 min-w-0 space-y-3">
               <p className="text-sm font-black tracking-[0.2em] uppercase px-3 py-2 text-center" style={{ color: '#1a1a1a' }}>News Briefs</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${hidePills ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
                 {textArticles.map(article => (
                   <div key={article.id} className="relative">
                     <CompactArticleCard
