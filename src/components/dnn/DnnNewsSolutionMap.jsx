@@ -22,7 +22,7 @@ export default function DnnNewsSolutionMap() {
   return (
     <div className="mb-16 flex justify-center">
       <div style={{ transform: 'scale(1.25)', transformOrigin: 'top center' }}>
-        <div className="rounded-xl p-3 sm:p-4 mx-auto" style={{ background: '#1a1a1a', border: `1px solid rgba(56,189,248,0.30)`, maxWidth: '420px' }}>
+        <div className="rounded-xl p-3 sm:p-4 mx-auto" style={{ background: '#1a1a1a', border: `1px solid rgba(56,189,248,0.30)`, maxWidth: '600px' }}>
           <div className="flex items-center gap-2 mb-2">
             <Newspaper className="w-4 h-4" style={{ color: DNN_COLOR }} />
             <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: DNN_COLOR }}>
