@@ -228,14 +228,6 @@ export default function CorporateRelo() {
           networks — so your people land well, and your budget stays intact.
         </p>
 
-        <div className="w-full max-w-3xl mx-auto mt-10">
-          <IssueRequestSolutionMap context="corporate_relo" />
-        </div>
-
-        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#000' }}>
-          <PropertyPlatformSearch />
-        </div>
-
         <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
           <FindAProWidget
             label="Employee Relocation Support Utilities"
@@ -418,6 +410,17 @@ export default function CorporateRelo() {
         <p className="text-sm mt-10" style={{ color: '#8a8a8a' }}>
           The Dyson &amp; Dyson Companies, Inc. · California DRE #02303118 · (858) 353-1200
         </p>
+      </section>
+
+      {/* ── Moved down temporarily, out of the hero scroll position ── */}
+      <section className="px-8 md:px-16 py-16" style={{ background: '#0d0d0d' }}>
+        <div className="w-full max-w-3xl mx-auto">
+          <IssueRequestSolutionMap context="corporate_relo" />
+        </div>
+
+        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#000' }}>
+          <PropertyPlatformSearch />
+        </div>
       </section>
 
       {/* ── NEWS LANDING — moved to the bottom as its own standalone block.
