@@ -1,13 +1,9 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper, Play } from 'lucide-react';
+import { Building2, DollarSign, ShieldCheck, Handshake, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
-import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
-import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
-import FindAProWidget from '@/components/portal/FindAProWidget';
-import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
 import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
@@ -419,101 +415,6 @@ export default function CorporateRelo() {
               dest="/corporate-relo"
             />
           </div>
-        </div>
-      </div>
-
-      {/* ── CTA ── */}
-      <section className="px-8 md:px-16 py-20 text-center" style={{ background: '#0d0d0d' }}>
-        <p className="text-xs font-black tracking-[0.35em] uppercase mb-4" style={{ color: GOLD }}>
-          NEXT TRANSFEREE?
-        </p>
-        <h2
-          className="display-heading mb-8"
-          style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', letterSpacing: '0.12em', color: '#fff' }}
-        >
-          LET'S TALK ABOUT YOUR PEOPLE
-        </h2>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event('open_talk_to_us'))}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-black text-base transition-all hover:scale-105"
-            style={{
-              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
-              color: '#000',
-              boxShadow: '0 4px 14px rgba(212,175,55,0.3)',
-            }}
-          >
-            <MessageCircle className="w-5 h-5" /> Talk to Charlie Now
-          </button>
-          <Link
-            to="/relocation-intake"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-base transition-all hover:scale-105"
-            style={{ border: `1px solid ${GOLD}`, color: GOLD }}
-          >
-            How We Manage a Move <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="mt-12 max-w-2xl mx-auto text-left">
-          <PortalSubscribeForm
-            portalName="Corporate Relo / HR Portal"
-            source="Corporate HR Portal"
-            roleKey="hr"
-            dest="/corporate-relo"
-          />
-        </div>
-        <p className="text-sm mt-10" style={{ color: '#8a8a8a' }}>
-          The Dyson &amp; Dyson Companies, Inc. · California DRE #02303118 · (858) 353-1200
-        </p>
-      </section>
-
-      {/* ── Moved down temporarily, out of the hero scroll position ── */}
-      <section className="px-8 md:px-16 py-16" style={{ background: '#0d0d0d' }}>
-        <div className="w-full max-w-3xl mx-auto">
-          <IssueRequestSolutionMap context="corporate_relo" />
-        </div>
-
-        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#000' }}>
-          <PropertyPlatformSearch />
-        </div>
-
-        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
-          <FindAProWidget
-            label="Employee Relocation Support Utilities"
-            subtitle="Your transferee needs a mover, inspector, or contractor right now? These national platforms are ready today."
-          />
-        </div>
-      </section>
-
-      {/* ── NEWS LANDING — moved to the bottom as its own standalone block.
-          Uses the shared StudioHeroBanner + SolutionMapEntry components as-is
-          (unmodified) so other portals that also use them are unaffected. ── */}
-      <section style={{ background: '#0a0a0a' }}>
-        <div className="px-8 md:px-16 pt-14 pb-4 text-center">
-          <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>
-            Also Available To You
-          </p>
-          <h2 className="display-heading" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
-            Real Estate News &amp; Intelligence
-          </h2>
-        </div>
-        <StudioHeroBanner />
-        <SolutionMapEntry hideCharliePresenter />
-      </section>
-
-      {/* ── Final subscribe CTA — bottom of page ── */}
-      <div className="px-8 py-16" style={{ background: '#0d0d0d' }}>
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>Stay In The Loop</p>
-          <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
-            Enroll to Receive Relocation Updates for Your Team
-          </h3>
-          <PortalSubscribeForm
-            portalName="Corporate Relo / HR Portal"
-            source="Corporate HR Portal - Bottom"
-            roleKey="hr"
-            dest="/corporate-relo"
-          />
         </div>
       </div>
 
