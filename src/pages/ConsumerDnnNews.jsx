@@ -707,15 +707,19 @@ export default function ConsumerDnnNews({ hidePills = false }) {
 
       {/* Below the fold — subscribe + network */}
       <div className="w-full px-6 md:px-12 lg:px-20 pb-16 max-w-5xl mx-auto">
-        <div className="flex items-center gap-4 mb-8" style={{ borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: '3rem' }}>
-          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-          <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Stay Connected</span>
-          <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <SubscribeBanner />
-          <CharlieEducationStrip />
-        </div>
+        {!hidePills && (
+          <>
+            <div className="flex items-center gap-4 mb-8" style={{ borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: '3rem' }}>
+              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+              <span className="text-xs font-black tracking-[0.3em] uppercase" style={{ color: '#D4AF37' }}>Stay Connected</span>
+              <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <SubscribeBanner />
+              <CharlieEducationStrip />
+            </div>
+          </>
+        )}
 
         {/* Footer */}
         <div className="mt-12 text-center pb-4" style={{ borderTop: '1px solid rgba(212,175,55,0.08)', paddingTop: '2rem' }}>
