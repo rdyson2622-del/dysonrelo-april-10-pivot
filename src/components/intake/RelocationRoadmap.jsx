@@ -193,7 +193,7 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
 
 
 
-      <div className="text-center px-6 md:pr-48 pt-10 pb-10">
+      <div className={`text-center px-6 pt-10 pb-10 ${hideCharlieCircle ? '' : 'md:pr-48'}`}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
             style={{ background: 'rgba(212,175,55,0.15)', border: `2px solid ${GOLD}` }}>
