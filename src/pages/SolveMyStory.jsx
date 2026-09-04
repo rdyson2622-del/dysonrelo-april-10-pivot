@@ -130,7 +130,7 @@ export default function SolveMyStory({ hideCharlie = false }) {
           {/* Situation Type */}
           <div className="rounded-2xl px-6 py-7"
             style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>
+            <p className="text-xs font-black tracking-[0.25em] uppercase mb-4 text-center" style={{ color: GOLD }}>
               WHAT BEST DESCRIBES YOUR SITUATION?
             </p>
             <div className="space-y-2">
