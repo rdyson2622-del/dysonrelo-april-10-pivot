@@ -304,7 +304,7 @@ export default function ClientSidebar({ onToggle }) {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide mb-2"
             style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
             <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-            {(isHR ? 'Corp HR Portal' : isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
+            {(isHR ? 'HR Manager Portal' : isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
           </div>
           <div className="flex flex-col gap-1">
             <Link to="/communications-explainer"
