@@ -198,7 +198,7 @@ export default function ClientSidebar({ onToggle }) {
               style={{ color: 'rgba(212,175,55,0.75)' }}>
               Real Time Real Estate Solutions
             </Link>
-            <Link to="/dnn-news"
+            <Link to="/corporate-relo"
               className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
               style={{ color: 'rgba(212,175,55,0.75)' }}>
               Real Estate News
