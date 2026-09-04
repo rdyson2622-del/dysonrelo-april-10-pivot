@@ -24,8 +24,8 @@ export default function ClientCommunicationsExplainer() {
       <div className="flex-1 flex flex-col">
 
         {/* Slide 1: Intro + How It Works — TAN BACKGROUND */}
-        <div className="flex-1 px-12 py-12" style={{ background: '#ede0cc' }}>
-          <div className="max-w-3xl">
+        <div className="flex-1 px-12 py-12 flex flex-col items-center" style={{ background: '#ede0cc' }}>
+          <div className="max-w-3xl w-full text-center">
             <h2 className="text-3xl font-bold mb-6" style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em', color: '#1a1a1a', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
               Stay Connected with Your Dyson & Dyson Team
             </h2>
@@ -37,7 +37,7 @@ export default function ClientCommunicationsExplainer() {
               How It Works
             </h3>
             
-            <div className="space-y-4">
+            <div className="space-y-4 text-left">
               {/* Card 1 */}
               <div className="rounded-2xl p-6 flex items-start gap-4" style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.3)' }}>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.2)' }}>
