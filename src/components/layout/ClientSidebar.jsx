@@ -331,7 +331,7 @@ export default function ClientSidebar({ onToggle }) {
             </button>
 
             {/* Pure client sub-sections */}
-            {isClientOnly && (
+            {isClientOnly && !isHR && (
               <>
                 {/* Relocation Services */}
                 <div className="mt-2 mb-1 px-1">
@@ -352,17 +352,19 @@ export default function ClientSidebar({ onToggle }) {
         </div>
 
         {/* DNN Section */}
-        <div className="px-3 pb-4 pt-2">
-          <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
-            Dyson News Network
-          </p>
-          <div className="flex flex-col gap-1">
-            <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />
-            <NavLink to="/dnn-archive" icon={Archive} location={location} label="Broadcast Archive" />
-            <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
-            <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
+        {!isHR && (
+          <div className="px-3 pb-4 pt-2">
+            <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
+              Dyson News Network
+            </p>
+            <div className="flex flex-col gap-1">
+              <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />
+              <NavLink to="/dnn-archive" icon={Archive} location={location} label="Broadcast Archive" />
+              <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
+              <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Heritage & Authority */}
         <div className="pt-3 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
@@ -393,7 +395,7 @@ export default function ClientSidebar({ onToggle }) {
         </div>
 
         {/* Footer — Admin link */}
-        {isAdmin && (
+        {isAdmin && !isHR && (
           <div className="px-3 py-3 pb-8 border-t" style={{ borderColor: 'rgba(212,175,55,0.1)' }}>
             <Link to="/admin">
               <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-white/5 transition-all"
