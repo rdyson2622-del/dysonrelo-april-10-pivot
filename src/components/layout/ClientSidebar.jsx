@@ -91,7 +91,8 @@ export default function ClientSidebar({ onToggle }) {
   const isReferralAgent = portalRole === 'referral_agent';
   const isVendor = (userRole === 'vendor' || portalRole === 'vendor') && !isAgent;
   const isAdmin = userRole === 'admin';
-  const isHR = location.pathname === '/corporate-relo';
+  // HR portal persists across every page once selected, not just while on /corporate-relo
+  const isHR = portalRole === 'hr' || location.pathname === '/corporate-relo';
   // Pure client: no professional path selected
   const isClientOnly = !isAgent && !isVendor;
 
@@ -100,10 +101,10 @@ export default function ClientSidebar({ onToggle }) {
     agent: 'RELOCATION AGENT PORTAL',
     referral_agent: 'INACTIVE LICENSED AGENTS PORTAL',
     vendor: 'VENDOR PORTAL',
+    hr: 'CORPORATE HR PORTAL',
   };
-  const portalLabel = location.pathname === '/corporate-relo'
-    ? 'CORPORATE HR PORTAL'
-    : (PORTAL_LABELS[portalRole] || 'CLIENT PORTAL');
+  const portalLabel = PORTAL_LABELS[portalRole]
+    || (location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : 'CLIENT PORTAL');
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
