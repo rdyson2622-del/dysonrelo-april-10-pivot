@@ -9,9 +9,11 @@ import {
   MessageCircle, Building2, Zap, GraduationCap, HeartPulse
 } from 'lucide-react';
 
+import { useQuery } from '@tanstack/react-query';
 import { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
 import RoadmapCharlieCircle from '@/components/roadmap/RoadmapCharlieCircle';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import DummyRoadmapLine from '@/components/workflow/DummyRoadmapLine';
 
 const GOLD = '#D4AF37';
 
@@ -149,6 +151,11 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
   const city = destinationCity || urlParams.get('city') || '';
+
+  const { data: dummyMilestones = [] } = useQuery({
+    queryKey: ['relocationRoadmapDummyMilestones'],
+    queryFn: () => base44.entities.SubscriberRoadmap.filter({ is_dummy: true }, 'requested_at'),
+  });
 
   useEffect(() => {
     const checkClient = async () => {
@@ -309,32 +316,17 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
         })}
       </div>
 
-      {/* The complete relocation process, every milestone across all 8 phases — lights up as each one completes */}
-      <div className="max-w-2xl mx-auto px-6 pb-10">
-        <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
-          <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4 text-center" style={{ color: GOLD }}>
-            The Complete Relocation Process — Every Milestone
-          </p>
-          <div className="overflow-x-auto">
-            <FlowRoadmapLine
-              stages={PHASES.flatMap((p) => p.steps.map((step, idx) => ({
-                id: `${p.number}-${idx}`,
-                title: step.replace(' ✓', ''),
-                who: `Phase ${p.number}`,
-              })))}
-              stageStatuses={PHASES.reduce((acc, p) => {
-                p.steps.forEach((step, idx) => {
-                  acc[`${p.number}-${idx}`] = { status: step.includes('✓') ? 'completed' : p.status === 'active' ? 'running' : 'pending' };
-                });
-                return acc;
-              }, {})}
-              color={GOLD}
-              onSelect={() => {}}
-              compact
-            />
+      {/* Live milestone line — lights up green when met, red when friction is flagged */}
+      {dummyMilestones.length > 0 && (
+        <div className="max-w-4xl mx-auto px-6 pb-10">
+          <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+            <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4 text-center" style={{ color: GOLD }}>
+              The Complete Relocation Process — Every Milestone
+            </p>
+            <DummyRoadmapLine items={dummyMilestones} color={GOLD} />
           </div>
         </div>
-      </div>
+      )}
 
       {/* Bottom CTA */}
       {!hideNextStepCta && (
