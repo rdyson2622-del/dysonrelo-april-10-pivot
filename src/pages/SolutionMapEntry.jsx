@@ -100,7 +100,7 @@ function getPortalCopy(user) {
   return PORTAL_COPY.consumer;
 }
 
-export default function SolutionMapEntry() {
+export default function SolutionMapEntry({ hideCharliePresenter = false }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [selectedPill, setSelectedPill] = useState(PILLS[0]);
@@ -140,7 +140,7 @@ export default function SolutionMapEntry() {
 
   return (
     <div className="min-h-screen bg-dyson-black text-white flex flex-col">
-      <CharliePagePresenter pageKey="solution-map-entry" />
+      {!hideCharliePresenter && <CharliePagePresenter pageKey="solution-map-entry" />}
 
       {/* ── Header ── */}
       <header className="flex items-center justify-between px-6 py-4 pt-28 border-b border-white/5">

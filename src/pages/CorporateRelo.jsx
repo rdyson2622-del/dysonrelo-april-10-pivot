@@ -437,7 +437,7 @@ export default function CorporateRelo() {
           </h2>
         </div>
         <StudioHeroBanner />
-        <SolutionMapEntry />
+        <SolutionMapEntry hideCharliePresenter />
       </section>
 
     </div>
