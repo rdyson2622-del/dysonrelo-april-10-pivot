@@ -1,22 +1,167 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
+import { getFlow } from '@/lib/departmentWorkflows';
+import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
+import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
+import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
+import FindAProWidget from '@/components/portal/FindAProWidget';
+import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
-import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
-import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
-import FindAProWidget from '@/components/portal/FindAProWidget';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
-// NOTE: This page was copied from src/pages/Home.jsx (Client Portal) on 2026-09-04
-// as a baseline template for the Corporate / HR portal. It is a standalone copy —
-// editing this file does NOT affect the Client Portal (Home.jsx), and editing
-// Home.jsx does NOT affect this page. No reordering has been done yet.
+const PILLARS = [
+  {
+    faqIndex: 0,
+    icon: DollarSign,
+    title: 'Zero Management Fees',
+    desc: "Traditional corporate relocation companies charge management fees, referral markups, and administrative overhead — thousands per transferred employee. We charge your company nothing. We share in the commission already paid to the buying or selling agent, money built into every transaction anyway.",
+  },
+  {
+    faqIndex: 1,
+    icon: ShieldCheck,
+    title: 'Vetted Pros — Not Aunt Suzie',
+    desc: "Every agent in our national and international network is production-vetted, license-verified, and matched to your employee's specific move. Your transferee lands with a proven professional on the receiving end — not a relative who assumes she's getting the business because she holds a license.",
+  },
+  {
+    faqIndex: 2,
+    icon: Handshake,
+    title: 'No Awkward Decisions',
+    desc: "When your employee knows three or four agents personally, our selection process makes the decision for them. No awkward calls, no hurt feelings, no favors owed. The system chose — not your employee. Those uncomfortable situations simply disappear.",
+  },
+];
+
+function clipReady(clip) {
+  if (!clip) return false;
+  const charlieOk = clip.charlieStatus === 'completed' && clip.charlieVideoUrl;
+  const bobOk = clip.bobStatus === 'completed' && clip.bobVideoUrl;
+  const combinedOk = clip.combinedStatus === 'completed' && clip.combinedVideoUrl;
+  return !!(combinedOk || charlieOk || bobOk);
+}
+
+function segmentsFor(clip) {
+  if (!clip) return [];
+  if (clip.combinedStatus === 'completed' && clip.combinedVideoUrl) {
+    return [{ src: clip.combinedVideoUrl, speaker: 'guide' }];
+  }
+  const segs = [];
+  if (clip.charlieStatus === 'completed' && clip.charlieVideoUrl) {
+    segs.push({ src: clip.charlieVideoUrl, speaker: 'charlie' });
+  }
+  if (clip.bobStatus === 'completed' && clip.bobVideoUrl) {
+    segs.push({ src: clip.bobVideoUrl, speaker: 'bob' });
+  }
+  return segs;
+}
+
+/** Upper-left speaking avatar player for one completed clip (Charlie then Bob). */
+function SectionAvatar({ clip, label }) {
+  const segs = useMemo(() => segmentsFor(clip), [clip]);
+  const videoRef = useRef(null);
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
+
+  if (!segs.length) return null;
+
+  const src = segs[Math.min(idx, segs.length - 1)]?.src;
+
+  const onEnded = () => {
+    if (idx < segs.length - 1) {
+      setIdx((i) => i + 1);
+      setPlaying(true);
+      setTimeout(() => videoRef.current?.play?.().catch(() => {}), 40);
+    } else {
+      setPlaying(false);
+    }
+  };
+
+  const toggle = () => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (el.paused) {
+      el.play().then(() => setPlaying(true)).catch(() => {});
+    } else {
+      el.pause();
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <div
+      className="relative rounded-xl overflow-hidden shrink-0"
+      style={{
+        width: 168,
+        background: '#0d0d0d',
+        border: `2px solid ${GOLD}`,
+        boxShadow: '0 12px 32px rgba(0,0,0,0.45)',
+      }}
+    >
+      <div
+        className="px-2 py-1 text-[9px] font-black tracking-[0.15em] uppercase text-center"
+        style={{ background: '#1a1a1a', color: GOLD, borderBottom: '1px solid rgba(212,175,55,0.25)' }}
+      >
+        {label}
+      </div>
+      <div className="relative" style={{ height: 190, background: '#000' }}>
+        <video
+          key={src}
+          ref={videoRef}
+          src={src}
+          playsInline
+          preload="metadata"
+          onEnded={onEnded}
+          onClick={toggle}
+          className="w-full h-full object-cover cursor-pointer"
+        />
+        {!playing && (
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label="Play"
+            className="absolute inset-0 flex items-center justify-center hover:bg-black/20"
+          >
+            <span
+              className="w-11 h-11 rounded-full flex items-center justify-center"
+              style={{ background: 'rgba(0,0,0,0.65)', border: `2px solid ${GOLD}` }}
+            >
+              <Play className="w-5 h-5 ml-0.5" style={{ color: GOLD }} fill={GOLD} />
+            </span>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// NOTE: This page's content is a standalone HR/Corporate portal template — editing
+// it does NOT affect the Client Portal (Home.jsx) or any other portal. Section order
+// per 2026-09-04 request: Corporate Relocation hero FIRST, "news landing" front door
+// (StudioHeroBanner + SolutionMapEntry) moved to the BOTTOM as its own standalone block.
 export default function CorporateRelo() {
+  const relocationFlow = getFlow('operations');
+  const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(
+    relocationFlow?.stages
+  );
+
+  const { data: clips = [] } = useQuery({
+    queryKey: ['corporateReloClipsPublic'],
+    queryFn: () => base44.entities.CorporateReloClip.list(),
+  });
+
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const headingRef = useRef(null);
   const videoRef = useRef(null);
   const [headingVisible, setHeadingVisible] = useState(false);
@@ -31,7 +176,6 @@ export default function CorporateRelo() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch latest DNN article for bottom corner card
   const { data: articles = [] } = useQuery({
     queryKey: ['corporateReloDnnBrief'],
     queryFn: () => base44.entities.DnnArticle.filter(
@@ -41,76 +185,142 @@ export default function CorporateRelo() {
   const brief = articles[0] || null;
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
+  const intro = clips.find((c) => c.kind === 'intro' && clipReady(c));
+  const qas = clips
+    .filter((c) => c.kind === 'qa' && clipReady(c))
+    .sort((a, b) => (a.faqIndex ?? 0) - (b.faqIndex ?? 0));
+
+  const qaByIndex = (i) => qas.find((c) => (c.faqIndex ?? 0) === i) || qas[i];
+
   return (
-    <div className="flex flex-col" style={{ background: '#0a0a0a' }}>
-      {/* ── Top: shared DNN Studio hero ── */}
-      <StudioHeroBanner />
-
-      {/* ── Solution Map entry page ── */}
-      <SolutionMapEntry />
-
-      {/* ── Scrollable following sections ── */}
-      <div className="w-full px-8 pb-20 pt-4" style={{ background: '#ede0cc' }}>
-
-        {/* ── SEARCH ACROSS ALL PLATFORMS ── */}
-        <div className="w-full mt-8 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
-          <PropertyPlatformSearch />
-        </div>
-
-        {/* ── FIND A PRO ── */}
-        <div className="w-full mt-6 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
-          <FindAProWidget />
-        </div>
-
-        {/* ── MARKETING BRIDGE ── */}
-        <div className="w-full mt-8 mb-2">
-          <div className="rounded-2xl px-8 py-10 text-center"
-            style={{ background: 'rgba(0,0,0,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <p className="font-black leading-tight mb-2"
-              style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.4rem, 3.5vw, 2.25rem)',
-                color: '#1a1a1a',
-                letterSpacing: '0.04em',
-              }}>
-              Moving is a Logistics Problem.<br />
-              Selling is a Story Problem.<br />
-              <span style={{ color: GOLD }}>We Solve Both.</span>
-            </p>
-            <p className="text-sm mt-4 mb-8 max-w-lg mx-auto leading-relaxed" style={{ color: '#4a3a28', fontFamily: 'Georgia, serif' }}>
-              Whether you need a full relocation managed end-to-end, or you're stuck in a deal that won't close — we have a path for you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="/relocation-intake"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
-                style={{
-                  background: 'rgba(0,0,0,0.5)',
-                  border: `1px solid ${GOLD}`,
-                  color: GOLD,
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
-                }}>
-                🏠 Explore Relocation Services
-              </a>
-              <a href="/real-estate-answers"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
-                style={{
-                  background: 'rgba(0,0,0,0.5)',
-                  border: `1px solid ${GOLD}`,
-                  color: GOLD,
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  boxShadow: '0 4px 20px rgba(212,175,55,0.15)',
-                }}>
-                💬 Get Real Estate Answers
-              </a>
+    <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
+      {/* ── FIRST PAGE: Corporate Relocation hero ── */}
+      <section
+        className="px-8 md:px-16 pt-16 pb-14"
+        style={{ background: '#ede0cc', borderBottom: '1px solid rgba(212,175,55,0.12)' }}
+      >
+        {intro && scrolled && (
+          <div className="fixed z-40 hidden md:block" style={{ top: '160px', left: '311px', transform: 'translateX(-50%)' }}>
+            <SectionAvatar clip={intro} label="Intro · Charlie / Bob" />
+          </div>
+        )}
+        <div className="max-w-5xl mx-auto">
+          <div className="flex-1 text-center">
+            <div
+              className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
+              style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}
+            >
+              <Building2 className="w-3.5 h-3.5" /> For HR Managers &amp; Employers
             </div>
+            <h1
+              className="display-heading mb-3"
+              style={{
+                fontSize: 'clamp(1.65rem, 4.5vw, 3rem)',
+                lineHeight: 1.05,
+                letterSpacing: '0.12em',
+                color: '#1a1a1a',
+              }}
+            >
+              CORPORATE RELOCATION
+            </h1>
+            <h2
+              className="display-heading mb-8"
+              style={{
+                fontSize: 'clamp(1.2rem, 3vw, 2.1rem)',
+                letterSpacing: '0.12em',
+                color: GOLD,
+              }}
+            >
+              WITH FULL REAL TIME TRANSPARENCY TO YOU AND YOUR EMPLOYEE BUT WITHOUT THE MANAGEMENT FEES.
+            </h2>
           </div>
         </div>
 
-        {/* ── CLIENT STORIES ── */}
-        <div className="w-full mt-12 text-left">
+        <div
+          className="w-full max-w-5xl mx-auto mt-6 mb-2 rounded-2xl p-5"
+          style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}
+        >
+          <p
+            className="text-[10px] font-black tracking-[0.3em] uppercase text-center mb-3 animate-pulse"
+            style={{ color: GOLD }}
+          >
+            ● Live Roadmap — The Relocation Process
+          </p>
+          <FlowRoadmapLine
+            stages={relocationFlow?.stages || []}
+            stageStatuses={relocationStatuses}
+            color={GOLD}
+            activeStageId={relocationActive}
+            onSelect={() => {}}
+          />
+        </div>
+
+        <p
+          className="leading-relaxed max-w-4xl mx-auto mt-10 text-center"
+          style={{ color: '#1a1a1a', fontSize: '1.75rem' }}
+        >
+          We save your company the relocation management costs charged by traditional corporate relocation companies.
+          Instead, we share in the commission offered to the buying or selling agent in our national and international
+          networks — so your people land well, and your budget stays intact.
+        </p>
+
+        <div className="w-full max-w-3xl mx-auto mt-10">
+          <IssueRequestSolutionMap context="corporate_relo" />
+        </div>
+
+        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#000' }}>
+          <PropertyPlatformSearch />
+        </div>
+
+        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+          <FindAProWidget
+            label="Employee Relocation Support Utilities"
+            subtitle="Your transferee needs a mover, inspector, or contractor right now? These national platforms are ready today."
+          />
+        </div>
+      </section>
+
+      {/* ── Three Pillars — each with matching Q clip upper-left in the card ── */}
+      <section className="px-8 md:px-16 py-16" style={{ background: '#ede0cc' }}>
+        <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
+          {PILLARS.map((p) => {
+            const clip = qaByIndex(p.faqIndex);
+            return (
+              <div
+                key={p.title}
+                className="p-6 rounded-2xl flex flex-col sm:flex-row gap-5 items-start"
+                style={{ background: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)' }}
+              >
+                {clip && (
+                  <SectionAvatar
+                    clip={clip}
+                    label={`Q${p.faqIndex + 1} · ${clip.question ? 'Charlie / Bob' : 'Guide'}`}
+                  />
+                )}
+                <div className="flex-1 flex flex-col gap-3 min-w-0">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center"
+                    style={{ background: 'rgba(212,175,55,0.2)', border: '1px solid rgba(212,175,55,0.3)' }}
+                  >
+                    <p.icon className="w-5 h-5" style={{ color: GOLD }} />
+                  </div>
+                  <p className="font-bold text-base text-white">{p.title}</p>
+                  {clip?.question && (
+                    <p className="text-xs font-semibold" style={{ color: GOLD }}>
+                      {clip.question}
+                    </p>
+                  )}
+                  <p className="text-sm leading-relaxed text-white">{p.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── CLIENT STORIES ── */}
+      <section className="px-8 md:px-16 py-16" style={{ background: '#ede0cc' }}>
+        <div className="w-full max-w-5xl mx-auto text-left">
           <div
             ref={headingRef}
             className="mb-8"
@@ -128,11 +338,9 @@ export default function CorporateRelo() {
             </p>
           </div>
 
-          {/* Story 1 — Windean Stratton */}
           <ClientStory
             label="4-State Relocation · Arizona → Arkansas"
             headline="The 4-State Farm Relocation: How We Moved a Family (and 13 Chickens) Without a Hitch."
-            defaultOpen
           >
             <div className="rounded-2xl overflow-hidden mb-8" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
               <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 px-4 pt-4" style={{ color: GOLD }}>▶ WATCH THE WINDEANS' STORY</p>
@@ -200,30 +408,69 @@ export default function CorporateRelo() {
               At Dyson, our philosophy is simple: Proper planning, elite professionals, and relentless daily management are the ingredients of a stress-free relocation. You don't just need an agent — you need an enterprise managing the timeline.
             </p>
           </ClientStory>
-
-          {/* CTA */}
-          <div className="rounded-2xl px-7 py-8 text-center mt-10"
-            style={{ background: '#111', border: `2px solid ${GOLD}` }}>
-            <p className="text-xs font-black tracking-[0.25em] uppercase mb-3" style={{ color: GOLD }}>YOUR STORY IS NEXT</p>
-            <p className="text-white leading-relaxed mb-6" style={{ fontFamily: 'Georgia, serif', fontSize: '1rem' }}>
-              Every home has a story, and every move has a conflict. Are you planning a complex relocation, or is your current real estate transaction stuck in the mud?
-            </p>
-            <button
-              onClick={() => window.location.href = '/solve-my-story'}
-              className="px-10 py-4 rounded-full font-bold text-base tracking-wider transition-all hover:opacity-90"
-              style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}
-            >
-              Solve My Story →
-            </button>
-            <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
-          </div>
-
-          {/* ── HR / CORPORATE SUBSCRIBE — bottom of the scroll ── */}
-          <div className="mt-12">
-            <PortalSubscribeForm portalName="Corporate Relo / HR Portal" source="Corporate HR Portal" roleKey="hr" dest="/corporate-relo" />
-          </div>
         </div>
-      </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="px-8 md:px-16 py-20 text-center" style={{ background: '#0d0d0d' }}>
+        <p className="text-xs font-black tracking-[0.35em] uppercase mb-4" style={{ color: GOLD }}>
+          NEXT TRANSFEREE?
+        </p>
+        <h2
+          className="display-heading mb-8"
+          style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', letterSpacing: '0.12em', color: '#fff' }}
+        >
+          LET'S TALK ABOUT YOUR PEOPLE
+        </h2>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event('open_talk_to_us'))}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-black text-base transition-all hover:scale-105"
+            style={{
+              background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
+              color: '#000',
+              boxShadow: '0 4px 14px rgba(212,175,55,0.3)',
+            }}
+          >
+            <MessageCircle className="w-5 h-5" /> Talk to Charlie Now
+          </button>
+          <Link
+            to="/relocation-intake"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-base transition-all hover:scale-105"
+            style={{ border: `1px solid ${GOLD}`, color: GOLD }}
+          >
+            How We Manage a Move <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="mt-12 max-w-2xl mx-auto text-left">
+          <PortalSubscribeForm
+            portalName="Corporate Relo / HR Portal"
+            source="Corporate HR Portal"
+            roleKey="hr"
+            dest="/corporate-relo"
+          />
+        </div>
+        <p className="text-sm mt-10" style={{ color: '#8a8a8a' }}>
+          The Dyson &amp; Dyson Companies, Inc. · California DRE #02303118 · (858) 353-1200
+        </p>
+      </section>
+
+      {/* ── NEWS LANDING — moved to the bottom as its own standalone block.
+          Uses the shared StudioHeroBanner + SolutionMapEntry components as-is
+          (unmodified) so other portals that also use them are unaffected. ── */}
+      <section style={{ background: '#0a0a0a' }}>
+        <div className="px-8 md:px-16 pt-14 pb-4 text-center">
+          <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>
+            Also Available To You
+          </p>
+          <h2 className="display-heading" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
+            Real Estate News &amp; Intelligence
+          </h2>
+        </div>
+        <StudioHeroBanner />
+        <SolutionMapEntry />
+      </section>
 
       {/* ── DNN MORNING BRIEF CORNER CARD ── */}
       {brief && (
