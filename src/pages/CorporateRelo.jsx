@@ -496,6 +496,22 @@ export default function CorporateRelo() {
         <SolutionMapEntry hideCharliePresenter />
       </section>
 
+      {/* ── Final subscribe CTA — bottom of page ── */}
+      <div className="px-8 py-16" style={{ background: '#0d0d0d' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>Stay In The Loop</p>
+          <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
+            Enroll to Receive Relocation Updates for Your Team
+          </h3>
+          <PortalSubscribeForm
+            portalName="Corporate Relo / HR Portal"
+            source="Corporate HR Portal - Bottom"
+            roleKey="hr"
+            dest="/corporate-relo"
+          />
+        </div>
+      </div>
+
     </div>
   );
 }
