@@ -367,6 +367,41 @@ export default function CorporateRelo() {
         </div>
       </section>
 
+      {/* ── FOR NOW: one long combined scroll of My Roadmaps, City Guide,
+          Real Estate Answers, Communication Hub, Solve My Story, and
+          Real Estate News — stacked as-is between Client Stories and the CTA. ── */}
+      <div>
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>My Roadmaps</p>
+        </div>
+        <RelocationRoadmap />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>City Guide</p>
+        </div>
+        <CityGuide />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Real Estate Answers</p>
+        </div>
+        <RealEstateAnswers />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Communication Hub</p>
+        </div>
+        <ClientCommunicationsExplainer />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Solve My Story</p>
+        </div>
+        <SolveMyStory />
+
+        <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
+          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Real Estate News</p>
+        </div>
+        <ConsumerDnnNews />
+      </div>
+
       {/* ── CTA ── */}
       <section className="px-8 md:px-16 py-20 text-center" style={{ background: '#0d0d0d' }}>
         <p className="text-xs font-black tracking-[0.35em] uppercase mb-4" style={{ color: GOLD }}>
