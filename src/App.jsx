@@ -295,6 +295,7 @@ const AuthenticatedApp = () => {
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
+      <Route path="/solve-my-story" element={<SolveMyStory />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}
@@ -351,7 +352,6 @@ const AuthenticatedApp = () => {
         <Route path="/admin/dnn/agent-vetting" element={<AdminAgentVetting />} />
         <Route path="/admin/dnn/lender-vetting" element={<AdminLenderVetting />} />
         <Route path="/admin/dnn/bureau-stories" element={<AdminBureauStories />} />
-        <Route path="/solve-my-story" element={<SolveMyStory />} />
         <Route path="/admin/prn-agent-plan" element={<AdminPRNAgentPlan />} />
         <Route path="/admin/roster" element={<AdminRoster />} />
         <Route path="/admin/active-relocation-agents" element={<AdminActiveRelocationAgents />} />
