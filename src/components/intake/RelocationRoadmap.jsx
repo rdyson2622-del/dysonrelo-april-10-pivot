@@ -11,6 +11,7 @@ import {
 
 import { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
 import RoadmapCharlieCircle from '@/components/roadmap/RoadmapCharlieCircle';
+import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
 
 const GOLD = '#D4AF37';
 
@@ -306,6 +307,11 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
             </motion.div>
           );
         })}
+      </div>
+
+      {/* Your specific relocation roadmap — submit your own issue and get a live, personalized roadmap */}
+      <div className="max-w-2xl mx-auto px-6 pb-10">
+        <IssueRequestSolutionMap context={isAgentPortal ? 'agent_portal' : 'client_portal'} />
       </div>
 
       {/* Bottom CTA */}
