@@ -85,7 +85,7 @@ const WHY_STEPS = [
   { icon: CheckCircle2, label: 'Buyer Broker signed', desc: 'You\'re a committed client — full access unlocks' },
 ];
 
-export default function CityGuide() {
+export default function CityGuide({ heroHeading = "Here's What's Coming For You" }) {
   const [city, setCity] = useState('');
   const [submittedCity, setSubmittedCity] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -209,7 +209,7 @@ export default function CityGuide() {
             {/* Hero */}
             <div className="text-center">
               <p className="text-sm font-black tracking-[0.25em] mb-3" style={{ color: GOLD }}>CITY GUIDE</p>
-              <h1 className="display-heading mb-3 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#1a1a1a' }}>Here's What's Coming For You</h1>
+              <h1 className="display-heading mb-3 whitespace-nowrap" style={{ fontSize: 'clamp(1.2rem, 2.8vw, 2.2rem)', color: '#1a1a1a' }}>{heroHeading}</h1>
               <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: '#1a1a1a' }}>
                 Our City Guide delivers <strong>hyper-personalized</strong> research across 6 categories — but we hold it until the right moment so every insight is actually useful to your family.
               </p>
