@@ -296,9 +296,11 @@ export default function ClientSidebar({ onToggle }) {
         {/* ── 4. STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
         <div className="px-3 pt-4 pb-1">
           {/* Communications */}
-          <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
-            {isClientOnly ? 'Your Portal' : 'Communications'}
-          </p>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide mb-2"
+            style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
+            <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+            {(isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
+          </div>
           <div className="flex flex-col gap-1">
             <Link to="/communications-explainer"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
