@@ -309,22 +309,28 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
         })}
       </div>
 
-      {/* The complete relocation process, milestone by milestone — lights up as each phase completes */}
+      {/* The complete relocation process, every milestone across all 8 phases — lights up as each one completes */}
       <div className="max-w-2xl mx-auto px-6 pb-10">
         <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
           <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4 text-center" style={{ color: GOLD }}>
-            The Complete Relocation Process
+            The Complete Relocation Process — Every Milestone
           </p>
           <div className="overflow-x-auto">
             <FlowRoadmapLine
-              stages={PHASES.map((p) => ({ id: p.number, title: p.title }))}
+              stages={PHASES.flatMap((p) => p.steps.map((step, idx) => ({
+                id: `${p.number}-${idx}`,
+                title: step.replace(' ✓', ''),
+                who: `Phase ${p.number}`,
+              })))}
               stageStatuses={PHASES.reduce((acc, p) => {
-                acc[p.number] = { status: p.status === 'active' ? 'running' : 'pending' };
+                p.steps.forEach((step, idx) => {
+                  acc[`${p.number}-${idx}`] = { status: step.includes('✓') ? 'completed' : p.status === 'active' ? 'running' : 'pending' };
+                });
                 return acc;
               }, {})}
               color={GOLD}
-              activeStageId={PHASES.find((p) => p.status === 'active')?.number}
               onSelect={() => {}}
+              compact
             />
           </div>
         </div>
