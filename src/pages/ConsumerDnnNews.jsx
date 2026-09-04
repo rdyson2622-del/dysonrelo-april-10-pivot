@@ -549,7 +549,8 @@ export default function ConsumerDnnNews({ hidePills = false }) {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
-  const textArticles = allArticles;
+  // Corp HR embed (hidePills) only shows the first row of briefs
+  const textArticles = hidePills ? allArticles.slice(0, 3) : allArticles;
 
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
