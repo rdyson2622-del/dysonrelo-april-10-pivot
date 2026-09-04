@@ -12,7 +12,6 @@ import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 import DnnComparisonSection from '@/components/dnn/DnnComparisonSection';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
-import DnnBroadcastArchive from '@/components/dnn/DnnBroadcastArchive';
 import DnnNewsSolutionMap from '@/components/dnn/DnnNewsSolutionMap';
 
 
@@ -699,11 +698,6 @@ export default function ConsumerDnnNews({ hidePills = false }) {
 
           </div>
         )}
-      </div>
-
-      {/* Broadcast Archive — past + current shows, admin edit/delete */}
-      <div className="w-full px-6 md:px-12 lg:px-20 py-10 max-w-7xl mx-auto">
-        <DnnBroadcastArchive limit={6} showViewAll />
       </div>
 
       {/* Competitive Comparison — Why DNN Is Different */}
