@@ -4,9 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Building2, DollarSign, ShieldCheck, Handshake, ArrowRight, MessageCircle, Newspaper, Play } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
-import { getFlow } from '@/lib/departmentWorkflows';
-import { useAnimatedDemoStatuses } from '@/hooks/useAnimatedDemoStatuses';
-import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
 import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import FindAProWidget from '@/components/portal/FindAProWidget';
@@ -145,11 +142,6 @@ function SectionAvatar({ clip, label }) {
 // per 2026-09-04 request: Corporate Relocation hero FIRST, "news landing" front door
 // (StudioHeroBanner + SolutionMapEntry) moved to the BOTTOM as its own standalone block.
 export default function CorporateRelo() {
-  const relocationFlow = getFlow('operations');
-  const { statuses: relocationStatuses, activeStageId: relocationActive } = useAnimatedDemoStatuses(
-    relocationFlow?.stages
-  );
-
   const { data: clips = [] } = useQuery({
     queryKey: ['corporateReloClipsPublic'],
     queryFn: () => base44.entities.CorporateReloClip.list(),
@@ -234,25 +226,6 @@ export default function CorporateRelo() {
               WITH FULL REAL TIME TRANSPARENCY TO YOU AND YOUR EMPLOYEE BUT WITHOUT THE MANAGEMENT FEES.
             </h2>
           </div>
-        </div>
-
-        <div
-          className="w-full max-w-5xl mx-auto mt-6 mb-2 rounded-2xl p-5"
-          style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}
-        >
-          <p
-            className="text-[10px] font-black tracking-[0.3em] uppercase text-center mb-3 animate-pulse"
-            style={{ color: GOLD }}
-          >
-            ● Live Roadmap — The Relocation Process
-          </p>
-          <FlowRoadmapLine
-            stages={relocationFlow?.stages || []}
-            stageStatuses={relocationStatuses}
-            color={GOLD}
-            activeStageId={relocationActive}
-            onSelect={() => {}}
-          />
         </div>
 
         <p
