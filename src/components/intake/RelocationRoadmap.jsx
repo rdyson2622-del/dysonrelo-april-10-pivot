@@ -11,7 +11,7 @@ import {
 
 import { RoadmapPhasePlay, RoadmapPhasePlayBadge } from '@/components/roadmap/RoadmapQASection';
 import RoadmapCharlieCircle from '@/components/roadmap/RoadmapCharlieCircle';
-import IssueRequestSolutionMap from '@/components/roadmap/IssueRequestSolutionMap';
+import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
 
@@ -309,9 +309,25 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
         })}
       </div>
 
-      {/* Your specific relocation roadmap — submit your own issue and get a live, personalized roadmap */}
+      {/* The complete relocation process, milestone by milestone — lights up as each phase completes */}
       <div className="max-w-2xl mx-auto px-6 pb-10">
-        <IssueRequestSolutionMap context={isAgentPortal ? 'agent_portal' : 'client_portal'} />
+        <div className="rounded-2xl p-5" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+          <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4 text-center" style={{ color: GOLD }}>
+            The Complete Relocation Process
+          </p>
+          <div className="overflow-x-auto">
+            <FlowRoadmapLine
+              stages={PHASES.map((p) => ({ id: p.number, title: p.title }))}
+              stageStatuses={PHASES.reduce((acc, p) => {
+                acc[p.number] = { status: p.status === 'active' ? 'running' : 'pending' };
+                return acc;
+              }, {})}
+              color={GOLD}
+              activeStageId={PHASES.find((p) => p.status === 'active')?.number}
+              onSelect={() => {}}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Bottom CTA */}
