@@ -131,7 +131,7 @@ const PHASES = [
   },
 ];
 
-export default function RelocationRoadmap({ clientName, destinationCity }) {
+export default function RelocationRoadmap({ clientName, destinationCity, hideCharlieCircle = false }) {
   const [expanded, setExpanded] = useState(null);
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -215,7 +215,7 @@ export default function RelocationRoadmap({ clientName, destinationCity }) {
       </div>
 
       {/* Charlie circle — replaces yellow banner, plays full roadmap briefing */}
-      <RoadmapCharlieCircle />
+      {!hideCharlieCircle && <RoadmapCharlieCircle />}
 
       {/* Phases */}
       <div className="max-w-2xl mx-auto px-6 pb-10 space-y-3">

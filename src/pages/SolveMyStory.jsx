@@ -16,7 +16,7 @@ const SITUATION_TYPES = [
   "I have a complex situation that doesn't fit a standard box",
 ];
 
-export default function SolveMyStory() {
+export default function SolveMyStory({ hideCharlie = false }) {
   const [form, setForm] = useState({
     full_name: '',
     email: '',
@@ -91,7 +91,7 @@ export default function SolveMyStory() {
 
   return (
      <div className="min-h-screen" style={{ background: '#ede0cc' }}>
-       <SolveMyStoryPresenter />
+       {!hideCharlie && <SolveMyStoryPresenter />}
 
        {/* Header */}
        <div className="relative flex flex-col items-center pt-14 pb-10 text-center px-6 md:pr-48"
