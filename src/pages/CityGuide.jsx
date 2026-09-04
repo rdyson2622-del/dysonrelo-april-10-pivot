@@ -85,7 +85,7 @@ const WHY_STEPS = [
   { icon: CheckCircle2, label: 'Buyer Broker signed', desc: 'You\'re a committed client — full access unlocks' },
 ];
 
-export default function CityGuide({ heroHeading = "Here's What's Coming For You" }) {
+export default function CityGuide({ heroHeading = "Here's What's Coming For You", hideStartCta = false }) {
   const [city, setCity] = useState('');
   const [submittedCity, setSubmittedCity] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -318,20 +318,22 @@ export default function CityGuide({ heroHeading = "Here's What's Coming For You"
             </div>
 
             {/* CTA */}
-            <div className="flex flex-col gap-3 pb-4">
-              <Link to="/GeminiSession">
-                <button className="w-full py-3 rounded-full font-bold text-sm"
-                  style={{ background: GOLD, color: '#000' }}>
-                  Start My Gemini Session → Unlock Full Access
-                </button>
-              </Link>
-              <Link to="/Chat">
-                <button className="w-full py-3 rounded-full font-semibold text-sm border-2"
-                  style={{ borderColor: '#1a1a1a', color: '#1a1a1a', background: 'transparent' }}>
-                  Chat with Charlie First
-                </button>
-              </Link>
-            </div>
+            {!hideStartCta && (
+              <div className="flex flex-col gap-3 pb-4">
+                <Link to="/GeminiSession">
+                  <button className="w-full py-3 rounded-full font-bold text-sm"
+                    style={{ background: GOLD, color: '#000' }}>
+                    Start My Gemini Session → Unlock Full Access
+                  </button>
+                </Link>
+                <Link to="/Chat">
+                  <button className="w-full py-3 rounded-full font-semibold text-sm border-2"
+                    style={{ borderColor: '#1a1a1a', color: '#1a1a1a', background: 'transparent' }}>
+                    Chat with Charlie First
+                  </button>
+                </Link>
+              </div>
+            )}
           </motion.div>
         )}
 
