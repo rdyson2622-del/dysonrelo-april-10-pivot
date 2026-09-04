@@ -101,10 +101,10 @@ export default function ClientSidebar({ onToggle }) {
     agent: 'RELOCATION AGENT PORTAL',
     referral_agent: 'INACTIVE LICENSED AGENTS PORTAL',
     vendor: 'VENDOR PORTAL',
-    hr: 'CORPORATE HR PORTAL',
+    hr: 'YOUR CORPORATE HR PORTAL',
   };
   const portalLabel = PORTAL_LABELS[portalRole]
-    || (location.pathname === '/corporate-relo' ? 'CORPORATE HR PORTAL' : 'CLIENT PORTAL');
+    || (location.pathname === '/corporate-relo' ? 'YOUR CORPORATE HR PORTAL' : 'CLIENT PORTAL');
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-full overflow-hidden"
