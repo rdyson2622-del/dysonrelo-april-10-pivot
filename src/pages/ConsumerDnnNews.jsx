@@ -476,7 +476,7 @@ const HERO_PILLS = [
   { label: 'INTELLIGENCE', path: '/solutions', icon: Sparkles },
 ];
 
-export default function ConsumerDnnNews() {
+export default function ConsumerDnnNews({ hidePills = false }) {
   const { talkingHeadProps, speak, loading: talkLoading, dismiss } = useTalkingHead();
   const navigate = useNavigate();
 
@@ -593,18 +593,20 @@ export default function ConsumerDnnNews() {
           Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
         </p>
 
-        <div className="flex items-center justify-center gap-3">
-          {HERO_PILLS.map(({ label, path, icon: Icon }) => (
-            <button
-              key={label}
-              onClick={() => navigate(path)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black tracking-widest transition-all hover:scale-105 active:scale-95"
-              style={{ background: '#1a1a1a', border: '1.5px solid #D4AF37', color: '#D4AF37' }}
-            >
-              <Icon className="w-3.5 h-3.5" /> {label}
-            </button>
-          ))}
-        </div>
+        {!hidePills && (
+          <div className="flex items-center justify-center gap-3">
+            {HERO_PILLS.map(({ label, path, icon: Icon }) => (
+              <button
+                key={label}
+                onClick={() => navigate(path)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black tracking-widest transition-all hover:scale-105 active:scale-95"
+                style={{ background: '#1a1a1a', border: '1.5px solid #D4AF37', color: '#D4AF37' }}
+              >
+                <Icon className="w-3.5 h-3.5" /> {label}
+              </button>
+            ))}
+          </div>
+        )}
 
       </div>
 
