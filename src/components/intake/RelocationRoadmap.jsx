@@ -131,7 +131,7 @@ const PHASES = [
   },
 ];
 
-export default function RelocationRoadmap({ clientName, destinationCity, hideCharlieCircle = false }) {
+export default function RelocationRoadmap({ clientName, destinationCity, hideCharlieCircle = false, hideNextStepCta = false }) {
   const [expanded, setExpanded] = useState(null);
   const [clientId, setClientId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -337,20 +337,22 @@ export default function RelocationRoadmap({ clientName, destinationCity, hideCha
       </div>
 
       {/* Bottom CTA */}
-      <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
-        <div className="rounded-2xl p-8" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}` }}>
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
-          <h3 className="text-xl font-bold mb-2 text-white">Ready to Start?</h3>
-          <p className="text-sm mb-6 text-white">
-            {clientId ? 'Your relocation profile is live. Bob\'s team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.' : 'Submit your information to unlock your complete roadmap and personalized relocation plan.'}
-          </p>
-          <Link to={clientId ? '/Dashboard' : '/RelocationIntake'}>
-            <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
-              {clientId ? 'Go to My Dashboard' : 'Start Your Relocation'} <ArrowRight className="w-4 h-4" />
-            </button>
-          </Link>
+      {!hideNextStepCta && (
+        <div className="max-w-2xl mx-auto px-6 pb-16 text-center">
+          <div className="rounded-2xl p-8" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}` }}>
+            <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>YOUR NEXT STEP</p>
+            <h3 className="text-xl font-bold mb-2 text-white">Ready to Start?</h3>
+            <p className="text-sm mb-6 text-white">
+              {clientId ? 'Your relocation profile is live. Bob\'s team will be in touch shortly to begin Phase 1. Meanwhile, Charlie is available 24/7 in your dashboard.' : 'Submit your information to unlock your complete roadmap and personalized relocation plan.'}
+            </p>
+            <Link to={clientId ? '/Dashboard' : '/RelocationIntake'}>
+              <button className="gold-btn w-full py-3 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-2">
+                {clientId ? 'Go to My Dashboard' : 'Start Your Relocation'} <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       </div>
       );
