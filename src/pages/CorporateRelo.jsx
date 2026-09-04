@@ -10,6 +10,12 @@ import FindAProWidget from '@/components/portal/FindAProWidget';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
+import RelocationRoadmap from '@/components/intake/RelocationRoadmap';
+import CityGuide from './CityGuide';
+import RealEstateAnswers from './RealEstateAnswers';
+import ClientCommunicationsExplainer from './ClientCommunicationsExplainer';
+import SolveMyStory from './SolveMyStory';
+import ConsumerDnnNews from './ConsumerDnnNews';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
