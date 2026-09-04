@@ -228,12 +228,6 @@ export default function CorporateRelo() {
           networks — so your people land well, and your budget stays intact.
         </p>
 
-        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
-          <FindAProWidget
-            label="Employee Relocation Support Utilities"
-            subtitle="Your transferee needs a mover, inspector, or contractor right now? These national platforms are ready today."
-          />
-        </div>
       </section>
 
       {/* ── Three Pillars — each with matching Q clip upper-left in the card ── */}
@@ -420,6 +414,13 @@ export default function CorporateRelo() {
 
         <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#000' }}>
           <PropertyPlatformSearch />
+        </div>
+
+        <div className="w-full max-w-3xl mx-auto mt-10 rounded-2xl p-6" style={{ background: '#1a1a1a', border: `1px solid ${GOLD}40` }}>
+          <FindAProWidget
+            label="Employee Relocation Support Utilities"
+            subtitle="Your transferee needs a mover, inspector, or contractor right now? These national platforms are ready today."
+          />
         </div>
       </section>
 
