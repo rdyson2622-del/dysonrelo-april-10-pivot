@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  MapPin, Zap, Settings, Phone, Map, Search, MessageCircle,
-  Newspaper, Archive, DollarSign, Shield, Fingerprint,
-  CreditCard, Building2, Home, Users, TrendingUp, Star, ArrowRight, ClipboardList,
-  Sparkles, Workflow, FileSignature, Send, UserCog
+  MapPin, Zap, Phone, Map, Search, MessageCircle, ChevronDown,
+  Newspaper, Archive, DollarSign, Shield, Building2, Home, TrendingUp,
+  Star, ArrowRight, ClipboardList, Sparkles, Workflow, FileSignature, Send, UserCog
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import RelocationManagementModal from './RelocationManagementModal';
@@ -19,19 +18,42 @@ const authorityLinks = [
   { label: '21 AI Assistants', to: '/ai-assistants' },
 ];
 
-// Subtle gold-bordered suite box wrapper
-function SuiteBox({ title, children }) {
+// Collapsible section header — collapsed by default, expands its children on click.
+function CollapsibleGroup({ title, icon: Icon, open, onToggle, children }) {
+  return (
+    <div className="mb-1">
+      <button onClick={onToggle}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+        style={{ color: GOLD, background: open ? 'rgba(212,175,55,0.15)' : 'transparent', border: '1px solid rgba(212,175,55,0.3)' }}>
+        <span className="flex items-center gap-2">
+          {Icon && <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />}
+          {title}
+        </span>
+        <ChevronDown className="w-3.5 h-3.5 shrink-0 transition-transform" style={{ color: GOLD, transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+      </button>
+      {open && <div className="mt-1 flex flex-col gap-0.5">{children}</div>}
+    </div>
+  );
+}
+
+// Subtle gold-bordered suite box wrapper — collapsible
+function SuiteBox({ title, open, onToggle, children }) {
   return (
     <div className="px-3 pt-4 pb-1">
       <div className="rounded-xl overflow-hidden" style={{ border: `1px solid rgba(212,175,55,0.55)`, background: 'rgba(212,175,55,0.06)' }}>
-        <div className="px-3 py-2" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+        <button onClick={onToggle}
+          className="w-full flex items-center justify-between px-3 py-2"
+          style={{ borderBottom: open ? '1px solid rgba(212,175,55,0.2)' : 'none' }}>
           <p className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: GOLD, textShadow: '0 0 8px rgba(212,175,55,0.4)' }}>
             {title}
           </p>
-        </div>
-        <div className="flex flex-col gap-0.5 p-2">
-          {children}
-        </div>
+          <ChevronDown className="w-3 h-3 shrink-0 transition-transform" style={{ color: GOLD, transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        </button>
+        {open && (
+          <div className="flex flex-col gap-0.5 p-2">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -50,26 +72,13 @@ function NavLink({ to, icon: Icon, label, badge, location }) {
   );
 }
 
-// Indented sub-item under a portal's top pill header — lights up gold when it's the current page
+// Indented sub-item under a collapsible group — lights up gold when it's the current page
 function SubLink({ to, label, location }) {
   const active = location.pathname === to;
   return (
     <Link to={to}
       className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
       style={{ color: active ? '#000' : 'rgba(212,175,55,0.75)', background: active ? GOLD : 'transparent' }}>
-      {label}
-    </Link>
-  );
-}
-
-// Full-width top pill link with icon — lights up gold when it's the current page
-function TopLink({ to, icon: Icon, label, location }) {
-  const active = location.pathname === to;
-  return (
-    <Link to={to}
-      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-      style={{ color: active ? '#000' : GOLD, background: active ? GOLD : 'transparent', border: active ? 'none' : '1px solid transparent' }}>
-      {Icon && <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: active ? '#000' : GOLD }} />}
       {label}
     </Link>
   );
@@ -85,6 +94,9 @@ export default function ClientSidebar({ onToggle }) {
   const [portalRole, setPortalRole] = useState(null);
   const [subscribed, setSubscribed] = useState(!!localStorage.getItem('dyson_portal'));
 
+  // All header categories start collapsed — expand only when clicked
+  const [openGroups, setOpenGroups] = useState({});
+  const toggleGroup = (key) => setOpenGroups((prev) => ({ ...prev, [key]: !prev[key] }));
 
   useEffect(() => {
     const stored = sessionStorage.getItem('dyson_role');
@@ -147,7 +159,7 @@ export default function ClientSidebar({ onToggle }) {
         </p>
       </div>
 
-      {/* ── Two Core Value Links ── */}
+      {/* ── Command Center + Relocation Services group ── */}
       <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         {/* Subscribed HR/Client Command Center — promoted above Relocation Services, matching the Agent Command Center pattern */}
         {subscribed && isHR && (
@@ -166,22 +178,26 @@ export default function ClientSidebar({ onToggle }) {
             CLIENT COMMAND CENTER
           </Link>
         )}
+        {isAgent && (
+          <Link to="/agent-command-center"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+            style={{ color: '#000', background: GOLD }}>
+            <ClipboardList className="w-3.5 h-3.5 shrink-0" style={{ color: '#000' }} />
+            AGENT COMMAND CENTER
+          </Link>
+        )}
+
         {isReferralAgent ? (
-          <>
-            <TopLink to="/referral-agent-explainer" icon={Sparkles} label="OPPORTUNITIES" location={location} />
-            <TopLink to="/referral-process" icon={Workflow} label="THE REFERRAL PROCESS" location={location} />
-            <TopLink to="/referral-forms" icon={FileSignature} label="REFERRAL FORMS" location={location} />
-            <TopLink to="/admin/referral-agent-contacts" icon={Send} label="MY REFERRAL CONTACTS" location={location} />
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide opacity-40 cursor-not-allowed"
-              style={{ color: GOLD }}>
-              <UserCog className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              MY DYSON RELO MEMBERS
-            </div>
-            <TopLink to="/communications-explainer" icon={MessageCircle} label="COMMUNICATION HUB" location={location} />
-          </>
+          <CollapsibleGroup title="RELOCATION SERVICES" icon={Star} open={!!openGroups.relo} onToggle={() => toggleGroup('relo')}>
+            <SubLink to="/referral-agent-explainer" label="Opportunities" location={location} />
+            <SubLink to="/referral-process" label="The Referral Process" location={location} />
+            <SubLink to="/referral-forms" label="Referral Forms" location={location} />
+            <SubLink to="/admin/referral-agent-contacts" label="My Referral Contacts" location={location} />
+            <SubLink to="/communications-explainer" label="Communication Hub" location={location} />
+          </CollapsibleGroup>
         ) : isHR ? (
-          <>
-            <TopLink to="/corporate-relo" icon={Star} label="RELOCATION SERVICES" location={location} />
+          <CollapsibleGroup title="RELOCATION SERVICES" icon={Star} open={!!openGroups.relo} onToggle={() => toggleGroup('relo')}>
+            <SubLink to="/corporate-relo" label="Overview" location={location} />
             <SubLink to="/RelocationRoadmap" label="My Roadmaps" location={location} />
             <SubLink to="/CityGuide" label="City Guide" location={location} />
             <SubLink to="/real-estate-answers" label="Real Estate Answers" location={location} />
@@ -189,10 +205,10 @@ export default function ClientSidebar({ onToggle }) {
             <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
             <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
             <SubLink to="/corporate-relo" label="Real Estate News" location={location} />
-          </>
+          </CollapsibleGroup>
         ) : (
-          <>
-            <TopLink to="/relocation-intake" icon={Star} label="RELOCATION SERVICES" location={location} />
+          <CollapsibleGroup title="RELOCATION SERVICES" icon={Star} open={!!openGroups.relo} onToggle={() => toggleGroup('relo')}>
+            <SubLink to="/relocation-intake" label="Overview" location={location} />
             <SubLink to="/RelocationRoadmap" label="My Roadmaps" location={location} />
             <SubLink to="/CityGuide" label="City Guide" location={location} />
             <SubLink to="/real-estate-answers" label="Real Estate Answers" location={location} />
@@ -200,16 +216,11 @@ export default function ClientSidebar({ onToggle }) {
             <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
             <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
             <SubLink to="/dnn-news" label="Real Estate News" location={location} />
-          </>
+          </CollapsibleGroup>
         )}
+
         {isAgent && (
           <>
-            <Link to="/agent-command-center"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: '#000', background: GOLD }}>
-              <ClipboardList className="w-3.5 h-3.5 shrink-0" style={{ color: '#000' }} />
-              AGENT COMMAND CENTER
-            </Link>
             <button
               onClick={() => setShowSendingModal(true)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10 text-left"
@@ -236,12 +247,12 @@ export default function ClientSidebar({ onToggle }) {
           <>
             {/* SUITE 2: Client Retention Loop — admin only */}
             {isAdmin && (
-              <SuiteBox title="🤝 Client Retention Loop">
+              <SuiteBox title="🤝 Client Retention Loop" open={!!openGroups.retention} onToggle={() => toggleGroup('retention')}>
                 <NavLink to="/agent-invited-clients" icon={TrendingUp} location={location} label="Track My Referrals" />
                 <NavLink to="/financial-services" icon={DollarSign} location={location} label="Lender-Solve Status" />
               </SuiteBox>
             )}
-            <SuiteBox title="🏠 My Personal Real Estate">
+            <SuiteBox title="🏠 My Personal Real Estate" open={!!openGroups.agentPersonal} onToggle={() => toggleGroup('agentPersonal')}>
               <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
               <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
               <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
@@ -253,13 +264,13 @@ export default function ClientSidebar({ onToggle }) {
         {/* ══ VENDOR PATH ══ */}
         {isVendor && !isAgent && (
           <>
-            <SuiteBox title="🔧 Vendor Utility">
+            <SuiteBox title="🔧 Vendor Utility" open={!!openGroups.vendorUtility} onToggle={() => toggleGroup('vendorUtility')}>
               <NavLink to="/search" icon={Search} location={location} label="Property Search" />
               {isAdmin && (
                 <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
               )}
             </SuiteBox>
-            <SuiteBox title="🏠 My Personal Real Estate">
+            <SuiteBox title="🏠 My Personal Real Estate" open={!!openGroups.vendorPersonal} onToggle={() => toggleGroup('vendorPersonal')}>
               <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
               <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
               <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
@@ -268,18 +279,17 @@ export default function ClientSidebar({ onToggle }) {
           </>
         )}
 
-        {/* ── 4. STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
+        {/* ── STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
         <div className="px-3 pt-4 pb-1">
-          {/* Communications */}
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide mb-2"
-            style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-            <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-            {(isHR ? 'HR Manager Portal' : isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
-          </div>
-          <div className="flex flex-col gap-1">
+          <CollapsibleGroup
+            title={(isHR ? 'HR Manager Portal' : isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
+            icon={Star}
+            open={!!openGroups.portal}
+            onToggle={() => toggleGroup('portal')}
+          >
             <Link to="/communications-explainer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-              style={{ background: location.pathname === '/communications-explainer' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/communications-explainer' ? '#000' : '#fff' }}>
+              className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ background: location.pathname === '/communications-explainer' ? GOLD : 'transparent', color: location.pathname === '/communications-explainer' ? '#000' : 'rgba(212,175,55,0.75)' }}>
               <div className="relative shrink-0">
                 <MessageCircle className="w-3.5 h-3.5" style={{ color: location.pathname === '/communications-explainer' ? '#000' : GOLD }} />
                 {unreadCount > 0 && (
@@ -294,48 +304,33 @@ export default function ClientSidebar({ onToggle }) {
 
             <button
               onClick={() => window.dispatchEvent(new Event('open_talk_to_us'))}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10 text-left"
-              style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+              className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10 text-left"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
               <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
               Talk to Us / My Requests
             </button>
-
-
-          </div>
+          </CollapsibleGroup>
         </div>
 
         {/* DNN Section */}
         {!isHR && (
           <div className="px-3 pb-4 pt-2">
-            <p className="text-[10px] uppercase tracking-[2px] px-2 font-bold mb-2" style={{ color: GOLD }}>
-              Dyson News Network
-            </p>
-            <div className="flex flex-col gap-1">
-              {!isClientOnly && <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />}
-              <NavLink to="/dnn-archive" icon={Archive} location={location} label="Broadcast Archive" />
-              <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
-              <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
-            </div>
+            <CollapsibleGroup title="Dyson News Network" icon={Newspaper} open={!!openGroups.dnn} onToggle={() => toggleGroup('dnn')}>
+              {!isClientOnly && <SubLink to="/dnn-news" label="DNN News" location={location} />}
+              <SubLink to="/dnn-archive" label="Broadcast Archive" location={location} />
+              <SubLink to="/my-agent" label="Vette an Agent" location={location} />
+              <SubLink to="/financial-services" label="Select a Lender" location={location} />
+            </CollapsibleGroup>
           </div>
         )}
 
         {/* Heritage & Authority */}
-        <div className="pt-3 border-t mx-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-          <div className="text-[10px] uppercase tracking-[2px] mb-2 px-2 font-bold" style={{ color: GOLD }}>
-            Our Authority
-          </div>
-          <nav className="space-y-0.5">
-            {authorityLinks.map(({ label, to }) => {
-              const active = location.pathname === to.split('#')[0];
-              return (
-                <Link key={label} to={to}
-                  className="block px-2 py-1 rounded-lg text-xs transition-colors hover:text-[#D4AF37]"
-                  style={{ color: active ? GOLD : 'rgba(255,255,255,0.7)', background: active ? 'rgba(212,175,55,0.12)' : 'transparent', fontWeight: active ? 700 : 400 }}>
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="pt-3 border-t mx-3 px-1" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+          <CollapsibleGroup title="Our Authority" icon={Shield} open={!!openGroups.authority} onToggle={() => toggleGroup('authority')}>
+            {authorityLinks.map(({ label, to }) => (
+              <SubLink key={label} to={to} label={label} location={location} />
+            ))}
+          </CollapsibleGroup>
         </div>
 
         {/* Human Help */}
