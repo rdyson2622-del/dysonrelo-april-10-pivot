@@ -50,6 +50,31 @@ function NavLink({ to, icon: Icon, label, badge, location }) {
   );
 }
 
+// Indented sub-item under a portal's top pill header — lights up gold when it's the current page
+function SubLink({ to, label, location }) {
+  const active = location.pathname === to;
+  return (
+    <Link to={to}
+      className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+      style={{ color: active ? '#000' : 'rgba(212,175,55,0.75)', background: active ? GOLD : 'transparent' }}>
+      {label}
+    </Link>
+  );
+}
+
+// Full-width top pill link with icon — lights up gold when it's the current page
+function TopLink({ to, icon: Icon, label, location }) {
+  const active = location.pathname === to;
+  return (
+    <Link to={to}
+      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
+      style={{ color: active ? '#000' : GOLD, background: active ? GOLD : 'transparent', border: active ? 'none' : '1px solid transparent' }}>
+      {Icon && <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: active ? '#000' : GOLD }} />}
+      {label}
+    </Link>
+  );
+}
+
 export default function ClientSidebar({ onToggle }) {
   const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
@@ -124,129 +149,38 @@ export default function ClientSidebar({ onToggle }) {
       <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         {isReferralAgent ? (
           <>
-            <Link to="/referral-agent-explainer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              OPPORTUNITIES
-            </Link>
-            <Link to="/referral-process"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <Workflow className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              THE REFERRAL PROCESS
-            </Link>
-            <Link to="/referral-forms"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <FileSignature className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              REFERRAL FORMS
-            </Link>
-            <Link to="/admin/referral-agent-contacts"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Send className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              MY REFERRAL CONTACTS
-            </Link>
+            <TopLink to="/referral-agent-explainer" icon={Sparkles} label="OPPORTUNITIES" location={location} />
+            <TopLink to="/referral-process" icon={Workflow} label="THE REFERRAL PROCESS" location={location} />
+            <TopLink to="/referral-forms" icon={FileSignature} label="REFERRAL FORMS" location={location} />
+            <TopLink to="/admin/referral-agent-contacts" icon={Send} label="MY REFERRAL CONTACTS" location={location} />
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide opacity-40 cursor-not-allowed"
               style={{ color: GOLD }}>
               <UserCog className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
               MY DYSON RELO MEMBERS
             </div>
-            <Link to="/communications-explainer"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              COMMUNICATION HUB
-            </Link>
+            <TopLink to="/communications-explainer" icon={MessageCircle} label="COMMUNICATION HUB" location={location} />
           </>
         ) : isHR ? (
           <>
-            <Link to="/corporate-relo"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              RELOCATION SERVICES
-            </Link>
-            <Link to="/RelocationRoadmap"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              My Roadmaps
-            </Link>
-            <Link to="/CityGuide"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              City Guide
-            </Link>
-            <Link to="/real-estate-answers"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Estate Answers
-            </Link>
-            <Link to="/communications-explainer"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Communication Hub
-            </Link>
-            <Link to="/solve-my-story"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Solve My Story
-            </Link>
-            <Link to="/solutions"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Time Real Estate Solutions
-            </Link>
-            <Link to="/corporate-relo"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Estate News
-            </Link>
+            <TopLink to="/corporate-relo" icon={Star} label="RELOCATION SERVICES" location={location} />
+            <SubLink to="/RelocationRoadmap" label="My Roadmaps" location={location} />
+            <SubLink to="/CityGuide" label="City Guide" location={location} />
+            <SubLink to="/real-estate-answers" label="Real Estate Answers" location={location} />
+            <SubLink to="/communications-explainer" label="Communication Hub" location={location} />
+            <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
+            <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
+            <SubLink to="/corporate-relo" label="Real Estate News" location={location} />
           </>
         ) : (
           <>
-            <Link to="/relocation-intake"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              RELOCATION SERVICES
-            </Link>
-            <Link to="/RelocationRoadmap"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              My Roadmaps
-            </Link>
-            <Link to="/CityGuide"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              City Guide
-            </Link>
-            <Link to="/real-estate-answers"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Estate Answers
-            </Link>
-            <Link to="/communications-explainer"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Communication Hub
-            </Link>
-            <Link to="/solve-my-story"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Solve My Story
-            </Link>
-            <Link to="/solutions"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Time Real Estate Solutions
-            </Link>
-            <Link to="/dnn-news"
-              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              Real Estate News
-            </Link>
+            <TopLink to="/relocation-intake" icon={Star} label="RELOCATION SERVICES" location={location} />
+            <SubLink to="/RelocationRoadmap" label="My Roadmaps" location={location} />
+            <SubLink to="/CityGuide" label="City Guide" location={location} />
+            <SubLink to="/real-estate-answers" label="Real Estate Answers" location={location} />
+            <SubLink to="/communications-explainer" label="Communication Hub" location={location} />
+            <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
+            <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
+            <SubLink to="/dnn-news" label="Real Estate News" location={location} />
           </>
         )}
         {isAgent && (
@@ -326,9 +260,9 @@ export default function ClientSidebar({ onToggle }) {
           <div className="flex flex-col gap-1">
             <Link to="/communications-explainer"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:bg-white/10"
-              style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+              style={{ background: location.pathname === '/communications-explainer' ? GOLD : 'rgba(255,255,255,0.05)', color: location.pathname === '/communications-explainer' ? '#000' : '#fff' }}>
               <div className="relative shrink-0">
-                <MessageCircle className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                <MessageCircle className="w-3.5 h-3.5" style={{ color: location.pathname === '/communications-explainer' ? '#000' : GOLD }} />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
                     style={{ background: '#ef4444', color: '#fff' }}>
@@ -372,13 +306,16 @@ export default function ClientSidebar({ onToggle }) {
             Our Authority
           </div>
           <nav className="space-y-0.5">
-            {authorityLinks.map(({ label, to }) => (
-              <Link key={label} to={to}
-                className="block px-2 py-1 text-xs transition-colors hover:text-[#D4AF37]"
-                style={{ color: 'rgba(255,255,255,0.7)' }}>
-                {label}
-              </Link>
-            ))}
+            {authorityLinks.map(({ label, to }) => {
+              const active = location.pathname === to.split('#')[0];
+              return (
+                <Link key={label} to={to}
+                  className="block px-2 py-1 rounded-lg text-xs transition-colors hover:text-[#D4AF37]"
+                  style={{ color: active ? GOLD : 'rgba(255,255,255,0.7)', background: active ? 'rgba(212,175,55,0.12)' : 'transparent', fontWeight: active ? 700 : 400 }}>
+                  {label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
