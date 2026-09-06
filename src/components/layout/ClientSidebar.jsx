@@ -83,6 +83,7 @@ export default function ClientSidebar({ onToggle }) {
   const [showReceivingModal, setShowReceivingModal] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [portalRole, setPortalRole] = useState(null);
+  const [subscribed, setSubscribed] = useState(!!localStorage.getItem('dyson_portal'));
 
 
   useEffect(() => {
@@ -106,6 +107,7 @@ export default function ClientSidebar({ onToggle }) {
     const onRoleChange = () => {
       const updated = sessionStorage.getItem('dyson_role');
       setPortalRole(updated || 'client');
+      setSubscribed(!!localStorage.getItem('dyson_portal'));
     };
     window.addEventListener('dyson_role_change', onRoleChange);
     return () => window.removeEventListener('dyson_role_change', onRoleChange);
@@ -147,6 +149,23 @@ export default function ClientSidebar({ onToggle }) {
 
       {/* ── Two Core Value Links ── */}
       <div className="shrink-0 px-4 py-3 flex flex-col gap-1.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        {/* Subscribed HR/Client Command Center — promoted above Relocation Services, matching the Agent Command Center pattern */}
+        {subscribed && isHR && (
+          <Link to="/corporate-relo"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:opacity-90"
+            style={{ color: '#000', background: GOLD }}>
+            <ClipboardList className="w-3.5 h-3.5 shrink-0" style={{ color: '#000' }} />
+            HR COMMAND CENTER
+          </Link>
+        )}
+        {subscribed && isClientOnly && !isHR && (
+          <Link to="/"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:opacity-90"
+            style={{ color: '#000', background: GOLD }}>
+            <ClipboardList className="w-3.5 h-3.5 shrink-0" style={{ color: '#000' }} />
+            CLIENT COMMAND CENTER
+          </Link>
+        )}
         {isReferralAgent ? (
           <>
             <TopLink to="/referral-agent-explainer" icon={Sparkles} label="OPPORTUNITIES" location={location} />
