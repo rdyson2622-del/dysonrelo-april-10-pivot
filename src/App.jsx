@@ -250,6 +250,8 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         {/* Role Selector — standalone, no sidebar */}
         <Route path="/portal" element={<RoleSelector />} />
+        {/* Talking App — standalone V2V page, no portal chrome */}
+        <Route path="/talking-app" element={<TalkingApp />} />
 
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
@@ -273,7 +275,6 @@ const AuthenticatedApp = () => {
         <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/gemini" element={<GeminiSession />} />
         <Route path="/GeminiSession" element={<GeminiSession />} />
-        <Route path="/talking-app" element={<TalkingApp />} />
         {/* PERMANENT FIX: /communications-explainer is CRITICAL — do not remove */}
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/city-guide" element={<CityGuide />} />
