@@ -206,29 +206,46 @@ export default function ClientSidebar({ onToggle }) {
           </>
         ) : (
           <>
-            <Link to="/home"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <Home className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              SOLUTIONS
-            </Link>
             <Link to="/relocation-intake"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
+              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
               <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
               RELOCATION SERVICES
             </Link>
-            <Link to="/real-estate-answers"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD }}>
-              <Star className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              REAL ESTATE ANSWERS
+            <Link to="/RelocationRoadmap"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              My Roadmaps
             </Link>
-            <Link to="/master-show-sheet"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-black tracking-wide transition-all hover:bg-white/10"
-              style={{ color: GOLD, background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <TrendingUp className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              MY PROGRESS ROADMAP
+            <Link to="/CityGuide"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              City Guide
+            </Link>
+            <Link to="/real-estate-answers"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Real Estate Answers
+            </Link>
+            <Link to="/communications-explainer"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Communication Hub
+            </Link>
+            <Link to="/solve-my-story"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Solve My Story
+            </Link>
+            <Link to="/solutions"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Real Time Real Estate Solutions
+            </Link>
+            <Link to="/dnn-news"
+              className="flex items-center gap-1.5 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+              style={{ color: 'rgba(212,175,55,0.75)' }}>
+              Real Estate News
             </Link>
           </>
         )}
@@ -330,24 +347,7 @@ export default function ClientSidebar({ onToggle }) {
               Talk to Us / My Requests
             </button>
 
-            {/* Pure client sub-sections */}
-            {isClientOnly && !isHR && (
-              <>
-                {/* Relocation Services */}
-                <div className="mt-2 mb-1 px-1">
-                  <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: 'rgba(212,175,55,0.55)' }}>Relocation Services</p>
-                </div>
-                <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
-                <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
 
-                {/* Real Estate Answers */}
-                <div className="mt-2 mb-1 px-1">
-                  <p className="text-[9px] font-black tracking-[0.2em] uppercase" style={{ color: 'rgba(212,175,55,0.55)' }}>Real Estate Answers</p>
-                </div>
-                <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
-                <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
-              </>
-            )}
           </div>
         </div>
 
@@ -358,7 +358,7 @@ export default function ClientSidebar({ onToggle }) {
               Dyson News Network
             </p>
             <div className="flex flex-col gap-1">
-              <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />
+              {!isClientOnly && <NavLink to="/dnn-news" icon={Newspaper} location={location} label="DNN News" />}
               <NavLink to="/dnn-archive" icon={Archive} location={location} label="Broadcast Archive" />
               <NavLink to="/my-agent" icon={Shield} location={location} label="Vette an Agent" />
               <NavLink to="/financial-services" icon={DollarSign} location={location} label="Select a Lender" />
