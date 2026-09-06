@@ -150,7 +150,7 @@ export default function DnnStudioLanding() {
           className="text-center mt-4 text-sm sm:text-base italic font-semibold tracking-wide"
           style={{ color: '#8a6d1a' }}
         >
-          "We provide a lifetime workspace designed to maximize your real estate opportunities.
+          "We provide a Real Time...lifetime workspace designed to maximize your real estate opportunities.
         </p>
         <p className="text-center mt-0.5 text-sm sm:text-base italic font-semibold tracking-wide" style={{ color: '#8a6d1a' }}>
           No sales pitches, just real-time solutions and a clear path to execute results."
