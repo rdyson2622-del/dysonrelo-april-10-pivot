@@ -50,6 +50,16 @@ const WHY_SECTION = [
 export default function FindAgent() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    try {
+      const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
+      if (portal?.roleKey === 'agent') setSubscribed(true);
+    } catch {
+      // ignore malformed storage
+    }
+  }, []);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -70,14 +80,14 @@ export default function FindAgent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#121212' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#ede0cc' }}>
         <Loader2 className="w-8 h-8 animate-spin" style={{ color: GOLD }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#121212' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
       <ClientHeroMockup
         label="Your Relocation Agent Portal"
         quoteLine1='"We built a two-way referral engine designed to send you real, qualified business — not just leads.'
@@ -92,13 +102,13 @@ export default function FindAgent() {
             <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
           </div>
           <h1 className="display-heading mb-6" style={{ fontSize: '2.5rem', letterSpacing: '0.1em' }}>
-            <span style={{ color: '#fff' }}>Referral Business,</span><br />
+            <span style={{ color: '#1a1a1a' }}>Referral Business,</span><br />
             <span style={{ color: GOLD }}>Both Directions</span>
           </h1>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.9)', fontStyle: 'italic' }}>
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-4" style={{ color: 'rgba(26,26,26,0.9)', fontStyle: 'italic' }}>
             "Every relocating client needs someone with real knowledge of the destination market — an agent or broker with genuine 'boots on the ground.' That's the seat we're inviting you to fill."
           </p>
-          <p className="text-base max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+          <p className="text-base max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(26,26,26,0.65)' }}>
             Join the Dyson & Dyson network and you get vetted client referrals sent to you, and a trusted place to send your own relocating clients — with your fee protected on both ends.
           </p>
         </motion.div>
@@ -176,13 +186,15 @@ export default function FindAgent() {
           </p>
         </motion.div>
 
-        {/* Portal Subscribe */}
-        <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
+        {/* Portal Subscribe — hidden once the agent is already subscribed */}
+        {!subscribed && (
+          <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
+        )}
 
         {/* Bottom CTA */}
-        {!client && (
+        {!client && !subscribed && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="text-center pb-8">
-            <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>Ready to start sending and receiving vetted referrals?</p>
+            <p className="text-sm mb-4" style={{ color: 'rgba(26,26,26,0.6)' }}>Ready to start sending and receiving vetted referrals?</p>
             <a href="/agent-subscribe" className="inline-block px-10 py-3 rounded-full font-bold text-sm text-center" style={{ background: GOLD, color: '#000' }}>
               Apply to Join the Referral Network
             </a>
