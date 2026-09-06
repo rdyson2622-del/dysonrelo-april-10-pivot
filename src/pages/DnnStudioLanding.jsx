@@ -78,7 +78,7 @@ export default function DnnStudioLanding() {
           <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '34px', width: 'auto', opacity: 0.9 }} />
         </div>
         <div className="flex items-center gap-3">
-          {user ? (
+          {user && sessionStorage.getItem('dyson_role') ? (
             <>
               <button
                 onClick={() => navigate('/portal')}
