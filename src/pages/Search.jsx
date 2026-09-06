@@ -12,6 +12,12 @@ export default function Search() {
 
   useEffect(() => {
     base44.auth.me().then((user) => {
+      const sessionRole = sessionStorage.getItem('dyson_role');
+      if (user?.portal_role === 'vendor' || sessionRole === 'vendor') {
+        setIsSubscribed(true);
+        setChecked(true);
+        return;
+      }
       if (!user?.email) { setChecked(true); return; }
       base44.entities.VendorInterest.filter({ email: user.email }, '-created_date', 1).then((recs) => {
         setIsSubscribed(recs.length > 0);
