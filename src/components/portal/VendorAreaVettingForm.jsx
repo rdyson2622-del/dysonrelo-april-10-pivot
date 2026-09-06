@@ -6,9 +6,10 @@ const GOLD = '#D4AF37';
 const inputStyle = { background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.3)', color: '#fff' };
 
 const SERVICE_TYPES = [
-  { value: 'title_company', label: 'Title Company' },
+  { value: 'title_company', label: 'Title & Escrow' },
   { value: 'lender', label: 'Lender' },
   { value: 'inspector', label: 'Inspector' },
+  { value: 'appraiser', label: 'Appraiser' },
   { value: 'mover', label: 'Mover' },
   { value: 'stager', label: 'Stager' },
   { value: 'photographer', label: 'Photographer' },
@@ -37,9 +38,9 @@ export default function VendorAreaVettingForm() {
   return (
     <div className="rounded-2xl overflow-hidden shadow-xl mt-8" style={{ border: `2px solid ${GOLD}` }}>
       <div className="px-6 py-4 text-center" style={{ background: GOLD }}>
-        <p className="font-black text-lg tracking-wide" style={{ color: '#000' }}>Coming Soon: Enroll by Service Area</p>
+        <p className="font-black text-lg tracking-wide" style={{ color: '#000' }}>Enroll by Service Area</p>
         <p className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.65)' }}>
-          Tell us the areas you serve now to get on the fast-track vetting list before enrollment opens.
+          Whatever your profession — lending, title & escrow, inspection, appraisal, moving, or another service — tell us the areas you serve to get on the fast-track vetting list.
         </p>
       </div>
 
