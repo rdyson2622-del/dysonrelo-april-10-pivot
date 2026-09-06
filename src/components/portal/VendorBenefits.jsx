@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, MapPinned, ShieldCheck } from 'lucide-react';
+import { Users, MapPinned, ShieldCheck, TrendingUp, Radio, Handshake } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -12,18 +12,33 @@ const BENEFITS = [
   {
     icon: MapPinned,
     title: 'National + Local Coverage',
-    desc: "Whether you're a local inspector or appraiser in one town, a title/escrow office covering a county, or a lender licensed nationwide, you're matched to relocating clients by the exact areas and services you provide.",
+    desc: "Whether you're a local inspector or appraiser in one town, a title/escrow office covering a county, or a lender licensed nationwide, you're matched to relocating clients by the exact areas and services you provide — as our footprint grows city by city.",
   },
   {
     icon: ShieldCheck,
     title: 'Fast, Simple Vetting',
     desc: "No lengthy onboarding, regardless of your profession. Tell us your service type and coverage area and we run a rapid vetting pass — which also strengthens the local market intel we give our relocating clients.",
   },
+  {
+    icon: Handshake,
+    title: 'Warm Intros, Not Cold Calls',
+    desc: "You're introduced by name to clients who already know they need your service — no bidding wars, no lead-gen spam. Just relationship-based referrals from a network built on trust.",
+  },
+  {
+    icon: TrendingUp,
+    title: 'Grow Your Book of Business',
+    desc: "Every relocation is a new client relationship — and often a source of repeat business and referrals of their own. As the network scales nationally, your pipeline of relocating clients scales with it.",
+  },
+  {
+    icon: Radio,
+    title: 'Visibility in DNN News',
+    desc: "Vetted vendors are featured in our Daily News Network coverage and market updates — putting your name and expertise in front of relocating clients and partner agents before they even ask.",
+  },
 ];
 
 export default function VendorBenefits() {
   return (
-    <div className="w-full max-w-3xl mx-auto mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+    <div className="w-full max-w-4xl mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
       {BENEFITS.map((b) => (
         <div
           key={b.title}
