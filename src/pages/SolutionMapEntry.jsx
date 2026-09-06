@@ -143,7 +143,7 @@ export default function SolutionMapEntry({ hideCharliePresenter = false }) {
       {!hideCharliePresenter && <CharliePagePresenter pageKey="solution-map-entry" />}
 
       {/* ── Header ── */}
-      <header className="flex items-center justify-between px-6 py-4 pt-28 border-b border-white/5">
+      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
         <div />
         <div className="flex items-center gap-3">
           {user ? (
