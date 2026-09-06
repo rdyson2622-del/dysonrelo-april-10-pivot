@@ -57,8 +57,8 @@ export default function ClientStory({ label, headline, media, children, defaultO
 
         {/* Right: media, in a black box on the tan background */}
         {media && (
-          <div className="w-full md:w-1/2 shrink-0 flex items-center justify-center p-5 md:p-8" style={{ minHeight: '320px' }}>
-            <div className="relative w-full h-full rounded-xl overflow-hidden" style={{ background: '#000', border: `1px solid ${GOLD}`, minHeight: '260px' }}>
+          <div className="w-full md:w-1/4 shrink-0 flex items-center justify-center p-5 md:p-8" style={{ minHeight: '160px' }}>
+            <div className="relative w-full h-full rounded-xl overflow-hidden" style={{ background: '#000', border: `1px solid ${GOLD}`, minHeight: '130px' }}>
               {media}
             </div>
           </div>
