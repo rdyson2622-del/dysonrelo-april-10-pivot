@@ -24,6 +24,7 @@ import RelocationIntake from './pages/RelocationIntake';
 import RelocationRoadmap from './components/intake/RelocationRoadmap';
 import FindAgent from './pages/FindAgent';
 import GeminiSession from './pages/GeminiSession';
+import TalkingApp from './pages/TalkingApp';
 import Admin from './pages/Admin';
 import CharlieScripts from './pages/CharlieScripts';
 import AdminClients from './pages/AdminClients';
@@ -272,6 +273,7 @@ const AuthenticatedApp = () => {
         <Route path="/RelocationRoadmap" element={<RelocationRoadmap />} />
         <Route path="/gemini" element={<GeminiSession />} />
         <Route path="/GeminiSession" element={<GeminiSession />} />
+        <Route path="/talking-app" element={<TalkingApp />} />
         {/* PERMANENT FIX: /communications-explainer is CRITICAL — do not remove */}
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/city-guide" element={<CityGuide />} />
