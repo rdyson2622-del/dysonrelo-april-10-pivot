@@ -134,14 +134,6 @@ export default function FindAgent() {
 
 
 
-        {/* Network Scale Statement */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
-          className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
-          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            We update our vetted, affiliated agent network on a regular basis — currently over <span className="font-bold" style={{ color: GOLD }}>500 vetted affiliated agents</span> across all 50 states seed our network monthly with many of the best of the best in U.S. markets and communities. We specialize in working with local, independent brokerages and their agents, bringing a real community feel to our services.
-          </p>
-        </motion.div>
-
         {/* Solution Map — animated 4-step agent selection flow, shown above the problem box */}
         <AgentSelectionSolutionMap />
 
@@ -175,6 +167,14 @@ export default function FindAgent() {
             );
           })}
         </div>
+
+        {/* Network Scale Statement */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
+          className="rounded-3xl p-8 text-center" style={{ background: '#000', border: `1px solid ${GOLD}44` }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            We update our vetted, affiliated agent network on a regular basis — currently over <span className="font-bold" style={{ color: GOLD }}>500 vetted affiliated agents</span> across all 50 states seed our network monthly with many of the best of the best in U.S. markets and communities. We specialize in working with local, independent brokerages and their agents, bringing a real community feel to our services.
+          </p>
+        </motion.div>
 
         {/* Portal Subscribe */}
         <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
