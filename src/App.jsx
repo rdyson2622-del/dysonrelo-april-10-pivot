@@ -244,13 +244,15 @@ const AuthenticatedApp = () => {
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
       </Route>
 
-      {/* Root → Role Selector if signed in, News if not (never send unauthenticated users to /login) */}
-      <Route path="/" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Navigate to="/studio-landing" replace />} />
+      {/* Root → Role Selector, the current front-door layout for clients and others (signed in or not) */}
+      <Route path="/" element={<Navigate to="/portal" replace />} />
+
+      {/* Role Selector — the current front-door layout for clients and others.
+          Public: works for both signed-in and first-time visitors. */}
+      <Route path="/portal" element={<RoleSelector />} />
 
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        {/* Role Selector — standalone, no sidebar */}
-        <Route path="/portal" element={<RoleSelector />} />
         {/* Talking App — standalone V2V page, no portal chrome */}
         <Route path="/talking-app" element={<TalkingApp />} />
 
