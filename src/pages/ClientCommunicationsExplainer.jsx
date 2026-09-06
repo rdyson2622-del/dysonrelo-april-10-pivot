@@ -1,8 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, MessageSquare, CheckCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle, MessageSquare, CheckCircle, Briefcase, ArrowRight } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+
+const ROADMAP_TEASER = ['Onboarding & Profile', 'Agent Match', 'Property Search', 'Due Diligence', 'Escrow & Closing', 'Move-In'];
+
+function HRAdvanceHomeworkCard() {
+  let isHR = false;
+  try { isHR = sessionStorage.getItem('dyson_role') === 'hr'; } catch (_) {}
+  if (!isHR) return null;
+
+  return (
+    <div className="rounded-2xl p-6 text-left mb-10" style={{ background: '#1a1a1a', border: `2px solid ${GOLD}` }}>
+      <div className="flex items-start gap-4 mb-4">
+        <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.2)' }}>
+          <Briefcase className="w-6 h-6" style={{ color: GOLD }} />
+        </div>
+        <div>
+          <p className="text-xs font-black tracking-[0.2em] uppercase mb-1" style={{ color: GOLD }}>For HR Managers — Let Us Lighten Your Load</p>
+          <h4 className="text-lg font-bold text-white">Get Us Involved Early — Before the Move Even Starts</h4>
+        </div>
+      </div>
+      <p className="text-sm leading-relaxed text-white mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+        The moment you get notice of a pending relocation for an employee or executive, your first call can be to us. Give us the specifics — origin, destination, and timeline — and we'll do the timely homework <strong style={{ color: GOLD }}>in advance, at no expense to you or your company</strong>.
+      </p>
+      <p className="text-sm leading-relaxed text-white mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+        By the time you sit down with the employee, you'll be armed with a wealth of information: what the entire move process looks like, insight on their destination location, a full relocation roadmap, and any other details you need to confidently guide them through it.
+      </p>
+      <div className="flex flex-wrap gap-2 mb-6">
+        {ROADMAP_TEASER.map((step, i) => (
+          <div key={step} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: GOLD }}>
+            <span className="opacity-60">{i + 1}.</span> {step}
+          </div>
+        ))}
+      </div>
+      <Link to="/RelocationRoadmap"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all hover:opacity-90"
+        style={{ background: GOLD, color: '#000' }}>
+        Preview the Relocation Roadmap <ArrowRight className="w-4 h-4" />
+      </Link>
+    </div>
+  );
+}
 
 export default function ClientCommunicationsExplainer() {
   return (
@@ -32,6 +73,8 @@ export default function ClientCommunicationsExplainer() {
             <p className="text-lg leading-relaxed mb-12" style={{ color: '#4a4a4a', fontFamily: 'Georgia, serif' }}>
               Every message you send — whether through Charlie chat, SMS reply, or email — reaches your dedicated team in one unified thread. No jumping between apps. No missed messages. Just a conversation you can trust.
             </p>
+
+            <HRAdvanceHomeworkCard />
 
             <h3 className="text-2xl font-bold mb-8" style={{ fontFamily: 'Cormorant Garamond, serif', letterSpacing: '0.05em', color: '#1a1a1a' }}>
               How It Works

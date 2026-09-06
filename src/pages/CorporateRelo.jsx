@@ -383,7 +383,8 @@ export default function CorporateRelo() {
         <RealEstateAnswers />
 
         <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
-          <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Communication Hub</p>
+          <p className="text-xs font-black tracking-[0.35em] uppercase mb-1" style={{ color: GOLD }}>Communication Hub</p>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>We can lighten your load — loop us in early and we'll do the homework for you.</p>
         </div>
         <ClientCommunicationsExplainer />
 
