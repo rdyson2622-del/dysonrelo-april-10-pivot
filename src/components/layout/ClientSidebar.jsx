@@ -235,7 +235,9 @@ export default function ClientSidebar({ onToggle }) {
             <SubLink to="/communications-explainer" label="Communication Hub" location={location} />
             <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
             <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
-            <SubLink to="/corporate-relo" label="Real Estate News" location={location} />
+            <SubLink to="/corporate-relo" label="DNN Real Estate News" location={location} />
+            <SubLink to="/my-agent" label="Vette an Agent" location={location} />
+            <SubLink to="/financial-services" label="Select a Lender" location={location} />
           </CollapsibleGroup>
         ) : (
           <CollapsibleGroup title="RELOCATION SERVICES" icon={Star} open={!!openGroups.relo} onToggle={() => toggleGroup('relo')}>
@@ -246,7 +248,9 @@ export default function ClientSidebar({ onToggle }) {
             <SubLink to="/communications-explainer" label="Communication Hub" location={location} />
             <SubLink to="/solve-my-story" label="Solve My Story" location={location} />
             <SubLink to="/solutions" label="Real Time Real Estate Solutions" location={location} />
-            <SubLink to="/dnn-news" label="Real Estate News" location={location} />
+            <SubLink to="/dnn-news" label="DNN Real Estate News" location={location} />
+            <SubLink to="/my-agent" label="Vette an Agent" location={location} />
+            <SubLink to="/financial-services" label="Select a Lender" location={location} />
           </CollapsibleGroup>
         )}
 
@@ -316,8 +320,6 @@ export default function ClientSidebar({ onToggle }) {
             <CollapsibleGroup title="Dyson News Network" icon={Newspaper} open={!!openGroups.dnn} onToggle={() => toggleGroup('dnn')}>
               {!isClientOnly && <SubLink to="/dnn-news" label="DNN News" location={location} />}
               <SubLink to="/dnn-archive" label="Broadcast Archive" location={location} />
-              <SubLink to="/my-agent" label="Vette an Agent" location={location} />
-              <SubLink to="/financial-services" label="Select a Lender" location={location} />
             </CollapsibleGroup>
           </div>
         )}
