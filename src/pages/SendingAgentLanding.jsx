@@ -57,7 +57,7 @@ export default function SendingAgentLanding() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0d0d0d' }}>
+    <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
       <StudioHeroBanner />
 
@@ -75,11 +75,11 @@ export default function SendingAgentLanding() {
         <p className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: GOLD }}>
           PRIVATE REFERRAL NETWORK · BOUTIQUE AGENT PROGRAM
         </p>
-        <h1 className="font-black text-4xl md:text-5xl leading-tight text-white mb-6 max-w-3xl mx-auto"
-          style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+        <h1 className="font-black text-4xl md:text-5xl leading-tight mb-6 max-w-3xl mx-auto"
+          style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
           Don't Leave Money on the Table<br />When Your Client Leaves the State.
         </h1>
-        <p className="text-lg leading-relaxed max-w-xl mx-auto mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
+        <p className="text-lg leading-relaxed max-w-xl mx-auto mb-8" style={{ color: 'rgba(26,26,26,0.7)' }}>
           You have the listing — but where are they moving? We handle the destination, protect your 25% referral fee, and manage the full move logistics.
         </p>
         <a href="#submit"
@@ -228,11 +228,11 @@ export default function SendingAgentLanding() {
 
         {/* Footer contact */}
         <div className="mt-8 text-center">
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Questions? Call or text us directly.</p>
+          <p className="text-sm" style={{ color: 'rgba(26,26,26,0.5)' }}>Questions? Call or text us directly.</p>
           <a href="tel:+18583531200" className="flex items-center justify-center gap-2 mt-2 font-black text-lg" style={{ color: GOLD }}>
             <Phone className="w-5 h-5" /> (858) 353-1200
           </a>
-          <p className="text-xs mt-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          <p className="text-xs mt-4" style={{ color: 'rgba(26,26,26,0.35)' }}>
             Dyson & Dyson Relocation Group · CalDRE #XXXXXXX · dysonanddyson.com
           </p>
         </div>
