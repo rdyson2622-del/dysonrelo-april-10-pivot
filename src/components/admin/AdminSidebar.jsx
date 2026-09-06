@@ -204,6 +204,7 @@ const NAV_SECTIONS = [
       { label: "Bob's Video Answers", path: '/admin/bob-library', icon: Video },
       { label: 'Escalations', path: '/admin/charlie-escalations', icon: AlertTriangle },
       { label: 'Voice Presentation', path: '/charlie-voice', icon: MessageCircle },
+      { label: '📞 Voice Concierge (V2V) Analytics', path: '/admin/voice-concierge-analytics', icon: BarChart3, highlight: true },
     ],
   },
   {

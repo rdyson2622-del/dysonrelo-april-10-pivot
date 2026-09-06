@@ -14,6 +14,7 @@ export default function TalkingApp() {
   const [roadmap, setRoadmap] = useState(null);
   const [generatingRoadmap, setGeneratingRoadmap] = useState(false);
   const prevStatusRef = useRef(status);
+  const sessionLogIdRef = useRef(null);
 
   const addTranscript = (entry) => setTranscript((prev) => [...prev, entry]);
 
@@ -27,7 +28,12 @@ export default function TalkingApp() {
       if (userText.length > 10) {
         setGeneratingRoadmap(true);
         base44.functions.invoke('realEstateIssueRoadmap', { request_text: userText, context: 'general' })
-          .then((res) => setRoadmap(res.data?.request || null))
+          .then((res) => {
+            setRoadmap(res.data?.request || null);
+            if (sessionLogIdRef.current) {
+              base44.entities.TalkingSessionLog.update(sessionLogIdRef.current, { roadmap_generated: true }).catch(() => {});
+            }
+          })
           .catch(() => {})
           .finally(() => setGeneratingRoadmap(false));
       }
@@ -55,6 +61,7 @@ export default function TalkingApp() {
           setStatus={setStatus}
           onTranscript={addTranscript}
           onSpeaker={setCurrentSpeaker}
+          onSessionId={(id) => { sessionLogIdRef.current = id; }}
           autoStart
         />
       </div>

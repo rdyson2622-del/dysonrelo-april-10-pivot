@@ -1,0 +1,86 @@
+{
+  "name": "TalkingSessionLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Caller's user ID"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Denormalized caller name"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Denormalized caller email"
+    },
+    "model": {
+      "type": "string",
+      "description": "Gemini Live model used for this session"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "description": "Total call length in seconds"
+    },
+    "transcript_turns": {
+      "type": "number",
+      "description": "Number of transcribed speech turns (user + assistant)"
+    },
+    "roadmap_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a real estate roadmap was generated from this call"
+    },
+    "estimated_cost_usd": {
+      "type": "number",
+      "description": "Estimated Gemini Live API cost for this session, based on audio-minute pricing"
+    }
+  },
+  "required": [
+    "user_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

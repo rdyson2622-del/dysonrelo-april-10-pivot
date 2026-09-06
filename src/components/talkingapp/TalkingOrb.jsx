@@ -6,13 +6,17 @@ const GOLD = '#D4AF37';
 const SYSTEM_PROMPT = `You are Charlie, the AI voice concierge for Dyson & Dyson Companies real estate relocation. Be warm, conversational, and helpful — answer real estate and relocation questions naturally, in short spoken-style replies. If you don't know something, offer to connect the caller with the human team.`;
 const GREETING_INSTRUCTION = `(The caller just connected — greet them now, out loud, then wait for their reply.) Say something like: "Good morning, this is Charlie, your real estate concierge. How can I help you today?"`;
 
-export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, autoStart = false }) {
+export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, autoStart = false, onSessionId }) {
   const wsRef = useRef(null);
   const micCtxRef = useRef(null);
   const processorRef = useRef(null);
   const streamRef = useRef(null);
   const playCtxRef = useRef(null);
   const nextPlayTimeRef = useRef(0);
+  const sessionLogIdRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const turnCountRef = useRef(0);
+  const reportedRef = useRef(false);
 
   const startMicrophone = async (ws) => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -75,6 +79,20 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
     stopPlayback();
   };
 
+  // Reports session duration/turns for admin analytics + cost tracking — fires
+  // once per session however it ends (manual "End Session" or connection drop).
+  const reportSessionEnd = () => {
+    if (reportedRef.current || !sessionLogIdRef.current) return;
+    reportedRef.current = true;
+    const duration_seconds = startTimeRef.current ? Math.round((Date.now() - startTimeRef.current) / 1000) : 0;
+    base44.functions.invoke('geminiLiveProxy', {
+      action: 'end_session',
+      sessionLogId: sessionLogIdRef.current,
+      duration_seconds,
+      transcript_turns: turnCountRef.current,
+    }).catch(() => {});
+  };
+
   const startSession = async () => {
     setStatus('connecting');
     try {
@@ -83,7 +101,11 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
         systemPrompt: SYSTEM_PROMPT,
       });
       if (!res.data?.wsUrl) throw new Error(res.data?.error || 'Could not start session');
-      const { wsUrl, model } = res.data;
+      const { wsUrl, model, sessionLogId } = res.data;
+      sessionLogIdRef.current = sessionLogId || null;
+      reportedRef.current = false;
+      turnCountRef.current = 0;
+      onSessionId?.(sessionLogId || null);
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
@@ -109,6 +131,7 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
 
         if (data.setupComplete) {
           setStatus('active');
+          startTimeRef.current = Date.now();
           onTranscript({ role: 'system', text: 'Session started.' });
           await startMicrophone(ws);
           if (autoStart) {
@@ -127,9 +150,11 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
           }
         }
         if (data.serverContent?.inputTranscription?.text) {
+          turnCountRef.current += 1;
           onTranscript({ role: 'user', text: data.serverContent.inputTranscription.text });
         }
         if (data.serverContent?.outputTranscription?.text) {
+          turnCountRef.current += 1;
           onTranscript({ role: 'assistant', text: data.serverContent.outputTranscription.text });
         }
         if (data.serverContent?.interrupted) {
@@ -140,8 +165,8 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
           onSpeaker(null);
         }
       };
-      ws.onerror = () => { setStatus('ready'); cleanup(); };
-      ws.onclose = () => { setStatus((s) => (s === 'active' || s === 'connecting' ? 'ready' : s)); };
+      ws.onerror = () => { reportSessionEnd(); setStatus('ready'); cleanup(); };
+      ws.onclose = () => { reportSessionEnd(); setStatus((s) => (s === 'active' || s === 'connecting' ? 'ready' : s)); };
     } catch (err) {
       onTranscript({ role: 'system', text: err.message || 'Failed to start session' });
       setStatus('ready');
@@ -149,6 +174,7 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
   };
 
   const endSession = () => {
+    reportSessionEnd();
     cleanup();
     onSpeaker(null);
     setStatus('ready');

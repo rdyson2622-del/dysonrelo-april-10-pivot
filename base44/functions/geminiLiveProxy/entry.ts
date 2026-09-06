@@ -15,20 +15,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action, clientInfo, systemPrompt } = await req.json();
+    const { action, systemPrompt, sessionLogId, duration_seconds, transcript_turns } = await req.json();
 
     if (action === 'start_session') {
       // --- DAILY SESSION CAP: max 3 sessions per user per day ---
       const today = new Date().toISOString().slice(0, 10); // "2026-03-17"
-      const todaySessions = await base44.asServiceRole.entities.ChatMessage.filter({
-        client_id: user.id,
-        message_type: 'task_update',
-      });
-
-      const sessionsTodayCount = todaySessions.filter(m =>
-        m.content?.startsWith('[GEMINI LIVE SESSION STARTED]') &&
-        m.created_date?.slice(0, 10) === today
-      ).length;
+      const todaySessions = await base44.asServiceRole.entities.TalkingSessionLog.filter({ user_id: user.id });
+      const sessionsTodayCount = todaySessions.filter(s => s.started_at?.slice(0, 10) === today).length;
 
       if (sessionsTodayCount >= 3) {
         return Response.json({
@@ -43,12 +36,13 @@ Deno.serve(async (req) => {
       const model = 'gemini-2.5-flash-preview-native-audio-dialog';
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
 
-      // Store session start in database
-      await base44.asServiceRole.entities.ChatMessage.create({
-        client_id: user.id,
-        role: 'charlie',
-        content: `[GEMINI LIVE SESSION STARTED] Client: ${clientInfo?.name || user.full_name} | Email: ${clientInfo?.email || user.email}`,
-        message_type: 'task_update',
+      // Log the session start for admin analytics/cost tracking
+      const log = await base44.asServiceRole.entities.TalkingSessionLog.create({
+        user_id: user.id,
+        user_name: user.full_name || '',
+        user_email: user.email || '',
+        model,
+        started_at: new Date().toISOString(),
       });
 
       return Response.json({
@@ -56,7 +50,28 @@ Deno.serve(async (req) => {
         model,
         systemPrompt,
         clientId: user.id,
+        sessionLogId: log.id,
       });
+    }
+
+    if (action === 'end_session') {
+      if (!sessionLogId) {
+        return Response.json({ error: 'sessionLogId is required' }, { status: 400 });
+      }
+      const seconds = Number(duration_seconds) || 0;
+      const minutes = seconds / 60;
+      // Rough estimate: Gemini 2.5 Flash native-audio Live pricing is ~$0.005/min
+      // audio-in + ~$0.018/min audio-out; assume roughly equal in/out per call.
+      const estimated_cost_usd = Math.round(minutes * 0.023 * 10000) / 10000;
+
+      const updated = await base44.asServiceRole.entities.TalkingSessionLog.update(sessionLogId, {
+        ended_at: new Date().toISOString(),
+        duration_seconds: seconds,
+        transcript_turns: Number(transcript_turns) || 0,
+        estimated_cost_usd,
+      });
+
+      return Response.json({ success: true, log: updated });
     }
 
     return Response.json({ error: 'Unknown action' }, { status: 400 });
