@@ -20,6 +20,7 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [clientRecord, setClientRecord] = useState(null);
   const [checkedSubscriber, setCheckedSubscriber] = useState(false);
+  const isReferralAgentPortal = typeof window !== 'undefined' && sessionStorage.getItem('dyson_role') === 'referral_agent';
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,10 +72,12 @@ export default function Home() {
       {/* ── Scrollable following sections ── */}
       <div className="w-full px-8 pb-20 pt-4" style={{ background: '#ede0cc' }}>
 
-        {/* ── SEARCH ACROSS ALL PLATFORMS ── */}
-        <div className="w-full mt-8 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
-          <PropertyPlatformSearch />
-        </div>
+        {/* ── SEARCH ACROSS ALL PLATFORMS — hidden for the Inactive Licensed Agents (referral agent) portal ── */}
+        {!isReferralAgentPortal && (
+          <div className="w-full mt-8 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
+            <PropertyPlatformSearch />
+          </div>
+        )}
 
         {/* ── FIND A PRO ── */}
         <div className="w-full mt-6 mb-2 rounded-2xl px-8 py-10" style={{ background: '#000' }}>
