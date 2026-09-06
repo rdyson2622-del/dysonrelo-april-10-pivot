@@ -45,9 +45,6 @@ export default function ClientHeroMockup() {
 
         {/* Studio video — right, ~50% size */}
         <div className="w-full md:w-1/2 shrink-0">
-          <div className="flex justify-center mb-4">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
-          </div>
           <div className="relative rounded-2xl overflow-hidden mx-auto" style={{ border: `2px solid ${GOLD}`, background: '#000', maxWidth: '420px' }}>
             <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
