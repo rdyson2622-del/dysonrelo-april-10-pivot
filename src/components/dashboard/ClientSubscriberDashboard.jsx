@@ -7,6 +7,7 @@ import {
   Map, Sparkles, Phone, ArrowRight, Home as HomeIcon
 } from 'lucide-react';
 import RequestInfoWidget from './RequestInfoWidget';
+import ClientMilestoneSteps from './ClientMilestoneSteps';
 
 const GOLD = '#D4AF37';
 
@@ -83,6 +84,9 @@ export default function ClientSubscriberDashboard({ client }) {
             View Full Roadmap →
           </Link>
         </div>
+
+        {/* Action steps */}
+        <ClientMilestoneSteps clientId={client.id} />
 
         {/* Roadmap activity */}
         <div className="rounded-2xl px-6 py-5 mb-6" style={{ background: '#111', border: '1px solid rgba(212,175,55,0.25)' }}>
