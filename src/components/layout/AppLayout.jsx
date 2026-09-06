@@ -35,12 +35,8 @@ export default function AppLayout() {
   }, []);
 
   // "Talk to us" pill is now the universal floating widget — every portal,
-  // every page. Small, non-interrupting, bottom-center, with the Plan of
-  // Action roadmap strip stacked above it.
-  // Don't show it on pages that already have embedded chat
-  const hideFloatingCharlie = ['/Chat', '/Dashboard', '/dnn-news', '/corporate-relo'].some(path => 
-     location.pathname.startsWith(path)
-   );
+  // every page, with no exceptions, since it may become the primary
+  // talking/voice entry point.
 
   // Video pipeline mode: strip ALL portal chrome and render only the page.
   const isVideoMode = new URLSearchParams(location.search).get('videoMode') === 'true';
@@ -98,7 +94,7 @@ export default function AppLayout() {
       </div>
       <MobileBottomNav />
       <PageNumberBadge />
-      {!hideFloatingCharlie && <TalkToUsPill />}
+      <TalkToUsPill />
       <PWAInstallPrompt />
     </div>
   );
