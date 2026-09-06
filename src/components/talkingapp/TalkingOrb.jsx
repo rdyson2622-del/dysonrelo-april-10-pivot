@@ -3,7 +3,39 @@ import { Mic, Square, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
-const SYSTEM_PROMPT = `You are Charlie, the AI voice concierge for Dyson & Dyson Companies real estate relocation. Be warm, conversational, and helpful — answer real estate and relocation questions naturally, in short spoken-style replies. If you don't know something, offer to connect the caller with the human team.`;
+const SYSTEM_PROMPT = `You are Charlie, the AI voice concierge for Dyson & Dyson Companies real estate relocation. Be warm, conversational, and helpful — answer real estate and relocation questions naturally, in short spoken-style replies.
+
+You have two tools:
+- search_knowledge_base: ALWAYS use this first for anything specific to Dyson & Dyson (our process, fees, agent network, services) before answering from general knowledge — it has our verified company answers.
+- escalate_to_human: use this when the caller asks something you're not confident about (exact legal/lending specifics, licensed advice, anything the knowledge base didn't cover), or when they explicitly ask to speak to a person. After calling it, tell the caller warmly that you've noted it for the team to follow up with them directly, and ask for their name/email if you don't have it yet.`;
+
+const TOOLS = [{
+  functionDeclarations: [
+    {
+      name: 'search_knowledge_base',
+      description: "Search Dyson & Dyson's internal knowledge base for verified, company-specific answers (process, fees, agent network, services, city info) before relying on general knowledge.",
+      parameters: {
+        type: 'object',
+        properties: { query: { type: 'string', description: 'The consumer question or topic to search for' } },
+        required: ['query'],
+      },
+    },
+    {
+      name: 'escalate_to_human',
+      description: "Flag a question for a human team member to follow up on, when you're not confident answering or the caller asks for a person.",
+      parameters: {
+        type: 'object',
+        properties: {
+          question: { type: 'string', description: "The caller's exact question" },
+          consumer_name: { type: 'string', description: "Caller's name if mentioned" },
+          consumer_email: { type: 'string', description: "Caller's email if mentioned" },
+          priority: { type: 'string', enum: ['low', 'medium', 'high', 'urgent'] },
+        },
+        required: ['question'],
+      },
+    },
+  ],
+}];
 const GREETING_INSTRUCTION = `(The caller just connected — greet them now, out loud, then wait for their reply.) Say something like: "Good morning, this is Charlie, your real estate concierge. How can I help you today?"`;
 
 export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, autoStart = false, onSessionId }) {
@@ -118,6 +150,7 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
               speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } } },
             },
             systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            tools: TOOLS,
             inputAudioTranscription: {},
             outputAudioTranscription: {},
             enableAffectiveDialog: true,
@@ -171,6 +204,31 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
         }
         if (data.serverContent?.turnComplete) {
           onSpeaker(null);
+        }
+
+        if (data.toolCall?.functionCalls) {
+          const functionResponses = await Promise.all(data.toolCall.functionCalls.map(async (fc) => {
+            let result = {};
+            try {
+              if (fc.name === 'search_knowledge_base') {
+                const res = await base44.functions.invoke('charlieKnowledgeSearch', { query: fc.args?.query || '' });
+                result = res.data;
+              } else if (fc.name === 'escalate_to_human') {
+                const res = await base44.functions.invoke('charlieEscalate', {
+                  question: fc.args?.question,
+                  consumer_name: fc.args?.consumer_name,
+                  consumer_email: fc.args?.consumer_email,
+                  priority: fc.args?.priority,
+                });
+                result = res.data;
+                onTranscript({ role: 'system', text: 'Flagged this question for the team to follow up.' });
+              }
+            } catch (e) {
+              result = { error: e.message };
+            }
+            return { id: fc.id, name: fc.name, response: { result } };
+          }));
+          ws.send(JSON.stringify({ toolResponse: { functionResponses } }));
         }
       };
       ws.onerror = () => { reportSessionEnd(); setStatus('ready'); cleanup(); };
