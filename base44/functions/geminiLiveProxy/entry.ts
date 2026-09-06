@@ -38,7 +38,9 @@ Deno.serve(async (req) => {
       }
       // -----------------------------------------------------------
 
-      const model = 'gemini-2.0-flash-live-001';
+      // Native-audio Live model — supports barge-in interruption, affective
+      // (emotion-aware) dialog, and proactive speaking without a text round-trip.
+      const model = 'gemini-2.5-flash-preview-native-audio-dialog';
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
 
       // Store session start in database

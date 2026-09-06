@@ -1,23 +1,26 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Mic, Square, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
-const SYSTEM_PROMPT = `You are Charlie, the AI voice concierge for Dyson & Dyson Companies. Be warm, conversational, and helpful — answer real estate and relocation questions naturally. If you don't know something, offer to connect the caller with the human team.`;
+const SYSTEM_PROMPT = `You are Charlie, the AI voice concierge for Dyson & Dyson Companies real estate relocation. Be warm, conversational, and helpful — answer real estate and relocation questions naturally, in short spoken-style replies. If you don't know something, offer to connect the caller with the human team.`;
+const GREETING_INSTRUCTION = `(The caller just connected — greet them now, out loud, then wait for their reply.) Say something like: "Good morning, this is Charlie, your real estate concierge. How can I help you today?"`;
 
-export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker }) {
+export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, autoStart = false }) {
   const wsRef = useRef(null);
-  const audioCtxRef = useRef(null);
+  const micCtxRef = useRef(null);
   const processorRef = useRef(null);
   const streamRef = useRef(null);
+  const playCtxRef = useRef(null);
+  const nextPlayTimeRef = useRef(0);
 
   const startMicrophone = async (ws) => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
-    const audioCtx = new AudioContext({ sampleRate: 16000 });
-    audioCtxRef.current = audioCtx;
-    const source = audioCtx.createMediaStreamSource(stream);
-    const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+    const micCtx = new AudioContext({ sampleRate: 16000 });
+    micCtxRef.current = micCtx;
+    const source = micCtx.createMediaStreamSource(stream);
+    const processor = micCtx.createScriptProcessor(4096, 1, 1);
     processorRef.current = processor;
     processor.onaudioprocess = (e) => {
       if (ws.readyState !== WebSocket.OPEN) return;
@@ -25,18 +28,25 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker 
       const pcm = new Int16Array(input.length);
       for (let i = 0; i < input.length; i++) pcm[i] = Math.max(-32768, Math.min(32767, input[i] * 32768));
       const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
-      ws.send(JSON.stringify({ type: 'audio_chunk', data: b64 }));
+      ws.send(JSON.stringify({ realtimeInput: { mediaChunks: [{ mimeType: 'audio/pcm;rate=16000', data: b64 }] } }));
     };
     source.connect(processor);
-    processor.connect(audioCtx.destination);
+    processor.connect(micCtx.destination);
   };
 
-  const playAudio = (b64Audio) => {
+  // Schedules incoming 24kHz PCM chunks back-to-back on one AudioContext so
+  // playback is gap-free instead of one new context per chunk.
+  const playAudioChunk = (b64Audio) => {
     try {
+      if (!playCtxRef.current || playCtxRef.current.state === 'closed') {
+        playCtxRef.current = new AudioContext({ sampleRate: 24000 });
+        nextPlayTimeRef.current = 0;
+      }
+      const ctx = playCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
       const raw = atob(b64Audio);
       const bytes = new Uint8Array(raw.length);
       for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-      const ctx = new AudioContext({ sampleRate: 24000 });
       const numSamples = bytes.buffer.byteLength / 2;
       const buffer = ctx.createBuffer(1, numSamples, 24000);
       const data = buffer.getChannelData(0);
@@ -45,15 +55,24 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker 
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.connect(ctx.destination);
-      source.start();
+      const startAt = Math.max(ctx.currentTime, nextPlayTimeRef.current);
+      source.start(startAt);
+      nextPlayTimeRef.current = startAt + buffer.duration;
     } catch (e) { console.error('Audio playback error:', e); }
   };
 
+  // Barge-in: Gemini sends `interrupted` the moment the caller talks over
+  // Charlie — flush anything queued so playback stops immediately.
+  const stopPlayback = () => {
+    try { if (playCtxRef.current) { playCtxRef.current.close(); playCtxRef.current = null; nextPlayTimeRef.current = 0; } } catch (_) {}
+  };
+
   const cleanup = () => {
-    try { streamRef.current?.getTracks().forEach(t => t.stop()); } catch (_) {}
+    try { streamRef.current?.getTracks().forEach((t) => t.stop()); } catch (_) {}
     try { processorRef.current?.disconnect(); } catch (_) {}
-    try { if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') audioCtxRef.current.close(); } catch (_) {}
+    try { if (micCtxRef.current && micCtxRef.current.state !== 'closed') micCtxRef.current.close(); } catch (_) {}
     try { if (wsRef.current?.readyState === WebSocket.OPEN) wsRef.current.close(); } catch (_) {}
+    stopPlayback();
   };
 
   const startSession = async () => {
@@ -63,29 +82,66 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker 
         action: 'start_session',
         systemPrompt: SYSTEM_PROMPT,
       });
-      if (!res.data?.wsUrl) throw new Error('Could not start session');
-      const ws = new WebSocket(res.data.wsUrl);
+      if (!res.data?.wsUrl) throw new Error(res.data?.error || 'Could not start session');
+      const { wsUrl, model } = res.data;
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
-      ws.onopen = async () => {
-        setStatus('active');
-        onTranscript({ role: 'system', text: 'Session started — speak naturally.' });
-        await startMicrophone(ws);
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          setup: {
+            model: `models/${model}`,
+            generationConfig: {
+              responseModalities: ['AUDIO'],
+              speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } } },
+            },
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
+            enableAffectiveDialog: true,
+          },
+        }));
       };
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'audio') {
-          playAudio(data.audio);
-          onSpeaker('assistant');
-        } else if (data.type === 'transcript') {
-          onTranscript({ role: data.role === 'user' ? 'user' : 'assistant', text: data.text });
-          onSpeaker(data.role === 'user' ? 'user' : 'assistant');
-        } else if (data.type === 'turn_complete') {
+
+      ws.onmessage = async (event) => {
+        const raw = typeof event.data === 'string' ? event.data : await event.data.text();
+        const data = JSON.parse(raw);
+
+        if (data.setupComplete) {
+          setStatus('active');
+          onTranscript({ role: 'system', text: 'Session started.' });
+          await startMicrophone(ws);
+          if (autoStart) {
+            ws.send(JSON.stringify({
+              clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
+            }));
+          }
+          return;
+        }
+
+        const parts = data.serverContent?.modelTurn?.parts || [];
+        for (const part of parts) {
+          if (part.inlineData?.data) {
+            playAudioChunk(part.inlineData.data);
+            onSpeaker('assistant');
+          }
+        }
+        if (data.serverContent?.inputTranscription?.text) {
+          onTranscript({ role: 'user', text: data.serverContent.inputTranscription.text });
+        }
+        if (data.serverContent?.outputTranscription?.text) {
+          onTranscript({ role: 'assistant', text: data.serverContent.outputTranscription.text });
+        }
+        if (data.serverContent?.interrupted) {
+          stopPlayback();
+          onSpeaker(null);
+        }
+        if (data.serverContent?.turnComplete) {
           onSpeaker(null);
         }
       };
       ws.onerror = () => { setStatus('ready'); cleanup(); };
-      ws.onclose = () => { setStatus((s) => (s === 'active' ? 'ready' : s)); };
+      ws.onclose = () => { setStatus((s) => (s === 'active' || s === 'connecting' ? 'ready' : s)); };
     } catch (err) {
       onTranscript({ role: 'system', text: err.message || 'Failed to start session' });
       setStatus('ready');
@@ -97,6 +153,12 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker 
     onSpeaker(null);
     setStatus('ready');
   };
+
+  useEffect(() => {
+    if (autoStart) startSession();
+    return () => cleanup();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-6">

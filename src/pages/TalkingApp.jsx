@@ -28,6 +28,7 @@ export default function TalkingApp() {
           setStatus={setStatus}
           onTranscript={addTranscript}
           onSpeaker={setCurrentSpeaker}
+          autoStart
         />
       </div>
     </div>
