@@ -9,7 +9,7 @@ export default function ClientStory({ label, headline, media, children, defaultO
   return (
     <div className="w-full rounded-2xl mb-4 p-3 sm:p-4" style={{ background: '#ede0cc' }}>
       <div className="rounded-2xl overflow-hidden flex flex-col md:flex-row items-stretch"
-        style={{ background: '#111', border: '1px solid rgba(212,175,55,0.25)' }}>
+        style={{ background: '#ede0cc', border: '1px solid rgba(212,175,55,0.4)' }}>
 
         {/* Left: all copy */}
         <div className="flex-1 min-w-0 px-6 py-6">
@@ -25,7 +25,7 @@ export default function ClientStory({ label, headline, media, children, defaultO
                 fontFamily: 'Cormorant Garamond, serif',
                 fontSize: 'clamp(1.3rem, 3.5vw, 2rem)',
                 fontWeight: 600,
-                color: '#ffffff',
+                color: '#1a1a1a',
                 lineHeight: 1.25,
               }}>
                 {headline}
@@ -44,7 +44,7 @@ export default function ClientStory({ label, headline, media, children, defaultO
 
           {!open && (
             <div className="relative -mt-2 h-10 pointer-events-none"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(17,17,17,0.3) 50%, rgba(17,17,17,0.9) 100%)' }}>
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(237,224,204,0.5) 50%, rgba(237,224,204,0.95) 100%)' }}>
               <button
                 onClick={() => setOpen(true)}
                 className="absolute inset-0 pointer-events-auto flex items-center justify-center text-sm font-bold transition-opacity hover:opacity-80"
@@ -55,10 +55,12 @@ export default function ClientStory({ label, headline, media, children, defaultO
           )}
         </div>
 
-        {/* Right: media, half the card width */}
+        {/* Right: media, in a black box on the tan background */}
         {media && (
-          <div className="w-full md:w-1/2 shrink-0 relative" style={{ minHeight: '320px' }}>
-            {media}
+          <div className="w-full md:w-1/2 shrink-0 flex items-center justify-center p-5 md:p-8" style={{ minHeight: '320px' }}>
+            <div className="relative w-full h-full rounded-xl overflow-hidden" style={{ background: '#000', border: `1px solid ${GOLD}`, minHeight: '260px' }}>
+              {media}
+            </div>
           </div>
         )}
       </div>
