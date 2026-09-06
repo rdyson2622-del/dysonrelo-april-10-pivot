@@ -110,19 +110,6 @@ export default function SendingAgentLanding() {
             </div>
           ))}
         </div>
-
-        {/* Fee Callout */}
-        <div className="mt-8 rounded-2xl p-6 text-center"
-          style={{ background: 'rgba(212,175,55,0.08)', border: `2px solid ${GOLD}` }}>
-          <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>THE FEE STRUCTURE</p>
-          <p className="text-white text-sm leading-relaxed">
-            On a <strong className="text-white">$1M transaction</strong> at 3% gross commission ($30,000):<br />
-            <span style={{ color: '#10b981' }} className="font-black">Your 25% = $7,500</span> · Dyson Management 10% = $3,000 · Total at destination: 35%
-          </p>
-          <p className="text-xs mt-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            vs. 40–50% skimmed by corporate relo divisions — with zero fee protection for you.
-          </p>
-        </div>
       </div>
 
       {/* Property Search Across Platforms */}
