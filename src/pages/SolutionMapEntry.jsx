@@ -196,7 +196,7 @@ export default function SolutionMapEntry({ hideCharliePresenter = false }) {
           )}
 
           {/* Spacer — pushes pill down so it stands alone */}
-          <div className="h-[15vh]" />
+          <div className="h-[4vh]" />
 
           {/* ── Input bar ── */}
           <div className="max-w-2xl mx-auto flex items-center gap-3">
@@ -247,7 +247,7 @@ export default function SolutionMapEntry({ hideCharliePresenter = false }) {
           </div>
 
           {/* Spacer — pushes copy below pill down so pill stands alone */}
-          <div className="h-[12vh]" />
+          <div className="h-[3vh]" />
 
           <p className="text-center max-w-3xl mx-auto" style={{ color: GOLD, fontSize: '1.3125rem', lineHeight: 1.5 }}>
             If you have a real estate opportunity or issue, Type or Voice your request here then you can visually follow progress, obstacles and results.
