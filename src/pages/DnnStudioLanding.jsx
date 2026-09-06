@@ -70,7 +70,7 @@ export default function DnnStudioLanding() {
   const roleLabel = ROLE_LABELS[activeRole] || 'Client';
 
   return (
-    <div className="relative min-h-screen w-full" style={{ background: '#0A0B0F' }}>
+    <div className="relative min-h-screen w-full" style={{ background: '#ede0cc' }}>
       {/* ── Top bar ── */}
       <header className="relative z-10 flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
@@ -108,7 +108,7 @@ export default function DnnStudioLanding() {
 
       {/* ── Studio hero (left) + rectangular nav boxes (right) ── */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 pt-1 pb-10">
-        <div className="flex flex-col md:flex-row items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-3" style={{ maxWidth: '70%', margin: '0 auto' }}>
           {/* Locked DNN Studio hero — the ONLY studio visual on this page */}
           <div className="flex-1 relative rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
             <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
@@ -126,12 +126,12 @@ export default function DnnStudioLanding() {
           </div>
 
           {/* Square nav boxes — matches the box style used on all other pages, centered beside the studio box */}
-          <div className="flex flex-row md:flex-col justify-center gap-3 md:w-56">
+          <div className="flex flex-row md:flex-col justify-center gap-2 md:w-40">
             {PILLS.map((pill) => (
               <button
                 key={pill.label}
                 onClick={() => navigate(pill.path)}
-                className="flex-1 md:flex-none flex flex-col items-center justify-center gap-2 px-2 py-6 text-[10px] sm:text-xs font-black tracking-[0.08em] text-center leading-tight transition-all hover:scale-[1.03] active:scale-95"
+                className="flex-1 md:flex-none flex flex-col items-center justify-center gap-1.5 px-2 py-4 text-[9px] font-black tracking-[0.08em] text-center leading-tight transition-all hover:scale-[1.03] active:scale-95"
                 style={{
                   background: '#0a0a0a',
                   border: `1.5px solid ${GOLD}`,
@@ -139,7 +139,7 @@ export default function DnnStudioLanding() {
                   boxShadow: `0 0 24px rgba(212,175,55,0.35), inset 0 0 12px rgba(212,175,55,0.08)`,
                 }}
               >
-                <pill.icon className="w-5 h-5" style={{ color: GOLD }} />
+                <pill.icon className="w-4 h-4" style={{ color: GOLD }} />
                 {pill.label}
               </button>
             ))}
@@ -147,19 +147,19 @@ export default function DnnStudioLanding() {
         </div>
 
         <p
-          className="text-center mt-8 text-lg sm:text-xl italic font-semibold tracking-wide"
-          style={{ color: GOLD }}
+          className="text-center mt-4 text-sm sm:text-base italic font-semibold tracking-wide"
+          style={{ color: '#8a6d1a' }}
         >
           "We provide a lifetime workspace designed to maximize your real estate opportunities.
         </p>
-        <p className="text-center mt-1 text-lg sm:text-xl italic font-semibold tracking-wide" style={{ color: GOLD }}>
+        <p className="text-center mt-0.5 text-sm sm:text-base italic font-semibold tracking-wide" style={{ color: '#8a6d1a' }}>
           No sales pitches, just real-time solutions and a clear path to execute results."
         </p>
-        <p className="text-center mt-2 text-sm sm:text-base italic" style={{ color: GOLD }}>
+        <p className="text-center mt-1 text-xs sm:text-sm italic" style={{ color: '#8a6d1a' }}>
           — Bob Dyson
         </p>
 
-        <div className="mt-12 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
+        <div className="mt-4 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
           <PortalChoiceSelector />
         </div>
 
