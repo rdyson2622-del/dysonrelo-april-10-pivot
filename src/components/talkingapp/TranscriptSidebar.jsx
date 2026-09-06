@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 const GOLD = '#D4AF37';
 
-export default function TranscriptSidebar({ transcript, currentSpeaker }) {
+export default function TranscriptSidebar({ transcript, currentSpeaker, roadmap, generatingRoadmap }) {
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +39,28 @@ export default function TranscriptSidebar({ transcript, currentSpeaker }) {
         )}
         <div ref={bottomRef} />
       </div>
+
+      {(generatingRoadmap || roadmap) && (
+        <div className="px-4 py-3 shrink-0 max-h-64 overflow-y-auto" style={{ borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+          <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>Your Roadmap</p>
+          {generatingRoadmap ? (
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>Building your roadmap…</p>
+          ) : (
+            <>
+              {roadmap.solution && (
+                <p className="text-sm leading-relaxed mb-3" style={{ color: '#fff' }}>{roadmap.solution}</p>
+              )}
+              {(roadmap.roadmap_stages || []).map((stage, i) => (
+                <div key={stage.id || i} className="flex items-center gap-2 mb-1.5">
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
+                    style={{ background: GOLD, color: '#000' }}>{i + 1}</span>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.85)' }}>{stage.title}</p>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      )}
     </aside>
   );
 }
