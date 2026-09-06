@@ -183,9 +183,6 @@ export default function SolutionMapEntry({ hideCharliePresenter = false }) {
       {/* ── Hero ── */}
       <main className="flex-1 flex flex-col items-center px-6 pt-4 pb-12">
         <div className="max-w-4xl w-full text-center">
-          <div className="flex justify-center mb-4">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
-          </div>
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
             {copy.eyebrow}
           </p>

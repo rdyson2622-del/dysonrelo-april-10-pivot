@@ -1,6 +1,7 @@
 import React from 'react';
 
 const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
 const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f22ec4070_charlie-desk-loop.mp4';
 
@@ -44,6 +45,9 @@ export default function ClientHeroMockup() {
 
         {/* Studio video — right, ~50% size */}
         <div className="w-full md:w-1/2 shrink-0">
+          <div className="flex justify-center mb-4">
+            <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '90px', width: 'auto' }} />
+          </div>
           <div className="relative rounded-2xl overflow-hidden mx-auto" style={{ border: `2px solid ${GOLD}`, background: '#000', maxWidth: '420px' }}>
             <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest" style={{ background: 'rgba(0,0,0,0.7)', border: '1px solid #ef4444', color: '#ef4444' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
