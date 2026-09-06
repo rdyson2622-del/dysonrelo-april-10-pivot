@@ -5,11 +5,11 @@ import { Home, Star, Handshake, Wrench, Building2 } from 'lucide-react';
 const GOLD = '#D4AF37';
 
 const PATHS = [
-  { icon: Home, label: 'Client', sub: 'Full relocation concierge — always free.', dest: '/home', roleKey: 'client' },
-  { icon: Star, label: 'Relo Agent', sub: 'Join our vetted agent network.', dest: '/find-agent', roleKey: 'agent' },
-  { icon: Handshake, label: 'Inactive Licensed Agents', sub: 'Send us your out-of-state client.', dest: '/partner-benefits', roleKey: 'referral_agent' },
-  { icon: Wrench, label: 'Vendor', sub: 'Movers, inspectors & service providers.', dest: '/search', roleKey: 'vendor' },
+  { icon: Home, label: 'Clients', sub: 'Full relocation concierge — always free.', dest: '/home', roleKey: 'client' },
   { icon: Building2, label: 'Corp Relo / HR', sub: 'White-glove employee relocation.', dest: '/corporate-relo', roleKey: 'hr' },
+  { icon: Star, label: 'Relocation Agents', sub: 'Join our vetted agent network.', dest: '/find-agent', roleKey: 'agent' },
+  { icon: Handshake, label: 'Inactive Licensed Agents', sub: 'Send us your out-of-state client.', dest: '/partner-benefits', roleKey: 'referral_agent' },
+  { icon: Wrench, label: 'Vendors', sub: 'Movers, inspectors & service providers.', dest: '/search', roleKey: 'vendor' },
 ];
 
 /**
