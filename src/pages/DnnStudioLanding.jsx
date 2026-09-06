@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Newspaper, MapPin, Sparkles, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import FindAProWidget from '@/components/portal/FindAProWidget';
-import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import LockedToolsDrawer from '@/components/portal/LockedToolsDrawer';
 import PortalChoiceSelector from '@/components/portal/PortalChoiceSelector';
 
@@ -161,14 +159,6 @@ export default function DnnStudioLanding() {
 
         <div className="mt-4 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
           <PortalChoiceSelector />
-        </div>
-
-        <div className="mt-6 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
-          <FindAProWidget />
-        </div>
-
-        <div className="mt-6 rounded-2xl p-6" style={{ background: '#111', border: `1px solid rgba(212,175,55,0.3)` }}>
-          <PropertyPlatformSearch />
         </div>
       </div>
 
