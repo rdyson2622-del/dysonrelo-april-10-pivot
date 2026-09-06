@@ -130,31 +130,29 @@ export default function Home() {
             headline="The 4-State Farm Relocation: How We Moved a Family (and 13 Chickens) Without a Hitch."
             defaultOpen
             media={
-              <div className="rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-                <p className="text-[9px] font-black tracking-[0.2em] uppercase mb-2 px-2 pt-2" style={{ color: GOLD }}>▶ WATCH THE STORY</p>
-                <div className="relative" style={{ aspectRatio: '16/9' }}>
-                  <video
-                    ref={videoRef}
-                    src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
-                    controls
-                    playsInline
-                    preload="none"
-                    className="w-full block h-full"
-                    onPlay={() => setStarted(true)}
-                  />
-                  {!started && (
-                    <button
-                      onClick={() => { setStarted(true); videoRef.current?.play(); }}
-                      className="absolute inset-0 flex flex-col items-center justify-center gap-2"
-                      style={{ background: '#000' }}
-                    >
-                      <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '60px', width: 'auto' }} />
-                      <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
-                        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#000" style={{ marginLeft: 2 }}><path d="M8 5v14l11-7z" /></svg>
-                      </span>
-                    </button>
-                  )}
-                </div>
+              <div className="absolute inset-0" style={{ background: '#000' }}>
+                <p className="absolute top-3 left-4 z-10 text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: GOLD }}>▶ WATCH THE STORY</p>
+                <video
+                  ref={videoRef}
+                  src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
+                  controls
+                  playsInline
+                  preload="none"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onPlay={() => setStarted(true)}
+                />
+                {!started && (
+                  <button
+                    onClick={() => { setStarted(true); videoRef.current?.play(); }}
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+                    style={{ background: '#000' }}
+                  >
+                    <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '120px', width: 'auto' }} />
+                    <span className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
+                      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="#000" style={{ marginLeft: 2 }}><path d="M8 5v14l11-7z" /></svg>
+                    </span>
+                  </button>
+                )}
               </div>
             }
           >
