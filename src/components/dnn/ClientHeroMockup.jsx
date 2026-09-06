@@ -24,7 +24,7 @@ export default function ClientHeroMockup() {
             className="italic font-semibold leading-snug"
             style={{
               fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(1.6rem, 3.2vw, 2.6rem)',
+              fontSize: 'clamp(1.44rem, 2.88vw, 2.34rem)',
               color: '#1a1a1a',
             }}
           >
@@ -34,7 +34,7 @@ export default function ClientHeroMockup() {
             className="italic font-semibold leading-snug mt-3"
             style={{
               fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(1.6rem, 3.2vw, 2.6rem)',
+              fontSize: 'clamp(1.44rem, 2.88vw, 2.34rem)',
               color: GOLD,
             }}
           >
