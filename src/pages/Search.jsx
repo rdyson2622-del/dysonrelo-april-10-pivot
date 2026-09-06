@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
 import VendorBenefits from '@/components/portal/VendorBenefits';
 import VendorAreaVettingForm from '@/components/portal/VendorAreaVettingForm';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 export default function Search() {
   return (
@@ -17,7 +17,6 @@ export default function Search() {
 
       <main className="max-w-4xl mx-auto px-6 py-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          <PortalLeadInDuo />
           <VendorBenefits />
 
           <div className="max-w-xl mx-auto text-left mt-12">
@@ -25,6 +24,9 @@ export default function Search() {
           </div>
         </motion.div>
       </main>
+
+      {/* Charlie — page-specific explainer for the Vendor Portal, pinned right */}
+      <CharliePagePresenter pageKey="portal-vendor" />
     </div>
   );
 }
