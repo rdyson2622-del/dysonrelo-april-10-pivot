@@ -12,6 +12,7 @@ import RealEstateAnswers from './RealEstateAnswers';
 import ClientCommunicationsExplainer from './ClientCommunicationsExplainer';
 import SolveMyStory from './SolveMyStory';
 import ConsumerDnnNews from './ConsumerDnnNews';
+import HRSubscriberDashboard from '@/components/dashboard/HRSubscriberDashboard';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -154,6 +155,17 @@ export default function CorporateRelo() {
     const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const [hrSubscriber, setHrSubscriber] = useState(null);
+  useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user?.portal_role === 'hr' && user?.email) {
+        base44.entities.DnnSubscriber.filter({ email: user.email }, '-created_date', 1).then(recs => {
+          setHrSubscriber(recs[0] || { full_name: user.full_name, email: user.email });
+        }).catch(() => setHrSubscriber({ full_name: user.full_name, email: user.email }));
+      }
+    }).catch(() => {});
   }, []);
 
   const headingRef = useRef(null);
@@ -403,20 +415,24 @@ export default function CorporateRelo() {
         </div>
         <ConsumerDnnNews hidePills />
 
-        <div className="px-8 py-16" style={{ background: '#0d0d0d' }}>
-          <div className="max-w-2xl mx-auto text-center">
-            <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>Stay In The Loop</p>
-            <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
-              Enroll to Receive Relocation Updates for Your Team
-            </h3>
-            <PortalSubscribeForm
-              portalName="Corporate Relo / HR Portal"
-              source="Corporate HR Portal - News Section"
-              roleKey="hr"
-              dest="/corporate-relo"
-            />
+        {hrSubscriber ? (
+          <HRSubscriberDashboard subscriber={hrSubscriber} />
+        ) : (
+          <div className="px-8 py-16" style={{ background: '#0d0d0d' }}>
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-xs font-black tracking-[0.35em] uppercase mb-2" style={{ color: GOLD }}>Stay In The Loop</p>
+              <h3 className="display-heading mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.9rem)', letterSpacing: '0.12em', color: '#fff' }}>
+                Enroll to Receive Relocation Updates for Your Team
+              </h3>
+              <PortalSubscribeForm
+                portalName="Corporate Relo / HR Portal"
+                source="Corporate HR Portal - News Section"
+                roleKey="hr"
+                dest="/corporate-relo"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
     </div>

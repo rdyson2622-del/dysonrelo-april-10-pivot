@@ -6,6 +6,7 @@ import {
   MapPin, Calendar, MessageCircle, Newspaper, Shield, DollarSign,
   Map, Sparkles, Phone, ArrowRight, Home as HomeIcon
 } from 'lucide-react';
+import RequestInfoWidget from './RequestInfoWidget';
 
 const GOLD = '#D4AF37';
 
@@ -106,6 +107,9 @@ export default function ClientSubscriberDashboard({ client }) {
             </div>
           )}
         </div>
+
+        {/* Request info / act on it */}
+        <RequestInfoWidget portalRole="client" context="client_portal" />
 
         {/* Quick links */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
