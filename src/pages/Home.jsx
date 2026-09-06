@@ -5,7 +5,6 @@ import { base44 } from '@/api/base44Client';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
-import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import FindAProWidget from '@/components/portal/FindAProWidget';
@@ -40,11 +39,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col" style={{ background: '#0a0a0a' }}>
-      {/* ── MOCKUP: new front page — keeping the original below for comparison ── */}
+      {/* ── New front page hero ── */}
       <ClientHeroMockup />
-
-      {/* ── Top: shared DNN Studio hero ── */}
-      <StudioHeroBanner />
 
       {/* ── Solution Map entry page ── */}
       <SolutionMapEntry />
