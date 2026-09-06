@@ -3,9 +3,10 @@ import { base44 } from '@/api/base44Client';
 import { Shield, DollarSign, Truck, ArrowRight, CheckCircle, Phone } from 'lucide-react';
 import VettingDeskDuo from '@/components/charlie/VettingDeskDuo';
 import PortalLeadInDuo from '@/components/portal/PortalLeadInDuo';
-import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
 import FindAProWidget from '@/components/portal/FindAProWidget';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
+import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import SolutionMapEntry from './SolutionMapEntry';
 
 const GOLD = '#D4AF37';
 
@@ -59,29 +60,14 @@ export default function SendingAgentLanding() {
   return (
     <div className="min-h-screen" style={{ background: '#ede0cc' }}>
 
-      <StudioHeroBanner />
+      <ClientHeroMockup
+        label="Your Referral Portal"
+      />
 
-      {/* Hero */}
-      <div className="px-6 py-16 text-center" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-        <div className="flex justify-center mb-8">
-          <a href="/?choose=1" title="Back to landing page">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png"
-              alt="Dyson & Dyson"
-              className="h-20 w-auto"
-            />
-          </a>
-        </div>
-        <p className="text-xs font-black tracking-[0.3em] mb-4" style={{ color: GOLD }}>
-          PRIVATE REFERRAL NETWORK · BOUTIQUE AGENT PROGRAM
-        </p>
-        <h1 className="font-black text-4xl md:text-5xl leading-tight mb-6 max-w-3xl mx-auto"
-          style={{ fontFamily: 'Cormorant Garamond, serif', color: '#1a1a1a' }}>
-          Don't Leave Money on the Table<br />When Your Client Leaves the State.
-        </h1>
-        <p className="text-lg leading-relaxed max-w-xl mx-auto mb-8" style={{ color: 'rgba(26,26,26,0.7)' }}>
-          You have the listing — but where are they moving? We handle the destination, protect your 25% referral fee, and manage the full move logistics.
-        </p>
+      <SolutionMapEntry />
+
+      {/* Referral CTA */}
+      <div className="px-6 py-10 text-center">
         <a href="#submit"
           className="inline-flex items-center gap-2 px-10 py-4 rounded-full font-black text-base tracking-wide transition-all hover:scale-[1.02]"
           style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
