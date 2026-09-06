@@ -1,34 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+
+const HOMEPAGES = {
+  zillow: 'https://www.zillow.com/',
+  realtor: 'https://www.realtor.com/',
+  redfin: 'https://www.redfin.com/',
+};
 
 /**
  * PropertyPlatformSearch — "search across all platforms" widget (Zillow /
  * Realtor / Redfin). Lives in the Client Portal scroll.
  */
 export default function PropertyPlatformSearch() {
-  const [location, setLocation] = useState('');
-
-  const buildSearchUrl = (platform) => {
-    const homepages = {
-      zillow: 'https://www.zillow.com/',
-      realtor: 'https://www.realtor.com/',
-      redfin: 'https://www.redfin.com/',
-    };
-    if (!location.trim()) return homepages[platform] || '#';
-    const query = encodeURIComponent(location);
-    const urls = {
-      zillow: `https://www.zillow.com/homes/for_sale/?searchQueryState={%22usersSearchTerm%22:%22${query}%22}`,
-      realtor: `https://www.realtor.com/homes/search/${query}`,
-      redfin: `https://www.redfin.com/search?utf8=%E2%9C%93&market=${query}`
-    };
-    return urls[platform] || '#';
-  };
-
   const handleSearch = (platform) => {
-    window.open(buildSearchUrl(platform), '_blank');
+    window.open(HOMEPAGES[platform] || '#', '_blank');
   };
 
   return (
@@ -42,17 +30,6 @@ export default function PropertyPlatformSearch() {
       <p className="text-lg mb-8" style={{ color: GOLD, letterSpacing: '0.05em' }}>Enter your destination.</p>
 
       <div className="mb-8 max-w-xl mx-auto">
-        <div className="flex items-center rounded-full border-2 px-6 py-4 mb-6" style={{ borderColor: GOLD, background: '#1a1a1a' }}>
-          <span className="text-lg mr-3" style={{ color: GOLD }}>🔍</span>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="City, State or Zip Code"
-            className="flex-1 bg-transparent outline-none text-white placeholder-gray-400 text-base"
-          />
-        </div>
-
         <div className="grid grid-cols-3 gap-4">
           <button
             onClick={() => handleSearch('zillow')}
