@@ -27,7 +27,7 @@ export default function ClientHeroMockup() {
               color: '#1a1a1a',
             }}
           >
-            "We provide a lifetime workspace designed to maximize your real estate opportunities.
+            "We provide a Real Time, lifetime workspace designed to maximize your real estate opportunities.
           </p>
           <p
             className="italic font-semibold leading-snug mt-3"
