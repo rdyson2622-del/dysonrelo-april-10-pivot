@@ -129,33 +129,35 @@ export default function Home() {
             label="4-State Relocation · Arizona → Arkansas"
             headline="The 4-State Farm Relocation: How We Moved a Family (and 13 Chickens) Without a Hitch."
             defaultOpen
-          >
-            <div className="rounded-2xl overflow-hidden mb-8" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
-              <p className="text-xs font-black tracking-[0.25em] uppercase mb-3 px-4 pt-4" style={{ color: GOLD }}>▶ WATCH THE WINDEANS' STORY</p>
-              <div className="relative" style={{ aspectRatio: '16/9' }}>
-                <video
-                  ref={videoRef}
-                  src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
-                  controls
-                  playsInline
-                  preload="none"
-                  className="w-full block h-full"
-                  onPlay={() => setStarted(true)}
-                />
-                {!started && (
-                  <button
-                    onClick={() => { setStarted(true); videoRef.current?.play(); }}
-                    className="absolute inset-0 flex flex-col items-center justify-center gap-4"
-                    style={{ background: '#000' }}
-                  >
-                    <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '180px', width: 'auto' }} />
-                    <span className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
-                      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="#000" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
-                    </span>
-                  </button>
-                )}
+            media={
+              <div className="rounded-2xl overflow-hidden" style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)' }}>
+                <p className="text-[9px] font-black tracking-[0.2em] uppercase mb-2 px-2 pt-2" style={{ color: GOLD }}>▶ WATCH THE STORY</p>
+                <div className="relative" style={{ aspectRatio: '16/9' }}>
+                  <video
+                    ref={videoRef}
+                    src="https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/bf489a37c_a_true_story_of_a_cross_country_real_estate_move.mp4"
+                    controls
+                    playsInline
+                    preload="none"
+                    className="w-full block h-full"
+                    onPlay={() => setStarted(true)}
+                  />
+                  {!started && (
+                    <button
+                      onClick={() => { setStarted(true); videoRef.current?.play(); }}
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+                      style={{ background: '#000' }}
+                    >
+                      <img src={DYSON_LOGO} alt="Dyson & Dyson" style={{ height: '60px', width: 'auto' }} />
+                      <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: GOLD }}>
+                        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#000" style={{ marginLeft: 2 }}><path d="M8 5v14l11-7z" /></svg>
+                      </span>
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            }
+          >
             <p className="text-xs font-black tracking-[0.25em] uppercase mb-2" style={{ color: GOLD }}>THE SITUATION</p>
             <p className="text-white leading-relaxed mb-3" style={{ fontFamily: 'Georgia, serif', fontSize: '0.97rem' }}>
               Moving across town is stressful. Now imagine moving across four states, coordinating the sale of your current home, the purchase of a new one, managing two moving trucks, and transporting a cat and 13 chickens.
