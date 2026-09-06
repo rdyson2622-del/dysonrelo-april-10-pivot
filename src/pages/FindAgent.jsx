@@ -5,7 +5,7 @@ import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lu
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
-import StudioHeroBanner from '@/components/dnn/StudioHeroBanner';
+import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import FindAProWidget from '@/components/portal/FindAProWidget';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 
@@ -84,7 +84,7 @@ export default function FindAgent() {
 
   return (
     <div className="min-h-screen" style={{ background: '#121212' }}>
-      <StudioHeroBanner />
+      <ClientHeroMockup label="Your Relocation Agent Portal" />
       <div className="max-w-4xl mx-auto px-6 py-16 space-y-10">
 
         {/* Header */}

@@ -11,14 +11,14 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
  * Tan background, headline copy on the left, DNN studio video shrunk to
  * ~50% size on the right.
  */
-export default function ClientHeroMockup() {
+export default function ClientHeroMockup({ label = 'Your Client Portal' }) {
   return (
     <div className="w-full px-6 sm:px-10 py-14" style={{ background: '#ede0cc' }}>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
         {/* Header copy — left */}
         <div className="flex-1 text-center md:text-left">
           <p className="text-xs font-black tracking-[0.3em] uppercase mb-4" style={{ color: GOLD }}>
-            Your Client Portal
+            {label}
           </p>
           <p
             className="italic font-semibold leading-snug"
