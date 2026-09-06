@@ -11,7 +11,12 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
  * Tan background, headline copy on the left, DNN studio video shrunk to
  * ~50% size on the right.
  */
-export default function ClientHeroMockup({ label = 'Your Client Portal' }) {
+export default function ClientHeroMockup({
+  label = 'Your Client Portal',
+  quoteLine1 = '"We provide a Real Time, lifetime workspace designed to maximize your real estate opportunities.',
+  quoteLine2 = 'No sales pitches, just real-time solutions and a clear path to execute results."',
+  attribution = '— Bob Dyson',
+}) {
   return (
     <div className="w-full px-6 sm:px-10 py-14" style={{ background: '#ede0cc' }}>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
@@ -28,7 +33,7 @@ export default function ClientHeroMockup({ label = 'Your Client Portal' }) {
               color: '#1a1a1a',
             }}
           >
-            "We provide a Real Time, lifetime workspace designed to maximize your real estate opportunities.
+            {quoteLine1}
           </p>
           <p
             className="italic font-semibold leading-snug mt-3"
@@ -38,9 +43,9 @@ export default function ClientHeroMockup({ label = 'Your Client Portal' }) {
               color: GOLD,
             }}
           >
-            No sales pitches, just real-time solutions and a clear path to execute results."
+            {quoteLine2}
           </p>
-          <p className="mt-4 text-sm italic" style={{ color: '#4a4a4a' }}>— Bob Dyson</p>
+          <p className="mt-4 text-sm italic" style={{ color: '#4a4a4a' }}>{attribution}</p>
         </div>
 
         {/* Studio video — right, ~50% size */}

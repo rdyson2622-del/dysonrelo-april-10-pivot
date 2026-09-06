@@ -7,18 +7,18 @@ const GOLD = '#D4AF37';
 
 const FLOW = {
   stages: [
-    { id: 'profile',   title: 'Client Preferences' },
-    { id: 'vetting',   title: 'Deep Market Vetting of Multiple Agents' },
-    { id: 'shortlist', title: 'Client Short List and Selection' },
-    { id: 'agreement', title: 'Referral and Relo Management Agreement' },
+    { id: 'profile',   title: 'Agent Application & Vetting' },
+    { id: 'vetting',   title: 'Two-Way Referral Matching' },
+    { id: 'shortlist', title: 'Warm Introduction & Handoff' },
+    { id: 'agreement', title: 'Referral Agreement & Fee Protection' },
   ],
 };
 
 const DETAILS = {
-  profile:   'We learn your destination, timeline, budget, lifestyle priorities, and communication style before anything else.',
-  vetting:   'We research 20+ agents in your destination market — DRE records, production history, reviews, and personality fit.',
-  shortlist: 'You receive 3–5 hand-selected finalists. No pitches. No competitions. Just a clear recommendation and your choice.',
-  agreement: 'Once you select your agent, you formalize the relationship. This unlocks your full City Guide, property tools, and concierge access.',
+  profile:   'We review your DRE record, production history, market coverage, and communication style before you receive a single referral.',
+  vetting:   'Incoming: we send you pre-qualified relocating clients matched to your market. Outgoing: your own relocating clients get placed with a vetted agent anywhere in the country.',
+  shortlist: 'No bidding, no competing for the lead. You get a warm introduction with the client\'s full profile already in hand.',
+  agreement: 'A signed referral agreement locks in your fee on every deal — both the business we send you and the business you send us.',
 };
 
 export default function AgentSelectionSolutionMap() {
