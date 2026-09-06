@@ -14,6 +14,11 @@ export default function TranscriptSidebar({ transcript, currentSpeaker, roadmap,
       <div className="px-4 py-3 shrink-0" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
         <p className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: GOLD }}>Live Transcript</p>
       </div>
+      <div className="px-4 py-2 shrink-0" style={{ background: 'rgba(212,175,55,0.06)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <p className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          Needs a microphone. Works on phones and most laptops — some desktops (e.g. Mac Mini) have no built-in mic and will need one plugged in.
+        </p>
+      </div>
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
         {transcript.length === 0 ? (
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>

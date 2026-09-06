@@ -133,7 +133,15 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
           setStatus('active');
           startTimeRef.current = Date.now();
           onTranscript({ role: 'system', text: 'Session started.' });
-          await startMicrophone(ws);
+          try {
+            await startMicrophone(ws);
+          } catch (micErr) {
+            onTranscript({ role: 'system', text: 'No microphone was found on this device, so I can hear myself but not you. Please try again from a phone, laptop, or a computer with a microphone connected.' });
+            reportSessionEnd();
+            cleanup();
+            setStatus('ready');
+            return;
+          }
           if (autoStart) {
             ws.send(JSON.stringify({
               clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
