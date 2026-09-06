@@ -92,6 +92,19 @@
     "duration_ms": {
       "type": "number",
       "description": "How long the LLM took to generate the roadmap, in milliseconds"
+    },
+    "admin_reply": {
+      "type": "string",
+      "description": "Admin's personal reply sent back to the requester by email"
+    },
+    "replied_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the admin reply was sent"
+    },
+    "replied_by": {
+      "type": "string",
+      "description": "Admin email who sent the reply"
     }
   },
   "required": [

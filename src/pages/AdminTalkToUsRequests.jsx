@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { MessageCircle, Clock, Mail, User } from 'lucide-react';
+import { MessageCircle, Clock, Mail, User, Send, CheckCircle2 } from 'lucide-react';
 import FlowRoadmapLine from '@/components/workflow/FlowRoadmapLine';
 
 const GOLD = '#D4AF37';
@@ -22,6 +22,9 @@ function stagesToStatuses(stages) {
 export default function AdminTalkToUsRequests() {
   const [portalFilter, setPortalFilter] = useState('all');
   const [selectedId, setSelectedId] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const [sending, setSending] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['allRealEstateRequests'],
@@ -30,6 +33,18 @@ export default function AdminTalkToUsRequests() {
 
   const filtered = portalFilter === 'all' ? requests : requests.filter(r => r.portal_role === portalFilter);
   const selected = filtered.find(r => r.id === selectedId) || filtered[0] || null;
+
+  const handleSendReply = async () => {
+    if (!selected || !replyText.trim() || sending) return;
+    setSending(true);
+    try {
+      await base44.functions.invoke('replyToRealEstateRequest', { id: selected.id, reply_text: replyText.trim() });
+      setReplyText('');
+      queryClient.invalidateQueries({ queryKey: ['allRealEstateRequests'] });
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -110,6 +125,49 @@ export default function AdminTalkToUsRequests() {
                 ))}
               </ul>
             )}
+
+            {/* Admin reply */}
+            <div className="mt-5 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-2 flex items-center gap-1.5" style={{ color: GOLD }}>
+                <MessageCircle className="w-3 h-3" /> Reply to {selected.full_name || selected.email || 'this requester'}
+              </p>
+
+              {selected.admin_reply && (
+                <div className="rounded-xl p-3 mb-3 flex items-start gap-2" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.25)' }}>
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: '#4ade80' }} />
+                  <div>
+                    <p className="text-xs text-white/80 leading-relaxed">{selected.admin_reply}</p>
+                    <p className="text-[10px] text-white/40 mt-1">
+                      Sent {selected.replied_at ? new Date(selected.replied_at).toLocaleString() : ''} by {selected.replied_by}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {!selected.email && (
+                <p className="text-[11px] mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  No email on file — your reply will be saved here but can't be emailed to them.
+                </p>
+              )}
+
+              <textarea
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Type your reply…"
+                rows={3}
+                className="w-full text-sm text-white rounded-lg p-3 outline-none resize-none"
+                style={{ background: '#111', border: '1px solid rgba(255,255,255,0.12)' }}
+              />
+              <button
+                onClick={handleSendReply}
+                disabled={!replyText.trim() || sending}
+                className="mt-2 flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold disabled:opacity-40"
+                style={{ background: GOLD, color: '#000' }}
+              >
+                <Send className="w-3.5 h-3.5" />
+                {sending ? 'Sending…' : selected.email ? 'Send Reply Email' : 'Save Reply'}
+              </button>
+            </div>
           </div>
         )}
       </div>
