@@ -287,32 +287,26 @@ export default function ClientSidebar({ onToggle }) {
                 <NavLink to="/financial-services" icon={DollarSign} location={location} label="Lender-Solve Status" />
               </SuiteBox>
             )}
-            <SuiteBox title="🏠 My Personal Real Estate" open={!!openGroups.agentPersonal} onToggle={() => toggleGroup('agentPersonal')}>
-              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
-              <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
-              <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
-              <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
-            </SuiteBox>
           </>
         )}
 
         {/* ══ VENDOR PATH ══ */}
         {isVendor && !isAgent && (
-          <>
-            <SuiteBox title="🔧 Vendor Utility" open={!!openGroups.vendorUtility} onToggle={() => toggleGroup('vendorUtility')}>
-              <NavLink to="/search" icon={Search} location={location} label="Property Search" />
-              {isAdmin && (
-                <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
-              )}
-            </SuiteBox>
-            <SuiteBox title="🏠 My Personal Real Estate" open={!!openGroups.vendorPersonal} onToggle={() => toggleGroup('vendorPersonal')}>
-              <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
-              <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
-              <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
-              <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
-            </SuiteBox>
-          </>
+          <SuiteBox title="🔧 Vendor Utility" open={!!openGroups.vendorUtility} onToggle={() => toggleGroup('vendorUtility')}>
+            <NavLink to="/search" icon={Search} location={location} label="Property Search" />
+            {isAdmin && (
+              <NavLink to="/admin/skip-trace" icon={Building2} location={location} label="Verified Owner Data" />
+            )}
+          </SuiteBox>
         )}
+
+        {/* My Personal Real Estate — shown in every portal (Client, Agent, Vendor, Referral Agent, HR) */}
+        <SuiteBox title="🏠 My Personal Real Estate" open={!!openGroups.myPersonalRealEstate} onToggle={() => toggleGroup('myPersonalRealEstate')}>
+          <NavLink to="/RelocationRoadmap" icon={Map} location={location} label="My Roadmap" />
+          <NavLink to="/solve-my-story" icon={Home} location={location} label="Solve My Story" />
+          <NavLink to="/CityGuide" icon={MapPin} location={location} label="City Guide" />
+          <NavLink to="/GeminiSession" icon={Zap} location={location} label="Gemini Session" />
+        </SuiteBox>
 
         {/* DNN Section */}
         {!isHR && (
