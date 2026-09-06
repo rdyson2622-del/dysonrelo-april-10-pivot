@@ -111,7 +111,7 @@ export default function RealEstateAnswers() {
 
       {/* ── Charlie circle — in flow, upper right of the tan content area ── */}
       {introReady && !sequence && (
-        <div className="w-full flex justify-end px-3 md:px-5 pt-20 md:pt-24">
+        <div className="w-full flex justify-end px-3 md:px-5 pt-4 md:pt-6">
           <button
             onClick={playIntro}
             aria-label="Hear Charlie explain this page"
