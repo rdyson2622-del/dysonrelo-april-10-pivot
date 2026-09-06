@@ -207,11 +207,8 @@ const AuthenticatedApp = () => {
       <Route path="/broadcast-show" element={<BroadcastShow />} />
       <Route path="/broadcast-preview" element={<BroadcastPreview />} />
 
-      {/* Public studio landing page — the actual front door for first-time
-          visitors (has working NEWS/RELOCATION/INTELLIGENCE pills). The
-          "Coming Soon" broadcast placeholder now lives BEHIND this page
-          (via the NEWS pill), not in front of it. */}
-      <Route path="/studio-landing" element={<DnnStudioLanding />} />
+      {/* Legacy studio landing page — retired, always redirect to the current portal */}
+      <Route path="/studio-landing" element={<Navigate to="/portal" replace />} />
 
       {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
       <Route path="/agreement-fill" element={<AgreementFillForm />} />
