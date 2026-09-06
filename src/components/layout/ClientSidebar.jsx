@@ -187,6 +187,37 @@ export default function ClientSidebar({ onToggle }) {
           </Link>
         )}
 
+        {/* My Command Center — renamed/promoted to the top of the list */}
+        <CollapsibleGroup
+          title={(isHR ? 'HR Command Center' : isClientOnly ? 'My Command Center' : 'Communications').toUpperCase()}
+          icon={ClipboardList}
+          open={!!openGroups.portal}
+          onToggle={() => toggleGroup('portal')}
+        >
+          <Link to="/communications-explainer"
+            className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
+            style={{ background: location.pathname === '/communications-explainer' ? GOLD : 'transparent', color: location.pathname === '/communications-explainer' ? '#000' : 'rgba(212,175,55,0.75)' }}>
+            <div className="relative shrink-0">
+              <MessageCircle className="w-3.5 h-3.5" style={{ color: location.pathname === '/communications-explainer' ? '#000' : GOLD }} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
+                  style={{ background: '#ef4444', color: '#fff' }}>
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </div>
+            {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
+          </Link>
+
+          <button
+            onClick={() => window.dispatchEvent(new Event('open_talk_to_us'))}
+            className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10 text-left"
+            style={{ color: 'rgba(212,175,55,0.75)' }}>
+            <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
+            Talk to Us / My Requests
+          </button>
+        </CollapsibleGroup>
+
         {isReferralAgent ? (
           <CollapsibleGroup title="RELOCATION SERVICES" icon={Star} open={!!openGroups.relo} onToggle={() => toggleGroup('relo')}>
             <SubLink to="/referral-agent-explainer" label="Opportunities" location={location} />
@@ -278,39 +309,6 @@ export default function ClientSidebar({ onToggle }) {
             </SuiteBox>
           </>
         )}
-
-        {/* ── STANDARD CLIENT NAV (always shown, but de-emphasised for pros) ── */}
-        <div className="px-3 pt-4 pb-1">
-          <CollapsibleGroup
-            title={(isHR ? 'HR Manager Portal' : isClientOnly ? 'Your Portal' : 'Communications').toUpperCase()}
-            icon={Star}
-            open={!!openGroups.portal}
-            onToggle={() => toggleGroup('portal')}
-          >
-            <Link to="/communications-explainer"
-              className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10"
-              style={{ background: location.pathname === '/communications-explainer' ? GOLD : 'transparent', color: location.pathname === '/communications-explainer' ? '#000' : 'rgba(212,175,55,0.75)' }}>
-              <div className="relative shrink-0">
-                <MessageCircle className="w-3.5 h-3.5" style={{ color: location.pathname === '/communications-explainer' ? '#000' : GOLD }} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black animate-pulse"
-                    style={{ background: '#ef4444', color: '#fff' }}>
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </div>
-              {unreadCount > 0 ? `${unreadCount} New Reply` : 'Communications Hub'}
-            </Link>
-
-            <button
-              onClick={() => window.dispatchEvent(new Event('open_talk_to_us'))}
-              className="flex items-center gap-2 pl-8 pr-3 py-1.5 rounded-lg text-[11px] font-bold tracking-wide transition-all hover:bg-white/10 text-left"
-              style={{ color: 'rgba(212,175,55,0.75)' }}>
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" style={{ color: GOLD }} />
-              Talk to Us / My Requests
-            </button>
-          </CollapsibleGroup>
-        </div>
 
         {/* DNN Section */}
         {!isHR && (
