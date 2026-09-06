@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2, Briefcase } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -115,6 +116,8 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
+      <ClientHeroMockup />
+
       {/* ── Hero: DNN Studio backdrop, full screen, clean ── */}
       <section className="relative w-full h-screen overflow-hidden">
         <video
