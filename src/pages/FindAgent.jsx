@@ -53,12 +53,19 @@ export default function FindAgent() {
   const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
-    try {
-      const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
-      if (portal?.roleKey === 'agent') setSubscribed(true);
-    } catch {
-      // ignore malformed storage
-    }
+    const checkSubscribed = () => {
+      let isSubscribed = sessionStorage.getItem('dyson_role') === 'agent';
+      try {
+        const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
+        if (portal?.roleKey === 'agent') isSubscribed = true;
+      } catch {
+        // ignore malformed storage
+      }
+      setSubscribed(isSubscribed);
+    };
+    checkSubscribed();
+    window.addEventListener('dyson_role_change', checkSubscribed);
+    return () => window.removeEventListener('dyson_role_change', checkSubscribed);
   }, []);
 
   useEffect(() => {
