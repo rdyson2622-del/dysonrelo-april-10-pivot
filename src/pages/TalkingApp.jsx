@@ -22,7 +22,7 @@ export default function TalkingApp() {
   // roadmap (same engine as the "Ask Your Concierge" solution map) and show
   // it in the sidebar below the transcript.
   useEffect(() => {
-    const wasLive = prevStatusRef.current === 'active' || prevStatusRef.current === 'connecting';
+    const wasLive = ['active', 'connecting', 'listening', 'speaking'].includes(prevStatusRef.current);
     if (wasLive && status === 'ready') {
       const userText = transcript.filter((t) => t.role === 'user').map((t) => t.text).join(' ').trim();
       if (userText.length > 10) {

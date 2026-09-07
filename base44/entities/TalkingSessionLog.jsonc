@@ -65,6 +65,10 @@
     "estimated_cost_usd": {
       "type": "number",
       "description": "Estimated Gemini Live API cost for this session, based on audio-minute pricing"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error details if the session failed or disconnected unexpectedly"
     }
   },
   "required": [
