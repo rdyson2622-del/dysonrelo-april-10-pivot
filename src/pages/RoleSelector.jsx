@@ -184,11 +184,11 @@ export default function RoleSelector() {
         </p>
 
         {/* Three-logo footer row — single dark pill backdrop so the dark logo tiles have a proper resting surface */}
-        <div className="mt-6 flex items-center justify-center gap-16 md:gap-32 px-10 md:px-16 py-1.5 rounded-full mx-auto"
+        <div className="mt-6 flex items-center justify-center gap-16 md:gap-32 px-10 md:px-16 py-1 rounded-full mx-auto"
           style={{ background: '#0a0a0a', border: `1px solid rgba(212,175,55,0.25)`, width: 'fit-content' }}>
-          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain" style={{ height: '60px' }} />
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain" style={{ height: '60px' }} />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain" style={{ height: '120px' }} />
+          <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain block" style={{ height: '36px' }} />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain block" style={{ height: '36px' }} />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain block" style={{ height: '36px' }} />
         </div>
       </section>
     </div>
