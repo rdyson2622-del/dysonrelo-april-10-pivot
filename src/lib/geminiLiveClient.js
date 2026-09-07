@@ -73,9 +73,15 @@ class PcmPlayer {
     }
   }
 
+  // Instant interruption / barge-in cancellation:
+  // Stops all queued audio sources immediately and prevents stale callbacks from firing
   stop() {
     for (const src of this.activeSources) {
-      try { src.stop(); } catch (_) {}
+      try {
+        src.onended = null;
+        src.stop(0);
+        src.disconnect();
+      } catch (_) {}
     }
     this.activeSources = [];
     if (this.ctx) {
@@ -102,14 +108,16 @@ export class GeminiLiveSessionClient {
       onSpeaker,
       onError,
       onSessionLogId,
-      voiceName = 'Puck',
+      onNavigate,
+      voiceName = 'Charon', // Deep, mature, authoritative American male voice (not British Puck)
     } = options;
-    this.systemPrompt = systemPrompt || 'You are Charlie, the real estate concierge for Dyson & Dyson. Speak warmly and concisely in real-time.';
+    this.systemPrompt = systemPrompt || 'You are Charlie, the distinguished American male AI real estate concierge for Dyson & Dyson. Speak warmly and concisely in real-time.';
     this.onStatusChange = onStatusChange;
     this.onTranscript = onTranscript;
     this.onSpeaker = onSpeaker;
     this.onError = onError;
     this.onSessionLogId = onSessionLogId;
+    this.onNavigate = onNavigate;
     this.voiceName = voiceName;
 
     this.ws = null;
@@ -122,6 +130,8 @@ export class GeminiLiveSessionClient {
     this.player = new PcmPlayer();
     this.active = false;
     this.transcriptTextBuffer = '';
+    this.isInterrupted = false;
+    this.consecutiveVoiceFrames = 0;
   }
 
   async start() {
@@ -129,6 +139,7 @@ export class GeminiLiveSessionClient {
       this.active = true;
       this.turnCount = 0;
       this.startTime = Date.now();
+      this.isInterrupted = false;
       this.onStatusChange?.('connecting');
 
       // 1. Get wsUrl and model from geminiLiveProxy
@@ -167,7 +178,7 @@ export class GeminiLiveSessionClient {
               speechConfig: {
                 voiceConfig: {
                   prebuiltVoiceConfig: {
-                    voiceName: this.voiceName || 'Puck',
+                    voiceName: this.voiceName || 'Charon',
                   },
                 },
               },
@@ -175,6 +186,34 @@ export class GeminiLiveSessionClient {
             systemInstruction: {
               parts: [{ text: this.systemPrompt }],
             },
+            tools: [
+              {
+                functionDeclarations: [
+                  {
+                    name: 'navigateToPage',
+                    description: 'Directs the user to a specific destination page on the DysonRelo platform instead of hunting and pecking.',
+                    parameters: {
+                      type: 'OBJECT',
+                      properties: {
+                        path: {
+                          type: 'STRING',
+                          description: 'The internal application route, e.g. /find-agent, /solutions, /relocation-intake, /corporate-relo, /dnn-news, /transparency, /refer, /financial-services, /city-guide, /portal',
+                        },
+                        pageTitle: {
+                          type: 'STRING',
+                          description: 'Human-friendly title of the destination page, e.g. "Find a Vetted Agent", "Real Estate Solutions", "Relocation Intake", "Corporate Relocation", "DNN Daily News", "Transparency Ledger", "Refer Someone"',
+                        },
+                        reason: {
+                          type: 'STRING',
+                          description: 'Brief reason for navigating to this page',
+                        },
+                      },
+                      required: ['path', 'pageTitle'],
+                    },
+                  },
+                ],
+              },
+            ],
           },
         };
         ws.send(JSON.stringify(setupMessage));
@@ -199,14 +238,41 @@ export class GeminiLiveSessionClient {
             return;
           }
 
-          // Case B: server content from model
+          // Case B: Tool call from model (navigation action)
+          if (data.toolCall?.functionCalls) {
+            for (const call of data.toolCall.functionCalls) {
+              if (call.name === 'navigateToPage') {
+                const { path, pageTitle, reason } = call.args || {};
+                if (path) {
+                  this.onNavigate?.({ path, title: pageTitle || path, reason: reason || '' });
+                }
+                // Send confirmation back so the model turn finishes cleanly
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                  this.ws.send(JSON.stringify({
+                    toolResponse: {
+                      functionResponses: [
+                        {
+                          response: { output: { success: true, navigatedTo: path } },
+                          id: call.id,
+                        },
+                      ],
+                    },
+                  }));
+                }
+              }
+            }
+          }
+
+          // Case C: server content from model
           if (data.serverContent) {
             const sc = data.serverContent;
 
-            // Handle interruption (conversational barge-in)
+            // Handle interruption (server-side conversational barge-in confirmation)
             if (sc.interrupted) {
+              this.isInterrupted = true;
               this.player.stop();
-              this.onSpeaker?.(null);
+              this.transcriptTextBuffer = '';
+              this.onSpeaker?.('user');
               this.onStatusChange?.('listening');
               return;
             }
@@ -214,16 +280,34 @@ export class GeminiLiveSessionClient {
             // Model turn parts (audio and/or text)
             if (sc.modelTurn?.parts) {
               for (const part of sc.modelTurn.parts) {
+                // Check for inline function call
+                if (part.functionCall?.name === 'navigateToPage') {
+                  const { path, pageTitle, reason } = part.functionCall.args || {};
+                  if (path) {
+                    this.onNavigate?.({ path, title: pageTitle || path, reason: reason || '' });
+                  }
+                }
+
                 if (part.text) {
                   this.transcriptTextBuffer += part.text;
+                  // Parse text navigation tags [NAVIGATE: /path | Title]
+                  const navMatch = part.text.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
+                  if (navMatch) {
+                    const navPath = navMatch[1].trim();
+                    const navTitle = (navMatch[2] || navPath).trim();
+                    this.onNavigate?.({ path: navPath, title: navTitle });
+                  }
                 }
-                if (part.inlineData?.data) {
+
+                if (part.inlineData?.data && !this.isInterrupted) {
                   this.turnCount += 1;
                   this.player.queueChunk(
                     part.inlineData.data,
                     () => {
-                      this.onSpeaker?.('assistant');
-                      this.onStatusChange?.('speaking');
+                      if (!this.isInterrupted) {
+                        this.onSpeaker?.('assistant');
+                        this.onStatusChange?.('speaking');
+                      }
                     },
                     () => {
                       this.onSpeaker?.(null);
@@ -235,11 +319,17 @@ export class GeminiLiveSessionClient {
             }
 
             if (sc.turnComplete) {
+              this.isInterrupted = false;
               if (this.transcriptTextBuffer.trim()) {
-                this.onTranscript?.({
-                  role: 'assistant',
-                  text: this.transcriptTextBuffer.trim(),
-                });
+                const cleanedText = this.transcriptTextBuffer
+                  .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
+                  .trim();
+                if (cleanedText) {
+                  this.onTranscript?.({
+                    role: 'assistant',
+                    text: cleanedText,
+                  });
+                }
                 this.transcriptTextBuffer = '';
               }
             }
@@ -298,14 +388,32 @@ export class GeminiLiveSessionClient {
 
         const input = e.inputBuffer.getChannelData(0);
         const pcm = new Int16Array(input.length);
-        let hasVoice = false;
+        let sumSquares = 0;
+
         for (let i = 0; i < input.length; i++) {
           const s = Math.max(-1, Math.min(1, input[i]));
-          if (Math.abs(s) > 0.05) hasVoice = true;
+          sumSquares += s * s;
           pcm[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
         }
 
-        if (hasVoice && !this.player.isPlaying) {
+        const rms = Math.sqrt(sumSquares / input.length);
+        const isUserVoice = rms > 0.035;
+
+        if (isUserVoice) {
+          this.consecutiveVoiceFrames += 1;
+        } else {
+          this.consecutiveVoiceFrames = Math.max(0, this.consecutiveVoiceFrames - 1);
+        }
+
+        // INSTANT CLIENT-SIDE BARGE-IN / INTERRUPTION:
+        // If Charlie is rambling/speaking and user starts talking (2+ frames of voice):
+        if (this.player.isPlaying && this.consecutiveVoiceFrames >= 2) {
+          this.isInterrupted = true;
+          this.player.stop();
+          this.transcriptTextBuffer = '';
+          this.onSpeaker?.('user');
+          this.onStatusChange?.('listening');
+        } else if (isUserVoice && !this.player.isPlaying) {
           this.onSpeaker?.('user');
         }
 
@@ -316,7 +424,7 @@ export class GeminiLiveSessionClient {
         }
         const b64 = btoa(binary);
 
-        // Standard Gemini Live realtimeInput contract
+        // Send realtimeInput PCM to Gemini
         this.ws.send(
           JSON.stringify({
             realtimeInput: {

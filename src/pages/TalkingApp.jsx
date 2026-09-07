@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, ArrowRight, Compass } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import TranscriptSidebar from '@/components/talkingapp/TranscriptSidebar';
 import TalkingOrb from '@/components/talkingapp/TalkingOrb';
@@ -8,11 +8,13 @@ import TalkingOrb from '@/components/talkingapp/TalkingOrb';
 const GOLD = '#D4AF37';
 
 export default function TalkingApp() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState('ready');
   const [transcript, setTranscript] = useState([]);
   const [currentSpeaker, setCurrentSpeaker] = useState(null);
   const [roadmap, setRoadmap] = useState(null);
   const [generatingRoadmap, setGeneratingRoadmap] = useState(false);
+  const [navTarget, setNavTarget] = useState(null);
   const prevStatusRef = useRef(status);
   const sessionLogIdRef = useRef(null);
 
@@ -56,13 +58,44 @@ export default function TalkingApp() {
           roadmap={roadmap}
           generatingRoadmap={generatingRoadmap}
         />
-        <TalkingOrb
-          status={status}
-          setStatus={setStatus}
-          onTranscript={addTranscript}
-          onSpeaker={setCurrentSpeaker}
-          onSessionId={(id) => { sessionLogIdRef.current = id; }}
-        />
+        <div className="flex-1 flex flex-col items-center justify-center relative">
+          {navTarget && (
+            <div
+              className="absolute top-4 z-20 flex items-center gap-3 px-4 py-2.5 rounded-full border shadow-2xl animate-bounce"
+              style={{
+                background: 'rgba(20,20,20,0.95)',
+                borderColor: GOLD,
+                boxShadow: '0 4px 25px rgba(212,175,55,0.4)',
+              }}
+            >
+              <Compass className="w-4 h-4 text-[#D4AF37]" />
+              <span className="text-xs font-bold text-white">
+                Charlie suggests: <span className="text-[#e8c84a]">{navTarget.title}</span>
+              </span>
+              <button
+                onClick={() => navigate(navTarget.path)}
+                className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black cursor-pointer hover:scale-105 active:scale-95 transition-all"
+                style={{ background: GOLD, color: '#000' }}
+              >
+                Go Now <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setNavTarget(null)}
+                className="text-xs text-gray-400 hover:text-white px-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+          <TalkingOrb
+            status={status}
+            setStatus={setStatus}
+            onTranscript={addTranscript}
+            onSpeaker={setCurrentSpeaker}
+            onSessionId={(id) => { sessionLogIdRef.current = id; }}
+            onNavigate={(nav) => setNavTarget(nav)}
+          />
+        </div>
       </div>
     </div>
   );
