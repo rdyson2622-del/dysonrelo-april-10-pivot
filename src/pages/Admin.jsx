@@ -7,6 +7,7 @@ import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText,
   Brain, AlertTriangle, Sparkles, TrendingUp
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 
 const GOLD = '#D4AF37';
 
@@ -137,24 +138,13 @@ export default function Admin() {
           </Link>
         </motion.div>
 
-        {/* ══════════════════════════════════════════════════════════════
-            🔒 LOCKED — CANONICAL DNN STUDIO 16:9 ASSET. DO NOT REPLACE.
-            This is the ONE verified real studio photo (Charlie at desk,
-            Bob in frame, native 16:9). Same URL used on /portal hero.
-            ══════════════════════════════════════════════════════════════ */}
+        {/* Standard landing page banner — same tan hero used across all portals */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl p-5"
-          style={{ background: '#000', border: `2px solid ${GOLD}` }}
+          className="mb-8 rounded-2xl overflow-hidden"
         >
-          <p className="text-xs font-bold tracking-[0.3em] mb-3" style={{ color: GOLD }}>🔒 LOCKED DNN STUDIO (16:9 VERIFIED)</p>
-          <img
-            src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png"
-            alt="DNN Real Estate News Studio"
-            className="w-full rounded-xl"
-            style={{ border: '1px solid rgba(212,175,55,0.3)' }}
-          />
+          <ClientHeroMockup />
         </motion.div>
 
         {/* Summary Dashboard Charts */}
