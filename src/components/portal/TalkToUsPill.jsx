@@ -34,6 +34,15 @@ export default function TalkToUsPill() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   // Corporate Relo is a public HR landing page — force that portal's voice
   // even if no role has been assigned in this session yet.
   const effectiveRole = location.pathname === '/corporate-relo' ? 'hr' : roleKey;
@@ -82,20 +91,21 @@ export default function TalkToUsPill() {
         )}
       </AnimatePresence>
 
-      {/* The pill itself — docked in the drawer's own panel area, clear of
-          the persistent sidebar (which is only visible on desktop), so it
-          never collides with sidebar nav items. Its label is tailored to
-          the portal the visitor is currently in. */}
-      <div className="fixed top-20 left-4 md:left-64 z-50">
-        <button
-          onClick={() => setIsOpen(v => !v)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:scale-105 active:scale-95"
-          style={{ background: '#0d0d0d', border: `1px solid ${GOLD}`, color: GOLD, boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
-        >
-          {isOpen ? <X className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
-          {portal.pillLabel}
-        </button>
-      </div>
+      {/* The pill itself — docked clear of the persistent sidebar.
+          Automatically hidden when the banner/drawer is deployed so it never
+          covers or obscures any of the drawer's content. */}
+      {!isOpen && (
+        <div className="fixed top-20 left-4 md:left-64 z-30">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ background: '#0d0d0d', border: `1px solid ${GOLD}`, color: GOLD, boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
+          >
+            <MessageCircle className="w-4 h-4" />
+            {portal.pillLabel}
+          </button>
+        </div>
+      )}
     </>
   );
 }
