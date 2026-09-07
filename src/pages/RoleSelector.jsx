@@ -119,43 +119,43 @@ export default function RoleSelector() {
       <ClientHeroMockup />
 
       {/* ── Path Selection ── */}
-      <section className="flex flex-col items-center px-6 pt-2 pb-8 bg-black">
+      <section className="flex flex-col items-center px-6 pt-2 pb-8" style={{ background: '#ede0cc' }}>
 
-        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {visiblePaths.map((path, i) => {
             const Icon = path.icon;
             return (
               <button
                 key={i}
                 onClick={() => handleSelect(path)}
-                className="group flex flex-col items-start text-left p-7 rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
+                className="group flex flex-col items-start text-left p-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                 style={{
-                  minHeight: '260px',
-                  background: '#ede0cc',
+                  minHeight: '130px',
+                  background: '#0a0a0a',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
                 }}
               >
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-all"
-                  style={{ background: '#0a0a0a', border: `2px solid ${GOLD}` }}>
-                  <Icon className="w-6 h-6" style={{ color: GOLD }} />
+                <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all"
+                  style={{ background: '#ede0cc', border: `2px solid ${GOLD}` }}>
+                  <Icon className="w-3 h-3" style={{ color: '#0a0a0a' }} />
                 </div>
 
-                <span className="text-[10px] font-black tracking-[0.15em] uppercase mb-3 px-3 py-1 rounded-full"
+                <span className="text-[6px] font-black tracking-[0.15em] uppercase mb-1.5 px-1.5 py-0.5 rounded-full"
                   style={{ color: '#0a0a0a', background: GOLD }}>
                   {path.badge}
                 </span>
 
-                <h2 className="font-bold leading-snug mb-3"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: '#0a0a0a' }}>
+                <h2 className="font-bold leading-snug mb-1.5"
+                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.7rem', color: '#fff' }}>
                   {path.label}
                 </h2>
 
-                <p className="text-[13px] leading-relaxed mb-6" style={{ color: 'rgba(10,10,10,0.65)' }}>
+                <p className="text-[6.5px] leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {path.sub}
                 </p>
 
-                <div className="mt-auto flex items-center gap-2 text-xs font-bold transition-all group-hover:gap-3"
-                  style={{ color: '#0a0a0a' }}>
+                <div className="mt-auto flex items-center gap-2 text-[9px] font-bold transition-all group-hover:gap-3"
+                  style={{ color: GOLD }}>
                   Enter <span>→</span>
                 </div>
               </button>
@@ -163,7 +163,7 @@ export default function RoleSelector() {
           })}
         </div>
 
-        <p className="mt-8 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        <p className="mt-8 text-xs" style={{ color: 'rgba(10,10,10,0.35)' }}>
           Dyson &amp; Dyson · 55 Years of Relocation Management
         </p>
 
