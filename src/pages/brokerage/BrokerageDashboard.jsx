@@ -88,16 +88,12 @@ export default function BrokerageDashboard() {
   const { data: brokerage } = useQuery({
     queryKey: ['brokeragePortal', user?.id, userBrokerageId],
     queryFn: async () => {
-      if (user?.role === 'admin') {
-        const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
-        return list?.[0] || null;
-      }
       if (userBrokerageId) {
         return await base44.entities.Brokerage.get(userBrokerageId);
       }
       return null;
     },
-    enabled: !!user,
+    enabled: !!user && !!userBrokerageId,
   });
 
   const { data: milestones = [], isLoading: milesLoading } = useQuery({
@@ -164,18 +160,20 @@ export default function BrokerageDashboard() {
       <div className="flex-1 flex flex-col items-center px-6 pt-10 pb-8">
         <div className="max-w-4xl w-full text-center">
           <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-3" style={{ color: GOLD }}>
-            {brokerage?.plan_tier === 'founder' ? 'Founder Subscriber · Pilot Brokerage' : 'Brokerage Subscriber'}
+            Brokerage Subscriber
           </p>
           <h1 className="text-3xl md:text-4xl font-serif font-normal mb-3 text-white leading-tight">
-            {brokerage?.name || '—'}
+            {brokerage?.name || 'Broker/Agent Portal'}
           </h1>
           <p className="text-base text-gray-400 max-w-2xl mx-auto mb-2 leading-relaxed">
             Your brokerage roadmaps — five live workflows for escrow, listings, agents, marketing, and luxury presence.
           </p>
-          <p className="text-xs text-gray-600">
-            {brokerage?.status === 'active' ? '● Subscription active' : brokerage?.status || 'Loading…'}
-            {brokerage?.subscribed_at && ` · Subscribed ${new Date(brokerage.subscribed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
-          </p>
+          {brokerage && (
+            <p className="text-xs text-gray-600">
+              {brokerage?.status === 'active' ? '● Subscription active' : brokerage?.status || 'Loading…'}
+              {brokerage?.subscribed_at && ` · Subscribed ${new Date(brokerage.subscribed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`}
+            </p>
+          )}
         </div>
 
         <div className="h-10" />
