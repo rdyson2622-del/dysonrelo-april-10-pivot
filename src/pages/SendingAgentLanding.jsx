@@ -76,7 +76,7 @@ export default function SendingAgentLanding() {
         <div className="grid gap-6">
           {FEATURES.map(({ icon: Icon, number, title, body }) => (
             <div key={number} className="flex gap-5 rounded-2xl p-6"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.25)' }}>
+              style={{ background: '#000', border: '1px solid rgba(212,175,55,0.25)' }}>
               <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-black text-lg"
                 style={{ background: 'rgba(212,175,55,0.15)', color: GOLD }}>
                 {number}
