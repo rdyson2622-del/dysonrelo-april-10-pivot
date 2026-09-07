@@ -42,6 +42,14 @@ const PATHS = [
     roleKey: 'agent',
   },
   {
+    icon: Briefcase,
+    label: 'I am an Active Real Estate Broker',
+    sub: 'Manage your firm\'s escrow, listings, agents, and marketing through the Broker/Agent Portal.',
+    badge: 'BROKER/AGENT PORTAL',
+    dest: '/brokerage',
+    roleKey: 'brokerage_admin',
+  },
+  {
     icon: Handshake,
     label: 'I am an Inactive but licensed Real Estate Agent or Broker',
     sub: 'Send us your out-of-state client. We manage everything — your 25% referral fee is protected.',
@@ -56,14 +64,6 @@ const PATHS = [
     badge: 'VENDOR UTILITY',
     dest: '/search',
     roleKey: 'vendor',
-  },
-  {
-    icon: Briefcase,
-    label: 'I am a Brokerage Subscriber',
-    sub: 'Manage your firm\'s escrow, listings, agents, and marketing through the Broker/Agent Portal.',
-    badge: 'BROKER/AGENT PORTAL',
-    dest: '/brokerage',
-    roleKey: 'brokerage_admin',
   },
 ];
 
