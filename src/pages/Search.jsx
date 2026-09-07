@@ -12,9 +12,15 @@ export default function Search() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
+    let subscribedPortal = false;
+    try {
+      const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
+      subscribedPortal = portal?.roleKey === 'vendor';
+    } catch {
+      // ignore malformed storage
+    }
     base44.auth.me().then((user) => {
-      const sessionRole = sessionStorage.getItem('dyson_role');
-      if (user?.portal_role === 'vendor' || sessionRole === 'vendor') {
+      if (user?.portal_role === 'vendor' || subscribedPortal) {
         setIsSubscribed(true);
         setChecked(true);
         return;
@@ -24,7 +30,7 @@ export default function Search() {
         setIsSubscribed(recs.length > 0);
         setChecked(true);
       }).catch(() => setChecked(true));
-    }).catch(() => setChecked(true));
+    }).catch(() => { setIsSubscribed(subscribedPortal); setChecked(true); });
   }, []);
 
   return (

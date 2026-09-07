@@ -54,7 +54,7 @@ export default function FindAgent() {
 
   useEffect(() => {
     const checkSubscribed = () => {
-      let isSubscribed = sessionStorage.getItem('dyson_role') === 'agent';
+      let isSubscribed = false;
       try {
         const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
         if (portal?.roleKey === 'agent') isSubscribed = true;
