@@ -21,6 +21,9 @@ export default function Home() {
   const [clientRecord, setClientRecord] = useState(null);
   const [checkedSubscriber, setCheckedSubscriber] = useState(false);
   const isReferralAgentPortal = typeof window !== 'undefined' && sessionStorage.getItem('dyson_role') === 'referral_agent';
+  const isSubscribed = (() => {
+    try { return JSON.parse(localStorage.getItem('dyson_portal'))?.roleKey === 'client'; } catch { return false; }
+  })();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -242,10 +245,12 @@ export default function Home() {
             <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
           </div>
 
-          {/* ── SUBSCRIBE — makes this the client's home page ── */}
-          <div className="max-w-xl mx-auto mt-10">
-            <PortalSubscribeForm portalName="Client Portal" source="Client Portal" roleKey="client" dest="/home" />
-          </div>
+          {/* ── SUBSCRIBE — makes this the client's home page, hidden once already subscribed ── */}
+          {!isSubscribed && (
+            <div className="max-w-xl mx-auto mt-10">
+              <PortalSubscribeForm portalName="Client Portal" source="Client Portal" roleKey="client" dest="/home" />
+            </div>
+          )}
         </div>
         </>
         )}
