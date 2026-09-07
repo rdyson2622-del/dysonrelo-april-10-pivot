@@ -20,15 +20,18 @@ export default function Search() {
       // ignore malformed storage
     }
     base44.auth.me().then((user) => {
-      if (user?.portal_role === 'vendor' || subscribedPortal) {
+      if (subscribedPortal) {
         setIsSubscribed(true);
         setChecked(true);
         return;
       }
       if (!user?.email) { setChecked(true); return; }
-      base44.entities.VendorInterest.filter({ email: user.email }, '-created_date', 1).then((recs) => {
-        setIsSubscribed(recs.length > 0);
-        setChecked(true);
+      base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Vendor Portal' }, '-created_date', 1).then((recs) => {
+        if (recs.length > 0) { setIsSubscribed(true); setChecked(true); return; }
+        base44.entities.VendorInterest.filter({ email: user.email }, '-created_date', 1).then((vRecs) => {
+          setIsSubscribed(vRecs.length > 0);
+          setChecked(true);
+        }).catch(() => setChecked(true));
       }).catch(() => setChecked(true));
     }).catch(() => { setIsSubscribed(subscribedPortal); setChecked(true); });
   }, []);

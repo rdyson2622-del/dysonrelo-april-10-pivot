@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShieldCheck, AlertTriangle, ThumbsDown, Award, ArrowRight } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
@@ -53,14 +54,20 @@ export default function BrokerPortalLanding() {
 
   useEffect(() => {
     const checkSubscribed = () => {
-      let isSubscribed = false;
+      let localSubscribed = false;
       try {
         const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
-        if (portal?.roleKey === 'brokerage_admin') isSubscribed = true;
+        if (portal?.roleKey === 'brokerage_admin') localSubscribed = true;
       } catch {
         // ignore malformed storage
       }
-      setSubscribed(isSubscribed);
+      if (localSubscribed) { setSubscribed(true); return; }
+      base44.auth.me().then(user => {
+        if (!user?.email) return;
+        base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Broker/Agent Portal' }, '-created_date', 1).then(recs => {
+          if (recs.length > 0) setSubscribed(true);
+        }).catch(() => {});
+      }).catch(() => {});
     };
     checkSubscribed();
     window.addEventListener('dyson_role_change', checkSubscribed);

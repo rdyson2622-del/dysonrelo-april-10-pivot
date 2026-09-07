@@ -161,11 +161,10 @@ export default function CorporateRelo() {
   const [hrSubscriber, setHrSubscriber] = useState(null);
   useEffect(() => {
     base44.auth.me().then(user => {
-      if (user?.portal_role === 'hr' && user?.email) {
-        base44.entities.DnnSubscriber.filter({ email: user.email }, '-created_date', 1).then(recs => {
-          setHrSubscriber(recs[0] || { full_name: user.full_name, email: user.email });
-        }).catch(() => setHrSubscriber({ full_name: user.full_name, email: user.email }));
-      }
+      if (!user?.email) return;
+      base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Corporate Relo Portal' }, '-created_date', 1).then(recs => {
+        if (recs[0]) setHrSubscriber(recs[0]);
+      }).catch(() => {});
     }).catch(() => {});
   }, []);
 

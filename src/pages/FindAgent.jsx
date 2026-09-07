@@ -54,14 +54,20 @@ export default function FindAgent() {
 
   useEffect(() => {
     const checkSubscribed = () => {
-      let isSubscribed = false;
+      let localSubscribed = false;
       try {
         const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
-        if (portal?.roleKey === 'agent') isSubscribed = true;
+        if (portal?.roleKey === 'agent') localSubscribed = true;
       } catch {
         // ignore malformed storage
       }
-      setSubscribed(isSubscribed);
+      if (localSubscribed) { setSubscribed(true); return; }
+      base44.auth.me().then(user => {
+        if (!user?.email) return;
+        base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Relocation Agent Portal' }, '-created_date', 1).then(recs => {
+          if (recs.length > 0) setSubscribed(true);
+        }).catch(() => {});
+      }).catch(() => {});
     };
     checkSubscribed();
     window.addEventListener('dyson_role_change', checkSubscribed);

@@ -20,10 +20,8 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [clientRecord, setClientRecord] = useState(null);
   const [checkedSubscriber, setCheckedSubscriber] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const isReferralAgentPortal = typeof window !== 'undefined' && sessionStorage.getItem('dyson_role') === 'referral_agent';
-  const isSubscribed = (() => {
-    try { return JSON.parse(localStorage.getItem('dyson_portal'))?.roleKey === 'client'; } catch { return false; }
-  })();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,13 +33,18 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    let localSubscribed = false;
+    try { localSubscribed = JSON.parse(localStorage.getItem('dyson_portal'))?.roleKey === 'client'; } catch {}
     base44.auth.me().then(user => {
-      if (!user?.email) { setCheckedSubscriber(true); return; }
+      if (!user?.email) { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); return; }
       base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1).then(recs => {
         setClientRecord(recs[0] || null);
+      }).catch(() => {});
+      base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Client Portal' }, '-created_date', 1).then(recs => {
+        setIsSubscribed(localSubscribed || recs.length > 0);
         setCheckedSubscriber(true);
-      }).catch(() => setCheckedSubscriber(true));
-    }).catch(() => setCheckedSubscriber(true));
+      }).catch(() => { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); });
+    }).catch(() => { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); });
   }, []);
 
   // Fetch latest DNN article for bottom corner card
