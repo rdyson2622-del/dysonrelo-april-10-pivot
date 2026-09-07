@@ -10,16 +10,19 @@ const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // The Voice Concierge greeting runs on the public /portal page for
+    // first-time, not-yet-logged-in visitors — don't require auth here.
+    // Fall back to a guest identity when there's no logged-in user.
+    let user = null;
+    try { user = await base44.auth.me(); } catch (_) { user = null; }
+    const isGuest = !user;
+    const guestId = isGuest ? `guest_${crypto.randomUUID()}` : null;
 
     const { action, systemPrompt, sessionLogId, duration_seconds, transcript_turns } = await req.json();
 
     if (action === 'start_session') {
-      // --- DAILY SESSION CAP: max 3 sessions per user per day (admins exempt, since they test repeatedly) ---
-      if (user.role !== 'admin') {
+      // --- DAILY SESSION CAP: max 3 sessions per user per day (admins exempt; guests exempt too — can't track per-guest) ---
+      if (user && user.role !== 'admin') {
         const today = new Date().toISOString().slice(0, 10); // "2026-03-17"
         const todaySessions = await base44.asServiceRole.entities.TalkingSessionLog.filter({ user_id: user.id });
         const sessionsTodayCount = todaySessions.filter(s => s.started_at?.slice(0, 10) === today).length;
@@ -40,9 +43,9 @@ Deno.serve(async (req) => {
 
       // Log the session start for admin analytics/cost tracking
       const log = await base44.asServiceRole.entities.TalkingSessionLog.create({
-        user_id: user.id,
-        user_name: user.full_name || '',
-        user_email: user.email || '',
+        user_id: user ? user.id : guestId,
+        user_name: user ? (user.full_name || '') : 'Guest (not logged in)',
+        user_email: user ? (user.email || '') : '',
         model,
         started_at: new Date().toISOString(),
       });
@@ -51,7 +54,7 @@ Deno.serve(async (req) => {
         wsUrl,
         model,
         systemPrompt,
-        clientId: user.id,
+        clientId: user ? user.id : guestId,
         sessionLogId: log.id,
       });
     }
