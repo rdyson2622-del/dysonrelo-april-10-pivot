@@ -192,7 +192,7 @@ export default function RoleSelector() {
           style={{ background: '#0a0a0a', border: `1px solid rgba(212,175,55,0.25)`, width: 'fit-content' }}>
           <img src={DNN_LOGO} alt="DNN" className="w-auto object-contain block" style={{ height: '41px' }} />
           <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-auto object-contain block" style={{ height: '41px' }} />
-          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain block" style={{ height: '51px', filter: 'sepia(1) saturate(4) hue-rotate(-10deg) brightness(1.15)' }} />
+          <img src={INTEL_LOGO} alt="Real Estate Intelligence" className="w-auto object-contain block" style={{ height: '51px' }} />
         </div>
       </section>
     </div>
