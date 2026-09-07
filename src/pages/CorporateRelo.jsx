@@ -10,7 +10,7 @@ import CityGuide from './CityGuide';
 import RealEstateAnswers from './RealEstateAnswers';
 import ClientCommunicationsExplainer from './ClientCommunicationsExplainer';
 import SolveMyStory from './SolveMyStory';
-import ConsumerDnnNews from './ConsumerDnnNews';
+import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
 import HRSubscriberDashboard from '@/components/dashboard/HRSubscriberDashboard';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
@@ -418,7 +418,11 @@ export default function CorporateRelo() {
         <div className="px-8 py-6 text-center" style={{ background: '#0d0d0d' }}>
           <p className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: GOLD }}>Real Estate News</p>
         </div>
-        <ConsumerDnnNews hidePills />
+        <div className="px-8 md:px-16 py-10" style={{ background: '#ede0cc' }}>
+          <div className="max-w-4xl mx-auto">
+            <FeaturedBroadcast />
+          </div>
+        </div>
 
         {hrSubscriber ? (
           <HRSubscriberDashboard subscriber={hrSubscriber} />
