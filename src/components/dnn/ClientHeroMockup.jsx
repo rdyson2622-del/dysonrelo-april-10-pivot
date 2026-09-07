@@ -18,7 +18,7 @@ export default function ClientHeroMockup({
   attribution = '— Bob Dyson',
 }) {
   return (
-    <div className="w-full px-6 sm:px-10 py-12" style={{ background: '#ede0cc' }}>
+    <div className="w-full px-6 sm:px-10 py-6" style={{ background: '#ede0cc' }}>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
         {/* Header copy — left */}
         <div className="flex-1 text-center md:text-left">
@@ -45,7 +45,6 @@ export default function ClientHeroMockup({
           >
             {quoteLine2}
           </p>
-          <p className="mt-3 text-sm italic" style={{ color: '#4a4a4a' }}>{attribution}</p>
         </div>
 
         {/* Studio video — right, ~50% size */}
