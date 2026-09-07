@@ -184,6 +184,8 @@ import AgentCommandCenter from './pages/AgentCommandCenter';
 import AgentWorkfile from './pages/AgentWorkfile';
 import AdminMarketingCampaignsHub from './pages/AdminMarketingCampaignsHub';
 import AdminQuickSend from './pages/AdminQuickSend';
+import AdminReferralLeads from './pages/AdminReferralLeads';
+import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 
 const AuthenticatedApp = () => {
@@ -214,6 +216,9 @@ const AuthenticatedApp = () => {
 
       {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
       <Route path="/agreement-fill" element={<AgreementFillForm />} />
+
+      {/* Public referral submission page — the Refer Someone floating pill links here, no login required */}
+      <Route path="/refer" element={<ReferSomeone />} />
 
       {/* Public personalized listing-agent preview — sent/shown to MLS listing agents, no login required */}
       <Route path="/agent-preview/:token" element={<ListingAgentPreview />} />
@@ -418,6 +423,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/listing-prospects" element={<AdminListingProspects />} />
         <Route path="/admin/marketing-campaigns-hub" element={<AdminMarketingCampaignsHub />} />
         <Route path="/admin/quick-send" element={<AdminQuickSend />} />
+        <Route path="/admin/referral-leads" element={<AdminReferralLeads />} />
         <Route path="/admin/voice-concierge-analytics" element={<AdminVoiceConciergeAnalytics />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />

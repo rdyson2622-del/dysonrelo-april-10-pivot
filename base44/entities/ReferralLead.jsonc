@@ -1,0 +1,84 @@
+{
+  "name": "ReferralLead",
+  "type": "object",
+  "properties": {
+    "referred_name": {
+      "type": "string",
+      "description": "Name of the person being referred (the relocating client)"
+    },
+    "referred_email": {
+      "type": "string",
+      "description": "Email of the person being referred"
+    },
+    "referred_phone": {
+      "type": "string",
+      "description": "Phone number of the person being referred (optional)"
+    },
+    "destination_city": {
+      "type": "string",
+      "description": "Destination city they're relocating to"
+    },
+    "destination_state": {
+      "type": "string",
+      "description": "Destination state they're relocating to"
+    },
+    "referrer_name": {
+      "type": "string",
+      "description": "Name of the person who submitted the referral"
+    },
+    "referrer_email": {
+      "type": "string",
+      "description": "Email of the person who submitted the referral"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Any additional context provided by the referrer"
+    },
+    "source": {
+      "type": "string",
+      "default": "Referral Page",
+      "description": "Where this referral was submitted from (e.g. Referral Page, Referral Pill)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "accepted",
+        "declined"
+      ],
+      "default": "new",
+      "description": "Admin review status of this referral lead"
+    },
+    "accepted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When an admin accepted this lead"
+    },
+    "accepted_by": {
+      "type": "string",
+      "description": "Admin email who accepted this lead"
+    }
+  },
+  "required": [
+    "referred_name",
+    "referred_email"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

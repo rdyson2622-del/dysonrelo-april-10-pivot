@@ -37,6 +37,7 @@ const NAV_SECTIONS = [
       { label: '📋 MLS Listing Agent Outreach', path: '/admin/listing-prospects', icon: MapPin, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
       { label: '📤 Quick Send (Page/Video → SMS or Email)', path: '/admin/quick-send', icon: Send, highlight: true },
+      { label: '🤝 Referral Leads (Accept/Decline + Analytics)', path: '/admin/referral-leads', icon: UserPlus, highlight: true },
     ],
   },
   {
