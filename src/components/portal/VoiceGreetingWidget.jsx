@@ -27,7 +27,8 @@ export default function VoiceGreetingWidget({ onClose }) {
   }, []);
 
   const handleTranscript = (entry) => {
-    if (entry.role !== 'user' && entry.role !== 'assistant') return;
+    if (entry.role === 'system') { setShowPanel(true); }
+    if (entry.role !== 'user' && entry.role !== 'assistant' && entry.role !== 'system') return;
     const withTime = { ...entry, timestamp: new Date().toISOString() };
     transcriptRef.current = [...transcriptRef.current, withTime];
     setTranscript([...transcriptRef.current]);

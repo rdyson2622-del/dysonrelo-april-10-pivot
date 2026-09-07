@@ -18,16 +18,18 @@ Deno.serve(async (req) => {
     const { action, systemPrompt, sessionLogId, duration_seconds, transcript_turns } = await req.json();
 
     if (action === 'start_session') {
-      // --- DAILY SESSION CAP: max 3 sessions per user per day ---
-      const today = new Date().toISOString().slice(0, 10); // "2026-03-17"
-      const todaySessions = await base44.asServiceRole.entities.TalkingSessionLog.filter({ user_id: user.id });
-      const sessionsTodayCount = todaySessions.filter(s => s.started_at?.slice(0, 10) === today).length;
+      // --- DAILY SESSION CAP: max 3 sessions per user per day (admins exempt, since they test repeatedly) ---
+      if (user.role !== 'admin') {
+        const today = new Date().toISOString().slice(0, 10); // "2026-03-17"
+        const todaySessions = await base44.asServiceRole.entities.TalkingSessionLog.filter({ user_id: user.id });
+        const sessionsTodayCount = todaySessions.filter(s => s.started_at?.slice(0, 10) === today).length;
 
-      if (sessionsTodayCount >= 3) {
-        return Response.json({
-          error: 'Daily session limit reached. You may start a new session tomorrow.',
-          limit_reached: true,
-        }, { status: 429 });
+        if (sessionsTodayCount >= 3) {
+          return Response.json({
+            error: 'Daily session limit reached. You may start a new session tomorrow.',
+            limit_reached: true,
+          }, { status: 429 });
+        }
       }
       // -----------------------------------------------------------
 
