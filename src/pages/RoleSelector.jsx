@@ -150,7 +150,7 @@ export default function RoleSelector() {
         <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-10">
           {/* Left: role entry boxes — centered under the copy column above */}
           <div className="flex-1 flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl w-full">
               {visiblePaths.map((path, i) => {
                 const Icon = path.icon;
                 return (
@@ -195,15 +195,15 @@ export default function RoleSelector() {
           </div>
 
           {/* Right: enlarged Intelligence Bureau boxes — vertically centered under the studio photo */}
-          <div className="w-full md:w-1/2 shrink-0 flex justify-center">
-            <div className="grid grid-cols-2 gap-4 w-full" style={{ maxWidth: '420px' }}>
+          <div className="w-full md:w-auto shrink-0 flex justify-center">
+            <div className="flex flex-col gap-4 w-full" style={{ maxWidth: '200px' }}>
               {INTEL_BOXES.map(({ label, path, icon: Icon }) => (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
                   className="flex flex-col items-center justify-center gap-2 transition-all hover:scale-[1.03] active:scale-95"
                   style={{
-                    height: '110px',
+                    height: '90px',
                     background: '#0a0a0a',
                     border: `2px solid ${GOLD}`,
                     borderRadius: '10px',
