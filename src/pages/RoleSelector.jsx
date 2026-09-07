@@ -196,22 +196,22 @@ export default function RoleSelector() {
 
           {/* Right: enlarged Intelligence Bureau boxes — vertically centered under the studio photo */}
           <div className="w-full md:w-auto shrink-0 flex justify-center">
-            <div className="flex flex-col gap-4 w-full" style={{ maxWidth: '320px' }}>
+            <div className="flex flex-col gap-5 w-full" style={{ maxWidth: '432px' }}>
               {INTEL_BOXES.map(({ label, path, icon: Icon }) => (
                 <button
                   key={label}
                   onClick={() => navigate(path)}
-                  className="flex flex-row items-center justify-center gap-3 transition-all hover:scale-[1.03] active:scale-95"
+                  className="flex flex-row items-center justify-center gap-4 transition-all hover:scale-[1.03] active:scale-95"
                   style={{
-                    height: '64px',
+                    height: '86px',
                     background: '#0a0a0a',
                     border: `2px solid ${GOLD}`,
                     borderRadius: '10px',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
                   }}
                 >
-                  <Icon className="w-6 h-6 shrink-0" style={{ color: GOLD }} />
-                  <span className="text-xs font-black tracking-[0.1em] text-center" style={{ color: GOLD }}>{label}</span>
+                  <Icon className="w-8 h-8 shrink-0" style={{ color: GOLD }} />
+                  <span className="text-base font-black tracking-[0.1em] text-center" style={{ color: GOLD }}>{label}</span>
                 </button>
               ))}
             </div>
