@@ -96,6 +96,7 @@ import RoleSelector from './pages/RoleSelector';
 import BroadcastPreview from './pages/BroadcastPreview';
 import BroadcastShow from './pages/BroadcastShow';
 import AgentInvitedClients from './pages/AgentInvitedClients';
+import BrokerPortalLanding from './pages/BrokerPortalLanding';
 import RealEstateAnswers from './pages/RealEstateAnswers';
 import NationalVettedDirectory from './pages/NationalVettedDirectory';
 import AdminRoster from './pages/AdminRoster';
@@ -291,6 +292,7 @@ const AuthenticatedApp = () => {
         <Route path="/explainers" element={<Explainers />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
         <Route path="/agent-invited-clients" element={<AgentInvitedClients />} />
+      <Route path="/broker-portal" element={<BrokerPortalLanding />} />
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
       <Route path="/master-show-sheet" element={<MasterShowSheet />} />
       <Route path="/agent-command-center" element={<AgentCommandCenter />} />
