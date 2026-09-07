@@ -259,6 +259,28 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
     setStatus('ready');
   };
 
+  // Browsers (especially Safari/iOS, common with AirPods) block audio playback
+  // until it's unlocked by a real user gesture. Auto-started sessions (the portal
+  // greeting) never get a "Start Talking" click, so the mic can work while Charlie's
+  // voice stays silently blocked — unlock on the very first tap anywhere on the page.
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (!playCtxRef.current || playCtxRef.current.state === 'closed') {
+        playCtxRef.current = new AudioContext({ sampleRate: 24000 });
+        nextPlayTimeRef.current = 0;
+      }
+      if (playCtxRef.current.state === 'suspended') playCtxRef.current.resume();
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    };
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('touchstart', unlockAudio);
+    return () => {
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    };
+  }, []);
+
   useEffect(() => {
     if (autoStart) startSession();
     return () => cleanup();
