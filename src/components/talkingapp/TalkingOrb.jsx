@@ -231,8 +231,16 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
           ws.send(JSON.stringify({ toolResponse: { functionResponses } }));
         }
       };
-      ws.onerror = () => { reportSessionEnd(); setStatus('ready'); cleanup(); };
-      ws.onclose = () => { reportSessionEnd(); setStatus((s) => (s === 'active' || s === 'connecting' ? 'ready' : s)); };
+      ws.onerror = () => {
+        onTranscript({ role: 'system', text: 'Lost connection to the voice service. Please try again.' });
+        reportSessionEnd(); setStatus('ready'); cleanup();
+      };
+      ws.onclose = (e) => {
+        if (!reportedRef.current && !e.wasClean) {
+          onTranscript({ role: 'system', text: 'The voice connection closed unexpectedly. Please try again.' });
+        }
+        reportSessionEnd(); setStatus((s) => (s === 'active' || s === 'connecting' ? 'ready' : s));
+      };
     } catch (err) {
       onTranscript({ role: 'system', text: err.message || 'Failed to start session' });
       setStatus('ready');
