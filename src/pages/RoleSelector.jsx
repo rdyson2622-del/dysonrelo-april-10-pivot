@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2, Briefcase } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2, Briefcase, ArrowLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import CommandPills from '@/components/layout/CommandPills';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -116,6 +117,21 @@ export default function RoleSelector() {
 
   return (
     <div className="bg-black">
+      {/* ── Admin escape bar — lets admin navigate back out to any other portal from here ── */}
+      {isAdmin && (
+        <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+          <div className="flex-1" />
+          <CommandPills />
+        </div>
+      )}
+
       <ClientHeroMockup />
 
       {/* ── Path Selection ── */}
