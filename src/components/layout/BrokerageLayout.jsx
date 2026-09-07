@@ -9,6 +9,7 @@ import {
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
 import PortalIntelligenceRail from '@/components/layout/PortalIntelligenceRail';
+import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
 
 const GOLD = '#D4AF37';
 
@@ -203,6 +204,7 @@ export default function BrokerageLayout() {
 
         {/* Page content */}
         <Outlet />
+        <ReferralFloatingPill />
       </main>
     </div>
   );

@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import CommandPills from '@/components/layout/CommandPills';
 import FirstVisitVoiceGreeting from '@/components/portal/FirstVisitVoiceGreeting';
+import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
@@ -141,6 +142,7 @@ export default function RoleSelector() {
       )}
 
       <FirstVisitVoiceGreeting />
+      <ReferralFloatingPill />
 
       <ClientHeroMockup />
 

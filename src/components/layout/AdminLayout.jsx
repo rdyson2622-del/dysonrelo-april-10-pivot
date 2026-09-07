@@ -7,6 +7,7 @@ import PageNumberBadge from '../PageNumberBadge';
 import { useLayout } from '@/lib/LayoutContext';
 import { ArrowLeft, Menu, X } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
+import ReferralFloatingPill from '../portal/ReferralFloatingPill';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
 import PortalIntelligenceRail from './PortalIntelligenceRail';
@@ -85,6 +86,7 @@ export default function AdminLayout() {
         </div>
         <PageNumberBadge />
         <AdminCharliePanel />
+        <ReferralFloatingPill />
       </main>
     </div>
   );
