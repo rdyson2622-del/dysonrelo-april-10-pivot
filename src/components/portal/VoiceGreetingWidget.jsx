@@ -38,9 +38,9 @@ export default function VoiceGreetingWidget({ onClose }) {
 
   return (
     <>
-      {/* Compact voice orb — bottom-right, live while the call is active */}
+      {/* Compact voice orb — bottom-left, live while the call is active (bottom-right is reserved for Admin Charlie) */}
       <div
-        className="fixed bottom-6 right-6 z-50 w-[220px] rounded-2xl overflow-hidden flex flex-col"
+        className="fixed bottom-6 left-6 z-50 w-[220px] rounded-2xl overflow-hidden flex flex-col"
         style={{ background: '#0d0d0d', border: `1px solid ${GOLD}`, boxShadow: '0 12px 40px rgba(0,0,0,0.6)' }}
       >
         <div className="shrink-0 flex items-center justify-between px-3 py-2.5" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
