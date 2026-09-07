@@ -5,7 +5,6 @@ import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lu
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 
@@ -50,29 +49,6 @@ const WHY_SECTION = [
 export default function FindAgent() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [subscribed, setSubscribed] = useState(false);
-
-  useEffect(() => {
-    const checkSubscribed = () => {
-      let localSubscribed = false;
-      try {
-        const portal = JSON.parse(localStorage.getItem('dyson_portal') || 'null');
-        if (portal?.roleKey === 'agent') localSubscribed = true;
-      } catch {
-        // ignore malformed storage
-      }
-      if (localSubscribed) { setSubscribed(true); return; }
-      base44.auth.me().then(user => {
-        if (!user?.email) return;
-        base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Relocation Agent Portal' }, '-created_date', 1).then(recs => {
-          if (recs.length > 0) setSubscribed(true);
-        }).catch(() => {});
-      }).catch(() => {});
-    };
-    checkSubscribed();
-    window.addEventListener('dyson_role_change', checkSubscribed);
-    return () => window.removeEventListener('dyson_role_change', checkSubscribed);
-  }, []);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -198,11 +174,6 @@ export default function FindAgent() {
             We update our vetted, affiliated agent network on a regular basis — currently over <span className="font-bold" style={{ color: GOLD }}>500 vetted affiliated agents</span> across all 50 states seed our network monthly with many of the best of the best in U.S. markets and communities. We specialize in working with local, independent brokerages and their agents, bringing a real community feel to our services.
           </p>
         </motion.div>
-
-        {/* ── SUBSCRIBE — makes this the agent's home page ── */}
-        {!subscribed && (
-          <PortalSubscribeForm portalName="Relocation Agent Portal" source="Relocation Agent Portal" roleKey="agent" dest="/find-agent" />
-        )}
 
       </div>
 

@@ -6,7 +6,6 @@ import { base44 } from '@/api/base44Client';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 
@@ -154,11 +153,6 @@ export default function BrokerPortalLanding() {
               <ArrowRight className="w-5 h-5" />
             </button>
           </motion.div>
-        )}
-
-        {/* ── SUBSCRIBE — makes this the broker's home page, unlocks the working dashboard ── */}
-        {!subscribed && (
-          <PortalSubscribeForm portalName="Broker/Agent Portal" source="Broker/Agent Portal" roleKey="brokerage_admin" dest="/broker-portal" />
         )}
 
       </div>

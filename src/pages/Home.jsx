@@ -8,7 +8,6 @@ import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import FindAProWidget from '@/components/portal/FindAProWidget';
 import ClientSubscriberDashboard from '@/components/dashboard/ClientSubscriberDashboard';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -20,7 +19,6 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [clientRecord, setClientRecord] = useState(null);
   const [checkedSubscriber, setCheckedSubscriber] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
   const isReferralAgentPortal = typeof window !== 'undefined' && sessionStorage.getItem('dyson_role') === 'referral_agent';
 
   useEffect(() => {
@@ -33,18 +31,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    let localSubscribed = false;
-    try { localSubscribed = JSON.parse(localStorage.getItem('dyson_portal'))?.roleKey === 'client'; } catch {}
     base44.auth.me().then(user => {
-      if (!user?.email) { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); return; }
+      if (!user?.email) { setCheckedSubscriber(true); return; }
       base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1).then(recs => {
         setClientRecord(recs[0] || null);
-      }).catch(() => {});
-      base44.entities.DnnSubscriber.filter({ email: user.email, source: 'Client Portal' }, '-created_date', 1).then(recs => {
-        setIsSubscribed(localSubscribed || recs.length > 0);
         setCheckedSubscriber(true);
-      }).catch(() => { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); });
-    }).catch(() => { setIsSubscribed(localSubscribed); setCheckedSubscriber(true); });
+      }).catch(() => setCheckedSubscriber(true));
+    }).catch(() => setCheckedSubscriber(true));
   }, []);
 
   // Fetch latest DNN article for bottom corner card
@@ -247,13 +240,6 @@ export default function Home() {
             </button>
             <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
           </div>
-
-          {/* ── SUBSCRIBE — makes this the client's home page, hidden once already subscribed ── */}
-          {!isSubscribed && (
-            <div className="max-w-xl mx-auto mt-10">
-              <PortalSubscribeForm portalName="Client Portal" source="Client Portal" roleKey="client" dest="/home" />
-            </div>
-          )}
         </div>
         </>
         )}
