@@ -170,6 +170,8 @@ export class GeminiLiveSessionClient {
       ws.onopen = () => {
         // Send setup handshake according to Google Gemini Live protocol
         const fullModel = model?.startsWith('models/') ? model : `models/${model || 'gemini-2.5-flash-preview-native-audio-dialog'}`;
+        const chosenVoice = ['Aoede', 'Charon', 'Fenrir'].includes(this.voiceName) ? this.voiceName : 'Charon';
+
         const setupMessage = {
           setup: {
             model: fullModel,
@@ -178,7 +180,7 @@ export class GeminiLiveSessionClient {
               speechConfig: {
                 voiceConfig: {
                   prebuiltVoiceConfig: {
-                    voiceName: this.voiceName || 'Charon',
+                    voiceName: chosenVoice,
                   },
                 },
               },
@@ -190,25 +192,21 @@ export class GeminiLiveSessionClient {
               {
                 functionDeclarations: [
                   {
-                    name: 'navigateToPage',
-                    description: 'Directs the user to a specific destination page on the DysonRelo platform instead of hunting and pecking.',
+                    name: 'navigate_to_page',
+                    description: 'Navigate the viewer directly to a specific destination page on the DysonRelo platform. Call this function whenever the user asks about or mentions HR or corporate relocation, relocation planning or moving intake, finding an agent, referring a friend or partner, broker or agent portals, real estate answers, daily news, or market transparency.',
                     parameters: {
                       type: 'OBJECT',
                       properties: {
                         path: {
                           type: 'STRING',
-                          description: 'The internal application route, e.g. /find-agent, /solutions, /relocation-intake, /corporate-relo, /dnn-news, /transparency, /refer, /financial-services, /city-guide, /portal',
-                        },
-                        pageTitle: {
-                          type: 'STRING',
-                          description: 'Human-friendly title of the destination page, e.g. "Find a Vetted Agent", "Real Estate Solutions", "Relocation Intake", "Corporate Relocation", "DNN Daily News", "Transparency Ledger", "Refer Someone"',
+                          description: 'The internal application route to navigate to: "/corporate-relo" (Corporate Relocation & HR services), "/relocation-intake" (Relocation Plan & Moving Intake), "/find-agent" (Find a Vetted Agent), "/solutions" (Real Estate Solutions & Roadmaps), "/refer" (Refer a Friend, Client, Agent, or Vendor), "/broker-portal" (Broker & Agent Portal), "/dnn-news" (DNN Daily Real Estate News), "/transparency" (Real Estate Transparency Ledger), "/financial-services" (Financial Services & Vetted Lenders), "/city-guide" (City Guide), "/real-estate-answers" (Real Estate Answers & Video FAQs), "/portal" (Main Portal Home).',
                         },
                         reason: {
                           type: 'STRING',
-                          description: 'Brief reason for navigating to this page',
+                          description: 'Short 1-sentence reason why you are taking the viewer to this page.',
                         },
                       },
-                      required: ['path', 'pageTitle'],
+                      required: ['path'],
                     },
                   },
                 ],
@@ -238,59 +236,79 @@ export class GeminiLiveSessionClient {
             return;
           }
 
-          // Case B: Tool call from model (navigation action)
+          // Case B: Handle Interruption / Barge-in immediately
+          // Watch for serverContent.interrupted or root interrupted flag
+          const isInterruptedSignal = Boolean(
+            data.serverContent?.interrupted ||
+            data.interrupted ||
+            data.serverContent?.modelTurn?.interrupted
+          );
+
+          if (isInterruptedSignal) {
+            this.isInterrupted = true;
+            this.player.stop();
+            this.transcriptTextBuffer = '';
+            this.onSpeaker?.('user');
+            this.onStatusChange?.('listening');
+            return;
+          }
+
+          // Helper to handle navigate_to_page function calls and immediately respond
+          const handleFunctionCall = (call) => {
+            const fnName = call.name;
+            if (fnName === 'navigate_to_page' || fnName === 'navigateToPage') {
+              const targetPath = call.args?.path || call.args?.page || '/portal';
+              const pageTitle = call.args?.pageTitle || call.args?.title || call.args?.reason || targetPath;
+              const reason = call.args?.reason || '';
+
+              // Trigger React Router navigation on the client
+              this.onNavigate?.({ path: targetPath, title: pageTitle, reason });
+
+              // Immediately send toolResponse back over the WebSocket so Charlie knows navigation succeeded
+              if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                const responsePayload = {
+                  toolResponse: {
+                    functionResponses: [
+                      {
+                        response: {
+                          output: {
+                            success: true,
+                            navigated_to: targetPath,
+                            status: `Viewer has navigated to ${targetPath}`,
+                          },
+                        },
+                        id: call.id,
+                      },
+                    ],
+                  },
+                };
+                this.ws.send(JSON.stringify(responsePayload));
+              }
+            }
+          };
+
+          // Case C: toolCall event at root level
           if (data.toolCall?.functionCalls) {
             for (const call of data.toolCall.functionCalls) {
-              if (call.name === 'navigateToPage') {
-                const { path, pageTitle, reason } = call.args || {};
-                if (path) {
-                  this.onNavigate?.({ path, title: pageTitle || path, reason: reason || '' });
-                }
-                // Send confirmation back so the model turn finishes cleanly
-                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                  this.ws.send(JSON.stringify({
-                    toolResponse: {
-                      functionResponses: [
-                        {
-                          response: { output: { success: true, navigatedTo: path } },
-                          id: call.id,
-                        },
-                      ],
-                    },
-                  }));
-                }
-              }
+              handleFunctionCall(call);
             }
           }
 
-          // Case C: server content from model
+          // Case D: server content from model
           if (data.serverContent) {
             const sc = data.serverContent;
 
-            // Handle interruption (server-side conversational barge-in confirmation)
-            if (sc.interrupted) {
-              this.isInterrupted = true;
-              this.player.stop();
-              this.transcriptTextBuffer = '';
-              this.onSpeaker?.('user');
-              this.onStatusChange?.('listening');
-              return;
-            }
-
-            // Model turn parts (audio and/or text)
+            // Model turn parts (audio, text, and/or inline function calls)
             if (sc.modelTurn?.parts) {
               for (const part of sc.modelTurn.parts) {
-                // Check for inline function call
-                if (part.functionCall?.name === 'navigateToPage') {
-                  const { path, pageTitle, reason } = part.functionCall.args || {};
-                  if (path) {
-                    this.onNavigate?.({ path, title: pageTitle || path, reason: reason || '' });
-                  }
+                // Check for inline function call part
+                if (part.functionCall) {
+                  handleFunctionCall(part.functionCall);
                 }
 
                 if (part.text) {
                   this.transcriptTextBuffer += part.text;
-                  // Parse text navigation tags [NAVIGATE: /path | Title]
+                  // Also parse fallback text navigation tags [NAVIGATE: /path | Title]
                   const navMatch = part.text.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
                   if (navMatch) {
                     const navPath = navMatch[1].trim();

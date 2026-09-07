@@ -41,38 +41,11 @@ export default function VoiceGreetingWidget({ onClose, isReturning = false }) {
   const handleNavigate = (nav) => {
     if (!nav?.path) return;
     setNavDirective(nav);
-    setCountdown(3);
-  };
-
-  useEffect(() => {
-    if (countdown === null) return;
-    if (countdown <= 0) {
-      if (navDirective?.path) {
-        navigate(navDirective.path);
-        setNavDirective(null);
-        setCountdown(null);
-      }
-      return;
-    }
+    navigate(nav.path);
+    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
     countdownTimerRef.current = setTimeout(() => {
-      setCountdown((c) => (c !== null ? c - 1 : null));
-    }, 1000);
-    return () => clearTimeout(countdownTimerRef.current);
-  }, [countdown, navDirective, navigate]);
-
-  const cancelNavigation = () => {
-    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-    setNavDirective(null);
-    setCountdown(null);
-  };
-
-  const executeNavigation = () => {
-    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-    if (navDirective?.path) {
-      navigate(navDirective.path);
       setNavDirective(null);
-      setCountdown(null);
-    }
+    }, 3500);
   };
 
   const handleTranscript = (entry) => {
@@ -135,42 +108,26 @@ export default function VoiceGreetingWidget({ onClose, isReturning = false }) {
         {/* Directing Alert Card */}
         {navDirective && (
           <div
-            className="shrink-0 p-2.5 mx-2 my-1.5 rounded-xl text-left border"
+            className="shrink-0 p-2 mx-2 my-1.5 rounded-xl text-left border flex items-center justify-between gap-2"
             style={{
               background: 'linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(20,20,20,0.95) 100%)',
               borderColor: GOLD,
             }}
           >
-            <div className="flex items-start justify-between gap-1 mb-1">
-              <span className="text-[9px] font-black tracking-wider uppercase text-[#e8c84a]">
-                Directing to {navDirective.title || 'Page'}
+            <div>
+              <span className="text-[9px] font-black tracking-wider uppercase text-[#e8c84a] block">
+                Navigated
               </span>
-              <button
-                onClick={cancelNavigation}
-                className="text-[10px] text-gray-400 hover:text-white px-1 cursor-pointer"
-                title="Cancel navigation"
-              >
-                ✕
-              </button>
+              <p className="text-[11px] font-bold text-white leading-tight">
+                Viewing {navDirective.title || navDirective.path}
+              </p>
             </div>
-            <p className="text-[11px] font-bold text-white mb-2 leading-tight">
-              Taking you there in {countdown}s…
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={executeNavigation}
-                className="flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black cursor-pointer hover:scale-105 active:scale-95 transition-all"
-                style={{ background: GOLD, color: '#000' }}
-              >
-                Go Now <ArrowRight className="w-3 h-3" />
-              </button>
-              <button
-                onClick={cancelNavigation}
-                className="px-2.5 py-1 rounded-full text-[10px] text-gray-300 hover:text-white border border-white/20 cursor-pointer"
-              >
-                Stay Here
-              </button>
-            </div>
+            <button
+              onClick={() => setNavDirective(null)}
+              className="text-[10px] text-gray-400 hover:text-white px-1.5 py-0.5 rounded cursor-pointer"
+            >
+              ✕
+            </button>
           </div>
         )}
 
