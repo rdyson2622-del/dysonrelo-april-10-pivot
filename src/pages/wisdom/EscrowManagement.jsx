@@ -52,14 +52,10 @@ export default function EscrowManagement() {
   const { data: brokerage } = useQuery({
     queryKey: ['brokeragePortal', user?.id, userBrokerageId],
     queryFn: async () => {
-      if (user?.role === 'admin') {
-        const list = await base44.entities.Brokerage.filter({ plan_tier: 'founder' }, '-subscribed_at', 1);
-        return list?.[0] || null;
-      }
       if (userBrokerageId) return await base44.entities.Brokerage.get(userBrokerageId);
       return null;
     },
-    enabled: !!user,
+    enabled: !!user && !!userBrokerageId,
   });
 
   const { data: milestones = [], isLoading } = useQuery({

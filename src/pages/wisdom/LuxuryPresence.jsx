@@ -6,7 +6,7 @@ export default function LuxuryPresence() {
   return (
     <WisdomSectionPlaceholder
       title="Luxury Presence"
-      description="High-end listing presentation, luxury buyer marketing, and concierge-level branding for the Wisdom Properties luxury tier. Showcase portfolio and prestige properties."
+      description="High-end listing presentation, luxury buyer marketing, and concierge-level branding for your luxury tier. Showcase portfolio and prestige properties."
       icon={Star}
     />
   );

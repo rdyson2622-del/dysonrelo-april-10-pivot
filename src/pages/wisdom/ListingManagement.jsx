@@ -6,7 +6,7 @@ export default function ListingManagement() {
   return (
     <WisdomSectionPlaceholder
       title="Listing Management"
-      description="Manage active listings across the Wisdom Properties portfolio. Track price reductions, days on market, showing activity, and offer status pulled from Back Office."
+      description="Manage active listings across your portfolio. Track price reductions, days on market, showing activity, and offer status pulled from Back Office."
       icon={Home}
     />
   );
