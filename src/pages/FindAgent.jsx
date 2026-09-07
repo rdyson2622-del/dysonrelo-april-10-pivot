@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lucide-react';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
@@ -192,21 +191,6 @@ export default function FindAgent() {
             We update our vetted, affiliated agent network on a regular basis — currently over <span className="font-bold" style={{ color: GOLD }}>500 vetted affiliated agents</span> across all 50 states seed our network monthly with many of the best of the best in U.S. markets and communities. We specialize in working with local, independent brokerages and their agents, bringing a real community feel to our services.
           </p>
         </motion.div>
-
-        {/* Portal Subscribe — hidden once the agent is already subscribed */}
-        {!subscribed && (
-          <PortalSubscribeForm portalName="Relocation Agent Network" source="Active Agent Portal" roleKey="agent" dest="/find-agent" />
-        )}
-
-        {/* Bottom CTA */}
-        {!client && !subscribed && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="text-center pb-8">
-            <p className="text-sm mb-4" style={{ color: 'rgba(26,26,26,0.6)' }}>Ready to start sending and receiving vetted referrals?</p>
-            <a href="/agent-subscribe" className="inline-block px-10 py-3 rounded-full font-bold text-sm text-center" style={{ background: GOLD, color: '#000' }}>
-              Apply to Join the Referral Network
-            </a>
-          </motion.div>
-        )}
 
       </div>
 

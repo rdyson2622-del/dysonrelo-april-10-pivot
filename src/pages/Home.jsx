@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import SolutionMapEntry from './SolutionMapEntry';
 import ClientStory from '@/components/landing/ClientStory';
-import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import FindAProWidget from '@/components/portal/FindAProWidget';
@@ -240,11 +239,6 @@ export default function Home() {
               Solve My Story →
             </button>
             <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
-          </div>
-
-          {/* ── CLIENT SUBSCRIBE — bottom of the scroll ── */}
-          <div className="mt-12">
-            <PortalSubscribeForm portalName="Client Concierge" source="Client Portal" roleKey="client" dest="/home" />
           </div>
         </div>
         </>
