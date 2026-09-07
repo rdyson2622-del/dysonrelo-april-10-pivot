@@ -44,7 +44,7 @@ const PATHS = [
   {
     icon: Briefcase,
     label: 'I am a Active Real Estate Broker',
-    sub: 'Manage your firm\'s escrow, listings, agents, and marketing through the Broker/Agent Portal.',
+    sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
     badge: 'BROKER/AGENT PORTAL',
     dest: '/brokerage',
     roleKey: 'brokerage_admin',
