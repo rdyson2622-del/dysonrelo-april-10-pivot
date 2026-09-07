@@ -38,7 +38,7 @@ const TOOLS = [{
 }];
 const GREETING_INSTRUCTION = `(The caller just connected — greet them now, out loud, then wait for their reply.) Say something like: "Good morning, this is Charlie, your real estate concierge. How can I help you today?"`;
 
-export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, onSessionId }) {
+export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, onSessionId, skipGreeting = false }) {
   const wsRef = useRef(null);
   const micCtxRef = useRef(null);
   const processorRef = useRef(null);
@@ -186,12 +186,14 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
             setStatus('ready');
             return;
           }
-          // Charlie always greets first, right after the mic is live — this only
-          // ever runs after startSession() was called from a real click/tap, so
-          // getUserMedia above already succeeded under a genuine user gesture.
-          ws.send(JSON.stringify({
-            clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
-          }));
+          // Charlie greets first via Gemini here — unless she already spoke a
+          // welcome/welcome-back greeting out loud automatically (browser TTS)
+          // before the mic was even connected, in which case skip the repeat.
+          if (!skipGreeting) {
+            ws.send(JSON.stringify({
+              clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
+            }));
+          }
           return;
         }
 

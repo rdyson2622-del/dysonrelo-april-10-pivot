@@ -7,21 +7,48 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 
 /**
- * VoiceGreetingWidget — a tap-to-talk voice orb (bottom-left). Mic access
- * requires a real user tap on most consumer devices (iOS Safari and most
- * mobile browsers silently block getUserMedia otherwise), so nothing starts
- * automatically — the visitor taps "Start Talking", then Charlie greets them
- * first and the two-way conversation begins. Once the session starts, a
- * left-docked drawer slides out showing the live conversation as text, for
- * both the visitor and admin. Every line is also persisted onto the
- * TalkingSessionLog record so it's retained for admin review afterward.
+ * VoiceGreetingWidget — Charlie speaks a welcome/welcome-back greeting out
+ * loud automatically on mount using the browser's built-in speech synthesis
+ * (no tap required for the greeting itself). If the browser blocks
+ * autoplay speech (common on mobile/iOS without a prior gesture), a small
+ * "Tap to hear Charlie" fallback appears. The two-way mic conversation
+ * still requires a real tap on "Start Talking" — mobile browsers block
+ * microphone access without a genuine user gesture, no way around that.
  */
-export default function VoiceGreetingWidget({ onClose }) {
+export default function VoiceGreetingWidget({ onClose, isReturning = false, visitorName = null }) {
   const [status, setStatus] = useState('ready');
   const [transcript, setTranscript] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
+  const [spoken, setSpoken] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const sessionLogIdRef = useRef(null);
   const transcriptRef = useRef([]);
+
+  const greetingText = `${isReturning ? 'Welcome back' : 'Welcome'}${visitorName ? `, ${visitorName}` : ''}! I'm Charlie, your relocation concierge. Tap Start Talking whenever you'd like to chat.`;
+
+  const speakGreeting = () => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(greetingText);
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => /male|david|mark|guy/i.test(v.name)) || voices.find(v => v.lang?.startsWith('en'));
+    if (preferred) utter.voice = preferred;
+    utter.rate = 1;
+    utter.onstart = () => { setSpoken(true); setAutoplayBlocked(false); };
+    window.speechSynthesis.speak(utter);
+  };
+
+  useEffect(() => {
+    // Attempt to speak immediately on mount — works on many desktop browsers
+    // without a gesture. If it hasn't started within ~800ms, the browser
+    // silently blocked it (common on mobile) — show a tap-to-enable fallback.
+    speakGreeting();
+    const checkTimer = setTimeout(() => {
+      if (!window.speechSynthesis?.speaking) setAutoplayBlocked(true);
+    }, 800);
+    return () => { clearTimeout(checkTimer); window.speechSynthesis?.cancel(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTranscript = (entry) => {
     if (entry.role === 'system') { setShowPanel(true); }
@@ -53,6 +80,22 @@ export default function VoiceGreetingWidget({ onClose }) {
             <X className="w-2.5 h-2.5" />
           </button>
         </div>
+        {status === 'ready' && (
+          <div className="px-3 pt-3">
+            <div className="rounded-lg px-3 py-2 text-xs text-white" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)' }}>
+              {greetingText}
+            </div>
+            {autoplayBlocked && !spoken && (
+              <button
+                onClick={speakGreeting}
+                className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold"
+                style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}`, color: GOLD }}
+              >
+                <Volume2 className="w-3 h-3" /> Tap to hear Charlie
+              </button>
+            )}
+          </div>
+        )}
         <div className="h-[340px]">
           <TalkingOrb
             status={status}
@@ -60,6 +103,7 @@ export default function VoiceGreetingWidget({ onClose }) {
             onTranscript={handleTranscript}
             onSpeaker={() => {}}
             onSessionId={(id) => { sessionLogIdRef.current = id; }}
+            skipGreeting={spoken}
           />
         </div>
       </div>
