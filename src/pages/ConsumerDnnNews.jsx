@@ -590,7 +590,7 @@ export default function ConsumerDnnNews({ hidePills = false }) {
           <span style={{ color: '#D4AF37', fontSize: '0.6em' }}>WITH SOLUTIONS</span>
         </h1>
         <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
-          Market-moving news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your move.
+          Market-moving real estate news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your lifestyle and potential relocation.
         </p>
 
         {!hidePills && (
