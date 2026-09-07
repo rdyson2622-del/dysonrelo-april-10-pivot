@@ -18,7 +18,7 @@ export default function ReferralFloatingPill() {
         className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-black tracking-wide transition-all hover:scale-105 active:scale-95"
         style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000', boxShadow: '0 6px 20px rgba(0,0,0,0.4)' }}
       >
-        <UserPlus className="w-4 h-4" /> Refer Someone
+        <UserPlus className="w-4 h-4" /> Refer a Friend
       </Link>
     </div>
   );
