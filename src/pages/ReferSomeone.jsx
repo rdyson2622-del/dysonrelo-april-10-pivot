@@ -36,6 +36,14 @@ export default function ReferSomeone() {
   const copy = COPY[form.referral_type] || COPY.other;
   const isRelocationClient = form.referral_type === 'relocation_client';
 
+  const handleBack = () => {
+    if (window.history?.state?.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/portal');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit || submitting) return;
@@ -63,8 +71,17 @@ export default function ReferSomeone() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-16" style={{ background: '#0a0a0a' }}>
-      <div className="w-full max-w-md rounded-2xl overflow-hidden" style={{ border: `2px solid ${GOLD}` }}>
-        <div className="px-6 py-5 text-center" style={{ background: GOLD }}>
+      <div className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl" style={{ border: `2px solid ${GOLD}` }}>
+        <div className="relative px-6 py-5 text-center" style={{ background: GOLD }}>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-black transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ background: '#000', color: GOLD }}
+            title="Go back"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back
+          </button>
           <p className="font-black text-xl tracking-wide" style={{ color: '#000' }}>Refer Someone</p>
           <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.65)' }}>{copy.title}</p>
         </div>
@@ -77,11 +94,11 @@ export default function ReferSomeone() {
               We'll reach out to {form.referred_name} directly.
             </p>
             <div className="flex items-center justify-center gap-4">
-              <button onClick={() => { setForm(EMPTY); setDone(false); }} className="text-xs font-bold" style={{ color: GOLD }}>
+              <button onClick={() => { setForm(EMPTY); setDone(false); }} className="text-xs font-bold cursor-pointer" style={{ color: GOLD }}>
                 Refer Another
               </button>
-              <button onClick={() => navigate('/portal')} className="text-xs font-bold text-white/60">
-                Back to Home
+              <button onClick={handleBack} className="text-xs font-bold text-white/60 hover:text-white transition-colors cursor-pointer">
+                Back to Portal
               </button>
             </div>
           </div>
@@ -156,13 +173,18 @@ export default function ReferSomeone() {
               className="w-full px-3 py-2.5 rounded-lg text-sm outline-none resize-none"
               style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,175,55,0.3)', color: '#fff' }} />
             <button type="submit" disabled={!canSubmit || submitting}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-black tracking-wide disabled:opacity-40"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-black tracking-wide disabled:opacity-40 cursor-pointer"
               style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
               {submitting ? 'Sending…' : 'Send Referral'}
             </button>
-            <button type="button" onClick={() => navigate(-1)} className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-white/50 pt-1">
-              <ArrowLeft className="w-3 h-3" /> Back
+            <button
+              type="button"
+              onClick={handleBack}
+              className="w-full flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-bold text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+              style={{ border: '1px solid rgba(255,255,255,0.15)' }}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to Portal
             </button>
           </form>
         )}

@@ -63,8 +63,14 @@ export default function AppLayout() {
         <LayoutToggleButton />
 
         <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+          onClick={() => {
+            if (window.history?.state?.idx > 0) {
+              navigate(-1);
+            } else {
+              navigate('/portal');
+            }
+          }}
+          className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all hover:opacity-80 cursor-pointer"
           style={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.3)' }}
         >
           <ArrowLeft className="w-4 h-4" /> Back

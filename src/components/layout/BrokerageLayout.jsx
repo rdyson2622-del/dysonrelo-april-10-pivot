@@ -179,8 +179,14 @@ export default function BrokerageLayout() {
         <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 sticky top-0 z-10" style={{ background: '#0a0a0a' }}>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition-all hover:opacity-80"
+              onClick={() => {
+                if (window.history?.state?.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/brokerage');
+                }
+              }}
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition-all hover:opacity-80 cursor-pointer"
               style={{ background: 'rgba(212,175,55,0.15)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back

@@ -149,7 +149,17 @@ export default function RelocationActionSteps() {
     <div className="min-h-screen" style={{ background: '#808080' }}>
       {/* Header with back button */}
       <nav className="flex items-center justify-between px-6 md:px-14 py-4" style={{ background: '#000', borderBottom: '1px solid rgba(212,175,55,0.12)' }}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-base" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <button
+          onClick={() => {
+            if (window.history?.state?.idx > 0) {
+              navigate(-1);
+            } else {
+              navigate('/dashboard');
+            }
+          }}
+          className="flex items-center gap-2 text-base cursor-pointer hover:text-white transition-colors"
+          style={{ color: 'rgba(255,255,255,0.6)' }}
+        >
           <ArrowLeft className="w-5 h-5" /> Back
         </button>
         <Link to="/Home">

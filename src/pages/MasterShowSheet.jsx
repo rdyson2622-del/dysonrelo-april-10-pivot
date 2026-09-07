@@ -242,7 +242,17 @@ export default function MasterShowSheet() {
             >
               <Zap className="w-4 h-4" /> Request a Roadmap
             </button>
-            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.15)' }}>
+            <button
+              onClick={() => {
+                if (window.history?.state?.idx > 0) {
+                  navigate(-1);
+                } else {
+                  navigate('/portal');
+                }
+              }}
+              className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
+              style={{ border: '1px solid rgba(255,255,255,0.15)' }}
+            >
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
           </div>
