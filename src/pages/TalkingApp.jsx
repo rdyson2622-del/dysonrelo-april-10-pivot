@@ -62,7 +62,6 @@ export default function TalkingApp() {
           onTranscript={addTranscript}
           onSpeaker={setCurrentSpeaker}
           onSessionId={(id) => { sessionLogIdRef.current = id; }}
-          autoStart
         />
       </div>
     </div>
