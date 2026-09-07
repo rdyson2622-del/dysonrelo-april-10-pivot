@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Star, Handshake, Wrench, Building2, Briefcase, ArrowLeft } from 'lucide-react';
+import { Home, Star, Handshake, Wrench, Building2, Briefcase, ArrowLeft, Newspaper, MapPinned, Sparkles, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import CommandPills from '@/components/layout/CommandPills';
@@ -68,6 +68,13 @@ const PATHS = [
 ];
 
 const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.dest]));
+
+const INTEL_BOXES = [
+  { label: 'NEWS', path: '/dnn-news', icon: Newspaper },
+  { label: 'RELOCATION', path: '/relocation-intake', icon: MapPinned },
+  { label: 'INTELLIGENCE', path: '/solutions', icon: Sparkles },
+  { label: 'TRANSPARENCY', path: '/transparency', icon: ShieldCheck },
+];
 
 export default function RoleSelector() {
   const navigate = useNavigate();
@@ -140,47 +147,75 @@ export default function RoleSelector() {
       {/* ── Path Selection ── */}
       <section className="flex flex-col items-center px-6 pt-2 pb-8" style={{ background: '#ede0cc' }}>
 
-        <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {visiblePaths.map((path, i) => {
-            const Icon = path.icon;
-            return (
-              <button
-                key={i}
-                onClick={() => handleSelect(path)}
-                className="group flex flex-col items-start text-left rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
-                style={{
-                  minHeight: '179px',
-                  padding: '20px',
-                  background: '#0a0a0a',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
-                }}
-              >
-                <div className="rounded-full flex items-center justify-center mb-2 transition-all"
-                  style={{ width: '45px', height: '45px', background: '#ede0cc', border: `2px solid ${GOLD}` }}>
-                  <Icon style={{ width: '17.5px', height: '17.5px', color: '#0a0a0a' }} />
-                </div>
+        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-10">
+          {/* Left: role entry boxes — centered under the copy column above */}
+          <div className="flex-1 flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl w-full">
+              {visiblePaths.map((path, i) => {
+                const Icon = path.icon;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleSelect(path)}
+                    className="group flex flex-col items-start text-left rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
+                    style={{
+                      minHeight: '179px',
+                      padding: '20px',
+                      background: '#0a0a0a',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                    }}
+                  >
+                    <div className="rounded-full flex items-center justify-center mb-2 transition-all"
+                      style={{ width: '45px', height: '45px', background: '#ede0cc', border: `2px solid ${GOLD}` }}>
+                      <Icon style={{ width: '17.5px', height: '17.5px', color: '#0a0a0a' }} />
+                    </div>
 
-                <span className="font-black tracking-[0.15em] uppercase mb-1.5 rounded-full"
-                  style={{ fontSize: '8.25px', padding: '3px 8px', color: '#0a0a0a', background: GOLD }}>
-                  {path.badge}
-                </span>
+                    <span className="font-black tracking-[0.15em] uppercase mb-1.5 rounded-full"
+                      style={{ fontSize: '8.25px', padding: '3px 8px', color: '#0a0a0a', background: GOLD }}>
+                      {path.badge}
+                    </span>
 
-                <h2 className="font-bold leading-snug mb-1.5"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.9625rem', color: '#fff' }}>
-                  {path.label}
-                </h2>
+                    <h2 className="font-bold leading-snug mb-1.5"
+                      style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.9625rem', color: '#fff' }}>
+                      {path.label}
+                    </h2>
 
-                <p className="leading-relaxed mb-3" style={{ fontSize: '9px', color: '#ffffff' }}>
-                  {path.sub}
-                </p>
+                    <p className="leading-relaxed mb-3" style={{ fontSize: '9px', color: '#ffffff' }}>
+                      {path.sub}
+                    </p>
 
-                <div className="mt-auto flex items-center gap-2 font-bold transition-all group-hover:gap-3"
-                  style={{ fontSize: '12.5px', color: GOLD }}>
-                  Enter <span>→</span>
-                </div>
-              </button>
-            );
-          })}
+                    <div className="mt-auto flex items-center gap-2 font-bold transition-all group-hover:gap-3"
+                      style={{ fontSize: '12.5px', color: GOLD }}>
+                      Enter <span>→</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right: enlarged Intelligence Bureau boxes — vertically centered under the studio photo */}
+          <div className="w-full md:w-1/2 shrink-0 flex justify-center">
+            <div className="grid grid-cols-2 gap-4 w-full" style={{ maxWidth: '420px' }}>
+              {INTEL_BOXES.map(({ label, path, icon: Icon }) => (
+                <button
+                  key={label}
+                  onClick={() => navigate(path)}
+                  className="flex flex-col items-center justify-center gap-2 transition-all hover:scale-[1.03] active:scale-95"
+                  style={{
+                    height: '110px',
+                    background: '#0a0a0a',
+                    border: `2px solid ${GOLD}`,
+                    borderRadius: '10px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  <Icon className="w-7 h-7 shrink-0" style={{ color: GOLD }} />
+                  <span className="text-xs font-black tracking-[0.1em] text-center" style={{ color: GOLD }}>{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <p className="mt-8 text-xs" style={{ color: 'rgba(10,10,10,0.35)' }}>
