@@ -259,10 +259,11 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
     setStatus('ready');
   };
 
-  // Browsers (especially Safari/iOS, common with AirPods) block audio playback
-  // until it's unlocked by a real user gesture. Auto-started sessions (the portal
-  // greeting) never get a "Start Talking" click, so the mic can work while Charlie's
-  // voice stays silently blocked — unlock on the very first tap anywhere on the page.
+  // Browsers (especially Safari/iOS) block audio playback AND microphone access
+  // until unlocked by a real user gesture. Auto-started sessions (the portal
+  // greeting) never get a "Start Talking" click — the mic request later fires from
+  // a websocket callback, not a gesture, so iOS Safari silently blocks it forever
+  // and the session hangs with no error. Unlock both on the very first tap.
   useEffect(() => {
     const unlockAudio = () => {
       if (!playCtxRef.current || playCtxRef.current.state === 'closed') {
@@ -270,6 +271,12 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
         nextPlayTimeRef.current = 0;
       }
       if (playCtxRef.current.state === 'suspended') playCtxRef.current.resume();
+      // Prime mic permission inside this gesture so the later automatic
+      // startMicrophone() call (triggered from a websocket message, not a
+      // gesture) succeeds instead of silently hanging on iOS Safari.
+      navigator.mediaDevices?.getUserMedia?.({ audio: true })
+        .then((stream) => stream.getTracks().forEach((t) => t.stop()))
+        .catch(() => {});
       document.removeEventListener('click', unlockAudio);
       document.removeEventListener('touchstart', unlockAudio);
     };
