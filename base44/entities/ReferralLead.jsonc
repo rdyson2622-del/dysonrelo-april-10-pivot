@@ -2,9 +2,20 @@
   "name": "ReferralLead",
   "type": "object",
   "properties": {
+    "referral_type": {
+      "type": "string",
+      "enum": [
+        "relocation_client",
+        "vendor",
+        "agent",
+        "other"
+      ],
+      "default": "relocation_client",
+      "description": "What kind of referral this is: relocation_client = someone relocating, vendor = a vendor being referred to join the network, agent = a real estate agent being referred to join the network, other = anything else"
+    },
     "referred_name": {
       "type": "string",
-      "description": "Name of the person being referred (the relocating client)"
+      "description": "Name of the person being referred"
     },
     "referred_email": {
       "type": "string",
@@ -14,13 +25,17 @@
       "type": "string",
       "description": "Phone number of the person being referred (optional)"
     },
+    "referred_company": {
+      "type": "string",
+      "description": "Company/brokerage name of the person being referred, for vendor or agent referral types (optional)"
+    },
     "destination_city": {
       "type": "string",
-      "description": "Destination city they're relocating to"
+      "description": "Destination city they're relocating to (relocation_client type only)"
     },
     "destination_state": {
       "type": "string",
-      "description": "Destination state they're relocating to"
+      "description": "Destination state they're relocating to (relocation_client type only)"
     },
     "referrer_name": {
       "type": "string",
@@ -29,6 +44,10 @@
     "referrer_email": {
       "type": "string",
       "description": "Email of the person who submitted the referral"
+    },
+    "referrer_role": {
+      "type": "string",
+      "description": "Portal role of the person submitting the referral (e.g. client, agent, vendor, broker), if known"
     },
     "notes": {
       "type": "string",
