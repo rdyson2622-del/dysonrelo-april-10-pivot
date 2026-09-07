@@ -18,7 +18,7 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
 const PATHS = [
   {
     icon: Home,
-    label: 'I am an Existing or Potential Client',
+    label: 'I am a Existing or Potential Client',
     sub: 'Full relocation management, real estate answers, city guides, and concierge service — always free to you.',
     badge: 'CLIENT CONCIERGE',
     dest: '/home',
@@ -35,7 +35,7 @@ const PATHS = [
   },
   {
     icon: Star,
-    label: 'I am an Active Real Estate Agent',
+    label: 'I am a Active Real Estate Agent',
     sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
     badge: 'RELOCATION AGENT NETWORK',
     dest: '/find-agent',
@@ -43,7 +43,7 @@ const PATHS = [
   },
   {
     icon: Briefcase,
-    label: 'I am an Active Real Estate Broker',
+    label: 'I am a Active Real Estate Broker',
     sub: 'Manage your firm\'s escrow, listings, agents, and marketing through the Broker/Agent Portal.',
     badge: 'BROKER/AGENT PORTAL',
     dest: '/brokerage',
@@ -51,7 +51,7 @@ const PATHS = [
   },
   {
     icon: Handshake,
-    label: 'I am an Inactive but licensed Real Estate Agent or Broker',
+    label: 'I am a Inactive but licensed Real Estate Agent or Broker',
     sub: 'Send us your out-of-state client. We manage everything — your 25% referral fee is protected.',
     badge: 'INACTIVE LICENSED AGENTS',
     dest: '/partner-benefits',
