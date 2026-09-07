@@ -1,0 +1,46 @@
+{
+  "name": "Brokerage Critical Escrow Alerts (Hourly)",
+  "description": "Hourly scan of escrow milestones for overdue / due-soon / at-risk items. Emails each brokerage's authorized users a digest of their critical alerts.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 1,
+      "interval_unit": "hours",
+      "interval_anchor": "2026-08-16T20:56:02.652000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "brokerage_critical_escrow_alerts_hourly",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "brokerageCriticalAlerts",
+            "args": {
+              "send_emails": true
+            }
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "brokerageCriticalAlerts"
+  }
+}

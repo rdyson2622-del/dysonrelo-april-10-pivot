@@ -1,0 +1,38 @@
+{
+  "name": "Claude Library Drive Sync",
+  "description": "Real-time sync: when any Google Doc in the Agent Library folder is edited, pull its content back into the matching ClaudeNode's content field.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "connector",
+      "events": [
+        "changes"
+      ],
+      "integration_type": "googledrive",
+      "resource_id": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "claude_library_drive_sync",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "grokLibraryWebhookSync",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "grokLibraryWebhookSync"
+  }
+}

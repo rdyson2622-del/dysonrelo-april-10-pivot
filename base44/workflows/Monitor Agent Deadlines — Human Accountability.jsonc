@@ -1,0 +1,44 @@
+{
+  "name": "Monitor Agent Deadlines \u2014 Human Accountability",
+  "description": "Scans all active relocation clients every 15 minutes for human-side deadline breaches (agent first-touch overdue, buyer broker unsigned, escrow deadline at risk, move date passed, escrow/transaction milestones overdue). Flags them on the consumer's Master Show Sheet in real time so the selected agent is accountable.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 15,
+      "interval_unit": "minutes",
+      "interval_anchor": "2026-08-16T15:41:35.202000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "monitor_agent_deadlines_human_accountability",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "monitorAgentDeadlines",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "monitorAgentDeadlines"
+  }
+}

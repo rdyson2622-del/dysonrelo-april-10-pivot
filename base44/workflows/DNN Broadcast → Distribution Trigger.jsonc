@@ -1,0 +1,37 @@
+{
+  "name": "DNN Broadcast \u2192 Distribution Trigger",
+  "description": "When a DnnBroadcast reaches 'completed' (the poller has downloaded the raw stitched MP4 from HeyGen AND baked the DNN studio background in via Creatomate), automatically post the composited MP4 to Instagram, Facebook, and all LinkedIn pages (DNN, Bob Dyson, Dyson & Dyson Relocation, + personal profile). Fires only on the composited 'completed' state \u2014 never on 'ready' (raw black-bg MP4) \u2014 so social posts always show the full studio set. Skips channels already posted to prevent duplicates.",
+  "trigger": {
+    "condition": "${ ((.trigger.changed_fields | index(\"status\") != null) and (.trigger.data.status == \"completed\")) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "DnnBroadcast"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "dnn_broadcast_distribution_trigger",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "dnnAutoSocialPost",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "dnnAutoSocialPost"
+  }
+}

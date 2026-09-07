@@ -1,0 +1,37 @@
+{
+  "name": "Email Alert \u2014 Charlie Explainer Render Complete",
+  "description": "Sends a Gmail alert when a Charlie page explainer's HeyGen render reaches completed.",
+  "trigger": {
+    "condition": "${ ((.trigger.changed_fields | index(\"renderStatus\") != null) and (.trigger.data.renderStatus == \"completed\")) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "CharliePageExplainer"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "email_alert_charlie_explainer_render_complete",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyRenderComplete",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "notifyRenderComplete"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "DNN Daily Video Pipeline \u2014 5:15 AM PT",
+  "description": "Grabs the latest published DNN article, generates a white-labeled Charlie newscaster script, submits to HeyGen for video render with Charlie's avatar + voice, and polls until complete.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "15 12 * * *",
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "dnn_daily_video_pipeline_5_15_am_pt",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "dnnDailyVideoPipeline",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "dnnDailyVideoPipeline"
+  }
+}

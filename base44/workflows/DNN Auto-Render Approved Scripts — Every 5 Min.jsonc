@@ -1,0 +1,44 @@
+{
+  "name": "DNN Auto-Render Approved Scripts \u2014 Every 5 Min",
+  "description": "Picks up DnnArticles approved in the Daily News Library (production_status=approved_for_render, render_requested=true), submits a HeyGen Charlie avatar render using the edited script, and stores the pending video ID. The DNN Video Render Poller then downloads the finished MP4.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 5,
+      "interval_unit": "minutes",
+      "interval_anchor": "2026-07-31T17:25:34.832000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "dnn_auto_render_approved_scripts_every_5_min",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "dnnAutoRender",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "dnnAutoRender"
+  }
+}
