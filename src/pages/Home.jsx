@@ -8,6 +8,7 @@ import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import FindAProWidget from '@/components/portal/FindAProWidget';
 import ClientSubscriberDashboard from '@/components/dashboard/ClientSubscriberDashboard';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -239,6 +240,11 @@ export default function Home() {
               Solve My Story →
             </button>
             <p className="text-xs mt-4 opacity-50 text-white">No sales pitch. Just a resolution. 55 years of relocation management experience.</p>
+          </div>
+
+          {/* ── SUBSCRIBE — makes this the client's home page ── */}
+          <div className="max-w-xl mx-auto mt-10">
+            <PortalSubscribeForm portalName="Client Portal" source="Client Portal" roleKey="client" dest="/home" />
           </div>
         </div>
         </>

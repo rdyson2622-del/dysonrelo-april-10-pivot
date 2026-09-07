@@ -5,6 +5,7 @@ import { Mail, Loader2, ShieldCheck, AlertTriangle, ThumbsDown, Award } from 'lu
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 import AgentSelectionSolutionMap from '@/components/roadmap/AgentSelectionSolutionMap';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 
@@ -191,6 +192,11 @@ export default function FindAgent() {
             We update our vetted, affiliated agent network on a regular basis — currently over <span className="font-bold" style={{ color: GOLD }}>500 vetted affiliated agents</span> across all 50 states seed our network monthly with many of the best of the best in U.S. markets and communities. We specialize in working with local, independent brokerages and their agents, bringing a real community feel to our services.
           </p>
         </motion.div>
+
+        {/* ── SUBSCRIBE — makes this the agent's home page ── */}
+        {!subscribed && (
+          <PortalSubscribeForm portalName="Relocation Agent Portal" source="Relocation Agent Portal" roleKey="agent" dest="/find-agent" />
+        )}
 
       </div>
 

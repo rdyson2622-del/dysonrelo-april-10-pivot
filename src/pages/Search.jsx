@@ -5,6 +5,7 @@ import VendorBenefits from '@/components/portal/VendorBenefits';
 import VendorAreaVettingForm from '@/components/portal/VendorAreaVettingForm';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 export default function Search() {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -40,8 +41,9 @@ export default function Search() {
           <VendorBenefits />
 
           {checked && !isSubscribed && (
-            <div className="max-w-xl mx-auto text-left mt-12">
+            <div className="max-w-xl mx-auto text-left mt-12 space-y-8">
               <VendorAreaVettingForm />
+              <PortalSubscribeForm portalName="Vendor Portal" source="Vendor Portal" roleKey="vendor" dest="/search" />
             </div>
           )}
         </motion.div>

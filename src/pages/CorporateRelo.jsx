@@ -13,6 +13,7 @@ import SolveMyStory from './SolveMyStory';
 import ConsumerDnnNews from './ConsumerDnnNews';
 import HRSubscriberDashboard from '@/components/dashboard/HRSubscriberDashboard';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import PortalSubscribeForm from '@/components/portal/PortalSubscribeForm';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -419,7 +420,13 @@ export default function CorporateRelo() {
         </div>
         <ConsumerDnnNews hidePills />
 
-        {hrSubscriber && <HRSubscriberDashboard subscriber={hrSubscriber} />}
+        {hrSubscriber ? (
+          <HRSubscriberDashboard subscriber={hrSubscriber} />
+        ) : (
+          <div className="px-8 py-16 max-w-xl mx-auto" style={{ background: '#0d0d0d' }}>
+            <PortalSubscribeForm portalName="Corporate Relocation Portal" source="Corporate Relo Portal" roleKey="hr" dest="/corporate-relo" />
+          </div>
+        )}
       </div>
 
     </div>
