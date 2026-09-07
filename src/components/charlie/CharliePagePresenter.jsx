@@ -125,7 +125,9 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
               className="w-full h-full object-cover pointer-events-none"
             />
           ) : (
-            <span className="w-full h-full flex items-center justify-center text-4xl">🎩</span>
+            <span className="w-full h-full flex items-center justify-center">
+              <Play className="w-8 h-8" style={{ color: GOLD }} />
+            </span>
           )}
         </span>
         {/* Play badge */}
@@ -213,9 +215,9 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
         ) : (
           /* Fallback: no completed video yet */
           <div className="px-4 py-5 flex flex-col items-center text-center gap-2">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+            <div className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
-              🎩
+              <Play className="w-5 h-5" style={{ color: GOLD }} />
             </div>
             <p className="text-xs font-bold text-white">Charlie overview coming soon</p>
             <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
