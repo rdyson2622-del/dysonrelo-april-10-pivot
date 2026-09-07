@@ -147,7 +147,7 @@ export default function RoleSelector() {
       {/* ── Path Selection ── */}
       <section className="flex flex-col items-center px-6 pt-2 pb-8" style={{ background: '#ede0cc' }}>
 
-        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-10 md:-translate-x-[10%]">
+        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-10">
           {/* Left: role entry boxes — centered under the copy column above */}
           <div className="flex-1 flex justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl w-full">
