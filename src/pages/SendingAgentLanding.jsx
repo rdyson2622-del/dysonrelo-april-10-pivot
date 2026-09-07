@@ -116,7 +116,7 @@ export default function SendingAgentLanding() {
       <div id="submit" className="px-6 pb-20 max-w-2xl mx-auto">
         <div className="rounded-2xl overflow-hidden shadow-xl" style={{ border: `2px solid ${GOLD}` }}>
           <div className="px-6 py-5 text-center" style={{ background: GOLD }}>
-            <p className="font-black text-xl tracking-wide" style={{ color: '#000' }}>Submit Your Out-of-State Referral</p>
+            <p className="font-black text-xl tracking-wide" style={{ color: '#000' }}>Submit Your Out of Area Referral</p>
             <p className="text-sm mt-1" style={{ color: 'rgba(0,0,0,0.65)' }}>We'll vet the destination agent and manage logistics. You collect your 25%.</p>
           </div>
 
@@ -188,7 +188,7 @@ export default function SendingAgentLanding() {
                 className="w-full py-3.5 rounded-full font-black text-sm tracking-wide flex items-center justify-center gap-2 transition-all hover:scale-[1.02] disabled:opacity-50"
                 style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
                 <ArrowRight className="w-4 h-4" />
-                {submitting ? 'Submitting…' : 'Submit Out-of-State Referral'}
+                {submitting ? 'Submitting…' : 'Submit Out of Area Referral'}
               </button>
             </form>
           )}
