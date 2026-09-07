@@ -5,14 +5,16 @@ import TalkingOrb from '@/components/talkingapp/TalkingOrb';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
-const PANEL_DELAY_MS = 3000;
 
 /**
- * VoiceGreetingWidget — Charlie speaks first via the compact voice orb
- * (bottom-right). After a short delay, a right-docked drawer slides out
- * showing the live conversation as text, for both the visitor and admin.
- * Every line is also persisted onto the TalkingSessionLog record so it's
- * retained for admin review afterward.
+ * VoiceGreetingWidget — a tap-to-talk voice orb (bottom-left). Mic access
+ * requires a real user tap on most consumer devices (iOS Safari and most
+ * mobile browsers silently block getUserMedia otherwise), so nothing starts
+ * automatically — the visitor taps "Start Talking", then Charlie greets them
+ * first and the two-way conversation begins. Once the session starts, a
+ * left-docked drawer slides out showing the live conversation as text, for
+ * both the visitor and admin. Every line is also persisted onto the
+ * TalkingSessionLog record so it's retained for admin review afterward.
  */
 export default function VoiceGreetingWidget({ onClose }) {
   const [status, setStatus] = useState('ready');
@@ -20,11 +22,6 @@ export default function VoiceGreetingWidget({ onClose }) {
   const [showPanel, setShowPanel] = useState(false);
   const sessionLogIdRef = useRef(null);
   const transcriptRef = useRef([]);
-
-  useEffect(() => {
-    const t = setTimeout(() => setShowPanel(true), PANEL_DELAY_MS);
-    return () => clearTimeout(t);
-  }, []);
 
   const handleTranscript = (entry) => {
     if (entry.role === 'system') { setShowPanel(true); }
@@ -63,7 +60,6 @@ export default function VoiceGreetingWidget({ onClose }) {
             onTranscript={handleTranscript}
             onSpeaker={() => {}}
             onSessionId={(id) => { sessionLogIdRef.current = id; }}
-            autoStart
           />
         </div>
       </div>

@@ -38,7 +38,7 @@ const TOOLS = [{
 }];
 const GREETING_INSTRUCTION = `(The caller just connected — greet them now, out loud, then wait for their reply.) Say something like: "Good morning, this is Charlie, your real estate concierge. How can I help you today?"`;
 
-export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, autoStart = false, onSessionId }) {
+export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker, onSessionId }) {
   const wsRef = useRef(null);
   const micCtxRef = useRef(null);
   const processorRef = useRef(null);
@@ -174,17 +174,24 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
           try {
             await startMicrophone(ws);
           } catch (micErr) {
-            onTranscript({ role: 'system', text: 'No microphone was found on this device, so I can hear myself but not you. Please try again from a phone, laptop, or a computer with a microphone connected.' });
+            const deniedOrBlocked = micErr?.name === 'NotAllowedError' || micErr?.name === 'SecurityError';
+            onTranscript({
+              role: 'system',
+              text: deniedOrBlocked
+                ? 'Microphone access was blocked. Please allow microphone permission for this site in your browser settings, then tap Start Talking again.'
+                : 'No microphone was found on this device, so I can hear myself but not you. Please try again from a phone, laptop, or a computer with a microphone connected.',
+            });
             reportSessionEnd();
             cleanup();
             setStatus('ready');
             return;
           }
-          if (autoStart) {
-            ws.send(JSON.stringify({
-              clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
-            }));
-          }
+          // Charlie always greets first, right after the mic is live — this only
+          // ever runs after startSession() was called from a real click/tap, so
+          // getUserMedia above already succeeded under a genuine user gesture.
+          ws.send(JSON.stringify({
+            clientContent: { turns: [{ role: 'user', parts: [{ text: GREETING_INSTRUCTION }] }], turnComplete: true },
+          }));
           return;
         }
 
@@ -288,8 +295,14 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
     };
   }, []);
 
+  // NOTE: session is never auto-started on mount. getUserMedia (the mic prompt)
+  // is blocked by iOS Safari and most mobile browsers unless it's called
+  // directly inside a real user gesture (a click/tap handler) — calling it
+  // automatically from an effect or a websocket callback silently fails on
+  // that equipment with no error, which is why the old auto-start version
+  // never worked reliably. startSession() below only ever runs from the
+  // "Start Talking" button's onClick, which is a genuine gesture everywhere.
   useEffect(() => {
-    if (autoStart) startSession();
     return () => cleanup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
