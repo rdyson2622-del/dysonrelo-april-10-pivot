@@ -126,6 +126,11 @@ export default function TalkingOrb({ status, setStatus, onTranscript, onSpeaker,
   };
 
   const startSession = async () => {
+    // Guard against overlapping sessions — starting a new one while the previous
+    // socket is still open/closing is what triggers a 409 Conflict from Gemini.
+    if (status === 'connecting' || status === 'active') return;
+    cleanup();
+    wsRef.current = null;
     setStatus('connecting');
     try {
       const res = await base44.functions.invoke('geminiLiveProxy', {
