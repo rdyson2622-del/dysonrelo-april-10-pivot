@@ -56,7 +56,7 @@ export default function VoiceGreetingWidget({ onClose }) {
             <X className="w-2.5 h-2.5" />
           </button>
         </div>
-        <div className="h-[220px]">
+        <div className="h-[340px]">
           <TalkingOrb
             status={status}
             setStatus={setStatus}
@@ -76,7 +76,7 @@ export default function VoiceGreetingWidget({ onClose }) {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed top-20 left-0 bottom-0 z-40 w-[26vw] min-w-[300px] max-w-[90vw] flex flex-col"
+            className="fixed top-36 left-0 bottom-0 z-40 w-[26vw] min-w-[300px] max-w-[90vw] flex flex-col"
             style={{ background: '#0d0d0d', borderRight: `1px solid ${GOLD}55`, boxShadow: '8px 0 30px rgba(0,0,0,0.5)' }}
           >
             <div className="shrink-0 flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
