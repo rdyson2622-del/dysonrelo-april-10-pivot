@@ -157,6 +157,7 @@ import BrokerageLayout from './components/layout/BrokerageLayout';
 import BrokerageDashboard from './pages/brokerage/BrokerageDashboard';
 import TransactionAudit from './pages/brokerage/TransactionAudit';
 import BuyingClients from './pages/wisdom/BuyingClients';
+import MyAgentReferrals from './pages/brokerage/MyAgentReferrals';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
 import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
@@ -431,6 +432,7 @@ const AuthenticatedApp = () => {
         <Route path="/brokerage/listings" element={<ListingManagement />} />
         <Route path="/brokerage/buying-clients" element={<BuyingClients />} />
         <Route path="/brokerage/agents" element={<AgentRecords />} />
+        <Route path="/brokerage/referrals" element={<MyAgentReferrals />} />
         <Route path="/brokerage/marketing" element={<WisdomMarketing />} />
         <Route path="/brokerage/luxury" element={<LuxuryPresence />} />
       </Route>

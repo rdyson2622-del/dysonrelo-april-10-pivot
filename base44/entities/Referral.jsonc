@@ -2,6 +2,10 @@
   "name": "Referral",
   "type": "object",
   "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "The Brokerage entity ID this referral belongs to. Set automatically for brokerage users; platform admins can see all."
+    },
     "referral_type": {
       "type": "string",
       "enum": [
@@ -118,27 +122,46 @@
   },
   "required": [
     "referral_type",
-    "agent_id",
     "agent_name",
-    "agent_email",
     "destination_city",
     "destination_state"
   ],
   "rls": {
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "create": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.brokerage_id": "{{user.data.brokerage_id}}"
+        }
+      ]
     },
     "delete": {
       "user_condition": {

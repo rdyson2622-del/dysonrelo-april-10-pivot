@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard, Shield, Building2, Users, Megaphone, Star,
-  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen, FileSearch, ShoppingBag
+  ArrowLeft, Loader2, Home, PanelLeftClose, PanelLeftOpen, FileSearch, ShoppingBag, Handshake
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { id: 'listings',   label: 'Listing Clients',             icon: Building2,       path: '/brokerage/listings' },
   { id: 'buying',     label: 'Buying Clients',              icon: ShoppingBag,     path: '/brokerage/buying-clients' },
   { id: 'agents',     label: 'Company Agents and Other Agents', icon: Users,       path: '/brokerage/agents' },
+  { id: 'referrals',  label: 'My Agent Referrals',          icon: Handshake,       path: '/brokerage/referrals' },
   { id: 'marketing',  label: 'Marketing Campaigns',         icon: Megaphone,       path: '/brokerage/marketing' },
   { id: 'luxury',     label: 'Luxury Presence Website',     icon: Star,            path: '/brokerage/luxury' },
 ];
