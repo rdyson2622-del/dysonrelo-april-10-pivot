@@ -83,7 +83,10 @@ export default function VoiceGreetingWidget({ onClose }) {
               <MessageCircle className="w-4 h-4" style={{ color: GOLD }} />
               <p className="text-xs font-black tracking-widest uppercase" style={{ color: GOLD }}>Live Conversation</p>
             </div>
-            <div className="flex-1 overflow-y-auto p-5 space-y-3">
+            {/* Extra bottom padding keeps the newest message from being hidden
+                behind the Charlie orb widget, which sits fixed bottom-left
+                on top of this drawer's bottom-left corner. */}
+            <div className="flex-1 overflow-y-auto p-5 pb-[420px] space-y-3">
               {transcript.length === 0 ? (
                 <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   Say hello — what you say shows up here live, for both of you, and is saved for admin review.
