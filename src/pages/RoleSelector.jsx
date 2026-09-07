@@ -144,33 +144,33 @@ export default function RoleSelector() {
               <button
                 key={i}
                 onClick={() => handleSelect(path)}
-                className="group flex flex-col items-start text-left p-3.5 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
+                className="group flex flex-col items-start text-left p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                 style={{
-                  minHeight: '130px',
+                  minHeight: '143px',
                   background: '#0a0a0a',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
                 }}
               >
-                <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all"
+                <div className="w-9 h-9 rounded-full flex items-center justify-center mb-2 transition-all"
                   style={{ background: '#ede0cc', border: `2px solid ${GOLD}` }}>
-                  <Icon className="w-3 h-3" style={{ color: '#0a0a0a' }} />
+                  <Icon className="w-3.5 h-3.5" style={{ color: '#0a0a0a' }} />
                 </div>
 
-                <span className="text-[6px] font-black tracking-[0.15em] uppercase mb-1.5 px-1.5 py-0.5 rounded-full"
+                <span className="text-[6.6px] font-black tracking-[0.15em] uppercase mb-1.5 px-1.5 py-0.5 rounded-full"
                   style={{ color: '#0a0a0a', background: GOLD }}>
                   {path.badge}
                 </span>
 
                 <h2 className="font-bold leading-snug mb-1.5"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.7rem', color: '#fff' }}>
+                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.77rem', color: '#fff' }}>
                   {path.label}
                 </h2>
 
-                <p className="text-[6.5px] leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <p className="text-[7.2px] leading-relaxed mb-3" style={{ color: '#ffffff' }}>
                   {path.sub}
                 </p>
 
-                <div className="mt-auto flex items-center gap-2 text-[9px] font-bold transition-all group-hover:gap-3"
+                <div className="mt-auto flex items-center gap-2 text-[10px] font-bold transition-all group-hover:gap-3"
                   style={{ color: GOLD }}>
                   Enter <span>→</span>
                 </div>
