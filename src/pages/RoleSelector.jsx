@@ -26,6 +26,14 @@ const PATHS = [
     featured: true,
   },
   {
+    icon: Building2,
+    label: 'I am a Corporate Relocation / HR Manager',
+    sub: 'White-glove employee relocation with zero management fees. See how the model works.',
+    badge: 'CORPORATE RELO / HR',
+    dest: '/corporate-relo',
+    roleKey: 'hr',
+  },
+  {
     icon: Star,
     label: 'I am an Active Real Estate Agent or Broker',
     sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
@@ -48,14 +56,6 @@ const PATHS = [
     badge: 'VENDOR UTILITY',
     dest: '/search',
     roleKey: 'vendor',
-  },
-  {
-    icon: Building2,
-    label: 'I am a Corporate Relocation / HR Manager',
-    sub: 'White-glove employee relocation with zero management fees. See how the model works.',
-    badge: 'CORPORATE RELO / HR',
-    dest: '/corporate-relo',
-    roleKey: 'hr',
   },
   {
     icon: Briefcase,
@@ -147,34 +147,35 @@ export default function RoleSelector() {
               <button
                 key={i}
                 onClick={() => handleSelect(path)}
-                className="group flex flex-col items-start text-left p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
+                className="group flex flex-col items-start text-left rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                 style={{
-                  minHeight: '143px',
+                  minHeight: '179px',
+                  padding: '20px',
                   background: '#0a0a0a',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.45)',
                 }}
               >
-                <div className="w-9 h-9 rounded-full flex items-center justify-center mb-2 transition-all"
-                  style={{ background: '#ede0cc', border: `2px solid ${GOLD}` }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color: '#0a0a0a' }} />
+                <div className="rounded-full flex items-center justify-center mb-2 transition-all"
+                  style={{ width: '45px', height: '45px', background: '#ede0cc', border: `2px solid ${GOLD}` }}>
+                  <Icon style={{ width: '17.5px', height: '17.5px', color: '#0a0a0a' }} />
                 </div>
 
-                <span className="text-[6.6px] font-black tracking-[0.15em] uppercase mb-1.5 px-1.5 py-0.5 rounded-full"
-                  style={{ color: '#0a0a0a', background: GOLD }}>
+                <span className="font-black tracking-[0.15em] uppercase mb-1.5 rounded-full"
+                  style={{ fontSize: '8.25px', padding: '3px 8px', color: '#0a0a0a', background: GOLD }}>
                   {path.badge}
                 </span>
 
                 <h2 className="font-bold leading-snug mb-1.5"
-                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.77rem', color: '#fff' }}>
+                  style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.9625rem', color: '#fff' }}>
                   {path.label}
                 </h2>
 
-                <p className="text-[7.2px] leading-relaxed mb-3" style={{ color: '#ffffff' }}>
+                <p className="leading-relaxed mb-3" style={{ fontSize: '9px', color: '#ffffff' }}>
                   {path.sub}
                 </p>
 
-                <div className="mt-auto flex items-center gap-2 text-[10px] font-bold transition-all group-hover:gap-3"
-                  style={{ color: GOLD }}>
+                <div className="mt-auto flex items-center gap-2 font-bold transition-all group-hover:gap-3"
+                  style={{ fontSize: '12.5px', color: GOLD }}>
                   Enter <span>→</span>
                 </div>
               </button>
