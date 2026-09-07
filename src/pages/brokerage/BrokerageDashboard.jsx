@@ -163,7 +163,7 @@ export default function BrokerageDashboard() {
             Brokerage Subscriber
           </p>
           <h1 className="text-3xl md:text-4xl font-serif font-normal mb-3 text-white leading-tight">
-            {brokerage?.name || 'Broker/Agent Portal'}
+            Broker/Agent Portal
           </h1>
           <p className="text-base text-gray-400 max-w-2xl mx-auto mb-2 leading-relaxed">
             Your brokerage roadmaps — five live workflows for escrow, listings, agents, marketing, and luxury presence.
