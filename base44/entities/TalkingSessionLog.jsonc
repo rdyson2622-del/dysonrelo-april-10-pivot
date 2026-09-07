@@ -34,6 +34,29 @@
       "type": "number",
       "description": "Number of transcribed speech turns (user + assistant)"
     },
+    "transcript": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Live spoken transcript for this session, retained for admin review (e.g. first-visit voice greeting test)"
+    },
     "roadmap_generated": {
       "type": "boolean",
       "default": false,

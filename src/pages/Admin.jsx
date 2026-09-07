@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +8,8 @@ import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText,
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
+import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
+import { Volume2 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -119,6 +121,8 @@ function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
 }
 
 export default function Admin() {
+  const [testingVoiceGreeting, setTestingVoiceGreeting] = useState(false);
+
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-6xl mx-auto">
@@ -129,14 +133,27 @@ export default function Admin() {
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Live stats below — click any card to jump directly to those records.
           </p>
-          <Link
-            to="/admin/workflows"
-            className="inline-flex items-center gap-2 mt-4 text-sm px-4 py-2 rounded-xl"
-            style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
-          >
-            🗺️ New here? Open the Master Workflow Atlas (pictures, not code)
-          </Link>
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Link
+              to="/admin/workflows"
+              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
+              style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
+            >
+              🗺️ New here? Open the Master Workflow Atlas (pictures, not code)
+            </Link>
+            <button
+              onClick={() => setTestingVoiceGreeting(true)}
+              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
+              style={{ border: '1px solid rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.08)' }}
+            >
+              <Volume2 className="w-4 h-4" /> Guinea Pig: Test First-Visit Voice Greeting
+            </button>
+          </div>
         </motion.div>
+
+        {testingVoiceGreeting && (
+          <VoiceGreetingWidget key={Date.now()} onClose={() => setTestingVoiceGreeting(false)} />
+        )}
 
         {/* Standard landing page banner — same tan hero used across all portals */}
         <motion.div
