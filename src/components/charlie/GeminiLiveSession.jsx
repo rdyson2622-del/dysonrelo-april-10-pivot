@@ -4,48 +4,17 @@ import { Mic, Square, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { CHARLIE_SIMMONS_SYSTEM_PROMPT, CHARLIE_SILENT_MODERATOR_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
 
 const GOLD = '#D4AF37';
 
 const SESSION_TIME_LIMIT = 5 * 60; // 5 minutes in seconds
 
 const createSessionSystem = (silentMode = false) => {
-  const baseSystem = `You are Charlie, a warm, professional relocation concierge working for Dyson & Dyson Concierge Relocation Services. You speak concisely and naturally in real-time.`;
-
   if (silentMode) {
-    return `${baseSystem}
-
-SILENT MODERATOR MODE: An agent is on this call. Your role is to:
-1. Listen for 'Pivot Points' (budget changes, destination shifts, timeline changes, priority updates)
-2. Silently track these changes in real-time
-3. Do NOT interrupt the agent-client conversation
-4. At natural pauses, acknowledge understood pivot points: "I'm noting that you've shifted your budget to $X / timeline is now Y"
-5. Silently update the Moving Plan data object with detected pivots
-
-KEY PIVOT POINTS TO DETECT:
-- Budget mentions (e.g., "actually, we can go up to 650k")
-- Destination changes (e.g., "we're looking at Austin now instead of Denver")
-- Timeline shifts (e.g., "we need to move sooner")
-- Priority updates (e.g., "schools are more important now")
-- Property type changes (e.g., "thinking more condo than house")
-
-Be conversational but brief. Your goal is to ensure the plan stays current as decisions evolve.`;
+    return CHARLIE_SILENT_MODERATOR_PROMPT;
   }
-
-  return `${baseSystem}
-
-Cover these topics naturally in conversation:
-1. Destination city and specific neighborhoods of interest
-2. Timeline for the move
-3. Family details (spouse, children ages, pets)
-4. Budget range for the new home
-5. Buying vs renting
-6. Top priorities: schools, commute, safety, nature, walkability
-7. Current home — are they selling? Do they need agent help on both ends?
-8. Employment situation — remote work, transferring, job searching
-
-Be warm, conversational, and concise. Ask one natural question at a time.
-When the conversation feels complete, wrap up: "I have what I need to start building your relocation roadmap. Our concierge team will review this and introduce you to your matched agent."`;
+  return CHARLIE_SIMMONS_SYSTEM_PROMPT;
 };
 
 export default function GeminiLiveSession({ clientInfo, onSessionComplete, agentId = null, movingPlanId = null }) {
@@ -98,7 +67,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
     try {
       const client = new GeminiLiveSessionClient({
         systemPrompt: createSessionSystem(silentMode),
-        voiceName: 'storm',
+        voiceName: CHARLIE_VOICE_NAME,
         onStatusChange: (newStatus) => {
           if (newStatus === 'listening' || newStatus === 'speaking') {
             setStatus('active');

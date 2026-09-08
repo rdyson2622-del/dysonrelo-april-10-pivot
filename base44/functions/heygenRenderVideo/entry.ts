@@ -39,12 +39,12 @@ Deno.serve(async (req) => {
     const scriptText = `${article.headline}. ${article.body}`.slice(0, 1500);
     const cleanText = scriptText.replace(/[*_#`]/g, '').replace(/\n+/g, ' ').trim();
 
-    // 2. Synthesize Charon audio directly via Google TTS (inlined to avoid auth proxy)
+    // 2. Synthesize Algieba audio directly via Google TTS (inlined to avoid auth proxy)
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     if (!GEMINI_API_KEY) return Response.json({ error: 'GEMINI_API_KEY not set' }, { status: 500 });
 
     const VOICE_ATTEMPTS = [
-      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Charon' },
+      { api: 'v1beta1', name: 'en-US-Chirp3-HD-Algieba' },
       { api: 'v1beta1', name: 'en-US-Chirp3-HD-Fenrir' },
       { api: 'v1',      name: 'en-US-Neural2-D' },
     ];

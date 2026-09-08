@@ -1,5 +1,5 @@
 // Charlie voice — routed exclusively through Google Cloud TTS via charlieSpeak backend function
-// Voice: en-US-Chirp3-HD-Charon (deep authoritative male)
+// Voice: Algieba / en-US-Chirp3-HD-Algieba (deep authoritative American male)
 // AUTO-INTERRUPT: Charlie stops immediately when the user starts speaking.
 
 import { base44 } from '@/api/base44Client';

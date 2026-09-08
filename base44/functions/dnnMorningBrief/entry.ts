@@ -51,7 +51,7 @@ This has been your DNN Morning Brief. Subscribe at dysonanddyson.com for daily m
             responseModalities: ['AUDIO'],
             speechConfig: {
               voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: 'Charon' }
+                prebuiltVoiceConfig: { voiceName: 'Algieba' }
               }
             }
           }
