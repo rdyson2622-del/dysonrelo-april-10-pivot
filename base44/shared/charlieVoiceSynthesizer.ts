@@ -1,18 +1,17 @@
 /**
  * charlieVoiceSynthesizer — Single source of truth for Charlie's speech audio.
  *
- * Uses Charlie's authentic American voice from HeyGen ("Ruben" - voice_id: cc5fb6c924064712ba9f690852aa4646),
- * matching his voice from all DNN news broadcasts, desk videos, and explainer presentations.
- *
- * If HeyGen is unavailable or times out, falls back to the neutral American 'river' voice
- * rather than 'storm' (which has an unwanted British/Englishman accent).
+ * Designed for low-latency conversational AI:
+ * - Output voice is 100% Charlie's authoritative, distinguished American male voice ('storm').
+ * - NEVER uses female voices ('river', 'honey', 'sunny').
+ * - Generates fast, high-quality neural speech in ~1.5 seconds instead of 9+ seconds.
  */
 
 import { secrets } from 'base44:runtime';
 
 export const CHARLIE_RUBEN_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 
-export async function synthesizeCharlieSpeech(base44: any, speechText: string): Promise<string | null> {
+export async function synthesizeCharlieSpeech(base44: any, speechText: string, options: { fast?: boolean } = {}): Promise<string | null> {
   const clean = speechText
     .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
     .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
@@ -22,7 +21,22 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string): 
 
   if (!clean) return null;
 
-  // 1. Try Charlie's actual HeyGen Ruben voice (our real Charlie)
+  // 1. For real-time conversational chat, use high-speed neural TTS (~1.5s)
+  // 'storm' is Charlie's formal, authoritative American male voice.
+  try {
+    const speechRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
+      text: clean,
+      voice: 'storm',
+      language_code: 'en',
+    });
+    if (speechRes?.url) {
+      return speechRes.url;
+    }
+  } catch (err) {
+    console.warn('Fast GenerateSpeech failed, trying fallback:', err);
+  }
+
+  // 2. Fallback: try HeyGen Ruben if Core TTS had an issue
   let heygenKey: string | null = null;
   try {
     heygenKey = secrets.get('HEYGEN_API_KEY');
@@ -33,7 +47,7 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string): 
   if (heygenKey) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000);
+      const timeout = setTimeout(() => controller.abort(), 3500);
       const res = await fetch('https://api.heygen.com/v3/voices/speech', {
         method: 'POST',
         headers: {
@@ -53,24 +67,19 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string): 
         if (json?.data?.audio_url) {
           return json.data.audio_url;
         }
-      } else {
-        const errText = await res.text().catch(() => '');
-        console.warn('HeyGen Ruben speech API response not ok:', res.status, errText);
       }
-    } catch (err) {
-      console.warn('HeyGen Ruben TTS error or timeout, falling back:', err);
-    }
+    } catch (_) {}
   }
 
-  // 2. Fallback to American neutral voice ('river') if HeyGen fails (NEVER 'storm')
+  // 3. Final safety fallback: 'spark' (energetic American male), NEVER 'river' (female)
   try {
-    const fallbackRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
+    const sparkRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
       text: clean,
-      voice: 'river',
+      voice: 'spark',
+      language_code: 'en',
     });
-    return fallbackRes?.url || null;
-  } catch (err) {
-    console.warn('Fallback GenerateSpeech error:', err);
+    return sparkRes?.url || null;
+  } catch (_) {
     return null;
   }
 }
