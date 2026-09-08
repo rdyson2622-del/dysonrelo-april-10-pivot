@@ -98,7 +98,7 @@ export default function GeminiLiveSession({ clientInfo, onSessionComplete, agent
     try {
       const client = new GeminiLiveSessionClient({
         systemPrompt: createSessionSystem(silentMode),
-        voiceName: 'Charon',
+        voiceName: 'storm',
         onStatusChange: (newStatus) => {
           if (newStatus === 'listening' || newStatus === 'speaking') {
             setStatus('active');

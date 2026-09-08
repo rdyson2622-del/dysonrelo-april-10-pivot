@@ -48,7 +48,7 @@ export default function HeroGeminiConcierge() {
 
     const client = new GeminiLiveSessionClient({
       systemPrompt: CHARLIE_CONCIERGE_PROMPT,
-      voiceName: 'Charon', // Deep, natural US male voice
+      voiceName: 'storm', // Charlie's distinguished US male voice
       onStatusChange: (newStatus) => {
         setStatus(newStatus);
         if (newStatus === 'listening') {

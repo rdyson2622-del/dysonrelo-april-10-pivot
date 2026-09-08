@@ -77,15 +77,18 @@ export async function speakAsCharlie(text, onEnd, onStart, onInterrupted) {
 
   try {
     const res = await base44.functions.invoke('charlieSpeak', { text: clean });
-    const { audio, mimeType } = res.data;
-    if (!audio) return;
+    const { audio, mimeType, audioUrl } = res.data || {};
+    let url = audioUrl;
 
-    const binary = atob(audio);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    const blob = new Blob([bytes], { type: mimeType || 'audio/wav' });
-    const url = URL.createObjectURL(blob);
+    if (!url && audio) {
+      const binary = atob(audio);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const blob = new Blob([bytes], { type: mimeType || 'audio/wav' });
+      url = URL.createObjectURL(blob);
+    }
 
+    if (!url) return;
     const audioEl = new Audio(url);
     currentAudio = audioEl;
 

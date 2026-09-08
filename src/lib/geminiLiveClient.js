@@ -1,16 +1,17 @@
 import { base44 } from '@/api/base44Client';
 
 /**
- * Gemini Live Client with Deep-Brain Intelligence & Charlie Voice ('storm')
+ * Charlie V2V Real-Time Voice Concierge Client
  *
  * Architecture:
- * 1. Deep Brain Intelligence: Gemini LLM engine powers all conversation reasoning,
- *    multi-turn conversational memory, intent recognition, and tool calling (`navigate_to_page`).
- * 2. Voice Generation: Charlie's custom authoritative male voice (`charlieSpeak` with voice `storm`)
- *    provides the spoken audio.
- * 3. Instant Real-Time Interruption (Barge-In): The browser microphone monitors user speech
- *    continuously. The millisecond the user speaks while Charlie is talking, active playback
- *    is instantly paused, the audio buffer is flushed, and any pending speech requests are canceled.
+ * 1. Deep Brain Intelligence: Powered by Gemini with full verified company knowledge
+ *    (Bob Dyson 55+ years, 20+ agent vetting, relocation milestones, transparency, etc.),
+ *    multi-turn conversational memory, and platform navigation tools.
+ * 2. True Charlie Voice: Audio output is 100% Charlie's authoritative American male voice ('storm').
+ *    Never plays the generic British/English man voice.
+ * 3. Instant Real-Time Interruption (Barge-In): The browser microphone monitors speech in real time.
+ *    The millisecond the user speaks while Charlie is talking, active playback is instantly paused,
+ *    audio buffers are flushed, and any pending requests are canceled.
  */
 
 class CharlieAudioPlayer {
@@ -91,7 +92,7 @@ export class GeminiLiveSessionClient {
       onNavigate,
     } = options;
 
-    this.systemPrompt = systemPrompt || 'You are Charlie, the distinguished American male AI real estate concierge for Dyson & Dyson. Speak warmly and concisely in real-time.';
+    this.systemPrompt = systemPrompt || 'You are Charlie, the distinguished American male AI real estate concierge for Dyson & Dyson.';
     this.onStatusChange = onStatusChange;
     this.onTranscript = onTranscript;
     this.onSpeaker = onSpeaker;
@@ -99,20 +100,20 @@ export class GeminiLiveSessionClient {
     this.onSessionLogId = onSessionLogId;
     this.onNavigate = onNavigate;
 
-    this.ws = null;
     this.sessionLogId = null;
     this.startTime = null;
     this.turnCount = 0;
     this.micStream = null;
     this.micCtx = null;
-    this.micProcessor = null;
+    this.micAnalyser = null;
     this.charlieAudioPlayer = new CharlieAudioPlayer();
     this.active = false;
-    this.transcriptTextBuffer = '';
     this.isInterrupted = false;
     this.pendingSpeakId = 0;
     this.conversationHistory = [];
-    this.fallbackRecognition = null;
+    this.recognition = null;
+    this.isProcessingTurn = false;
+    this.vadInterval = null;
   }
 
   async start() {
@@ -125,207 +126,165 @@ export class GeminiLiveSessionClient {
       this.conversationHistory = [];
       this.onStatusChange?.('connecting');
 
-      // 1. Obtain Gemini session credentials from proxy
-      const res = await base44.functions.invoke('geminiLiveProxy', {
-        action: 'start_session',
-        systemPrompt: this.systemPrompt,
-      });
-
-      if (res.data?.error) {
-        throw new Error(res.data.error);
-      }
-
-      const { wsUrl, model, sessionLogId } = res.data || {};
-      this.sessionLogId = sessionLogId;
-      this.onSessionLogId?.(sessionLogId);
-
-      if (!wsUrl) {
-        throw new Error('Could not obtain Gemini Live WebSocket URL.');
-      }
-
-      // 2. Open WebSocket
-      const ws = new WebSocket(wsUrl);
-      this.ws = ws;
-
-      ws.onopen = () => {
-        const fullModel = model?.startsWith('models/') ? model : `models/${model || 'gemini-2.5-flash-preview-native-audio-dialog'}`;
-
-        // Gemini Tools & Function calling layer: navigate_to_page
-        const setupMessage = {
-          setup: {
-            model: fullModel,
-            generationConfig: {
-              responseModalities: ['TEXT'], // Gemini powers deep brain intelligence & tools; Charlie powers speech
-            },
-            systemInstruction: {
-              parts: [{ text: this.systemPrompt }],
-            },
-            tools: [
-              {
-                functionDeclarations: [
-                  {
-                    name: 'navigate_to_page',
-                    description: 'Navigate the viewer directly to a specific destination page on the DysonRelo platform. Call this function whenever the user asks about or mentions HR or corporate relocation, relocation planning or moving intake, finding an agent, referring a friend or partner, broker or agent portals, real estate answers, daily news, or market transparency.',
-                    parameters: {
-                      type: 'OBJECT',
-                      properties: {
-                        path: {
-                          type: 'STRING',
-                          description: 'The internal application route to navigate to: "/corporate-relo" (Corporate Relocation & HR services), "/relocation-intake" (Relocation Plan & Moving Intake), "/find-agent" (Find a Vetted Agent), "/solutions" (Real Estate Solutions & Roadmaps), "/refer" (Refer a Friend, Client, Agent, or Vendor), "/broker-portal" (Broker & Agent Portal), "/dnn-news" (DNN Daily Real Estate News), "/transparency" (Real Estate Transparency Ledger), "/financial-services" (Financial Services & Vetted Lenders), "/city-guide" (City Guide), "/real-estate-answers" (Real Estate Answers & Video FAQs), "/portal" (Main Portal Home).',
-                        },
-                        reason: {
-                          type: 'STRING',
-                          description: 'Short 1-sentence reason why you are taking the viewer to this page.',
-                        },
-                      },
-                      required: ['path'],
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        };
-        ws.send(JSON.stringify(setupMessage));
-      };
-
-      ws.onmessage = async (event) => {
-        try {
-          let data;
-          if (typeof event.data === 'string') {
-            data = JSON.parse(event.data);
-          } else if (event.data instanceof Blob) {
-            const text = await event.data.text();
-            data = JSON.parse(text);
-          } else {
-            return;
-          }
-
-          // Case A: setup complete confirmation
-          if (data.setupComplete) {
-            this.onStatusChange?.('listening');
-            await this.startMicrophone();
-            return;
-          }
-
-          // Case B: Handle Interruption / Barge-in immediately
-          const isInterruptedSignal = Boolean(
-            data.serverContent?.interrupted ||
-            data.interrupted ||
-            data.serverContent?.modelTurn?.interrupted
-          );
-
-          if (isInterruptedSignal) {
-            this.handleInterruption();
-            return;
-          }
-
-          // Helper to handle navigate_to_page function calls
-          const handleFunctionCall = (call) => {
-            const fnName = call.name;
-            if (fnName === 'navigate_to_page' || fnName === 'navigateToPage') {
-              const targetPath = call.args?.path || call.args?.page || '/portal';
-              const pageTitle = call.args?.pageTitle || call.args?.title || call.args?.reason || targetPath;
-              const reason = call.args?.reason || '';
-
-              // Trigger React Router navigation on the client
-              this.onNavigate?.({ path: targetPath, title: pageTitle, reason });
-
-              // Send toolResponse back over the WebSocket
-              if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                const responsePayload = {
-                  toolResponse: {
-                    functionResponses: [
-                      {
-                        response: {
-                          output: {
-                            success: true,
-                            navigated_to: targetPath,
-                            status: `Viewer has navigated to ${targetPath}`,
-                          },
-                        },
-                        id: call.id,
-                      },
-                    ],
-                  },
-                };
-                this.ws.send(JSON.stringify(responsePayload));
-              }
-            }
-          };
-
-          // Case C: toolCall event at root level
-          if (data.toolCall?.functionCalls) {
-            for (const call of data.toolCall.functionCalls) {
-              handleFunctionCall(call);
-            }
-          }
-
-          // Case D: server content from model
-          if (data.serverContent) {
-            const sc = data.serverContent;
-
-            // Model turn parts (text and/or inline function calls)
-            if (sc.modelTurn?.parts) {
-              for (const part of sc.modelTurn.parts) {
-                if (part.functionCall) {
-                  handleFunctionCall(part.functionCall);
-                }
-
-                if (part.text) {
-                  this.transcriptTextBuffer += part.text;
-                  const navMatch = part.text.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
-                  if (navMatch) {
-                    const navPath = navMatch[1].trim();
-                    const navTitle = (navMatch[2] || navPath).trim();
-                    this.onNavigate?.({ path: navPath, title: navTitle });
-                  }
-                }
-              }
-            }
-
-            // When turn is complete, route Gemini's answer to Charlie's custom speech engine
-            if (sc.turnComplete) {
-              this.isInterrupted = false;
-              const rawText = this.transcriptTextBuffer.trim();
-              if (rawText) {
-                const cleanedText = rawText
-                  .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
-                  .replace(/[*_#`]/g, '')
-                  .trim();
-
-                if (cleanedText) {
-                  this.turnCount++;
-                  this.conversationHistory.push({ role: 'assistant', text: cleanedText });
-                  this.onTranscript?.({
-                    role: 'assistant',
-                    text: cleanedText,
-                  });
-
-                  // Voice synthesis via Charlie ('storm')
-                  this.speakWithCharlie(cleanedText);
-                }
-                this.transcriptTextBuffer = '';
-              }
-            }
-          }
-        } catch (e) {
-          console.error('Error handling Gemini message:', e);
+      // 1. Initialize or log session in backend
+      try {
+        const res = await base44.functions.invoke('geminiLiveProxy', {
+          action: 'start_session',
+          systemPrompt: this.systemPrompt,
+        });
+        if (res.data?.sessionLogId) {
+          this.sessionLogId = res.data.sessionLogId;
+          this.onSessionLogId?.(res.data.sessionLogId);
         }
-      };
+      } catch (_) {}
 
-      ws.onerror = () => {
-        this.initiateSpeechFallback();
-      };
+      // 2. Start hardware microphone listener for real-time barge-in detection
+      await this.startMicrophoneVAD();
 
-      ws.onclose = () => {
-        if (this.active && !this.micStream) {
-          this.initiateSpeechFallback();
-        }
-      };
+      // 3. Start continuous Speech Recognition engine
+      this.startSpeechRecognition();
+
+      this.onStatusChange?.('listening');
+      this.onSpeaker?.('user');
     } catch (err) {
-      console.warn('Gemini Live session error:', err);
-      this.initiateSpeechFallback();
+      console.warn('V2V session start error:', err);
+      this.onError?.(err?.message || 'Could not start voice session.');
+      this.onStatusChange?.('error');
+    }
+  }
+
+  /**
+   * High-sensitivity hardware microphone monitor:
+   * Continuously measures audio RMS energy. If Charlie is speaking and user talks,
+   * instantly stops and flushes Charlie's audio mid-sentence.
+   */
+  async startMicrophoneVAD() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+      this.micStream = stream;
+
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioCtx();
+      this.micCtx = ctx;
+
+      const source = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      this.micAnalyser = analyser;
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      // Continuous high-frequency VAD check (every 30ms)
+      this.vadInterval = setInterval(() => {
+        if (!this.active || !this.micAnalyser) return;
+
+        analyser.getByteTimeDomainData(dataArray);
+        let sumSquares = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          const norm = (dataArray[i] - 128) / 128;
+          sumSquares += norm * norm;
+        }
+        const rms = Math.sqrt(sumSquares / dataArray.length);
+
+        // Sensitive voice detection threshold
+        const isSpeaking = rms > 0.035;
+
+        if (isSpeaking) {
+          // INSTANT BARGE-IN: If Charlie is playing audio, cut him off instantly!
+          if (this.charlieAudioPlayer.isPlaying) {
+            this.handleInterruption();
+          }
+        }
+      }, 30);
+    } catch (e) {
+      console.warn('Microphone VAD setup error:', e);
+    }
+  }
+
+  startSpeechRecognition() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      this.onError?.('Your browser does not support SpeechRecognition. Please use Chrome, Edge, or Safari.');
+      this.onStatusChange?.('error');
+      return;
+    }
+
+    try {
+      const rec = new SpeechRec();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = 'en-US';
+      this.recognition = rec;
+
+      rec.onstart = () => {
+        if (this.active) {
+          this.onStatusChange?.('listening');
+        }
+      };
+
+      rec.onspeechstart = () => {
+        if (this.charlieAudioPlayer.isPlaying) {
+          this.handleInterruption();
+        }
+      };
+
+      rec.onresult = async (event) => {
+        if (!this.active) return;
+
+        // Cut off Charlie immediately if user begins speaking
+        if (this.charlieAudioPlayer.isPlaying) {
+          this.handleInterruption();
+        }
+
+        let interim = '';
+        let final = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const res = event.results[i];
+          if (res.isFinal) {
+            final += res[0].transcript;
+          } else {
+            interim += res[0].transcript;
+          }
+        }
+
+        const userText = (final || interim).trim();
+        if (userText) {
+          this.onSpeaker?.('user');
+        }
+
+        if (final.trim() && !this.isProcessingTurn) {
+          await this.processUserTurn(final.trim());
+        }
+      };
+
+      rec.onerror = (e) => {
+        if (e?.error === 'not-allowed') {
+          this.onError?.('Microphone permission denied. Please allow microphone access in your browser.');
+          this.onStatusChange?.('error');
+        }
+      };
+
+      rec.onend = () => {
+        // Automatically restart speech recognition while session is active
+        if (this.active) {
+          try {
+            rec.start();
+          } catch (_) {}
+        }
+      };
+
+      rec.start();
+    } catch (e) {
+      console.warn('SpeechRecognition start error:', e);
     }
   }
 
@@ -334,26 +293,54 @@ export class GeminiLiveSessionClient {
     this.isInterrupted = true;
     this.pendingSpeakId++;
     this.charlieAudioPlayer.stop();
-    this.transcriptTextBuffer = '';
     this.onSpeaker?.('user');
     this.onStatusChange?.('listening');
   }
 
-  async speakWithCharlie(text) {
-    if (this.isInterrupted || !this.active || !text) return;
+  async processUserTurn(text) {
+    if (!text || !this.active) return;
+    this.isProcessingTurn = true;
+    this.isInterrupted = false;
 
-    const currentReq = ++this.pendingSpeakId;
+    this.turnCount++;
+    this.conversationHistory.push({ role: 'user', text });
+    this.onTranscript?.({ role: 'user', text });
     this.onSpeaker?.('assistant');
     this.onStatusChange?.('speaking');
 
     try {
-      const res = await base44.functions.invoke('charlieSpeak', { text });
-      if (currentReq !== this.pendingSpeakId || this.isInterrupted || !this.active) {
-        return; // User interrupted mid-synthesis
+      const currentReq = ++this.pendingSpeakId;
+
+      // Call Gemini deep-brain backend with full conversation memory & verified knowledge base
+      const res = await base44.functions.invoke('charlieVoiceChat', {
+        message: text,
+        conversation: this.conversationHistory,
+      });
+
+      if (currentReq !== this.pendingSpeakId || !this.active || this.isInterrupted) {
+        this.isProcessingTurn = false;
+        return; // User interrupted while Gemini was thinking
       }
 
+      const reply = res.data?.reply || '';
       const audioUrl = res.data?.audioUrl;
-      if (audioUrl) {
+
+      // Check for navigation directives (tool calling)
+      const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
+      if (navMatch) {
+        const navPath = navMatch[1].trim();
+        const navTitle = (navMatch[2] || navPath).trim();
+        this.onNavigate?.({ path: navPath, title: navTitle });
+      }
+
+      const cleanReply = reply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
+      if (cleanReply) {
+        this.conversationHistory.push({ role: 'assistant', text: cleanReply });
+        this.onTranscript?.({ role: 'assistant', text: cleanReply });
+      }
+
+      // Play Charlie's custom authoritative American voice ('storm')
+      if (audioUrl && !this.isInterrupted) {
         this.charlieAudioPlayer.play(audioUrl, {
           onStart: () => {
             if (currentReq === this.pendingSpeakId && !this.isInterrupted) {
@@ -373,197 +360,11 @@ export class GeminiLiveSessionClient {
         this.onStatusChange?.('listening');
       }
     } catch (err) {
-      console.warn('Charlie voice generation error:', err);
+      console.warn('Error processing turn:', err);
       this.onSpeaker?.(null);
       this.onStatusChange?.('listening');
-    }
-  }
-
-  async startMicrophone() {
-    if (!this.active) return;
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          sampleRate: 16000,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
-      this.micStream = stream;
-
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const micCtx = new AudioCtx({ sampleRate: 16000 });
-      this.micCtx = micCtx;
-
-      const source = micCtx.createMediaStreamSource(stream);
-      const processor = micCtx.createScriptProcessor(4096, 1, 1);
-      this.micProcessor = processor;
-
-      processor.onaudioprocess = (e) => {
-        if (!this.active) return;
-
-        const input = e.inputBuffer.getChannelData(0);
-        const pcm = new Int16Array(input.length);
-        let sumSquares = 0;
-
-        for (let i = 0; i < input.length; i++) {
-          const s = Math.max(-1, Math.min(1, input[i]));
-          sumSquares += s * s;
-          pcm[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
-        }
-
-        const rms = Math.sqrt(sumSquares / input.length);
-        // Sensitive threshold to catch speech at the earliest millisecond
-        const isUserVoice = rms > 0.02;
-
-        // INSTANT BARGE-IN INTERRUPTION:
-        // The instant the microphone detects the user speaking, flush active Charlie audio immediately!
-        if (isUserVoice && this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        } else if (isUserVoice && !this.charlieAudioPlayer.isPlaying) {
-          this.onSpeaker?.('user');
-        }
-
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-          const bytes = new Uint8Array(pcm.buffer);
-          let binary = '';
-          for (let i = 0; i < bytes.length; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          const b64 = btoa(binary);
-
-          this.ws.send(
-            JSON.stringify({
-              realtimeInput: {
-                mediaChunks: [
-                  {
-                    mimeType: 'audio/pcm;rate=16000',
-                    data: b64,
-                  },
-                ],
-              },
-            })
-          );
-        }
-      };
-
-      source.connect(processor);
-      processor.connect(micCtx.destination);
-    } catch (e) {
-      const errMsg = e?.name === 'NotAllowedError'
-        ? 'Microphone permission denied. Please allow microphone access.'
-        : 'Could not access microphone.';
-      this.onError?.(errMsg);
-      this.onStatusChange?.('error');
-    }
-  }
-
-  /**
-   * Resilient speech fallback:
-   * Uses browser SpeechRecognition for speech input + Gemini deep brain reasoning with conversation memory,
-   * tool navigation, and Charlie's voice.
-   */
-  initiateSpeechFallback() {
-    if (!this.active) return;
-
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) {
-      this.onStatusChange?.('listening');
-      return;
-    }
-
-    try {
-      const recognition = new SpeechRec();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-      this.fallbackRecognition = recognition;
-
-      recognition.onstart = () => {
-        this.onStatusChange?.('listening');
-      };
-
-      recognition.onresult = async (event) => {
-        if (!this.active) return;
-
-        // Cut off Charlie audio immediately if user speaks (instant barge-in)
-        if (this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        }
-
-        let finalTranscript = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          }
-        }
-
-        const text = finalTranscript.trim();
-        if (text) {
-          this.turnCount++;
-          this.conversationHistory.push({ role: 'user', text });
-          this.onTranscript?.({ role: 'user', text });
-          this.onSpeaker?.('assistant');
-          this.onStatusChange?.('speaking');
-
-          try {
-            // Process Gemini intent, memory, tool navigation & Charlie voice
-            const res = await base44.functions.invoke('charlieVoiceChat', {
-              message: text,
-              conversation: this.conversationHistory,
-            });
-
-            const reply = res.data?.reply || '';
-            const audioUrl = res.data?.audioUrl;
-
-            // Check for navigation directives in Gemini's response
-            const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
-            if (navMatch) {
-              const navPath = navMatch[1].trim();
-              const navTitle = (navMatch[2] || navPath).trim();
-              this.onNavigate?.({ path: navPath, title: navTitle });
-            }
-
-            const cleanReply = reply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
-            if (cleanReply) {
-              this.conversationHistory.push({ role: 'assistant', text: cleanReply });
-              this.onTranscript?.({ role: 'assistant', text: cleanReply });
-            }
-
-            if (audioUrl && !this.isInterrupted) {
-              this.charlieAudioPlayer.play(audioUrl, {
-                onEnded: () => {
-                  this.onSpeaker?.(null);
-                  this.onStatusChange?.('listening');
-                },
-              });
-            } else {
-              this.onSpeaker?.(null);
-              this.onStatusChange?.('listening');
-            }
-          } catch (_) {
-            this.onSpeaker?.(null);
-            this.onStatusChange?.('listening');
-          }
-        }
-      };
-
-      recognition.onerror = () => {
-        this.onStatusChange?.('listening');
-      };
-
-      recognition.onend = () => {
-        if (this.active) {
-          try { recognition.start(); } catch (_) {}
-        }
-      };
-
-      recognition.start();
-    } catch (_) {
-      this.onStatusChange?.('listening');
+    } finally {
+      this.isProcessingTurn = false;
     }
   }
 
@@ -571,12 +372,20 @@ export class GeminiLiveSessionClient {
     this.active = false;
     this.pendingSpeakId++;
 
+    if (this.vadInterval) {
+      clearInterval(this.vadInterval);
+      this.vadInterval = null;
+    }
+
     // Immediately stop Charlie's audio and flush queue
     this.charlieAudioPlayer.stop();
 
-    if (this.fallbackRecognition) {
-      try { this.fallbackRecognition.stop(); } catch (_) {}
-      this.fallbackRecognition = null;
+    if (this.recognition) {
+      try {
+        this.recognition.onend = null;
+        this.recognition.stop();
+      } catch (_) {}
+      this.recognition = null;
     }
 
     try {
@@ -587,31 +396,16 @@ export class GeminiLiveSessionClient {
     } catch (_) {}
 
     try {
-      if (this.micProcessor) {
-        this.micProcessor.disconnect();
-        this.micProcessor = null;
-      }
-    } catch (_) {}
-
-    try {
       if (this.micCtx && this.micCtx.state !== 'closed') {
         this.micCtx.close().catch(() => {});
         this.micCtx = null;
       }
     } catch (_) {}
 
-    if (this.ws) {
-      try {
-        if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
-          this.ws.close();
-        }
-      } catch (_) {}
-      this.ws = null;
-    }
-
     this.onSpeaker?.(null);
     this.onStatusChange?.('ready');
 
+    // End session log
     if (this.sessionLogId && this.startTime) {
       const duration_seconds = Math.round((Date.now() - this.startTime) / 1000);
       base44.functions.invoke('geminiLiveProxy', {

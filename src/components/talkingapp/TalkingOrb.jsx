@@ -46,7 +46,7 @@ export default function TalkingOrb({
 
     const client = new GeminiLiveSessionClient({
       systemPrompt,
-      voiceName: 'Charon', // Deep, authoritative American male voice
+      voiceName: 'storm', // Charlie's distinguished American male voice
       onStatusChange: (newStatus) => {
         setStatus?.(newStatus);
         if (newStatus === 'listening') {
