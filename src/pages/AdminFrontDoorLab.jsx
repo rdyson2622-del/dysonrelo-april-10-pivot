@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Search, Building, ArrowRight, ChevronDown, 
-  CheckCircle2, SlidersHorizontal, Globe 
+  CheckCircle2, SlidersHorizontal, Globe, Lock 
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
@@ -133,6 +133,15 @@ export default function AdminFrontDoorLab() {
     setActiveExternalSearch({ location: `${listing.city}, ${listing.state}`, url, listing, engineName });
   };
 
+  const handleSelectRoleFromNav = (roleKey) => {
+    setSelectedRoleForSubscription(roleKey);
+    setPortalMenuOpen(false);
+    const elem = document.getElementById('portal-subscribe-section');
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#070707] text-white">
       {/* Top Admin Lab Inspector Bar */}
@@ -153,7 +162,7 @@ export default function AdminFrontDoorLab() {
           }`}
           style={{ background: TAN_BG }}
         >
-          {/* TOP BLACK BAR: BRAND HEADER (DysonHomes.com) */}
+          {/* TOP BLACK BAR: BRAND HEADER (DysonRelo.com) */}
           <nav
             className="px-5 py-3.5 flex items-center justify-between relative shadow-md"
             style={{ background: '#0a0a0a', borderBottom: `2px solid ${GOLD}` }}
@@ -207,14 +216,14 @@ export default function AdminFrontDoorLab() {
               >
                 <Globe className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span className="hidden sm:inline">Domain:</span>
-                <span className="font-bold underline">dysonhomes.com</span>
+                <span className="font-bold underline">dysonrelo.com</span>
               </button>
 
-              {/* Corporate & Partner Portals Dropdown */}
+              {/* Subscriber Workspaces & Portals Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:brightness-110 cursor-pointer shadow-sm"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
                   style={{
                     background: '#141414',
                     border: '1.5px solid rgba(212,175,55,0.4)',
@@ -222,65 +231,179 @@ export default function AdminFrontDoorLab() {
                   }}
                 >
                   <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Corporate &amp; Partner Portals</span>
+                  <span>Subscriber Workspaces</span>
+                  <span className="text-[9px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded font-black uppercase tracking-wider hidden sm:inline">
+                    Subscribers Only
+                  </span>
                   <ChevronDown className="w-3.5 h-3.5 opacity-80" />
                 </button>
 
                 {portalMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-72 border rounded-xl shadow-2xl p-2 z-50 text-xs"
-                    style={{ background: '#0a0a0a', borderColor: GOLD, boxShadow: '0 12px 35px rgba(0,0,0,0.6)' }}
+                    className="absolute right-0 mt-2 w-80 sm:w-96 border rounded-2xl shadow-2xl p-3.5 z-50 text-xs"
+                    style={{
+                      background: '#0a0a0a',
+                      borderColor: GOLD,
+                      boxShadow: '0 16px 45px rgba(0,0,0,0.85)',
+                    }}
                   >
-                    <div className="px-2 py-1.5 mb-1 border-b border-white/10 flex items-center justify-between">
-                      <p className="text-[10px] uppercase font-black tracking-wider text-[#D4AF37]">
-                        Specialized Workspaces
+                    {/* Header with clear explanation */}
+                    <div className="px-1 pb-3 mb-2 border-b border-white/10">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] uppercase font-black tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                          <Lock className="w-3 h-3 text-[#D4AF37]" />
+                          Subscriber-Gated Workspaces
+                        </span>
+                        <span className="text-[9px] font-bold bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/50 px-2 py-0.5 rounded-full uppercase">
+                          Subscription Required
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-white/75 mt-1.5 leading-snug">
+                        These specialized portals are operational workspaces reserved for enrolled subscribers and approved partners. Public visitors must activate an approved role subscription to access client files, pipeline tools, and referral ledgers.
                       </p>
-                      <span className="text-[9px] text-white/40">Direct Roles</span>
+
+                      {/* Fast Action Buttons: Subscribe vs Log In */}
+                      <div className="grid grid-cols-2 gap-2 mt-2.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPortalMenuOpen(false);
+                            const elem = document.getElementById('portal-subscribe-section');
+                            if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-black text-center cursor-pointer transition-transform active:scale-95 shadow"
+                          style={{
+                            background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                          }}
+                        >
+                          Enroll / Activate Free
+                        </button>
+                        <Link
+                          to="/login"
+                          onClick={() => setPortalMenuOpen(false)}
+                          className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-white text-center border border-white/20 bg-[#1a1a1a] hover:bg-[#252525] cursor-pointer"
+                        >
+                          Subscriber Sign In
+                        </Link>
+                      </div>
                     </div>
 
-                    <Link to="/corporate-relo" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
-                      <div>
-                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Corporate Relocation &amp; HR</div>
-                        <div className="text-[10px] text-white/50">Zero-fee employee relocation programs</div>
+                    {/* Roles List with Clear Subscription Requirements */}
+                    <div className="space-y-1">
+                      <div className="px-1 pt-1 pb-1 text-[9px] uppercase font-bold tracking-wider text-white/40">
+                        Choose Your Workspace to Enroll or Sign In:
                       </div>
-                    </Link>
 
-                    <Link to="/find-agent" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
-                      <div>
-                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Relocation Agent Network</div>
-                        <div className="text-[10px] text-white/50">20+ Vetted partner agent receiving bureau</div>
-                      </div>
-                    </Link>
+                      {/* Corporate HR */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('hr')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Corporate Relocation &amp; HR
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            Zero-fee employee relocation packages &amp; executive milestone dashboard
+                          </p>
+                        </div>
+                      </button>
 
-                    <Link to="/broker-portal" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
-                      <div>
-                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Brokerage &amp; Office Management</div>
-                        <div className="text-[10px] text-white/50">Institutional pipeline &amp; transaction tools</div>
-                      </div>
-                    </Link>
+                      {/* Agent Network */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('agent')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Relocation Agent Network
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            Receiving agent bureau • Capped territories &amp; pre-qualified clients
+                          </p>
+                        </div>
+                      </button>
 
-                    <Link to="/partner-benefits" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
-                      <div>
-                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Inactive Licensed Agents</div>
-                        <div className="text-[10px] text-white/50">Monetize license with 25% referral protection</div>
-                      </div>
-                    </Link>
+                      {/* Brokerage Management */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('broker')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Brokerage &amp; Office Management
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            BackOffice sync, escrow friction audits &amp; multi-agent pipeline
+                          </p>
+                        </div>
+                      </button>
 
-                    <Link to="/search" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
-                      <div>
-                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Vetted Vendor Network</div>
-                        <div className="text-[10px] text-white/50">Movers, inspectors, lenders &amp; stagers</div>
-                      </div>
-                    </Link>
+                      {/* Inactive Licensed Agents */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('inactive_agent')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Inactive Licensed Agents
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            25% Protected referral contract • Full escrow milestone tracking
+                          </p>
+                        </div>
+                      </button>
 
-                    <div className="mt-1 pt-1.5 border-t border-white/10 px-2 py-1 flex items-center justify-between text-[10px]">
-                      <Link to="/portal" className="text-[#D4AF37] hover:underline font-bold">
-                        Master Role Selector →
+                      {/* Vetted Vendor Network */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('vendor')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Vetted Vendor Network
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            Certified movers, inspectors, lenders &amp; stagers directory
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+
+                    {/* Bottom link to master role selector / subscribe page */}
+                    <div className="mt-2 pt-2 border-t border-white/10 px-1 flex items-center justify-between text-[10px]">
+                      <span className="text-white/40">Need help deciding?</span>
+                      <Link
+                        to="/subscribe"
+                        onClick={() => setPortalMenuOpen(false)}
+                        className="text-[#D4AF37] hover:underline font-bold"
+                      >
+                        Full Subscription Matrix →
                       </Link>
                     </div>
                   </div>

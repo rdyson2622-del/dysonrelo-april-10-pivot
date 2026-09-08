@@ -87,7 +87,7 @@ export default function PartnerPortalGateways({ onSelectRole }) {
             Not a Buyer or Seller? Access Your Specialized Portal.
           </h2>
           <p className="text-xs sm:text-sm text-[#44382c] max-w-2xl mt-0.5">
-            DysonHomes provides dedicated workspaces tailored specifically for Corporate HR leaders, vetted relocation agents, managing brokers, and service partners.
+            DysonRelo provides dedicated workspaces tailored specifically for Corporate HR leaders, vetted relocation agents, managing brokers, and service partners.
           </p>
         </div>
 
