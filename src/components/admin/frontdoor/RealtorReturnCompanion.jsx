@@ -22,7 +22,7 @@ export default function RealtorReturnCompanion({ activeSearch, onClose }) {
           }}
         >
           <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e] animate-pulse" />
-          <span>Active MLS Search: {activeSearch.location || 'Nationwide'}</span>
+          <span>Active {activeSearch.engineName || 'MLS'} Search: {activeSearch.location || 'Nationwide'}</span>
           <span className="text-[10px] text-[#D4AF37] underline ml-1">Expand Return Hub</span>
         </button>
       </div>
@@ -44,7 +44,7 @@ export default function RealtorReturnCompanion({ activeSearch, onClose }) {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e] animate-pulse shrink-0" />
             <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37]">
-              Realtor.com Search Active in New Tab
+              {activeSearch.engineName || 'Realtor.com'} Search Active in New Tab
             </span>
           </div>
           <div className="flex items-center gap-1">
@@ -67,15 +67,42 @@ export default function RealtorReturnCompanion({ activeSearch, onClose }) {
         {/* Value explanation */}
         <div className="space-y-1.5 text-xs">
           <p className="font-semibold text-white">
-            Keep this DysonHomes tab open while you search {activeSearch.location ? `in ${activeSearch.location}` : 'properties'}.
+            Keep this DysonRelo tab open while searching {activeSearch.location ? `in ${activeSearch.location}` : 'properties'}.
           </p>
           <p className="text-[11px] text-white/70 leading-relaxed">
-            When you spot a home you like, switch back here. We protect you from random dual-agency sales pitches by independently vetting the local listing agent, verifying tax rates, and managing your relocation.
+            When you spot a home you like on {activeSearch.engineName || 'MLS'}, do NOT click "Contact Agent" (that sells your info to 3 random paying agents). Paste the address below and our team will independently vet the listing agent for you.
           </p>
         </div>
 
+        {/* 1-Click Paste & Vet Box */}
+        <div className="mt-2.5 pt-2 border-t border-white/10">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const addr = e.target.address.value.trim();
+              if (addr) {
+                window.location.href = `/solutions?q=${encodeURIComponent('Please vet the listing agent and check relocation milestones for: ' + addr)}`;
+              }
+            }}
+            className="flex items-center gap-1.5 bg-[#181818] border border-[#D4AF37]/50 rounded-xl p-1"
+          >
+            <input
+              name="address"
+              type="text"
+              placeholder="Paste listing address here..."
+              className="bg-transparent text-xs text-white px-2.5 py-1 w-full focus:outline-none placeholder:text-white/40"
+            />
+            <button
+              type="submit"
+              className="bg-[#D4AF37] text-black font-bold text-[11px] px-3 py-1 rounded-lg shrink-0 hover:brightness-110 cursor-pointer"
+            >
+              Vet Agent
+            </button>
+          </form>
+        </div>
+
         {/* Quick Return Action Buttons */}
-        <div className="mt-3 pt-2.5 border-t border-white/10 flex flex-col gap-2">
+        <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-col gap-2">
           <Link
             to="/relocation-intake"
             className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow"
@@ -86,7 +113,7 @@ export default function RealtorReturnCompanion({ activeSearch, onClose }) {
           >
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4" />
-              Found a Home? Start Intake &amp; Agent Vetting
+              Start Full Relocation Intake &amp; Plan
             </span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>

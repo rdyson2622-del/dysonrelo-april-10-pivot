@@ -81,6 +81,7 @@ export default function AdminFrontDoorLab() {
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('All');
+  const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
   const [domainModalOpen, setDomainModalOpen] = useState(false);
   const [latestBroadcast, setLatestBroadcast] = useState(null);
@@ -104,16 +105,32 @@ export default function AdminFrontDoorLab() {
     const q = (query || searchQuery).trim();
     if (!q) return;
     const cleanLocation = q.replace(/,\s*/g, '_').replace(/\s+/g, '-');
-    const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    let url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    let engineName = 'Realtor.com';
+
+    if (searchEngine === 'homes') {
+      const homesLoc = cleanLocation.toLowerCase().replace(/_/g, '-');
+      url = `https://www.homes.com/${encodeURIComponent(homesLoc)}/homes-for-sale/`;
+      engineName = 'Homes.com';
+    }
+
     window.open(url, '_blank', 'noopener,noreferrer');
-    setActiveExternalSearch({ location: q, url });
+    setActiveExternalSearch({ location: q, url, engineName });
   };
 
   const handleAskCharlie = (listing) => {
     const cleanLocation = `${listing.city}_${listing.state}`.replace(/\s+/g, '-');
-    const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    let url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    let engineName = 'Realtor.com';
+
+    if (searchEngine === 'homes') {
+      const homesLoc = cleanLocation.toLowerCase().replace(/_/g, '-');
+      url = `https://www.homes.com/${encodeURIComponent(homesLoc)}/homes-for-sale/`;
+      engineName = 'Homes.com';
+    }
+
     window.open(url, '_blank', 'noopener,noreferrer');
-    setActiveExternalSearch({ location: `${listing.city}, ${listing.state}`, url, listing });
+    setActiveExternalSearch({ location: `${listing.city}, ${listing.state}`, url, listing, engineName });
   };
 
   return (
@@ -355,12 +372,39 @@ export default function AdminFrontDoorLab() {
                     boxShadow: '0 12px 35px rgba(0,0,0,0.45)',
                   }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-black tracking-widest uppercase text-[#D4AF37]">
-                      Direct Aggregator Search • Nationwide Listings
-                    </span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] font-black tracking-widest uppercase text-[#D4AF37]">
+                        National Search Feed:
+                      </span>
+                      <div className="inline-flex items-center bg-[#181818] border border-white/10 rounded-full p-0.5">
+                        <button
+                          type="button"
+                          onClick={() => setSearchEngine('realtor')}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+                            searchEngine === 'realtor'
+                              ? 'bg-[#D4AF37] text-black shadow'
+                              : 'text-white/70 hover:text-white'
+                          }`}
+                        >
+                          Realtor.com (Official MLS)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSearchEngine('homes')}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+                            searchEngine === 'homes'
+                              ? 'bg-[#D4AF37] text-black shadow'
+                              : 'text-white/70 hover:text-white'
+                          }`}
+                          title="Homes.com shows listing agents directly without selling buyer leads"
+                        >
+                          Homes.com (Zero-Poaching Feed)
+                        </button>
+                      </div>
+                    </div>
                     <span className="text-[10px] text-white/50 font-sans hidden sm:inline">
-                      DysonRelo Public Feed
+                      Companion Dock Stays Active On Tab Launch
                     </span>
                   </div>
 
