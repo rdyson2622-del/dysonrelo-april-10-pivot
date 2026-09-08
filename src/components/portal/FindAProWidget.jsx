@@ -19,7 +19,7 @@ export default function FindAProWidget({
         style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid rgba(212,175,55,0.3)`, color: GOLD }}>
         <Wrench className="w-3.5 h-3.5" /> {label}
       </div>
-      <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+      <p className="text-sm mb-6 font-medium" style={{ color: '#2c2217' }}>
         {subtitle}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
