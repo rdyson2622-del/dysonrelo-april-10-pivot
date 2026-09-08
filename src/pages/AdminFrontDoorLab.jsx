@@ -10,6 +10,7 @@ import LabInspectorHeader from '@/components/admin/frontdoor/LabInspectorHeader'
 import DualFeatureEngine from '@/components/admin/frontdoor/DualFeatureEngine';
 import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
+import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -81,6 +82,7 @@ export default function AdminFrontDoorLab() {
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
   const [domainModalOpen, setDomainModalOpen] = useState(false);
   const [latestBroadcast, setLatestBroadcast] = useState(null);
+  const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
 
   useEffect(() => {
     base44.entities.DnnBroadcast.list('-broadcast_date', 1)
@@ -457,7 +459,11 @@ export default function AdminFrontDoorLab() {
 
           {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
           <section className="px-5 sm:px-8 py-6 border-t" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
-            <PartnerPortalGateways />
+            <PartnerPortalGateways onSelectRole={setSelectedRoleForSubscription} />
+            <RoleSubscriptionDeck
+              activeRole={selectedRoleForSubscription}
+              onSelectRole={setSelectedRoleForSubscription}
+            />
           </section>
 
           {/* THREE-LOGO FOOTER ROW & LEGAL */}

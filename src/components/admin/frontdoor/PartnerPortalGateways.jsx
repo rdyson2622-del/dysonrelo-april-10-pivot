@@ -1,21 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Briefcase, Star, Handshake, Wrench, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Building2, Briefcase, Star, Handshake, Wrench, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
 const GATEWAYS = [
   {
+    id: 'hr',
     icon: Building2,
     role: 'Corporate Relocation & HR',
     badge: 'Enterprise Solutions',
     headline: 'Corporate HR & Employee Moves',
     description: 'White-glove executive and employee relocation with zero management fees. Dedicated concierge tracking and full policy compliance.',
-    cta: 'Enter HR Portal',
+    cta: 'Subscribe to HR Relo',
     path: '/corporate-relo',
     highlight: true,
   },
   {
+    id: 'agent',
     icon: Star,
     role: 'Active Relocation Agents',
     badge: 'Agent Network',
@@ -26,38 +28,49 @@ const GATEWAYS = [
     highlight: false,
   },
   {
+    id: 'broker',
     icon: Briefcase,
     role: 'Brokerage Owners & Managers',
     badge: 'Broker Workspace',
     headline: 'Broker & Office Management',
     description: 'Institutional referral pipeline management, transaction oversight, and co-branded concierge tools for your entire firm.',
-    cta: 'Open Broker Portal',
+    cta: 'Enroll Brokerage',
     path: '/broker-portal',
     highlight: false,
   },
   {
+    id: 'inactive_agent',
     icon: Handshake,
     role: 'Inactive Licensed Agents',
     badge: '25% Referral Program',
     headline: 'Inactive & Non-Practicing Agents',
     description: 'Protect and monetize your real estate license. Introduce out-of-market clients — we manage every milestone while your 25% fee is secure.',
-    cta: 'Monetize License',
+    cta: 'Activate 25% Referral',
     path: '/partner-benefits',
     highlight: false,
   },
   {
+    id: 'vendor',
     icon: Wrench,
     role: 'Certified Service Vendors',
     badge: 'Partner Directory',
     headline: 'Relocation Vendors & Lenders',
     description: 'Movers, inspectors, title officers, appraisers, and home service providers integrated directly into active client roadmaps.',
-    cta: 'Explore Vendor Hub',
+    cta: 'Apply as Vendor',
     path: '/search',
     highlight: false,
   },
 ];
 
-export default function PartnerPortalGateways() {
+export default function PartnerPortalGateways({ onSelectRole }) {
+  const handleScrollToSubscribe = (roleId) => {
+    onSelectRole?.(roleId);
+    const target = document.getElementById('portal-subscribe-section');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="w-full max-w-6xl mx-auto py-8">
       {/* Header Line */}
@@ -78,22 +91,22 @@ export default function PartnerPortalGateways() {
           </p>
         </div>
 
-        <Link
-          to="/portal"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0a0a0a] hover:text-[#b8920a] transition-colors shrink-0"
+        <button
+          onClick={() => handleScrollToSubscribe('hr')}
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0a0a0a] hover:text-[#b8920a] transition-colors shrink-0 cursor-pointer"
         >
-          <span>View Master Role Selector</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+          <Sparkles className="w-3.5 h-3.5 text-[#b8920a]" />
+          <span>Compare All Subscription Tiers ↓</span>
+        </button>
       </div>
 
       {/* Grid of Black Cards on Tan */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {GATEWAYS.map((gateway, idx) => {
+        {GATEWAYS.map((gateway) => {
           const Icon = gateway.icon;
           return (
             <div
-              key={idx}
+              key={gateway.id}
               className={`rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 shadow-xl text-left ${
                 gateway.highlight ? 'lg:col-span-2' : ''
               }`}
@@ -139,11 +152,17 @@ export default function PartnerPortalGateways() {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[11px] text-white/40">Secure Role Access</span>
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                 <Link
                   to={gateway.path}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg transition-transform active:scale-95"
+                  className="text-[11px] text-white/60 hover:text-white underline"
+                >
+                  Direct Login →
+                </Link>
+
+                <button
+                  onClick={() => handleScrollToSubscribe(gateway.id)}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg transition-transform active:scale-95 cursor-pointer shadow-md"
                   style={{
                     background: gateway.highlight ? 'linear-gradient(135deg, #e8c84a, #D4AF37)' : '#181818',
                     color: gateway.highlight ? '#0a0a0a' : GOLD,
@@ -152,7 +171,7 @@ export default function PartnerPortalGateways() {
                 >
                   <span>{gateway.cta}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                </button>
               </div>
             </div>
           );
