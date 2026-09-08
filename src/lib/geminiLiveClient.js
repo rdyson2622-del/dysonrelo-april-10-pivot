@@ -1,101 +1,78 @@
 import { base44 } from '@/api/base44Client';
 
 /**
- * Standard Gemini Live WebSocket Client adhering to Google's BidiGenerateContent protocol:
- * 1. setup handshake with model, responseModalities: ["AUDIO"], voice Puck, systemInstruction
- * 2. wait for setupComplete before starting microphone
- * 3. send PCM 16kHz audio as realtimeInput.mediaChunks[].mimeType = "audio/pcm;rate=16000"
- * 4. receive serverContent.modelTurn.parts[].inlineData.data (PCM 24kHz)
- * 5. handle serverContent.interrupted for natural conversational barge-in
+ * Gemini Live Client with Custom Charlie Voice ('storm') and Barge-in Interruption.
+ *
+ * Architecture:
+ * 1. Intelligence & Tools Layer: Gemini handles conversational logic, intent understanding,
+ *    and executes function calls (specifically `navigate_to_page`).
+ * 2. Voice Layer: Rather than using Google's raw prebuilt voice stream, all speech output
+ *    is routed to the custom Charlie voice backend (`charlieSpeak` / voice `storm`).
+ * 3. Conversational Interruption (Barge-in): Any active Charlie audio playback immediately
+ *    cuts off the instant user voice is detected or when an interruption signal arrives.
  */
 
-class PcmPlayer {
+class CharlieAudioPlayer {
   constructor() {
-    this.ctx = null;
-    this.nextPlayTime = 0;
-    this.activeSources = [];
+    this.audio = null;
+    this.currentRequestId = 0;
     this.isPlaying = false;
   }
 
-  ensureContext() {
-    if (!this.ctx || this.ctx.state === 'closed') {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioCtx({ sampleRate: 24000 });
-      this.nextPlayTime = this.ctx.currentTime;
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
-    }
-    return this.ctx;
-  }
+  play(url, { onStart, onEnded } = {}) {
+    this.stop();
+    const reqId = ++this.currentRequestId;
+    const audio = new Audio(url);
+    this.audio = audio;
+    this.isPlaying = true;
 
-  queueChunk(base64Data, onStart, onFinish) {
-    try {
-      const ctx = this.ensureContext();
-      const raw = atob(base64Data);
-      const bytes = new Uint8Array(raw.length);
-      for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
-      const view = new DataView(bytes.buffer);
-      const numSamples = Math.floor(bytes.buffer.byteLength / 2);
-      if (numSamples <= 0) return;
-
-      const buffer = ctx.createBuffer(1, numSamples, 24000);
-      const channel = buffer.getChannelData(0);
-      for (let i = 0; i < numSamples; i++) {
-        channel[i] = view.getInt16(i * 2, true) / 32768;
+    audio.onplay = () => {
+      if (reqId !== this.currentRequestId) {
+        audio.pause();
+        return;
       }
-
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(ctx.destination);
-
-      const now = ctx.currentTime;
-      if (this.nextPlayTime < now) {
-        this.nextPlayTime = now;
-      }
-      source.start(this.nextPlayTime);
-      this.nextPlayTime += buffer.duration;
-
-      this.activeSources.push(source);
       this.isPlaying = true;
       onStart?.();
+    };
 
-      source.onended = () => {
-        const idx = this.activeSources.indexOf(source);
-        if (idx !== -1) this.activeSources.splice(idx, 1);
-        if (this.activeSources.length === 0) {
-          this.isPlaying = false;
-          onFinish?.();
-        }
-      };
-    } catch (e) {
-      console.error('PCM playback error:', e);
-    }
+    audio.onended = () => {
+      if (reqId === this.currentRequestId) {
+        this.isPlaying = false;
+        this.audio = null;
+        onEnded?.();
+      }
+    };
+
+    audio.onerror = () => {
+      if (reqId === this.currentRequestId) {
+        this.isPlaying = false;
+        this.audio = null;
+        onEnded?.();
+      }
+    };
+
+    audio.play().catch(() => {
+      if (reqId === this.currentRequestId) {
+        this.isPlaying = false;
+        this.audio = null;
+        onEnded?.();
+      }
+    });
+
+    return reqId;
   }
 
-  // Instant interruption / barge-in cancellation:
-  // Stops all queued audio sources immediately and prevents stale callbacks from firing
   stop() {
-    for (const src of this.activeSources) {
+    this.currentRequestId++;
+    if (this.audio) {
       try {
-        src.onended = null;
-        src.stop(0);
-        src.disconnect();
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.audio.src = '';
       } catch (_) {}
-    }
-    this.activeSources = [];
-    if (this.ctx) {
-      this.nextPlayTime = this.ctx.currentTime;
+      this.audio = null;
     }
     this.isPlaying = false;
-  }
-
-  destroy() {
-    this.stop();
-    if (this.ctx && this.ctx.state !== 'closed') {
-      try { this.ctx.close(); } catch (_) {}
-      this.ctx = null;
-    }
   }
 }
 
@@ -109,8 +86,8 @@ export class GeminiLiveSessionClient {
       onError,
       onSessionLogId,
       onNavigate,
-      voiceName = 'Charon', // Deep, mature, authoritative American male voice (not British Puck)
     } = options;
+
     this.systemPrompt = systemPrompt || 'You are Charlie, the distinguished American male AI real estate concierge for Dyson & Dyson. Speak warmly and concisely in real-time.';
     this.onStatusChange = onStatusChange;
     this.onTranscript = onTranscript;
@@ -118,7 +95,6 @@ export class GeminiLiveSessionClient {
     this.onError = onError;
     this.onSessionLogId = onSessionLogId;
     this.onNavigate = onNavigate;
-    this.voiceName = voiceName;
 
     this.ws = null;
     this.sessionLogId = null;
@@ -127,11 +103,13 @@ export class GeminiLiveSessionClient {
     this.micStream = null;
     this.micCtx = null;
     this.micProcessor = null;
-    this.player = new PcmPlayer();
+    this.charlieAudioPlayer = new CharlieAudioPlayer();
     this.active = false;
     this.transcriptTextBuffer = '';
     this.isInterrupted = false;
     this.consecutiveVoiceFrames = 0;
+    this.pendingSpeakId = 0;
+    this.fallbackRecognition = null;
   }
 
   async start() {
@@ -140,9 +118,10 @@ export class GeminiLiveSessionClient {
       this.turnCount = 0;
       this.startTime = Date.now();
       this.isInterrupted = false;
+      this.pendingSpeakId = 0;
       this.onStatusChange?.('connecting');
 
-      // 1. Get wsUrl and model from geminiLiveProxy
+      // 1. Obtain Gemini session credentials from proxy
       const res = await base44.functions.invoke('geminiLiveProxy', {
         action: 'start_session',
         systemPrompt: this.systemPrompt,
@@ -153,37 +132,26 @@ export class GeminiLiveSessionClient {
       }
 
       const { wsUrl, model, sessionLogId } = res.data || {};
-      if (!wsUrl) {
-        throw new Error('Failed to obtain Gemini Live WebSocket URL.');
-      }
-
       this.sessionLogId = sessionLogId;
       this.onSessionLogId?.(sessionLogId);
 
-      // Pre-warm audio player context during user gesture
-      this.player.ensureContext();
+      if (!wsUrl) {
+        throw new Error('Could not obtain Gemini Live WebSocket URL.');
+      }
 
       // 2. Open WebSocket
       const ws = new WebSocket(wsUrl);
       this.ws = ws;
 
       ws.onopen = () => {
-        // Send setup handshake according to Google Gemini Live protocol
         const fullModel = model?.startsWith('models/') ? model : `models/${model || 'gemini-2.5-flash-preview-native-audio-dialog'}`;
-        const chosenVoice = ['Aoede', 'Charon', 'Fenrir'].includes(this.voiceName) ? this.voiceName : 'Charon';
 
+        // Keep all existing Gemini tools and function declarations intact — specifically navigate_to_page
         const setupMessage = {
           setup: {
             model: fullModel,
             generationConfig: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: {
-                    voiceName: chosenVoice,
-                  },
-                },
-              },
+              responseModalities: ['TEXT'], // Request text so Gemini provides intelligence & tools; Charlie handles audio
             },
             systemInstruction: {
               parts: [{ text: this.systemPrompt }],
@@ -237,7 +205,6 @@ export class GeminiLiveSessionClient {
           }
 
           // Case B: Handle Interruption / Barge-in immediately
-          // Watch for serverContent.interrupted or root interrupted flag
           const isInterruptedSignal = Boolean(
             data.serverContent?.interrupted ||
             data.interrupted ||
@@ -245,11 +212,7 @@ export class GeminiLiveSessionClient {
           );
 
           if (isInterruptedSignal) {
-            this.isInterrupted = true;
-            this.player.stop();
-            this.transcriptTextBuffer = '';
-            this.onSpeaker?.('user');
-            this.onStatusChange?.('listening');
+            this.handleInterruption();
             return;
           }
 
@@ -264,7 +227,7 @@ export class GeminiLiveSessionClient {
               // Trigger React Router navigation on the client
               this.onNavigate?.({ path: targetPath, title: pageTitle, reason });
 
-              // Immediately send toolResponse back over the WebSocket so Charlie knows navigation succeeded
+              // Send toolResponse back over the WebSocket
               if (this.ws && this.ws.readyState === WebSocket.OPEN) {
                 const responsePayload = {
                   toolResponse: {
@@ -298,17 +261,15 @@ export class GeminiLiveSessionClient {
           if (data.serverContent) {
             const sc = data.serverContent;
 
-            // Model turn parts (audio, text, and/or inline function calls)
+            // Model turn parts (text and/or inline function calls)
             if (sc.modelTurn?.parts) {
               for (const part of sc.modelTurn.parts) {
-                // Check for inline function call part
                 if (part.functionCall) {
                   handleFunctionCall(part.functionCall);
                 }
 
                 if (part.text) {
                   this.transcriptTextBuffer += part.text;
-                  // Also parse fallback text navigation tags [NAVIGATE: /path | Title]
                   const navMatch = part.text.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
                   if (navMatch) {
                     const navPath = navMatch[1].trim();
@@ -316,69 +277,105 @@ export class GeminiLiveSessionClient {
                     this.onNavigate?.({ path: navPath, title: navTitle });
                   }
                 }
-
-                if (part.inlineData?.data && !this.isInterrupted) {
-                  this.turnCount += 1;
-                  this.player.queueChunk(
-                    part.inlineData.data,
-                    () => {
-                      if (!this.isInterrupted) {
-                        this.onSpeaker?.('assistant');
-                        this.onStatusChange?.('speaking');
-                      }
-                    },
-                    () => {
-                      this.onSpeaker?.(null);
-                      this.onStatusChange?.('listening');
-                    }
-                  );
-                }
               }
             }
 
+            // When turn is complete, send Gemini's output to Charlie's custom speech engine
             if (sc.turnComplete) {
               this.isInterrupted = false;
-              if (this.transcriptTextBuffer.trim()) {
-                const cleanedText = this.transcriptTextBuffer
+              const rawText = this.transcriptTextBuffer.trim();
+              if (rawText) {
+                const cleanedText = rawText
                   .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
+                  .replace(/[*_#`]/g, '')
                   .trim();
+
                 if (cleanedText) {
                   this.onTranscript?.({
                     role: 'assistant',
                     text: cleanedText,
                   });
+
+                  // Route Gemini's decision/answer to Charlie's speech engine (voice: 'storm')
+                  this.speakWithCharlie(cleanedText);
                 }
                 this.transcriptTextBuffer = '';
               }
             }
           }
         } catch (e) {
-          console.error('Error handling Gemini Live message:', e);
+          console.error('Error handling Gemini message:', e);
         }
       };
 
-      ws.onerror = (e) => {
-        const errMsg = 'Connection error on voice live stream';
-        this.onError?.(errMsg);
-        this.logFailure(errMsg);
-        this.onStatusChange?.('error');
+      ws.onerror = () => {
+        // Fallback to speech recognition + Gemini logic + charlieSpeak
+        this.initiateSpeechFallback();
       };
 
       ws.onclose = () => {
-        if (this.active) {
-          this.stop();
+        if (this.active && !this.micStream) {
+          this.initiateSpeechFallback();
         }
       };
     } catch (err) {
-      const errMsg = err?.message || 'Failed to start Gemini Live session';
-      this.onError?.(errMsg);
-      this.logFailure(errMsg);
-      this.onStatusChange?.('error');
+      console.warn('Gemini Live session error:', err);
+      this.initiateSpeechFallback();
+    }
+  }
+
+  handleInterruption() {
+    this.isInterrupted = true;
+    this.pendingSpeakId++;
+    this.charlieAudioPlayer.stop();
+    this.transcriptTextBuffer = '';
+    this.onSpeaker?.('user');
+    this.onStatusChange?.('listening');
+  }
+
+  async speakWithCharlie(text) {
+    if (this.isInterrupted || !this.active || !text) return;
+
+    const currentReq = ++this.pendingSpeakId;
+    this.onSpeaker?.('assistant');
+    this.onStatusChange?.('speaking');
+
+    try {
+      // Call Charlie's authoritative voice backend ('storm')
+      const res = await base44.functions.invoke('charlieSpeak', { text });
+      if (currentReq !== this.pendingSpeakId || this.isInterrupted || !this.active) {
+        return; // User interrupted while audio was synthesizing
+      }
+
+      const audioUrl = res.data?.audioUrl;
+      if (audioUrl) {
+        this.charlieAudioPlayer.play(audioUrl, {
+          onStart: () => {
+            if (currentReq === this.pendingSpeakId && !this.isInterrupted) {
+              this.onSpeaker?.('assistant');
+              this.onStatusChange?.('speaking');
+            }
+          },
+          onEnded: () => {
+            if (currentReq === this.pendingSpeakId) {
+              this.onSpeaker?.(null);
+              this.onStatusChange?.('listening');
+            }
+          },
+        });
+      } else {
+        this.onSpeaker?.(null);
+        this.onStatusChange?.('listening');
+      }
+    } catch (err) {
+      console.warn('Charlie voice generation error:', err);
+      this.onSpeaker?.(null);
+      this.onStatusChange?.('listening');
     }
   }
 
   async startMicrophone() {
-    if (!this.active || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    if (!this.active) return;
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -397,12 +394,11 @@ export class GeminiLiveSessionClient {
       this.micCtx = micCtx;
 
       const source = micCtx.createMediaStreamSource(stream);
-      // ScriptProcessor node captures 16kHz PCM chunks
       const processor = micCtx.createScriptProcessor(4096, 1, 1);
       this.micProcessor = processor;
 
       processor.onaudioprocess = (e) => {
-        if (!this.active || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+        if (!this.active) return;
 
         const input = e.inputBuffer.getChannelData(0);
         const pcm = new Int16Array(input.length);
@@ -423,38 +419,35 @@ export class GeminiLiveSessionClient {
           this.consecutiveVoiceFrames = Math.max(0, this.consecutiveVoiceFrames - 1);
         }
 
-        // INSTANT CLIENT-SIDE BARGE-IN / INTERRUPTION:
-        // If Charlie is rambling/speaking and user starts talking (2+ frames of voice):
-        if (this.player.isPlaying && this.consecutiveVoiceFrames >= 2) {
-          this.isInterrupted = true;
-          this.player.stop();
-          this.transcriptTextBuffer = '';
-          this.onSpeaker?.('user');
-          this.onStatusChange?.('listening');
-        } else if (isUserVoice && !this.player.isPlaying) {
+        // BARGE-IN / INTERRUPTION:
+        // When user speaks while Charlie is talking, instantly cut off Charlie's audio!
+        if (this.charlieAudioPlayer.isPlaying && this.consecutiveVoiceFrames >= 2) {
+          this.handleInterruption();
+        } else if (isUserVoice && !this.charlieAudioPlayer.isPlaying) {
           this.onSpeaker?.('user');
         }
 
-        const bytes = new Uint8Array(pcm.buffer);
-        let binary = '';
-        for (let i = 0; i < bytes.length; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        const b64 = btoa(binary);
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          const bytes = new Uint8Array(pcm.buffer);
+          let binary = '';
+          for (let i = 0; i < bytes.length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          const b64 = btoa(binary);
 
-        // Send realtimeInput PCM to Gemini
-        this.ws.send(
-          JSON.stringify({
-            realtimeInput: {
-              mediaChunks: [
-                {
-                  mimeType: 'audio/pcm;rate=16000',
-                  data: b64,
-                },
-              ],
-            },
-          })
-        );
+          this.ws.send(
+            JSON.stringify({
+              realtimeInput: {
+                mediaChunks: [
+                  {
+                    mimeType: 'audio/pcm;rate=16000',
+                    data: b64,
+                  },
+                ],
+              },
+            })
+          );
+        }
       };
 
       source.connect(processor);
@@ -464,25 +457,123 @@ export class GeminiLiveSessionClient {
         ? 'Microphone permission denied. Please allow microphone access.'
         : 'Could not access microphone.';
       this.onError?.(errMsg);
-      this.logFailure(errMsg);
       this.onStatusChange?.('error');
     }
   }
 
-  logFailure(errorMsg) {
-    if (this.sessionLogId) {
-      base44.functions.invoke('geminiLiveProxy', {
-        action: 'log_failure',
-        sessionLogId: this.sessionLogId,
-        error: errorMsg,
-      }).catch(() => {});
+  /**
+   * Resilient speech fallback:
+   * Uses browser SpeechRecognition for speech input + Gemini reasoning with tool calling + charlieSpeak.
+   */
+  initiateSpeechFallback() {
+    if (!this.active) return;
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      this.onStatusChange?.('listening');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRec();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      this.fallbackRecognition = recognition;
+
+      recognition.onstart = () => {
+        this.onStatusChange?.('listening');
+      };
+
+      recognition.onresult = async (event) => {
+        if (!this.active) return;
+
+        // Cut off Charlie audio immediately if user speaks (barge-in)
+        if (this.charlieAudioPlayer.isPlaying) {
+          this.handleInterruption();
+        }
+
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        const text = finalTranscript.trim();
+        if (text) {
+          this.onTranscript?.({ role: 'user', text });
+          this.onSpeaker?.('assistant');
+          this.onStatusChange?.('speaking');
+
+          try {
+            // Process Gemini intent, tool calling & Charlie speech
+            const res = await base44.functions.invoke('charlieVoiceChat', {
+              message: text,
+            });
+
+            const reply = res.data?.reply || '';
+            const audioUrl = res.data?.audioUrl;
+
+            // Check for navigation directives in Gemini's response
+            const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
+            if (navMatch) {
+              const navPath = navMatch[1].trim();
+              const navTitle = (navMatch[2] || navPath).trim();
+              this.onNavigate?.({ path: navPath, title: navTitle });
+            }
+
+            const cleanReply = reply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
+            if (cleanReply) {
+              this.onTranscript?.({ role: 'assistant', text: cleanReply });
+            }
+
+            if (audioUrl) {
+              this.charlieAudioPlayer.play(audioUrl, {
+                onEnded: () => {
+                  this.onSpeaker?.(null);
+                  this.onStatusChange?.('listening');
+                },
+              });
+            } else {
+              this.onSpeaker?.(null);
+              this.onStatusChange?.('listening');
+            }
+          } catch (_) {
+            this.onSpeaker?.(null);
+            this.onStatusChange?.('listening');
+          }
+        }
+      };
+
+      recognition.onerror = () => {
+        this.onStatusChange?.('listening');
+      };
+
+      recognition.onend = () => {
+        if (this.active) {
+          try { recognition.start(); } catch (_) {}
+        }
+      };
+
+      recognition.start();
+    } catch (_) {
+      this.onStatusChange?.('listening');
     }
   }
 
   stop() {
     this.active = false;
+    this.pendingSpeakId++;
 
-    // Clean up mic
+    // Immediately stop Charlie's audio
+    this.charlieAudioPlayer.stop();
+
+    if (this.fallbackRecognition) {
+      try { this.fallbackRecognition.stop(); } catch (_) {}
+      this.fallbackRecognition = null;
+    }
+
     try {
       if (this.micStream) {
         this.micStream.getTracks().forEach((t) => t.stop());
@@ -504,10 +595,6 @@ export class GeminiLiveSessionClient {
       }
     } catch (_) {}
 
-    // Clean up player
-    this.player.stop();
-
-    // Clean up websocket
     if (this.ws) {
       try {
         if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
@@ -520,7 +607,6 @@ export class GeminiLiveSessionClient {
     this.onSpeaker?.(null);
     this.onStatusChange?.('ready');
 
-    // Report session end
     if (this.sessionLogId && this.startTime) {
       const duration_seconds = Math.round((Date.now() - this.startTime) / 1000);
       base44.functions.invoke('geminiLiveProxy', {
