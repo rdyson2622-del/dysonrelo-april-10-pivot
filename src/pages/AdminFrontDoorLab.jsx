@@ -305,19 +305,28 @@ export default function AdminFrontDoorLab() {
                 DYSONHOMES.COM • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
               </div>
 
-              <h1
-                className="font-bold leading-tight"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.75rem, 3.8vw, 3.1rem)',
-                  color: '#111111',
-                }}
-              >
-                Search Verified Homes Nationwide. <br />
-                <span className="italic" style={{ color: '#b8920a' }}>
+              <div>
+                <h1
+                  className="font-bold leading-tight"
+                  style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 'clamp(1.75rem, 3.6vw, 2.9rem)',
+                    color: '#111111',
+                  }}
+                >
+                  Search Verified Homes Nationwide.
+                </h1>
+                <p
+                  className="italic font-semibold mt-1"
+                  style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 'clamp(1.15rem, 2.1vw, 1.7rem)',
+                    color: '#b8920a',
+                  }}
+                >
                   Navigate Every Mile with Charlie.
-                </span>
-              </h1>
+                </p>
+              </div>
 
               <p
                 className="italic text-base sm:text-lg max-w-2xl mx-auto font-medium"
@@ -327,8 +336,8 @@ export default function AdminFrontDoorLab() {
                 }}
               >
                 "We provide a real-time, lifetime workspace designed to maximize your real estate opportunities. No sales pitches, just real-time solutions."
-                <span className="block not-italic text-xs font-sans font-bold text-[#665a4c] mt-1 uppercase tracking-wider">
-                  — Bob Dyson, 55+ Years California Real Estate
+                <span className="block not-italic text-[11px] sm:text-xs font-sans font-bold text-[#665a4c] mt-1 uppercase tracking-wider">
+                  55+ YEARS OF NATIONAL REAL ESTATE RELOCATION MANAGEMENT
                 </span>
               </p>
 
