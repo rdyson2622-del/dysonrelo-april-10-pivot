@@ -387,7 +387,7 @@ export class GeminiLiveSessionClient {
         }
       };
 
-      // Play Charlie's custom authoritative American voice ('storm')
+      // Play Charlie's authentic American voice (HeyGen Ruben)
       if (audioUrl && !this.isInterrupted) {
         // Safety timeout so navigation doesn't hang if audio event stalls
         const navTimeout = turnNav ? setTimeout(() => {

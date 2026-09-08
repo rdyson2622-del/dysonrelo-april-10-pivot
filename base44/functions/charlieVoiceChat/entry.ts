@@ -64,7 +64,7 @@ Respond as Charlie (strictly 1 concise sentence under 20 words, natural American
       .replace(/\n+/g, ' ')
       .trim();
 
-    // Fast neural speech (~1.5s, storm male voice, never river/female)
+    // Authentic Charlie American speech (HeyGen Ruben voice)
     let audioUrl = null;
     try {
       audioUrl = await synthesizeCharlieSpeech(base44, cleanReply, { fast: true });
