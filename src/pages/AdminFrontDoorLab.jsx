@@ -12,6 +12,7 @@ import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal'
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
+import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -173,6 +174,9 @@ export default function AdminFrontDoorLab() {
 
             {/* Quick Actions & GoDaddy Pointer Info */}
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Studio Ambience / Concierge Lounge Audio Player */}
+              <StudioAmbiencePlayer />
+
               {/* GoDaddy Domain Status Badge */}
               <button
                 onClick={() => setDomainModalOpen(true)}

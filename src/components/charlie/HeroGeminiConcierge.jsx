@@ -62,6 +62,11 @@ export default function HeroGeminiConcierge() {
         if (newStatus === 'listening') {
           setErrorMessage(null);
         }
+        // Auto-duck ambient background music when Charlie is listening or speaking
+        if (typeof window !== 'undefined') {
+          const isActive = newStatus === 'listening' || newStatus === 'speaking' || newStatus === 'connecting';
+          window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: isActive } }));
+        }
       },
       onTranscript: (t) => {
         if (t?.text) {
@@ -108,6 +113,9 @@ export default function HeroGeminiConcierge() {
     }
     setStatus('ready');
     setLiveText('');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+    }
   };
 
   useEffect(() => {
