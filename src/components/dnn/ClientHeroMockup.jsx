@@ -1,4 +1,5 @@
 import React from 'react';
+import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
