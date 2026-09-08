@@ -24,7 +24,7 @@ const GATEWAYS = [
     headline: 'Vetted National Agent Bureau',
     description: 'Receive pre-qualified buyers and sellers from our corporate and consumer relocation pipeline. 20+ vetting standards.',
     cta: 'Join Agent Network',
-    path: '/find-agent',
+    path: '/agent-command-center',
     highlight: false,
   },
   {

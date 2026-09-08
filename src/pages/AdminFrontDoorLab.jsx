@@ -414,7 +414,7 @@ export default function AdminFrontDoorLab() {
                     {/* Roles List with Clear Subscription Requirements */}
                     <div className="space-y-1">
                       <div className="px-1 pt-1 pb-1 text-[9px] uppercase font-bold tracking-wider text-white/40">
-                        Choose Your Workspace to Enroll or Sign In:
+                        {isSubscribed ? 'Select Workspace to Open Directly:' : 'Choose Your Workspace to Enroll or Sign In:'}
                       </div>
 
                       {/* Corporate HR */}
@@ -429,7 +429,9 @@ export default function AdminFrontDoorLab() {
                             <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
                               Corporate Relocation &amp; HR
                             </span>
-                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
                           </div>
                           <p className="text-[10px] text-white/50 leading-tight">
                             Zero-fee employee relocation packages &amp; executive milestone dashboard
@@ -449,7 +451,9 @@ export default function AdminFrontDoorLab() {
                             <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
                               Relocation Agent Network
                             </span>
-                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
                           </div>
                           <p className="text-[10px] text-white/50 leading-tight">
                             Receiving agent bureau • Capped territories &amp; pre-qualified clients
@@ -469,7 +473,9 @@ export default function AdminFrontDoorLab() {
                             <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
                               Brokerage &amp; Office Management
                             </span>
-                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
                           </div>
                           <p className="text-[10px] text-white/50 leading-tight">
                             BackOffice sync, escrow friction audits &amp; multi-agent pipeline
@@ -489,7 +495,9 @@ export default function AdminFrontDoorLab() {
                             <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
                               Inactive Licensed Agents
                             </span>
-                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
                           </div>
                           <p className="text-[10px] text-white/50 leading-tight">
                             25% Protected referral contract • Full escrow milestone tracking
@@ -509,13 +517,61 @@ export default function AdminFrontDoorLab() {
                             <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
                               Vetted Vendor Network
                             </span>
-                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">Enroll / Open</span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
                           </div>
                           <p className="text-[10px] text-white/50 leading-tight">
                             Certified movers, inspectors, lenders &amp; stagers directory
                           </p>
                         </div>
                       </button>
+
+                      {/* Client Relocation Workspace */}
+                      <button
+                        type="button"
+                        onClick={() => handleSelectRoleFromNav('client')}
+                        className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl hover:bg-[#1a1a1a] transition-colors group cursor-pointer border border-transparent hover:border-[#D4AF37]/30"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-white group-hover:text-[#D4AF37] text-xs">
+                              Relocation Client &amp; Buyer
+                            </span>
+                            <span className="text-[9px] text-[#D4AF37] font-semibold underline">
+                              {isSubscribed ? 'Open Workspace →' : 'Enroll / Open'}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-white/50 leading-tight">
+                            Personal relocation intake, milestones &amp; verified agent matching
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Platform Admin Console if user is admin */}
+                      {currentUser?.role === 'admin' && (
+                        <button
+                          type="button"
+                          onClick={() => handleSelectRoleFromNav('admin')}
+                          className="w-full text-left flex items-start gap-2.5 p-2 rounded-xl bg-[#1f1606] hover:bg-[#2a1e08] transition-colors group cursor-pointer border border-[#D4AF37]/40 mt-1"
+                        >
+                          <span className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-[#D4AF37] text-xs">
+                                Platform Admin Console
+                              </span>
+                              <span className="text-[9px] text-[#D4AF37] font-bold underline">
+                                Admin Access →
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-white/60 leading-tight">
+                              Full platform control, broadcasts, audits, and user management
+                            </p>
+                          </div>
+                        </button>
+                      )}
                     </div>
 
                     {/* Bottom link to master role selector / subscribe page */}

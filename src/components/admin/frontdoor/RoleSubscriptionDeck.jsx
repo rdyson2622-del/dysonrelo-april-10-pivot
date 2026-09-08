@@ -41,7 +41,7 @@ const ROLES = [
       'Daily 6AM DNN National & Local Real Estate News broadcast',
       'Direct client communication via verified Dyson portal channels',
     ],
-    dest: '/find-agent',
+    dest: '/agent-command-center',
     companyLabel: 'Brokerage Firm Name',
     detailLabel: 'DRE / State License #',
     detailPlaceholder: 'e.g. DRE #01234567',
