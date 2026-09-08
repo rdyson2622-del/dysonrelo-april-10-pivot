@@ -188,7 +188,7 @@ export default function LuxuryHeroShowcase({
               We Vet Top Agents With You &amp; Manage The Entire Move For You.
             </p>
             <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto font-sans font-medium mt-1 drop-shadow">
-              Independent, fiduciary advocacy across all 50 states — zero fees to buyers &amp; employers.
+              Independent, fiduciary advocacy across all 50 states for over 55 years — zero fees to buyers &amp; employers.
             </p>
           </div>
 
@@ -407,7 +407,7 @@ export default function LuxuryHeroShowcase({
             <span className="font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">National Relocation Coverage • All 50 States</span>
           </div>
           <span className="hidden sm:inline text-white/85 drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)] font-medium">
-            55+ Years of Fiduciary Relocation Management • Independent Agent Vetting
+            THE DYSON &amp; DYSON COMPANIES • CALIFORNIA DRE #02303118
           </span>
         </div>
       </div>
