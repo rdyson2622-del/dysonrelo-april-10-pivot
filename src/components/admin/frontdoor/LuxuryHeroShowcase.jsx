@@ -163,28 +163,29 @@ export default function LuxuryHeroShowcase({
         </div>
 
         {/* Center Content: Headline & Visual Floating Search Bar */}
-        <div className="max-w-4xl mx-auto w-full text-center space-y-4 my-auto py-6 z-10">
+        <div className="max-w-5xl mx-auto w-full text-center space-y-4 my-auto py-6 z-10">
           <div>
             <h1
-              className="font-bold leading-tight text-white"
+              className="font-bold leading-tight text-white tracking-tight sm:tracking-normal sm:whitespace-nowrap"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.75rem, 3.3vw, 3.1rem)',
+                fontSize: 'clamp(1.6rem, 2.85vw, 2.85rem)',
                 textShadow: '0 2px 18px rgba(0,0,0,0.9), 0 4px 35px rgba(0,0,0,0.8)',
               }}
             >
               The Newest Way to Find Your Next Home Nationwide.
             </h1>
             <p
-              className="font-semibold mt-1 tracking-wide"
+              className="font-semibold mt-2 tracking-wide leading-snug"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.05rem, 1.7vw, 1.45rem)',
+                fontSize: 'clamp(1.1rem, 1.6vw, 1.45rem)',
                 color: '#fce38a',
                 textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
               }}
             >
-              We Don't Sell Real Estate! We Vet Agents and Manage the Entire Move.
+              <span className="block">We Don't Sell Real Estate! We Vet Top Agents With You</span>
+              <span className="block">and Manage The Entire Move For You.</span>
             </p>
           </div>
 
