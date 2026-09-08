@@ -185,8 +185,8 @@ export default function LuxuryHeroShowcase({
                 textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
               }}
             >
-              <span className="block">We Don't Sell Real Estate! We Vet Top Agents With You</span>
-              <span className="block">and Manage The Entire Move For You.</span>
+              <span className="block">We Don't Sell Real Estate!</span>
+              <span className="block">We Vet Top Agents With You &amp; Manage The Entire Move For You.</span>
             </p>
           </div>
 
