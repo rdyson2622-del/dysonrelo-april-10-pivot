@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, Sparkles, MapPin, Building, ShieldCheck, 
   ExternalLink, Compass, SlidersHorizontal, CheckCircle2, TrendingUp,
-  Percent, Sun, Mountain, Waves
+  Percent, Sun, Mountain, Waves, Users, Briefcase
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
@@ -143,7 +143,7 @@ export default function LuxuryHeroShowcase({
             style={{ background: 'rgba(10,10,10,0.75)', border: `1.5px solid ${GOLD}`, color: GOLD }}
           >
             <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-            <span>NATIONWIDE RELOCATION MLS FEED</span>
+            <span>55+ YEARS • NATIONWIDE RELOCATION CONCIERGE</span>
           </div>
 
           <div className="hidden md:flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/20 p-1 rounded-full text-[11px]">
@@ -163,51 +163,162 @@ export default function LuxuryHeroShowcase({
           </div>
         </div>
 
-        {/* Center Content: Headline & Visual Floating Search Bar */}
-        <div className="max-w-5xl mx-auto w-full text-center space-y-4 my-auto py-6 z-10">
+        {/* Center Content: Fiduciary Relocation Story & The 3 Clear Public Doors */}
+        <div className="max-w-5xl mx-auto w-full text-center space-y-4 my-auto py-5 z-10">
           <div>
             <h1
-              className="font-bold leading-tight text-white tracking-tight sm:tracking-normal sm:whitespace-nowrap"
+              className="font-bold leading-tight text-white tracking-tight"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.6rem, 2.85vw, 2.85rem)',
-                textShadow: '0 2px 18px rgba(0,0,0,0.9), 0 4px 35px rgba(0,0,0,0.8)',
+                fontSize: 'clamp(2rem, 3.4vw, 3.4rem)',
+                textShadow: '0 2px 20px rgba(0,0,0,0.95), 0 4px 40px rgba(0,0,0,0.85)',
               }}
             >
-              The Newest Way to Find or Sell Real Estate.
+              We Don't Sell Real Estate.
             </h1>
+            <p
+              className="font-semibold mt-1 tracking-wide leading-snug"
+              style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(1.2rem, 1.9vw, 1.8rem)',
+                color: '#fce38a',
+                textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
+              }}
+            >
+              We Vet Top Agents With You &amp; Manage The Entire Move For You.
+            </p>
+            <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto font-sans font-medium mt-1 drop-shadow">
+              Independent, fiduciary advocacy across all 50 states — zero fees to buyers &amp; employers.
+            </p>
           </div>
 
-          {/* Quick Intent Filter Tabs on the Hero (Moved up under headline) */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            {[
-              { id: 'buy', label: 'Search All Homes' },
-              { id: 'low_tax', label: '0% State Tax Havens' },
-              { id: 'new_construction', label: 'New Construction' },
-              { id: 'grok_assistants', label: '21 Grok Bot Assistants 24/7' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  if (tab.id === 'grok_assistants') {
-                    navigate('/ai-assistants');
-                    return;
-                  }
-                  setSearchTab(tab.id);
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
-                  searchTab === tab.id
-                    ? 'bg-[#D4AF37] text-black shadow-lg scale-105'
-                    : 'bg-black/60 text-white/85 hover:text-white border border-white/20 backdrop-blur-sm'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* THREE CLEAR PUBLIC DOORS (No login barrier) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 max-w-4xl mx-auto text-left">
+            {/* Door 1: Relocating Families */}
+            <button
+              type="button"
+              onClick={() => navigate('/relocation-intake')}
+              className="group p-3.5 rounded-xl border border-white/20 bg-black/75 backdrop-blur-md hover:border-[#D4AF37] transition-all hover:scale-[1.02] shadow-xl text-left cursor-pointer flex flex-col justify-between min-h-[115px]"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5" />
+                    For Families &amp; Buyers
+                  </span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#10b981]/20 text-[#10b981] font-bold border border-[#10b981]/40">
+                    Free Service
+                  </span>
+                </div>
+                <h4 className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-tight">
+                  Relocating Family Concierge
+                </h4>
+                <p className="text-[11px] text-white/70 leading-snug mt-1">
+                  Independent agent vetting, school/tax analysis &amp; personal move roadmap.
+                </p>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] font-bold text-[#D4AF37] group-hover:underline">
+                <span>Start Relocation Plan</span>
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </button>
+
+            {/* Door 2: Corporate HR & Employers */}
+            <button
+              type="button"
+              onClick={() => navigate('/corporate-relo')}
+              className="group p-3.5 rounded-xl border border-white/20 bg-black/75 backdrop-blur-md hover:border-[#D4AF37] transition-all hover:scale-[1.02] shadow-xl text-left cursor-pointer flex flex-col justify-between min-h-[115px]"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                    <Briefcase className="w-3.5 h-3.5" />
+                    For HR &amp; Employers
+                  </span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-bold border border-[#D4AF37]/40">
+                    Zero Employer Fee
+                  </span>
+                </div>
+                <h4 className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-tight">
+                  Corporate Relo Packages
+                </h4>
+                <p className="text-[11px] text-white/70 leading-snug mt-1">
+                  Turnkey executive employee relocation, milestone tracking &amp; cost control.
+                </p>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] font-bold text-[#D4AF37] group-hover:underline">
+                <span>Explore HR Solutions</span>
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </button>
+
+            {/* Door 3: Agents & Brokers */}
+            <button
+              type="button"
+              onClick={() => navigate('/partner-benefits')}
+              className="group p-3.5 rounded-xl border border-white/20 bg-black/75 backdrop-blur-md hover:border-[#D4AF37] transition-all hover:scale-[1.02] shadow-xl text-left cursor-pointer flex flex-col justify-between min-h-[115px]"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
+                    <Building className="w-3.5 h-3.5" />
+                    For Agents &amp; Brokers
+                  </span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#3b82f6]/20 text-[#60a5fa] font-bold border border-[#3b82f6]/40">
+                    25% Referral Fee
+                  </span>
+                </div>
+                <h4 className="text-sm font-bold text-white group-hover:text-[#D4AF37] transition-colors leading-tight">
+                  Agent Bureau &amp; Referrals
+                </h4>
+                <p className="text-[11px] text-white/70 leading-snug mt-1">
+                  Receiving agent bureau, inactive agent 25% referrals &amp; escrow audits.
+                </p>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-[11px] font-bold text-[#D4AF37] group-hover:underline">
+                <span>Agent Opportunities</span>
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </button>
           </div>
 
-          {/* FLOATING LUXURY SEARCH PILL (POPS WITH OFF-WHITE WARM BACKGROUND & GOLD BORDER) */}
-          <div className="pt-1 max-w-2xl mx-auto">
+          {/* SECONDARY SUPERPOWER: LIVE NATIONAL MLS FEED & PROPERTY SEARCH */}
+          <div className="pt-2 max-w-2xl mx-auto border-t border-white/15">
+            <div className="flex items-center justify-center gap-2 mb-2 text-xs">
+              <span className="text-[11px] text-white/80 font-medium">
+                Already browsing on Realtor, Zillow, or Homes.com? Search direct MLS syndication below:
+              </span>
+            </div>
+
+            {/* Quick Intent Filter Tabs */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mb-2">
+              {[
+                { id: 'buy', label: 'All MLS Homes' },
+                { id: 'low_tax', label: '0% State Tax Havens' },
+                { id: 'new_construction', label: 'New Construction' },
+                { id: 'grok_assistants', label: '21 Grok Bot Specialists' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    if (tab.id === 'grok_assistants') {
+                      navigate('/ai-assistants');
+                      return;
+                    }
+                    setSearchTab(tab.id);
+                  }}
+                  className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer shadow ${
+                    searchTab === tab.id
+                      ? 'bg-[#D4AF37] text-black shadow-lg scale-105'
+                      : 'bg-black/60 text-white/80 hover:text-white border border-white/20 backdrop-blur-sm'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* FLOATING LUXURY SEARCH PILL */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -246,19 +357,19 @@ export default function LuxuryHeroShowcase({
 
               <button
                 type="submit"
-                className="w-full sm:w-auto font-bold text-xs sm:text-sm px-8 py-3 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-105"
+                className="w-full sm:w-auto font-bold text-xs sm:text-sm px-7 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-105"
                 style={{
                   background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
                   color: '#0a0a0a',
                 }}
               >
-                <span>{searchTab === 'grok_assistants' ? 'Ask Assistants' : 'Search Live MLS'}</span>
+                <span>{searchTab === 'grok_assistants' ? 'Ask Specialists' : 'Search Live MLS'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
             {/* Micro Engine Picker & Charlie Tap */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mt-3 px-2 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-2.5 px-2 text-xs">
               <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full">
                 <span className="text-[10px] text-white/70 font-semibold uppercase">Feed Engine:</span>
                 <button
@@ -286,20 +397,6 @@ export default function LuxuryHeroShowcase({
                 <HeroGeminiConcierge />
               </div>
             </div>
-
-            {/* Repositioned Statement: Placed at the bottom just under the Feed Engine & Charlie line */}
-            <p
-              className="font-semibold mt-4 tracking-wide leading-snug"
-              style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.1rem, 1.6vw, 1.45rem)',
-                color: '#fce38a',
-                textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
-              }}
-            >
-              <span className="block">We Don't Sell Real Estate!</span>
-              <span className="block">We Vet Top Agents With You &amp; Manage The Entire Move For You.</span>
-            </p>
           </div>
         </div>
 
