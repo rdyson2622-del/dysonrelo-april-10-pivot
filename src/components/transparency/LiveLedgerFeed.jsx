@@ -37,28 +37,53 @@ export default function LiveLedgerFeed() {
     <div className="mt-14">
       {HOOK_BLOCKS.map((block, i) => (
         <div key={i} className="mb-8">
-          <h3 className="text-lg sm:text-xl font-black uppercase tracking-wide mb-2" style={{ color: GOLD }}>
+          <h3 className="text-lg sm:text-xl font-black uppercase tracking-wide mb-2" style={{ color: '#b8920a' }}>
             {block.title}
           </h3>
-          <p className="text-white/85 leading-relaxed">{block.body}</p>
+          <p className="text-base leading-relaxed font-medium" style={{ color: '#2c2217' }}>
+            {block.body}
+          </p>
         </div>
       ))}
 
-      <div className="rounded-xl p-6 mb-10" style={{ border: `1px solid ${GOLD}40`, background: 'rgba(255,255,255,0.03)' }}>
+      <div
+        className="rounded-2xl p-6 sm:p-8 mb-10 shadow-2xl"
+        style={{
+          border: '1.5px solid rgba(212,175,55,0.4)',
+          background: '#0a0a0a',
+          boxShadow: '0 12px 32px rgba(0,0,0,0.22)',
+        }}
+      >
         <h3 className="text-lg sm:text-xl font-black uppercase tracking-wide mb-3" style={{ color: GOLD }}>
           No Hidden Agendas. No Unexplained Delays.
         </h3>
-        <p className="text-white/85 leading-relaxed mb-4">
+        <p className="text-stone-200 leading-relaxed mb-4 text-sm sm:text-base">
           Your live Time Clock attaches a transparent narrative to every step of your plan of action:
         </p>
-        <ul className="space-y-2 text-white/90">
-          <li><span className="font-bold" style={{ color: GOLD }}>The Milestones:</span> Clear, trackable progress points updated in real-time.</li>
-          <li><span className="font-bold" style={{ color: GOLD }}>The Friction Points:</span> If we hit a wall, you know about it immediately. We log every stopping point so you're never left wondering why things paused.</li>
-          <li><span className="font-bold" style={{ color: GOLD }}>The Ownership:</span> Every task, roadblock, and solution has a name attached to it. You'll always know exactly who is responsible for clearing the path.</li>
+        <ul className="space-y-3 text-white">
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: GOLD }} />
+            <span><strong style={{ color: GOLD }}>The Milestones:</strong> Clear, trackable progress points updated in real-time.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: GOLD }} />
+            <span><strong style={{ color: GOLD }}>The Friction Points:</strong> If we hit a wall, you know about it immediately. We log every stopping point so you're never left wondering why things paused.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: GOLD }} />
+            <span><strong style={{ color: GOLD }}>The Ownership:</strong> Every task, roadblock, and solution has a name attached to it. You'll always know exactly who is responsible for clearing the path.</span>
+          </li>
         </ul>
       </div>
 
-      <div className="rounded-xl p-6" style={{ border: `2px solid ${GOLD}`, background: '#000' }}>
+      <div
+        className="rounded-2xl p-6 sm:p-8 shadow-2xl"
+        style={{
+          border: `1.5px solid ${GOLD}`,
+          background: '#0a0a0a',
+          boxShadow: '0 12px 32px rgba(0,0,0,0.22)',
+        }}
+      >
         <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1" style={{ color: GOLD }}>
           Live Ledger — The Dyson Time Clock
         </p>

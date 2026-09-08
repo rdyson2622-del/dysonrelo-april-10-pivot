@@ -43,16 +43,16 @@ export default function Transparency() {
   const bullets = content?.bullets?.length ? content.bullets : DEFAULT_BULLETS;
 
   return (
-    <div className="min-h-screen px-6 py-16" style={{ background: '#0A0B0F' }}>
+    <div className="min-h-screen px-6 py-16" style={{ background: '#ede0cc' }}>
       <div className="max-w-3xl mx-auto">
-        <div className="mb-4">
-          <div className="flex items-center gap-3 mb-4">
-            <ShieldCheck className="w-8 h-8" style={{ color: GOLD }} />
-            <h1 className="text-3xl sm:text-4xl font-black tracking-widest uppercase" style={{ color: GOLD }}>
-              Solutions <span className="text-xl sm:text-2xl">With {content?.headline || 'Transparency'}</span>
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <ShieldCheck className="w-8 h-8 shrink-0" style={{ color: GOLD }} />
+            <h1 className="text-3xl sm:text-4xl font-black tracking-widest uppercase" style={{ color: '#0a0a0a' }}>
+              <span style={{ color: GOLD }}>Solutions</span> <span className="text-xl sm:text-2xl font-bold">With {content?.headline || 'Transparency'}</span>
             </h1>
           </div>
-          <p className="text-white/80 text-lg">
+          <p className="text-base sm:text-lg font-medium leading-relaxed max-w-2xl" style={{ color: '#2c2217' }}>
             {content?.subheadline || 'The one thing missing in real estate — a live, shared roadmap for every issue and every objective, whichever of our six portals brought you here.'}
           </p>
         </div>
@@ -62,12 +62,13 @@ export default function Transparency() {
           <button
             type="button"
             onClick={() => content?.video_url && window.open(content.video_url, '_blank')}
-            className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95"
+            className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl cursor-pointer"
+            style={{ border: `3px solid ${GOLD}` }}
             aria-label="Watch Charlie's Transparency explainer"
           >
             <img src={CHARLIE_HEADSHOT} alt="Charlie — Dyson AI Concierge" className="w-full h-full object-cover" />
             {!content?.video_url && (
-              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] text-white/50">
+              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-bold text-[#2c2217]">
                 Video coming soon
               </span>
             )}
@@ -75,8 +76,17 @@ export default function Transparency() {
         </div>
 
         {/* Visual sample roadmap — shows what "every milestone visible to everyone" looks like */}
-        <div className="rounded-xl p-6 mb-8 mt-24" style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(255,255,255,0.03)' }}>
-          <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-4" style={{ color: GOLD }}>Sample Roadmap — Everyone Sees This</p>
+        <div
+          className="rounded-2xl p-6 sm:p-7 mb-8 mt-16 sm:mt-20 shadow-2xl"
+          style={{
+            border: '1.5px solid rgba(212,175,55,0.45)',
+            background: '#0a0a0a',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
+          }}
+        >
+          <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-4" style={{ color: GOLD }}>
+            Sample Roadmap — Everyone Sees This
+          </p>
           <FlowRoadmapLine
             stages={SAMPLE_STAGES}
             stageStatuses={SAMPLE_STATUSES}
@@ -87,14 +97,27 @@ export default function Transparency() {
           />
         </div>
 
-        <ul className="space-y-4">
-          {bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-3 text-white/90">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GOLD }} />
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Core Transparency Value Pillars — Solid Black Card with crisp white letters */}
+        <div
+          className="rounded-2xl p-6 sm:p-8 mb-10 shadow-2xl"
+          style={{
+            background: '#0a0a0a',
+            border: '1.5px solid rgba(212,175,55,0.4)',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.22)',
+          }}
+        >
+          <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-4" style={{ color: GOLD }}>
+            The Dyson Transparency Standard
+          </p>
+          <ul className="space-y-4">
+            {bullets.map((b, i) => (
+              <li key={i} className="flex items-start gap-3.5 text-white leading-relaxed text-sm sm:text-base">
+                <span className="mt-2 w-2 h-2 rounded-full shrink-0 shadow-sm" style={{ background: GOLD }} />
+                <span className="text-stone-100">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <LiveLedgerFeed />
       </div>
