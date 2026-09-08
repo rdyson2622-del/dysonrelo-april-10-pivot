@@ -176,22 +176,10 @@ export default function LuxuryHeroShowcase({
             >
               The Newest Way to Find or Sell Real Estate.
             </h1>
-            <p
-              className="font-semibold mt-2 tracking-wide leading-snug"
-              style={{
-                fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(1.1rem, 1.6vw, 1.45rem)',
-                color: '#fce38a',
-                textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
-              }}
-            >
-              <span className="block">We Don't Sell Real Estate!</span>
-              <span className="block">We Vet Top Agents With You &amp; Manage The Entire Move For You.</span>
-            </p>
           </div>
 
-          {/* Quick Intent Filter Tabs on the Hero (Like Realtor.com / Homes.com) */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          {/* Quick Intent Filter Tabs on the Hero (Moved up under headline) */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
             {[
               { id: 'buy', label: 'Search All Homes' },
               { id: 'low_tax', label: '0% State Tax Havens' },
@@ -219,7 +207,7 @@ export default function LuxuryHeroShowcase({
           </div>
 
           {/* FLOATING LUXURY SEARCH PILL (POPS WITH OFF-WHITE WARM BACKGROUND & GOLD BORDER) */}
-          <div className="pt-2 max-w-2xl mx-auto">
+          <div className="pt-1 max-w-2xl mx-auto">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -298,6 +286,20 @@ export default function LuxuryHeroShowcase({
                 <HeroGeminiConcierge />
               </div>
             </div>
+
+            {/* Repositioned Statement: Placed at the bottom just under the Feed Engine & Charlie line */}
+            <p
+              className="font-semibold mt-4 tracking-wide leading-snug"
+              style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(1.1rem, 1.6vw, 1.45rem)',
+                color: '#fce38a',
+                textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
+              }}
+            >
+              <span className="block">We Don't Sell Real Estate!</span>
+              <span className="block">We Vet Top Agents With You &amp; Manage The Entire Move For You.</span>
+            </p>
           </div>
         </div>
 
