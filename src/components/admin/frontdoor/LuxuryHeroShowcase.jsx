@@ -8,34 +8,35 @@ import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
 const GOLD = '#D4AF37';
 
-// Curated high-res architectural photos resembling Homes.com and Realtor.com heroes
+// Curated crystal-clear, high-resolution architectural luxury homes (bright natural daylight, no dark filters)
 const HERO_BACKGROUNDS = [
   {
     id: 'scottsdale',
     title: 'Modern Desert Villa • Scottsdale, AZ',
     tag: '0% Income Tax Destination',
-    url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85',
+    url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'austin',
     title: 'Architectural Farmhouse • Austin, TX',
     tag: 'Corporate Tech Relo Hub',
-    url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85',
+    url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'naples',
     title: 'Waterfront Estate • Naples, FL',
     tag: 'Coastal Relo Favorite',
-    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=85',
+    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'boulder',
     title: 'Mountain Contemporary • Boulder, CO',
     tag: 'Lifestyle Relocation',
-    url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=85',
+    url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=95',
   },
 ];
 
+// Clean, bright daylight architectural home photos for top relocation destinations
 const QUICK_MARKETS = [
   {
     city: 'Scottsdale, AZ',
@@ -43,7 +44,7 @@ const QUICK_MARKETS = [
     avgPrice: '$1.15M',
     tag: 'Low Tax • Sunbelt',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Austin, TX',
@@ -51,7 +52,7 @@ const QUICK_MARKETS = [
     avgPrice: '$890K',
     tag: '0% State Tax • Tech',
     icon: TrendingUp,
-    image: 'https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Naples, FL',
@@ -59,7 +60,7 @@ const QUICK_MARKETS = [
     avgPrice: '$1.45M',
     tag: 'Waterfront • No Tax',
     icon: Waves,
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Boulder, CO',
@@ -67,7 +68,7 @@ const QUICK_MARKETS = [
     avgPrice: '$1.28M',
     tag: 'Mountain Outdoors',
     icon: Mountain,
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Nashville, TN',
@@ -75,7 +76,7 @@ const QUICK_MARKETS = [
     avgPrice: '$740K',
     tag: '0% State Tax • Culture',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Dallas, TX',
@@ -83,7 +84,7 @@ const QUICK_MARKETS = [
     avgPrice: '$825K',
     tag: 'Corporate Executive',
     icon: Building,
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=90',
   },
 ];
 
@@ -115,13 +116,23 @@ export default function LuxuryHeroShowcase({
     <div className="w-full">
       {/* FULL-BLEED CINEMATIC HERO (HOMES.COM & REALTOR.COM STYLE) */}
       <div 
-        className="relative min-h-[480px] sm:min-h-[540px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-10 text-white rounded-t-2xl overflow-hidden shadow-2xl transition-all duration-700"
-        style={{
-          backgroundImage: `linear-gradient(180deg, rgba(10,10,10,0.68) 0%, rgba(10,10,10,0.45) 45%, rgba(10,10,10,0.92) 100%), url(${currentBg.url})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        className="relative min-h-[480px] sm:min-h-[540px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-10 text-white rounded-t-2xl overflow-hidden shadow-2xl bg-[#0a0a0a]"
       >
+        {/* Crystal-Clear, Crisp High-Resolution Home Background (No grey/dark filter) */}
+        <img
+          src={currentBg.url}
+          alt={currentBg.title}
+          key={currentBg.id}
+          className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-700 ease-in-out"
+        />
+
+        {/* Minimal Soft Vignette: middle 75% is completely clear so architectural details, pools & skies stay vibrant */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.65) 100%)',
+          }}
+        />
         {/* Subtle Top Photo Switcher Pill */}
         <div className="flex flex-wrap items-center justify-between gap-3 z-10">
           <div 
