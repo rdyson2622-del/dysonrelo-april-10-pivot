@@ -11,6 +11,7 @@ import DualFeatureEngine from '@/components/admin/frontdoor/DualFeatureEngine';
 import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
+import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -96,18 +97,22 @@ export default function AdminFrontDoorLab() {
 
   const tags = ['All', 'Sunbelt States', 'Coastal Relo', 'Low Tax Markets', 'Mountain West', 'Golf Communities'];
 
+  const [activeExternalSearch, setActiveExternalSearch] = useState(null);
+
   const handleSearch = (query) => {
     const q = (query || searchQuery).trim();
     if (!q) return;
     const cleanLocation = q.replace(/,\s*/g, '_').replace(/\s+/g, '-');
     const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+    setActiveExternalSearch({ location: q, url });
   };
 
   const handleAskCharlie = (listing) => {
     const cleanLocation = `${listing.city}_${listing.state}`.replace(/\s+/g, '-');
     const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+    setActiveExternalSearch({ location: `${listing.city}, ${listing.state}`, url, listing });
   };
 
   return (
@@ -527,6 +532,12 @@ export default function AdminFrontDoorLab() {
       <GoDaddyDomainModal
         isOpen={domainModalOpen}
         onClose={() => setDomainModalOpen(false)}
+      />
+
+      {/* REALTOR.COM RETURN COMPANION DOCK */}
+      <RealtorReturnCompanion
+        activeSearch={activeExternalSearch}
+        onClose={() => setActiveExternalSearch(null)}
       />
     </div>
   );
