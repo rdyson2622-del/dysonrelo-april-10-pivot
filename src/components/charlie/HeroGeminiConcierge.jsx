@@ -131,7 +131,7 @@ export default function HeroGeminiConcierge() {
   const isActive = status === 'listening' || status === 'speaking' || status === 'connecting';
 
   return (
-    <div className="mt-3.5 inline-flex flex-col items-start max-w-full">
+    <div className="inline-flex flex-col items-start max-w-full">
       {/* Discreet Gemini-style audio pill */}
       <div
         className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all duration-300 shadow-md"

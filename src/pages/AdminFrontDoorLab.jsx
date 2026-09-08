@@ -32,7 +32,7 @@ const MOCK_LISTINGS = [
     baths: 6,
     sqft: '6,240',
     tag: '0% State Tax • New on MLS',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
@@ -45,7 +45,7 @@ const MOCK_LISTINGS = [
     baths: 4.5,
     sqft: '4,120',
     tag: 'Sunbelt Relo • Pool & Views',
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
@@ -58,7 +58,7 @@ const MOCK_LISTINGS = [
     baths: 4,
     sqft: '3,760',
     tag: 'Waterfront Haven • No Tax',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
@@ -71,7 +71,7 @@ const MOCK_LISTINGS = [
     baths: 5,
     sqft: '4,890',
     tag: 'Mountain Outdoors • Relo Pick',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
@@ -84,7 +84,7 @@ const MOCK_LISTINGS = [
     baths: 4.5,
     sqft: '4,450',
     tag: '0% State Tax • Historic Acreage',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
@@ -97,7 +97,7 @@ const MOCK_LISTINGS = [
     baths: 3.5,
     sqft: '3,450',
     tag: 'Corporate Tech Relo Hub',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
 ];

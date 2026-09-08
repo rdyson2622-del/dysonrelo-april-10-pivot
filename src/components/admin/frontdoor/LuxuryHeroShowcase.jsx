@@ -164,10 +164,11 @@ export default function LuxuryHeroShowcase({
         <div className="max-w-4xl mx-auto w-full text-center space-y-4 my-auto py-6 z-10">
           <div>
             <h1
-              className="font-bold leading-tight drop-shadow-md text-white"
+              className="font-bold leading-tight text-white"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
                 fontSize: 'clamp(2.1rem, 4.2vw, 3.8rem)',
+                textShadow: '0 2px 18px rgba(0,0,0,0.9), 0 4px 35px rgba(0,0,0,0.8)',
               }}
             >
               Find Your Next Home Nationwide.
@@ -176,8 +177,8 @@ export default function LuxuryHeroShowcase({
               className="font-semibold text-lg sm:text-2xl mt-1 tracking-wide"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                color: '#f3d87f',
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)',
+                color: '#fce38a',
+                textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
               }}
             >
               We Manage Every Relocation Mile.
@@ -278,12 +279,12 @@ export default function LuxuryHeroShowcase({
         </div>
 
         {/* Bottom Hero Tagline Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/20 pt-3 text-[11px] text-white/80 z-10">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/20 pt-3 text-[11px] text-white/90 z-10">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            <span className="font-medium">Direct National MLS Syndication • 50 States</span>
+            <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-sm" />
+            <span className="font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">Direct National MLS Syndication • 50 States</span>
           </div>
-          <span className="hidden sm:inline text-white/60">
+          <span className="hidden sm:inline text-white/85 drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)] font-medium">
             55+ Years of National Relocation Management • Independent Fiduciary Advice
           </span>
         </div>
@@ -314,23 +315,34 @@ export default function LuxuryHeroShowcase({
                     setSearchQuery(m.city);
                     onSearch(m.city);
                   }}
-                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/40 shadow-sm transition-all hover:scale-[1.03] hover:shadow-md cursor-pointer flex flex-col justify-end min-h-[92px]"
-                  style={{
-                    backgroundImage: `linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.85) 100%), url(${m.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
+                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.03] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[105px] bg-[#0a0a0a]"
                 >
-                  <span className="text-[9px] font-bold text-[#D4AF37] uppercase tracking-wider flex items-center gap-1">
-                    <MarketIcon className="w-2.5 h-2.5" />
-                    <span>{m.tag}</span>
-                  </span>
-                  <span className="text-xs font-bold text-white leading-tight group-hover:text-[#D4AF37] transition-colors">
-                    {m.city}
-                  </span>
-                  <span className="text-[10px] text-white/80 font-mono">
-                    Avg {m.avgPrice}
-                  </span>
+                  {/* Clear crisp home photo without dark veil */}
+                  <img
+                    src={m.image}
+                    alt={m.city}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  {/* Subtle bottom shadow only under text, top 55% is completely unfiltered */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 100%)',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <span className="text-[9px] font-black text-[#D4AF37] uppercase tracking-wider flex items-center gap-1 drop-shadow">
+                      <MarketIcon className="w-2.5 h-2.5" />
+                      <span>{m.tag}</span>
+                    </span>
+                    <span className="text-xs font-bold text-white leading-tight group-hover:text-[#D4AF37] transition-colors drop-shadow block">
+                      {m.city}
+                    </span>
+                    <span className="text-[10px] text-white/90 font-mono block drop-shadow">
+                      Avg {m.avgPrice}
+                    </span>
+                  </div>
                 </button>
               );
             })}
