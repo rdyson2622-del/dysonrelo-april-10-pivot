@@ -72,14 +72,14 @@ export default function VettingDeskDuo() {
         <QADuoPresenter segments={sequence} onClose={() => setSequence(null)} />
       )}
 
-      <p className="text-xs font-black tracking-[0.3em] text-center mb-3" style={{ color: GOLD }}>
+      <p className="text-xs font-black tracking-[0.3em] text-center mb-3" style={{ color: '#b8920a' }}>
         THE DYSON NATIONAL VETTING DESK
       </p>
-      <h2 className="text-center font-black text-2xl md:text-3xl text-white mb-4"
+      <h2 className="text-center font-bold text-2xl md:text-3xl text-[#0a0a0a] mb-4"
         style={{ fontFamily: 'Cormorant Garamond, serif' }}>
         Your Client. Our Full-Time Job.
       </h2>
-      <p className="text-center text-sm leading-relaxed max-w-xl mx-auto mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
+      <p className="text-center text-sm leading-relaxed max-w-xl mx-auto mb-8 font-medium" style={{ color: '#2c2217' }}>
         Tell us as much about your client as you can — where they're relocating to and their preferred
         timetable. From that moment on, we stay with them through the entire move, step by step, as if
         we were moving right alongside them. Tap any question below and hear Bob Dyson answer it himself.
@@ -89,7 +89,7 @@ export default function VettingDeskDuo() {
       {introReady && (
         <div className="flex justify-center mb-10">
           <button onClick={playIntro} aria-label="Hear Charlie introduce the Vetting Desk"
-            className="relative w-36 h-36 transition-all hover:scale-105 active:scale-95">
+            className="relative w-36 h-36 transition-all hover:scale-105 active:scale-95 cursor-pointer">
             <span className="absolute inset-0 rounded-full overflow-hidden shadow-xl"
               style={{ background: '#0d0d0d', border: `3px solid ${GOLD}` }}>
               <video
@@ -101,7 +101,7 @@ export default function VettingDeskDuo() {
                 className="w-full h-full object-cover pointer-events-none"
               />
             </span>
-            <span className="absolute bottom-1 right-1 w-10 h-10 rounded-full flex items-center justify-center"
+            <span className="absolute bottom-1 right-1 w-10 h-10 rounded-full flex items-center justify-center shadow-md"
               style={{ background: GOLD, border: '2px solid #0d0d0d' }}>
               <Play className="w-5 h-5 ml-0.5" style={{ color: '#000' }} />
             </span>
@@ -109,18 +109,34 @@ export default function VettingDeskDuo() {
         </div>
       )}
 
-      {/* Q&A cards */}
+      {/* Q&A cards / pills — solid black with crisp white text & gold accents */}
       <div className="grid gap-4">
         {QUESTIONS.map((item, i) => (
-          <div key={i} className="rounded-2xl p-5"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <p className="font-black text-sm text-white mb-2">{item.q}</p>
-            <p className="text-sm leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>{item.a}</p>
+          <div
+            key={i}
+            className="rounded-2xl p-5 sm:p-6 transition-all hover:scale-[1.01]"
+            style={{
+              background: '#0a0a0a',
+              border: '1.5px solid rgba(212,175,55,0.4)',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+            }}
+          >
+            <p className="font-bold text-base text-white mb-2.5 tracking-wide leading-snug">
+              {item.q}
+            </p>
+            <p className="text-sm leading-relaxed mb-4 text-[#e6e6e6]" style={{ color: '#e6e6e6' }}>
+              {item.a}
+            </p>
             {qaReady(i) && (
-              <button onClick={() => playFaq(i)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black tracking-wide transition-all hover:scale-105"
-                style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})`, color: '#000' }}>
-                <Play className="w-3.5 h-3.5" /> Hear Bob Dyson answer this
+              <button
+                onClick={() => playFaq(i)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow cursor-pointer"
+                style={{
+                  background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
+                  color: '#000',
+                }}
+              >
+                <Play className="w-3.5 h-3.5 fill-current" /> Hear Bob Dyson answer this
               </button>
             )}
           </div>
