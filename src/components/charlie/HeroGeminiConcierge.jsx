@@ -20,6 +20,7 @@ CRITICAL ROUTING RULES:
 - Consumer or family move, start plan, intake, process in, "how you manage a move", "I need to relocate" → ALWAYS path "/relocation-intake" [NAVIGATE: /relocation-intake | Relocation Plan & Intake]. NEVER "/corporate-relo".
 - Employer, HR manager, company employee relocation, or B2B corporate pitch → "/corporate-relo" only [NAVIGATE: /corporate-relo | Corporate Relocation].
 - Ambiguous "relocation" (unclear if household move or company/HR program): Do NOT navigate yet. Ask once: "Are you moving your household, or is this for a company/HR program?" before navigating.
+- Searching for homes, properties, or listings in any city or state (e.g. "homes in Scottsdale", "Austin listings"): ALWAYS direct to Realtor.com search: [NAVIGATE: https://www.realtor.com/realestateandhomes-search/{City}_{State} | Live MLS Search on Realtor.com]
 
 OTHER ROUTES (UNCHANGED):
 - Finding / hiring a vetted agent: [NAVIGATE: /find-agent | Find a Vetted Agent]
@@ -84,7 +85,11 @@ export default function HeroGeminiConcierge() {
       onNavigate: (nav) => {
         if (!nav?.path) return;
         setNavNotice(nav);
-        navigate(nav.path);
+        if (nav.path.startsWith('http://') || nav.path.startsWith('https://')) {
+          window.open(nav.path, '_blank', 'noopener,noreferrer');
+        } else {
+          navigate(nav.path);
+        }
         if (navTimerRef.current) clearTimeout(navTimerRef.current);
         navTimerRef.current = setTimeout(() => {
           setNavNotice(null);

@@ -8,6 +8,8 @@
  * rather than 'storm' (which has an unwanted British/Englishman accent).
  */
 
+import { secrets } from 'base44:runtime';
+
 export const CHARLIE_RUBEN_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 
 export async function synthesizeCharlieSpeech(base44: any, speechText: string): Promise<string | null> {
@@ -21,7 +23,13 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string): 
   if (!clean) return null;
 
   // 1. Try Charlie's actual HeyGen Ruben voice (our real Charlie)
-  const heygenKey = Deno.env.get('HEYGEN_API_KEY');
+  let heygenKey: string | null = null;
+  try {
+    heygenKey = secrets.get('HEYGEN_API_KEY');
+  } catch (_) {
+    heygenKey = null;
+  }
+
   if (heygenKey) {
     try {
       const controller = new AbortController();
@@ -45,13 +53,16 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string): 
         if (json?.data?.audio_url) {
           return json.data.audio_url;
         }
+      } else {
+        const errText = await res.text().catch(() => '');
+        console.warn('HeyGen Ruben speech API response not ok:', res.status, errText);
       }
     } catch (err) {
       console.warn('HeyGen Ruben TTS error or timeout, falling back:', err);
     }
   }
 
-  // 2. Fallback to American neutral voice ('river') if HeyGen fails
+  // 2. Fallback to American neutral voice ('river') if HeyGen fails (NEVER 'storm')
   try {
     const fallbackRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
       text: clean,

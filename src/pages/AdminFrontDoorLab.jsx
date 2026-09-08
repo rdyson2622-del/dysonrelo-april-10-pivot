@@ -96,8 +96,18 @@ export default function AdminFrontDoorLab() {
 
   const tags = ['All', 'Sunbelt States', 'Coastal Relo', 'Low Tax Markets', 'Mountain West', 'Golf Communities'];
 
+  const handleSearch = (query) => {
+    const q = (query || searchQuery).trim();
+    if (!q) return;
+    const cleanLocation = q.replace(/,\s*/g, '_').replace(/\s+/g, '-');
+    const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   const handleAskCharlie = (listing) => {
-    alert(`Charlie Voice Concierge on ${listing.address}, ${listing.city}: "This property has low property tax assessment and sits 12 minutes from top-rated schools."`);
+    const cleanLocation = `${listing.city}_${listing.state}`.replace(/\s+/g, '-');
+    const url = `https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -337,7 +347,11 @@ export default function AdminFrontDoorLab() {
                   </div>
 
                   {/* Search Input Pill (Warm Off-White / Tan Pop against Black Box) */}
-                  <div
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSearch(searchQuery);
+                    }}
                     className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-lg"
                     style={{
                       background: '#faf6ee',
@@ -357,16 +371,17 @@ export default function AdminFrontDoorLab() {
                       />
                     </div>
                     <button
+                      type="submit"
                       className="w-full sm:w-auto font-bold text-xs sm:text-sm px-7 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105"
                       style={{
                         background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
                         color: '#0a0a0a',
                       }}
                     >
-                      <span>Search Feed</span>
+                      <span>Search Live MLS</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
-                  </div>
+                  </form>
 
                   {/* Trending Market Pills */}
                   <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 text-xs">

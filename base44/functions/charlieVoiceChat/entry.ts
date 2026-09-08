@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
+import { synthesizeCharlieSpeech } from '../../shared/charlieVoiceSynthesizer.ts';
 
 const SYSTEM_PROMPT = `You are Charlie, the distinguished, authoritative American male AI voice concierge for Dyson & Dyson Companies relocation.
 You speak with a natural, warm, mature American accent — like a trusted senior real estate advisor, confident and helpful.
@@ -25,6 +26,7 @@ CRITICAL ROUTING RULES:
 - Consumer or family move, start plan, intake, process in, "how you manage a move", "I need to relocate" → ALWAYS path "/relocation-intake" [NAVIGATE: /relocation-intake | Relocation Plan & Intake]. NEVER "/corporate-relo".
 - Employer, HR manager, company employee relocation, or B2B corporate pitch → "/corporate-relo" only [NAVIGATE: /corporate-relo | Corporate Relocation].
 - Ambiguous "relocation" (unclear if household move or company/HR program): Do NOT navigate yet. Ask once: "Are you moving your household, or is this for a company/HR program?" before navigating.
+- Searching for homes, properties, or listings in any city or state (e.g. "homes in Scottsdale", "Austin listings"): ALWAYS route to Realtor.com search: [NAVIGATE: https://www.realtor.com/realestateandhomes-search/{City}_{State} | Live MLS Search on Realtor.com]
 
 OTHER ROUTES (UNCHANGED):
 - Finding / vetting an agent: [NAVIGATE: /find-agent | Find a Vetted Agent]
@@ -80,24 +82,12 @@ Respond as Charlie (strictly 1-2 concise sentences, natural American spoken tone
       .replace(/\n+/g, ' ')
       .trim();
 
-    // Generate speech using Charlie's authoritative American male voice ('storm')
+    // Generate Charlie's authentic American voice (HeyGen Ruben voice ID cc5fb6c924064712ba9f690852aa4646)
     let audioUrl = null;
     try {
-      // Strip navigation markup before sending text to speech synthesis
-      const speechText = cleanReply
-        .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
-        .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
-        .replace(/navigate_to_page:\s*[\/a-z0-9_-]+/gi, '')
-        .trim();
-      if (speechText) {
-        const speechRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-          text: speechText,
-          voice: 'storm',
-        });
-        audioUrl = speechRes?.url || null;
-      }
+      audioUrl = await synthesizeCharlieSpeech(base44, cleanReply);
     } catch (e) {
-      console.warn('GenerateSpeech error:', e);
+      console.warn('synthesizeCharlieSpeech error:', e);
     }
 
     return Response.json({
