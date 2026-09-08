@@ -21,8 +21,23 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string, o
 
   if (!clean) return null;
 
-  // 1. PRIMARY: Authentic Charlie Ruben American Voice (HeyGen Voice ID: cc5fb6c924064712ba9f690852aa4646)
-  // NEVER use 'storm' — 'storm' in Core TTS produces an unwanted British/English accent.
+  // When fast mode is enabled (real-time V2V voice chat), prioritize ultra-low-latency American male neural speech (~1s)
+  // using Core.GenerateSpeech with voice: 'spark' (natural American male).
+  // This completely eliminates the 8-10 second HeyGen API lag and ensures zero female voice and zero British accent ('storm').
+  if (options.fast) {
+    try {
+      const sparkRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
+        text: clean,
+        voice: 'spark',
+        language_code: 'en',
+      });
+      if (sparkRes?.url) return sparkRes.url;
+    } catch (e) {
+      console.warn('Fast GenerateSpeech failed, falling back:', e);
+    }
+  }
+
+  // 1. High-fidelity synthesis: Authentic Charlie Ruben American Voice (HeyGen Voice ID: cc5fb6c924064712ba9f690852aa4646)
   let heygenKey: string | null = null;
   try {
     heygenKey = secrets.get('HEYGEN_API_KEY');
@@ -33,7 +48,7 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string, o
   if (heygenKey) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000);
+      const timeout = setTimeout(() => controller.abort(), options.fast ? 2500 : 8000);
       const res = await fetch('https://api.heygen.com/v3/voices/speech', {
         method: 'POST',
         headers: {
@@ -61,7 +76,7 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string, o
     }
   }
 
-  // 2. Fallback: Only if HeyGen is unavailable, use 'spark' (American male), NEVER 'storm' (British) or female voices
+  // 2. Fallback: Always 'spark' (American male). NEVER 'storm' (British) and NEVER female voices ('river', 'honey', 'sunny')
   try {
     const sparkRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
       text: clean,
