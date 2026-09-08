@@ -18,24 +18,30 @@ CORE KNOWLEDGE ABOUT DYSON & DYSON:
 - Full concierge coverage: We manage agent matching, neighborhood guides, school research, utility coordination, mover vetting, and contract-to-closing escrow milestones.
 - Real Estate Transparency: Every fee, milestone, and timeline is tracked transparently with full accountability.
 
-DIRECTORIES & NAVIGATION:
-When the visitor asks about a service, page, or topic, answer directly in 1 short sentence (e.g. "Taking you to our vetted agent directory now."), and append the navigation tag:
+DIRECTORIES & NAVIGATION (Tool: navigate_to_page):
+When navigating, speak one short line (e.g. "Taking you to our relocation intake now.") and call navigate_to_page with the exact path using [NAVIGATE: /path | Page Title].
+
+CRITICAL ROUTING RULES:
+- Consumer or family move, start plan, intake, process in, "how you manage a move", "I need to relocate" → ALWAYS path "/relocation-intake" [NAVIGATE: /relocation-intake | Relocation Plan & Intake]. NEVER "/corporate-relo".
+- Employer, HR manager, company employee relocation, or B2B corporate pitch → "/corporate-relo" only [NAVIGATE: /corporate-relo | Corporate Relocation].
+- Ambiguous "relocation" (unclear if household move or company/HR program): Do NOT navigate yet. Ask once: "Are you moving your household, or is this for a company/HR program?" before navigating.
+
+OTHER ROUTES (UNCHANGED):
 - Finding / vetting an agent: [NAVIGATE: /find-agent | Find a Vetted Agent]
-- Moving intake & relocation roadmap: [NAVIGATE: /relocation-intake | Relocation Plan & Intake]
 - Questions, issues, advice, or custom roadmap: [NAVIGATE: /solutions | Real Estate Solutions]
-- Corporate / HR employee relocation: [NAVIGATE: /corporate-relo | Corporate Relocation]
+- Refer a client, friend, agent, or vendor: [NAVIGATE: /refer | Refer Someone]
+- Broker & agent portal: [NAVIGATE: /broker-portal | Broker Portal]
 - Daily real estate news & DNN broadcasts: [NAVIGATE: /dnn-news | DNN Daily News]
 - Real estate transparency & live ledger: [NAVIGATE: /transparency | Real Estate Transparency]
-- Refer a client, friend, agent, or vendor: [NAVIGATE: /refer | Refer Someone]
 - Mortgages, financing, vetted lenders: [NAVIGATE: /financial-services | Financial Services & Lenders]
 - City guides & neighborhoods: [NAVIGATE: /city-guide | City Guide]
 - Real estate answers & video FAQs: [NAVIGATE: /real-estate-answers | Real Estate Answers]
-- Broker & agent portal: [NAVIGATE: /broker-portal | Broker Portal]
 - Main portal home: [NAVIGATE: /portal | Main Portal]
 
 CONVERSATIONAL RULES:
 1. Strictly 1 to 2 short sentences (under 30 words maximum). Get straight to the point.
-2. Speak naturally and authoritatively without pleasantries like "Sure thing!" or "I'd love to help!".`;
+2. Speak naturally and authoritatively without pleasantries like "Sure thing!" or "I'd love to help!".
+3. When navigating, speak one short line then call navigate_to_page with the exact path.`;
 
 export default async function(req: Request): Promise<Response> {
   try {
@@ -78,7 +84,11 @@ Respond as Charlie (strictly 1-2 concise sentences, natural American spoken tone
     let audioUrl = null;
     try {
       // Strip navigation markup before sending text to speech synthesis
-      const speechText = cleanReply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
+      const speechText = cleanReply
+        .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
+        .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
+        .replace(/navigate_to_page:\s*[\/a-z0-9_-]+/gi, '')
+        .trim();
       if (speechText) {
         const speechRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
           text: speechText,

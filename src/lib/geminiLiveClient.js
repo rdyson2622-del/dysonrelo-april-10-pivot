@@ -349,7 +349,9 @@ export class GeminiLiveSessionClient {
 
       // Check for navigation directives (tool calling)
       let turnNav = null;
-      const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
+      const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i) ||
+                       reply.match(/navigate_to_page\s*\(?['"]?([\/a-z0-9_-]+)['"]?(?:,\s*['"]?([^'")]*)['"]?)?\)?/i) ||
+                       reply.match(/navigate_to_page:\s*([\/a-z0-9_-]+)/i);
       if (navMatch) {
         const navPath = navMatch[1].trim();
         const navTitle = (navMatch[2] || navPath).trim();
@@ -358,7 +360,11 @@ export class GeminiLiveSessionClient {
         this.onPendingNavigate?.(turnNav);
       }
 
-      const cleanReply = reply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
+      const cleanReply = reply
+        .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
+        .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
+        .replace(/navigate_to_page:\s*[\/a-z0-9_-]+/gi, '')
+        .trim();
       if (cleanReply) {
         this.conversationHistory.push({ role: 'assistant', text: cleanReply });
         this.onTranscript?.({ role: 'assistant', text: cleanReply });
