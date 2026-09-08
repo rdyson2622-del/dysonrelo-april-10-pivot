@@ -1,17 +1,20 @@
 /**
  * charlieVoiceSynthesizer — Single source of truth for Charlie's speech audio.
  *
- * Designed for low-latency conversational AI:
- * - Output voice is 100% Charlie's authoritative, distinguished American male voice ('storm').
- * - NEVER uses female voices ('river', 'honey', 'sunny').
- * - Generates fast, high-quality neural speech in ~1.5 seconds instead of 9+ seconds.
+ * Charlie's voice is EXCLUSIVELY the HeyGen Ruben voice:
+ * Voice ID: cc5fb6c924064712ba9f690852aa4646
+ *
+ * Matches all Dyson & Dyson explainer videos and video productions.
+ * NEVER uses secondary TTS voices ('spark', 'storm', 'river', 'sunny', etc.).
  */
-
-import { secrets } from 'base44:runtime';
 
 export const CHARLIE_RUBEN_VOICE_ID = 'cc5fb6c924064712ba9f690852aa4646';
 
-export async function synthesizeCharlieSpeech(base44: any, speechText: string, options: { fast?: boolean } = {}): Promise<string | null> {
+export async function synthesizeCharlieSpeech(
+  _base44: any,
+  speechText: string,
+  _options: { fast?: boolean } = {}
+): Promise<string | null> {
   const clean = speechText
     .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
     .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
@@ -21,34 +24,27 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string, o
 
   if (!clean) return null;
 
-  // When fast mode is enabled (real-time V2V voice chat), prioritize ultra-low-latency American male neural speech (~1s)
-  // using Core.GenerateSpeech with voice: 'spark' (natural American male).
-  // This completely eliminates the 8-10 second HeyGen API lag and ensures zero female voice and zero British accent ('storm').
-  if (options.fast) {
-    try {
-      const sparkRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-        text: clean,
-        voice: 'spark',
-        language_code: 'en',
-      });
-      if (sparkRes?.url) return sparkRes.url;
-    } catch (e) {
-      console.warn('Fast GenerateSpeech failed, falling back:', e);
-    }
-  }
-
-  // 1. High-fidelity synthesis: Authentic Charlie Ruben American Voice (HeyGen Voice ID: cc5fb6c924064712ba9f690852aa4646)
+  // Retrieve HEYGEN_API_KEY from Deno environment (standard in Base44 backend functions)
   let heygenKey: string | null = null;
   try {
-    heygenKey = secrets.get('HEYGEN_API_KEY');
+    heygenKey = Deno.env.get('HEYGEN_API_KEY') || null;
   } catch (_) {
     heygenKey = null;
+  }
+
+  if (!heygenKey) {
+    try {
+      const { secrets } = await import('base44:runtime');
+      heygenKey = secrets.get('HEYGEN_API_KEY') || null;
+    } catch (_) {
+      heygenKey = null;
+    }
   }
 
   if (heygenKey) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), options.fast ? 2500 : 8000);
+      const timeout = setTimeout(() => controller.abort(), 15000);
       const res = await fetch('https://api.heygen.com/v3/voices/speech', {
         method: 'POST',
         headers: {
@@ -69,22 +65,13 @@ export async function synthesizeCharlieSpeech(base44: any, speechText: string, o
           return json.data.audio_url;
         }
       } else {
-        console.warn('HeyGen Ruben speech API response not ok:', res.status);
+        const errText = await res.text().catch(() => '');
+        console.warn('HeyGen Ruben speech API response not ok:', res.status, errText);
       }
     } catch (err) {
       console.warn('HeyGen Ruben speech synthesis call error:', err);
     }
   }
 
-  // 2. Fallback: Always 'spark' (American male). NEVER 'storm' (British) and NEVER female voices ('river', 'honey', 'sunny')
-  try {
-    const sparkRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-      text: clean,
-      voice: 'spark',
-      language_code: 'en',
-    });
-    return sparkRes?.url || null;
-  } catch (_) {
-    return null;
-  }
+  return null;
 }
