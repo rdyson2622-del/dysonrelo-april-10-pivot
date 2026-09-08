@@ -379,17 +379,47 @@ export class GeminiLiveSessionClient {
       const reply = res.data?.reply || '';
       const audioUrl = res.data?.audioUrl;
 
-      // Check for navigation directives (tool calling)
-      let turnNav = null;
+      // Check for navigation & search directives (tool calling & structured actions)
+      let turnNav = res.data?.action || null;
       const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i) ||
-                       reply.match(/navigate_to_page\s*\(?['"]?([\/a-z0-9_-]+)['"]?(?:,\s*['"]?([^'")]*)['"]?)?\)?/i) ||
-                       reply.match(/navigate_to_page:\s*([\/a-z0-9_-]+)/i);
-      if (navMatch) {
+                       reply.match(/navigate_to_page\s*\(?['"]?([\/a-z0-9_:-]+)['"]?(?:,\s*['"]?([^'")]*)['"]?)?\)?/i) ||
+                       reply.match(/navigate_to_page:\s*([\/a-z0-9_:-]+)/i);
+      if (!turnNav && navMatch) {
         const navPath = navMatch[1].trim();
         const navTitle = (navMatch[2] || navPath).trim();
-        turnNav = { path: navPath, title: navTitle };
+        const isMls = navPath.includes('realtor.com') || navPath.includes('homes.com');
+        let location = null;
+        if (isMls) {
+          const locMatch = navPath.match(/realestateandhomes-search\/([^\/?#]+)/i) || navPath.match(/for-sale\/([^\/?#]+)/i);
+          if (locMatch) {
+            let raw = decodeURIComponent(locMatch[1]).replace(/_/g, ', ').replace(/-/g, ' ');
+            const stateMatch = raw.match(/^(.*)([A-Z]{2})$/);
+            if (stateMatch && !raw.includes(',')) {
+              raw = `${stateMatch[1].trim()}, ${stateMatch[2]}`;
+            }
+            location = raw;
+          }
+        }
+        turnNav = {
+          type: isMls ? 'mls_search' : 'navigate',
+          path: navPath,
+          url: navPath.startsWith('http') ? navPath : null,
+          title: navTitle,
+          location,
+        };
+      }
+
+      if (turnNav) {
         this.pendingNav = turnNav;
         this.onPendingNavigate?.(turnNav);
+
+        // Broadcast to application listeners immediately (FrontDoor search bar, companion, etc.)
+        if (typeof window !== 'undefined') {
+          if (turnNav.type === 'mls_search' || turnNav.location) {
+            window.dispatchEvent(new CustomEvent('charlie-mls-search', { detail: turnNav }));
+          }
+          window.dispatchEvent(new CustomEvent('charlie-action', { detail: turnNav }));
+        }
       }
 
       const cleanReply = reply

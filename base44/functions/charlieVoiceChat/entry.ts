@@ -21,10 +21,13 @@ DIRECTORIES & NAVIGATION:
 When navigating, speak one short line (e.g. "Opening relocation intake for you now.") and append [NAVIGATE: /path | Title].
 
 CRITICAL ROUTING RULES:
+- IMPORTANT VOICE RULE: NEVER say "click here" or "use this link" without context. Instead say: "I've pulled up {City} live listings and placed the gold launch button right below me on your screen."
 - Consumer or family move, start plan, intake, process in, "I need to relocate" → ALWAYS "/relocation-intake" [NAVIGATE: /relocation-intake | Relocation Plan & Intake]. NEVER "/corporate-relo".
 - Employer, HR manager, company employee relocation → "/corporate-relo" only [NAVIGATE: /corporate-relo | Corporate Relocation].
 - Ambiguous "relocation": Ask once: "Are you moving your household, or is this for an employer/HR program?"
-- Searching for homes, properties, or listings in any city/state: "Opening live {City} listings in a new tab now. Keep DysonRelo open so we can vet any home you find." [NAVIGATE: https://www.realtor.com/realestateandhomes-search/{City}_{State} | Live MLS Search]
+- Searching for homes, properties, or listings in any city/state (e.g. "search okla city", "find homes in Phoenix", "Austin listings"):
+  Map city abbreviations accurately (e.g. "okla city" or "okc" -> Oklahoma-City_OK, "vegas" -> Las-Vegas_NV, "phx" -> Phoenix_AZ, "sf" -> San-Francisco_CA).
+  Say: "Opening live {City} MLS listings for you now. I've populated the search on your screen." [NAVIGATE: https://www.realtor.com/realestateandhomes-search/{City}_{StateCode} | {City}, {StateCode} MLS Search]
 - Finding / vetting an agent: [NAVIGATE: /find-agent | Find a Vetted Agent]
 - Questions, issues, advice, or custom roadmap: [NAVIGATE: /solutions | Real Estate Solutions]
 - Refer a client, friend, agent, or vendor: [NAVIGATE: /refer | Refer Someone]
@@ -64,6 +67,36 @@ Respond as Charlie (strictly 1 concise sentence under 20 words, natural American
       .replace(/\n+/g, ' ')
       .trim();
 
+    // Parse navigation / search action for the frontend
+    let action: any = null;
+    const navMatch = cleanReply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i) ||
+                     cleanReply.match(/navigate_to_page\s*\(?['"]?([\/a-z0-9_:-]+)['"]?(?:,\s*['"]?([^'")]*)['"]?)?\)?/i);
+    if (navMatch) {
+      const path = navMatch[1].trim();
+      const title = (navMatch[2] || path).trim();
+      const isMls = path.includes('realtor.com') || path.includes('homes.com');
+      let location = null;
+      if (isMls) {
+        const locMatch = path.match(/realestateandhomes-search\/([^\/?#]+)/i) || path.match(/for-sale\/([^\/?#]+)/i);
+        if (locMatch) {
+          let raw = decodeURIComponent(locMatch[1]).replace(/_/g, ', ').replace(/-/g, ' ');
+          // Handle CityST pattern without comma (e.g. Oklahoma CityOK -> Oklahoma City, OK)
+          const stateMatch = raw.match(/^(.*)([A-Z]{2})$/);
+          if (stateMatch && !raw.includes(',')) {
+            raw = `${stateMatch[1].trim()}, ${stateMatch[2]}`;
+          }
+          location = raw;
+        }
+      }
+      action = {
+        type: isMls ? 'mls_search' : 'navigate',
+        path,
+        url: path.startsWith('http') ? path : null,
+        title,
+        location,
+      };
+    }
+
     // Authentic Charlie American speech (HeyGen Ruben voice)
     let audioUrl = null;
     try {
@@ -75,6 +108,7 @@ Respond as Charlie (strictly 1 concise sentence under 20 words, natural American
     return Response.json({
       reply: cleanReply,
       audioUrl,
+      action,
     });
   } catch (error: any) {
     return Response.json({ error: error.message }, { status: 500 });
