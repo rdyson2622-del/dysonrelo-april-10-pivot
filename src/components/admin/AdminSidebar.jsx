@@ -27,6 +27,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '✨ FRONT DOOR LAB (MLS + News + Charlie)', path: '/admin/front-door-lab', icon: Star, highlight: true },
       { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
       { label: '🧭 Role Selector Page', path: '/portal?choose=1', icon: Map, highlight: true },
       { label: '🏢 Brokerage Portal (Wisdom)', path: '/brokerage', icon: Building2, highlight: true },

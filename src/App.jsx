@@ -187,6 +187,7 @@ import AdminQuickSend from './pages/AdminQuickSend';
 import AdminReferralLeads from './pages/AdminReferralLeads';
 import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
+import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -433,6 +434,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/quick-send" element={<AdminQuickSend />} />
         <Route path="/admin/referral-leads" element={<AdminReferralLeads />} />
         <Route path="/admin/voice-concierge-analytics" element={<AdminVoiceConciergeAnalytics />} />
+        <Route path="/admin/front-door-lab" element={<AdminFrontDoorLab />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />
