@@ -4,7 +4,6 @@ import {
   Search, Building, ArrowRight, ChevronDown, 
   CheckCircle2, SlidersHorizontal, Globe, Lock 
 } from 'lucide-react';
-import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
 import LabInspectorHeader from '@/components/admin/frontdoor/LabInspectorHeader';
 import DualFeatureEngine from '@/components/admin/frontdoor/DualFeatureEngine';
@@ -108,7 +107,6 @@ export default function AdminFrontDoorLab() {
   const [deviceView, setDeviceView] = useState('desktop');
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTag, setSelectedTag] = useState('All');
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
   const [domainModalOpen, setDomainModalOpen] = useState(false);
@@ -186,8 +184,6 @@ export default function AdminFrontDoorLab() {
       })
       .catch(() => {});
   }, []);
-
-  const tags = ['All', 'Sunbelt States', 'Coastal Relo', 'Low Tax Markets', 'Mountain West', 'Golf Communities'];
 
   const [activeExternalSearch, setActiveExternalSearch] = useState(null);
 
@@ -643,167 +639,15 @@ export default function AdminFrontDoorLab() {
             </div>
           )}
 
-          {/* HERO SECTION: TAN BACKDROP WITH BOLD BLACK SEARCH & CONCIERGE BOX */}
-          <section className="px-5 sm:px-8 py-8 sm:py-10" style={{ background: TAN_BG }}>
-            <div className="max-w-4xl mx-auto text-center space-y-4">
-              
-              {/* Badge & Signature Quote */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm"
-                style={{ background: '#0a0a0a', border: `1.5px solid ${GOLD}`, color: GOLD }}
-              >
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                DysonRelo.com • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
-              </div>
-
-              <div>
-                <h1
-                  className="font-bold leading-tight"
-                  style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 'clamp(1.75rem, 3.6vw, 2.9rem)',
-                    color: '#111111',
-                  }}
-                >
-                  Search Verified Homes Nationwide.
-                </h1>
-                <p
-                  className="italic font-semibold mt-1"
-                  style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 'clamp(1.15rem, 2.1vw, 1.7rem)',
-                    color: '#b8920a',
-                  }}
-                >
-                  Navigate Every Mile with Charlie.
-                </p>
-              </div>
-
-              <p
-                className="italic text-base sm:text-lg max-w-2xl mx-auto font-medium"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  color: '#2a2a2a',
-                }}
-              >
-                "We provide a real-time, lifetime workspace designed to maximize your real estate opportunities. No sales pitches, just real-time solutions."
-                <span className="block not-italic text-[11px] sm:text-xs font-sans font-bold text-[#665a4c] mt-1 uppercase tracking-wider">
-                  55+ YEARS OF NATIONAL REAL ESTATE RELOCATION MANAGEMENT
-                </span>
-              </p>
-
-              {/* THE BLACK COMMAND SEARCH BOX */}
-              <div className="pt-2 max-w-3xl mx-auto">
-                <div
-                  className="rounded-2xl p-4 sm:p-5 text-left shadow-2xl transition-all"
-                  style={{
-                    background: '#0a0a0a',
-                    border: `2px solid ${GOLD}`,
-                    boxShadow: '0 12px 35px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-black tracking-widest uppercase text-[#D4AF37]">
-                        National Search Feed:
-                      </span>
-                      <div className="inline-flex items-center bg-[#181818] border border-white/10 rounded-full p-0.5">
-                        <button
-                          type="button"
-                          onClick={() => setSearchEngine('realtor')}
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
-                            searchEngine === 'realtor'
-                              ? 'bg-[#D4AF37] text-black shadow'
-                              : 'text-white/70 hover:text-white'
-                          }`}
-                        >
-                          Realtor.com (Official MLS)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSearchEngine('homes')}
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
-                            searchEngine === 'homes'
-                              ? 'bg-[#D4AF37] text-black shadow'
-                              : 'text-white/70 hover:text-white'
-                          }`}
-                          title="Homes.com shows listing agents directly without selling buyer leads"
-                        >
-                          Homes.com (Zero-Poaching Feed)
-                        </button>
-                      </div>
-                    </div>
-                    <span className="text-[10px] text-white/50 font-sans hidden sm:inline">
-                      Companion Dock Stays Active On Tab Launch
-                    </span>
-                  </div>
-
-                  {/* Search Input Pill (Warm Off-White / Tan Pop against Black Box) */}
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleSearch(searchQuery);
-                    }}
-                    className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-lg"
-                    style={{
-                      background: '#faf6ee',
-                      border: `2px solid ${GOLD}`,
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                    }}
-                  >
-                    <div className="flex items-center gap-3 w-full pl-4 py-1">
-                      <Search className="w-5 h-5 shrink-0" style={{ color: '#0a0a0a' }} />
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search City, State, ZIP, or Neighborhood (e.g. Scottsdale, Austin, Denver, Naples)..."
-                        className="w-full bg-transparent text-sm font-medium focus:outline-none placeholder:text-stone-500"
-                        style={{ color: '#0a0a0a' }}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto font-bold text-xs sm:text-sm px-7 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105"
-                      style={{
-                        background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-                        color: '#0a0a0a',
-                      }}
-                    >
-                      <span>Search Live MLS</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </form>
-
-                  {/* Trending Market Pills */}
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3 text-xs">
-                    <span className="text-white/60 text-[11px] font-medium mr-1">Trending Markets:</span>
-                    {tags.map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setSelectedTag(t)}
-                        className={`px-2.5 py-1 rounded-full text-[11px] transition-all cursor-pointer ${
-                          selectedTag === t
-                            ? 'bg-[#D4AF37] text-black font-bold'
-                            : 'bg-[#181818] border border-[#2a2a2a] text-white/70 hover:text-white'
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Charlie Voice Concierge Integration inside the box */}
-                  <div className="border-t border-[#222] mt-4 pt-3 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-semibold text-white">Prefer to talk instead of type?</p>
-                      <p className="text-[11px] text-white/60">Charlie can navigate to any city, school district, or intake flow.</p>
-                    </div>
-                    <HeroGeminiConcierge />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* OPTION 3: THE HYBRID LUXURY PROPERTY SHOWCASE HERO */}
+          <LuxuryHeroShowcase
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearch={handleSearch}
+            searchEngine={searchEngine}
+            setSearchEngine={setSearchEngine}
+            onQuickMarketClick={handleSearch}
+          />
 
           {/* TWO-COLUMN DUAL ENGINE: 6AM NEWS BOX & CONCIERGE ADVANTAGE BOX */}
           <section className="px-5 sm:px-8 py-6" style={{ background: TAN_BG }}>
