@@ -173,7 +173,7 @@ export default function LuxuryHeroShowcase({
                 textShadow: '0 2px 18px rgba(0,0,0,0.9), 0 4px 35px rgba(0,0,0,0.8)',
               }}
             >
-              The Newest Way to Find Your Next Home Nationwide.
+              The Newest Way to Find or Sell Real Estate.
             </h1>
             <p
               className="font-semibold mt-2 tracking-wide leading-snug"
