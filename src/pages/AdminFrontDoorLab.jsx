@@ -9,6 +9,7 @@ import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
 import LabInspectorHeader from '@/components/admin/frontdoor/LabInspectorHeader';
 import DualFeatureEngine from '@/components/admin/frontdoor/DualFeatureEngine';
 import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
+import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -171,47 +172,79 @@ export default function AdminFrontDoorLab() {
                 <span className="font-bold underline">dysonhomes.com</span>
               </button>
 
-              {/* Discrete Portals Dropdown */}
+              {/* Corporate & Partner Portals Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:brightness-110 cursor-pointer shadow-sm"
                   style={{
-                    background: '#1a1a1a',
-                    border: '1px solid rgba(212,175,55,0.3)',
+                    background: '#141414',
+                    border: '1.5px solid rgba(212,175,55,0.4)',
+                    color: GOLD,
                   }}
                 >
                   <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span className="hidden sm:inline">Workspaces (6)</span>
-                  <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+                  <span>Corporate &amp; Partner Portals</span>
+                  <ChevronDown className="w-3.5 h-3.5 opacity-80" />
                 </button>
 
                 {portalMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-64 border rounded-xl shadow-2xl p-2 z-50 text-xs"
-                    style={{ background: '#0a0a0a', borderColor: GOLD }}
+                    className="absolute right-0 mt-2 w-72 border rounded-xl shadow-2xl p-2 z-50 text-xs"
+                    style={{ background: '#0a0a0a', borderColor: GOLD, boxShadow: '0 12px 35px rgba(0,0,0,0.6)' }}
                   >
-                    <p className="text-[10px] uppercase font-black tracking-wider px-2 py-1 text-[#D4AF37]">
-                      Concierge &amp; Enterprise Portals
-                    </p>
-                    <Link to="/relocation-intake" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      📦 Client Relocation Intake &amp; Roadmap
+                    <div className="px-2 py-1.5 mb-1 border-b border-white/10 flex items-center justify-between">
+                      <p className="text-[10px] uppercase font-black tracking-wider text-[#D4AF37]">
+                        Specialized Workspaces
+                      </p>
+                      <span className="text-[9px] text-white/40">Direct Roles</span>
+                    </div>
+
+                    <Link to="/corporate-relo" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
+                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
+                      <div>
+                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Corporate Relocation &amp; HR</div>
+                        <div className="text-[10px] text-white/50">Zero-fee employee relocation programs</div>
+                      </div>
                     </Link>
-                    <Link to="/broker-portal" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      🏛️ Broker &amp; Office Workspace
+
+                    <Link to="/find-agent" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
+                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
+                      <div>
+                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Relocation Agent Network</div>
+                        <div className="text-[10px] text-white/50">20+ Vetted partner agent receiving bureau</div>
+                      </div>
                     </Link>
-                    <Link to="/find-agent" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      🤝 20+ Vetted Partner Agent Bureau
+
+                    <Link to="/broker-portal" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
+                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
+                      <div>
+                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Brokerage &amp; Office Management</div>
+                        <div className="text-[10px] text-white/50">Institutional pipeline &amp; transaction tools</div>
+                      </div>
                     </Link>
-                    <Link to="/corporate-relo" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      💼 Corporate &amp; HR Move Management
+
+                    <Link to="/partner-benefits" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
+                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
+                      <div>
+                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Inactive Licensed Agents</div>
+                        <div className="text-[10px] text-white/50">Monetize license with 25% referral protection</div>
+                      </div>
                     </Link>
-                    <Link to="/refer" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      🎁 Referral Partner Submission
+
+                    <Link to="/search" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white group">
+                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] shrink-0" />
+                      <div>
+                        <div className="font-bold text-white group-hover:text-[#D4AF37]">Vetted Vendor Network</div>
+                        <div className="text-[10px] text-white/50">Movers, inspectors, lenders &amp; stagers</div>
+                      </div>
                     </Link>
-                    <Link to="/transparency" className="block px-2.5 py-2 rounded-lg hover:bg-[#1f1f1f] text-white/90">
-                      🛡️ Real Estate Transparency Ledger
-                    </Link>
+
+                    <div className="mt-1 pt-1.5 border-t border-white/10 px-2 py-1 flex items-center justify-between text-[10px]">
+                      <Link to="/portal" className="text-[#D4AF37] hover:underline font-bold">
+                        Master Role Selector →
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -420,6 +453,11 @@ export default function AdminFrontDoorLab() {
                 ))}
               </div>
             </div>
+          </section>
+
+          {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
+          <section className="px-5 sm:px-8 py-6 border-t" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
+            <PartnerPortalGateways />
           </section>
 
           {/* THREE-LOGO FOOTER ROW & LEGAL */}
