@@ -1,0 +1,411 @@
+import React, { useState } from 'react';
+import { 
+  Search, ArrowRight, Sparkles, MapPin, Building, ShieldCheck, 
+  ExternalLink, Compass, SlidersHorizontal, CheckCircle2, TrendingUp,
+  Percent, Sun, Mountain, Waves
+} from 'lucide-react';
+import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
+
+const GOLD = '#D4AF37';
+
+// Curated high-res architectural photos resembling Homes.com and Realtor.com heroes
+const HERO_BACKGROUNDS = [
+  {
+    id: 'scottsdale',
+    title: 'Modern Desert Villa • Scottsdale, AZ',
+    tag: '0% Income Tax Destination',
+    url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=85',
+  },
+  {
+    id: 'austin',
+    title: 'Architectural Farmhouse • Austin, TX',
+    tag: 'Corporate Tech Relo Hub',
+    url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85',
+  },
+  {
+    id: 'naples',
+    title: 'Waterfront Estate • Naples, FL',
+    tag: 'Coastal Relo Favorite',
+    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2000&q=85',
+  },
+  {
+    id: 'boulder',
+    title: 'Mountain Contemporary • Boulder, CO',
+    tag: 'Lifestyle Relocation',
+    url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=85',
+  },
+];
+
+const QUICK_MARKETS = [
+  {
+    city: 'Scottsdale, AZ',
+    state: 'AZ',
+    avgPrice: '$1.15M',
+    tag: 'Low Tax • Sunbelt',
+    icon: Sun,
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    city: 'Austin, TX',
+    state: 'TX',
+    avgPrice: '$890K',
+    tag: '0% State Tax • Tech',
+    icon: TrendingUp,
+    image: 'https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    city: 'Naples, FL',
+    state: 'FL',
+    avgPrice: '$1.45M',
+    tag: 'Waterfront • No Tax',
+    icon: Waves,
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    city: 'Boulder, CO',
+    state: 'CO',
+    avgPrice: '$1.28M',
+    tag: 'Mountain Outdoors',
+    icon: Mountain,
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    city: 'Nashville, TN',
+    state: 'TN',
+    avgPrice: '$740K',
+    tag: '0% State Tax • Culture',
+    icon: Sun,
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    city: 'Dallas, TX',
+    state: 'TX',
+    avgPrice: '$825K',
+    tag: 'Corporate Executive',
+    icon: Building,
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80',
+  },
+];
+
+export default function LuxuryHeroShowcase({
+  searchQuery,
+  setSearchQuery,
+  onSearch,
+  searchEngine,
+  setSearchEngine,
+  onQuickMarketClick,
+}) {
+  const [activeBgIndex, setActiveBgIndex] = useState(0);
+  const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, corporate, new_construction
+  const [vetAddressInput, setVetAddressInput] = useState('');
+  const [vettingStatus, setVettingStatus] = useState(null);
+
+  const currentBg = HERO_BACKGROUNDS[activeBgIndex];
+
+  const handleVetAddress = (e) => {
+    e.preventDefault();
+    if (!vetAddressInput.trim()) return;
+    setVettingStatus('vetting');
+    setTimeout(() => {
+      setVettingStatus('ready');
+    }, 1200);
+  };
+
+  return (
+    <div className="w-full">
+      {/* FULL-BLEED CINEMATIC HERO (HOMES.COM & REALTOR.COM STYLE) */}
+      <div 
+        className="relative min-h-[480px] sm:min-h-[540px] md:min-h-[580px] flex flex-col justify-between p-6 sm:p-10 text-white rounded-t-2xl overflow-hidden shadow-2xl transition-all duration-700"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10,10,10,0.68) 0%, rgba(10,10,10,0.45) 45%, rgba(10,10,10,0.92) 100%), url(${currentBg.url})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Subtle Top Photo Switcher Pill */}
+        <div className="flex flex-wrap items-center justify-between gap-3 z-10">
+          <div 
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold tracking-widest uppercase shadow-md backdrop-blur-md"
+            style={{ background: 'rgba(10,10,10,0.75)', border: `1.5px solid ${GOLD}`, color: GOLD }}
+          >
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+            <span>NATIONWIDE RELOCATION MLS FEED</span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/20 p-1 rounded-full text-[11px]">
+            {HERO_BACKGROUNDS.map((bg, idx) => (
+              <button
+                key={bg.id}
+                onClick={() => setActiveBgIndex(idx)}
+                className={`px-2.5 py-1 rounded-full font-medium transition-all cursor-pointer ${
+                  activeBgIndex === idx
+                    ? 'bg-[#D4AF37] text-black font-bold shadow'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                {bg.title.split('•')[1]?.trim() || bg.title}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Center Content: Headline & Visual Floating Search Bar */}
+        <div className="max-w-4xl mx-auto w-full text-center space-y-4 my-auto py-6 z-10">
+          <div>
+            <h1
+              className="font-bold leading-tight drop-shadow-md text-white"
+              style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(2.1rem, 4.2vw, 3.8rem)',
+              }}
+            >
+              Find Your Next Home Nationwide.
+            </h1>
+            <p
+              className="font-semibold text-lg sm:text-2xl mt-1 tracking-wide"
+              style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                color: '#f3d87f',
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)',
+              }}
+            >
+              We Manage Every Relocation Mile.
+            </p>
+          </div>
+
+          {/* Quick Intent Filter Tabs on the Hero (Like Realtor.com / Homes.com) */}
+          <div className="flex items-center justify-center gap-2 pt-2">
+            {[
+              { id: 'buy', label: 'Search All Homes' },
+              { id: 'low_tax', label: '0% State Tax Havens' },
+              { id: 'corporate', label: 'Executive & Relo' },
+              { id: 'new_construction', label: 'New Construction' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSearchTab(tab.id)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
+                  searchTab === tab.id
+                    ? 'bg-[#D4AF37] text-black shadow-lg scale-105'
+                    : 'bg-black/60 text-white/85 hover:text-white border border-white/20 backdrop-blur-sm'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* FLOATING LUXURY SEARCH PILL (POPS WITH OFF-WHITE WARM BACKGROUND & GOLD BORDER) */}
+          <div className="pt-2 max-w-2xl mx-auto">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSearch(searchQuery);
+              }}
+              className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-2xl backdrop-blur-md"
+              style={{
+                background: '#faf6ee',
+                border: `2px solid ${GOLD}`,
+                boxShadow: '0 16px 40px rgba(0,0,0,0.6)',
+              }}
+            >
+              <div className="flex items-center gap-3 w-full pl-5 py-1">
+                <Search className="w-5 h-5 shrink-0" style={{ color: '#0a0a0a' }} />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Enter City, State, Neighborhood, or ZIP (e.g. Scottsdale, Austin, Naples)..."
+                  className="w-full bg-transparent text-sm font-semibold focus:outline-none placeholder:text-stone-500"
+                  style={{ color: '#0a0a0a' }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full sm:w-auto font-bold text-xs sm:text-sm px-8 py-3 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-105"
+                style={{
+                  background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                  color: '#0a0a0a',
+                }}
+              >
+                <span>Search Live MLS</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+
+            {/* Micro Engine Picker & Charlie Tap */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-3 px-2 text-xs">
+              <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full">
+                <span className="text-[10px] text-white/70 font-semibold uppercase">Feed Engine:</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchEngine('realtor')}
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded cursor-pointer ${
+                    searchEngine === 'realtor' ? 'bg-[#D4AF37] text-black' : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  Realtor.com MLS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchEngine('homes')}
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded cursor-pointer ${
+                    searchEngine === 'homes' ? 'bg-[#D4AF37] text-black' : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  Homes.com Direct
+                </button>
+              </div>
+
+              {/* Charlie Voice Concierge Pill */}
+              <div className="flex items-center">
+                <HeroGeminiConcierge />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Hero Tagline Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/20 pt-3 text-[11px] text-white/80 z-10">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+            <span className="font-medium">Direct National MLS Syndication • 50 States</span>
+          </div>
+          <span className="hidden sm:inline text-white/60">
+            55+ Years of National Relocation Management • Independent Fiduciary Advice
+          </span>
+        </div>
+      </div>
+
+      {/* QUICK DESTINATION PHOTO STRIP (JUST LIKE HOMES.COM CATEGORIES & ZILLOW RECENT) */}
+      <div className="px-5 sm:px-8 py-5 border-b border-[#0a0a0a]/10" style={{ background: '#f5eee2' }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Compass className="w-4 h-4 text-[#D4AF37]" />
+              <span className="text-xs font-black uppercase tracking-wider text-[#0a0a0a]">
+                Explore Top Relocation Destinations:
+              </span>
+            </div>
+            <span className="text-[11px] text-[#665a4c] font-medium hidden sm:inline">
+              Zero state tax &amp; executive hubs
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            {QUICK_MARKETS.map((m) => {
+              const MarketIcon = m.icon;
+              return (
+                <button
+                  key={m.city}
+                  onClick={() => {
+                    setSearchQuery(m.city);
+                    onSearch(m.city);
+                  }}
+                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/40 shadow-sm transition-all hover:scale-[1.03] hover:shadow-md cursor-pointer flex flex-col justify-end min-h-[92px]"
+                  style={{
+                    backgroundImage: `linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.85) 100%), url(${m.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  <span className="text-[9px] font-bold text-[#D4AF37] uppercase tracking-wider flex items-center gap-1">
+                    <MarketIcon className="w-2.5 h-2.5" />
+                    <span>{m.tag}</span>
+                  </span>
+                  <span className="text-xs font-bold text-white leading-tight group-hover:text-[#D4AF37] transition-colors">
+                    {m.city}
+                  </span>
+                  <span className="text-[10px] text-white/80 font-mono">
+                    Avg {m.avgPrice}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* THE HYBRID SECRET WEAPON: VET ANY PROPERTY FOUND ON REALTOR / ZILLOW */}
+      <div 
+        className="px-5 sm:px-8 py-5 border-b"
+        style={{
+          background: '#0a0a0a',
+          borderColor: GOLD,
+        }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5 text-left">
+            <div 
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-inner"
+              style={{ background: '#1c1c1c', border: `1.5px solid ${GOLD}` }}
+            >
+              <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/50">
+                  The Dyson Concierge Advantage
+                </span>
+                <span className="text-xs text-white/60 hidden sm:inline">• Free for buyers</span>
+              </div>
+              <h3 
+                className="text-base sm:text-lg font-bold text-white mt-0.5"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                Found a home on Realtor.com, Zillow, or Homes.com?
+              </h3>
+              <p className="text-xs text-white/70">
+                Paste the address or link below. We vet the top 1% local agent and oversee your escrow at zero cost to you.
+              </p>
+            </div>
+          </div>
+
+          {/* Rapid Property Vetting Input */}
+          <form 
+            onSubmit={handleVetAddress}
+            className="flex items-center gap-2 w-full lg:w-auto"
+          >
+            <div className="relative flex-1 lg:w-80">
+              <input
+                type="text"
+                value={vetAddressInput}
+                onChange={(e) => setVetAddressInput(e.target.value)}
+                placeholder="Paste listing address or URL..."
+                className="w-full bg-[#181818] border border-white/20 rounded-full px-4 py-2 text-xs text-white placeholder:text-stone-500 focus:outline-none focus:border-[#D4AF37]"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-full font-bold text-xs whitespace-nowrap cursor-pointer transition-all active:scale-95 shadow"
+              style={{
+                background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                color: '#0a0a0a',
+              }}
+            >
+              {vettingStatus === 'vetting' ? 'Vetting...' : 'Vet Agent & Escrow'}
+            </button>
+          </form>
+        </div>
+
+        {vettingStatus === 'ready' && (
+          <div className="max-w-6xl mx-auto mt-3 p-3 rounded-xl bg-[#141414] border border-[#D4AF37]/40 flex items-center justify-between text-xs text-white">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
+              <span>
+                Property received! Charlie and our relocation concierge are matching the verified top 1% agent in this area.
+              </span>
+            </div>
+            <a
+              href="/relocation-intake"
+              className="text-[#D4AF37] font-bold underline hover:text-white"
+            >
+              Open Your Relocation Plan →
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -13,6 +13,7 @@ import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGat
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
+import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -24,6 +25,19 @@ const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef05
 const MOCK_LISTINGS = [
   {
     id: 'prop-1',
+    address: '4920 Preston Road Manor',
+    city: 'Dallas',
+    state: 'TX',
+    price: '$3,495,000',
+    beds: 5,
+    baths: 6,
+    sqft: '6,240',
+    tag: '0% State Tax • New on MLS',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    status: 'Active Syndication',
+  },
+  {
+    id: 'prop-2',
     address: '2840 Mariposa Crest Lane',
     city: 'Scottsdale',
     state: 'AZ',
@@ -31,21 +45,8 @@ const MOCK_LISTINGS = [
     beds: 4,
     baths: 4.5,
     sqft: '4,120',
-    tag: 'New on MLS • 3h ago',
+    tag: 'Sunbelt Relo • Pool & Views',
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
-    status: 'Active Syndication',
-  },
-  {
-    id: 'prop-2',
-    address: '744 Mountain Laurel Ridge',
-    city: 'Boulder',
-    state: 'CO',
-    price: '$2,450,000',
-    beds: 5,
-    baths: 5,
-    sqft: '4,890',
-    tag: 'Price Improvement',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
     status: 'Active Syndication',
   },
   {
@@ -57,12 +58,38 @@ const MOCK_LISTINGS = [
     beds: 4,
     baths: 4,
     sqft: '3,760',
-    tag: 'Waterfront Tour',
+    tag: 'Waterfront Haven • No Tax',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
     status: 'Active Syndication',
   },
   {
     id: 'prop-4',
+    address: '744 Mountain Laurel Ridge',
+    city: 'Boulder',
+    state: 'CO',
+    price: '$2,450,000',
+    beds: 5,
+    baths: 5,
+    sqft: '4,890',
+    tag: 'Mountain Outdoors • Relo Pick',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80',
+    status: 'Active Syndication',
+  },
+  {
+    id: 'prop-5',
+    address: '810 Belle Meade Boulevard',
+    city: 'Nashville',
+    state: 'TN',
+    price: '$2,150,000',
+    beds: 4,
+    baths: 4.5,
+    sqft: '4,450',
+    tag: '0% State Tax • Historic Acreage',
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80',
+    status: 'Active Syndication',
+  },
+  {
+    id: 'prop-6',
     address: '420 Barton Creek Boulevard',
     city: 'Austin',
     state: 'TX',
@@ -70,8 +97,8 @@ const MOCK_LISTINGS = [
     beds: 4,
     baths: 3.5,
     sqft: '3,450',
-    tag: 'Relo Favorite',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80',
+    tag: 'Corporate Tech Relo Hub',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
     status: 'Active Syndication',
   },
 ];
