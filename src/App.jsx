@@ -231,8 +231,8 @@ const AuthenticatedApp = () => {
       <Route path="/referral-process" element={<ReferralProcessExplainer />} />
       <Route path="/referral-forms" element={<ReferralFormsExplainer />} />
 
-      {/* Public marketing/legal pages — no auth required, but still wrapped in AppLayout
-          so the admin top command bar (access to every portal) shows automatically. */}
+      {/* Public marketing/legal pages & Concierge Exploration Routes — no auth required,
+          wrapped in AppLayout so visitors can explore directories & services without hitting a login wall. */}
       <Route element={<AppLayout />}>
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
@@ -240,12 +240,20 @@ const AuthenticatedApp = () => {
         <Route path="/relocation-intake" element={<RelocationIntake />} />
         <Route path="/RelocationIntake" element={<RelocationIntake />} />
         <Route path="/real-estate-answers" element={<RealEstateAnswers />} />
-        {/* Corporate Relo / HR portal — PUBLIC (cold HR visitors, no login redirect).
-            Public AppLayout is the pattern for cold visitors; it must NOT inherit the
-            Client sidebar content or the Admin sidebar (AdminLayout) — it is its own portal. */}
         <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/transparency" element={<Transparency />} />
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
+
+        {/* Public Concierge Directories navigated by Charlie */}
+        <Route path="/find-agent" element={<FindAgent />} />
+        <Route path="/FindAgent" element={<FindAgent />} />
+        <Route path="/solutions" element={<SolutionMapEntry />} />
+        <Route path="/roadmaps" element={<SolutionMapEntry />} />
+        <Route path="/city-guide" element={<CityGuide />} />
+        <Route path="/CityGuide" element={<CityGuide />} />
+        <Route path="/financial-services" element={<FinancialServices />} />
+        <Route path="/broker-portal" element={<BrokerPortalLanding />} />
+        <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       </Route>
 
       {/* Root → Role Selector, the current front-door layout for clients and others (signed in or not) */}

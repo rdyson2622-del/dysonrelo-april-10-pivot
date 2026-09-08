@@ -68,6 +68,12 @@ export default function HeroGeminiConcierge() {
         setErrorMessage(err);
       },
       onSessionLogId: () => {},
+      onPendingNavigate: (nav) => {
+        setNavNotice(nav);
+      },
+      onCancelNavigate: () => {
+        setNavNotice(null);
+      },
       onNavigate: (nav) => {
         if (!nav?.path) return;
         setNavNotice(nav);
@@ -130,7 +136,7 @@ export default function HeroGeminiConcierge() {
               className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full"
               style={{ background: `${GOLD}20`, color: GOLD }}
             >
-              Gemini Live
+              Voice Concierge
             </span>
           </button>
         ) : (

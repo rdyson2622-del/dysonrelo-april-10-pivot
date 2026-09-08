@@ -89,6 +89,8 @@ export class GeminiLiveSessionClient {
       onSpeaker,
       onError,
       onSessionLogId,
+      onPendingNavigate,
+      onCancelNavigate,
       onNavigate,
     } = options;
 
@@ -98,7 +100,10 @@ export class GeminiLiveSessionClient {
     this.onSpeaker = onSpeaker;
     this.onError = onError;
     this.onSessionLogId = onSessionLogId;
+    this.onPendingNavigate = onPendingNavigate;
+    this.onCancelNavigate = onCancelNavigate;
     this.onNavigate = onNavigate;
+    this.pendingNav = null;
 
     this.sessionLogId = null;
     this.startTime = null;
@@ -307,7 +312,9 @@ export class GeminiLiveSessionClient {
   handleInterruption() {
     this.isInterrupted = true;
     this.pendingSpeakId++;
+    this.pendingNav = null;
     this.charlieAudioPlayer.stop();
+    this.onCancelNavigate?.();
     this.onSpeaker?.('user');
     this.onStatusChange?.('listening');
   }
@@ -341,11 +348,14 @@ export class GeminiLiveSessionClient {
       const audioUrl = res.data?.audioUrl;
 
       // Check for navigation directives (tool calling)
+      let turnNav = null;
       const navMatch = reply.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i);
       if (navMatch) {
         const navPath = navMatch[1].trim();
         const navTitle = (navMatch[2] || navPath).trim();
-        this.onNavigate?.({ path: navPath, title: navTitle });
+        turnNav = { path: navPath, title: navTitle };
+        this.pendingNav = turnNav;
+        this.onPendingNavigate?.(turnNav);
       }
 
       const cleanReply = reply.replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '').trim();
@@ -354,8 +364,21 @@ export class GeminiLiveSessionClient {
         this.onTranscript?.({ role: 'assistant', text: cleanReply });
       }
 
+      const executeNavigationIfValid = () => {
+        if (turnNav && !this.isInterrupted && currentReq === this.pendingSpeakId && this.active) {
+          const navTarget = turnNav;
+          this.pendingNav = null;
+          this.onNavigate?.(navTarget);
+        }
+      };
+
       // Play Charlie's custom authoritative American voice ('storm')
       if (audioUrl && !this.isInterrupted) {
+        // Safety timeout so navigation doesn't hang if audio event stalls
+        const navTimeout = turnNav ? setTimeout(() => {
+          executeNavigationIfValid();
+        }, 5500) : null;
+
         this.charlieAudioPlayer.play(audioUrl, {
           onStart: () => {
             if (currentReq === this.pendingSpeakId && !this.isInterrupted) {
@@ -364,15 +387,20 @@ export class GeminiLiveSessionClient {
             }
           },
           onEnded: () => {
-            if (currentReq === this.pendingSpeakId) {
+            if (navTimeout) clearTimeout(navTimeout);
+            if (currentReq === this.pendingSpeakId && !this.isInterrupted) {
               this.onSpeaker?.(null);
               this.onStatusChange?.('listening');
+              executeNavigationIfValid();
             }
           },
         });
       } else {
         this.onSpeaker?.(null);
         this.onStatusChange?.('listening');
+        if (turnNav) {
+          setTimeout(() => executeNavigationIfValid(), 800);
+        }
       }
     } catch (err) {
       console.warn('Error processing turn:', err);

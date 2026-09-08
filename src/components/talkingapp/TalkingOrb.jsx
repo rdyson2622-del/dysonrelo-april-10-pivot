@@ -65,6 +65,10 @@ export default function TalkingOrb({
       onSessionLogId: (id) => {
         onSessionId?.(id);
       },
+      onPendingNavigate: (nav) => {
+        onNavigate?.(nav);
+      },
+      onCancelNavigate: () => {},
       onNavigate: (nav) => {
         onNavigate?.(nav);
       },
