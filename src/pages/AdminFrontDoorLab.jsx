@@ -301,20 +301,28 @@ export default function AdminFrontDoorLab() {
                     </span>
                   </div>
 
-                  {/* Search Input Bar */}
-                  <div className="flex flex-col sm:flex-row items-center gap-2 bg-[#181818] p-1.5 rounded-xl border border-[#333]">
-                    <div className="flex items-center gap-2.5 w-full pl-3 py-1">
-                      <Search className="w-5 h-5 text-[#D4AF37] shrink-0" />
+                  {/* Search Input Pill (Warm Off-White / Tan Pop against Black Box) */}
+                  <div
+                    className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-lg"
+                    style={{
+                      background: '#faf6ee',
+                      border: `2px solid ${GOLD}`,
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <div className="flex items-center gap-3 w-full pl-4 py-1">
+                      <Search className="w-5 h-5 shrink-0" style={{ color: '#0a0a0a' }} />
                       <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search City, State, ZIP, or Neighborhood (e.g. Scottsdale, Austin, Denver, Naples)..."
-                        className="w-full bg-transparent text-sm text-white placeholder-white/50 focus:outline-none"
+                        className="w-full bg-transparent text-sm font-medium focus:outline-none placeholder:text-stone-500"
+                        style={{ color: '#0a0a0a' }}
                       />
                     </div>
                     <button
-                      className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-2.5 rounded-lg whitespace-nowrap transition-transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      className="w-full sm:w-auto font-bold text-xs sm:text-sm px-7 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105"
                       style={{
                         background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
                         color: '#0a0a0a',
