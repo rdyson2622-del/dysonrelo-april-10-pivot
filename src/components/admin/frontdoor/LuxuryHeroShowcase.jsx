@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, Sparkles, MapPin, Building, ShieldCheck, 
   ExternalLink, Compass, SlidersHorizontal, CheckCircle2, TrendingUp,
@@ -96,8 +97,9 @@ export default function LuxuryHeroShowcase({
   setSearchEngine,
   onQuickMarketClick,
 }) {
+  const navigate = useNavigate();
   const [activeBgIndex, setActiveBgIndex] = useState(0);
-  const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, corporate, new_construction
+  const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, new_construction, grok_assistants
   const [vetAddressInput, setVetAddressInput] = useState('');
   const [vettingStatus, setVettingStatus] = useState(null);
 
@@ -187,16 +189,21 @@ export default function LuxuryHeroShowcase({
           </div>
 
           {/* Quick Intent Filter Tabs on the Hero (Like Realtor.com / Homes.com) */}
-          <div className="flex items-center justify-center gap-2 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             {[
               { id: 'buy', label: 'Search All Homes' },
               { id: 'low_tax', label: '0% State Tax Havens' },
-              { id: 'corporate', label: 'Executive & Relo' },
               { id: 'new_construction', label: 'New Construction' },
+              { id: 'grok_assistants', label: '21 Grok Bot Assistants 24/7' },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setSearchTab(tab.id)}
+                onClick={() => {
+                  setSearchTab(tab.id);
+                  if (tab.id === 'grok_assistants' && !searchQuery.trim()) {
+                    // Optional quick suggestion or navigation
+                  }
+                }}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
                   searchTab === tab.id
                     ? 'bg-[#D4AF37] text-black shadow-lg scale-105'
@@ -213,6 +220,10 @@ export default function LuxuryHeroShowcase({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                if (searchTab === 'grok_assistants' && (!searchQuery.trim() || searchQuery.toLowerCase().includes('bot') || searchQuery.toLowerCase().includes('grok'))) {
+                  navigate('/ai-assistants');
+                  return;
+                }
                 onSearch(searchQuery);
               }}
               className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-2xl backdrop-blur-md"
@@ -228,7 +239,15 @@ export default function LuxuryHeroShowcase({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Enter City, State, Neighborhood, or ZIP (e.g. Scottsdale, Austin, Naples)..."
+                  placeholder={
+                    searchTab === 'low_tax'
+                      ? "Search 0% state tax havens (e.g. Dallas, Scottsdale, Naples, Nashville)..."
+                      : searchTab === 'new_construction'
+                      ? "Search new construction & modern developments (e.g. Austin, Phoenix)..."
+                      : searchTab === 'grok_assistants'
+                      ? "Ask our 21 Grok Bot specialists about cities, taxes, or relocation steps..."
+                      : "Enter City, State, Neighborhood, or ZIP (e.g. Scottsdale, Austin, Naples)..."
+                  }
                   className="w-full bg-transparent text-sm font-semibold focus:outline-none placeholder:text-stone-500"
                   style={{ color: '#0a0a0a' }}
                 />
@@ -242,7 +261,7 @@ export default function LuxuryHeroShowcase({
                   color: '#0a0a0a',
                 }}
               >
-                <span>Search Live MLS</span>
+                <span>{searchTab === 'grok_assistants' ? 'Ask Assistants' : 'Search Live MLS'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
