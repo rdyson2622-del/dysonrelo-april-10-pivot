@@ -156,7 +156,7 @@ export default function AdminFrontDoorLab() {
                     className="font-bold text-lg sm:text-xl tracking-wider text-white"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
-                    DYSONRELO.COM
+                    DysonRelo.com
                   </span>
                   <span
                     className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full hidden sm:inline-flex"
@@ -302,7 +302,7 @@ export default function AdminFrontDoorLab() {
                 style={{ background: '#0a0a0a', border: `1.5px solid ${GOLD}`, color: GOLD }}
               >
                 <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                DYSONRELO.COM • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
+                DysonRelo.com • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
               </div>
 
               <div>
@@ -512,7 +512,7 @@ export default function AdminFrontDoorLab() {
 
             <div className="text-center text-white/60 space-y-1">
               <p className="font-bold text-white text-sm" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                DYSONRELO.COM • THE DYSON &amp; DYSON COMPANIES, INC.
+                DysonRelo.com • THE DYSON &amp; DYSON COMPANIES, INC.
               </p>
               <p className="text-[11px] text-white/50">
                 Licensed California Corporate Brokerage • Real Estate Relocation Concierge &amp; National Referral Network
