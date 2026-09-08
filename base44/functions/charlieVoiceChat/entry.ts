@@ -60,7 +60,7 @@ Respond as Charlie (strictly 1-2 concise sentences, natural American spoken tone
 
     const reply = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,
-      model: 'gpt_5_mini',
+      model: 'gemini_3_flash',
     });
 
     const cleanReply = (typeof reply === 'string' ? reply : JSON.stringify(reply))

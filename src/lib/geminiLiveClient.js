@@ -172,6 +172,9 @@ export class GeminiLiveSessionClient {
 
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') {
+        await ctx.resume().catch(() => {});
+      }
       this.micCtx = ctx;
 
       const source = ctx.createMediaStreamSource(stream);
@@ -230,7 +233,19 @@ export class GeminiLiveSessionClient {
         }
       };
 
+      rec.onsoundstart = () => {
+        if (this.charlieAudioPlayer.isPlaying) {
+          this.handleInterruption();
+        }
+      };
+
       rec.onspeechstart = () => {
+        if (this.charlieAudioPlayer.isPlaying) {
+          this.handleInterruption();
+        }
+      };
+
+      rec.onaudiostart = () => {
         if (this.charlieAudioPlayer.isPlaying) {
           this.handleInterruption();
         }
