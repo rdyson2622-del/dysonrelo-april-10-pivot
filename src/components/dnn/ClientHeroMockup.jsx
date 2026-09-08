@@ -46,6 +46,9 @@ export default function ClientHeroMockup({
           >
             {quoteLine2}
           </p>
+
+          {/* Discreet Gemini Live Voice Concierge — Upper Left */}
+          <HeroGeminiConcierge />
         </div>
 
         {/* Studio video — right, ~50% size */}

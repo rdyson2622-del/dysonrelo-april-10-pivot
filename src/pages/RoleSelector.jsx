@@ -4,7 +4,6 @@ import { Home, Star, Handshake, Wrench, Building2, Briefcase, ArrowLeft, Newspap
 import { base44 } from '@/api/base44Client';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import CommandPills from '@/components/layout/CommandPills';
-import FirstVisitVoiceGreeting from '@/components/portal/FirstVisitVoiceGreeting';
 import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
 
 const GOLD = '#D4AF37';
@@ -147,7 +146,6 @@ export default function RoleSelector() {
         </div>
       )}
 
-      <FirstVisitVoiceGreeting />
       <ReferralFloatingPill />
 
       <ClientHeroMockup />

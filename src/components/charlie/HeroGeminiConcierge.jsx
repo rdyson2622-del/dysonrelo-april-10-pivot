@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, Square, Loader2, Volume2, Compass, AlertCircle } from 'lucide-react';
+import { Mic, Square, Loader2, Volume2, Compass, X } from 'lucide-react';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
-import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 
@@ -31,14 +30,16 @@ export default function HeroGeminiConcierge() {
   const navigate = useNavigate();
   const [status, setStatus] = useState('ready'); // ready, connecting, listening, speaking, error
   const [errorMessage, setErrorMessage] = useState(null);
-  const [lastTranscript, setLastTranscript] = useState(null);
+  const [liveText, setLiveText] = useState('');
+  const [speakerRole, setSpeakerRole] = useState(null);
   const [navNotice, setNavNotice] = useState(null);
   const clientRef = useRef(null);
   const navTimerRef = useRef(null);
 
   const handleStart = async () => {
     setErrorMessage(null);
-    setLastTranscript(null);
+    setLiveText('');
+    setSpeakerRole(null);
     setNavNotice(null);
 
     if (clientRef.current) {
@@ -56,10 +57,13 @@ export default function HeroGeminiConcierge() {
       },
       onTranscript: (t) => {
         if (t?.text) {
-          setLastTranscript(t);
+          setLiveText(t.text);
+          setSpeakerRole(t.role);
         }
       },
-      onSpeaker: () => {},
+      onSpeaker: (role) => {
+        setSpeakerRole(role);
+      },
       onError: (err) => {
         setErrorMessage(err);
       },
@@ -85,6 +89,7 @@ export default function HeroGeminiConcierge() {
       clientRef.current = null;
     }
     setStatus('ready');
+    setLiveText('');
   };
 
   useEffect(() => {
@@ -100,110 +105,99 @@ export default function HeroGeminiConcierge() {
   const isActive = status === 'listening' || status === 'speaking' || status === 'connecting';
 
   return (
-    <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.35)] w-full max-w-xl">
-      <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-3 bg-[#0d0d0d] p-3 rounded-2xl border border-[rgba(212,175,55,0.4)] shadow-xl">
-        <div className="flex items-center gap-3 min-w-0">
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-            style={{
-              background: status === 'speaking'
-                ? 'radial-gradient(circle, rgba(212,175,55,0.4) 0%, #1a1a1a 70%)'
-                : status === 'listening'
-                ? 'radial-gradient(circle, rgba(34,197,94,0.35) 0%, #1a1a1a 70%)'
-                : 'rgba(212,175,55,0.15)',
-              border: `1.5px solid ${status === 'speaking' ? GOLD : status === 'listening' ? '#22c55e' : GOLD}`,
-            }}
+    <div className="mt-3.5 inline-flex flex-col items-start max-w-full">
+      {/* Discreet Gemini-style audio pill */}
+      <div
+        className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all duration-300 shadow-md"
+        style={{
+          background: '#0d0d0d',
+          border: `1px solid ${isActive ? GOLD : 'rgba(212,175,55,0.35)'}`,
+        }}
+      >
+        {!isActive ? (
+          <button
+            onClick={handleStart}
+            className="flex items-center gap-2 text-xs font-semibold text-white/90 hover:text-white cursor-pointer group"
           >
-            {status === 'connecting' ? (
-              <Loader2 className="w-4 h-4 animate-spin text-[#D4AF37]" />
-            ) : status === 'speaking' ? (
-              <Volume2 className="w-4 h-4 text-[#D4AF37] animate-pulse" />
-            ) : status === 'listening' ? (
-              <Mic className="w-4 h-4 text-[#22c55e] animate-pulse" />
-            ) : (
-              <Mic className="w-4 h-4 text-[#D4AF37]" />
-            )}
-          </div>
-
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black tracking-widest uppercase text-[#D4AF37]">
-                Gemini Live Concierge
+            <span
+              className="w-6 h-6 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: 'rgba(212,175,55,0.2)', border: `1px solid ${GOLD}` }}
+            >
+              <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
+            </span>
+            <span className="tracking-wide">Talk with Charlie</span>
+            <span
+              className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full"
+              style={{ background: `${GOLD}20`, color: GOLD }}
+            >
+              Gemini Live
+            </span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-3">
+            {/* Live animated waveform */}
+            <div className="flex items-center gap-1.5">
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: status === 'speaking' ? GOLD : status === 'listening' ? '#22c55e' : GOLD,
+                  boxShadow: status === 'speaking' ? `0 0 8px ${GOLD}` : '0 0 8px #22c55e',
+                }}
+              />
+              <span className="text-[11px] font-bold text-white tracking-wide">
+                {status === 'connecting' && 'Connecting…'}
+                {status === 'listening' && 'Listening…'}
+                {status === 'speaking' && 'Charlie Speaking…'}
               </span>
-              {isActive && (
-                <span
-                  className="px-1.5 py-0.2 rounded text-[8px] font-black uppercase tracking-wider"
-                  style={{
-                    background: status === 'speaking' ? 'rgba(212,175,55,0.2)' : 'rgba(34,197,94,0.2)',
-                    color: status === 'speaking' ? GOLD : '#4ade80',
-                    border: `1px solid ${status === 'speaking' ? GOLD : '#22c55e'}`,
-                  }}
-                >
-                  {status === 'speaking' ? 'Charlie Speaking' : status === 'listening' ? 'Listening' : 'Connecting'}
-                </span>
+
+              {/* Minimalist 3-bar equalizer for speaking */}
+              {status === 'speaking' && (
+                <div className="flex items-center gap-0.5 ml-1">
+                  <span className="w-0.5 h-3 bg-[#D4AF37] animate-pulse rounded-full" />
+                  <span className="w-0.5 h-4 bg-[#D4AF37] animate-pulse delay-75 rounded-full" />
+                  <span className="w-0.5 h-2 bg-[#D4AF37] animate-pulse delay-150 rounded-full" />
+                </div>
               )}
             </div>
 
-            <p className="text-xs text-white/90 truncate font-medium">
-              {status === 'ready' && 'US Male Voice • Voice Navigation • Live V2V'}
-              {status === 'connecting' && 'Connecting live session...'}
-              {status === 'listening' && 'Listening... ask anything or name any service'}
-              {status === 'speaking' && 'Speaking (you can interrupt anytime)'}
-              {status === 'error' && (errorMessage || 'Connection interrupted')}
-            </p>
-          </div>
-        </div>
+            <span className="text-[10px] text-gray-400 hidden sm:inline">
+              (barge-in enabled)
+            </span>
 
-        {/* Action Button */}
-        <div className="shrink-0">
-          {isActive ? (
+            {/* End button */}
             <button
               onClick={handleEnd}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full font-bold text-xs cursor-pointer transition-all hover:scale-105 active:scale-95 text-red-400 bg-red-950/40 border border-red-500/50"
+              className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full text-red-400 hover:text-red-300 hover:bg-red-500/10 cursor-pointer transition-colors"
+              title="End conversation"
             >
-              <Square className="w-3 h-3" /> End Call
+              <Square className="w-2.5 h-2.5" /> Stop
             </button>
-          ) : (
-            <button
-              onClick={handleStart}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full font-black text-xs tracking-wider uppercase cursor-pointer transition-all hover:scale-105 active:scale-95"
-              style={{
-                background: `linear-gradient(135deg, #e8c84a, ${GOLD})`,
-                color: '#000',
-                boxShadow: '0 4px 15px rgba(212,175,55,0.3)',
-              }}
-            >
-              <Mic className="w-3.5 h-3.5" /> Talk with Charlie
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* Navigation notification banner */}
-      {navNotice && (
-        <div className="mt-2 p-2 rounded-xl bg-black/80 border border-[#D4AF37] flex items-center justify-between text-xs text-white">
-          <div className="flex items-center gap-2">
-            <Compass className="w-4 h-4 text-[#D4AF37]" />
-            <span>
-              Navigating to <strong className="text-[#e8c84a]">{navNotice.title || navNotice.path}</strong>
-            </span>
-          </div>
-          <button
-            onClick={() => setNavNotice(null)}
-            className="text-[10px] text-gray-400 hover:text-white px-1"
-          >
-            ✕
-          </button>
-        </div>
+      {/* Error note if any */}
+      {status === 'error' && (
+        <p className="text-[10px] text-amber-600 mt-1 pl-1">
+          {errorMessage || 'Connection issue. Tap to retry.'}
+        </p>
       )}
 
-      {/* Live Transcript Snippet */}
-      {isActive && lastTranscript && (
-        <div className="mt-2 px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 text-[11px] text-white/80 flex items-start gap-2">
-          <span className="font-bold text-[#D4AF37] uppercase text-[9px] shrink-0 mt-0.5">
-            {lastTranscript.role === 'user' ? 'You' : 'Charlie'}:
-          </span>
-          <p className="line-clamp-2 leading-tight">{lastTranscript.text}</p>
+      {/* Discreet single-line caption / navigation alert */}
+      {isActive && (liveText || navNotice) && (
+        <div className="mt-1.5 max-w-md text-[11px] text-[#2c2217] font-medium leading-tight pl-1 flex items-center gap-1.5">
+          {navNotice ? (
+            <span className="inline-flex items-center gap-1 text-[#0d0d0d] font-bold bg-[#D4AF37]/30 px-2 py-0.5 rounded">
+              <Compass className="w-3 h-3 text-[#b8920a]" /> Directing to {navNotice.title || navNotice.path}
+            </span>
+          ) : (
+            <span className="truncate">
+              <strong className="text-[#b8920a] uppercase text-[9px] mr-1">
+                {speakerRole === 'user' ? 'You:' : 'Charlie:'}
+              </strong>
+              {liveText}
+            </span>
+          )}
         </div>
       )}
     </div>
