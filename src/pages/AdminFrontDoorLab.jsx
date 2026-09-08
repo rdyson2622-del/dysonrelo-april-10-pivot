@@ -17,7 +17,7 @@ import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
-const DYSON_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
 const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/67bc7aa5a_generated_image.png';
 
@@ -264,15 +264,11 @@ export default function AdminFrontDoorLab() {
             style={{ background: '#0a0a0a', borderBottom: `2px solid ${GOLD}` }}
           >
             <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-black text-xl shadow"
-                style={{
-                  background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-                  fontFamily: 'Cormorant Garamond, serif',
-                }}
-              >
-                D
-              </div>
+              <img
+                src={DYSON_LOGO}
+                alt="Dyson & Dyson"
+                className="h-10 w-auto object-contain shrink-0 drop-shadow"
+              />
               <div>
                 <div className="flex items-center gap-2">
                   <span
