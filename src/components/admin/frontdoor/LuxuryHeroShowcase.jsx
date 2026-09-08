@@ -200,10 +200,11 @@ export default function LuxuryHeroShowcase({
               <button
                 key={tab.id}
                 onClick={() => {
-                  setSearchTab(tab.id);
-                  if (tab.id === 'grok_assistants' && !searchQuery.trim()) {
-                    // Optional quick suggestion or navigation
+                  if (tab.id === 'grok_assistants') {
+                    navigate('/ai-assistants');
+                    return;
                   }
+                  setSearchTab(tab.id);
                 }}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
                   searchTab === tab.id

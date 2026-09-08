@@ -255,6 +255,7 @@ const AuthenticatedApp = () => {
         <Route path="/financial-services" element={<FinancialServices />} />
         <Route path="/broker-portal" element={<BrokerPortalLanding />} />
         <Route path="/partner-benefits" element={<SendingAgentLanding />} />
+        <Route path="/ai-assistants" element={<AIAssistants />} />
       </Route>
 
       {/* Root → Role Selector, the current front-door layout for clients and others (signed in or not) */}
