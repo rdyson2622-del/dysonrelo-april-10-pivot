@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, Building, ArrowRight, ChevronDown, 
   CheckCircle2, SlidersHorizontal, Globe, Lock 
@@ -77,6 +77,7 @@ const MOCK_LISTINGS = [
 ];
 
 export default function AdminFrontDoorLab() {
+  const navigate = useNavigate();
   const [deviceView, setDeviceView] = useState('desktop');
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,7 +88,69 @@ export default function AdminFrontDoorLab() {
   const [latestBroadcast, setLatestBroadcast] = useState(null);
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
 
+  // Subscriber session & direct-access detection
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userPortalDest, setUserPortalDest] = useState(null);
+  const [userRoleLabel, setUserRoleLabel] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   useEffect(() => {
+    base44.auth.me().then(user => {
+      if (user) {
+        setCurrentUser(user);
+        setIsSubscribed(true);
+        if (user.role === 'admin') {
+          setUserPortalDest('/admin');
+          setUserRoleLabel('Admin Portal');
+        } else if (user.portal_role === 'brokerage_admin' || user.portal_role === 'broker') {
+          setUserPortalDest('/brokerage');
+          setUserRoleLabel('Brokerage Portal');
+        } else if (user.portal_role === 'agent') {
+          setUserPortalDest('/agent-command-center');
+          setUserRoleLabel('Agent Portal');
+        } else if (user.portal_role === 'referral_agent' || user.portal_role === 'inactive_agent') {
+          setUserPortalDest('/partner-benefits');
+          setUserRoleLabel('Referral Portal');
+        } else if (user.portal_role === 'hr') {
+          setUserPortalDest('/corporate-relo');
+          setUserRoleLabel('Corporate Relo Suite');
+        } else if (user.portal_role === 'vendor') {
+          setUserPortalDest('/search');
+          setUserRoleLabel('Vendor Hub');
+        } else {
+          setUserPortalDest('/home');
+          setUserRoleLabel('Client Portal');
+        }
+      }
+    }).catch(() => {
+      // Not authenticated — check local storage for saved subscriber role
+      try {
+        const saved = JSON.parse(localStorage.getItem('dyson_portal'));
+        if (saved?.roleKey) {
+          setIsSubscribed(true);
+          const MAP = {
+            admin: { dest: '/admin', label: 'Admin Portal' },
+            brokerage_admin: { dest: '/brokerage', label: 'Brokerage Portal' },
+            broker: { dest: '/brokerage', label: 'Brokerage Portal' },
+            agent: { dest: '/agent-command-center', label: 'Agent Portal' },
+            referral_agent: { dest: '/partner-benefits', label: 'Referral Portal' },
+            inactive_agent: { dest: '/partner-benefits', label: 'Referral Portal' },
+            hr: { dest: '/corporate-relo', label: 'Corporate Relo Suite' },
+            vendor: { dest: '/search', label: 'Vendor Hub' },
+            client: { dest: '/home', label: 'Client Portal' },
+          };
+          const m = MAP[saved.roleKey];
+          if (m) {
+            setUserPortalDest(m.dest);
+            setUserRoleLabel(m.label);
+          } else {
+            setUserPortalDest(saved.dest || '/home');
+            setUserRoleLabel('My Workspace');
+          }
+        }
+      } catch (_) {}
+    });
+
     base44.entities.DnnBroadcast.list('-broadcast_date', 1)
       .then((res) => {
         if (res && res.length > 0) {
@@ -133,13 +196,23 @@ export default function AdminFrontDoorLab() {
     setActiveExternalSearch({ location: `${listing.city}, ${listing.state}`, url, listing, engineName });
   };
 
+  const ROLE_NAV_DESTS = {
+    hr: '/corporate-relo',
+    agent: '/agent-command-center',
+    broker: '/brokerage',
+    inactive_agent: '/partner-benefits',
+    vendor: '/search',
+    client: '/home',
+    admin: '/admin',
+  };
+
   const handleSelectRoleFromNav = (roleKey) => {
-    setSelectedRoleForSubscription(roleKey);
     setPortalMenuOpen(false);
-    const elem = document.getElementById('portal-subscribe-section');
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    }
+    const dest = ROLE_NAV_DESTS[roleKey] || '/home';
+    localStorage.setItem('dyson_portal', JSON.stringify({ roleKey, dest }));
+    sessionStorage.setItem('dyson_role', roleKey);
+    window.dispatchEvent(new Event('dyson_role_change'));
+    navigate(dest);
   };
 
   return (
@@ -219,73 +292,123 @@ export default function AdminFrontDoorLab() {
                 <span className="font-bold underline">dysonrelo.com</span>
               </button>
 
-              {/* Subscriber Workspaces & Portals Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
-                  style={{
-                    background: '#141414',
-                    border: '1.5px solid rgba(212,175,55,0.4)',
-                    color: GOLD,
-                  }}
-                >
-                  <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span>Subscriber Workspaces</span>
-                  <span className="text-[9px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded font-black uppercase tracking-wider hidden sm:inline">
-                    Subscribers Only
-                  </span>
-                  <ChevronDown className="w-3.5 h-3.5 opacity-80" />
-                </button>
+              {/* Subscriber Workspaces & Direct Access Button */}
+              <div className="relative flex items-center">
+                {isSubscribed ? (
+                  /* ALREADY SUBSCRIBED: Direct access to their specific personal DysonRelo site/portal! */
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => navigate(userPortalDest || '/home')}
+                      className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                      style={{
+                        background: 'linear-gradient(135deg, #1f1a0e 0%, #0d0d0d 100%)',
+                        border: `1.5px solid ${GOLD}`,
+                        color: GOLD,
+                      }}
+                      title={`Direct Access: Open ${userRoleLabel || 'Your Workspace'}`}
+                    >
+                      <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <span>{userRoleLabel || 'My Workspace'}</span>
+                      <span
+                        className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-black flex items-center gap-1 shadow-sm"
+                        style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
+                      >
+                        <span>ENTER SITE</span>
+                        <ArrowRight className="w-2.5 h-2.5" />
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setPortalMenuOpen(!portalMenuOpen)}
+                      className="p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                      title="Switch Workspace / Options"
+                    >
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  /* NOT SUBSCRIBED: Opens the subscriber workspace options */
+                  <button
+                    onClick={() => setPortalMenuOpen(!portalMenuOpen)}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
+                    style={{
+                      background: '#141414',
+                      border: '1.5px solid rgba(212,175,55,0.4)',
+                      color: GOLD,
+                    }}
+                  >
+                    <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Subscriber Workspaces</span>
+                    <span className="text-[9px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded font-black uppercase tracking-wider hidden sm:inline">
+                      Subscribers Only
+                    </span>
+                    <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+                  </button>
+                )}
 
                 {portalMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-80 sm:w-96 border rounded-2xl shadow-2xl p-3.5 z-50 text-xs"
+                    className="absolute right-0 top-full mt-2 w-80 sm:w-96 border rounded-2xl shadow-2xl p-3.5 z-50 text-xs"
                     style={{
                       background: '#0a0a0a',
                       borderColor: GOLD,
                       boxShadow: '0 16px 45px rgba(0,0,0,0.85)',
                     }}
                   >
-                    {/* Header with clear explanation */}
+                    {/* Header with clear status and direct options */}
                     <div className="px-1 pb-3 mb-2 border-b border-white/10">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] uppercase font-black tracking-wider text-[#D4AF37] flex items-center gap-1.5">
                           <Lock className="w-3 h-3 text-[#D4AF37]" />
-                          Subscriber-Gated Workspaces
+                          Subscriber Workspaces
                         </span>
                         <span className="text-[9px] font-bold bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/50 px-2 py-0.5 rounded-full uppercase">
-                          Subscription Required
+                          {isSubscribed ? 'Subscribed' : 'Subscription Required'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-white/75 mt-1.5 leading-snug">
-                        These specialized portals are operational workspaces reserved for enrolled subscribers and approved partners. Public visitors must activate an approved role subscription to access client files, pipeline tools, and referral ledgers.
-                      </p>
 
-                      {/* Fast Action Buttons: Subscribe vs Log In */}
-                      <div className="grid grid-cols-2 gap-2 mt-2.5">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPortalMenuOpen(false);
-                            const elem = document.getElementById('portal-subscribe-section');
-                            if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-black text-center cursor-pointer transition-transform active:scale-95 shadow"
-                          style={{
-                            background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-                          }}
-                        >
-                          Enroll / Activate Free
-                        </button>
-                        <Link
-                          to="/login"
-                          onClick={() => setPortalMenuOpen(false)}
-                          className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-white text-center border border-white/20 bg-[#1a1a1a] hover:bg-[#252525] cursor-pointer"
-                        >
-                          Subscriber Sign In
-                        </Link>
-                      </div>
+                      {/* Logged in status or sign-in/enroll options */}
+                      {currentUser ? (
+                        <div className="mt-2 flex items-center justify-between text-[11px] bg-[#141414] p-2 rounded-lg border border-white/10">
+                          <span className="text-white/80 truncate">
+                            Signed in: <strong className="text-white">{currentUser.email}</strong>
+                          </span>
+                          <button
+                            onClick={async () => {
+                              await base44.auth.logout();
+                              localStorage.removeItem('dyson_portal');
+                              sessionStorage.removeItem('dyson_role');
+                              window.location.reload();
+                            }}
+                            className="text-red-400 hover:text-red-300 text-[10px] font-bold underline ml-2 shrink-0 cursor-pointer"
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-2 mt-2.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPortalMenuOpen(false);
+                              const elem = document.getElementById('portal-subscribe-section');
+                              if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-black text-center cursor-pointer transition-transform active:scale-95 shadow"
+                            style={{
+                              background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                            }}
+                          >
+                            Enroll / Activate Free
+                          </button>
+                          <Link
+                            to="/login"
+                            onClick={() => setPortalMenuOpen(false)}
+                            className="py-1.5 px-2 rounded-lg font-bold text-[10px] text-white text-center border border-white/20 bg-[#1a1a1a] hover:bg-[#252525] cursor-pointer"
+                          >
+                            Subscriber Sign In
+                          </Link>
+                        </div>
+                      )}
                     </div>
 
                     {/* Roles List with Clear Subscription Requirements */}
