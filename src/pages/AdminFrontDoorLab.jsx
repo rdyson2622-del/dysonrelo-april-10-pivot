@@ -156,7 +156,7 @@ export default function AdminFrontDoorLab() {
                     className="font-bold text-lg sm:text-xl tracking-wider text-white"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
-                    DYSONHOMES.COM
+                    DYSONRELO.COM
                   </span>
                   <span
                     className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full hidden sm:inline-flex"
@@ -302,7 +302,7 @@ export default function AdminFrontDoorLab() {
                 style={{ background: '#0a0a0a', border: `1.5px solid ${GOLD}`, color: GOLD }}
               >
                 <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                DYSONHOMES.COM • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
+                DYSONRELO.COM • NATIONWIDE PROPERTY SEARCH &amp; CONCIERGE
               </div>
 
               <div>
@@ -356,7 +356,7 @@ export default function AdminFrontDoorLab() {
                       Direct Aggregator Search • Nationwide Listings
                     </span>
                     <span className="text-[10px] text-white/50 font-sans hidden sm:inline">
-                      DysonHomes Public Feed
+                      DysonRelo Public Feed
                     </span>
                   </div>
 
@@ -442,7 +442,7 @@ export default function AdminFrontDoorLab() {
                     className="text-xl sm:text-2xl font-bold text-[#0a0a0a] flex items-center gap-2"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
-                    <span>Featured Listings on DysonHomes.com</span>
+                    <span>Featured Listings on DysonRelo.com</span>
                     <span
                       className="text-[9px] font-sans font-black px-2 py-0.5 rounded-full uppercase tracking-wider"
                       style={{ background: '#0a0a0a', color: GOLD, border: `1px solid ${GOLD}` }}
@@ -512,7 +512,7 @@ export default function AdminFrontDoorLab() {
 
             <div className="text-center text-white/60 space-y-1">
               <p className="font-bold text-white text-sm" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                DYSONHOMES.COM • THE DYSON &amp; DYSON COMPANIES, INC.
+                DYSONRELO.COM • THE DYSON &amp; DYSON COMPANIES, INC.
               </p>
               <p className="text-[11px] text-white/50">
                 Licensed California Corporate Brokerage • Real Estate Relocation Concierge &amp; National Referral Network
