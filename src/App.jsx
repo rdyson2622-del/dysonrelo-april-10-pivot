@@ -188,6 +188,7 @@ import AdminReferralLeads from './pages/AdminReferralLeads';
 import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
+import FrontDoor from './pages/FrontDoor';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -258,12 +259,10 @@ const AuthenticatedApp = () => {
         <Route path="/ai-assistants" element={<AIAssistants />} />
       </Route>
 
-      {/* Root → Role Selector, the current front-door layout for clients and others (signed in or not) */}
-      <Route path="/" element={<Navigate to="/portal" replace />} />
-
-      {/* Role Selector — the current front-door layout for clients and others.
-          Public: works for both signed-in and first-time visitors. */}
-      <Route path="/portal" element={<RoleSelector />} />
+      {/* Main Front Door — DysonRelo.com hybrid luxury concierge & national MLS syndication */}
+      <Route path="/" element={<FrontDoor />} />
+      <Route path="/portal" element={<FrontDoor />} />
+      <Route path="/role-selector" element={<RoleSelector />} />
 
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>

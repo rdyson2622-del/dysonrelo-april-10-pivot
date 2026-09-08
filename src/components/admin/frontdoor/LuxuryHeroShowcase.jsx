@@ -9,35 +9,36 @@ import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
 const GOLD = '#D4AF37';
 
-// Curated crystal-clear, high-resolution architectural luxury homes (bright natural daylight, no dark filters)
+// Curated high-end architectural luxury estates captured at sunset and twilight
+// Warm ambient glow, illuminated windows, and soft dusk skies provide optimal contrast and readability for copy
 const HERO_BACKGROUNDS = [
   {
     id: 'scottsdale',
-    title: 'Modern Desert Villa • Scottsdale, AZ',
+    title: 'Desert Sunset Villa • Scottsdale, AZ',
     tag: '0% Income Tax Destination',
-    url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=95',
+    url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'austin',
-    title: 'Architectural Farmhouse • Austin, TX',
+    title: 'Twilight Hill Country Villa • Austin, TX',
     tag: 'Corporate Tech Relo Hub',
     url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'naples',
-    title: 'Waterfront Estate • Naples, FL',
+    title: 'Waterfront Sunset Estate • Naples, FL',
     tag: 'Coastal Relo Favorite',
     url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'boulder',
-    title: 'Mountain Contemporary • Boulder, CO',
+    title: 'Mountain Contemporary at Dusk • Boulder, CO',
     tag: 'Lifestyle Relocation',
-    url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=95',
+    url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=95',
   },
 ];
 
-// Clean, bright daylight architectural home photos for top relocation destinations
+// Sunset and twilight architectural estate photos for top relocation destinations
 const QUICK_MARKETS = [
   {
     city: 'Scottsdale, AZ',
@@ -45,7 +46,7 @@ const QUICK_MARKETS = [
     avgPrice: '$1.15M',
     tag: 'Low Tax • Sunbelt',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Austin, TX',
@@ -69,7 +70,7 @@ const QUICK_MARKETS = [
     avgPrice: '$1.28M',
     tag: 'Mountain Outdoors',
     icon: Mountain,
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Nashville, TN',
@@ -77,7 +78,7 @@ const QUICK_MARKETS = [
     avgPrice: '$740K',
     tag: '0% State Tax • Culture',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Dallas, TX',
@@ -85,7 +86,7 @@ const QUICK_MARKETS = [
     avgPrice: '$825K',
     tag: 'Corporate Executive',
     icon: Building,
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
   },
 ];
 
@@ -128,11 +129,11 @@ export default function LuxuryHeroShowcase({
           className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-700 ease-in-out"
         />
 
-        {/* Minimal Soft Vignette: middle 75% is completely clear so architectural details, pools & skies stay vibrant */}
+        {/* Soft Sunset Vignette: warm twilight ambient glow that makes white and gold copy easy to read without harsh glare */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.65) 100%)',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 25%, rgba(0,0,0,0.2) 65%, rgba(0,0,0,0.7) 100%)',
           }}
         />
         {/* Subtle Top Photo Switcher Pill */}

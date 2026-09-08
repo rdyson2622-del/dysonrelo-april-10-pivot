@@ -149,8 +149,8 @@ export class GeminiLiveSessionClient {
       // 3. Start continuous Speech Recognition engine
       this.startSpeechRecognition();
 
-      this.onStatusChange?.('listening');
-      this.onSpeaker?.('user');
+      // 4. CHARLIE SPEAKS FIRST: Immediate welcoming voice greeting (0ms lag)
+      await this.speakOpeningGreeting();
     } catch (err) {
       console.warn('V2V session start error:', err);
       this.onError?.(err?.message || 'Could not start voice session.');
@@ -202,16 +202,15 @@ export class GeminiLiveSessionClient {
         }
         const rms = Math.sqrt(sumSquares / dataArray.length);
 
-        // Sensitive voice detection threshold
-        const isSpeaking = rms > 0.035;
+        // Require higher RMS threshold for hardware barge-in so speaker bleed doesn't self-interrupt
+        const isHighVolumeSpeech = rms > 0.14;
 
-        if (isSpeaking) {
-          // INSTANT BARGE-IN: If Charlie is playing audio, cut him off instantly!
+        if (isHighVolumeSpeech && !this.isPlayingGreeting) {
           if (this.charlieAudioPlayer.isPlaying) {
             this.handleInterruption();
           }
         }
-      }, 30);
+      }, 50);
     } catch (e) {
       console.warn('Microphone VAD setup error:', e);
     }
@@ -233,36 +232,16 @@ export class GeminiLiveSessionClient {
       this.recognition = rec;
 
       rec.onstart = () => {
-        if (this.active) {
+        if (this.active && !this.charlieAudioPlayer.isPlaying) {
           this.onStatusChange?.('listening');
         }
       };
 
-      rec.onsoundstart = () => {
-        if (this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        }
-      };
-
-      rec.onspeechstart = () => {
-        if (this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        }
-      };
-
-      rec.onaudiostart = () => {
-        if (this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        }
-      };
+      // Note: Do NOT interrupt on raw onsoundstart/onspeechstart because speaker audio triggers them.
+      // Interruption is handled cleanly in onresult when meaningful user speech is parsed.
 
       rec.onresult = async (event) => {
         if (!this.active) return;
-
-        // Cut off Charlie immediately if user begins speaking
-        if (this.charlieAudioPlayer.isPlaying) {
-          this.handleInterruption();
-        }
 
         let interim = '';
         let final = '';
@@ -315,6 +294,47 @@ export class GeminiLiveSessionClient {
     } catch (e) {
       console.warn('SpeechRecognition start error:', e);
     }
+  }
+
+  /**
+   * CHARLIE SPEAKS FIRST:
+   * Greets the user immediately on tap in Charlie's authentic American voice.
+   * Hosted permanent HeyGen Ruben audio ensures zero latency.
+   */
+  async speakOpeningGreeting() {
+    const greetingText = "Hello, I'm Charlie, your Dyson relocation concierge. What city or move can I help you with?";
+    const greetingAudioUrl = "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/dd44d7240_speech.mp3";
+
+    this.isPlayingGreeting = true;
+    this.conversationHistory.push({ role: 'assistant', text: greetingText });
+    this.onTranscript?.({ role: 'assistant', text: greetingText });
+    this.onSpeaker?.('assistant');
+    this.onStatusChange?.('speaking');
+
+    return new Promise((resolve) => {
+      this.charlieAudioPlayer.play(greetingAudioUrl, {
+        onStart: () => {
+          this.onSpeaker?.('assistant');
+          this.onStatusChange?.('speaking');
+        },
+        onEnded: () => {
+          this.isPlayingGreeting = false;
+          if (this.active && !this.isInterrupted) {
+            this.onSpeaker?.('user');
+            this.onStatusChange?.('listening');
+          }
+          resolve();
+        },
+        onError: () => {
+          this.isPlayingGreeting = false;
+          if (this.active) {
+            this.onSpeaker?.('user');
+            this.onStatusChange?.('listening');
+          }
+          resolve();
+        },
+      });
+    });
   }
 
   // Real-time barge-in handler: instantly cuts off audio and flushes state
