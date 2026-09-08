@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mic, Square, Loader2, Volume2, Compass, X } from 'lucide-react';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { CHARLIE_SIMMONS_SYSTEM_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
+import CharlieActionPointer from './CharlieActionPointer';
 
 const GOLD = '#D4AF37';
 
@@ -15,6 +16,7 @@ export default function HeroGeminiConcierge() {
   const [liveText, setLiveText] = useState('');
   const [speakerRole, setSpeakerRole] = useState(null);
   const [navNotice, setNavNotice] = useState(null);
+  const [activeAction, setActiveAction] = useState(null);
   const clientRef = useRef(null);
   const navTimerRef = useRef(null);
 
@@ -23,6 +25,7 @@ export default function HeroGeminiConcierge() {
     setLiveText('');
     setSpeakerRole(null);
     setNavNotice(null);
+    setActiveAction(null);
 
     if (clientRef.current) {
       clientRef.current.stop();
@@ -57,22 +60,23 @@ export default function HeroGeminiConcierge() {
       onSessionLogId: () => {},
       onPendingNavigate: (nav) => {
         setNavNotice(nav);
+        setActiveAction(nav);
       },
       onCancelNavigate: () => {
         setNavNotice(null);
       },
       onNavigate: (nav) => {
-        if (!nav?.path) return;
+        if (!nav?.path && !nav?.url) return;
         setNavNotice(nav);
-        if (nav.path.startsWith('http://') || nav.path.startsWith('https://')) {
-          window.open(nav.path, '_blank', 'noopener,noreferrer');
+        setActiveAction(nav);
+        const target = nav.url || nav.path;
+        if (target.startsWith('http://') || target.startsWith('https://')) {
+          try {
+            window.open(target, '_blank', 'noopener,noreferrer');
+          } catch (_) {}
         } else {
           navigate(nav.path);
         }
-        if (navTimerRef.current) clearTimeout(navTimerRef.current);
-        navTimerRef.current = setTimeout(() => {
-          setNavNotice(null);
-        }, 4000);
       },
     });
 
@@ -184,7 +188,7 @@ export default function HeroGeminiConcierge() {
       )}
 
       {/* Discreet single-line caption / navigation alert */}
-      {isActive && (liveText || navNotice) && (
+      {isActive && (liveText || navNotice) && !activeAction && (
         <div className="mt-1.5 max-w-md text-[11px] text-[#2c2217] font-medium leading-tight pl-1 flex items-center gap-1.5">
           {navNotice ? (
             <span className="inline-flex items-center gap-1 text-[#0d0d0d] font-bold bg-[#D4AF37]/30 px-2 py-0.5 rounded">
@@ -198,6 +202,19 @@ export default function HeroGeminiConcierge() {
               {liveText}
             </span>
           )}
+        </div>
+      )}
+
+      {/* Charlie Action Pointer: Glowing Beacon + 1-Tap Action Button */}
+      {activeAction && (
+        <div className="w-full max-w-md">
+          <CharlieActionPointer
+            action={activeAction}
+            onDismiss={() => {
+              setActiveAction(null);
+              setNavNotice(null);
+            }}
+          />
         </div>
       )}
     </div>

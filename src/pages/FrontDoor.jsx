@@ -23,79 +23,79 @@ const INTEL_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef05
 const MOCK_LISTINGS = [
   {
     id: 'prop-1',
-    address: '4920 Preston Road Manor',
+    address: '4920 Preston Hollow Estate',
     city: 'Dallas',
     state: 'TX',
-    price: '$3,495,000',
-    beds: 5,
-    baths: 6,
-    sqft: '6,240',
-    tag: '0% State Tax • New on MLS',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=90',
-    status: 'Active Syndication',
-  },
-  {
-    id: 'prop-2',
-    address: '2840 Mariposa Crest Lane',
-    city: 'Scottsdale',
-    state: 'AZ',
-    price: '$1,875,000',
-    beds: 4,
-    baths: 4.5,
-    sqft: '4,120',
-    tag: 'Sunbelt Relo • Pool & Views',
+    price: '$7,850,000',
+    beds: 6,
+    baths: 7.5,
+    sqft: '8,420',
+    tag: '0% State Tax • Highland Park / Preston Hollow',
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
+    id: 'prop-2',
+    address: '2840 Silverleaf Sunset Ridge',
+    city: 'Scottsdale',
+    state: 'AZ',
+    price: '$8,950,000',
+    beds: 5,
+    baths: 6.5,
+    sqft: '7,890',
+    tag: 'Silverleaf • Desert Sunset & Infinity Pool',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=90',
+    status: 'Active Syndication',
+  },
+  {
     id: 'prop-3',
-    address: '112 Pelican Bay Vista',
+    address: '112 Port Royal Coastal Vista',
     city: 'Naples',
     state: 'FL',
-    price: '$3,195,000',
-    beds: 4,
-    baths: 4,
-    sqft: '3,760',
-    tag: 'Waterfront Haven • No Tax',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=90',
+    price: '$12,800,000',
+    beds: 5,
+    baths: 7,
+    sqft: '9,150',
+    tag: 'Port Royal • Waterfront Sunset & Deepwater Dock',
+    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
     id: 'prop-4',
-    address: '744 Mountain Laurel Ridge',
+    address: '744 Chautauqua Alpine Ridge',
     city: 'Boulder',
     state: 'CO',
-    price: '$2,450,000',
+    price: '$6,450,000',
     beds: 5,
-    baths: 5,
-    sqft: '4,890',
-    tag: 'Mountain Outdoors • Relo Pick',
+    baths: 6,
+    sqft: '6,780',
+    tag: 'Flatirons Vista • Modern Mountain Glass',
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
     id: 'prop-5',
-    address: '810 Belle Meade Boulevard',
+    address: '810 Belle Meade Manor Court',
     city: 'Nashville',
     state: 'TN',
-    price: '$2,150,000',
-    beds: 4,
-    baths: 4.5,
-    sqft: '4,450',
-    tag: '0% State Tax • Historic Acreage',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=90',
+    price: '$5,950,000',
+    beds: 6,
+    baths: 7,
+    sqft: '7,650',
+    tag: '0% State Tax • Belle Meade Estate Grounds',
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
   {
     id: 'prop-6',
-    address: '420 Barton Creek Boulevard',
+    address: '420 Westlake Glass Pavilion',
     city: 'Austin',
     state: 'TX',
-    price: '$1,625,000',
-    beds: 4,
-    baths: 3.5,
-    sqft: '3,450',
-    tag: 'Corporate Tech Relo Hub',
+    price: '$7,250,000',
+    beds: 5,
+    baths: 6,
+    sqft: '6,920',
+    tag: '0% State Tax • Lake Austin Sunset Views',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=90',
     status: 'Active Syndication',
   },
@@ -182,6 +182,28 @@ export default function FrontDoor() {
   }, []);
 
   const [activeExternalSearch, setActiveExternalSearch] = useState(null);
+
+  useEffect(() => {
+    const handleCharlieMls = (e) => {
+      const detail = e.detail;
+      if (!detail) return;
+      const loc = detail.location || detail.title || '';
+      if (loc) {
+        setSearchQuery(loc);
+      }
+      if (detail.url) {
+        setActiveExternalSearch({
+          location: loc,
+          url: detail.url,
+          engineName: detail.url.includes('homes.com') ? 'Homes.com' : 'Realtor.com',
+          fromCharlie: true,
+        });
+      }
+    };
+
+    window.addEventListener('charlie-mls-search', handleCharlieMls);
+    return () => window.removeEventListener('charlie-mls-search', handleCharlieMls);
+  }, []);
 
   const handleSearch = (query) => {
     const q = (query || searchQuery).trim();

@@ -9,49 +9,49 @@ import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
 const GOLD = '#D4AF37';
 
-// Curated high-end architectural luxury estates captured at sunset and twilight
-// Warm ambient glow, illuminated windows, and soft dusk skies provide optimal contrast and readability for copy
+// Curated high-valued architectural luxury estates captured at sunset and twilight
+// Warm ambient glow, illuminated windows, infinity pools, and soft dusk skies provide optimal contrast and luxury presence
 const HERO_BACKGROUNDS = [
   {
     id: 'scottsdale',
-    title: 'Desert Sunset Villa • Scottsdale, AZ',
-    tag: '0% Income Tax Destination',
-    url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=95',
+    title: 'Desert Sunset Architectural Estate • Scottsdale, AZ',
+    tag: '$8.9M • 0% Income Tax Destination',
+    url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'austin',
-    title: 'Twilight Hill Country Villa • Austin, TX',
-    tag: 'Corporate Tech Relo Hub',
+    title: 'Twilight Hill Country Glass Villa • Austin, TX',
+    tag: '$7.5M • Corporate Tech Relo Hub',
     url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'naples',
-    title: 'Waterfront Sunset Estate • Naples, FL',
-    tag: 'Coastal Relo Favorite',
-    url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=95',
+    title: 'Waterfront Sunset Palm Estate • Naples, FL',
+    tag: '$12.8M • Coastal Relo Haven',
+    url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=2400&q=95',
   },
   {
     id: 'boulder',
-    title: 'Mountain Contemporary at Dusk • Boulder, CO',
-    tag: 'Lifestyle Relocation',
+    title: 'Mountain Contemporary Glass Manor • Boulder, CO',
+    tag: '$9.2M • Alpine Lifestyle Relo',
     url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=95',
   },
 ];
 
-// Sunset and twilight architectural estate photos for top relocation destinations
+// High-valued architectural estate photos at sunset/twilight for top relocation destinations (unique luxury photo per market)
 const QUICK_MARKETS = [
   {
     city: 'Scottsdale, AZ',
     state: 'AZ',
-    avgPrice: '$1.15M',
+    avgPrice: '$3.85M',
     tag: 'Low Tax • Sunbelt',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Austin, TX',
     state: 'TX',
-    avgPrice: '$890K',
+    avgPrice: '$4.25M',
     tag: '0% State Tax • Tech',
     icon: TrendingUp,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=90',
@@ -59,15 +59,15 @@ const QUICK_MARKETS = [
   {
     city: 'Naples, FL',
     state: 'FL',
-    avgPrice: '$1.45M',
+    avgPrice: '$6.75M',
     tag: 'Waterfront • No Tax',
     icon: Waves,
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Boulder, CO',
     state: 'CO',
-    avgPrice: '$1.28M',
+    avgPrice: '$4.90M',
     tag: 'Mountain Outdoors',
     icon: Mountain,
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=90',
@@ -75,18 +75,18 @@ const QUICK_MARKETS = [
   {
     city: 'Nashville, TN',
     state: 'TN',
-    avgPrice: '$740K',
-    tag: '0% State Tax • Culture',
+    avgPrice: '$3.95M',
+    tag: '0% State Tax • Belle Meade',
     icon: Sun,
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=90',
   },
   {
     city: 'Dallas, TX',
     state: 'TX',
-    avgPrice: '$825K',
-    tag: 'Corporate Executive',
+    avgPrice: '$5.40M',
+    tag: 'Highland Park • Executive',
     icon: Building,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=90',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=90',
   },
 ];
 
