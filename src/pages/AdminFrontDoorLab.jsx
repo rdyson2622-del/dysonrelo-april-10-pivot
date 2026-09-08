@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Search, Mic, Play, Sparkles, MapPin, Building, ArrowRight, 
-  ChevronDown, Volume2, ShieldCheck, Newspaper, Compass,
-  Eye, Laptop, Smartphone, CheckCircle2, SlidersHorizontal, Home as HomeIcon
+  Search, Play, Building, ArrowRight, 
+  ChevronDown, ShieldCheck, MapPin, Compass,
+  CheckCircle2, SlidersHorizontal
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
+import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
+import LabInspectorHeader from '@/components/admin/frontdoor/LabInspectorHeader';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -66,16 +68,14 @@ const MOCK_LISTINGS = [
 ];
 
 export default function AdminFrontDoorLab() {
-  const [deviceView, setDeviceView] = useState('desktop'); // desktop | mobile
+  const [deviceView, setDeviceView] = useState('desktop');
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('All');
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
   const [latestBroadcast, setLatestBroadcast] = useState(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
 
   useEffect(() => {
-    // Attempt to load the latest broadcast to make the lab authentic
     base44.entities.DnnBroadcast.list('-broadcast_date', 1)
       .then((res) => {
         if (res && res.length > 0) {
@@ -87,60 +87,19 @@ export default function AdminFrontDoorLab() {
 
   const tags = ['All', 'Sunbelt States', 'Coastal Relo', 'Low Tax Markets', 'Mountain West', 'Golf Communities'];
 
+  const handleAskCharlie = (listing) => {
+    alert(`Charlie voice insight on ${listing.address}, ${listing.city}: "This home has low property tax assessment and sits 12 minutes from top-rated schools."`);
+  };
+
   return (
     <div className="min-h-screen bg-[#070707] text-white">
       {/* Top Admin Lab Inspector Bar */}
-      <header className="sticky top-0 z-50 bg-[#111111] border-b border-[#222222] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-xl">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#D4AF37]/20 border border-[#D4AF37]/50 text-xs font-bold text-[#D4AF37]">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            FRONT DOOR LAB
-          </span>
-          <span className="text-xs text-white/70 hidden sm:inline">
-            Interactive Prototype: National MLS + 6AM Daily News + Charlie Concierge
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* View Mode Toggle */}
-          <div className="flex items-center bg-[#1c1c1c] p-0.5 rounded-lg border border-[#333]">
-            <button
-              onClick={() => setDeviceView('desktop')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold transition-all ${
-                deviceView === 'desktop' ? 'bg-[#D4AF37] text-black shadow' : 'text-white/70 hover:text-white'
-              }`}
-            >
-              <Laptop className="w-3.5 h-3.5" /> Desktop
-            </button>
-            <button
-              onClick={() => setDeviceView('mobile')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold transition-all ${
-                deviceView === 'mobile' ? 'bg-[#D4AF37] text-black shadow' : 'text-white/70 hover:text-white'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" /> Mobile
-            </button>
-          </div>
-
-          {/* Annotations Toggle */}
-          <button
-            onClick={() => setShowAnnotations(!showAnnotations)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold transition-all ${
-              showAnnotations ? 'bg-[#222] border-[#D4AF37] text-[#D4AF37]' : 'bg-[#181818] border-[#333] text-white/60'
-            }`}
-          >
-            <Eye className="w-3.5 h-3.5" />
-            {showAnnotations ? 'Hide Design Notes' : 'Show Design Notes'}
-          </button>
-
-          <Link
-            to="/portal"
-            className="text-xs text-white/60 hover:text-white px-2 py-1 underline ml-2"
-          >
-            Back to Current Portal
-          </Link>
-        </div>
-      </header>
+      <LabInspectorHeader
+        deviceView={deviceView}
+        setDeviceView={setDeviceView}
+        showAnnotations={showAnnotations}
+        setShowAnnotations={setShowAnnotations}
+      />
 
       {/* Main Canvas Container */}
       <main className="p-4 sm:p-8 flex justify-center items-start">
@@ -185,51 +144,29 @@ export default function AdminFrontDoorLab() {
                     <p className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider px-2 py-1">
                       Deep Transaction Portals
                     </p>
-                    <Link
-                      to="/relocation-intake"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/relocation-intake" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       📦 Client Relocation Intake & Roadmap
                     </Link>
-                    <Link
-                      to="/broker-portal"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/broker-portal" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       🏛️ Broker & Office Workspace
                     </Link>
-                    <Link
-                      to="/find-agent"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/find-agent" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       🤝 20+ Vetted Partner Agent Bureau
                     </Link>
-                    <Link
-                      to="/corporate-relo"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/corporate-relo" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       💼 Corporate & HR Move Management
                     </Link>
-                    <Link
-                      to="/refer"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/refer" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       🎁 Referral Partner Submission
                     </Link>
-                    <Link
-                      to="/transparency"
-                      className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90"
-                    >
+                    <Link to="/transparency" className="block px-2.5 py-2 rounded-lg hover:bg-[#222] text-white/90">
                       🛡️ Real Estate Transparency Ledger
                     </Link>
                   </div>
                 )}
               </div>
 
-              {/* Login / Profile */}
-              <Link
-                to="/login"
-                className="text-xs text-white/80 hover:text-white hidden sm:inline font-medium"
-              >
+              <Link to="/login" className="text-xs text-white/80 hover:text-white hidden sm:inline font-medium">
                 Sign In
               </Link>
             </div>
@@ -368,7 +305,7 @@ export default function AdminFrontDoorLab() {
                 </div>
               </div>
 
-              {/* RIGHT: REAL-TIME CONCIERGE ADVANTAGE (WHY DYSON RELO) */}
+              {/* RIGHT: REAL-TIME CONCIERGE ADVANTAGE */}
               <div className="bg-[#141414] border border-[#282828] rounded-2xl p-4 sm:p-5 flex flex-col justify-between hover:border-[#D4AF37]/50 transition-all shadow-lg">
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -461,58 +398,16 @@ export default function AdminFrontDoorLab() {
             {/* Grid of Listing Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {MOCK_LISTINGS.map((listing) => (
-                <div
+                <LabListingCard
                   key={listing.id}
-                  className="bg-[#141414] border border-[#252525] hover:border-[#D4AF37] rounded-xl overflow-hidden transition-all duration-200 group flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="relative aspect-[4/3] overflow-hidden bg-black">
-                      <img
-                        src={listing.image}
-                        alt={listing.address}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <span className="absolute top-2 left-2 bg-black/80 backdrop-blur text-[#D4AF37] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#D4AF37]/40">
-                        {listing.tag}
-                      </span>
-                    </div>
-
-                    <div className="p-3.5">
-                      <div className="text-base font-bold text-white mb-0.5">
-                        {listing.price}
-                      </div>
-                      <div className="text-xs font-semibold text-white/90 truncate">
-                        {listing.address}
-                      </div>
-                      <div className="text-[11px] text-white/60 mb-2.5">
-                        {listing.city}, {listing.state}
-                      </div>
-
-                      <div className="flex items-center gap-3 text-[11px] text-white/70 border-t border-[#222] pt-2">
-                        <span><strong>{listing.beds}</strong> bds</span>
-                        <span>•</span>
-                        <span><strong>{listing.baths}</strong> ba</span>
-                        <span>•</span>
-                        <span><strong>{listing.sqft}</strong> sqft</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-3.5 pb-3 pt-1">
-                    <button
-                      onClick={() => alert(`Connect with Charlie for verified insight on ${listing.address}, ${listing.city}!`)}
-                      className="w-full py-1.5 rounded-lg bg-[#222] hover:bg-[#D4AF37] hover:text-black text-white/90 text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <Sparkles className="w-3 h-3 text-[#D4AF37] group-hover:text-black" />
-                      Ask Charlie About Property
-                    </button>
-                  </div>
-                </div>
+                  listing={listing}
+                  onAskCharlie={handleAskCharlie}
+                />
               ))}
             </div>
           </section>
 
-          {/* SIMULATED FOOTER: COMPLIANCE & LEGAL */}
+          {/* SIMULATED FOOTER */}
           <footer className="border-t border-[#1a1a1a] bg-[#070707] px-5 py-6 text-xs text-white/50 flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="font-semibold text-white/70">The Dyson & Dyson Companies, Inc.</p>

@@ -135,11 +135,18 @@ export default function Admin() {
           </p>
           <div className="flex flex-wrap gap-3 mt-4">
             <Link
+              to="/admin/front-door-lab"
+              className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg transition-transform hover:scale-105"
+              style={{ border: '2px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+            >
+              <Sparkles className="w-4 h-4 text-black" /> ✨ Open Front Door Lab (MLS + News + Charlie)
+            </Link>
+            <Link
               to="/admin/workflows"
               className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
               style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
             >
-              🗺️ New here? Open the Master Workflow Atlas (pictures, not code)
+              🗺️ Master Workflow Atlas
             </Link>
             <button
               onClick={() => setTestingVoiceGreeting(true)}

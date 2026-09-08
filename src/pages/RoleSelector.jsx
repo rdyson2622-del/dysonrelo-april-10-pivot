@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Home, Star, Handshake, Wrench, Building2, Briefcase, ArrowLeft, Newspaper, MapPinned, Sparkles, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
@@ -141,6 +141,13 @@ export default function RoleSelector() {
           >
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
+          <Link
+            to="/admin/front-door-lab"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}
+          >
+            ✨ Open Front Door Lab
+          </Link>
           <div className="flex-1" />
           <CommandPills />
         </div>
