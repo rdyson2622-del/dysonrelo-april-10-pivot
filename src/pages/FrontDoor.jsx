@@ -585,6 +585,38 @@ export default function FrontDoor() {
             </div>
           </nav>
 
+          {/* SUBSCRIBER WELCOME-BACK ACCESS BAR */}
+          {isSubscribed && (
+            <div 
+              className="px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs shadow-inner"
+              style={{
+                background: 'linear-gradient(90deg, #110e08 0%, #1f180a 50%, #110e08 100%)',
+                borderBottom: `1px solid ${GOLD}50`,
+                color: '#fff',
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+                <span className="text-white/85 text-[11px] sm:text-xs">
+                  Welcome back{currentUser?.full_name ? `, ${currentUser.full_name}` : ''}! Active workspace: <strong className="text-[#D4AF37] font-semibold">{userRoleLabel || 'Subscriber Portal'}</strong>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate(userPortalDest || '/home')}
+                  className="px-4 py-1.5 rounded-full text-xs font-bold text-black flex items-center gap-1.5 transition-transform hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                  }}
+                >
+                  <span>Enter {userRoleLabel || 'My Workspace'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-black" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO */}
           <LuxuryHeroShowcase
             searchQuery={searchQuery}
