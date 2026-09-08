@@ -282,7 +282,16 @@ export class GeminiLiveSessionClient {
         }
 
         if (final.trim() && !this.isProcessingTurn) {
+          if (this.speechSilenceTimer) clearTimeout(this.speechSilenceTimer);
           await this.processUserTurn(final.trim());
+        } else if (interim.trim() && !this.isProcessingTurn) {
+          // Responsive end-of-speech detector: trigger after 800ms pause
+          if (this.speechSilenceTimer) clearTimeout(this.speechSilenceTimer);
+          this.speechSilenceTimer = setTimeout(async () => {
+            if (!this.isProcessingTurn && this.active && interim.trim()) {
+              await this.processUserTurn(interim.trim());
+            }
+          }, 800);
         }
       };
 
@@ -420,6 +429,11 @@ export class GeminiLiveSessionClient {
   stop() {
     this.active = false;
     this.pendingSpeakId++;
+
+    if (this.speechSilenceTimer) {
+      clearTimeout(this.speechSilenceTimer);
+      this.speechSilenceTimer = null;
+    }
 
     if (this.vadInterval) {
       clearInterval(this.vadInterval);

@@ -67,7 +67,18 @@ const PATHS = [
   },
 ];
 
-const PORTAL_DESTS = Object.fromEntries(PATHS.map(path => [path.roleKey, path.dest]));
+const PORTAL_DESTS = {
+  admin: '/admin',
+  client: '/home',
+  hr: '/corporate-relo',
+  agent: '/agent-command-center',
+  broker: '/brokerage',
+  brokerage_admin: '/brokerage',
+  inactive_agent: '/partner-benefits',
+  referral_agent: '/partner-benefits',
+  vendor: '/search',
+  ...Object.fromEntries(PATHS.map(path => [path.roleKey, path.dest])),
+};
 
 const INTEL_BOXES = [
   { label: 'NEWS', path: '/dnn-news', icon: Newspaper },
@@ -89,22 +100,42 @@ export default function RoleSelector() {
 
     base44.auth.me().then(user => {
       const admin = user?.role === 'admin';
-      const assigned = admin ? null : (user?.portal_role || saved?.roleKey || null);
       setIsAdmin(admin);
-      setAssignedRole(assigned);
-      if (assigned) {
-        sessionStorage.setItem('dyson_role', assigned);
-        window.dispatchEvent(new Event('dyson_role_change'));
+
+      let targetRole = 'client';
+      let targetDest = '/home';
+
+      if (admin) {
+        targetRole = 'admin';
+        targetDest = '/admin';
+      } else if (user?.portal_role && PORTAL_DESTS[user.portal_role]) {
+        targetRole = user.portal_role;
+        targetDest = PORTAL_DESTS[user.portal_role];
+      } else if (saved?.roleKey && (PORTAL_DESTS[saved.roleKey] || saved.dest)) {
+        targetRole = saved.roleKey;
+        targetDest = PORTAL_DESTS[saved.roleKey] || saved.dest;
+      } else {
+        targetRole = 'client';
+        targetDest = '/home';
       }
+
+      setAssignedRole(targetRole);
+      sessionStorage.setItem('dyson_role', targetRole);
+      window.dispatchEvent(new Event('dyson_role_change'));
       setAccessReady(true);
-      if (!params.get('choose') && assigned) {
-        navigate(PORTAL_DESTS[assigned] || saved?.dest || '/home', { replace: true });
+
+      // DIRECT ACCESS: If authenticated or subscribed, go straight to their specific personal app!
+      // Only display the 6-card role selector if explicitly requesting with ?choose=true
+      if (!params.get('choose') && targetDest) {
+        navigate(targetDest, { replace: true });
       }
     }).catch(() => {
       const assigned = saved?.roleKey || null;
       setAssignedRole(assigned);
       setAccessReady(true);
-      if (!params.get('choose') && assigned) navigate(PORTAL_DESTS[assigned], { replace: true });
+      if (!params.get('choose') && assigned && PORTAL_DESTS[assigned]) {
+        navigate(PORTAL_DESTS[assigned], { replace: true });
+      }
     });
   }, [navigate]);
 

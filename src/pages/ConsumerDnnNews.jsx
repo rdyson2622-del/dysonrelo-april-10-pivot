@@ -481,8 +481,8 @@ export default function ConsumerDnnNews({ hidePills = false }) {
 
   const HARDCODED_VIDEO = {
     id: '__hardcoded__',
-    headline: 'DNN Intelligence Report',
-    video_url: 'https://app.heygen.com/embeds/1b0ea329a2d448079a01f67ea3559ac6',
+    headline: 'San Diego Housing Inventory Remains Constrained Amid Sustained Price Resilience',
+    video_url: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/75165cedb_san-diego-housing-inventory-remains-constrained-amid-sustained-price-resilience.mp4',
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
