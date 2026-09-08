@@ -32,7 +32,7 @@ export default function LabListingCard({ listing, onAskCharlie }) {
           <span
             className="absolute bottom-2 right-2 text-[9px] font-mono px-2 py-0.5 rounded bg-black/85 text-white/80 border border-white/20"
           >
-            DysonHomes MLS
+            DysonRelo MLS
           </span>
         </div>
 

@@ -19,7 +19,7 @@ export default function GoDaddyDomainModal({ isOpen, onClose }) {
               className="font-bold text-lg text-white"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Connecting dysonhomes.com at GoDaddy
+              Connecting dysonrelo.com at GoDaddy
             </h3>
           </div>
           <button
@@ -32,7 +32,7 @@ export default function GoDaddyDomainModal({ isOpen, onClose }) {
 
         <div className="space-y-4 py-4 text-xs text-white/80 leading-relaxed">
           <p>
-            To point your GoDaddy-owned domain <strong>dysonhomes.com</strong> directly to this application, add these DNS records in your GoDaddy DNS Management panel:
+            To point your GoDaddy-owned domain <strong>dysonrelo.com</strong> directly to this application, add these DNS records in your GoDaddy DNS Management panel:
           </p>
 
           <div className="p-3.5 rounded-xl bg-[#141414] border border-[#333] space-y-2">
@@ -58,7 +58,7 @@ export default function GoDaddyDomainModal({ isOpen, onClose }) {
               Step in Base44 Dashboard:
             </span>
             <p className="text-[11px] text-white/70">
-              In your Base44 project settings under <strong>Domains</strong>, enter <code>dysonhomes.com</code> and click <strong>Verify</strong>. Alternatively, use <strong>Continue with GoDaddy</strong> for 1-click automated DNS configuration.
+              In your Base44 project settings under <strong>Domains</strong>, enter <code>dysonrelo.com</code> and click <strong>Verify</strong>. Alternatively, use <strong>Continue with GoDaddy</strong> for 1-click automated DNS configuration.
             </p>
           </div>
         </div>
