@@ -167,21 +167,22 @@ export default function LuxuryHeroShowcase({
               className="font-bold leading-tight text-white"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(2.1rem, 4.2vw, 3.8rem)',
+                fontSize: 'clamp(1.75rem, 3.3vw, 3.1rem)',
                 textShadow: '0 2px 18px rgba(0,0,0,0.9), 0 4px 35px rgba(0,0,0,0.8)',
               }}
             >
-              Find Your Next Home Nationwide.
+              The Newest Way to Find Your Next Home Nationwide.
             </h1>
             <p
-              className="font-semibold text-lg sm:text-2xl mt-1 tracking-wide"
+              className="font-semibold mt-1 tracking-wide"
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(1.05rem, 1.7vw, 1.45rem)',
                 color: '#fce38a',
                 textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 4px 28px rgba(0,0,0,0.85)',
               }}
             >
-              We Manage Every Relocation Mile.
+              We Don't Sell Real Estate! We Vet Agents and Manage the Entire Move.
             </p>
           </div>
 
