@@ -282,21 +282,21 @@ export default function LuxuryHeroShowcase({
             </button>
           </div>
 
-          {/* SECONDARY SUPERPOWER: LIVE NATIONAL MLS FEED & PROPERTY SEARCH */}
+          {/* SECONDARY SUPERPOWER: DESTINATION HOME SEARCH & PROPERTY VETTING */}
           <div className="pt-2 max-w-2xl mx-auto border-t border-white/15">
             <div className="flex items-center justify-center gap-2 mb-2 text-xs">
               <span className="text-[11px] text-white/80 font-medium">
-                Already browsing on Realtor, Zillow, or Homes.com? Search direct MLS syndication below:
+                Already browsing on Realtor, Zillow, or Homes.com? Search destination listings below or paste any address:
               </span>
             </div>
 
             {/* Quick Intent Filter Tabs */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 mb-2">
               {[
-                { id: 'buy', label: 'All MLS Homes' },
+                { id: 'buy', label: 'All Destination Homes' },
                 { id: 'low_tax', label: '0% State Tax Havens' },
                 { id: 'new_construction', label: 'New Construction' },
-                { id: 'grok_assistants', label: '21 Grok Bot Specialists' },
+                { id: 'grok_assistants', label: '24/7 AI Move Specialists' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -347,7 +347,7 @@ export default function LuxuryHeroShowcase({
                       : searchTab === 'new_construction'
                       ? "Search new construction & modern developments (e.g. Austin, Phoenix)..."
                       : searchTab === 'grok_assistants'
-                      ? "Ask our 21 Grok Bot specialists about cities, taxes, or relocation steps..."
+                      ? "Ask our AI Move Specialists about cities, taxes, or relocation steps..."
                       : "Enter City, State, Neighborhood, or ZIP (e.g. Scottsdale, Austin, Naples)..."
                   }
                   className="w-full bg-transparent text-sm font-semibold focus:outline-none placeholder:text-stone-500"
@@ -363,7 +363,7 @@ export default function LuxuryHeroShowcase({
                   color: '#0a0a0a',
                 }}
               >
-                <span>{searchTab === 'grok_assistants' ? 'Ask Specialists' : 'Search Live MLS'}</span>
+                <span>{searchTab === 'grok_assistants' ? 'Ask Move Specialists' : 'Explore Homes'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -371,7 +371,7 @@ export default function LuxuryHeroShowcase({
             {/* Micro Engine Picker & Charlie Tap */}
             <div className="flex flex-wrap items-center justify-between gap-3 mt-2.5 px-2 text-xs">
               <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full">
-                <span className="text-[10px] text-white/70 font-semibold uppercase">Feed Engine:</span>
+                <span className="text-[10px] text-white/70 font-semibold uppercase">Search Via:</span>
                 <button
                   type="button"
                   onClick={() => setSearchEngine('realtor')}
@@ -379,7 +379,7 @@ export default function LuxuryHeroShowcase({
                     searchEngine === 'realtor' ? 'bg-[#D4AF37] text-black' : 'text-white/70 hover:text-white'
                   }`}
                 >
-                  Realtor.com MLS
+                  Realtor.com
                 </button>
                 <button
                   type="button"
@@ -388,7 +388,7 @@ export default function LuxuryHeroShowcase({
                     searchEngine === 'homes' ? 'bg-[#D4AF37] text-black' : 'text-white/70 hover:text-white'
                   }`}
                 >
-                  Homes.com Direct
+                  Homes.com
                 </button>
               </div>
 
@@ -404,10 +404,10 @@ export default function LuxuryHeroShowcase({
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/20 pt-3 text-[11px] text-white/90 z-10">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-sm" />
-            <span className="font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">Direct National MLS Syndication • 50 States</span>
+            <span className="font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">National Relocation Coverage • All 50 States</span>
           </div>
           <span className="hidden sm:inline text-white/85 drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)] font-medium">
-            55+ Years of National Relocation Management • Independent Fiduciary Advice
+            55+ Years of Fiduciary Relocation Management • Independent Agent Vetting
           </span>
         </div>
       </div>

@@ -123,7 +123,7 @@ export default function FrontDoor() {
         setIsSubscribed(true);
         if (user.role === 'admin') {
           setUserPortalDest('/admin');
-          setUserRoleLabel('Admin Portal');
+          setUserRoleLabel('Admin Console');
         } else if (user.portal_role === 'brokerage_admin' || user.portal_role === 'broker') {
           setUserPortalDest('/brokerage');
           setUserRoleLabel('Brokerage Portal');
@@ -143,33 +143,14 @@ export default function FrontDoor() {
           setUserPortalDest('/home');
           setUserRoleLabel('Client Portal');
         }
+      } else {
+        setCurrentUser(null);
+        setIsSubscribed(false);
       }
     }).catch(() => {
-      try {
-        const saved = JSON.parse(localStorage.getItem('dyson_portal'));
-        if (saved?.roleKey) {
-          setIsSubscribed(true);
-          const MAP = {
-            admin: { dest: '/admin', label: 'Admin Portal' },
-            brokerage_admin: { dest: '/brokerage', label: 'Brokerage Portal' },
-            broker: { dest: '/brokerage', label: 'Brokerage Portal' },
-            agent: { dest: '/agent-command-center', label: 'Agent Portal' },
-            referral_agent: { dest: '/partner-benefits', label: 'Referral Portal' },
-            inactive_agent: { dest: '/partner-benefits', label: 'Referral Portal' },
-            hr: { dest: '/corporate-relo', label: 'Corporate Relo Suite' },
-            vendor: { dest: '/search', label: 'Vendor Hub' },
-            client: { dest: '/home', label: 'Client Portal' },
-          };
-          const m = MAP[saved.roleKey];
-          if (m) {
-            setUserPortalDest(m.dest);
-            setUserRoleLabel(m.label);
-          } else {
-            setUserPortalDest(saved.dest || '/home');
-            setUserRoleLabel('My Workspace');
-          }
-        }
-      } catch (_) {}
+      // Unauthenticated visitor: keep public page clean and pristine
+      setCurrentUser(null);
+      setIsSubscribed(false);
     });
 
     base44.entities.DnnBroadcast.list('-broadcast_date', 1)
@@ -287,7 +268,7 @@ export default function FrontDoor() {
                     className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full hidden sm:inline-flex"
                     style={{ background: GOLD, color: '#0a0a0a' }}
                   >
-                    MLS PORTAL
+                    RELOCATION CONCIERGE
                   </span>
                 </div>
                 <span className="text-[10px] text-white/70 block tracking-widest uppercase font-sans -mt-0.5">
@@ -664,11 +645,11 @@ export default function FrontDoor() {
                       className="text-[9px] font-sans font-black px-2 py-0.5 rounded-full uppercase tracking-wider"
                       style={{ background: '#0a0a0a', color: GOLD, border: `1px solid ${GOLD}` }}
                     >
-                      Aggregator Preview
+                      Curated Destination Markets
                     </span>
                   </h3>
                   <p className="text-xs text-[#44382c]">
-                    Live national properties matching current relocation subscribers
+                    Featured destination properties for relocating families &amp; executive transferees
                   </p>
                 </div>
 
