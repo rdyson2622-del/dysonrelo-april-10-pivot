@@ -187,7 +187,7 @@ export default function LuxuryHeroShowcase({
             >
               We Vet Top Agents With You &amp; Manage The Entire Move For You.
             </p>
-            <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto font-sans font-medium mt-1 drop-shadow">
+            <p className="text-xs sm:text-sm text-white/90 max-w-4xl mx-auto font-sans font-medium mt-1 drop-shadow sm:whitespace-nowrap">
               Independent, fiduciary advocacy across all 50 states for over 55 years — zero fees to buyers &amp; employers.
             </p>
           </div>
