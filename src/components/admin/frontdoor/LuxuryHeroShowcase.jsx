@@ -72,7 +72,7 @@ export default function LuxuryHeroShowcase({
           }}
         >
           {/* Top Branding & Fiduciary Headline */}
-          <div className="space-y-2">
+          <div className="space-y-2 flex flex-col items-center text-center">
             <div 
               className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-sm"
               style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid ${GOLD}60`, color: GOLD }}
@@ -81,7 +81,7 @@ export default function LuxuryHeroShowcase({
               <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
             </div>
 
-            <div>
+            <div className="text-center w-full">
               <h2
                 className="font-bold leading-tight text-white tracking-tight"
                 style={{
@@ -89,7 +89,7 @@ export default function LuxuryHeroShowcase({
                   fontSize: 'clamp(1.35rem, 1.75vw, 1.7rem)',
                 }}
               >
-                We Don't Sell Real Estate.
+                We Don't Sell Real Estate
               </h2>
               <p
                 className="font-semibold mt-0.5 tracking-wide leading-snug"
