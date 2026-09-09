@@ -201,14 +201,14 @@ export default function AdminAppStoreMockup() {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black shadow-sm">
-              ADMIN LAB MOCKUP
+              INTERNAL ADMIN CATALOG
             </span>
             <span className="text-sm font-bold text-white tracking-wide">
-              Apple-Style Pills &amp; App Store Catalog
+              DysonRelo 10-App Catalog &amp; Springboard Specs
             </span>
           </div>
-          <p className="text-xs text-white/60 mt-1">
-            Clean standalone workbench stored in Admin for review and design reference.
+          <p className="text-xs text-white/70 mt-1">
+            Internal reference for our 10 DysonRelo modules (Charlie AI, Relo Intake, Corporate HR, PRN Agents, etc.) designed with Apple-style springboard squircle icons.
           </p>
         </div>
 
@@ -237,7 +237,7 @@ export default function AdminAppStoreMockup() {
             }`}
           >
             <Smartphone className="w-3.5 h-3.5" />
-            <span>App Store &amp; Purposes Catalog</span>
+            <span>10 Apps &amp; Purposes Catalog</span>
           </button>
 
           <button
@@ -486,66 +486,78 @@ export default function AdminAppStoreMockup() {
               </aside>
 
               {/* ========================================================
-                  RIGHT MAIN HERO (FROM SCREENSHOT)
+                  RIGHT MAIN CONTENT:
+                  If an Apple App is clicked, opens its scrollable subject matter view.
+                  Otherwise, renders the default featured estate hero showcase!
                   ======================================================== */}
-              <main className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col justify-between" style={{ background: TAN_BG }}>
-                {/* Featured Destination Bar */}
-                <div className="w-full flex justify-center mb-4">
-                  <div 
-                    className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-1.5 rounded-full bg-black text-white border border-[#D4AF37]/50 shadow-md max-w-2xl w-full text-xs"
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse shrink-0" />
-                      <span className="font-semibold truncate">
-                        Featured: <strong className="text-white">Scottsdale, AZ</strong> ($8.9M • 0% State Income Tax)
-                      </span>
-                    </div>
+              {selectedApp ? (
+                <main className="flex-1 p-3 sm:p-5 flex flex-col justify-start overflow-hidden" style={{ background: '#0a0a0a' }}>
+                  <AppSubjectMatterView
+                    app={selectedApp}
+                    onClose={() => setSelectedApp(null)}
+                    onNavigate={(route) => navigate(route)}
+                  />
+                </main>
+              ) : (
+                <main className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col justify-between" style={{ background: TAN_BG }}>
+                  {/* Featured Destination Bar */}
+                  <div className="w-full flex justify-center mb-4">
+                    <div 
+                      className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-1.5 rounded-full bg-black text-white border border-[#D4AF37]/50 shadow-md max-w-2xl w-full text-xs"
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse shrink-0" />
+                        <span className="font-semibold truncate">
+                          Featured: <strong className="text-white">Scottsdale, AZ</strong> ($8.9M • 0% State Income Tax)
+                        </span>
+                      </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold">
-                      <span className="px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">Scottsdale</span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Austin</span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Naples</span>
-                      <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Boulder</span>
+                      <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold">
+                        <span className="px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">Scottsdale</span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Austin</span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Naples</span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#181818] text-white/80">Boulder</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Hero Villa Photo */}
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-black/10 max-w-3xl mx-auto w-full aspect-[16/9]">
-                  <img 
-                    src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=90"
-                    alt="Luxury Estate"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </div>
+                  {/* Hero Villa Photo */}
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-black/10 max-w-3xl mx-auto w-full aspect-[16/9]">
+                    <img 
+                      src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=90"
+                      alt="Luxury Estate"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </div>
 
-                {/* Headline & Bob Quote */}
-                <div className="text-center max-w-2xl mx-auto mt-6 space-y-2">
-                  <h1 
-                    className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0a0a0a] tracking-tight"
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                  >
-                    We Don't Sell Real Estate
-                  </h1>
-                  <h2 
-                    className="text-xl sm:text-2xl font-bold text-[#854d0e]"
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                  >
-                    We Orchestrate Your Entire Move.
-                  </h2>
-                  <p className="text-xs sm:text-sm text-[#44382c] max-w-xl mx-auto leading-relaxed">
-                    Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
-                  </p>
+                  {/* Headline & Bob Quote */}
+                  <div className="text-center max-w-2xl mx-auto mt-6 space-y-2">
+                    <h1 
+                      className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#0a0a0a] tracking-tight"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    >
+                      We Don't Sell Real Estate
+                    </h1>
+                    <h2 
+                      className="text-xl sm:text-2xl font-bold text-[#854d0e]"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    >
+                      We Orchestrate Your Entire Move.
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#44382c] max-w-xl mx-auto leading-relaxed">
+                      Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
+                    </p>
 
-                  <blockquote className="pt-3 border-t border-[#0a0a0a]/15 text-xs sm:text-sm italic font-serif text-[#0a0a0a]">
-                    “You are absolutely going to love our stressless Concierge Approach to transacting your real estate ventures.”
-                    <footer className="text-[11px] font-sans font-bold text-[#854d0e] not-italic mt-1">
-                      — Bob Dyson
-                    </footer>
-                  </blockquote>
-                </div>
-              </main>
+                    <blockquote className="pt-3 border-t border-[#0a0a0a]/15 text-xs sm:text-sm italic font-serif text-[#0a0a0a]">
+                      “You are absolutely going to love our stressless Concierge Approach to transacting your real estate ventures.”
+                      <footer className="text-[11px] font-sans font-bold text-[#854d0e] not-italic mt-1">
+                        — Bob Dyson
+                      </footer>
+                    </blockquote>
+                  </div>
+                </main>
+              )}
 
             </div>
           </div>

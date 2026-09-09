@@ -11,8 +11,8 @@ const GOLD = '#D4AF37';
 export const WORKING_MODELS = [
   {
     id: 'app_store_catalog',
-    title: 'Apple App Store & Catalog',
-    sub: '10 Apps, purposes & specs',
+    title: '10 Apps & Specs Catalog',
+    sub: 'DysonRelo modules (Apple-style icons)',
     badge: 'CATALOG',
     path: '/admin/app-store-mockup?tab=app_store_catalog',
     icon: Smartphone,

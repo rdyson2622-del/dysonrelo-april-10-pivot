@@ -30,7 +30,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
-      { label: '📱 APPLE APP STORE & SIDEBAR PILLS MOCKUP', path: '/admin/app-store-mockup', icon: Star, highlight: true },
+      { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '✉️ Send Subscriber Invite (Email & Text)', path: '/admin/subscriber-invite', icon: Mail, highlight: true },
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },

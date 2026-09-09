@@ -47,6 +47,13 @@ export default function LabInspectorHeader({
               <Sparkles className="w-3 h-3" />
               <span>Client Backside DEMO</span>
             </button>
+            <Link
+              to="/admin/app-store-mockup?tab=app_store_catalog"
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold text-[#D4AF37] hover:text-white hover:bg-white/10 transition-all cursor-pointer border-l border-white/20 ml-1 pl-2"
+              title="View the 10 DysonRelo Platform Apps & Specifications"
+            >
+              <span>📱 10 App Catalog</span>
+            </Link>
           </div>
         )}
 
