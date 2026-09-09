@@ -477,9 +477,12 @@ export default function LuxuryHeroShowcase({
               >
                 We Orchestrate Your Entire Move.
               </p>
-              <p className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5">
-                Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
-              </p>
+              <div className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5 leading-relaxed">
+                <div>Independent agent vetting &amp; fiduciary relocation management across all 50 states</div>
+                <div className="whitespace-nowrap font-bold text-[#854d0e] sm:text-[#0a0a0a]/90">
+                  — zero fees to buyers &amp; employers.
+                </div>
+              </div>
             </div>
 
             {/* 2ND: WRITING FORMAT QUOTE FROM BOB DYSON (JUST ABOVE SEARCH PILL) */}
