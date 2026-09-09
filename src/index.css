@@ -17,8 +17,8 @@
     --dyson-taupe: #d8cab6;
     --dyson-text: #ffffff;
     --dyson-text-dark: #0a0a0a;
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 37 43% 86%; /* #ede0cc Dyson Signature Tan */
+    --foreground: 0 0% 5%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -96,7 +96,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: #ede0cc;
+    color: #0a0a0a;
     font-family: 'Inter', sans-serif;
   }
 }

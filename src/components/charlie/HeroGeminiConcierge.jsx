@@ -115,31 +115,30 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
           <button
             type="button"
             onClick={handleStart}
-            className="w-full group p-2.5 rounded-xl border border-[#D4AF37]/60 hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between shadow-lg"
+            className="w-full group p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 active:scale-95 transition-all text-left cursor-pointer flex items-center justify-between shadow-md"
             style={{
-              background: 'linear-gradient(135deg, #1b160a 0%, #0d0d0d 100%)',
+              background: '#ede0cc',
             }}
           >
             <div className="flex items-center gap-2 min-w-0 pr-1">
               <span
-                className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow"
-                style={{ background: 'rgba(212,175,55,0.25)', border: `1px solid ${GOLD}` }}
+                className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 shadow-sm"
+                style={{ background: '#0a0a0a', border: `1px solid ${GOLD}` }}
               >
-                <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <Mic className="w-3 h-3 text-[#D4AF37]" />
               </span>
               <div className="min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                <div className="flex items-center gap-1 mb-0.2">
+                  <span className="text-[10.5px] font-bold text-[#0a0a0a]">
                     Talk with Charlie
                   </span>
                   <span
-                    className="text-[7.5px] px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider text-black"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                    className="text-[7px] px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider text-white bg-[#0a0a0a]"
                   >
                     Voice AI
                   </span>
                 </div>
-                <p className="text-[9.5px] text-white/60 leading-tight truncate">
+                <p className="text-[9px] text-[#44382c] font-medium leading-tight truncate">
                   Ask anything, vet agents &amp; navigate
                 </p>
               </div>

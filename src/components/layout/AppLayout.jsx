@@ -50,7 +50,7 @@ export default function AppLayout() {
   }
   
   return (
-    <div className={`flex flex-col h-screen overflow-hidden ${landscape ? 'force-landscape' : ''}`} style={{ background: '#A9A9A9' }}>
+    <div className={`flex flex-col h-screen overflow-hidden ${landscape ? 'force-landscape' : ''}`} style={{ background: '#ede0cc' }}>
       {/* Top bar spanning full width */}
       <div className="px-4 py-3 flex items-center gap-3" style={{ background: '#0d0d0d' }}>
         {/* STUDIO HOME pill — toggles the sidebar (collapse/expand) */}

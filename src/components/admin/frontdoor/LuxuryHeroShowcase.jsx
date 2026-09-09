@@ -94,19 +94,18 @@ export default function LuxuryHeroShowcase({
         
         {/* ========================================================
             LEFT SIDEBAR (ORGANIZED CONCIERGE TO-DO'S & PATHWAYS)
-            In portrait (< lg), this appears AFTER the house photo & search pill.
-            On desktop (lg+), this sits as the left column.
+            Sidebar stays black, pills inside are reverse colors: tan box with black font colors!
             ======================================================== */}
         <aside 
-          className="w-full lg:w-[315px] xl:w-[335px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20 order-2 lg:order-1 border-t lg:border-t-0 lg:border-r border-[#D4AF37]/40"
+          className="w-full lg:w-[275px] xl:w-[295px] shrink-0 p-3 sm:p-3.5 flex flex-col justify-between text-left relative z-20 order-2 lg:order-1 border-t lg:border-t-0 lg:border-r border-[#D4AF37]/40"
           style={{
             background: 'linear-gradient(180deg, #0e0e0e 0%, #080808 100%)',
           }}
         >
           {/* Top Branding & Fiduciary Headline */}
-          <div className="space-y-2 flex flex-col items-center text-center">
+          <div className="space-y-1.5 flex flex-col items-center text-center">
             <div 
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-sm"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8.5px] font-bold tracking-widest uppercase shadow-sm"
               style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid ${GOLD}60`, color: GOLD }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
@@ -115,18 +114,17 @@ export default function LuxuryHeroShowcase({
 
             {isSubscriberMode ? (
               /* PERSONAL SUBSCRIBER SIDEBAR CONSOLE */
-              <div className="w-full space-y-2 pt-1">
+              <div className="w-full space-y-1.5 pt-0.5">
                 <div 
-                  className="p-3 rounded-xl border text-left shadow-lg space-y-2"
+                  className="p-2.5 rounded-lg border text-left shadow-md space-y-1.5"
                   style={{
-                    background: 'linear-gradient(135deg, #18140c 0%, #0d0d0d 100%)',
-                    borderColor: `${GOLD}70`,
+                    background: '#ede0cc',
+                    borderColor: `${GOLD}`,
                   }}
                 >
                   <div className="flex items-center justify-between gap-1">
                     <span 
-                      className="text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-black shadow-sm"
-                      style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                      className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-white bg-[#0a0a0a] shadow-sm"
                     >
                       {isAdmin ? 'ADMIN CONSOLE' : 'SUBSCRIBER WORKSPACE'}
                     </span>
@@ -134,10 +132,10 @@ export default function LuxuryHeroShowcase({
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-white leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                    <h3 className="text-sm sm:text-base font-bold text-[#0a0a0a] leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                       {subscriberName}'s Workspace
                     </h3>
-                    <p className="text-[10.5px] text-[#fce38a] font-medium mt-0.5 leading-snug">
+                    <p className="text-[10px] text-[#854d0e] font-semibold leading-snug">
                       Active: {activeProjectLabel}
                     </p>
                   </div>
@@ -146,83 +144,78 @@ export default function LuxuryHeroShowcase({
                   <button
                     type="button"
                     onClick={() => navigate(workspaceDest)}
-                    className="w-full py-2 px-3 rounded-lg text-xs font-bold text-black flex items-center justify-between shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer group"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
+                    className="w-full py-1.5 px-2.5 rounded text-[11px] font-bold text-white bg-[#0a0a0a] hover:bg-[#1a1a1a] flex items-center justify-between shadow transition-all cursor-pointer group"
                   >
                     <span>{workspaceLabel}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    <ArrowRight className="w-3 h-3 text-[#D4AF37] group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
               </div>
             ) : (
-              /* PUBLIC VISITOR SIDEBAR TOP */
+              /* PUBLIC VISITOR SIDEBAR TOP — REVERSE COLORS (TAN BOX WITH BLACK FONT) */
               <>
                 <button
                   type="button"
                   onClick={scrollToSearch}
-                  className="text-center w-full p-2.5 rounded-xl border border-white/10 hover:border-[#D4AF37] bg-[#141414] hover:bg-[#1a170f] transition-all cursor-pointer group shadow-sm text-left"
+                  className="w-full p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 transition-all cursor-pointer group shadow-sm text-center"
+                  style={{ background: '#ede0cc' }}
                   title="Click to jump directly to Search Destinations"
                 >
                   <div className="text-center w-full">
                     <h2
-                      className="font-bold leading-tight text-white tracking-tight group-hover:text-[#D4AF37] transition-colors"
-                      style={{
-                        fontFamily: 'Cormorant Garamond, serif',
-                        fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
-                      }}
+                      className="font-bold leading-tight text-[#0a0a0a] tracking-tight text-sm sm:text-base"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
                       Search Destinations
                     </h2>
                     <p
-                      className="font-semibold mt-0.5 tracking-wide leading-snug"
-                      style={{
-                        fontFamily: 'Cormorant Garamond, serif',
-                        fontSize: '1.1rem',
-                        color: '#fce38a',
-                      }}
+                      className="font-semibold text-xs text-[#854d0e] leading-tight mt-0.5"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
                     >
                       Or Let Us Vet Any Listing For You.
                     </p>
-                    <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
-                      Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
+                    <p className="text-[9.5px] text-[#44382c] font-sans font-medium mt-0.5 leading-snug">
+                      Destination market, or paste link from Realtor, Zillow, or Homes.com
                     </p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-[#D4AF37] border border-[#D4AF37]/50 bg-[#D4AF37]/10 group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
-                      <Search className="w-2.5 h-2.5" />
+                    <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8.5px] font-bold tracking-wider uppercase text-white bg-[#0a0a0a] group-hover:bg-[#1c1c1c] transition-all">
+                      <Search className="w-2.5 h-2.5 text-[#D4AF37]" />
                       <span>Click to Search</span>
                       <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
                 </button>
 
-                {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN */}
-                <div className="w-full pt-1.5 pb-0.5">
+                {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN — REVERSE COLOR TAN BOX */}
+                <div className="w-full pt-1 pb-0.5">
                   {!currentUser ? (
                     <button
                       type="button"
                       onClick={() => navigate('/login')}
-                      className="w-full py-1.5 px-2.5 rounded-xl border border-[#D4AF37]/50 bg-[#121212] hover:bg-[#1a170f] hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                      className="w-full py-1 px-2 rounded-lg border border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                      style={{ background: '#ede0cc' }}
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <LogIn className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                        <span className="text-[10.5px] font-bold text-white/90 group-hover:text-[#D4AF37] truncate">
-                          Already Subscribed? <span className="text-[#D4AF37] underline underline-offset-2">Sign In</span>
+                        <LogIn className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                        <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
+                          Already Subscribed? <span className="text-[#854d0e] underline underline-offset-2">Sign In</span>
                         </span>
                       </div>
-                      <ArrowRight className="w-3 h-3 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      <ArrowRight className="w-2.5 h-2.5 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => navigate(currentUser.role === 'admin' ? '/admin' : '/home')}
-                      className="w-full py-1.5 px-2.5 rounded-xl border border-[#10b981]/50 bg-[#10b981]/10 hover:bg-[#10b981]/20 transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                      className="w-full py-1 px-2 rounded-lg border border-[#10b981] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                      style={{ background: '#ede0cc' }}
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-                        <span className="text-[10px] font-bold text-white/90 truncate">
-                          Signed In: <span className="text-[#10b981] font-semibold">{currentUser.full_name || currentUser.email}</span>
+                        <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
+                          Signed In: <span className="text-[#0a0a0a] font-semibold">{currentUser.full_name || currentUser.email}</span>
                         </span>
                       </div>
-                      <span className="text-[9px] font-bold text-[#10b981] flex items-center gap-0.5 shrink-0">
+                      <span className="text-[8.5px] font-bold text-[#0a0a0a] flex items-center gap-0.5 shrink-0">
                         Workspace <ArrowRight className="w-2.5 h-2.5" />
                       </span>
                     </button>
@@ -231,11 +224,11 @@ export default function LuxuryHeroShowcase({
               </>
             )}
 
-            {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S */}
-            <div className="space-y-1.5 pt-1.5">
-              <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
+            {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S — REVERSE COLOR TAN PILLS WITH BLACK TEXT */}
+            <div className="space-y-1 pt-1 w-full">
+              <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 flex items-center justify-between">
                 <span>Concierge To-Do's:</span>
-                <span className="text-[8px] text-white/50 lowercase tracking-normal">select one to begin</span>
+                <span className="text-[7.5px] text-white/50 lowercase tracking-normal">select one</span>
               </div>
 
               {/* TO-DO 1: TALK WITH CHARLIE (AI VOICE CONCIERGE) */}
@@ -243,129 +236,134 @@ export default function LuxuryHeroShowcase({
                 <HeroGeminiConcierge sidebarMode={true} />
               </div>
 
-              {/* TO-DO 2: Families & Buyers */}
+              {/* TO-DO 2: Families & Buyers — REVERSE COLOR TAN PILL */}
               <button
                 type="button"
                 onClick={() => navigate('/relocation-intake')}
-                className="w-full group p-2.5 rounded-xl border border-white/10 bg-[#141414] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
-                <div className="min-w-0 pr-1.5">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <Users className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1 mb-0.2">
+                    <Users className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
                       Relocating Families &amp; Buyers
                     </span>
-                    <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] font-bold border border-[#10b981]/30 shrink-0">
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#10b981] font-bold shrink-0">
                       Free
                     </span>
                   </div>
-                  <p className="text-[9.5px] text-white/55 leading-tight truncate">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
                     Agent vetting, tax &amp; school roadmap
                   </p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* TO-DO 3: Corporate HR & Employers */}
+              {/* TO-DO 3: Corporate HR & Employers — REVERSE COLOR TAN PILL */}
               <button
                 type="button"
                 onClick={() => navigate('/corporate-relo')}
-                className="w-full group p-2.5 rounded-xl border border-white/10 bg-[#141414] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
-                <div className="min-w-0 pr-1.5">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <Briefcase className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1 mb-0.2">
+                    <Briefcase className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
                       Corporate HR &amp; Employers
                     </span>
-                    <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-bold border border-[#D4AF37]/40 shrink-0">
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#D4AF37] font-bold shrink-0">
                       Zero Fee
                     </span>
                   </div>
-                  <p className="text-[9.5px] text-white/55 leading-tight truncate">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
                     Executive move packages &amp; milestones
                   </p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* TO-DO 4: Agents & Brokerages */}
+              {/* TO-DO 4: Agents & Brokerages — REVERSE COLOR TAN PILL */}
               <button
                 type="button"
                 onClick={() => navigate('/partner-benefits')}
-                className="w-full group p-2.5 rounded-xl border border-white/10 bg-[#141414] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
-                <div className="min-w-0 pr-1.5">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <Building className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1 mb-0.2">
+                    <Building className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
                       Agents &amp; Brokerages
                     </span>
-                    <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#3b82f6]/20 text-[#60a5fa] font-bold border border-[#3b82f6]/40 shrink-0">
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#60a5fa] font-bold shrink-0">
                       25% Referral
                     </span>
                   </div>
-                  <p className="text-[9.5px] text-white/55 leading-tight truncate">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
                     Receiving agent bureau &amp; escrow audits
                   </p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* TO-DO 5: Refer a Client or Colleague */}
+              {/* TO-DO 5: Refer a Client or Colleague — REVERSE COLOR TAN PILL */}
               <button
                 type="button"
                 onClick={() => navigate('/refer')}
-                className="w-full group p-2.5 rounded-xl border border-white/10 bg-[#141414] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
-                <div className="min-w-0 pr-1.5">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <UserPlus className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1 mb-0.2">
+                    <UserPlus className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
                       Refer a Client or Colleague
                     </span>
-                    <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-bold border border-[#D4AF37]/40 shrink-0">
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#D4AF37] font-bold shrink-0">
                       25% Payout
                     </span>
                   </div>
-                  <p className="text-[9.5px] text-white/55 leading-tight truncate">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
                     Submit buyer, seller, agent or vendor lead
                   </p>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
-            {/* DIRECT ACCESS: 6AM NEWS DESK & CONCIERGE ADVANTAGE */}
-            <div className="pt-2 mt-1 border-t border-white/10 space-y-1.5">
-              <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
+            {/* DIRECT ACCESS: 6AM NEWS DESK & CONCIERGE ADVANTAGE — REVERSE COLOR TAN PILLS */}
+            <div className="pt-1 mt-1 border-t border-white/10 space-y-1 w-full">
+              <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 flex items-center justify-between">
                 <span>Detailed Systems:</span>
-                <span className="text-[8px] text-white/50 lowercase tracking-normal">direct access</span>
+                <span className="text-[7.5px] text-white/50 lowercase tracking-normal">direct</span>
               </div>
 
               {/* 1. 6AM NEWS BROADCAST LINK */}
               <button
                 type="button"
                 onClick={() => navigate('/dnn-news')}
-                className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group px-2 py-1 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
                 <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1.5">
-                    <Tv className="w-3 h-3 text-red-400 shrink-0" />
-                    <span className="text-[10.5px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                  <div className="flex items-center gap-1">
+                    <Tv className="w-2.5 h-2.5 text-red-600 shrink-0" />
+                    <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
                       6AM DNN News Broadcast
                     </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-red-500/20 text-red-300 font-bold border border-red-500/30 shrink-0">
+                    <span className="text-[6.5px] px-1 py-0.2 rounded bg-[#0a0a0a] text-red-400 font-bold shrink-0">
                       Daily
                     </span>
                   </div>
-                  <p className="text-[9px] text-white/55 leading-tight truncate pl-4.5">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate pl-3.5">
                     AI Charlie &amp; Bob • Daily Housing Pulse
                   </p>
                 </div>
-                <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                <span className="text-[8px] text-[#0a0a0a] underline font-bold whitespace-nowrap shrink-0 flex items-center gap-0.5">
                   <span>Open</span>
-                  <ArrowRight className="w-2.5 h-2.5" />
+                  <ArrowRight className="w-2 h-2" />
                 </span>
               </button>
 
@@ -373,57 +371,61 @@ export default function LuxuryHeroShowcase({
               <button
                 type="button"
                 onClick={() => navigate('/relocation-intake')}
-                className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                className="w-full group px-2 py-1 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                style={{ background: '#ede0cc' }}
               >
                 <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3 h-3 text-[#10b981] shrink-0" />
-                    <span className="text-[10.5px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                  <div className="flex items-center gap-1">
+                    <ShieldCheck className="w-2.5 h-2.5 text-[#10b981] shrink-0" />
+                    <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
                       The Concierge Advantage
                     </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] font-bold border border-[#10b981]/30 shrink-0">
+                    <span className="text-[6.5px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#10b981] font-bold shrink-0">
                       Fiduciary
                     </span>
                   </div>
-                  <p className="text-[9px] text-white/55 leading-tight truncate pl-4.5">
+                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate pl-3.5">
                     Independent Vetting vs Lead Portals
                   </p>
                 </div>
-                <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                <span className="text-[8px] text-[#0a0a0a] underline font-bold whitespace-nowrap shrink-0 flex items-center gap-0.5">
                   <span>Open</span>
-                  <ArrowRight className="w-2.5 h-2.5" />
+                  <ArrowRight className="w-2 h-2" />
                 </span>
               </button>
             </div>
           </div>
 
-          {/* 3. FIDUCIARY DESK DIRECT CONTACT / TEXT LINE */}
-          <div className="pt-2 mt-2 border-t border-white/10">
-            <div className="p-2 rounded-xl bg-[#121212] border border-white/10 flex items-center justify-between gap-2 shadow-sm">
+          {/* 3. FIDUCIARY DESK DIRECT CONTACT / TEXT LINE — REVERSE COLOR TAN BOX */}
+          <div className="pt-1.5 mt-1 border-t border-white/10">
+            <div 
+              className="p-1.5 rounded-lg border border-[#D4AF37]/60 flex items-center justify-between gap-1.5 shadow-sm"
+              style={{ background: '#ede0cc' }}
+            >
               <div className="min-w-0">
-                <div className="flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-[#D4AF37]">
+                <div className="flex items-center gap-1 text-[7.5px] font-black uppercase tracking-wider text-[#854d0e]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
-                  <span>Concierge Desk Direct</span>
+                  <span>Concierge Direct</span>
                 </div>
-                <div className="text-[11px] font-bold text-white font-mono mt-0.5">
+                <div className="text-[10.5px] font-bold text-[#0a0a0a] font-mono leading-tight">
                   (858) 353-1200
                 </div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <a
                   href="tel:+18583531200"
-                  className="px-2 py-1 rounded-lg bg-[#1e1e1e] hover:bg-[#D4AF37] hover:text-black border border-white/15 text-[9px] font-bold text-white transition-all flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[#0a0a0a] hover:bg-[#202020] text-[8.5px] font-bold text-white transition-all flex items-center gap-0.5 cursor-pointer"
                   title="Call Concierge Desk"
                 >
-                  <Phone className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <Phone className="w-2 h-2 text-[#D4AF37]" />
                   <span>Call</span>
                 </a>
                 <a
                   href="sms:+18583531200"
-                  className="px-2 py-1 rounded-lg bg-[#1e1e1e] hover:bg-[#D4AF37] hover:text-black border border-white/15 text-[9px] font-bold text-white transition-all flex items-center gap-1 cursor-pointer"
+                  className="px-2 py-0.5 rounded bg-[#0a0a0a] hover:bg-[#202020] text-[8.5px] font-bold text-white transition-all flex items-center gap-0.5 cursor-pointer"
                   title="Text Concierge Desk"
                 >
-                  <MessageCircle className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <MessageCircle className="w-2 h-2 text-[#D4AF37]" />
                   <span>Text</span>
                 </a>
               </div>
