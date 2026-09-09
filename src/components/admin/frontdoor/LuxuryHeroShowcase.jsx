@@ -54,6 +54,19 @@ export default function LuxuryHeroShowcase({
   const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, new_construction
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
 
+  const scrollToSearch = () => {
+    const searchForm = document.getElementById('hero-search-bar');
+    const searchInput = document.getElementById('hero-search-input');
+    if (searchForm) {
+      searchForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    if (searchInput) {
+      setTimeout(() => {
+        searchInput.focus();
+      }, 350);
+    }
+  };
+
   return (
     <div className="w-full">
       {/* 2-COLUMN STRUCTURE:
@@ -82,30 +95,42 @@ export default function LuxuryHeroShowcase({
               <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
             </div>
 
-            <div className="text-center w-full">
-              <h2
-                className="font-bold leading-tight text-white tracking-tight"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
-                }}
-              >
-                Search Destinations
-              </h2>
-              <p
-                className="font-semibold mt-0.5 tracking-wide leading-snug"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: '1.1rem',
-                  color: '#fce38a',
-                }}
-              >
-                Or Let Us Vet Any Listing For You.
-              </p>
-              <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
-                Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={scrollToSearch}
+              className="text-center w-full p-2.5 rounded-xl border border-white/10 hover:border-[#D4AF37] bg-[#141414] hover:bg-[#1a170f] transition-all cursor-pointer group shadow-sm text-left"
+              title="Click to jump directly to Search Destinations"
+            >
+              <div className="text-center w-full">
+                <h2
+                  className="font-bold leading-tight text-white tracking-tight group-hover:text-[#D4AF37] transition-colors"
+                  style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
+                  }}
+                >
+                  Search Destinations
+                </h2>
+                <p
+                  className="font-semibold mt-0.5 tracking-wide leading-snug"
+                  style={{
+                    fontFamily: 'Cormorant Garamond, serif',
+                    fontSize: '1.1rem',
+                    color: '#fce38a',
+                  }}
+                >
+                  Or Let Us Vet Any Listing For You.
+                </p>
+                <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
+                  Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
+                </p>
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-[#D4AF37] border border-[#D4AF37]/50 bg-[#D4AF37]/10 group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
+                  <Search className="w-2.5 h-2.5" />
+                  <span>Click to Search</span>
+                  <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
+            </button>
 
             {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN */}
             <div className="w-full pt-1.5 pb-0.5">
@@ -433,11 +458,34 @@ export default function LuxuryHeroShowcase({
             />
           </div>
 
-          {/* ================= 3. CLEAN SEARCH PILL DIRECTLY BELOW PHOTO ================= */}
+          {/* ================= 3. STATEMENT & SEARCH PILL DIRECTLY BELOW PHOTO ================= */}
           <div className="w-full max-w-2xl mx-auto space-y-3.5 text-center pt-1">
+
+            {/* 1ST: THE STATEMENT & EXPLANATION COPY (ALL IN BLACK FONT COLOR) */}
+            <div className="space-y-0.5 pt-1 text-center">
+              <h3 
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0a0a0a]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                We Don't Sell Real Estate
+              </h3>
+              <p
+                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide"
+                style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  color: '#854d0e',
+                }}
+              >
+                We Orchestrate Your Entire Move.
+              </p>
+              <p className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5">
+                Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
+              </p>
+            </div>
             
-            {/* 1ST: THE FLOATING LUXURY SEARCH PILL (CLEAN & UNCLUTTERED) */}
+            {/* 2ND: THE FLOATING LUXURY SEARCH PILL (JUST BELOW THE STATEMENT) */}
             <form
+              id="hero-search-bar"
               onSubmit={(e) => {
                 e.preventDefault();
                 onSearch(searchQuery);
@@ -452,6 +500,7 @@ export default function LuxuryHeroShowcase({
               <div className="flex items-center gap-2.5 w-full pl-5 py-1">
                 <Search className="w-5 h-5 shrink-0" style={{ color: '#0a0a0a' }} />
                 <input
+                  id="hero-search-input"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -482,28 +531,6 @@ export default function LuxuryHeroShowcase({
                 </button>
               </div>
             </form>
-
-            {/* THEN: THE HEADER & EXPLANATION COPY (ALL IN BLACK FONT COLOR) */}
-            <div className="space-y-0.5 pt-1 text-center">
-              <h3 
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0a0a0a]"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                We Don't Sell Real Estate
-              </h3>
-              <p
-                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  color: '#854d0e',
-                }}
-              >
-                We Orchestrate Your Entire Move.
-              </p>
-              <p className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5">
-                Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
-              </p>
-            </div>
 
             {/* THEN: CATEGORY INTENT TABS */}
             <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
