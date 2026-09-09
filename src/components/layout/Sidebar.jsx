@@ -158,161 +158,7 @@ export default function Sidebar({ userRole, onToggle }) {
             <span>CONCIERGE APPS:</span>
             <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
           </div>
-
-          {/* 3-Column iPhone Springboard Grid directly on black background */}
-          <div className="grid grid-cols-3 gap-y-4 gap-x-2 px-1">
-            {[
-              {
-                id: 'charlie',
-                shortLabel: 'Charlie AI',
-                tag: 'Voice AI',
-                icon: Mic,
-                iconColor: '#10b981',
-                bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
-                border: 'border-[#10b981]/60',
-                badge: 'VOICE',
-                route: '/talking-app',
-              },
-              {
-                id: 'family',
-                shortLabel: 'Family Relo',
-                tag: 'Intake',
-                icon: Home,
-                iconColor: '#D4AF37',
-                bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
-                border: 'border-[#D4AF37]/60',
-                badge: 'FREE',
-                route: '/relocation-intake',
-              },
-              {
-                id: 'hr',
-                shortLabel: 'Corp HR',
-                tag: 'Exec Move',
-                icon: Building,
-                iconColor: '#e8c84a',
-                bgGradient: 'from-[#332a18] via-[#1a160d] to-[#0a0a0a]',
-                border: 'border-[#e8c84a]/60',
-                badge: 'ZERO',
-                route: '/corporate-relo',
-              },
-              {
-                id: 'agents',
-                shortLabel: 'Agent Bureau',
-                tag: 'PRN Network',
-                icon: Users,
-                iconColor: '#60a5fa',
-                bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
-                border: 'border-[#3b82f6]/60',
-                badge: '25%',
-                route: '/broker-portal',
-              },
-              {
-                id: 'refer',
-                shortLabel: 'Refer Lead',
-                tag: 'Payout',
-                icon: ArrowRight,
-                iconColor: '#D4AF37',
-                bgGradient: 'from-[#2b2210] via-[#17130b] to-[#0a0a0a]',
-                border: 'border-[#D4AF37]/60',
-                badge: 'PAYOUT',
-                route: '/refer',
-              },
-              {
-                id: 'news',
-                shortLabel: '6AM News',
-                tag: 'Daily Pulse',
-                icon: Play,
-                iconColor: '#ef4444',
-                bgGradient: 'from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a]',
-                border: 'border-[#ef4444]/60',
-                badge: 'DAILY',
-                route: '/dnn-news',
-              },
-              {
-                id: 'advantage',
-                shortLabel: 'Advantage',
-                tag: 'Fiduciary',
-                icon: ShieldCheck,
-                iconColor: '#34d399',
-                bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
-                border: 'border-[#10b981]/60',
-                badge: '100%',
-                route: '/transparency',
-              },
-              {
-                id: 'library',
-                shortLabel: 'My Library',
-                tag: 'Vault',
-                icon: BookOpen,
-                iconColor: '#60a5fa',
-                bgGradient: 'from-[#10223d] via-[#0c1626] to-[#0a0a0a]',
-                border: 'border-[#3b82f6]/60',
-                badge: 'VAULT',
-                route: '/media',
-              },
-              {
-                id: 'concierge',
-                shortLabel: 'Concierge',
-                tag: 'Direct Desk',
-                icon: Phone,
-                iconColor: '#D4AF37',
-                bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
-                border: 'border-[#D4AF37]/60',
-                badge: 'CALL',
-                route: 'tel:+18583531200',
-              },
-            ].map((app) => {
-              const Icon = app.icon;
-              return (
-                <button
-                  key={app.id}
-                  type="button"
-                  onClick={() => {
-                    if (app.route.startsWith('tel:')) {
-                      window.open(app.route);
-                    } else {
-                      navigate(app.route);
-                    }
-                  }}
-                  className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
-                >
-                  {/* Standalone Apple Squircle Icon Tile on Black Background */}
-                  <div 
-                    className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
-                    style={{
-                      boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
-                    }}
-                  >
-                    {/* iPhone Glossy Top Sheen */}
-                    <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 via-white/10 to-transparent pointer-events-none rounded-t-[18px]" />
-
-                    {/* Notification Pill Badge */}
-                    {app.badge && (
-                      <span 
-                        className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow-md"
-                      >
-                        {app.badge}
-                      </span>
-                    )}
-
-                    <Icon 
-                      className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110 drop-shadow" 
-                      style={{ color: app.iconColor }} 
-                    />
-                  </div>
-
-                  {/* Clean iPhone App Label directly on Black */}
-                  <span className="mt-1.5 text-[11px] font-semibold text-white group-hover:text-[#D4AF37] transition-colors leading-tight text-center max-w-[76px] truncate">
-                    {app.shortLabel}
-                  </span>
-                  {/* Micro Purpose Tag */}
-                  <span className="text-[8.5px] text-white/45 leading-none mt-0.5 text-center max-w-[76px] truncate">
-                    {app.tag}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <IPhoneSpringboardGrid />
         </div>
 
       </div>
@@ -322,15 +168,15 @@ export default function Sidebar({ userRole, onToggle }) {
           ======================================================== */}
       <div className="p-3 border-t border-white/15 bg-black/90 text-left space-y-2 shrink-0">
         <div 
-          className="p-2.5 rounded-xl flex items-center justify-between gap-2 shadow-inner"
-          style={{ background: '#ede0cc', color: '#0a0a0a' }}
+          className="p-2.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg border border-[#D4AF37]/50"
+          style={{ background: '#121212', color: '#ffffff' }}
         >
           <div className="min-w-0">
-            <div className="text-[9px] font-black uppercase tracking-wider text-[#854d0e] flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+            <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
               <span>CONCIERGE DIRECT</span>
             </div>
-            <div className="font-mono text-xs sm:text-sm font-bold text-[#0a0a0a] tracking-tight">
+            <div className="font-mono text-xs sm:text-sm font-bold text-white tracking-tight">
               (858) 353–1200
             </div>
           </div>
@@ -338,7 +184,7 @@ export default function Sidebar({ userRole, onToggle }) {
           <div className="flex items-center gap-1.5 shrink-0">
             <a
               href="tel:+18583531200"
-              className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] transition-all flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-[#202020] text-[#D4AF37] hover:bg-[#2a2a2a] border border-[#D4AF37]/40 transition-all flex items-center gap-1"
               title="Call Fiduciary Desk"
             >
               <Phone className="w-3 h-3 text-[#D4AF37]" />
@@ -346,7 +192,7 @@ export default function Sidebar({ userRole, onToggle }) {
             </a>
             <a
               href="sms:+18583531200"
-              className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] transition-all flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-[#202020] text-[#10b981] hover:bg-[#2a2a2a] border border-[#10b981]/40 transition-all flex items-center gap-1"
               title="Text Fiduciary Desk"
             >
               <MessageSquare className="w-3 h-3 text-[#10b981]" />
