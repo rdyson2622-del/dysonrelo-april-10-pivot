@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Search, Mic, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles, X, Home, Building, Users, Play, BookOpen
+  Search, ArrowRight, ShieldCheck, Phone, 
+  MessageSquare, ExternalLink, Sparkles, X
 } from 'lucide-react';
+import IPhoneSpringboardGrid from '@/components/springboard/IPhoneSpringboardGrid';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
