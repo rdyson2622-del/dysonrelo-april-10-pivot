@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
 import LabInspectorHeader from '@/components/admin/frontdoor/LabInspectorHeader';
-import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
@@ -109,7 +108,6 @@ export default function AdminFrontDoorLab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
-  const [domainModalOpen, setDomainModalOpen] = useState(false);
   const [latestBroadcast, setLatestBroadcast] = useState(null);
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
 
@@ -646,12 +644,6 @@ export default function AdminFrontDoorLab() {
                   <strong>Signature Theme Applied:</strong> Tan backdrop (<code className="text-[#D4AF37]">#ede0cc</code>) with classic black command boxes (<code className="text-[#D4AF37]">#0a0a0a</code>), Cormorant Garamond serif headings, and gold accents.
                 </span>
               </div>
-              <button
-                onClick={() => setDomainModalOpen(true)}
-                className="text-[11px] underline text-[#D4AF37] font-semibold shrink-0 hover:text-white cursor-pointer"
-              >
-                GoDaddy Setup Details
-              </button>
             </div>
           )}
 
@@ -757,7 +749,7 @@ export default function AdminFrontDoorLab() {
                 DysonRelo.com • THE DYSON &amp; DYSON COMPANIES, INC.
               </p>
               <p className="text-[11px] text-white/50">
-                Licensed California Corporate Brokerage • Real Estate Relocation Concierge &amp; National Referral Network
+                Licensed California Corporate Brokerage • CA DRE #02303118 • Real Estate Relocation Concierge &amp; National Referral Network
               </p>
             </div>
 
@@ -767,23 +759,10 @@ export default function AdminFrontDoorLab() {
               <Link to="/privacy" className="hover:text-white">Privacy</Link>
               <span>•</span>
               <Link to="/terms" className="hover:text-white">Terms</Link>
-              <span>•</span>
-              <button
-                onClick={() => setDomainModalOpen(true)}
-                className="text-[#D4AF37] hover:underline font-bold cursor-pointer"
-              >
-                GoDaddy Pointer Setup
-              </button>
             </div>
           </footer>
         </div>
       </main>
-
-      {/* GODADDY DOMAIN POINTER INSTRUCTIONS MODAL */}
-      <GoDaddyDomainModal
-        isOpen={domainModalOpen}
-        onClose={() => setDomainModalOpen(false)}
-      />
 
       {/* REALTOR.COM RETURN COMPANION DOCK */}
       <RealtorReturnCompanion

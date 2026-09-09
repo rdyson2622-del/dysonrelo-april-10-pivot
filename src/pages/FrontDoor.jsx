@@ -5,7 +5,6 @@ import {
   SlidersHorizontal, Globe, Lock 
 } from 'lucide-react';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
-import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
@@ -106,7 +105,6 @@ export default function FrontDoor() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [portalMenuOpen, setPortalMenuOpen] = useState(false);
-  const [domainModalOpen, setDomainModalOpen] = useState(false);
   const [latestBroadcast, setLatestBroadcast] = useState(null);
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
 
@@ -704,7 +702,7 @@ export default function FrontDoor() {
                 DysonRelo.com • THE DYSON &amp; DYSON COMPANIES, INC.
               </p>
               <p className="text-[11px] text-white/50">
-                Licensed California Corporate Brokerage • Real Estate Relocation Concierge &amp; National Referral Network
+                Licensed California Corporate Brokerage • CA DRE #02303118 • Real Estate Relocation Concierge &amp; National Referral Network
               </p>
             </div>
 
@@ -714,23 +712,10 @@ export default function FrontDoor() {
               <Link to="/privacy" className="hover:text-white">Privacy</Link>
               <span>•</span>
               <Link to="/terms" className="hover:text-white">Terms</Link>
-              <span>•</span>
-              <button
-                onClick={() => setDomainModalOpen(true)}
-                className="text-[#D4AF37] hover:underline font-bold cursor-pointer"
-              >
-                GoDaddy Pointer Setup
-              </button>
             </div>
           </footer>
         </div>
       </main>
-
-      {/* GODADDY DOMAIN POINTER INSTRUCTIONS MODAL */}
-      <GoDaddyDomainModal
-        isOpen={domainModalOpen}
-        onClose={() => setDomainModalOpen(false)}
-      />
 
       {/* REALTOR.COM RETURN COMPANION DOCK */}
       <RealtorReturnCompanion
