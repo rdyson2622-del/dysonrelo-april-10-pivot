@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  CheckCircle2, ArrowRight, ArrowLeft, Clock, ShieldCheck, 
-  MapPin, Home, UserCheck, Search, MessageSquare, Send, 
-  Phone, MessageCircle, Mic, AlertCircle, ChevronDown, ChevronUp,
-  FileText, Sparkles, Building2, Check
+  CheckCircle2, ArrowLeft, ShieldCheck, 
+  Phone, Mic, ChevronDown, ChevronUp,
+  Send, Check, Sparkles
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from '@/components/ui/use-toast';
-import VisualProjectRoadmap, { ROADMAP_TEMPLATES } from '@/components/roadmap/VisualProjectRoadmap';
+import { ROADMAP_TEMPLATES } from '@/components/roadmap/VisualProjectRoadmap';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -50,7 +49,7 @@ export default function ClientMoveRoadmap() {
           if (user && isMounted) setCurrentUser(user);
         } catch (_) {}
 
-        // 1. Fetch latest client record matching user or query param or latest created
+        // Fetch latest client record matching user or query param or latest created
         let matchedClient = null;
         const paramEmail = searchParams.get('email');
         const paramName = searchParams.get('name');
@@ -95,161 +94,53 @@ export default function ClientMoveRoadmap() {
 
   // Derived client details
   const clientName = clientRecord?.full_name || searchParams.get('name') || currentUser?.full_name || 'Kayden Sterling';
-  const firstName = clientName.split(' ')[0] || 'Kayden';
-  const originCity = clientRecord?.current_city || 'Los Gatos, CA';
-  const destinationCity = clientRecord?.destination_city || searchParams.get('destination') || 'Scottsdale, AZ';
+  const originCity = clientRecord?.current_city || 'Santa Cruz, CA';
+  const destinationCity = clientRecord?.destination_city || searchParams.get('destination') || 'Austin, TX';
   const budget = clientRecord?.budget || '$800K – $1.5M';
   const moveDate = clientRecord?.move_date || 'Fall Relocation (1–3 Months)';
-  const dispatchRef = clientRecord?.id ? `DYS-${clientRecord.id.slice(-6).toUpperCase()}` : 'DYS-RELO-8821';
+  const dispatchRef = clientRecord?.id ? `DYS-${clientRecord.id.slice(-6).toUpperCase()}` : 'DYS-649AB6';
 
-  // Roadmap phases structure
-  const ROADMAP_PHASES = [
-    {
-      number: 1,
-      title: 'Relocation Intake & Criteria Profile',
-      status: 'completed',
-      badge: 'Completed',
-      desc: 'Move parameters, timeline, budget, and destination criteria registered in the Dyson network.',
-      dysonDeliverable: 'Client relocation file established; fiduciary engagement initiated.',
-      items: [
-        'Relocation profile submitted & verified',
-        'Move timeline & budget parameters registered',
-        'Fiduciary representation standards acknowledged',
-      ],
-    },
-    {
-      number: 2,
-      title: 'Fiduciary Agent Match & Independent Vetting',
-      status: 'active',
-      badge: 'In Progress • Manual Review',
-      desc: 'Bob Dyson and our senior relocation desk are independently vetting top-producing local agents in your destination market.',
-      dysonDeliverable: 'Vetted candidate shortlist presented directly to you with production audit & disciplinary check.',
-      items: [
-        'Analyzing local MLS sales volume & neighborhood specialization',
-        'Direct interview & fiduciary standard verification with broker candidates',
-        '3–5 top candidate dossiers prepared for client review',
-      ],
-    },
-    {
-      number: 3,
-      title: 'Curated Property Search & On-Site Preview',
-      status: 'upcoming',
-      badge: 'Upcoming',
-      desc: 'Collaborative MLS listing review, AI comp analysis, and video tours coordinated with your vetted agent.',
-      dysonDeliverable: 'Unbiased property valuation audits before offers are drafted.',
-      items: [
-        'Off-market & MLS match alerts aligned with your lifestyle criteria',
-        'Preliminary tax assessment and valuation audit for candidate homes',
-        'Coordination of preview tours and neighborhood drive-throughs',
-      ],
-    },
-    {
-      number: 4,
-      title: 'Community, School & Tax Migration Research',
-      status: 'upcoming',
-      badge: 'Upcoming',
-      desc: 'In-depth lifestyle intelligence, school district data, property tax analysis, and climate considerations.',
-      dysonDeliverable: 'Personalized destination briefing document prepared by our research desk.',
-      items: [
-        'Local property tax differential and residency transition guide',
-        'School ranking verification and private/public enrollment windows',
-        'Commute routes, municipal services, and medical infrastructure mapping',
-      ],
-    },
-    {
-      number: 5,
-      title: 'Due Diligence, Inspection & Contract Review',
-      status: 'upcoming',
-      badge: 'Upcoming',
-      desc: 'Independent contract and contingency audit so you never walk into an uninspected surprise.',
-      dysonDeliverable: 'Fiduciary contract audit protecting your earnest money deposit.',
-      items: [
-        'Independent inspection report evaluation and repair request strategy',
-        'HOA covenants, CCRs, and municipal zoning compliance review',
-        'Title commitment and property disclosure cross-examination',
-      ],
-    },
-    {
-      number: 6,
-      title: 'Escrow Oversight, Closing & Settlement',
-      status: 'upcoming',
-      badge: 'Upcoming',
-      desc: 'Continuous tracking through closing day, key exchange, and mover coordination.',
-      dysonDeliverable: 'Escrow milestone audit from acceptance through deed recordation.',
-      items: [
-        'Escrow milestone timeline and deadline monitoring',
-        'Final walkthrough checklist and lender funding verification',
-        'Utility transfer coordination and closing celebration',
-      ],
-    },
-  ];
+  const currentTemplate = ROADMAP_TEMPLATES[selectedTemplate] || ROADMAP_TEMPLATES.relocation;
+  const phases = currentTemplate.phases;
 
-  // Handle posting a new message to the dialogue feed
+  // Handle sending message in Move Dialogue Journal
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessageText.trim()) return;
 
+    const textToSend = newMessageText.trim();
+    setNewMessageText('');
     setSendingMessage(true);
-    const content = newMessageText.trim();
-    const tempId = `temp-${Date.now()}`;
 
-    // Optimistic UI update
     const optimisticMsg = {
-      id: tempId,
-      client_id: clientRecord?.id || 'demo-client',
+      id: `temp-${Date.now()}`,
       role: 'user',
-      content,
+      content: textToSend,
       created_date: new Date().toISOString(),
     };
-
     setDialogueMessages(prev => [...prev, optimisticMsg]);
-    setNewMessageText('');
 
     try {
-      // 1. Save ChatMessage entity
+      const clientId = clientRecord?.id || currentUser?.id || 'demo-client';
       await base44.entities.ChatMessage.create({
-        client_id: clientRecord?.id || 'demo-client',
+        client_id: clientId,
         role: 'user',
-        content,
-        message_type: 'text',
+        content: textToSend,
       });
 
-      // 2. Also log to Communication entity for Admin Communications integration
+      // Dispatch to central communications log
       await base44.entities.Communication.create({
-        recipient_name: clientName,
-        recipient_email: clientRecord?.email || currentUser?.email || 'client@dysonrelo.com',
-        recipient_phone: clientRecord?.phone || '(858) 353-1200',
-        message_content: `[Client Move Dialogue - ${destinationCity}] ${content}`,
-        sent_date: new Date().toISOString(),
-        status: 'delivered',
-        communication_type: 'sms',
-        notes: `Logged from Client Move Roadmap (${destinationCity})`,
-      });
-
-      // 3. Automated acknowledgment from Bob Dyson's Fiduciary Desk
-      setTimeout(async () => {
-        const replyContent = `Thank you ${firstName}. Your note has been logged to your move file (${dispatchRef}) and routed directly to Bob Dyson's relocation desk. We are actively reviewing this with your criteria.`;
-        const replyMsg = {
-          id: `reply-${Date.now()}`,
-          client_id: clientRecord?.id || 'demo-client',
-          role: 'charlie',
-          content: replyContent,
-          created_date: new Date().toISOString(),
-        };
-        setDialogueMessages(prev => [...prev, replyMsg]);
-
-        try {
-          await base44.entities.ChatMessage.create({
-            client_id: clientRecord?.id || 'demo-client',
-            role: 'charlie',
-            content: replyContent,
-            message_type: 'text',
-          });
-        } catch (_) {}
-      }, 1200);
+        client_id: clientId,
+        client_name: clientName,
+        type: 'note',
+        direction: 'inbound',
+        content: `Client Move Journal Note (${originCity} → ${destinationCity}): "${textToSend}"`,
+        status: 'logged',
+        sent_at: new Date().toISOString(),
+      }).catch(() => {});
 
       toast({
-        title: "Message Logged to Your Move File",
+        title: "Message Logged to Move File",
         description: "Bob Dyson and the relocation desk have been notified.",
       });
     } catch (err) {
@@ -260,226 +151,188 @@ export default function ClientMoveRoadmap() {
   };
 
   return (
-    <div className="min-h-screen p-3 sm:p-6 lg:p-8" style={{ background: TAN_BG }}>
-      <div className="max-w-5xl mx-auto space-y-5 text-left">
+    <div className="min-h-screen py-6 px-4 sm:px-8 lg:px-12 text-[#0a0a0a]" style={{ background: TAN_BG }}>
+      <div className="max-w-4xl mx-auto space-y-8 text-left">
         
-        {/* TOP BRAND NAVIGATION */}
-        <div className="flex items-center justify-between pb-2">
+        {/* ========================================================
+            1. TOP MINIMAL NAVIGATION & FILE META (NO BOXES)
+            ======================================================== */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs border-b border-[#0a0a0a]/15 pb-3">
           <button
             type="button"
             onClick={() => navigate('/admin/front-door-lab?view=client_backside')}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0a0a0a] hover:text-[#854d0e] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 font-bold text-[#0a0a0a] hover:text-[#854d0e] transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Client Backside Workspace</span>
           </button>
 
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono font-bold text-[#854d0e] bg-black/5 px-2.5 py-0.5 rounded-full">
-              Move File: {dispatchRef}
+          <div className="flex items-center gap-3 font-mono text-xs text-[#554433]">
+            <span>File #{dispatchRef}</span>
+            <span>•</span>
+            <span className="text-[#10b981] font-semibold flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#10b981] inline-block animate-pulse" />
+              Desk Review Active
             </span>
           </div>
         </div>
 
         {/* ========================================================
-            1. TOP NOTICE FOR CLIENT & DISPATCH TO OUR SYSTEM
+            2. EDITORIAL EXECUTIVE HEADER (OPEN LAYOUT — ZERO BOXES)
             ======================================================== */}
-        <section 
-          className="rounded-2xl p-4 sm:p-6 bg-[#0a0a0a] text-white border-2 border-[#D4AF37] shadow-2xl relative overflow-hidden"
-        >
-          <div className="relative z-10 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping shrink-0" />
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#10b981] text-black">
-                  DISPATCH ACTIVE • NOTICE CONFIRMED
-                </span>
-                <span className="text-xs font-mono text-[#D4AF37]">
-                  {dispatchRef}
-                </span>
-              </div>
-
-              <div className="text-[11px] text-white/60 font-mono">
-                Logged to Dyson Communication System ✓
-              </div>
+        <section className="space-y-3">
+          <div className="space-y-1">
+            <div className="text-[11px] font-bold tracking-widest uppercase text-[#854d0e]">
+              Fiduciary Relocation Management
             </div>
+            <h1 
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Relocation Roadmap: {clientName}
+            </h1>
+          </div>
 
-            <div className="space-y-1">
-              <h1 
-                className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                Relocation Request Active for {clientName}
-              </h1>
-              <p className="text-xs sm:text-sm text-[#D4AF37] font-semibold">
-                Fiduciary Manual Process Triggered: Bob Dyson and our senior relocation desk are now actively reviewing your move parameters.
-              </p>
+          {/* Clean inline parameters line — no separate inner boxes */}
+          <div className="text-sm sm:text-base font-semibold text-[#0a0a0a] flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
+            <span className="text-[#854d0e] font-bold">{originCity} → {destinationCity}</span>
+            <span className="text-[#0a0a0a]/30">•</span>
+            <span>Budget: {budget}</span>
+            <span className="text-[#0a0a0a]/30">•</span>
+            <span>Timeline: {moveDate}</span>
+          </div>
+
+          <p className="text-sm text-[#44382c] leading-relaxed max-w-3xl pt-1">
+            Bob Dyson and our senior relocation desk are independently reviewing your parameters. Because Dyson &amp; Dyson operates as an independent fiduciary, we do not sell your contact to generic agent pools. We personally audit local sales production, interview candidate brokers, and verify transaction records in <strong>{destinationCity}</strong> on your behalf — with zero buyer fees.
+          </p>
+
+          <div className="flex items-center gap-4 text-xs pt-1 font-medium">
+            <div className="flex items-center gap-1.5 text-[#10b981] font-semibold">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Zero Buyer Fee Guarantee · Independent Fiduciary</span>
             </div>
-
-            <p className="text-xs text-white/75 leading-relaxed pt-1">
-              Because Dyson &amp; Dyson operates as an independent fiduciary, we do not sell your information to generic lead portals. Our team manually audits local agents, interviews brokerage managers, and verifies transaction records in <strong>{destinationCity}</strong> to select top-tier candidates on your behalf.
-            </p>
-
-            {/* Quick Move Attributes Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-white/10 text-xs">
-              <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                <span className="text-[10px] text-white/50 block">Current Origin:</span>
-                <span className="font-bold text-white text-xs truncate block">{originCity}</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                <span className="text-[10px] text-white/50 block">Destination Target:</span>
-                <span className="font-bold text-[#10b981] text-xs truncate block">{destinationCity}</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                <span className="text-[10px] text-white/50 block">Target Budget:</span>
-                <span className="font-bold text-white text-xs truncate block">{budget}</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                <span className="text-[10px] text-white/50 block">Move Timeline:</span>
-                <span className="font-bold text-[#D4AF37] text-xs truncate block">{moveDate}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-              <div className="flex items-center gap-1.5 text-xs text-white/70">
-                <ShieldCheck className="w-4 h-4 text-[#10b981]" />
-                <span>Zero Buyer Fee Guarantee • Independent Fiduciary Representation</span>
-              </div>
-              <Link
-                to="/relocation-intake"
-                className="text-xs text-[#D4AF37] hover:underline font-bold"
-              >
-                Update Move Criteria →
-              </Link>
-            </div>
+            <span className="text-[#0a0a0a]/30">•</span>
+            <Link
+              to="/relocation-intake"
+              className="text-[#854d0e] hover:text-[#0a0a0a] hover:underline font-bold transition-colors"
+            >
+              Update Move Parameters →
+            </Link>
           </div>
         </section>
 
         {/* ========================================================
-            2. VISIBLE PROJECT ROADMAP (DYNAMIC TESLA FSD ROUTE LINE)
-            Visible linear route with glowing milestones matching project requirements
+            3. CLEAN VERTICAL TIMELINE ROADMAP (NO HEAVY CARDS / NO PILLS)
+            A single, continuous timeline connecting all milestones cleanly
             ======================================================== */}
-        <VisualProjectRoadmap
-          selectedTemplate={selectedTemplate}
-          onSelectTemplate={(tmplId) => {
-            setSelectedTemplate(tmplId);
-            setActivePhaseNumber(2);
-            setExpandedPhase(2);
-          }}
-          activePhaseNumber={activePhaseNumber}
-          onSelectPhase={(phaseNum) => {
-            setActivePhaseNumber(phaseNum);
-            setExpandedPhase(phaseNum);
-          }}
-          originCity={originCity}
-          destinationCity={destinationCity}
-        />
-
-        {/* ========================================================
-            3. MILESTONES & FIDUCIARY CHECKPOINTS (EXPANDABLE DETAILS)
-            ======================================================== */}
-        <section className="space-y-3">
-          <div className="flex items-center justify-between pb-1 border-b border-[#0a0a0a]/15">
+        <section className="pt-4 space-y-5 border-t border-[#0a0a0a]/15">
+          <div className="flex items-baseline justify-between gap-4">
             <div>
               <h2 
                 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                {ROADMAP_TEMPLATES[selectedTemplate]?.name || 'Relocation Roadmap'} Milestones
+                Your Relocation Milestones
               </h2>
-              <p className="text-xs text-[#854d0e] font-semibold">
+              <p className="text-xs text-[#854d0e] font-medium mt-0.5">
                 Milestones &amp; Fiduciary Checkpoints Along Your Move
               </p>
             </div>
 
-            <div className="text-xs font-mono font-bold text-[#0a0a0a]">
-              Phase {activePhaseNumber} of {(ROADMAP_TEMPLATES[selectedTemplate]?.phases || ROADMAP_PHASES).length} Active
+            <div className="text-xs font-mono font-bold text-[#854d0e] text-right shrink-0">
+              Phase {activePhaseNumber} of {phases.length} in progress
             </div>
           </div>
 
-          <div className="space-y-2.5">
-            {(ROADMAP_TEMPLATES[selectedTemplate]?.phases || ROADMAP_PHASES).map((phase) => {
+          {/* Connected timeline list */}
+          <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#0a0a0a]/15">
+            {phases.map((phase) => {
               const isExpanded = expandedPhase === phase.number;
               const isCompleted = phase.number < activePhaseNumber || phase.status === 'completed';
               const isActive = phase.number === activePhaseNumber;
 
               return (
-                <div
-                  key={phase.number}
-                  className={`rounded-xl border transition-all overflow-hidden ${
-                    isActive 
-                      ? 'bg-[#0a0a0a] text-white border-2 border-[#D4AF37] shadow-lg' 
-                      : isCompleted
-                      ? 'bg-[#0a0a0a]/90 text-white border border-[#10b981]/50'
-                      : 'bg-[#0a0a0a]/75 text-white/80 border border-white/10'
-                  }`}
-                >
-                  <button
-                    type="button"
+                <div key={phase.number} className="relative group">
+                  
+                  {/* Timeline node icon */}
+                  <div 
                     onClick={() => setExpandedPhase(isExpanded ? null : phase.number)}
-                    className="w-full p-3.5 sm:p-4 flex items-center justify-between text-left cursor-pointer hover:bg-white/5 transition-colors"
+                    className={`absolute -left-6 sm:-left-8 top-0.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs font-bold transition-transform cursor-pointer group-hover:scale-110 shadow-sm ${
+                      isCompleted 
+                        ? 'bg-[#10b981] text-black ring-4 ring-[#ede0cc]'
+                        : isActive
+                        ? 'bg-[#0a0a0a] text-[#D4AF37] ring-4 ring-[#ede0cc] border-2 border-[#D4AF37]'
+                        : 'bg-[#0a0a0a]/15 text-[#0a0a0a]/70 ring-4 ring-[#ede0cc]'
+                    }`}
                   >
-                    <div className="flex items-center gap-3 min-w-0 pr-2">
-                      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
-                        isCompleted
-                          ? 'bg-[#10b981] text-black'
-                          : isActive
-                          ? 'bg-[#D4AF37] text-black font-black'
-                          : 'bg-white/10 text-white/50'
-                      }`}>
-                        {isCompleted ? <Check className="w-4 h-4" /> : phase.number}
-                      </div>
+                    {isCompleted ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : phase.number}
+                  </div>
 
-                      <div className="min-w-0">
+                  {/* Header row */}
+                  <div 
+                    onClick={() => setExpandedPhase(isExpanded ? null : phase.number)}
+                    className="cursor-pointer select-none"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-0.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-sm sm:text-base font-bold text-white truncate">
+                          <h3 className={`text-base sm:text-lg font-bold transition-colors ${
+                            isActive ? 'text-[#0a0a0a]' : isCompleted ? 'text-[#0a0a0a]/90' : 'text-[#0a0a0a]/70'
+                          }`}>
                             {phase.title}
                           </h3>
-                          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                            isCompleted
-                              ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40'
-                              : isActive
-                              ? 'bg-[#D4AF37] text-black font-bold'
-                              : 'bg-white/10 text-white/50'
+                          
+                          {/* Clean status tag (NOT a bulky pill button) */}
+                          <span className={`text-xs font-semibold ${
+                            isCompleted ? 'text-[#10b981]' : isActive ? 'text-[#854d0e]' : 'text-[#0a0a0a]/40'
                           }`}>
-                            {phase.badge}
+                            • {isCompleted ? 'Completed' : isActive ? 'Active Review' : 'Upcoming'}
                           </span>
                         </div>
-                        <p className="text-xs text-white/60 truncate mt-0.5">
+
+                        <p className="text-xs text-[#554433] leading-relaxed">
                           {phase.desc}
                         </p>
                       </div>
-                    </div>
 
-                    <div className="shrink-0 text-white/60">
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      <button
+                        type="button"
+                        aria-label="Toggle details"
+                        className="text-[#0a0a0a]/40 group-hover:text-[#0a0a0a] p-1 transition-colors shrink-0 mt-0.5"
+                      >
+                        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </button>
                     </div>
-                  </button>
+                  </div>
 
+                  {/* Expanded details — clean indentation, NO bulky inner cards */}
                   {isExpanded && (
-                    <div className="px-4 pb-4 pt-1 border-t border-white/10 space-y-3 text-xs bg-black/40">
-                      <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 space-y-1">
-                        <div className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
+                    <div className="mt-3 pt-3 pl-3 sm:pl-4 border-l-2 border-[#D4AF37] space-y-2.5 text-xs text-[#44382c] animate-in fade-in duration-200">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#854d0e] block">
                           Dyson Fiduciary Deliverable:
-                        </div>
-                        <p className="text-white/85 text-xs">
-                          {phase.dysonDeliverable || phase.deliverable}
+                        </span>
+                        <p className="text-sm font-serif italic text-[#0a0a0a] font-medium mt-0.5">
+                          "{phase.dysonDeliverable || phase.deliverable}"
                         </p>
                       </div>
 
-                      <div className="space-y-1.5">
-                        <div className="text-[10px] text-white/50 uppercase tracking-wider font-semibold">
+                      <div className="space-y-1.5 pt-1">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#0a0a0a]/60 block">
                           Checkpoint Actions:
-                        </div>
+                        </span>
                         {phase.items?.map((item, idx) => (
-                          <div key={idx} className="flex items-start gap-2 text-white/75">
-                            <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isCompleted ? 'text-[#10b981]' : isActive ? 'text-[#D4AF37]' : 'text-white/30'}`} />
+                          <div key={idx} className="flex items-start gap-2 text-xs text-[#0a0a0a]/85">
+                            <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
+                              isCompleted ? 'text-[#10b981]' : isActive ? 'text-[#854d0e]' : 'text-[#0a0a0a]/30'
+                            }`} />
                             <span>{item}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
+
                 </div>
               );
             })}
@@ -487,81 +340,75 @@ export default function ClientMoveRoadmap() {
         </section>
 
         {/* ========================================================
-            3. "AND BELOW IT THE DIALOGUE ALONG THE WAY AND ALL THROUGH THE MOVE"
-            Live, continuous timeline of notes, updates & client questions
+            4. MOVE DIALOGUE & CONCIERGE JOURNAL (OPEN, UNCLUTTERED FEED)
             ======================================================== */}
-        <section 
-          className="rounded-2xl p-4 sm:p-6 bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-2xl space-y-4"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+        <section className="pt-6 border-t border-[#0a0a0a]/15 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
             <div>
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-[#D4AF37]" />
-                <h3 
-                  className="text-xl sm:text-2xl font-bold text-white tracking-tight"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  Move Dialogue &amp; Concierge Journal
-                </h3>
-              </div>
-              <p className="text-xs text-white/60 mt-0.5">
-                Continuous log of communications, questions, and notes between you and Bob Dyson's Fiduciary Desk.
+              <h2 
+                className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                Move Dialogue &amp; Concierge Journal
+              </h2>
+              <p className="text-xs text-[#554433] mt-0.5">
+                Direct communication thread between you and Bob Dyson's Fiduciary Desk.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <a
-                href="tel:+18583531200"
-                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+            {/* Direct contact text links */}
+            <div className="flex items-center gap-3 text-xs font-semibold shrink-0">
+              <a 
+                href="tel:+18583531200" 
+                className="text-[#854d0e] hover:text-[#0a0a0a] flex items-center gap-1 hover:underline"
               >
-                <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>Call Bob Dyson</span>
+                <Phone className="w-3.5 h-3.5" />
+                <span>Call Desk: (858) 353-1200</span>
               </a>
+              <span className="text-[#0a0a0a]/20">|</span>
               <button
                 type="button"
                 onClick={() => navigate('/talking-app')}
-                className="px-3 py-1.5 rounded-full text-xs font-bold bg-[#151515] hover:bg-[#202020] text-[#10b981] border border-[#10b981] flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="text-[#0a0a0a] hover:text-[#854d0e] flex items-center gap-1 hover:underline cursor-pointer"
               >
-                <Mic className="w-3.5 h-3.5" />
+                <Mic className="w-3.5 h-3.5 text-[#10b981]" />
                 <span>Talk with Charlie</span>
               </button>
             </div>
           </div>
 
-          {/* Dialogue Feed */}
-          <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
-            {/* Initial System Entry */}
-            <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1 text-xs">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-[#D4AF37] flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+          {/* Clean Message History Feed */}
+          <div className="space-y-3 py-2">
+            {/* Initial Desk Record Entry */}
+            <div className="p-3.5 rounded-xl bg-black/5 border border-black/10 space-y-1 text-xs">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="font-bold text-[#854d0e] flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#854d0e]" />
                   <span>Dyson Fiduciary Relocation Desk</span>
                 </span>
-                <span className="text-[10px] text-white/40 font-mono">Today • Intake Confirmation</span>
+                <span className="text-[#554433] font-mono text-[10px]">File Initialized</span>
               </div>
-              <p className="text-white/80 leading-relaxed text-xs">
-                Relocation file <strong>{dispatchRef}</strong> opened for {clientName}. Move parameters: <strong>{originCity} → {destinationCity}</strong> ({budget}). Bob Dyson and the fiduciary committee have initiated candidate research in {destinationCity}.
+              <p className="text-[#0a0a0a]/85 leading-relaxed">
+                Relocation file <strong>{dispatchRef}</strong> opened for {clientName}. Active route parameters: <strong>{originCity} → {destinationCity}</strong> ({budget}). Bob Dyson and the fiduciary review committee have initiated agent vetting in {destinationCity}.
               </p>
             </div>
 
-            {/* Dynamic Message History */}
+            {/* Dynamic messages */}
             {dialogueMessages.map((msg) => {
               const isUser = msg.role === 'user';
               return (
                 <div 
                   key={msg.id}
-                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1 text-xs`}
+                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1`}
                 >
-                  <div className="flex items-center gap-2 px-1 text-[10px] text-white/40">
-                    <span>{isUser ? clientName : 'Bob Dyson Concierge Desk'}</span>
-                    <span>•</span>
-                    <span>{msg.created_date ? new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}</span>
+                  <div className="text-[10px] text-[#554433] px-1 font-medium">
+                    {isUser ? clientName : 'Bob Dyson Concierge Desk'} • {msg.created_date ? new Date(msg.created_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                   </div>
                   <div 
-                    className={`p-3 rounded-2xl max-w-xl text-xs leading-relaxed ${
+                    className={`p-3 rounded-xl max-w-xl text-xs sm:text-sm leading-relaxed ${
                       isUser 
-                        ? 'bg-[#faf6ee] text-[#0a0a0a] font-medium border border-[#D4AF37] rounded-br-none shadow-md'
-                        : 'bg-[#181818] text-white/90 border border-white/15 rounded-bl-none shadow'
+                        ? 'bg-[#0a0a0a] text-white rounded-br-none shadow-sm'
+                        : 'bg-white text-[#0a0a0a] border border-black/10 rounded-bl-none shadow-sm'
                     }`}
                   >
                     {msg.content}
@@ -571,28 +418,27 @@ export default function ClientMoveRoadmap() {
             })}
           </div>
 
-          {/* New Message Composer */}
-          <form onSubmit={handleSendMessage} className="pt-2 border-t border-white/10 space-y-2">
-            <div className="flex items-center gap-2 p-1.5 rounded-full border border-[#D4AF37] bg-[#141414] focus-within:ring-2 focus-within:ring-[#D4AF37]">
+          {/* Streamlined Message Input Bar */}
+          <form onSubmit={handleSendMessage} className="space-y-2 pt-1">
+            <div className="flex items-center gap-2 p-1.5 rounded-full border border-[#0a0a0a]/30 bg-white/70 focus-within:bg-white focus-within:border-[#854d0e] focus-within:ring-2 focus-within:ring-[#854d0e]/20 transition-all shadow-sm">
               <input 
                 type="text"
                 value={newMessageText}
                 onChange={(e) => setNewMessageText(e.target.value)}
-                placeholder={`Send note, question, or property link to Bob Dyson's desk...`}
-                className="w-full bg-transparent px-4 py-1.5 text-xs sm:text-sm text-white placeholder:text-stone-400 focus:outline-none"
+                placeholder="Write a note, question, or property link for Bob Dyson's desk..."
+                className="w-full bg-transparent px-4 py-1.5 text-xs sm:text-sm text-[#0a0a0a] placeholder:text-stone-500 focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={sendingMessage || !newMessageText.trim()}
-                className="px-5 py-2 rounded-full font-bold text-xs text-black flex items-center gap-1.5 cursor-pointer shadow hover:brightness-110 active:scale-95 disabled:opacity-50 shrink-0"
-                style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                className="px-5 py-2 rounded-full font-bold text-xs text-white bg-[#0a0a0a] hover:bg-[#1a1a1a] flex items-center gap-1.5 cursor-pointer shadow transition-all disabled:opacity-40 shrink-0"
               >
-                <span>Send Note</span>
-                <Send className="w-3 h-3" />
+                <span>Send</span>
+                <Send className="w-3 h-3 text-[#D4AF37]" />
               </button>
             </div>
-            <p className="text-[10px] text-white/40 text-center">
-              All messages post directly to your move history and alert our fiduciary team in real time.
+            <p className="text-[10px] text-[#554433] text-center">
+              All messages post directly to your relocation record and notify our fiduciary desk in real time.
             </p>
           </form>
         </section>
