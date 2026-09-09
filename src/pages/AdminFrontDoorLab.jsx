@@ -266,7 +266,7 @@ export default function AdminFrontDoorLab() {
           >
             {/* BRAND STATEMENT: ULTRA-COMPACT HORIZONTALLY ON CELL PHONE PORTRAIT, EXPANDED ON LARGER SCREENS */}
             <div 
-              className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg shadow-sm border shrink-0"
+              className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-2xl shadow-sm border shrink-0"
               style={{
                 background: '#0a0a0a',
                 borderColor: `${GOLD}80`,
