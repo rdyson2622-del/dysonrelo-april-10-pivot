@@ -55,9 +55,9 @@ export default function ClientBacksideLabDemo() {
   const destinationCity = clientRecord?.destination_city ? clientRecord.destination_city.replace(/,\s*[A-Z]{2}$/i, '') : 'Scottsdale';
   const destinationState = clientRecord?.destination_state || 'AZ';
 
-  const newsPhotoUrl = latestNews?.thumbnail_url || 
-    'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/40bacd8ac_charlie_desk_widescreen_1280x720.png';
-  const newsHeadline = latestNews?.headline || 'Daily 6AM Real Estate Broadcast: Today’s Market Effects & Housing Trends';
+  // Canonical 16:9 DNN Studio broadcast set (Charlie at desk + DNN center screen + Bob Dyson standing)
+  const DNN_STUDIO_SET_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+  const newsHeadline = latestNews?.headline || 'Seattle Office Market Stabilizes as AI Firms Drive New Leasing Demand';
 
   const handleToggleVoice = () => {
     if (!isVoiceActive) {
@@ -85,55 +85,48 @@ export default function ClientBacksideLabDemo() {
     }
   };
 
-  // 7 Core Actions: Plain clickable text items (NO pill boxes)
+  // 7 Core Actions: Shortened & concise per user direction (no bloated descriptions)
   const TEXT_ACTIONS = [
     {
       id: 'request',
       number: '1',
-      title: 'Start or update a relocation request',
-      desc: 'Set or update destination, budget & home criteria',
+      title: 'Start / update relocation request',
       path: '/relocation-intake',
     },
     {
       id: 'strategy',
       number: '2',
       title: 'Ask for a strategy or solution',
-      desc: 'Tax migration, 1031 exchange, or custom relocation plan',
       path: '/solutions?prompt=Tax%20migration%20and%201031%20exchange%20strategy&autostart=true',
     },
     {
       id: 'vet',
       number: '3',
-      title: 'Search/vet a property or agent',
-      desc: 'Independent fiduciary audit of any listing link or agent',
+      title: 'Search / vet a property or agent',
       path: '/refer',
     },
     {
       id: 'library',
       number: '4',
       title: 'Open My Library',
-      desc: 'All stored contracts, files & history live behind this tap',
       action: () => setIsLibraryOpen(true),
     },
     {
       id: 'roadmap',
       number: '5',
-      title: 'View/update a Roadmap',
-      desc: 'Step-by-step milestones, deadlines & escrow tracking',
+      title: 'View / update a Roadmap',
       path: '/client-roadmap',
     },
     {
       id: 'news',
       number: '6',
-      title: 'Get news/market effects',
-      desc: '6AM daily real estate broadcast & interest rate pulse',
+      title: 'Get news / market effects',
       path: '/dnn-news',
     },
     {
       id: 'concierge',
       number: '7',
       title: 'Contact concierge',
-      desc: 'Direct call or text with Bob Dyson fiduciary desk',
       action: () => window.open('tel:+18583531200'),
     },
   ];
@@ -300,116 +293,116 @@ export default function ClientBacksideLabDemo() {
         </section>
 
         {/* ========================================================
-            2. MIDDLE SECTION: 7 TOOLS (LEFT) + DNN NEWS PHOTO BOX (RIGHT)
-            Eliminating wasted horizontal space and aligning "Continue >" adjacent to tools
+            2. MIDDLE SECTION: 7 SHORTENED TOOLS (LEFT) + WIDESCREEN HORIZONTAL DNN NEWS BOX (RIGHT)
             ======================================================== */}
         <section className="pt-1 pb-2">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
             
-            {/* LEFT COLUMN: 7 TOOLS WITH "CONTINUE >" DIRECTLY TO THE RIGHT */}
-            <div className="lg:col-span-7 space-y-1.5">
-              <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20">
-                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
-                  WHAT DYSONRELO IS BUILT TO DO FOR YOU:
-                </h3>
-                <span className="text-[10px] text-[#44382c] font-medium hidden sm:inline">
-                  Click any item to continue
-                </span>
+            {/* LEFT COLUMN: 7 SHORTENED COMPACT ACTIONS (NO BLOAT, TIGHT HORIZONTAL FOOTPRINT) */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-2">
+              <div>
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20 mb-1">
+                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
+                    WHAT DYSONRELO DOES FOR YOU:
+                  </h3>
+                  <span className="text-[10px] text-[#44382c] font-medium hidden sm:inline">
+                    7 Quick Actions
+                  </span>
+                </div>
+
+                <div className="divide-y divide-[#0a0a0a]/10">
+                  {TEXT_ACTIONS.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        if (item.action) item.action();
+                        else if (item.path) navigate(item.path);
+                      }}
+                      className="w-full py-2 px-1 flex items-center justify-between text-left cursor-pointer transition-all hover:bg-black/5 group rounded-lg"
+                    >
+                      <div className="text-xs sm:text-sm font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors flex items-center gap-1.5 truncate pr-2">
+                        <span className="text-xs font-mono font-bold text-[#854d0e] shrink-0">{item.number}.</span>
+                        <span className="truncate">{item.title}</span>
+                      </div>
+                      <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#854d0e] group-hover:translate-x-1 transition-transform shrink-0">
+                        <span>Continue</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="divide-y divide-[#0a0a0a]/10">
-                {TEXT_ACTIONS.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => {
-                      if (item.action) item.action();
-                      else if (item.path) navigate(item.path);
-                    }}
-                    className="w-full py-2 px-1 sm:px-1.5 flex items-start text-left cursor-pointer transition-all hover:bg-black/5 group rounded-lg"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors flex items-center flex-wrap gap-x-1.5 gap-y-0.5">
-                        <span className="text-xs font-mono font-bold text-[#854d0e]">{item.number}.</span>
-                        <span>{item.title}</span>
-                        {/* "Continue >" positioned immediately to the right of each tool */}
-                        <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#854d0e] ml-1 group-hover:translate-x-1 transition-transform shrink-0">
-                          <span>Continue</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </span>
-                      </div>
-                      <div className="text-xs text-[#44382c] pl-4 sm:pl-5 mt-0.5 leading-snug">
-                        {item.desc}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+              <div className="p-2.5 rounded-xl bg-black/5 border border-black/10 text-[11px] text-[#554433] flex items-center justify-between">
+                <span>Direct Fiduciary Desk:</span>
+                <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
+                  (858) 353-1200
+                </a>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: DNN NEWS PHOTO IN A BOX (CLICK THRU TO DAILY NEWS) */}
-            <div className="lg:col-span-5">
+            {/* RIGHT COLUMN: WIDESCREEN HORIZONTAL DNN STUDIO BOX */}
+            <div className="lg:col-span-7 flex flex-col">
               <div 
                 onClick={() => navigate('/dnn-news')}
-                className="rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
+                className="w-full h-full rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
                 title="Click to view Today's Daily News"
               >
                 <div>
-                  {/* PHOTO WITH LIVE BROADCAST BADGE & OVERLAY */}
-                  <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-black">
+                  {/* WIDESCREEN 16:9 STUDIO BACKDROP: CHARLIE AT DESK + DNN SCREEN + BOB DYSON */}
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
                     <img 
-                      src={newsPhotoUrl} 
-                      alt="DNN Real Estate News"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80';
-                      }}
+                      src={DNN_STUDIO_SET_URL} 
+                      alt="DNN News Network Studio"
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/30" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/30" />
                     
-                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/85 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
+                    {/* Broadcast Live Badge */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/85 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                       <Play className="w-3 h-3 text-[#D4AF37] fill-[#D4AF37]" />
                       <span>DNN 6AM DAILY BROADCAST</span>
                     </div>
 
-                    <span className="absolute top-2.5 right-2.5 text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">
+                    <span className="absolute top-3 right-3 text-[9px] font-bold px-2.5 py-0.5 rounded-full bg-[#D4AF37] text-black">
                       Daily News
                     </span>
 
-                    <div className="absolute bottom-2.5 left-2.5 right-2.5 space-y-0.5">
+                    {/* Headline and Topic Banner */}
+                    <div className="absolute bottom-3 left-3 right-3 space-y-0.5">
                       <div className="text-[10px] text-[#fce38a] font-bold uppercase tracking-wider">
                         Today's Market Pulse &amp; Rates
                       </div>
-                      <div className="text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug drop-shadow">
+                      <div className="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug drop-shadow-md">
                         {newsHeadline}
                       </div>
                     </div>
                   </div>
 
-                  {/* CONTENT BELOW */}
-                  <div className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-[11px] text-white/60">
+                  {/* Content below the 16:9 broadcast photo */}
+                  <div className="p-3.5 sm:p-4 space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] text-white/70">
                       <span>Anchor: Charlie &amp; Bob Dyson</span>
                       <span className="text-[#10b981] font-semibold flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" /> Updated 6:00 AM
                       </span>
                     </div>
-                    <p className="text-xs text-white/70 leading-relaxed">
+                    <p className="text-xs text-white/75 leading-relaxed line-clamp-2">
                       Daily AI &amp; expert fiduciary relocation intelligence covering tax migration data, interest rate adjustments, and local market effects across all 50 states.
                     </p>
                   </div>
                 </div>
 
-                <div className="p-4 pt-0">
+                <div className="p-3.5 sm:p-4 pt-0">
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate('/dnn-news');
                     }}
-                    className="w-full py-2.5 px-3 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-2 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-2 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
                     style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
                   >
                     <Play className="w-3.5 h-3.5 fill-black" />
