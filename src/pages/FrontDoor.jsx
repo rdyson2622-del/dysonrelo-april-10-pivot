@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Building, ArrowRight, 
-  SlidersHorizontal 
+  SlidersHorizontal, Menu 
 } from 'lucide-react';
+import ClientSidebar from '@/components/layout/ClientSidebar';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
@@ -109,6 +110,7 @@ export default function FrontDoor() {
   const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'high_to_low' | 'low_to_high'
   const [activeListingFilter, setActiveListingFilter] = useState('all'); // 'all' | '0_tax' | 'waterfront' | 'mountain'
   const [showFilterBar, setShowFilterBar] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSubscriberMode, setShowSubscriberMode] = useState(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
@@ -280,6 +282,18 @@ export default function FrontDoor() {
             className="px-2 sm:px-3.5 lg:px-5 py-1 sm:py-1.5 flex items-center justify-between gap-1 sm:gap-2.5 lg:gap-4 relative shadow-sm"
             style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
+            {/* CONCIERGE SIDEBAR TOGGLE BUTTON */}
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(prev => !prev)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-black tracking-wider uppercase transition-all shadow-md cursor-pointer hover:brightness-110 active:scale-95 shrink-0"
+              style={{ background: '#0a0a0a', border: `1.2px solid ${GOLD}`, color: GOLD }}
+              title="Open Concierge Sidebar"
+            >
+              <Menu className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span className="hidden sm:inline">MENU</span>
+            </button>
+
             {/* BRAND STATEMENT: ULTRA-COMPACT HORIZONTALLY ON CELL PHONE PORTRAIT, EXPANDED ON LARGER SCREENS */}
             <div 
               className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-2xl shadow-sm border shrink-0"
@@ -599,6 +613,19 @@ export default function FrontDoor() {
         activeSearch={activeExternalSearch}
         onClose={() => setActiveExternalSearch(null)}
       />
+
+      {/* CONCIERGE SIDEBAR DRAWER (DESKTOP & MOBILE PORTRAIT) */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div 
+            className="fixed inset-0 bg-black/75 backdrop-blur-xs animate-in fade-in duration-200"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          <div className="relative z-10 h-full max-w-[85vw] animate-in slide-in-from-left duration-200 shadow-2xl">
+            <ClientSidebar onToggle={() => setIsSidebarOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
