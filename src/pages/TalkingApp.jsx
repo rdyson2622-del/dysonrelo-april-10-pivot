@@ -180,19 +180,20 @@ export default function TalkingApp() {
               )}
 
               {/* Bottom Dock: Suggested Questions (Left) & Compact Mic Box (Tucked into Lower Right Corner) */}
-              <div className="mt-auto pt-6 flex items-end justify-between gap-3 w-full relative">
+              <div className="mt-auto pt-4 flex items-end justify-between gap-3 w-full relative">
                 
-                {/* Suggested Questions (Bottom Left) */}
-                <div className="w-full max-w-[calc(100%-140px)] sm:max-w-xs md:max-w-sm text-left bg-black/80 p-3 sm:p-3.5 rounded-2xl backdrop-blur-md border border-white/15 shadow-2xl space-y-1.5">
-                  <div className="flex items-center justify-between text-[9.5px] font-black uppercase tracking-wider text-[#D4AF37]">
+                {/* Suggested Questions (Tucked in Lower Left Corner — Longer & ~50% Height Reduction) */}
+                <div className="w-full max-w-[calc(100%-136px)] sm:max-w-[460px] md:max-w-[510px] text-left bg-black/85 p-2.5 sm:p-3 rounded-2xl backdrop-blur-md border border-white/15 shadow-2xl space-y-1.5">
+                  <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5">
                     <span>Suggested questions:</span>
-                    <span className="text-white/50 lowercase font-normal">tap mic &amp; speak</span>
+                    <span className="text-white/50 lowercase font-normal text-[8.5px]">tap mic &amp; speak</span>
                   </div>
-                  <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                     {SUGGESTED_QUESTIONS.map((q, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-full text-[10px] sm:text-[10.5px] bg-[#141414]/90 border border-white/15 text-white/90 hover:text-white hover:border-[#D4AF37] transition-all select-none shadow-sm"
+                        className="px-2.5 py-1 rounded-full text-[9.5px] sm:text-[10px] bg-[#141414]/90 border border-white/15 text-white/90 hover:text-white hover:border-[#D4AF37] transition-all select-none shadow-sm truncate block"
+                        title={`“${q}”`}
                       >
                         “{q}”
                       </span>
