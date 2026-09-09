@@ -5,9 +5,11 @@ import {
   Video, Edit, Library, Clapperboard, Zap, BarChart3, Users, Send, Shield, 
   BookOpen, Star, FileCheck, DollarSign, Archive, ArrowRight, Sparkles,
   Map, ShieldCheck, FileSearch, Home, ShoppingBag, TrendingUp, Calendar,
-  MessageCircle, Fingerprint, List, ExternalLink, Play
+  MessageCircle, Fingerprint, List, ExternalLink, Play, Mail, MessageSquare, CheckCircle2, Inbox, Clock
 } from 'lucide-react';
 import { ADMIN_DEPT_MINI_APPS } from './AdminMiniAppsGrid';
+import LiveEmailTextStatusPanel from './LiveEmailTextStatusPanel';
+import CalendarMiniApp from '@/components/miniapps/CalendarMiniApp';
 
 const GOLD = '#D4AF37';
 
@@ -375,6 +377,171 @@ export const DEPARTMENT_DATA = {
       },
     ],
   },
+  calendar: {
+    id: 'calendar',
+    name: 'Calendar & Relocation Schedules',
+    subtitle: 'Relocation milestones, home tour itineraries, and closing deadlines',
+    icon: Calendar,
+    accentColor: '#a855f7',
+    badge: 'MOVE TIMELINE',
+    subChoices: [
+      {
+        id: 'move_milestones',
+        title: 'Interactive Relocation Calendar',
+        tagline: 'Track client moving dates and critical milestones',
+        icon: Calendar,
+        color: '#a855f7',
+        badge: 'CLIENT DATES',
+        description: 'Interactive monthly and daily schedule of moves, key turnover dates, and van line logistics.',
+        primaryLink: { label: 'Open Full Calendar', path: '/calendar' },
+        links: [
+          { label: '🗓️ Relocation Calendar Mini App', path: '/calendar', highlight: true },
+          { label: '📋 Master Client Roadmaps', path: '/client-roadmap' },
+          { label: '🏠 Intake Schedule Sequence', path: '/relocation-intake' },
+        ],
+      },
+      {
+        id: 'escrow_deadlines',
+        title: 'Escrow & Transaction Deadlines',
+        tagline: 'Brokermint contingency periods & closing dates',
+        icon: ShieldCheck,
+        color: '#10b981',
+        badge: 'ESCROW SCHEDULE',
+        description: 'Monitor loan contingencies, appraisal deadlines, and scheduled close of escrow dates.',
+        primaryLink: { label: 'Escrow Deadlines', path: '/admin/wisdom/escrow' },
+        links: [
+          { label: '🛡️ Escrow Management Deadlines', path: '/admin/wisdom/escrow', highlight: true },
+          { label: '🔍 Transaction Document Audits', path: '/admin/wisdom/audit' },
+          { label: '📄 AI Compliance Reviews', path: '/admin/compliance-review' },
+        ],
+      },
+      {
+        id: 'marketing_calendar',
+        title: 'Campaign & Broadcast Schedule',
+        tagline: '6AM Morning brief broadcasts & scheduled SMS drops',
+        icon: Clock,
+        color: '#f59e0b',
+        badge: 'AUTOMATED DROPS',
+        description: 'View scheduled SMS campaigns, recurring morning brief production, and weekly recap distributions.',
+        primaryLink: { label: 'Scheduled Campaigns', path: '/admin/scheduled-campaigns' },
+        links: [
+          { label: '📅 Scheduled SMS Campaigns', path: '/admin/scheduled-campaigns', highlight: true },
+          { label: '🎬 Daily Show Production Pipeline', path: '/admin/dnn/show-pipeline' },
+          { label: '🎯 Outreach Campaign Roadmap', path: '/admin/campaign-roadmap' },
+        ],
+      },
+    ],
+  },
+  email: {
+    id: 'email',
+    name: 'Email Desk & bob@dysonrelo.com',
+    subtitle: 'Sending verification via Resend, Microsoft 365 inbound routing, and client threads',
+    icon: Mail,
+    accentColor: '#38bdf8',
+    badge: 'bob@dysonrelo.com',
+    subChoices: [
+      {
+        id: 'email_live_desk',
+        title: 'bob@dysonrelo.com Live Verification',
+        tagline: 'Real-time outbound sending & inbound MX routing diagnostics',
+        icon: Mail,
+        color: '#38bdf8',
+        badge: 'VERIFIED SENDING',
+        description: 'Inspect Resend DKIM/SPF domain verification, Microsoft 365 inbound MX destination, and run one-click test sends.',
+        primaryLink: { label: 'Email Mini App', path: '/email' },
+        links: [
+          { label: '✉️ Email Client Mini App', path: '/email', highlight: true },
+          { label: '📤 Quick Send (Video / Page → Email)', path: '/admin/quick-send' },
+          { label: '📨 Communications Hub', path: '/admin/dnn/communications' },
+        ],
+      },
+      {
+        id: 'client_comms',
+        title: 'Client Communications Desk',
+        tagline: 'Message history, lead replies, and inquiry threads',
+        icon: MessageCircle,
+        color: '#10b981',
+        badge: 'CLIENT LOGS',
+        description: 'Review communications with relocation buyers, listing agents, and vetting candidates.',
+        primaryLink: { label: 'Communications Logs', path: '/admin/communications' },
+        links: [
+          { label: '💬 Admin Communications Roster', path: '/admin/communications', highlight: true },
+          { label: '🚩 Flagged Conversations', path: '/admin/flagged-conversations' },
+          { label: '👥 Subscriber CRM Directory', path: '/admin/dnn/subscribers' },
+        ],
+      },
+      {
+        id: 'email_outreach',
+        title: 'B2B & Subscriber Email Blasts',
+        tagline: 'Resend high-volume multi-inbox rotation & newsletters',
+        icon: Send,
+        color: '#D4AF37',
+        badge: 'RESEND BLAST',
+        description: 'Multi-inbox agent outreach with 40/day cap, morning broadcast email notifications, and invite dispatches.',
+        primaryLink: { label: 'Subscriber Invites', path: '/admin/subscriber-invite' },
+        links: [
+          { label: '✉️ Send Subscriber Invites', path: '/admin/subscriber-invite', highlight: true },
+          { label: '📍 MLS Listing Agent Outreach Hub', path: '/admin/listing-prospects' },
+          { label: '📰 8AM Morning Email Blast Workflow', path: '/admin/workflows/dnn' },
+        ],
+      },
+    ],
+  },
+  text: {
+    id: 'text',
+    name: 'Text / SMS Communications Desk',
+    subtitle: 'Twilio active carrier line, automated 10DLC pipelines, and client SMS alerts',
+    icon: MessageSquare,
+    accentColor: '#10b981',
+    badge: 'TWILIO ACTIVE',
+    subChoices: [
+      {
+        id: 'direct_sms',
+        title: 'Compose & Direct SMS',
+        tagline: 'Send individual and targeted messages to owners & clients',
+        icon: SendHorizontal,
+        color: '#10b981',
+        badge: 'CARRIER LINE',
+        description: 'Send direct text messages to homeowners, follow up with leads, and receive automatic email alerts on replies.',
+        primaryLink: { label: 'Compose SMS', path: '/admin/compose-sms' },
+        links: [
+          { label: '💬 Compose Single SMS', path: '/admin/compose-sms', highlight: true },
+          { label: '📱 Quick Send Video / Page via SMS', path: '/admin/quick-send' },
+          { label: '📞 Direct Call / Text: (858) 353-1200', path: '/admin/outreach-pipeline' },
+        ],
+      },
+      {
+        id: 'outreach_pipeline_sms',
+        title: 'Outreach Pipeline & Response Board',
+        tagline: 'Owner response Kanban & lead qualification workflow',
+        icon: Users,
+        color: '#f59e0b',
+        badge: 'RESPONSES',
+        description: 'Track inbound text responses from homeowners, qualify relocation intent, and assign vetted agents.',
+        primaryLink: { label: 'Outreach Pipeline', path: '/admin/outreach-pipeline' },
+        links: [
+          { label: '🚀 Outreach Pipeline Stages', path: '/admin/outreach-pipeline', highlight: true },
+          { label: '📋 Owner Response Kanban', path: '/admin/owner-kanban' },
+          { label: '🏡 Listing Owners Directory', path: '/admin/owners' },
+        ],
+      },
+      {
+        id: 'batch_logs',
+        title: 'Batch SMS Logs & Sequences',
+        tagline: 'Audit trail of dispatched SMS campaigns & automated drips',
+        icon: List,
+        color: '#ec4899',
+        badge: 'AUDIT LOGS',
+        description: 'Real-time delivery verification, failure tracking, opt-out management, and multi-step SMS sequences.',
+        primaryLink: { label: 'Batch SMS Logs', path: '/admin/batch-sms-log' },
+        links: [
+          { label: '📜 Batch SMS Audit Logs', path: '/admin/batch-sms-log', highlight: true },
+          { label: '💬 Multi-Step SMS Sequences', path: '/admin/sms-sequences' },
+          { label: '📊 Outreach Analytics Dashboard', path: '/admin/outreach-analytics' },
+        ],
+      },
+    ],
+  },
 };
 
 export default function DepartmentSubChoicesView({ 
@@ -476,6 +643,32 @@ export default function DepartmentSubChoicesView({
           </div>
         </div>
       </div>
+
+      {/* ── LIVE EMAIL OR TEXT STATUS & TEST PANEL (FOR EMAIL & TEXT DESKS) ── */}
+      {(dept.id === 'email' || dept.id === 'text') && (
+        <div className="animate-in fade-in duration-300">
+          <LiveEmailTextStatusPanel mode={dept.id} />
+        </div>
+      )}
+
+      {/* ── CALENDAR MINI APP EMBED (FOR CALENDAR DESK) ── */}
+      {dept.id === 'calendar' && (
+        <div className="p-4 sm:p-6 rounded-3xl bg-[#0a0a0a] border border-[#a855f7]/40 shadow-2xl space-y-3">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <span className="text-xs font-bold text-[#a855f7] uppercase tracking-wider">
+              INTERACTIVE RELOCATION &amp; MOVE CALENDAR
+            </span>
+            <Link 
+              to="/calendar" 
+              className="text-xs text-[#D4AF37] hover:underline font-bold flex items-center gap-1"
+            >
+              <span>Full Screen</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
+          <CalendarMiniApp />
+        </div>
+      )}
 
       {/* ── SUB-CHOICES GRID (THE 3-4 SUB DIRECTIONS) ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
