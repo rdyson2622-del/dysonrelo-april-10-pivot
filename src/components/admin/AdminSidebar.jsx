@@ -446,101 +446,34 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* Admin Dashboard — always visible */}
-      <div className="px-3 pt-2 space-y-0.5">
-        <Link
-          to="/admin"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-          style={{
-            background: location.pathname === '/admin' ? 'rgba(212,175,55,0.12)' : 'transparent',
-            color: location.pathname === '/admin' ? '#D4AF37' : '#fff',
-          }}
-        >
-          <LayoutDashboard className="w-4 h-4" />
-          Admin Dashboard
-        </Link>
-      </div>
+      {/* ── CORE ADMIN COMMAND PILLS (UNIFIED GOLD FORMAT) ── */}
+      <div className="px-3 pt-2 pb-1 space-y-2 shrink-0">
+        {[
+          { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
+          { label: '📜 AI Library Specialists', path: '/admin/library-specialists', icon: Brain },
+          { label: '👁️ Grok Screen Viewer', path: '/admin/claude-screen-viewer', icon: Monitor },
+          { label: '🔌 Connect AI Assistant', path: '/connect', icon: Plug },
+          { label: '🎯 Marketing Campaigns Hub', path: '/admin/marketing-campaigns-hub', icon: Megaphone },
+          { label: '📋 Business Plan', path: '/admin/business-plan', icon: FileText },
+        ].map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
 
-      {/* AI Library Specialists — Canon, Playbook, Conduit */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/admin/library-specialists"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/admin/library-specialists' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Brain className="w-4 h-4" />
-          📜 AI Library Specialists
-        </Link>
-      </div>
-
-      {/* Claude Screen Viewer — always visible */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/admin/claude-screen-viewer"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/admin/claude-screen-viewer' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Monitor className="w-4 h-4" />
-          👁️ Grok Screen Viewer
-        </Link>
-      </div>
-
-
-
-      {/* Connect AI Assistant — always visible */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/connect"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/connect' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Plug className="w-4 h-4" />
-          🔌 Connect AI Assistant
-        </Link>
-      </div>
-
-      {/* Marketing Campaigns Hub — always visible */}
-      <div className="px-3 pt-1 pb-1">
-        <Link
-          to="/admin/marketing-campaigns-hub"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/admin/marketing-campaigns-hub' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Megaphone className="w-4 h-4" />
-          🎯 Marketing Campaigns Hub
-        </Link>
-      </div>
-
-      {/* Business Plan — always visible */}
-      <div className="px-3 pt-1 pb-2">
-        <Link
-          to="/admin/business-plan"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: location.pathname === '/admin/business-plan' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <FileText className="w-4 h-4" />
-          📋 Business Plan
-        </Link>
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all cursor-pointer shadow-md group ${
+                isActive
+                  ? 'bg-[#251e10] border-2 border-[#D4AF37] text-[#D4AF37] ring-1 ring-[#D4AF37]/60'
+                  : 'bg-[#14120b] hover:bg-[#1f190e] border border-[#D4AF37]/45 hover:border-[#D4AF37] text-[#e8c84a] hover:text-[#D4AF37]'
+              }`}
+            >
+              <Icon className="w-4 h-4 shrink-0 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
 
       {/* Collapsible Sections */}
