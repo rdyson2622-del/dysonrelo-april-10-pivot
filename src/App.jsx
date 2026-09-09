@@ -160,6 +160,7 @@ import BuyingClients from './pages/wisdom/BuyingClients';
 import MyAgentReferrals from './pages/brokerage/MyAgentReferrals';
 import SubscriberSetup from './pages/SubscriberSetup';
 import AdminAddSubscriber from './pages/AdminAddSubscriber';
+import AdminSubscriberInvite from './pages/AdminSubscriberInvite';
 import AdminActiveRelocationAgents from './pages/AdminActiveRelocationAgents';
 import AdminReferralAgents from './pages/AdminReferralAgents';
 import AdminAgreementSubmissions from './pages/AdminAgreementSubmissions';
@@ -423,6 +424,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/wisdom/marketing" element={<WisdomMarketing />} />
         <Route path="/admin/wisdom/luxury" element={<LuxuryPresence />} />
         <Route path="/admin/add-subscriber" element={<AdminAddSubscriber />} />
+        <Route path="/admin/subscriber-invite" element={<AdminSubscriberInvite />} />
         <Route path="/admin/show-sheet" element={<MasterShowSheet />} />
         <Route path="/admin/agreement-submissions" element={<AdminAgreementSubmissions />} />
         <Route path="/admin/entry-portal" element={<AdminEntryPortal />} />

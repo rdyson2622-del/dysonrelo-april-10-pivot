@@ -7,7 +7,8 @@ import {
   ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
-  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList, Megaphone
+  FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList, Megaphone,
+  Mail
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -17,6 +18,7 @@ import AdminCharlieCard from '@/components/admin/AdminCharlieCard';
 import AdminDispatchWidget from '@/components/admin/AdminDispatchWidget';
 import AdminSidebarSearch, { buildSearchIndex } from '@/components/admin/AdminSidebarSearch';
 import ListingProspectsRepWidget from '@/components/admin/ListingProspectsRepWidget';
+import SubscriberInviteModal from '@/components/admin/SubscriberInviteModal';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
@@ -31,6 +33,7 @@ const NAV_SECTIONS = [
       { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
       { label: '🧭 Role Selector Page', path: '/portal?choose=1', icon: Map, highlight: true },
       { label: '🏢 Brokerage Portal (Wisdom)', path: '/brokerage', icon: Building2, highlight: true },
+      { label: '✉️ Send Subscriber Invite (Email & Text)', path: '/admin/subscriber-invite', icon: Mail, highlight: true },
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
       { label: '🚪 6th Portal: Entry Page (First-Time Visitor)', path: '/admin/entry-portal', icon: DoorOpen, highlight: true },
       { label: '🛡️ Transparency Explainer Page', path: '/admin/transparency', icon: ShieldCheck, highlight: true },
