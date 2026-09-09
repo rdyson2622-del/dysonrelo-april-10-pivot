@@ -40,12 +40,12 @@ export default function ClientBacksideLabDemo() {
   }, []);
 
   // Client display metadata
-  const displayName = clientRecord?.full_name || currentUser?.full_name || 'Eleanor & Robert Sterling';
-  const firstName = displayName.split(' ')[0] || 'Friend';
+  const displayName = clientRecord?.full_name || currentUser?.full_name || 'Kayden Sterling';
+  const firstName = displayName.split(' ')[0] || 'Kayden';
   const photoUrl = currentUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
   const originAddress = clientRecord?.current_address || '14820 Blossom Hill Rd, Los Gatos, CA';
   const originCity = clientRecord?.current_city || 'Los Gatos, CA';
-  const destinationCity = clientRecord?.destination_city || 'Scottsdale, AZ';
+  const destinationCity = clientRecord?.destination_city ? clientRecord.destination_city.replace(/,\s*[A-Z]{2}$/i, '') : 'Scottsdale';
   const destinationState = clientRecord?.destination_state || 'AZ';
 
   const handleToggleVoice = () => {
@@ -235,7 +235,7 @@ export default function ClientBacksideLabDemo() {
                     type="text"
                     value={commandText}
                     onChange={(e) => setCommandText(e.target.value)}
-                    placeholder="Type what you need..."
+                    placeholder="Hi KAYDEN... What will you do next for you?"
                     className="w-full bg-transparent text-xs sm:text-sm text-[#0a0a0a] placeholder:text-stone-500 font-medium focus:outline-none"
                   />
                 </div>
@@ -333,162 +333,213 @@ export default function ClientBacksideLabDemo() {
 
         {/* ========================================================
             3. AT THE BOTTOM ACROSS: 3 BOXES
-            ONE FOR PROPERTY/PROPERTIES OWNED & SUPPORTING DATA
-            ONE FOR STORED DATA & ARCHIVES
-            ONE FOR RELOCATION
+            BOX 1: PHOTO OF HOME + PROPERTIES OWNED & SUPPORTING DATA
+            BOX 2: PHOTO OF FILES + STORED DATA & ARCHIVES
+            BOX 3: PHOTO OF CITY + RELOCATION
             ======================================================== */}
         <section className="pt-2">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             
-            {/* BOX 1: PROPERTIES OWNED & SUPPORTING OWNERSHIP DATA */}
+            {/* BOX 1: PHOTO OF A HOME + PROPERTIES OWNED */}
             <div 
-              className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3"
+              className="rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl overflow-hidden flex flex-col justify-between group"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                  <div className="flex items-center gap-2">
-                    <Home className="w-4 h-4 text-[#D4AF37]" />
-                    <h4 className="text-xs font-black uppercase tracking-wider text-[#D4AF37]">
-                      Properties Owned
-                    </h4>
+              <div>
+                {/* PHOTO OF A HOME WITH CLICK-THROUGH */}
+                <div 
+                  onClick={() => navigate('/refer')}
+                  className="relative h-44 sm:h-48 w-full overflow-hidden cursor-pointer"
+                  title="Click to view Property & Ownership Details"
+                >
+                  <img 
+                    src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" 
+                    alt="Current Residence"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
+                    <Home className="w-3 h-3 text-[#D4AF37]" />
+                    <span>Properties Owned</span>
                   </div>
-                  <span className="text-[10px] text-[#10b981] font-bold">1 Verified</span>
+                  <span className="absolute top-2.5 right-2.5 text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#10b981] text-black">
+                    1 Verified
+                  </span>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <div className="text-xs font-bold text-white flex items-center gap-1 drop-shadow">
+                      <MapPin className="w-3 h-3 text-[#D4AF37] shrink-0" />
+                      <span className="truncate">{originAddress}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span>{originAddress}</span>
-                  </div>
-                  <div className="text-[11px] text-white/60 pl-4 mt-0.5">
+                {/* CONTENT BELOW */}
+                <div className="p-4 space-y-2.5">
+                  <div className="text-[11px] text-white/60">
                     Single Family Residence • 4,850 sq ft
                   </div>
-                </div>
 
-                <div className="pt-1.5 space-y-1 text-[11px] text-white/75">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">Ownership Data:</span>
-                    <span className="text-[#10b981] font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Title &amp; Deed on File
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">Estimated Equity:</span>
-                    <span className="text-white font-mono font-semibold">~$2,450,000</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">1031 Exchange:</span>
-                    <span className="text-[#D4AF37] font-semibold">Profile Prepared</span>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => navigate('/refer')}
-                className="w-full py-2 px-3 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#D4AF37]/50 text-xs font-bold text-[#D4AF37] flex items-center justify-center gap-1.5 cursor-pointer transition-all"
-              >
-                <span>Audit Listing / Vet Sale Agent</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
-
-            {/* BOX 2: STORED DATA & ARCHIVES */}
-            <div 
-              className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-[#D4AF37]" />
-                    <h4 className="text-xs font-black uppercase tracking-wider text-[#D4AF37]">
-                      Stored Data &amp; Archives
-                    </h4>
-                  </div>
-                  <span className="text-[10px] text-white/50 font-mono">My Library</span>
-                </div>
-
-                <p className="text-xs text-white/70 leading-relaxed">
-                  All signed fiduciary agreements, inspection notes, transcripts, and transaction documents are archived here.
-                </p>
-
-                <div className="space-y-1 text-[11px] text-white/75 pt-1">
-                  <div className="flex items-center gap-1.5">
-                    <FileText className="w-3 h-3 text-[#D4AF37]" />
-                    <span className="truncate">Fiduciary Advisory Agreement (Signed)</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <FileText className="w-3 h-3 text-[#D4AF37]" />
-                    <span className="truncate">Property Tax &amp; Deed Record Archive</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <FileText className="w-3 h-3 text-[#D4AF37]" />
-                    <span className="truncate">Saved MLS Listings &amp; Search Profiles</span>
+                  <div className="space-y-1 text-[11px] text-white/75 pt-1 border-t border-white/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">Ownership Data:</span>
+                      <span className="text-[#10b981] font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Title &amp; Deed on File
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">Estimated Equity:</span>
+                      <span className="text-white font-mono font-semibold">~$2,450,000</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">1031 Exchange:</span>
+                      <span className="text-[#D4AF37] font-semibold">Profile Prepared</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setIsLibraryOpen(true)}
-                className="w-full py-2 px-3 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
-                style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Open Stored Archives</span>
-              </button>
+              <div className="p-4 pt-0">
+                <button
+                  type="button"
+                  onClick={() => navigate('/refer')}
+                  className="w-full py-2 px-3 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#D4AF37]/50 text-xs font-bold text-[#D4AF37] flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                >
+                  <span>Audit Listing / Vet Sale Agent</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </div>
 
-            {/* BOX 3: RELOCATION */}
+            {/* BOX 2: FILES PHOTO + STORED DATA & ARCHIVES */}
             <div 
-              className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3"
+              className="rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl overflow-hidden flex flex-col justify-between group"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                  <div className="flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-[#10b981]" />
-                    <h4 className="text-xs font-black uppercase tracking-wider text-[#10b981]">
-                      Relocation
-                    </h4>
+              <div>
+                {/* PHOTO OF FILES / CONTRACTS WITH CLICK-THROUGH */}
+                <div 
+                  onClick={() => setIsLibraryOpen(true)}
+                  className="relative h-44 sm:h-48 w-full overflow-hidden cursor-pointer"
+                  title="Click to Open Stored Data & Archives"
+                >
+                  <img 
+                    src="https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80" 
+                    alt="Stored Files & Data"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
+                    <BookOpen className="w-3 h-3 text-[#D4AF37]" />
+                    <span>Stored Data &amp; Archives</span>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#10b981]/20 text-[#10b981] font-bold">
+                  <span className="absolute top-2.5 right-2.5 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/20 text-white backdrop-blur-sm">
+                    My Library
+                  </span>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <div className="text-xs font-bold text-white drop-shadow">
+                      All Signed Contracts, Deeds &amp; Blueprints
+                    </div>
+                  </div>
+                </div>
+
+                {/* CONTENT BELOW */}
+                <div className="p-4 space-y-2">
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    All signed fiduciary agreements, inspection notes, transcripts, and transaction documents are archived here.
+                  </p>
+
+                  <div className="space-y-1 text-[11px] text-white/75 pt-1 border-t border-white/10">
+                    <div className="flex items-center gap-1.5">
+                      <FileText className="w-3 h-3 text-[#D4AF37]" />
+                      <span className="truncate">Fiduciary Advisory Agreement (Signed)</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <FileText className="w-3 h-3 text-[#D4AF37]" />
+                      <span className="truncate">Property Tax &amp; Deed Record Archive</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <FileText className="w-3 h-3 text-[#D4AF37]" />
+                      <span className="truncate">Saved MLS Listings &amp; Search Profiles</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 pt-0">
+                <button
+                  type="button"
+                  onClick={() => setIsLibraryOpen(true)}
+                  className="w-full py-2 px-3 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
+                  style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Open Stored Archives</span>
+                </button>
+              </div>
+            </div>
+
+            {/* BOX 3: CITY PHOTO + RELOCATION */}
+            <div 
+              className="rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl overflow-hidden flex flex-col justify-between group"
+            >
+              <div>
+                {/* PHOTO OF A DESTINATION CITY WITH CLICK-THROUGH */}
+                <div 
+                  onClick={() => navigate('/RelocationRoadmap')}
+                  className="relative h-44 sm:h-48 w-full overflow-hidden cursor-pointer"
+                  title="Click to View Active Relocation Roadmap"
+                >
+                  <img 
+                    src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80" 
+                    alt="Destination City"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/80 text-[#10b981] border border-[#10b981]/60 backdrop-blur-sm">
+                    <Compass className="w-3 h-3 text-[#10b981]" />
+                    <span>Relocation</span>
+                  </div>
+                  <span className="absolute top-2.5 right-2.5 text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#10b981]/30 text-[#10b981] border border-[#10b981] backdrop-blur-sm">
                     Active Roadmap
                   </span>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <div className="text-xs font-bold text-white drop-shadow">
+                      Target: {destinationCity}, {destinationState}
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-1">
-                    <span>Target: {destinationCity}, {destinationState}</span>
-                  </div>
-                  <div className="text-[11px] text-white/60 mt-0.5">
+                {/* CONTENT BELOW */}
+                <div className="p-4 space-y-2">
+                  <div className="text-[11px] text-white/60">
                     Timeline: Fall Relocation • Stage 2 of 6
                   </div>
-                </div>
 
-                <div className="space-y-1.5 text-[11px] text-white/75 pt-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">Receiving Agent Vetting:</span>
-                    <span className="text-[#10b981] font-semibold">Underway</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">Tax Differential:</span>
-                    <span className="text-white font-mono font-semibold">CA to AZ (-8.8%)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white/50">Next Action:</span>
-                    <span className="text-[#D4AF37] font-semibold">Review Candidate Vetting</span>
+                  <div className="space-y-1.5 text-[11px] text-white/75 pt-1 border-t border-white/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">Receiving Agent Vetting:</span>
+                      <span className="text-[#10b981] font-semibold">Underway</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">Tax Differential:</span>
+                      <span className="text-white font-mono font-semibold">CA to AZ (-8.8%)</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/50">Next Action:</span>
+                      <span className="text-[#D4AF37] font-semibold">Review Candidate Vetting</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => navigate('/RelocationRoadmap')}
-                className="w-full py-2 px-3 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#10b981] text-xs font-bold text-white flex items-center justify-center gap-1.5 cursor-pointer transition-all"
-              >
-                <span>View Full Roadmap</span>
-                <ArrowRight className="w-3 h-3 text-[#10b981]" />
-              </button>
+              <div className="p-4 pt-0">
+                <button
+                  type="button"
+                  onClick={() => navigate('/RelocationRoadmap')}
+                  className="w-full py-2 px-3 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#10b981] text-xs font-bold text-white flex items-center justify-center gap-1.5 cursor-pointer transition-all"
+                >
+                  <span>View Full Roadmap</span>
+                  <ArrowRight className="w-3 h-3 text-[#10b981]" />
+                </button>
+              </div>
             </div>
 
           </div>
