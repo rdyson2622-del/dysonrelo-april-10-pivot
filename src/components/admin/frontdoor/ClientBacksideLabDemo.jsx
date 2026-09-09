@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Sparkles, User, Home, Mic, Search, Compass, Tv, ShieldCheck, 
-  ArrowRight, History, Calendar, TrendingUp, Plus, CheckCircle2, 
-  Clock, Phone, MessageCircle, FileText, MapPin, Layers, AlertCircle, X,
-  ChevronRight, Smartphone, Building, RefreshCw, ExternalLink
+  Search, Mic, BookOpen, Home, ArrowRight, ShieldCheck, 
+  MapPin, CheckCircle2, Clock, Phone, MessageCircle, X, 
+  FileText, Sparkles, Building, Compass, UserCheck, Layers,
+  ChevronRight, Wrench, HelpCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import RetainedDialogueModal from './RetainedDialogueModal';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -15,79 +14,12 @@ const TAN_BG = '#ede0cc';
 export default function ClientBacksideLabDemo({ initialClient = null }) {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
-  const [liveClient, setLiveClient] = useState(initialClient);
-  const [isDialogueModalOpen, setIsDialogueModalOpen] = useState(false);
-  const [showAddHomeModal, setShowAddHomeModal] = useState(false);
-  const [newHomeAddress, setNewHomeAddress] = useState('');
-  const [newHomeRole, setNewHomeRole] = useState('selling');
-  const [newHomeNotes, setNewHomeNotes] = useState('');
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'properties' | 'roadmap' | 'history'
+  const [clientRecord, setClientRecord] = useState(initialClient);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [voiceActive, setVoiceActive] = useState(false);
 
-  // Editable sample property assets (starts with live or rich stub template data)
-  const [properties, setProperties] = useState([
-    {
-      id: 'prop-origin',
-      role: 'Current Residence (Origin)',
-      address: '14820 Blossom Hill Rd, Los Gatos, CA 95032',
-      specs: '4 Beds · 3.5 Baths · 3,850 sq ft',
-      status: 'Escrow Open · Pending Close',
-      statusColor: '#10b981',
-      agent: 'Sarah Lin (PRN Vetted)',
-      docs: [
-        { name: 'Executed Purchase Agreement.pdf', size: '2.4 MB' },
-        { name: 'Preliminary Title Report.pdf', size: '1.8 MB' },
-        { name: 'Property Disclosures & Inspection.pdf', size: '4.1 MB' }
-      ],
-      notes: 'Closing scheduled for June 24. Proceeds wired to 1031 escrow exchange.'
-    },
-    {
-      id: 'prop-dest',
-      role: 'Target Home (Destination)',
-      address: '20844 N 110th Way, Scottsdale, AZ 85255',
-      specs: '5 Beds · 6 Baths · 5,600 sq ft',
-      status: 'Fiduciary Contract Audit Active',
-      statusColor: '#D4AF37',
-      agent: 'Wisdom Properties · Fiduciary Team',
-      docs: [
-        { name: 'Inspection Contingency Checklist.pdf', size: '920 KB' },
-        { name: 'HOA & Golf Membership Bylaws.pdf', size: '3.2 MB' }
-      ],
-      notes: 'Inspection response submitted to seller. Dyson team auditing repair escrow.'
-    }
-  ]);
-
-  // Request & Communication History
-  const [requestHistory, setRequestHistory] = useState([
-    {
-      id: 'req-1',
-      title: 'Listing Agent Vetting & Fee Audit',
-      submittedAt: '3 days ago',
-      status: 'completed',
-      statusLabel: 'Completed',
-      resultSummary: 'Approved. Agent vetted (Top 1% Silicon Valley, 0 disciplinary actions). Negotiated 25% co-op fee.',
-      desk: 'Agent Vetting Desk'
-    },
-    {
-      id: 'req-2',
-      title: 'Scottsdale Unified School District Analysis',
-      submittedAt: 'Yesterday',
-      status: 'ongoing',
-      statusLabel: 'Ongoing / Reviewing',
-      resultSummary: 'Charter vs Public comparison in progress. Executive briefing scheduled with Charlie.',
-      desk: 'Relocation Intelligence'
-    },
-    {
-      id: 'req-3',
-      title: 'Commercial Storage & Auto Transport Bid',
-      submittedAt: 'May 12',
-      status: 'abandoned',
-      statusLabel: 'Withdrawn',
-      resultSummary: 'Client chose private enclosed transport provider independently.',
-      desk: 'Vendor Logistics'
-    }
-  ]);
-
-  // Fetch real authenticated user & real RelocationClient if exists
+  // Fetch live auth user and matching client data
   useEffect(() => {
     let isMounted = true;
     base44.auth.me().then(async (user) => {
@@ -96,12 +28,12 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
         setCurrentUser(user);
         try {
           const clients = await base44.entities.RelocationClient.filter({ email: user.email }, '-created_date', 1);
-          if (clients && clients.length > 0) {
-            setLiveClient(clients[0]);
+          if (clients && clients.length > 0 && isMounted) {
+            setClientRecord(clients[0]);
           } else {
             const anyClients = await base44.entities.RelocationClient.list('-created_date', 1);
             if (anyClients && anyClients.length > 0 && isMounted) {
-              setLiveClient(anyClients[0]);
+              setClientRecord(anyClients[0]);
             }
           }
         } catch (_) {}
@@ -111,682 +43,438 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
     return () => { isMounted = false; };
   }, []);
 
-  // Identity resolution
-  const displayName = liveClient?.full_name || currentUser?.full_name || 'Robert & Eleanor Sterling';
+  // Personalized Identity values
+  const displayName = clientRecord?.full_name || currentUser?.full_name || 'Robert & Eleanor Sterling';
   const firstName = displayName.split(' ')[0] || 'Friend';
-  const originCity = liveClient?.current_city || 'Silicon Valley, CA';
-  const destinationCity = liveClient?.destination_city || 'Scottsdale, AZ';
-  const moveRoute = `${originCity} → ${destinationCity}`;
-  const userPhoto = currentUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+  const primaryProperty = clientRecord?.current_address || '14820 Blossom Hill Rd, Los Gatos, CA';
+  const destinationMarket = clientRecord?.destination_city ? `${clientRecord.destination_city}, ${clientRecord.destination_state || 'AZ'}` : 'Scottsdale, AZ';
+  const photoUrl = currentUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
 
-  const handleAddHomeSubmit = (e) => {
-    e.preventDefault();
-    if (!newHomeAddress.trim()) return;
-    const newProp = {
-      id: `prop-${Date.now()}`,
-      role: newHomeRole === 'selling' ? 'Additional Property (Origin/Selling)' : 'Candidate Home (Destination/Buying)',
-      address: newHomeAddress.trim(),
-      specs: 'Added by subscriber',
-      status: 'Pending Fiduciary Review',
+  // The focused, clean vertical list of what we can do / active projects
+  const SERVICES_LIST = [
+    {
+      id: 'research',
+      title: 'Research Properties',
+      subtitle: 'Search national MLS or paste any listing URL',
+      status: 'Active Search',
+      statusColor: '#10b981',
+      path: '/search',
+      icon: Search,
+    },
+    {
+      id: 'solution',
+      title: 'Provide a Strategy & Solution',
+      subtitle: 'Custom real estate gameplan & tax-advantage roadmap',
+      status: 'Ready',
+      statusColor: '#D4AF37',
+      path: '/solutions',
+      icon: Compass,
+    },
+    {
+      id: 'properties',
+      title: 'Store & Manage My Properties',
+      subtitle: 'Current residence + target acquisition files',
+      status: '2 Properties Logged',
       statusColor: '#60a5fa',
-      agent: 'Dyson Concierge Assigned',
-      docs: [],
-      notes: newHomeNotes.trim() || 'Awaiting initial paperwork submission.'
-    };
-    setProperties([...properties, newProp]);
-    setNewHomeAddress('');
-    setNewHomeNotes('');
-    setShowAddHomeModal(false);
+      path: '#properties',
+      action: 'open_properties',
+      icon: Home,
+    },
+    {
+      id: 'communications',
+      title: 'My Communications & History',
+      subtitle: 'Transcripts, Charlie Q&A, and direct notes',
+      status: 'Up to Date',
+      statusColor: '#a78bfa',
+      path: '/chat',
+      icon: MessageCircle,
+    },
+    {
+      id: 'relocation',
+      title: 'Relocation Services & Roadmap',
+      subtitle: 'Step-by-step moving timeline & school reports',
+      status: 'In Progress · Step 3',
+      statusColor: '#D4AF37',
+      path: '/RelocationRoadmap',
+      icon: Layers,
+    },
+    {
+      id: 'escrow',
+      title: 'The Escrow Process & Audit',
+      subtitle: 'Fiduciary timeline, contingency releases & deposit check',
+      status: 'Pending Review',
+      statusColor: '#fb923c',
+      path: '/relo-management',
+      icon: FileText,
+    },
+    {
+      id: 'vet_agents',
+      title: 'Vetting Agents',
+      subtitle: 'Independent fiduciary audit of listing or buyer agents',
+      status: '1 Agent Vetted',
+      statusColor: '#10b981',
+      path: '/find-agent',
+      icon: UserCheck,
+    },
+    {
+      id: 'vet_vendors',
+      title: 'Vetting Vendors & Lenders',
+      subtitle: 'Movers, escrow officers, title & competitive rates',
+      status: 'Available',
+      statusColor: '#94a3b8',
+      path: '/financial-services',
+      icon: Wrench,
+    },
+  ];
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    const cleanLocation = searchQuery.trim().replace(/,\s*/g, '_').replace(/\s+/g, '-');
+    window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleServiceClick = (item) => {
+    if (item.action === 'open_properties') {
+      setIsLibraryOpen(true);
+    } else {
+      navigate(item.path);
+    }
   };
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-4 px-2 sm:px-4 text-left">
       
-      {/* TEMPLATE CONTROLS & CALLOUT BAR */}
-      <div className="w-full max-w-[420px] mb-3 flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/60 text-xs shadow-md">
-        <div className="flex items-center gap-2">
-          <Smartphone className="w-4 h-4 text-[#D4AF37]" />
-          <div>
-            <div className="font-bold text-white leading-tight">Client Backside Template</div>
-            <div className="text-[10px] text-white/60 font-mono">Portrait-Mobile First · ~390px Viewport</div>
-          </div>
-        </div>
-        <span 
-          className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-black shadow-sm"
-          style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-        >
-          ALL ABOUT THEM
-        </span>
-      </div>
-
       {/* ========================================================
-          PORTRAIT-MOBILE-FIRST CHASSIS (~390px WIDTH)
-          Strictly framed at max-w-[390px] for true mobile parity
-          Obsidian frame, gold bezel, responsive on actual phones
+          PORTRAIT-MOBILE-FIRST CHASSIS (~390px) ON CLEAN TAN BACKDROP
+          Strictly framed, NO sidebar, ultra-clean, serene & personal.
           ======================================================== */}
       <div 
-        className="w-full max-w-[390px] rounded-[36px] p-3 sm:p-3.5 shadow-2xl relative overflow-hidden flex flex-col border-4"
+        className="w-full max-w-[390px] rounded-[36px] p-4 shadow-2xl relative flex flex-col border border-[#0a0a0a]/15 text-[#0a0a0a]"
         style={{
-          background: '#070707',
-          borderColor: '#1e1c18',
-          boxShadow: '0 25px 60px -15px rgba(0,0,0,0.85), 0 0 0 1px rgba(212,175,55,0.4)',
+          background: TAN_BG,
+          boxShadow: '0 20px 50px -10px rgba(0,0,0,0.25), 0 0 0 1px rgba(212,175,55,0.4)',
         }}
       >
-        {/* Top Speaker / Dynamic Island Simulator */}
-        <div className="w-full flex items-center justify-between px-4 pt-1 pb-2">
-          <span className="text-[11px] font-bold text-white/70 font-mono">9:41</span>
-          <div className="w-20 h-4 rounded-full bg-[#151515] border border-white/10 flex items-center justify-center">
-            <span className="w-2 h-2 rounded-full bg-[#0a0a0a]" />
+        {/* TOP BAR: BRANDING + ONE-CLICK LIBRARY BUTTON */}
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#0a0a0a]/15">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#0a0a0a]">
+              DYSON RELOCATION CONCIERGE
+            </span>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            <span className="text-[10px] font-bold text-[#D4AF37]">5G</span>
+
+          {/* ONE-CLICK LIBRARY BUTTON: REPLACES CLUTTERED SIDEBAR ENTIRELY */}
+          <button
+            type="button"
+            onClick={() => setIsLibraryOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all shadow-sm cursor-pointer hover:brightness-110 active:scale-95"
+            style={{
+              background: '#0a0a0a',
+              color: GOLD,
+              border: `1px solid ${GOLD}`,
+            }}
+            title="Click to open your personal stored library"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Library</span>
+          </button>
+        </div>
+
+        {/* 1. SUBSCRIBER IDENTITY & PICTURE */}
+        <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-md">
+          <div className="relative shrink-0">
+            <img 
+              src={photoUrl} 
+              alt={displayName} 
+              className="w-13 h-13 rounded-full object-cover border-2 border-[#D4AF37] shadow"
+            />
+            <span 
+              className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#10b981] border-2 border-black flex items-center justify-center text-[8px] font-black text-black"
+              title="Verified Client"
+            >
+              ✓
+            </span>
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="text-[9px] uppercase tracking-wider text-[#D4AF37] font-black">
+              Verified Subscriber
+            </div>
+            <h2 
+              className="text-lg font-bold leading-tight text-white truncate"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Welcome back, {firstName}
+            </h2>
+            <div className="text-[10px] text-white/70 truncate flex items-center gap-1 mt-0.5">
+              <MapPin className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
+              <span className="truncate">{destinationMarket}</span>
+            </div>
           </div>
         </div>
 
-        {/* ========================================================
-            INNER SCROLLABLE CONTENT AREA (TAN BACKGROUND CANVAS)
-            Universal #ede0cc backdrop with black containers & gold accents
-            ======================================================== */}
-        <div 
-          className="w-full rounded-[26px] p-3 sm:p-3.5 space-y-3 overflow-y-auto max-h-[82vh] scrollbar-thin"
-          style={{ background: TAN_BG }}
-        >
-          {/* 1. HEADER: IDENTITY & VERIFIED SUBSCRIBER CARD */}
-          <div 
-            className="p-3 rounded-2xl border text-left shadow-md relative overflow-hidden"
-            style={{
-              background: '#0a0a0a',
-              borderColor: `${GOLD}`,
-            }}
-          >
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-[9px]">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[#D4AF37]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                <span>RELOCATING FAMILY CLIENT</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsDialogueModalOpen(true)}
-                className="flex items-center gap-1 text-[8.5px] font-bold text-white/80 hover:text-white underline cursor-pointer"
-              >
-                <History className="w-2.5 h-2.5 text-[#D4AF37]" />
-                <span>Dialogue History</span>
-              </button>
-            </div>
+        {/* 2. SUBSCRIBER'S CURRENT PROPERTY CARD (IF THEY OWN) */}
+        <div className="mt-2.5 p-2.5 rounded-xl bg-white/70 border border-[#0a0a0a]/15 text-[#0a0a0a] shadow-sm">
+          <div className="flex items-center justify-between text-[9px] font-bold text-[#854d0e] uppercase tracking-wider mb-0.5">
+            <span className="flex items-center gap-1">
+              <Home className="w-3 h-3 text-[#0a0a0a]" />
+              <span>Current Primary Property</span>
+            </span>
+            <span className="text-[#10b981]">Active File</span>
+          </div>
+          <div className="text-xs font-bold truncate text-[#0a0a0a]">
+            {primaryProperty}
+          </div>
+        </div>
 
-            {/* Profile Avatar & Welcome */}
-            <div className="flex items-center gap-3">
-              <div className="relative shrink-0">
-                <img
-                  src={userPhoto}
-                  alt={displayName}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#D4AF37] shadow"
-                />
-                <span 
-                  className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#10b981] border-2 border-black flex items-center justify-center text-[7.5px] font-black text-black"
-                  title="Fiduciary Protection Active"
-                >
-                  ✓
-                </span>
-              </div>
-
-              <div className="min-w-0">
-                <h2 
-                  className="text-lg font-bold text-white leading-tight truncate"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  Welcome back {firstName}
-                </h2>
-                <div className="text-[11px] font-bold text-[#D4AF37] truncate mt-0.5">
-                  {moveRoute}
-                </div>
-                <div className="text-[8.5px] text-white/50 font-mono">
-                  Concierge Lead: <strong>Bob Dyson</strong> · CA DRE #02303118
-                </div>
-              </div>
-            </div>
-
-            {/* Fiduciary Direct Contact Pill */}
-            <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[9px]">
-              <span className="text-white/60">Fiduciary Direct: <strong>(858) 353-1200</strong></span>
-              <div className="flex items-center gap-1">
-                <a 
-                  href="tel:+18583531200"
-                  className="px-2 py-0.5 rounded bg-[#1f1a0e] border border-[#D4AF37] text-[8px] font-bold text-[#D4AF37] hover:brightness-125"
-                >
-                  Call
-                </a>
-                <a 
-                  href="sms:+18583531200"
-                  className="px-2 py-0.5 rounded bg-[#1f1a0e] border border-[#D4AF37] text-[8px] font-bold text-[#D4AF37] hover:brightness-125"
-                >
-                  Text
-                </a>
-              </div>
-            </div>
+        {/* 3. PREDOMINANT SEARCH PILL (THE MAIN COMMUNICATOR) WITH INTEGRATED CHARLIE VOICE */}
+        <div className="mt-3.5 space-y-1.5">
+          <div className="text-[10px] font-black uppercase tracking-wider text-[#0a0a0a] px-1 flex items-center justify-between">
+            <span>Main Communicator</span>
+            <span className="text-[8.5px] text-[#854d0e] font-semibold">Type or Tap Charlie to Speak</span>
           </div>
 
-          {/* 2. THE THREE PRESERVED COMMAND BUTTONS (CORE ACTIONS) */}
-          <div className="space-y-1.5">
-            <div className="text-[9px] font-black uppercase tracking-wider text-[#0a0a0a] px-1 flex items-center justify-between">
-              <span>Your Next Steps</span>
-              <span className="text-[8px] text-[#854d0e] font-bold">1-Click Actions</span>
+          <form 
+            onSubmit={handleSearchSubmit}
+            className="flex items-center gap-1.5 p-1.5 rounded-full bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl text-white"
+          >
+            <div className="flex items-center gap-2 w-full pl-3 py-1">
+              <Search className="w-4 h-4 text-[#D4AF37] shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Ask Charlie or search anything on your site..."
+                className="w-full bg-transparent text-xs text-white placeholder:text-stone-400 focus:outline-none"
+              />
             </div>
 
-            {/* Action 1: Continue your move */}
+            {/* Charlie Voice Concierge Button */}
             <button
               type="button"
-              onClick={() => navigate('/RelocationRoadmap')}
-              className="w-full group p-2.5 rounded-xl border border-[#D4AF37] hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-md"
+              onClick={() => navigate('/talking-app')}
+              className="p-2 rounded-full bg-[#181818] hover:bg-[#252525] border border-[#D4AF37]/60 text-[#D4AF37] transition-all shrink-0 cursor-pointer"
+              title="Talk with Charlie (Voice AI)"
+            >
+              <Mic className="w-3.5 h-3.5 text-[#10b981]" />
+            </button>
+
+            {/* Execute / Explore Button */}
+            <button
+              type="submit"
+              className="px-3.5 py-1.5 rounded-full text-xs font-bold text-black transition-all hover:brightness-105 active:scale-95 shrink-0 shadow"
               style={{
                 background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
               }}
             >
-              <div className="min-w-0 pr-1">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <Home className="w-3.5 h-3.5 text-[#0a0a0a] shrink-0" />
-                  <span className="text-xs font-black text-[#0a0a0a]">
-                    1. Continue Your Move
-                  </span>
-                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-[#0a0a0a] text-white font-bold shrink-0">
-                    Active Roadmap
-                  </span>
-                </div>
-                <p className="text-[9px] text-[#2b2118] font-semibold leading-tight">
-                  Phase 3 of 7 · Inspection Release deadline approaching
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] shrink-0 group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            {/* Action 2: Talk with Charlie (Voice AI) */}
-            <button
-              type="button"
-              onClick={() => navigate('/talking-app')}
-              className="w-full group p-2.5 rounded-xl border border-[#D4AF37] hover:brightness-110 transition-all text-left cursor-pointer flex items-center justify-between shadow-md bg-[#0a0a0a]"
-            >
-              <div className="min-w-0 pr-1">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <Mic className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                  <span className="text-xs font-bold text-white">
-                    2. Talk with Charlie
-                  </span>
-                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-[#10b981] text-black font-black shrink-0">
-                    Voice AI
-                  </span>
-                </div>
-                <p className="text-[9px] text-white/60 leading-tight">
-                  Ask relocation questions, school ratings &amp; escrow checks
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:translate-x-1 transition-transform" />
-            </button>
-
-            {/* Action 3: Vet a listing / refer */}
-            <button
-              type="button"
-              onClick={() => navigate('/refer')}
-              className="w-full group p-2.5 rounded-xl border border-[#D4AF37]/60 hover:brightness-110 transition-all text-left cursor-pointer flex items-center justify-between shadow-md bg-[#0a0a0a]"
-            >
-              <div className="min-w-0 pr-1">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <Search className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                  <span className="text-xs font-bold text-white">
-                    3. Vet a Listing / Refer
-                  </span>
-                  <span className="text-[7.5px] px-1.5 py-0.2 rounded bg-[#151515] text-[#38bdf8] font-bold border border-[#38bdf8]/40 shrink-0">
-                    Audit
-                  </span>
-                </div>
-                <p className="text-[9px] text-white/60 leading-tight">
-                  Paste any MLS link for fiduciary agent &amp; contract review
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-
-          {/* Quick Listing Audit Bar */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate('/refer');
-            }}
-            className="flex items-center gap-1.5 p-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37] shadow-md"
-          >
-            <div className="flex items-center gap-1.5 w-full pl-2.5 py-0.5">
-              <Search className="w-3 h-3 text-[#D4AF37] shrink-0" />
-              <input
-                type="text"
-                placeholder="Paste Realtor, Zillow or Redfin link to audit..."
-                className="w-full bg-transparent text-[9.5px] text-white placeholder:text-stone-400 focus:outline-none"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-2.5 py-1 rounded-full text-[8.5px] font-black uppercase text-black shrink-0"
-              style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-            >
-              Audit
+              Go
             </button>
           </form>
+        </div>
 
-          {/* 3. SECTION TABS: ALL ABOUT THEM */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/40 text-[9px] font-bold text-white">
-            {[
-              { id: 'overview', label: 'Holdings & Goal' },
-              { id: 'roadmap', label: 'Milestones' },
-              { id: 'pulse', label: 'Market Pulse' },
-              { id: 'history', label: 'Requests' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-1 px-1 rounded-lg transition-all text-center truncate ${
-                  activeTab === tab.id
-                    ? 'bg-[#ede0cc] text-[#0a0a0a] font-black shadow-sm'
-                    : 'text-white/60 hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {/* 4. CLEAN VERTICAL LIST: WHAT WE CAN DO / PROJECTS BUILDING & PENDING */}
+        <div className="mt-4 space-y-2">
+          <div className="text-[10px] font-black uppercase tracking-wider text-[#0a0a0a] px-1 flex items-center justify-between">
+            <span>What We Are Doing For You</span>
+            <span className="text-[8.5px] text-[#854d0e] font-semibold">Select Any Item</span>
           </div>
 
-          {/* TAB 1: HOLDINGS ("WHAT THEY HAVE") & GOAL ("WHAT THEY WANT TO ACCOMPLISH") */}
-          {(activeTab === 'overview') && (
-            <div className="space-y-3 animate-in fade-in duration-200">
-              
-              {/* WHAT THEY WANT TO ACCOMPLISH (CLIENT GOAL) */}
-              <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/70 text-white space-y-1.5 shadow-md">
-                <div className="flex items-center justify-between text-[9px]">
-                  <span className="font-black uppercase tracking-wider text-[#D4AF37]">
-                    WHAT YOU WANT TO ACCOMPLISH
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] font-bold border border-[#10b981]/40">
-                    Dual Transaction
-                  </span>
-                </div>
-                <h3 
-                  className="text-sm font-bold leading-tight"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  Sell Los Gatos Residence &amp; Acquire Scottsdale Single-Story Luxury Estate
-                </h3>
-                <div className="grid grid-cols-2 gap-1.5 pt-1 text-[8.5px]">
-                  <div className="p-1.5 rounded bg-[#141414] border border-white/10">
-                    <span className="text-white/50 block">Target Close</span>
-                    <strong className="text-white">Q3 2026 (Tax Year Lock)</strong>
-                  </div>
-                  <div className="p-1.5 rounded bg-[#141414] border border-white/10">
-                    <span className="text-white/50 block">Key Requirement</span>
-                    <strong className="text-white">Single Story · Gated / Golf</strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* WHAT THEY HAVE (MULTIPLE OWNED / CURRENT HOMES) */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-wider text-[#0a0a0a] px-1">
-                  <span>What You Have ({properties.length} Properties)</span>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddHomeModal(true)}
-                    className="inline-flex items-center gap-1 text-[8px] font-bold px-2 py-0.5 rounded bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37] hover:brightness-125 cursor-pointer shadow-sm"
-                  >
-                    <Plus className="w-2.5 h-2.5" />
-                    <span>Add Your Home</span>
-                  </button>
-                </div>
-
-                {properties.map((prop, idx) => (
-                  <div 
-                    key={prop.id}
-                    className="p-3 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/50 text-white space-y-2 shadow-md relative"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-[#1e1c18] text-[#D4AF37] border border-[#D4AF37]/30 inline-block mb-1">
-                          {prop.role}
-                        </span>
-                        <h4 className="text-xs font-bold leading-snug">{prop.address}</h4>
-                        <div className="text-[8.5px] text-white/60 font-mono mt-0.5">{prop.specs}</div>
-                      </div>
-                      <span 
-                        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
-                        style={{ background: `${prop.statusColor}20`, color: prop.statusColor, border: `1px solid ${prop.statusColor}` }}
-                      >
-                        {prop.status}
-                      </span>
-                    </div>
-
-                    {/* Associated Documents */}
-                    {prop.docs && prop.docs.length > 0 && (
-                      <div className="pt-1.5 border-t border-white/10 space-y-1">
-                        <div className="text-[8px] font-bold text-white/50 uppercase">Linked Escrow &amp; Audit Files:</div>
-                        {prop.docs.map((doc, dIdx) => (
-                          <div key={dIdx} className="flex items-center justify-between text-[8px] p-1 rounded bg-[#161616] border border-white/5">
-                            <span className="flex items-center gap-1 truncate text-white/80">
-                              <FileText className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
-                              <span className="truncate">{doc.name}</span>
-                            </span>
-                            <span className="text-white/40 shrink-0 ml-1">{doc.size}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="text-[8.5px] text-[#fce38a] italic bg-[#15120a] p-1.5 rounded border border-[#D4AF37]/30 leading-snug">
-                      Note: {prop.notes}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: ROADMAP & MILESTONES (INTEGRAL ROADMAP REUSE) */}
-          {activeTab === 'roadmap' && (
-            <div className="space-y-2.5 animate-in fade-in duration-200">
-              <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#D4AF37] text-white space-y-2 shadow-md">
-                <div className="flex items-center justify-between text-[9px]">
-                  <span className="font-black uppercase tracking-wider text-[#D4AF37]">
-                    ACTIVE RELOCATION ROADMAP
-                  </span>
-                  <span className="text-[8.5px] text-[#10b981] font-bold">
-                    Phase 3 of 7 Active
-                  </span>
-                </div>
-                
-                {/* Visual Step Tracker */}
-                <div className="space-y-2 pt-1">
-                  {[
-                    { step: '1', title: 'Fiduciary Intake & Strategy Blueprint', state: 'completed', date: 'Done May 14' },
-                    { step: '2', title: 'Silicon Valley Listing Agent Vetting', state: 'completed', date: 'Done May 28' },
-                    { step: '3', title: 'Scottsdale Property Contract & Escrow Audit', state: 'current', date: 'Underway' },
-                    { step: '4', title: 'Inspection & Repair Contingency Release', state: 'pending', date: 'Due June 12' },
-                    { step: '5', title: '1031 Exchange / Proceeds Coordination', state: 'pending', date: 'Target June 20' },
-                    { step: '6', title: 'Final Walkthrough & Utility Transfer', state: 'pending', date: 'Target June 28' },
-                    { step: '7', title: 'Keys Delivered & Post-Close Concierge', state: 'pending', date: 'Target July 2' }
-                  ].map((s, idx) => (
-                    <div 
-                      key={idx} 
-                      className={`flex items-center justify-between p-2 rounded-lg text-[9px] border transition-all ${
-                        s.state === 'completed'
-                          ? 'bg-[#10b981]/10 border-[#10b981]/40 text-white'
-                          : s.state === 'current'
-                          ? 'bg-[#D4AF37]/15 border-[#D4AF37] text-white font-bold'
-                          : 'bg-[#121212] border-white/10 text-white/50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[7.5px] font-black shrink-0 ${
-                          s.state === 'completed' ? 'bg-[#10b981] text-black' : s.state === 'current' ? 'bg-[#D4AF37] text-black' : 'bg-[#222] text-white/60'
-                        }`}>
-                          {s.state === 'completed' ? '✓' : s.step}
-                        </span>
-                        <span className="truncate">{s.title}</span>
-                      </div>
-                      <span className="text-[7.5px] shrink-0 font-mono text-white/60">{s.date}</span>
-                    </div>
-                  ))}
-                </div>
-
+          <div className="space-y-1.5">
+            {SERVICES_LIST.map((item) => {
+              const Icon = item.icon;
+              return (
                 <button
+                  key={item.id}
                   type="button"
-                  onClick={() => navigate('/RelocationRoadmap')}
-                  className="w-full mt-2 py-2 rounded-lg font-black text-xs text-black flex items-center justify-center gap-1.5 shadow"
-                  style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                  onClick={() => handleServiceClick(item)}
+                  className="w-full p-2.5 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/40 hover:border-[#D4AF37] text-white hover:brightness-110 transition-all text-left flex items-center justify-between gap-2 shadow-sm cursor-pointer group"
                 >
-                  <span>Open Full Interactive Roadmap</span>
-                  <ExternalLink className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: MARKET PULSE (CLEARLY LABELED COMING / STUB - NO FAKE VALUATIONS) */}
-          {activeTab === 'pulse' && (
-            <div className="space-y-2.5 animate-in fade-in duration-200">
-              <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/60 text-white space-y-2 shadow-md">
-                <div className="flex items-center justify-between text-[9px]">
-                  <span className="font-black uppercase tracking-wider text-[#D4AF37]">
-                    MARKET PULSE
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 text-[7.5px]">
-                    LIVE DESK CURATION
-                  </span>
-                </div>
-
-                <p className="text-[8.5px] text-white/70 leading-relaxed">
-                  Independent macro &amp; local market effects affecting your origin and destination assets. We provide verified market factors rather than speculative automated valuation algorithms.
-                </p>
-
-                {/* Origin Market Effect */}
-                <div className="p-2.5 rounded-lg bg-[#141414] border border-white/10 space-y-1">
-                  <div className="flex items-center justify-between text-[8.5px]">
-                    <span className="font-bold text-white flex items-center gap-1">
-                      <MapPin className="w-2.5 h-2.5 text-[#10b981]" />
-                      <span>Origin: Silicon Valley (Los Gatos)</span>
-                    </span>
-                    <span className="text-[#10b981] font-bold font-mono">Seller's Advantage</span>
-                  </div>
-                  <p className="text-[8px] text-white/60 leading-snug">
-                    Luxury inventory in Santa Clara County remains constrained at 1.8 months. Average DOM for prime estates sits at 21 days. Favorable climate to secure strong non-contingent offer.
-                  </p>
-                </div>
-
-                {/* Destination Market Effect */}
-                <div className="p-2.5 rounded-lg bg-[#141414] border border-white/10 space-y-1">
-                  <div className="flex items-center justify-between text-[8.5px]">
-                    <span className="font-bold text-white flex items-center gap-1">
-                      <MapPin className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>Destination: Scottsdale, AZ (Silverleaf)</span>
-                    </span>
-                    <span className="text-[#D4AF37] font-bold font-mono">Buyer Negotiation</span>
-                  </div>
-                  <p className="text-[8px] text-white/60 leading-snug">
-                    Summer seasonal lull has expanded luxury inventory to 4.6 months. Premium buyers currently achieving 3-5% inspection credits and seller-paid HOA transfers.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: REQUEST HISTORY (ONGOING | COMPLETED | ABANDONED TIED TO ROADMAPS) */}
-          {activeTab === 'history' && (
-            <div className="space-y-2.5 animate-in fade-in duration-200">
-              <div className="p-3 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/60 text-white space-y-2 shadow-md">
-                <div className="flex items-center justify-between text-[9px]">
-                  <span className="font-black uppercase tracking-wider text-[#D4AF37]">
-                    YOUR REQUEST HISTORY
-                  </span>
-                  <span className="text-white/50 text-[8px] font-mono">
-                    Roadmap Tied
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  {requestHistory.map(req => (
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <div 
-                      key={req.id}
-                      className="p-2.5 rounded-lg bg-[#141414] border border-white/10 space-y-1"
+                      className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border border-white/10"
+                      style={{ background: '#181818' }}
                     >
-                      <div className="flex items-center justify-between text-[8.5px]">
-                        <span className="font-bold text-white truncate">{req.title}</span>
-                        <span className={`text-[7.5px] px-1.5 py-0.2 rounded font-bold uppercase ${
-                          req.status === 'completed'
-                            ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40'
-                            : req.status === 'ongoing'
-                            ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40'
-                            : 'bg-white/10 text-white/50 border border-white/20'
-                        }`}>
-                          {req.statusLabel}
+                      <Icon className="w-4 h-4 text-[#D4AF37]" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-white truncate">
+                          {item.title}
+                        </span>
+                        <span 
+                          className="text-[7.5px] px-1.5 py-0.2 rounded font-bold uppercase shrink-0"
+                          style={{
+                            background: `${item.statusColor}20`,
+                            color: item.statusColor,
+                            border: `1px solid ${item.statusColor}50`
+                          }}
+                        >
+                          {item.status}
                         </span>
                       </div>
-                      <p className="text-[8px] text-white/60 leading-snug">
-                        {req.resultSummary}
+                      <p className="text-[9px] text-white/60 truncate mt-0.5">
+                        {item.subtitle}
                       </p>
-                      <div className="flex items-center justify-between text-[7.5px] text-white/40 pt-0.5 border-t border-white/5">
-                        <span>{req.desk}</span>
-                        <span>{req.submittedAt}</span>
-                      </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+                  </div>
 
-          {/* 4. FAST ESSENTIALS: 6AM NEWS & SOLUTIONS ENTRY */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => navigate('/dnn-news')}
-              className="p-2 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/60 hover:brightness-110 text-left transition-all shadow-sm cursor-pointer"
-            >
-              <div className="flex items-center gap-1 text-[9px] font-bold text-white mb-0.5">
-                <Tv className="w-3 h-3 text-red-500 shrink-0" />
-                <span className="truncate">6AM DNN News</span>
-              </div>
-              <p className="text-[8px] text-white/50 truncate">Daily Housing Broadcast</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate('/solutions')}
-              className="p-2 rounded-xl bg-[#0a0a0a] border border-[#D4AF37]/60 hover:brightness-110 text-left transition-all shadow-sm cursor-pointer"
-            >
-              <div className="flex items-center gap-1 text-[9px] font-bold text-white mb-0.5">
-                <Compass className="w-3 h-3 text-[#38bdf8] shrink-0" />
-                <span className="truncate">Solutions Map</span>
-              </div>
-              <p className="text-[8px] text-white/50 truncate">Blueprints &amp; Guidance</p>
-            </button>
-          </div>
-
-          {/* 5. FOOTER COMPLIANCE BADGE */}
-          <div className="pt-2 text-center text-[8px] text-[#44382c] font-medium leading-tight">
-            <div>The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118</div>
-            <div>Nationwide Fiduciary Relocation Concierge</div>
+                  <ChevronRight className="w-4 h-4 text-white/40 shrink-0 group-hover:text-[#D4AF37] group-hover:translate-x-0.5 transition-all" />
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Bottom Home Indicator Bar Simulator */}
-        <div className="w-full flex justify-center py-2">
-          <div className="w-32 h-1 rounded-full bg-white/30" />
+        {/* 5. DIRECT CONCIERGE HELP CONTACT */}
+        <div className="mt-4 pt-3 border-t border-[#0a0a0a]/15 flex items-center justify-between text-xs text-[#0a0a0a]">
+          <div>
+            <div className="text-[8px] font-black uppercase text-[#854d0e]">Concierge Direct Desk</div>
+            <div className="font-mono font-bold text-[11px]">(858) 353-1200</div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <a 
+              href="tel:+18583531200"
+              className="px-2.5 py-1 rounded bg-[#0a0a0a] text-white text-[9px] font-bold hover:brightness-125 flex items-center gap-1"
+            >
+              <Phone className="w-2.5 h-2.5 text-[#D4AF37]" />
+              <span>Call</span>
+            </a>
+            <a 
+              href="sms:+18583531200"
+              className="px-2.5 py-1 rounded bg-[#0a0a0a] text-white text-[9px] font-bold hover:brightness-125 flex items-center gap-1"
+            >
+              <MessageCircle className="w-2.5 h-2.5 text-[#D4AF37]" />
+              <span>Text</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* MODAL: ADD YOUR HOME / PROPERTY ENTRY */}
-      {showAddHomeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+      {/* ========================================================
+          ONE-CLICK LIBRARY DRAWER / MODAL
+          Holds all stored data so the sidebar can go away!
+          ======================================================== */}
+      {isLibraryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
-            className="w-full max-w-sm rounded-2xl p-4 sm:p-5 border space-y-3.5 shadow-2xl text-left"
-            style={{ background: '#0a0a0a', borderColor: GOLD }}
+            className="w-full max-w-[400px] max-h-[85vh] rounded-3xl p-5 border space-y-4 shadow-2xl text-left flex flex-col relative overflow-hidden"
+            style={{
+              background: '#0a0a0a',
+              borderColor: GOLD,
+            }}
           >
+            {/* Header */}
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
-              <div className="flex items-center gap-1.5">
-                <Home className="w-4 h-4 text-[#D4AF37]" />
-                <h3 className="text-sm font-bold text-white">Add Your Home</h3>
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-[#D4AF37]" />
+                <h3 className="text-base font-bold text-white">Your Stored Library</h3>
               </div>
               <button 
                 type="button"
-                onClick={() => setShowAddHomeModal(false)}
-                className="text-white/50 hover:text-white"
+                onClick={() => setIsLibraryOpen(false)}
+                className="w-7 h-7 rounded-full bg-[#181818] border border-white/10 flex items-center justify-center text-white/70 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddHomeSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="block text-[10px] font-bold text-white/70 uppercase mb-1">
-                  Property Role
-                </label>
-                <div className="grid grid-cols-2 gap-2">
+            {/* Scrollable Library Contents */}
+            <div className="flex-1 overflow-y-auto space-y-3.5 pr-1 scrollbar-thin text-white">
+              
+              {/* Category 1: Stored Properties */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
+                  Stored Properties &amp; Documents
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <span>14820 Blossom Hill Rd, Los Gatos, CA</span>
+                    <span className="text-[8px] text-[#10b981] font-mono">Origin</span>
+                  </div>
+                  <div className="text-[9px] text-white/50">4 Beds · 3.5 Baths · 3,850 sq ft</div>
+                  <div className="pt-1 flex items-center gap-2 text-[8px] text-[#D4AF37] underline">
+                    <span>Executed Purchase Agreement.pdf</span>
+                    <span>Title Report.pdf</span>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-[#141414] border border-white/10 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-bold text-white">
+                    <span>20844 N 110th Way, Scottsdale, AZ</span>
+                    <span className="text-[8px] text-[#D4AF37] font-mono">Target</span>
+                  </div>
+                  <div className="text-[9px] text-white/50">5 Beds · 6 Baths · 5,600 sq ft</div>
+                  <div className="pt-1 flex items-center gap-2 text-[8px] text-[#D4AF37] underline">
+                    <span>Inspection Checklist.pdf</span>
+                    <span>HOA Bylaws.pdf</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Category 2: Stored Blueprints & Reports */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
+                  Relocation Blueprints &amp; Reports
+                </div>
+                {[
+                  { title: 'Scottsdale Unified School District Analysis', date: 'May 18, 2026', type: 'Intelligence' },
+                  { title: 'California to Arizona Tax Shield Comparison', date: 'May 12, 2026', type: 'Tax Advisory' },
+                  { title: 'Listing Agent Vetting Scorecard', date: 'April 29, 2026', type: 'Fiduciary Audit' },
+                ].map((doc, idx) => (
+                  <div key={idx} className="p-2 rounded-lg bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-white text-[11px]">{doc.title}</div>
+                      <div className="text-[8.5px] text-white/50">{doc.date} · {doc.type}</div>
+                    </div>
+                    <FileText className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Category 3: Quick Navigation to Portals */}
+              <div className="space-y-1.5 pt-1 border-t border-white/10">
+                <div className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">
+                  Concierge Direct Shortcuts
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
                   <button
                     type="button"
-                    onClick={() => setNewHomeRole('selling')}
-                    className={`py-1.5 px-2 rounded-lg font-bold text-center border ${
-                      newHomeRole === 'selling'
-                        ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
-                        : 'bg-[#151515] text-white/70 border-white/10'
-                    }`}
+                    onClick={() => {
+                      setIsLibraryOpen(false);
+                      navigate('/dnn-news');
+                    }}
+                    className="p-2 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left"
                   >
-                    Selling (Origin)
+                    <div className="font-bold text-white text-[10.5px]">6AM DNN News</div>
+                    <div className="text-[8px] text-white/50">Daily Video Brief</div>
                   </button>
                   <button
                     type="button"
-                    onClick={() => setNewHomeRole('buying')}
-                    className={`py-1.5 px-2 rounded-lg font-bold text-center border ${
-                      newHomeRole === 'buying'
-                        ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
-                        : 'bg-[#151515] text-white/70 border-white/10'
-                    }`}
+                    onClick={() => {
+                      setIsLibraryOpen(false);
+                      navigate('/refer');
+                    }}
+                    className="p-2 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left"
                   >
-                    Target (Destination)
+                    <div className="font-bold text-white text-[10.5px]">Vet a Listing</div>
+                    <div className="text-[8px] text-white/50">Fiduciary Review</div>
                   </button>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] font-bold text-white/70 uppercase mb-1">
-                  Property Address
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newHomeAddress}
-                  onChange={(e) => setNewHomeAddress(e.target.value)}
-                  placeholder="Street, City, State, ZIP..."
-                  className="w-full p-2 rounded-lg bg-[#151515] border border-white/20 text-white focus:outline-none focus:border-[#D4AF37]"
-                />
-              </div>
+            </div>
 
-              <div>
-                <label className="block text-[10px] font-bold text-white/70 uppercase mb-1">
-                  Details / Notes (Optional)
-                </label>
-                <textarea
-                  rows={2}
-                  value={newHomeNotes}
-                  onChange={(e) => setNewHomeNotes(e.target.value)}
-                  placeholder="Estimated price, timeline, or current status..."
-                  className="w-full p-2 rounded-lg bg-[#151515] border border-white/20 text-white focus:outline-none focus:border-[#D4AF37] resize-none"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAddHomeModal(false)}
-                  className="px-3 py-1.5 rounded-lg text-white/60 hover:text-white"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-lg font-bold text-black"
-                  style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-                >
-                  Save Property
-                </button>
-              </div>
-            </form>
+            {/* Footer */}
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[8px] text-white/50">
+              <span>All Stored Data Secured</span>
+              <span>The Dyson &amp; Dyson Companies</span>
+            </div>
           </div>
         </div>
       )}
 
-      {/* RETAINED DIALOGUE MODAL */}
-      <RetainedDialogueModal
-        isOpen={isDialogueModalOpen}
-        onClose={() => setIsDialogueModalOpen(false)}
-        subscriberRole="client"
-        subscriberName={displayName}
-      />
     </div>
   );
 }
