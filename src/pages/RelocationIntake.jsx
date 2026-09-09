@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
@@ -85,6 +85,39 @@ export default function RelocationIntake() {
     due_diligence_notes: '',
   });
 
+  // Pre-fill form if client or user is already known
+  useEffect(() => {
+    let isMounted = true;
+    async function prefill() {
+      try {
+        let user = null;
+        try {
+          user = await base44.auth.me();
+        } catch (_) {}
+
+        const clients = await base44.entities.RelocationClient.list('-created_date', 1);
+        const existing = clients?.[0];
+
+        if (isMounted) {
+          setForm(f => ({
+            ...f,
+            full_name: f.full_name || existing?.full_name || user?.full_name || clientName || 'Kayden Sterling',
+            email: f.email || existing?.email || user?.email || 'kayden@sterling.com',
+            phone: f.phone || existing?.phone || '(858) 353-1200',
+            current_city: f.current_city || existing?.current_city || 'Los Gatos, CA',
+            destination_city: f.destination_city || existing?.destination_city || destination || 'Scottsdale, AZ',
+            budget: f.budget || existing?.budget || '800k_1m',
+            move_date: f.move_date || existing?.move_date || '1_3_months',
+            family_size: f.family_size || (existing?.family_size ? String(existing.family_size) : '4'),
+          }));
+          setShowForm(true);
+        }
+      } catch (_) {}
+    }
+    prefill();
+    return () => { isMounted = false; };
+  }, [clientName, destination]);
+
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
   const togglePriority = (p) => {
     setForm(f => ({
@@ -113,7 +146,7 @@ export default function RelocationIntake() {
     setSubmitting(true);
     try {
       // Create RelocationClient record
-      await base44.entities.RelocationClient.create({
+      const client = await base44.entities.RelocationClient.create({
         full_name: form.full_name,
         email: form.email,
         phone: form.phone,
@@ -144,6 +177,27 @@ export default function RelocationIntake() {
         status: 'new',
       });
 
+      // Log dispatch notice to Communication entity for Admin Communications integration
+      await base44.entities.Communication.create({
+        recipient_name: form.full_name,
+        recipient_email: form.email,
+        recipient_phone: form.phone,
+        message_content: `[Manual Dispatch Triggered] Relocation Intake received for ${form.full_name} (${form.current_city} → ${form.destination_city}). Budget: ${form.budget}. Fiduciary manual agent vetting initiated.`,
+        sent_date: new Date().toISOString(),
+        status: 'delivered',
+        communication_type: 'sms',
+        notes: `Notice: Start manual vetting process for ${form.full_name} (${form.destination_city})`,
+      }).catch(() => {});
+
+      if (client?.id) {
+        await base44.entities.ChatMessage.create({
+          client_id: client.id,
+          role: 'charlie',
+          content: `Welcome ${form.full_name.split(' ')[0]}. Your relocation request to ${form.destination_city} has been received. Bob Dyson and the senior fiduciary relocation desk have officially begun the manual vetting process for top agents in ${form.destination_city}.`,
+          message_type: 'text',
+        }).catch(() => {});
+      }
+
       base44.integrations.Core.SendEmail({
         to: 'bob@dysonconcierge.com',
         subject: `New Relocation Intake: ${form.full_name} → ${form.destination_city}`,
@@ -151,7 +205,7 @@ export default function RelocationIntake() {
       }).catch(() => {});
 
       setSubmitting(false);
-      navigate('/RelocationRoadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city));
+      navigate('/client-roadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city) + '&email=' + encodeURIComponent(form.email));
     } catch (e) {
       console.error('Intake submit error:', e);
       setSubmitting(false);
@@ -260,7 +314,7 @@ export default function RelocationIntake() {
                 return;
               }
               setSubmitting(false);
-              navigate('/RelocationRoadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city));
+              navigate('/client-roadmap?name=' + encodeURIComponent(form.full_name) + '&destination=' + encodeURIComponent(form.destination_city) + '&email=' + encodeURIComponent(form.email));
             }}
             disabled={submitting}
             className="w-full py-3 rounded-full text-sm font-bold tracking-wide gold-btn disabled:opacity-50"

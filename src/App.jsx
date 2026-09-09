@@ -190,6 +190,7 @@ import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import FrontDoor from './pages/FrontDoor';
+import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -246,6 +247,9 @@ const AuthenticatedApp = () => {
         <Route path="/corporate-relo" element={<CorporateRelo />} />
         <Route path="/transparency" element={<Transparency />} />
         <Route path="/dnn-news" element={<ConsumerDnnNews />} />
+        <Route path="/client-roadmap" element={<ClientMoveRoadmap />} />
+        <Route path="/relocation-roadmap" element={<ClientMoveRoadmap />} />
+        <Route path="/RelocationRoadmap" element={<ClientMoveRoadmap />} />
 
         {/* Public Concierge Directories navigated by Charlie */}
         <Route path="/find-agent" element={<FindAgent />} />
