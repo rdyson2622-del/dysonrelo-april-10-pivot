@@ -743,6 +743,9 @@ export default function AdminSidebar() {
                     if (child.isCommsBadge) {
                       return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
                     }
+                    if (child.isWorkingModelsScroll) {
+                      return <div key={ci} className="py-0.5"><AdminWorkingModelsScroll /></div>;
+                    }
                     if (child.isHeader) {
                       return (
                         <div key={ci} className="px-3 pt-3 pb-1">

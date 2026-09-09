@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { 
   Sparkles, Mic, Home, Building, Users, Play, ShieldCheck, 
   BookOpen, Phone, MessageSquare, ArrowRight, CheckCircle2, 
   Search, SlidersHorizontal, ExternalLink, Smartphone, 
-  Layout, Eye, Copy, Check
+  Layout, Eye, Copy, Check, Layers
 } from 'lucide-react';
+import { WORKING_MODELS } from '@/components/admin/AdminWorkingModelsScroll';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -167,8 +168,19 @@ export const PLATFORM_APP_CATALOG = [
 
 export default function AdminAppStoreMockup() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('full_mockup'); // 'full_mockup' | 'app_store_catalog' | 'pills_inspector'
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const initialTab = searchParams.get('tab') || 'full_mockup';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [copiedId, setCopiedId] = useState(null);
+
+  useEffect(() => {
+    const tabParam = new URLSearchParams(location.search).get('tab');
+    if (tabParam && ['full_mockup', 'app_store_catalog', 'pills_inspector'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
 
   const copyToClipboard = (text, id) => {
     navigator.clipboard.writeText(text);
@@ -177,7 +189,7 @@ export default function AdminAppStoreMockup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white p-3 sm:p-6 md:p-8 space-y-6">
+    <div className="min-h-screen bg-[#070707] text-white p-3 sm:p-6 md:p-8 space-y-5">
       
       {/* ========================================================
           ADMIN TOP BAR & VIEW TOGGLE
@@ -239,6 +251,74 @@ export default function AdminAppStoreMockup() {
           </button>
         </div>
       </header>
+
+      {/* ========================================================
+          HORIZONTAL WORKING MODELS SCROLL STRIP (SAVES SPACE IN ADMIN)
+          ======================================================== */}
+      <section className="p-3 rounded-2xl bg-[#0e0e0e] border border-[#D4AF37]/35 shadow-lg space-y-2">
+        <div className="flex items-center justify-between text-xs px-1">
+          <div className="flex items-center gap-1.5 text-[#D4AF37] font-bold text-[11px] uppercase tracking-wider">
+            <Layers className="w-3.5 h-3.5" />
+            <span>Working Platform Models &amp; Labs</span>
+          </div>
+          <span className="text-[10px] text-white/45">
+            Scroll horizontally to browse &amp; test all working prototypes →
+          </span>
+        </div>
+
+        <div 
+          className="flex items-center gap-2.5 overflow-x-auto pb-1.5 pt-0.5"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(212,175,55,0.4) rgba(0,0,0,0.5)',
+          }}
+        >
+          {WORKING_MODELS.map((model) => {
+            const Icon = model.icon;
+            const isInternalTab = model.path.includes('/admin/app-store-mockup?tab=');
+            const targetTab = isInternalTab ? model.path.split('tab=')[1] : null;
+            const isActive = targetTab ? activeTab === targetTab : location.pathname === model.path;
+
+            return (
+              <button
+                key={model.id}
+                type="button"
+                onClick={() => {
+                  if (targetTab) {
+                    setActiveTab(targetTab);
+                  } else {
+                    navigate(model.path);
+                  }
+                }}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl shrink-0 transition-all cursor-pointer text-left ${
+                  isActive
+                    ? 'bg-[#221c10] border border-[#D4AF37] text-white shadow-md scale-102'
+                    : 'bg-[#151515] hover:bg-[#1f1f1f] border border-white/10 text-white/80 hover:text-white'
+                }`}
+              >
+                <div 
+                  className="w-7 h-7 rounded-lg bg-black border border-white/10 flex items-center justify-center shrink-0 shadow-inner"
+                >
+                  <Icon className="w-3.5 h-3.5" style={{ color: model.iconColor }} />
+                </div>
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold whitespace-nowrap text-white">
+                      {model.title}
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[7px] font-black uppercase tracking-wider bg-black border border-[#D4AF37]/50 text-[#D4AF37]">
+                      {model.badge}
+                    </span>
+                  </div>
+                  <p className="text-[9.5px] text-white/50 whitespace-nowrap">
+                    {model.sub}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       {/* ========================================================
           TAB 1: COMPLETE MOCKUP (PAGE + APPLE-STYLE SIDEBAR PILLS)
