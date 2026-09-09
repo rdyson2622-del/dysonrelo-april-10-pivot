@@ -271,6 +271,9 @@ const AuthenticatedApp = () => {
         <Route path="/calculator" element={<MiniAppPage appType="calculator" />} />
         <Route path="/weather" element={<MiniAppPage appType="weather" />} />
         <Route path="/miniapp/:type" element={<MiniAppPage />} />
+
+        {/* Talking App with full AppLayout sidebar */}
+        <Route path="/talking-app" element={<TalkingApp />} />
       </Route>
 
       {/* Main Front Door — DysonRelo.com hybrid luxury concierge & national MLS syndication */}
@@ -280,9 +283,6 @@ const AuthenticatedApp = () => {
 
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        {/* Talking App — standalone V2V page, no portal chrome */}
-        <Route path="/talking-app" element={<TalkingApp />} />
-
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
         <Route element={<AppLayout />}>
