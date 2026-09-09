@@ -179,11 +179,11 @@ export default function TalkingApp() {
                 </div>
               )}
 
-              {/* Bottom Dock: Suggested Questions (Left) & Big Mic Pill / Orb (Lower Right Corner) */}
-              <div className="mt-auto pt-6 flex flex-col sm:flex-row items-end justify-between gap-3 w-full">
+              {/* Bottom Dock: Suggested Questions (Left) & Compact Mic Box (Tucked into Lower Right Corner) */}
+              <div className="mt-auto pt-6 flex items-end justify-between gap-3 w-full relative">
                 
                 {/* Suggested Questions (Bottom Left) */}
-                <div className="w-full sm:max-w-xs md:max-w-sm text-left bg-black/80 p-3 sm:p-3.5 rounded-2xl backdrop-blur-md border border-white/15 shadow-2xl space-y-1.5">
+                <div className="w-full max-w-[calc(100%-140px)] sm:max-w-xs md:max-w-sm text-left bg-black/80 p-3 sm:p-3.5 rounded-2xl backdrop-blur-md border border-white/15 shadow-2xl space-y-1.5">
                   <div className="flex items-center justify-between text-[9.5px] font-black uppercase tracking-wider text-[#D4AF37]">
                     <span>Suggested questions:</span>
                     <span className="text-white/50 lowercase font-normal">tap mic &amp; speak</span>
@@ -200,8 +200,8 @@ export default function TalkingApp() {
                   </div>
                 </div>
 
-                {/* Big Mic Pill & Visualizer (Lower Right Corner) */}
-                <div className="shrink-0 self-end">
+                {/* 50% Reduced Mic Box Tucked into the Lower Right Corner */}
+                <div className="absolute bottom-0 right-0 z-20 shrink-0">
                   <TalkingOrb
                     status={status}
                     setStatus={setStatus}
@@ -210,6 +210,7 @@ export default function TalkingApp() {
                     onSessionId={(id) => { sessionLogIdRef.current = id; }}
                     onNavigate={(nav) => setNavTarget(nav)}
                     buttonLabel="Talk with Charlie"
+                    compact={true}
                   />
                 </div>
 
