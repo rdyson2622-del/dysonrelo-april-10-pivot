@@ -13,6 +13,7 @@ import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
 import ClientBacksideLabDemo from '@/components/admin/frontdoor/ClientBacksideLabDemo';
+import FirstTimeUserSpringboardLab from '@/components/admin/frontdoor/FirstTimeUserSpringboardLab';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -113,9 +114,9 @@ export default function AdminFrontDoorLab() {
   const [activeLabTab, setActiveLabTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const param = new URLSearchParams(window.location.search).get('view');
-      if (param === 'front_door' || param === 'client_backside') return param;
+      if (param === 'front_door' || param === 'client_backside' || param === 'springboard_lab') return param;
     }
-    return 'client_backside';
+    return 'springboard_lab';
   });
 
   // Subscriber session & direct-access detection
@@ -285,10 +286,21 @@ export default function AdminFrontDoorLab() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
+                onClick={() => setActiveLabTab('springboard_lab')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                  activeLabTab === 'springboard_lab'
+                    ? 'bg-[#10b981] text-black shadow-md'
+                    : 'bg-[#1a1a1a] text-[#10b981] hover:text-white border border-[#10b981]/50'
+                }`}
+              >
+                <span>📱 1st-Time Springboard Lab</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => setActiveLabTab('client_backside')}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
                   activeLabTab === 'client_backside'
-                    ? 'bg-[#10b981] text-black shadow-md'
+                    ? 'bg-[#D4AF37] text-black shadow-md'
                     : 'bg-[#1a1a1a] text-[#fce38a] hover:text-white border border-[#D4AF37]/40'
                 }`}
               >
@@ -308,7 +320,11 @@ export default function AdminFrontDoorLab() {
             </div>
           </div>
 
-          {activeLabTab === 'client_backside' ? (
+          {activeLabTab === 'springboard_lab' ? (
+            <div className="p-3 sm:p-5 lg:p-6">
+              <FirstTimeUserSpringboardLab />
+            </div>
+          ) : activeLabTab === 'client_backside' ? (
             <div className="p-3 sm:p-5 lg:p-6">
               <ClientBacksideLabDemo />
             </div>

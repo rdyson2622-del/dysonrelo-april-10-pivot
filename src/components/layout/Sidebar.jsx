@@ -95,14 +95,37 @@ export default function Sidebar({ userRole, onToggle }) {
             Destination market, or paste link from Realtor, Zillow, or Homes.com
           </p>
 
-          <button
-            type="button"
-            onClick={() => navigate('/search')}
-            className="w-full py-2 px-3 rounded-full text-xs font-black uppercase tracking-wider text-white bg-[#0a0a0a] hover:bg-[#1a1a1a] transition-all flex items-center justify-center gap-1.5 shadow cursor-pointer active:scale-95"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const val = e.target.elements.sidebarQ?.value?.trim();
+              if (val) {
+                if (val.includes('?') || val.toLowerCase().includes('tax') || val.toLowerCase().includes('school') || val.toLowerCase().includes('how')) {
+                  navigate(`/solutions?prompt=${encodeURIComponent(val)}&autostart=true`);
+                } else {
+                  const clean = val.replace(/,\s*/g, '_').replace(/\s+/g, '-');
+                  window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(clean)}`, '_blank', 'noopener,noreferrer');
+                }
+              } else {
+                navigate('/search');
+              }
+            }}
+            className="flex items-center gap-1.5 p-1 rounded-full bg-white/95 border border-[#D4AF37] shadow-inner focus-within:ring-2 focus-within:ring-[#D4AF37]"
           >
-            <Search className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>CLICK TO SEARCH →</span>
-          </button>
+            <input
+              name="sidebarQ"
+              type="text"
+              placeholder="Ask anything or enter city / link..."
+              className="w-full bg-transparent text-xs text-black pl-3 pr-1 py-1 focus:outline-none placeholder:text-stone-500 font-medium"
+            />
+            <button
+              type="submit"
+              className="p-1.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#1a1a1a] transition-all shrink-0 cursor-pointer"
+              title="Search or Ask"
+            >
+              <Search className="w-3.5 h-3.5" />
+            </button>
+          </form>
         </div>
 
         {/* ========================================================

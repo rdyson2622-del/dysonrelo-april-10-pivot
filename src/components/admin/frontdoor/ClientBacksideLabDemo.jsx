@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ClientBottomCardsDeck from './ClientBottomCardsDeck';
+import UnifiedConciergeSearchPill from '@/components/portal/UnifiedConciergeSearchPill';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -263,75 +264,14 @@ export default function ClientBacksideLabDemo() {
         </div>
 
         {/* ========================================================
-            SEARCH PILL (OFF-WHITE BACKGROUND, BLACK TYPE) + TALK TO CHARLIE
+            THE ONE UNIFIED SEARCH & ASK PILL (INCLUDES EMBEDDED VOICE AI)
             ======================================================== */}
-        <section className="space-y-2.5">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
-            
-            {/* SEARCH PILL: OFF-WHITE BACKGROUND (#faf6ee) + BLACK TYPE */}
-            <div className="lg:col-span-8">
-              <form 
-                onSubmit={handleCommandSubmit}
-                className="flex items-center gap-2 p-1.5 sm:p-2 rounded-full border-2 border-[#D4AF37] shadow-lg text-[#0a0a0a] transition-all focus-within:ring-2 focus-within:ring-[#D4AF37]"
-                style={{ background: '#faf6ee' }}
-              >
-                <div className="flex items-center gap-2.5 w-full pl-4 py-1">
-                  <Search className="w-4 h-4 sm:w-5 sm:h-5 text-[#0a0a0a] shrink-0" />
-                  <input
-                    type="text"
-                    value={commandText}
-                    onChange={(e) => setCommandText(e.target.value)}
-                    placeholder={`Hi ${firstName.toUpperCase()}... What can we do next for you?`}
-                    className="w-full bg-transparent text-xs sm:text-sm text-[#0a0a0a] placeholder:text-stone-500 font-medium focus:outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-5 sm:px-6 py-2 rounded-full text-xs font-bold text-black transition-all hover:brightness-105 active:scale-95 shrink-0 shadow-md cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)',
-                  }}
-                >
-                  Go
-                </button>
-              </form>
-            </div>
-
-            {/* TALK WITH CHARLIE (VOICE CONCIERGE) */}
-            <div className="lg:col-span-4">
-              <button
-                type="button"
-                onClick={handleToggleVoice}
-                className={`w-full py-2.5 px-4 rounded-full border-2 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 ${
-                  isVoiceActive 
-                    ? 'bg-[#10b981] border-[#10b981] text-black font-black' 
-                    : 'bg-[#0a0a0a] border-[#10b981] text-white hover:bg-[#151515]'
-                }`}
-              >
-                <Mic className={`w-4 h-4 ${isVoiceActive ? 'text-black animate-bounce' : 'text-[#10b981] animate-pulse'}`} />
-                <span className="text-xs font-bold">
-                  {isVoiceActive ? 'Charlie Live (Tap to End)' : 'Talk with Charlie (Voice Concierge)'}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* Voice Feedback / Spoken Line */}
-          {isVoiceActive && (
-            <div className="p-3 rounded-xl bg-[#0a0a0a] text-white border border-[#10b981] text-xs flex items-center justify-between gap-3 animate-in fade-in duration-200">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping shrink-0" />
-                <span className="text-[#10b981] font-semibold italic">{voiceStatus}</span>
-              </div>
-              <button 
-                type="button" 
-                onClick={() => navigate('/talking-app')}
-                className="text-[11px] text-[#D4AF37] underline font-bold whitespace-nowrap hover:text-white"
-              >
-                Full Studio Voice →
-              </button>
-            </div>
-          )}
+        <section className="space-y-1">
+          <UnifiedConciergeSearchPill 
+            placeholder={`Hi ${firstName.toUpperCase()}... What can we do next for you?`}
+            showVoiceToggle={true}
+            showSuggestions={false}
+          />
         </section>
 
         {/* ========================================================

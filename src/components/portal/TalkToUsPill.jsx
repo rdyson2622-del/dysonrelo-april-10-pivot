@@ -91,21 +91,8 @@ export default function TalkToUsPill() {
         )}
       </AnimatePresence>
 
-      {/* The pill itself — docked clear of the persistent sidebar.
-          Automatically hidden when the banner/drawer is deployed so it never
-          covers or obscures any of the drawer's content. */}
-      {!isOpen && (
-        <div className="fixed top-20 left-4 md:left-64 z-30">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            style={{ background: '#0d0d0d', border: `1px solid ${GOLD}`, color: GOLD, boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
-          >
-            <MessageCircle className="w-4 h-4" />
-            {portal.pillLabel}
-          </button>
-        </div>
-      )}
+      {/* Note: The old floating "Ask Your Concierge" button has been retired in favor of the Unified Search & Ask Pill,
+          preventing screen overlaps while keeping the drawer listener active for any system requests. */}
     </>
   );
 }
