@@ -192,6 +192,7 @@ import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
 import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
+import MiniAppPage from './pages/MiniAppPage';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
@@ -263,6 +264,13 @@ const AuthenticatedApp = () => {
         <Route path="/broker-portal" element={<BrokerPortalLanding />} />
         <Route path="/partner-benefits" element={<SendingAgentLanding />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
+
+        {/* Mini Apps Routes (Calendar, Email, Calculator, Weather) */}
+        <Route path="/calendar" element={<MiniAppPage appType="calendar" />} />
+        <Route path="/email" element={<MiniAppPage appType="email" />} />
+        <Route path="/calculator" element={<MiniAppPage appType="calculator" />} />
+        <Route path="/weather" element={<MiniAppPage appType="weather" />} />
+        <Route path="/miniapp/:type" element={<MiniAppPage />} />
       </Route>
 
       {/* Main Front Door — DysonRelo.com hybrid luxury concierge & national MLS syndication */}

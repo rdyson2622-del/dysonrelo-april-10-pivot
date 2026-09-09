@@ -79,12 +79,12 @@ export default function ClientSidebar({ onToggle }) {
         <SubscriberProfileHeader />
 
         {/* ========================================================
-            APPLE-STYLE APP SPRINGBOARD GRID (SOLID BLACK BACKGROUND)
-            Clicking any app opens the subject matter on the full right side page.
+            MINI APPS GRID (SOLID BLACK BACKGROUND)
+            Clicking any mini app opens the subject matter on the full right side page.
             ======================================================== */}
         <div className="pt-1.5 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
-            <span>SUBSCRIBER APPS:</span>
+            <span>SUBSCRIBER MINI APPS:</span>
             <span className="text-white/40 normal-case font-normal text-[9px]">tap to launch on page</span>
           </div>
           <IPhoneSpringboardGrid />

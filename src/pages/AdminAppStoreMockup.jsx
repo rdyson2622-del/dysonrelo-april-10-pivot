@@ -4,7 +4,7 @@ import {
   Sparkles, Mic, Home, Building, Users, Play, ShieldCheck, 
   BookOpen, Phone, MessageSquare, ArrowRight, CheckCircle2, 
   Search, SlidersHorizontal, ExternalLink, Smartphone, 
-  Layout, Eye, Copy, Check, Layers
+  Layout, Eye, Copy, Check, Layers, Calendar, Mail, Calculator, CloudSun
 } from 'lucide-react';
 import { WORKING_MODELS } from '@/components/admin/AdminWorkingModelsScroll';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';

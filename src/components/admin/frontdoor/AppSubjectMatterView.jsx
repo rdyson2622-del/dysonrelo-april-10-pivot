@@ -4,8 +4,12 @@ import {
   Sparkles, Mic, Home, Building, Users, Play, ShieldCheck, 
   BookOpen, Phone, MessageSquare, ArrowRight, CheckCircle2, 
   ExternalLink, Compass, Download, DollarSign, FileText, X,
-  MapPin, Clock, Star, AlertCircle
+  MapPin, Clock, Star, AlertCircle, Calendar, Mail, Calculator, CloudSun
 } from 'lucide-react';
+import CalendarMiniApp from '@/components/miniapps/CalendarMiniApp';
+import EmailMiniApp from '@/components/miniapps/EmailMiniApp';
+import CalculatorMiniApp from '@/components/miniapps/CalculatorMiniApp';
+import WeatherMiniApp from '@/components/miniapps/WeatherMiniApp';
 
 const GOLD = '#D4AF37';
 
@@ -46,7 +50,7 @@ export default function AppSubjectMatterView({ app, onClose, onNavigate }) {
         }}
       >
         <div className="flex items-center gap-3 min-w-0">
-          {/* Apple Squircle Icon Tile */}
+          {/* Mini App Squircle Icon Tile */}
           <div 
             className={`w-11 h-11 sm:w-12 sm:h-12 rounded-[16px] bg-gradient-to-br ${app.bgGradient} border ${app.border} flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden`}
           >
@@ -60,7 +64,7 @@ export default function AppSubjectMatterView({ app, onClose, onNavigate }) {
                 {app.badge}
               </span>
               <span className="text-[10px] text-white/50 uppercase tracking-wider font-semibold">
-                FULL APPLICATION VIEW
+                MINI APP VIEW
               </span>
             </div>
             <h2 
@@ -270,6 +274,34 @@ export default function AppSubjectMatterView({ app, onClose, onNavigate }) {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 4B. CALENDAR MINI APP */}
+        {(app.id === 'calendar' || app.id === 'calendar_app') && (
+          <div className="space-y-4">
+            <CalendarMiniApp onBack={onClose} />
+          </div>
+        )}
+
+        {/* 4C. EMAIL MINI APP */}
+        {(app.id === 'email' || app.id === 'email_app') && (
+          <div className="space-y-4">
+            <EmailMiniApp onBack={onClose} />
+          </div>
+        )}
+
+        {/* 4D. CALCULATOR MINI APP */}
+        {(app.id === 'calculator' || app.id === 'calculator_app') && (
+          <div className="space-y-4">
+            <CalculatorMiniApp onBack={onClose} />
+          </div>
+        )}
+
+        {/* 4E. WEATHER MINI APP */}
+        {(app.id === 'weather' || app.id === 'weather_app') && (
+          <div className="space-y-4">
+            <WeatherMiniApp onBack={onClose} />
           </div>
         )}
 

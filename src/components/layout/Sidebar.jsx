@@ -82,12 +82,11 @@ export default function Sidebar({ userRole, onToggle }) {
         <SubscriberProfileHeader />
 
         {/* ========================================================
-            INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND
-            (EXACT IPHONE SPRINGBOARD LOOK — NO BEIGE PILLS!)
+            CONCIERGE MINI APPS ON SOLID BLACK BACKGROUND
             ======================================================== */}
         <div className="pt-2 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2.5">
-            <span>CONCIERGE APPS:</span>
+            <span>CONCIERGE MINI APPS:</span>
             <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
           </div>
           <IPhoneSpringboardGrid />

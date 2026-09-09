@@ -237,10 +237,10 @@ export default function LuxuryHeroShowcase({
                   </div>
                 </div>
 
-                {/* iPhone Springboard App Grid for Subscribers */}
+                {/* Mini Apps Grid for Subscribers */}
                 <div className="pt-1.5 w-full text-left">
                   <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 mb-2 flex items-center justify-between">
-                    <span>SUBSCRIBER APPS:</span>
+                    <span>SUBSCRIBER MINI APPS:</span>
                     <span className="text-white/40 normal-case font-normal text-[8px]">tap to launch</span>
                   </div>
                   <IPhoneSpringboardGrid />
@@ -319,11 +319,11 @@ export default function LuxuryHeroShowcase({
               </>
             )}
 
-            {/* INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND */}
+            {/* CONCIERGE MINI APPS ON SOLID BLACK BACKGROUND */}
             {!isFamilySubscriber && (
               <div className="pt-1.5 w-full text-left">
                 <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 mb-2 flex items-center justify-between">
-                  <span>CONCIERGE APPS:</span>
+                  <span>CONCIERGE MINI APPS:</span>
                   <span className="text-white/40 normal-case font-normal text-[8px]">tap to launch</span>
                 </div>
                 <IPhoneSpringboardGrid />
