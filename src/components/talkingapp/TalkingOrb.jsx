@@ -96,13 +96,14 @@ export default function TalkingOrb({
             ? 'radial-gradient(circle, rgba(34,197,94,0.3) 0%, rgba(13,13,13,0.95) 70%)'
             : isConnecting
             ? 'radial-gradient(circle, rgba(212,175,55,0.2) 0%, rgba(13,13,13,0.95) 70%)'
-            : 'rgba(255,255,255,0.03)',
-          border: `2px solid ${isSpeaking ? GOLD : isListening ? '#22c55e' : 'rgba(212,175,55,0.3)'}`,
+            : 'rgba(12,12,12,0.85)',
+          backdropFilter: 'blur(10px)',
+          border: `2px solid ${isSpeaking ? GOLD : isListening ? '#22c55e' : 'rgba(212,175,55,0.6)'}`,
           boxShadow: isSpeaking
             ? '0 0 35px rgba(212,175,55,0.45)'
             : isListening
             ? '0 0 35px rgba(34,197,94,0.4)'
-            : 'none',
+            : '0 8px 30px rgba(0,0,0,0.85)',
         }}
       >
         {isConnecting ? (

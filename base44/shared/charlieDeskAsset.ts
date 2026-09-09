@@ -16,7 +16,7 @@
 // swap this URL for a non-16:9 image without re-running
 // cropCharlieDeskToWidescreen first.
 export const CHARLIE_DESK_STILL_URL =
-  'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/40bacd8ac_charlie_desk_widescreen_1280x720.png';
+  'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png';
 
 const HEYGEN_UPLOAD_API = 'https://upload.heygen.com';
 

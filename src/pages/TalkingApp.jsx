@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Compass, Radio, Phone } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import TalkingOrb from '@/components/talkingapp/TalkingOrb';
-import CharlieSettingsShowcase from '@/components/charlie/CharlieSettingsShowcase';
+import CharlieCollageBackdrop, { CHARLIE_PHOTOS } from '@/components/charlie/CharlieCollageBackdrop';
 import LiveDiscussionBox from '@/components/talkingapp/LiveDiscussionBox';
 
 const GOLD = '#D4AF37';
@@ -76,8 +76,8 @@ export default function TalkingApp() {
           <div className="relative">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-[#D4AF37] shadow-xl bg-black">
               <img 
-                src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a0f097ef2_generated_image.png"
-                alt="Charlie AI"
+                src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png"
+                alt="Charlie Simmons - Voice AI Concierge"
                 className="w-full h-full object-cover object-top"
               />
             </div>
@@ -124,86 +124,87 @@ export default function TalkingApp() {
           ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        {/* ── LEFT COLUMN (7 COLS): MIC ORB & SETTINGS GALLERY ── */}
-        <div className="lg:col-span-7 space-y-6">
+        {/* ── LEFT COLUMN (7 COLS): MIC ORB WITH CHARLIE STUDIO COLLAGE BACKDROP ── */}
+        <div className="lg:col-span-7">
 
-          {/* ACTIVE MIC & VOICE CONVERSATION STATION */}
+          {/* ACTIVE MIC & VOICE CONVERSATION STATION WITH CHARLIE PHOTO COLLAGE BACKDROP */}
           <div 
-            className="p-5 sm:p-6 rounded-3xl border border-[#D4AF37]/50 shadow-2xl relative overflow-hidden flex flex-col items-center text-center justify-between min-h-[360px]"
-            style={{
-              background: 'radial-gradient(ellipse at top, #1a170f 0%, #0d0d0d 70%, #070707 100%)',
-            }}
+            className="p-5 sm:p-6 rounded-3xl border border-[#D4AF37]/60 shadow-2xl relative overflow-hidden flex flex-col items-center text-center justify-between min-h-[520px]"
           >
-            {/* Top Indicator */}
-            <div className="flex items-center justify-between w-full text-xs text-white/60 mb-2">
-              <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-[#D4AF37]">
-                <Radio className="w-3.5 h-3.5 text-[#10b981] animate-pulse" />
-                <span>Live Audio Channel</span>
-              </span>
-              <span className="text-[10px] text-white/40 font-mono">
-                Hands-Free Spoken AI
-              </span>
-            </div>
+            {/* CHARLIE PHOTOS COLLAGE BACKDROP (IN THE SAME BOX, NO SEPARATE BOX) */}
+            <CharlieCollageBackdrop />
 
-            {/* In-Call Navigation Suggestion Pill */}
-            {navTarget && (
-              <div 
-                className="z-20 flex items-center gap-2.5 px-4 py-2 rounded-full border shadow-2xl animate-bounce mb-3"
-                style={{
-                  background: 'rgba(20,20,20,0.95)',
-                  borderColor: GOLD,
-                  boxShadow: '0 4px 25px rgba(212,175,55,0.4)',
-                }}
-              >
-                <Compass className="w-4 h-4 text-[#D4AF37]" />
-                <span className="text-xs font-bold text-white">
-                  Charlie suggests: <span className="text-[#e8c84a]">{navTarget.title}</span>
+            {/* FOREGROUND INTERACTION LAYER */}
+            <div className="relative z-10 w-full flex flex-col items-center justify-between h-full space-y-4">
+              
+              {/* Top Bar Indicator */}
+              <div className="flex items-center justify-between w-full text-xs text-white/80 mb-1">
+                <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-[#D4AF37] bg-black/70 px-2.5 py-1 rounded-full border border-[#D4AF37]/40 shadow-sm backdrop-blur-md">
+                  <Radio className="w-3.5 h-3.5 text-[#10b981] animate-pulse" />
+                  <span>Charlie Studio Voice Channel</span>
                 </span>
-                <button
-                  type="button"
-                  onClick={() => navigate(navTarget.path)}
-                  className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#D4AF37] text-black hover:scale-105 transition-all cursor-pointer"
+                <span className="text-[10px] text-white/70 font-mono bg-black/70 px-2.5 py-1 rounded-full border border-white/10 backdrop-blur-md">
+                  Gemini Live • Spoken 2-Way AI
+                </span>
+              </div>
+
+              {/* In-Call Navigation Suggestion Pill */}
+              {navTarget && (
+                <div 
+                  className="z-20 flex items-center gap-2.5 px-4 py-2 rounded-full border shadow-2xl animate-bounce"
+                  style={{
+                    background: 'rgba(20,20,20,0.95)',
+                    borderColor: GOLD,
+                    boxShadow: '0 4px 25px rgba(212,175,55,0.4)',
+                  }}
                 >
-                  Go Now →
-                </button>
-              </div>
-            )}
-
-            {/* THE MIC VISUALIZER & BUTTON */}
-            <div className="my-auto py-2">
-              <TalkingOrb
-                status={status}
-                setStatus={setStatus}
-                onTranscript={addTranscript}
-                onSpeaker={setCurrentSpeaker}
-                onSessionId={(id) => { sessionLogIdRef.current = id; }}
-                onNavigate={(nav) => setNavTarget(nav)}
-                buttonLabel="Talk with Charlie"
-              />
-            </div>
-
-            {/* Conversation Starters */}
-            <div className="w-full pt-4 border-t border-white/10 space-y-2">
-              <span className="text-[9.5px] font-black uppercase tracking-wider text-[#D4AF37]/80 block">
-                Suggested questions to ask Charlie out loud:
-              </span>
-              <div className="flex flex-wrap items-center justify-center gap-1.5">
-                {SUGGESTED_QUESTIONS.map((q, idx) => (
-                  <span
-                    key={idx}
-                    className="px-2.5 py-1 rounded-full text-[10.5px] bg-black/60 border border-white/10 text-white/80 hover:text-white hover:border-[#D4AF37]/60 transition-all select-none"
-                  >
-                    “{q}”
+                  <Compass className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-xs font-bold text-white">
+                    Charlie suggests: <span className="text-[#e8c84a]">{navTarget.title}</span>
                   </span>
-                ))}
+                  <button
+                    type="button"
+                    onClick={() => navigate(navTarget.path)}
+                    className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-[#D4AF37] text-black hover:scale-105 transition-all cursor-pointer"
+                  >
+                    Go Now →
+                  </button>
+                </div>
+              )}
+
+              {/* THE MIC VISUALIZER & BUTTON (CENTERED OVER THE CHARLIE COLLAGE) */}
+              <div className="my-auto py-4">
+                <TalkingOrb
+                  status={status}
+                  setStatus={setStatus}
+                  onTranscript={addTranscript}
+                  onSpeaker={setCurrentSpeaker}
+                  onSessionId={(id) => { sessionLogIdRef.current = id; }}
+                  onNavigate={(nav) => setNavTarget(nav)}
+                  buttonLabel="Talk with Charlie"
+                />
               </div>
+
+              {/* Suggested Questions & Studio Settings Strip in that same box */}
+              <div className="w-full pt-3 border-t border-white/15 space-y-2 bg-black/60 p-3 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg">
+                <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-wider text-[#D4AF37]">
+                  <span>Suggested questions to ask Charlie:</span>
+                  <span className="text-white/50 lowercase font-normal">tap mic &amp; speak naturally</span>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-1.5">
+                  {SUGGESTED_QUESTIONS.map((q, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2.5 py-1 rounded-full text-[10.5px] bg-[#121212]/90 border border-white/15 text-white/90 hover:text-white hover:border-[#D4AF37] transition-all select-none shadow-sm"
+                    >
+                      “{q}”
+                    </span>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
-
-          {/* ========================================================
-              PICTURES OF CHARLIE IN DIFFERENT SETTINGS ON THE SCREEN
-              ======================================================== */}
-          <CharlieSettingsShowcase />
 
         </div>
 
