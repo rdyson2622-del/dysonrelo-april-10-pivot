@@ -8,6 +8,7 @@ import { base44 } from '@/api/base44Client';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 import SubscriberCommandCard from './SubscriberCommandCard';
 import IPhoneSpringboardGrid from '@/components/springboard/IPhoneSpringboardGrid';
+import FirstTimeViewerSidebarIntro from '@/components/sidebar/FirstTimeViewerSidebarIntro';
 
 const GOLD = '#D4AF37';
 
@@ -247,76 +248,17 @@ export default function LuxuryHeroShowcase({
                 </div>
               </div>
             ) : (
-              /* PUBLIC VISITOR SIDEBAR TOP — REVERSE COLORS (TAN BOX WITH BLACK FONT) */
-              <>
-                <button
-                  type="button"
-                  onClick={scrollToSearch}
-                  className="w-full p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 transition-all cursor-pointer group shadow-sm text-center"
-                  style={{ background: '#ede0cc' }}
-                  title="Click to jump directly to Search Destinations"
-                >
-                  <div className="text-center w-full">
-                    <h2
-                      className="font-bold leading-tight text-[#0a0a0a] tracking-tight text-sm sm:text-base"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
-                      Search Destinations
-                    </h2>
-                    <p
-                      className="font-semibold text-xs text-[#854d0e] leading-tight mt-0.5"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
-                      Or Let Us Vet Any Listing For You.
-                    </p>
-                    <p className="text-[9.5px] text-[#44382c] font-sans font-medium mt-0.5 leading-snug">
-                      Destination market, or paste link from Realtor, Zillow, or Homes.com
-                    </p>
-                    <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8.5px] font-bold tracking-wider uppercase text-white bg-[#0a0a0a] group-hover:bg-[#1c1c1c] transition-all">
-                      <Search className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>Click to Search</span>
-                      <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                    </div>
-                  </div>
-                </button>
-
-                {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN — REVERSE COLOR TAN BOX */}
-                <div className="w-full pt-1 pb-0.5">
-                  {!currentUser ? (
-                    <button
-                      type="button"
-                      onClick={() => navigate('/login')}
-                      className="w-full py-1 px-2 rounded-lg border border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
-                      style={{ background: '#ede0cc' }}
-                    >
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <LogIn className="w-3 h-3 text-[#0a0a0a] shrink-0" />
-                        <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
-                          Already Subscribed? <span className="text-[#854d0e] underline underline-offset-2">Sign In</span>
-                        </span>
-                      </div>
-                      <ArrowRight className="w-2.5 h-2.5 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => navigate(currentUser.role === 'admin' ? '/admin' : '/home')}
-                      className="w-full py-1 px-2 rounded-lg border border-[#10b981] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
-                      style={{ background: '#ede0cc' }}
-                    >
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-                        <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
-                          Signed In: <span className="text-[#0a0a0a] font-semibold">{currentUser.full_name || currentUser.email}</span>
-                        </span>
-                      </div>
-                      <span className="text-[8.5px] font-bold text-[#0a0a0a] flex items-center gap-0.5 shrink-0">
-                        Workspace <ArrowRight className="w-2.5 h-2.5" />
-                      </span>
-                    </button>
-                  )}
-                </div>
-              </>
+              /* 1ST TIME UNSUBSCRIBED VIEWER INTRO CARD AT TOP OF SIDEBAR */
+              <FirstTimeViewerSidebarIntro
+                onSwitchToSubscriber={() => {
+                  if (onToggleSubscriberMode) {
+                    onToggleSubscriberMode();
+                  } else {
+                    sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+                    window.location.reload();
+                  }
+                }}
+              />
             )}
 
             {/* CONCIERGE MINI APPS ON SOLID BLACK BACKGROUND */}

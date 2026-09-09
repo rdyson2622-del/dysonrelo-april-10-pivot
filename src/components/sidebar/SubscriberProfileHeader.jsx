@@ -241,10 +241,18 @@ export default function SubscriberProfileHeader({
             <Edit3 className="w-2.5 h-2.5" />
             <span>Subscriber Details &amp; File</span>
           </span>
-          <span className="text-white/50 flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-            <span>Edit</span>
-            <ArrowRight className="w-2.5 h-2.5 text-[#D4AF37]" />
-          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsGuestMode(true);
+              sessionStorage.setItem('dyson_viewer_mode', 'guest');
+            }}
+            className="text-[8px] text-white/45 hover:text-[#D4AF37] transition-colors cursor-pointer"
+            title="Switch back to 1st Time Visitor Card"
+          >
+            ← 1st Time Mode
+          </button>
         </div>
       </div>
 
