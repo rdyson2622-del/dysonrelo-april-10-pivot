@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, ArrowRight, ShieldCheck, Users, Briefcase, Building 
+  Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles 
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
@@ -51,6 +51,17 @@ export default function LuxuryHeroShowcase({
   const [activeBgIndex, setActiveBgIndex] = useState(0);
   const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, new_construction
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('ring-4', 'ring-[#D4AF37]', 'transition-all', 'duration-500');
+      setTimeout(() => {
+        el.classList.remove('ring-4', 'ring-[#D4AF37]');
+      }, 2500);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -183,6 +194,66 @@ export default function LuxuryHeroShowcase({
                   </p>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+
+            {/* QUICK-JUMP LINKS: 6AM NEWS DESK & CONCIERGE ADVANTAGE EXPLANATIONS */}
+            <div className="pt-2 mt-1 border-t border-white/10 space-y-1.5">
+              <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
+                <span>Detailed Systems:</span>
+                <span className="text-[8px] text-white/50 lowercase tracking-normal">click to view box</span>
+              </div>
+
+              {/* 1. 6AM NEWS BROADCAST LINK */}
+              <button
+                type="button"
+                onClick={() => scrollToSection('dnn-broadcast-engine')}
+                className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+              >
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1.5">
+                    <Tv className="w-3 h-3 text-red-400 shrink-0" />
+                    <span className="text-[10.5px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                      6AM DNN News Broadcast
+                    </span>
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-red-500/20 text-red-300 font-bold border border-red-500/30 shrink-0">
+                      Daily
+                    </span>
+                  </div>
+                  <p className="text-[9px] text-white/55 leading-tight truncate pl-4.5">
+                    AI Charlie &amp; Bob • Daily Housing Pulse
+                  </p>
+                </div>
+                <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                  <span>View</span>
+                  <ArrowRight className="w-2.5 h-2.5" />
+                </span>
+              </button>
+
+              {/* 2. THE CONCIERGE ADVANTAGE LINK */}
+              <button
+                type="button"
+                onClick={() => scrollToSection('concierge-advantage-engine')}
+                className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+              >
+                <div className="min-w-0 pr-1">
+                  <div className="flex items-center gap-1.5">
+                    <ShieldCheck className="w-3 h-3 text-[#10b981] shrink-0" />
+                    <span className="text-[10.5px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                      The Concierge Advantage
+                    </span>
+                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] font-bold border border-[#10b981]/30 shrink-0">
+                      Fiduciary
+                    </span>
+                  </div>
+                  <p className="text-[9px] text-white/55 leading-tight truncate pl-4.5">
+                    Independent Vetting vs Lead Portals
+                  </p>
+                </div>
+                <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                  <span>View</span>
+                  <ArrowRight className="w-2.5 h-2.5" />
+                </span>
               </button>
             </div>
           </div>

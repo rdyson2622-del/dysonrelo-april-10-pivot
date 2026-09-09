@@ -9,7 +9,8 @@ export default function DualFeatureEngine({ latestBroadcast }) {
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* LEFT: 6AM DAILY DNN BROADCAST BOX */}
       <div
-        className="rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all"
+        id="dnn-broadcast-engine"
+        className="rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all scroll-mt-24"
         style={{
           background: '#0a0a0a',
           border: `2px solid ${GOLD}`,
@@ -74,7 +75,8 @@ export default function DualFeatureEngine({ latestBroadcast }) {
 
       {/* RIGHT: VETTED CONCIERGE ADVANTAGE BOX */}
       <div
-        className="rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all"
+        id="concierge-advantage-engine"
+        className="rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all scroll-mt-24"
         style={{
           background: '#0a0a0a',
           border: `2px solid ${GOLD}`,

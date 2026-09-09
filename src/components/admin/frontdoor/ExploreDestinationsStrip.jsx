@@ -1,5 +1,5 @@
-import React from 'react';
-import { Compass, Sun, Mountain, Waves, TrendingUp, Building } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Compass, Sun, Mountain, Waves, TrendingUp, Building, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const QUICK_MARKETS = [
   {
@@ -53,25 +53,59 @@ const QUICK_MARKETS = [
 ];
 
 export default function ExploreDestinationsStrip({ onMarketClick }) {
+  const scrollRef = useRef(null);
+
+  const scrollBy = (offset) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section 
-      className="px-5 sm:px-8 py-6 border-t border-b border-[#0a0a0a]/15 shadow-inner" 
+      className="px-4 sm:px-6 lg:px-8 py-4 sm:py-5 border-t border-b border-[#0a0a0a]/15 shadow-inner" 
       style={{ background: '#f5eee2' }}
     >
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-3">
+        {/* Header bar with controls */}
+        <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-2">
             <Compass className="w-4 h-4 text-[#D4AF37]" />
             <h4 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#0a0a0a]">
               Explore Top Relocation Destinations:
             </h4>
           </div>
-          <span className="text-[11px] text-[#665a4c] font-medium hidden sm:inline">
-            Zero state tax havens &amp; executive growth hubs nationwide
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-[#665a4c] font-medium hidden md:inline">
+              Zero state tax havens &amp; executive growth hubs nationwide
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => scrollBy(-220)}
+                className="w-6 h-6 rounded-full bg-[#0a0a0a] text-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition-colors cursor-pointer shadow-sm border border-[#D4AF37]/40"
+                title="Scroll left"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollBy(220)}
+                className="w-6 h-6 rounded-full bg-[#0a0a0a] text-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition-colors cursor-pointer shadow-sm border border-[#D4AF37]/40"
+                title="Scroll right"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {/* Horizontal Scroll Track */}
+        <div 
+          ref={scrollRef}
+          className="flex items-stretch gap-3 overflow-x-auto pb-1.5 scroll-smooth no-scrollbar"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {QUICK_MARKETS.map((m) => {
             const MarketIcon = m.icon;
             return (
@@ -79,7 +113,7 @@ export default function ExploreDestinationsStrip({ onMarketClick }) {
                 key={m.city}
                 type="button"
                 onClick={() => onMarketClick && onMarketClick(m.city)}
-                className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.03] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[105px] bg-[#0a0a0a]"
+                className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.02] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[112px] bg-[#0a0a0a] shrink-0 w-[185px] sm:w-[200px]"
               >
                 <img
                   src={m.image}
@@ -90,7 +124,7 @@ export default function ExploreDestinationsStrip({ onMarketClick }) {
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: 'linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.88) 100%)',
+                    background: 'linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.92) 100%)',
                   }}
                 />
                 <div className="relative z-10">
