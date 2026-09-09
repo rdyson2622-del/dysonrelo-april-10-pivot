@@ -7,6 +7,8 @@ import {
   Layout, Eye, Copy, Check, Layers
 } from 'lucide-react';
 import { WORKING_MODELS } from '@/components/admin/AdminWorkingModelsScroll';
+import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
+import AppSubjectMatterView from '@/components/admin/frontdoor/AppSubjectMatterView';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';

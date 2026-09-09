@@ -5,6 +5,7 @@ import {
   MessageSquare, ExternalLink, Sparkles, X
 } from 'lucide-react';
 import IPhoneSpringboardGrid from '@/components/springboard/IPhoneSpringboardGrid';
+import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -74,80 +75,11 @@ export default function Sidebar({ userRole, onToggle }) {
         </div>
 
         {/* ========================================================
-            SEARCH DESTINATIONS CARD (CREAM CARD)
+            SUBSCRIBER PROFILE HEADER (REPLACES SEARCH DESTINATIONS)
+            Photo & basic subscriber info visible across searches & pages.
+            Click to view full details or edit move file.
             ======================================================== */}
-        <div 
-          className="p-3.5 rounded-2xl text-left text-[#0a0a0a] shadow-md border border-[#D4AF37]/40 space-y-2"
-          style={{ background: '#ede0cc' }}
-        >
-          <div className="text-center space-y-0.5">
-            <h2 
-              className="text-lg font-bold tracking-tight text-[#0a0a0a] leading-tight"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              Search Destinations
-            </h2>
-            <p className="text-xs italic font-serif font-bold text-[#854d0e]">
-              Or Let Us Vet Any Listing For You.
-            </p>
-          </div>
-
-          <p className="text-[11px] text-center text-[#44382c] leading-snug px-1">
-            Destination market, or paste link from Realtor, Zillow, or Homes.com
-          </p>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const val = e.target.elements.sidebarQ?.value?.trim();
-              if (val) {
-                if (val.includes('?') || val.toLowerCase().includes('tax') || val.toLowerCase().includes('school') || val.toLowerCase().includes('how')) {
-                  navigate(`/solutions?prompt=${encodeURIComponent(val)}&autostart=true`);
-                } else {
-                  const clean = val.replace(/,\s*/g, '_').replace(/\s+/g, '-');
-                  window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(clean)}`, '_blank', 'noopener,noreferrer');
-                }
-              } else {
-                navigate('/search');
-              }
-            }}
-            className="flex items-center gap-1.5 p-1 rounded-full bg-white/95 border border-[#D4AF37] shadow-inner focus-within:ring-2 focus-within:ring-[#D4AF37]"
-          >
-            <input
-              name="sidebarQ"
-              type="text"
-              placeholder="Ask anything or enter city / link..."
-              className="w-full bg-transparent text-xs text-black pl-3 pr-1 py-1 focus:outline-none placeholder:text-stone-500 font-medium"
-            />
-            <button
-              type="submit"
-              className="p-1.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#1a1a1a] transition-all shrink-0 cursor-pointer"
-              title="Search or Ask"
-            >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-          </form>
-        </div>
-
-        {/* ========================================================
-            SIGNED IN STATUS STRIP
-            ======================================================== */}
-        <div className="py-2 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 truncate pr-2">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-            <span className="text-white/90 font-medium truncate">
-              Signed In: <strong className="text-white font-bold">{signedInName}</strong>
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate('/portal')}
-            className="text-[11px] font-bold text-[#D4AF37] hover:text-white transition-colors shrink-0 flex items-center gap-0.5 cursor-pointer"
-          >
-            <span>Workspace</span>
-            <ArrowRight className="w-3 h-3" />
-          </button>
-        </div>
+        <SubscriberProfileHeader />
 
         {/* ========================================================
             INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND
