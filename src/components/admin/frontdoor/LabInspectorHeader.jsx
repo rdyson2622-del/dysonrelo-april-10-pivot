@@ -7,6 +7,8 @@ export default function LabInspectorHeader({
   setDeviceView,
   showAnnotations,
   setShowAnnotations,
+  activeLabView = 'front_door',
+  setActiveLabView,
 }) {
   return (
     <header className="sticky top-0 z-50 bg-[#111111] border-b border-[#222222] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-xl">
@@ -21,6 +23,33 @@ export default function LabInspectorHeader({
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Lab View Switcher */}
+        {setActiveLabView && (
+          <div className="flex items-center bg-[#181818] p-0.5 rounded-lg border border-[#D4AF37]/50 shadow-inner">
+            <button
+              onClick={() => setActiveLabView('front_door')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer ${
+                activeLabView === 'front_door'
+                  ? 'bg-[#D4AF37] text-black shadow-sm'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              Public Front Door
+            </button>
+            <button
+              onClick={() => setActiveLabView('client_backside')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                activeLabView === 'client_backside'
+                  ? 'bg-[#10b981] text-black shadow-sm'
+                  : 'text-[#fce38a] hover:text-white'
+              }`}
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Client Backside DEMO</span>
+            </button>
+          </div>
+        )}
+
         {/* View Mode Toggle */}
         <div className="flex items-center bg-[#1c1c1c] p-0.5 rounded-lg border border-[#333]">
           <button
