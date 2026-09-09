@@ -109,7 +109,7 @@ export const IPHONE_DEFAULT_APPS = [
   },
   {
     id: 'news',
-    label: '6AM News',
+    label: 'DNN News',
     copy: 'Daily Market Pulse',
     icon: Play,
     iconColor: '#ef4444',

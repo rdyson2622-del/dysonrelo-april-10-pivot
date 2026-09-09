@@ -306,7 +306,7 @@ export default function AppSubjectMatterView({ app, onClose, onNavigate }) {
         )}
 
         {/* 5. 6AM DNN NEWS SPECIFIC SUBJECT MATTER */}
-        {app.id === 'dnn_news' && (
+        {(app.id === 'dnn_news' || app.id === 'news') && (
           <div className="space-y-4 text-xs">
             <div className="p-4 rounded-2xl bg-black border border-[#ef4444]/50 space-y-3">
               <div className="flex items-center justify-between">
