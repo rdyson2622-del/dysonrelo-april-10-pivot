@@ -10,7 +10,7 @@ import NewsUnderConstructionInfo from '@/components/dnn/NewsUnderConstructionInf
 import CoreFourPillars from '@/components/dnn/CoreFourPillars';
 
 const GOLD = '#D4AF37';
-const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+const HERO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
 // Animated silent placeholder — real HeyGen render of Charlie at the DNN desk (Show 2),
 // muted + looped so visitors see the anchor moving while the daily show is finished.
 const HERO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f22ec4070_charlie-desk-loop.mp4';

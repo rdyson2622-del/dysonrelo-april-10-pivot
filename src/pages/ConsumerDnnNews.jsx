@@ -548,6 +548,16 @@ export default function ConsumerDnnNews({ hidePills = false }) {
     new Date(b.generated_date || b.created_date) - new Date(a.generated_date || a.created_date)
   );
 
+  // Auto-open specific article if provided in URL (e.g. from Client Backside click-through)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const targetId = params.get('articleId') || params.get('article');
+    if (targetId && allArticles.length > 0) {
+      const found = allArticles.find(a => a.id === targetId);
+      if (found) setReadingArticle(found);
+    }
+  }, [allArticles]);
+
   // Corp HR embed (hidePills) only shows the first row of 4 briefs
   const textArticles = hidePills ? allArticles.slice(0, 4) : allArticles;
 
@@ -575,48 +585,26 @@ export default function ConsumerDnnNews({ hidePills = false }) {
         </div>
       </div>
 
-      {/* Hero */}
-      <div className="relative w-full px-8 md:px-16 py-14 text-center"
-        style={{ borderBottom: '1px solid rgba(212,175,55,0.12)', background: '#ede0cc' }}>
-        <CharliePagePresenter pageKey="dnn-news" inline positionClass="top-6 right-6" />
-        <div className="inline-flex items-center gap-2 mb-5 px-5 py-2 rounded-full text-xs font-black tracking-[0.3em] uppercase"
-          style={{ background: '#000', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}>
-          <Globe className="w-3.5 h-3.5" /> Intelligence Bureau
+      {/* Actual News Header: No Explainer Pages */}
+      <div className="relative w-full px-6 md:px-12 py-8 text-center border-b border-[#D4AF37]/20"
+        style={{ background: '#ede0cc' }}>
+        <div className="inline-flex items-center gap-2 mb-2 px-4 py-1 rounded-full text-[10px] font-black tracking-[0.25em] uppercase bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]/40 shadow-sm">
+          <Globe className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>DNN Intelligence Bureau · Today's Published News</span>
         </div>
-        <h1 className="display-heading mb-4"
-          style={{ fontSize: 'clamp(1.7rem, 4.25vw, 3.4rem)', letterSpacing: '0.15em', color: '#1a1a1a', lineHeight: 1.05 }}>
-          REAL ESTATE NEWS
-          <br />
-          <span style={{ color: '#D4AF37', fontSize: '0.6em' }}>WITH SOLUTIONS</span>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0a0a0a] mb-1.5"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          Today's Daily News Broadcast &amp; Market Intelligence
         </h1>
-        <p className="text-base leading-relaxed mx-auto mb-6" style={{ color: '#4a4a4a', maxWidth: '560px' }}>
-          Market-moving real estate news curated daily by DNN's AI Intelligence Bureau — localized to the markets that matter to your lifestyle and potential relocation.
+        <p className="text-xs sm:text-sm text-[#44382c] max-w-xl mx-auto leading-relaxed">
+          Daily fiduciary relocation intelligence covering tax migration data, interest rate adjustments, and local market effects across all 50 states.
         </p>
-
-        {!hidePills && (
-          <div className="flex items-center justify-center gap-3">
-            {HERO_PILLS.map(({ label, path, icon: Icon }) => (
-              <button
-                key={label}
-                onClick={() => navigate(path)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black tracking-widest transition-all hover:scale-105 active:scale-95"
-                style={{ background: '#1a1a1a', border: '1.5px solid #D4AF37', color: '#D4AF37' }}
-              >
-                <Icon className="w-3.5 h-3.5" /> {label}
-              </button>
-            ))}
-          </div>
-        )}
-
       </div>
 
-
-
-      {/* Articles Feed */}
-      <div className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-10 max-w-7xl mx-auto">
+      {/* Actual News Content Feed */}
+      <div id="todays-news" className="w-full px-6 md:px-12 lg:px-20 md:pr-44 py-8 max-w-7xl mx-auto">
         <FeaturedBroadcast />
         {isAdmin && window.location.pathname.includes('/admin') && <DnnAdminBar articles={allArticles} isAdmin={isAdmin} />}
-        <DnnNewsSolutionMap />
         <div className="flex items-center gap-4 mb-8">
           <div className="h-px flex-1" style={{ background: 'rgba(212,175,55,0.15)' }} />
           <span className="display-heading" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', letterSpacing: '0.3em', color: '#D4AF37' }}>Today's Briefs</span>

@@ -14,7 +14,7 @@ const PILLS = [
 // ⚠️ CANONICAL DNN STUDIO ASSETS — DO NOT REPLACE, DO NOT REGENERATE ⚠️
 // Same still/loop used on DnnStudioLanding.jsx, BroadcastShow.jsx, RoleSelector.jsx.
 // ══════════════════════════════════════════════════════════════════════════
-const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+const STUDIO_STILL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
 const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/f22ec4070_charlie-desk-loop.mp4';
 
 /**

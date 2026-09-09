@@ -56,8 +56,8 @@ export default function ClientBacksideLabDemo() {
   const destinationCity = clientRecord?.destination_city ? clientRecord.destination_city.replace(/,\s*[A-Z]{2}$/i, '') : 'Scottsdale';
   const destinationState = clientRecord?.destination_state || 'AZ';
 
-  // Canonical 16:9 DNN Studio broadcast set (Charlie at desk + DNN center screen + Bob Dyson standing)
-  const DNN_STUDIO_SET_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0f55cd52a_DNNStudioLandingPage.png';
+  // Canonical 16:9 DNN Studio news placeholder (Charlie at desk + DNN center screen + Bob Dyson standing)
+  const DNN_STUDIO_SET_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
   const newsHeadline = latestNews?.headline || 'Seattle Office Market Stabilizes as AI Firms Drive New Leasing Demand';
 
   const handleToggleVoice = () => {
@@ -346,7 +346,10 @@ export default function ClientBacksideLabDemo() {
             {/* RIGHT COLUMN: WIDESCREEN HORIZONTAL DNN STUDIO BOX */}
             <div className="lg:col-span-7 flex flex-col">
               <div 
-                onClick={() => navigate('/dnn-news')}
+                onClick={() => {
+                  if (latestNews?.id) navigate(`/dnn-news?articleId=${latestNews.id}`);
+                  else navigate('/dnn-news');
+                }}
                 className="w-full h-full rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
                 title="Click to view Today's Daily News"
               >
@@ -401,7 +404,8 @@ export default function ClientBacksideLabDemo() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate('/dnn-news');
+                      if (latestNews?.id) navigate(`/dnn-news?articleId=${latestNews.id}`);
+                      else navigate('/dnn-news');
                     }}
                     className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-2 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
                     style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
