@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, Mic, BookOpen, Home, ArrowRight, ShieldCheck, 
-  MapPin, CheckCircle2, Clock, Phone, MessageCircle, X, 
-  FileText, Sparkles, Building, Compass, UserCheck, Layers,
-  ChevronRight, Wrench, Volume2, MicOff, ExternalLink
+  Search, Mic, MicOff, BookOpen, ArrowRight, ShieldCheck, 
+  Phone, MessageCircle, X, FileText, Sparkles, Volume2, 
+  Compass, MapPin, CheckCircle2, ChevronRight, Play, Pause
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -17,8 +16,9 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
   const [clientRecord, setClientRecord] = useState(initialClient);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [isV2VActive, setIsV2VActive] = useState(false);
-  const [v2vTranscript, setV2VTranscript] = useState('');
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [voiceStatusText, setVoiceStatusText] = useState('Tap microphone to start live Voice-to-Voice with Charlie');
+  const [activeSpeechWave, setActiveSpeechWave] = useState(false);
 
   // Fetch real auth user and matching client data
   useEffect(() => {
@@ -47,10 +47,28 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
   // Personalized identity data
   const displayName = clientRecord?.full_name || currentUser?.full_name || 'Robert & Eleanor Sterling';
   const firstName = displayName.split(' ')[0] || 'Friend';
-  const currentAddress = clientRecord?.current_address || '14820 Blossom Hill Rd, Los Gatos, CA';
-  const currentCity = clientRecord?.current_city || 'Los Gatos, CA';
+  const originCity = clientRecord?.current_city || 'Los Gatos, CA';
   const destinationCity = clientRecord?.destination_city || 'Scottsdale, AZ';
   const photoUrl = currentUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+
+  const handleVoiceToggle = () => {
+    if (!isVoiceActive) {
+      setIsVoiceActive(true);
+      setActiveSpeechWave(true);
+      setVoiceStatusText('Connecting to Charlie Voice Concierge (Live V2V)...');
+      setTimeout(() => {
+        setVoiceStatusText(`"Hello ${firstName}, I'm Charlie. How can I help orchestrate your move today?"`);
+      }, 1000);
+    } else {
+      setIsVoiceActive(false);
+      setActiveSpeechWave(false);
+      setVoiceStatusText('Tap microphone to start live Voice-to-Voice with Charlie');
+    }
+  };
+
+  const handleLaunchFullVoice = () => {
+    navigate('/talking-app');
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -59,74 +77,92 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
     window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(cleanLocation)}`, '_blank', 'noopener,noreferrer');
   };
 
-  const handleStartV2V = () => {
-    // Navigate directly to the conversational V2V engine
-    navigate('/talking-app');
-  };
-
-  const handlePresetSearch = (queryText) => {
-    setSearchQuery(queryText);
-    if (queryText.toLowerCase().includes('roadmap') || queryText.toLowerCase().includes('move')) {
+  const handleQuickPrompt = (promptText) => {
+    setSearchQuery(promptText);
+    if (promptText.toLowerCase().includes('roadmap') || promptText.toLowerCase().includes('escrow')) {
       navigate('/RelocationRoadmap');
-    } else if (queryText.toLowerCase().includes('voice') || queryText.toLowerCase().includes('charlie')) {
+    } else if (promptText.toLowerCase().includes('voice')) {
       navigate('/talking-app');
+    } else if (promptText.toLowerCase().includes('vet')) {
+      navigate('/refer');
     } else {
-      const clean = queryText.replace(/,\s*/g, '_').replace(/\s+/g, '-');
+      const clean = promptText.replace(/,\s*/g, '_').replace(/\s+/g, '-');
       window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(clean)}`, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-4 px-3 sm:px-6 text-left">
+    <div className="w-full max-w-5xl mx-auto py-2 sm:py-4 px-2 sm:px-6 text-left">
       
       {/* ========================================================
           CLEAN SHEET ON TAN BACKDROP (#ede0cc)
-          Widescreen Landscape Command Deck (Fluidly responsive on mobile)
+          Spacious, Landscape-First AI Concierge Architecture
           ======================================================== */}
       <div 
-        className="w-full rounded-3xl p-4 sm:p-7 md:p-8 shadow-2xl border border-[#0a0a0a]/15 text-[#0a0a0a] space-y-6"
+        className="w-full rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl border border-[#0a0a0a]/15 text-[#0a0a0a] space-y-6 sm:space-y-8"
         style={{
           background: TAN_BG,
-          boxShadow: '0 25px 60px -15px rgba(0,0,0,0.25), 0 0 0 1px rgba(212,175,55,0.4)',
+          boxShadow: '0 25px 60px -15px rgba(0,0,0,0.2), 0 0 0 1px rgba(212,175,55,0.4)',
         }}
       >
+        
         {/* ========================================================
-            1. TOP BAR: IDENTITY & CONTROLS + ONE-CLICK LIBRARY
+            1. STREAMLINED TOP BAR: IDENTITY & LIBRARY
+            Uncluttered, elegant, single-line presentation
             ======================================================== */}
-        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-[#0a0a0a]/15">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-            <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-[#0a0a0a]">
-              DYSON RELOCATION CONCIERGE
-            </span>
-            <span className="hidden md:inline text-[11px] text-[#854d0e] font-semibold border-l border-[#0a0a0a]/20 pl-2">
-              Fiduciary Relocation Management · CA DRE #02303118
-            </span>
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-5 border-b border-[#0a0a0a]/15">
+          
+          {/* Subscriber Identity in One Line */}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <img 
+                src={photoUrl} 
+                alt={displayName} 
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-[#D4AF37] shadow-md"
+              />
+              <span 
+                className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#10b981] border-2 border-[#ede0cc]" 
+                title="Verified Subscriber"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 
+                  className="text-xl sm:text-2xl font-bold text-[#0a0a0a] leading-tight"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  Welcome back, {firstName}
+                </h1>
+                <span className="hidden md:inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37]">
+                  Fiduciary Active
+                </span>
+              </div>
+              <p className="text-xs text-[#854d0e] font-semibold flex items-center gap-1.5 mt-0.5">
+                <span>{originCity}</span>
+                <span className="text-[#0a0a0a]/40 font-mono">→</span>
+                <span className="text-[#0a0a0a]">{destinationCity}</span>
+              </p>
+            </div>
           </div>
 
+          {/* Action Header: Concierge Phone & One-Click Library */}
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="hidden lg:inline text-[11px] font-bold text-[#854d0e]">Direct Desk:</span>
-              <span className="font-mono font-bold text-xs">(858) 353-1200</span>
+            <div className="flex items-center gap-1 text-xs">
               <a
                 href="tel:+18583531200"
-                className="px-2 py-0.5 rounded bg-[#0a0a0a] text-white text-[10px] font-bold hover:brightness-125"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#0a0a0a] text-white hover:brightness-125 text-xs font-bold transition-all shadow-sm"
               >
-                Call
-              </a>
-              <a
-                href="sms:+18583531200"
-                className="px-2 py-0.5 rounded bg-[#0a0a0a] text-white text-[10px] font-bold hover:brightness-125"
-              >
-                Text
+                <Phone className="w-3 h-3 text-[#D4AF37]" />
+                <span>(858) 353-1200</span>
               </a>
             </div>
 
-            {/* ONE-CLICK LIBRARY BUTTON: STORES ALL HISTORICAL DATA, CONTRACTS & BLUEPRINTS */}
+            {/* ONE-CLICK LIBRARY BUTTON */}
             <button
               type="button"
               onClick={() => setIsLibraryOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:brightness-110 active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               style={{
                 background: '#0a0a0a',
                 color: GOLD,
@@ -141,285 +177,224 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
         </header>
 
         {/* ========================================================
-            2. SUBSCRIBER IDENTITY & PERSONAL HORIZON
-            Clear photo, welcome greeting, and live property journey
+            2. THE GRAND AI CENTERPIECE: V2V VOICE & REQUEST PILL
+            Clean, expansive, futuristic Voice-to-Voice AI communicator
             ======================================================== */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+        <section className="space-y-4 py-2 sm:py-4 text-center">
           
-          {/* Identity Card (Left) */}
-          <div className="lg:col-span-5 p-4 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-lg flex items-center gap-4">
-            <div className="relative shrink-0">
-              <img 
-                src={photoUrl} 
-                alt={displayName} 
-                className="w-16 h-16 sm:w-18 sm:h-18 rounded-full object-cover border-2 border-[#D4AF37] shadow-md"
+          {/* Conversational V2V Voice Orb & Audio Wave */}
+          <div className="flex flex-col items-center justify-center space-y-3">
+            
+            <div className="relative group cursor-pointer" onClick={handleVoiceToggle}>
+              {/* Pulsing glow effect */}
+              <div 
+                className={`absolute -inset-3 rounded-full blur-xl transition-all duration-700 ${
+                  isVoiceActive ? 'bg-[#10b981]/50 scale-110' : 'bg-[#D4AF37]/20 group-hover:bg-[#D4AF37]/40'
+                }`}
               />
-              <span 
-                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#10b981] border-2 border-black flex items-center justify-center text-[10px] font-black text-black"
-                title="Verified Fiduciary Client"
+
+              {/* Main Orb */}
+              <div 
+                className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-2xl ${
+                  isVoiceActive 
+                    ? 'bg-gradient-to-br from-[#10b981] to-[#047857] scale-105 ring-4 ring-[#10b981]/30' 
+                    : 'bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border-2 border-[#D4AF37]'
+                }`}
               >
-                ✓
+                {isVoiceActive ? (
+                  <Volume2 className="w-8 h-8 sm:w-10 sm:h-10 text-white animate-pulse" />
+                ) : (
+                  <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+                )}
+                <span className="text-[9px] font-black uppercase tracking-wider text-white mt-1">
+                  {isVoiceActive ? 'Live V2V' : 'Tap to Talk'}
+                </span>
+              </div>
+            </div>
+
+            {/* Audio Wave Visualizer Simulation */}
+            {activeSpeechWave ? (
+              <div className="flex items-center justify-center gap-1.5 h-6">
+                <span className="w-1 bg-[#10b981] rounded-full h-3 animate-pulse" />
+                <span className="w-1 bg-[#10b981] rounded-full h-6 animate-pulse delay-75" />
+                <span className="w-1 bg-[#10b981] rounded-full h-4 animate-pulse delay-150" />
+                <span className="w-1 bg-[#10b981] rounded-full h-5 animate-pulse delay-100" />
+                <span className="w-1 bg-[#10b981] rounded-full h-2 animate-pulse" />
+              </div>
+            ) : null}
+
+            {/* Spoken Status or Charlie Greeting */}
+            <div className="max-w-md mx-auto">
+              <p 
+                className={`text-sm sm:text-base font-medium leading-relaxed transition-all ${
+                  isVoiceActive ? 'text-[#0a0a0a] font-bold italic' : 'text-[#854d0e]'
+                }`}
+              >
+                {voiceStatusText}
+              </p>
+              {isVoiceActive && (
+                <button
+                  type="button"
+                  onClick={handleLaunchFullVoice}
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs text-[#0a0a0a] underline font-bold hover:text-[#b8920a] cursor-pointer"
+                >
+                  <span>Open Full Screen Studio Voice View →</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Grand Request & Search Pill */}
+          <div className="max-w-3xl mx-auto pt-2">
+            <form 
+              onSubmit={handleSearchSubmit}
+              className="flex items-center gap-2 p-2 sm:p-2.5 rounded-full bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-2xl text-white transition-all focus-within:ring-2 focus-within:ring-[#D4AF37]"
+            >
+              <div className="flex items-center gap-2.5 w-full pl-4 sm:pl-6 py-1">
+                <Search className="w-5 h-5 text-[#D4AF37] shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Ask Charlie anything, audit an escrow, or search properties..."
+                  className="w-full bg-transparent text-xs sm:text-sm md:text-base text-white placeholder:text-stone-400 focus:outline-none"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1.5 pr-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleVoiceToggle}
+                  className="px-3 sm:px-4 py-2 rounded-full bg-[#1c1c1c] hover:bg-[#252525] border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-bold flex items-center gap-1 cursor-pointer transition-all"
+                  title="Toggle Voice-to-Voice"
+                >
+                  <Mic className="w-3.5 h-3.5 text-[#10b981]" />
+                  <span className="hidden sm:inline">V2V</span>
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-5 sm:px-7 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold text-black transition-all hover:brightness-105 active:scale-95 shadow-md cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                  }}
+                >
+                  Execute
+                </button>
+              </div>
+            </form>
+
+            {/* Quick Strategic Prompts (3 only, minimal, clear) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-3 text-xs">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#854d0e]">
+                Instant Actions:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleQuickPrompt('Continue Move Roadmap')}
+                className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all cursor-pointer font-medium shadow-sm flex items-center gap-1"
+              >
+                <span>📍 View Escrow Milestone</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickPrompt('Scottsdale Luxury Homes')}
+                className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all cursor-pointer font-medium shadow-sm flex items-center gap-1"
+              >
+                <span>🔍 Search Scottsdale MLS</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickPrompt('Vet a Listing')}
+                className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all cursor-pointer font-medium shadow-sm flex items-center gap-1"
+              >
+                <span>📑 Vet a Listing Link</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            3. BIG PICTURE LANDSCAPE HORIZONS (2 CLEAN BARS ONLY)
+            Spacious, uncrowded layout replacing dense card clutter
+            ======================================================== */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          
+          {/* Left Horizon: Active Relocation Journey */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/40 shadow-xl flex flex-col justify-between">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37]">
+                Active Relocation Horizon
+              </span>
+              <span className="text-[10px] font-bold text-[#10b981] bg-[#10b981]/20 px-2 py-0.5 rounded-full">
+                Phase 3 of 7 · On Schedule
               </span>
             </div>
 
-            <div className="min-w-0 flex-1">
-              <div className="text-[10px] uppercase tracking-wider text-[#D4AF37] font-black flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-                <span>Verified Subscriber</span>
-              </div>
-              <h1 
-                className="text-xl sm:text-2xl font-bold leading-tight text-white truncate"
+            <div className="py-3 space-y-1.5">
+              <h3 
+                className="text-lg font-bold text-white leading-tight"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Welcome back, {firstName}
-              </h1>
-              <p className="text-xs text-white/70 truncate mt-0.5">
-                Account: <strong>{displayName}</strong>
+                Inspection Release &amp; Dual Escrow Audit
+              </h3>
+              <p className="text-xs text-white/70 leading-relaxed">
+                Silicon Valley sale contingency release is tracked alongside the Scottsdale target contract audit.
               </p>
-              <div className="text-[10px] text-white/50 font-mono mt-0.5">
-                Fiduciary Director: <strong>Bob Dyson</strong>
-              </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => navigate('/RelocationRoadmap')}
+              className="w-full py-2 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
+              style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+            >
+              <span>Continue Move Roadmap</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          {/* Active Relocation Route & Property Card (Right) */}
-          <div className="lg:col-span-7 p-4 rounded-2xl bg-white/80 border border-[#0a0a0a]/15 shadow-md flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs font-bold text-[#854d0e] uppercase tracking-wider pb-1 mb-2 border-b border-[#0a0a0a]/10">
-              <span>Your Active Relocation Horizon</span>
-              <span className="text-[#10b981] flex items-center gap-1 font-mono text-[11px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
-                In Progress
+          {/* Right Horizon: Fiduciary Intelligence & Direct Access */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/40 shadow-xl flex flex-col justify-between">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37]">
+                Fiduciary Direct Intelligence
+              </span>
+              <span className="text-[10px] font-bold text-[#60a5fa] bg-[#60a5fa]/20 px-2 py-0.5 rounded-full">
+                All 50 States
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-              <div>
-                <span className="text-[10px] font-bold text-[#854d0e] uppercase block">Current Primary Residence</span>
-                <div className="text-sm font-bold text-[#0a0a0a] truncate">{currentAddress}</div>
-                <div className="text-[11px] text-[#44382c] font-medium">Silicon Valley · Escrow Open</div>
-              </div>
-
-              <div className="sm:border-l sm:border-[#0a0a0a]/15 sm:pl-3">
-                <span className="text-[10px] font-bold text-[#854d0e] uppercase block">Target Destination</span>
-                <div className="text-sm font-bold text-[#0a0a0a] truncate">{destinationCity}</div>
-                <div className="text-[11px] text-[#44382c] font-medium">Luxury Single-Story Search Active</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================
-            3. THE COMMAND CENTERPIECE: V2V VOICE & REQUEST PILL
-            Predominantly positioned as the primary AI communicator
-            ======================================================== */}
-        <section className="space-y-3 pt-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 px-1">
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#0a0a0a] flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#b8920a]" />
-              <span>Voice-To-Voice (V2V) &amp; Intelligent Search Pill</span>
-            </h2>
-            <span className="text-xs text-[#854d0e] font-semibold">
-              Speak with Charlie or type to execute any strategy
-            </span>
-          </div>
-
-          {/* Large Interactive Pill Form */}
-          <form 
-            onSubmit={handleSearchSubmit}
-            className="flex items-center gap-2 p-2 sm:p-2.5 rounded-full bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-2xl text-white transition-all focus-within:ring-2 focus-within:ring-[#D4AF37]"
-          >
-            <div className="flex items-center gap-3 w-full pl-3 sm:pl-5 py-1">
-              <Search className="w-5 h-5 text-[#D4AF37] shrink-0" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ask Charlie anything, order a strategy, or search properties across the USA..."
-                className="w-full bg-transparent text-xs sm:text-sm md:text-base text-white placeholder:text-stone-400 focus:outline-none"
-              />
-            </div>
-
-            {/* V2V Voice Button (Charlie Tap-To-Talk) */}
-            <button
-              type="button"
-              onClick={handleStartV2V}
-              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[#181818] hover:bg-[#252525] border border-[#10b981] text-[#10b981] font-bold text-xs sm:text-sm transition-all shrink-0 cursor-pointer shadow-inner active:scale-95"
-              title="Start Voice-To-Voice session with Charlie"
-            >
-              <Mic className="w-4 h-4 text-[#10b981] animate-pulse" />
-              <span className="hidden sm:inline">Talk V2V</span>
-            </button>
-
-            {/* Execute Button */}
-            <button
-              type="submit"
-              className="px-5 sm:px-7 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold text-black transition-all hover:brightness-105 active:scale-95 shrink-0 shadow-lg cursor-pointer"
-              style={{
-                background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-              }}
-            >
-              Execute
-            </button>
-          </form>
-
-          {/* Quick Action Suggestion Chips Directly Under The Pill */}
-          <div className="flex flex-wrap items-center gap-2 px-2 text-xs font-semibold text-[#0a0a0a]">
-            <span className="text-[#854d0e] font-black uppercase text-[10px] tracking-wider">
-              Quick Suggestions:
-            </span>
-            <button
-              type="button"
-              onClick={() => handlePresetSearch('Continue my move')}
-              className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all flex items-center gap-1 shadow-sm cursor-pointer"
-            >
-              <Layers className="w-3 h-3 text-[#D4AF37]" />
-              <span>Continue my move (Phase 3)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handlePresetSearch('Scottsdale single story luxury homes')}
-              className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all flex items-center gap-1 shadow-sm cursor-pointer"
-            >
-              <Search className="w-3 h-3 text-[#38bdf8]" />
-              <span>Search Scottsdale Luxury</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleStartV2V()}
-              className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all flex items-center gap-1 shadow-sm cursor-pointer"
-            >
-              <Volume2 className="w-3 h-3 text-[#10b981]" />
-              <span>Voice debrief with Charlie</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/refer')}
-              className="px-3 py-1 rounded-full bg-[#0a0a0a] text-white border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all flex items-center gap-1 shadow-sm cursor-pointer"
-            >
-              <ShieldCheck className="w-3 h-3 text-[#D4AF37]" />
-              <span>Vet a listing link</span>
-            </button>
-          </div>
-        </section>
-
-        {/* ========================================================
-            4. THE BIG PICTURE: 3 CLEAN HIGH-IMPACT CARDS
-            No long confusing list of words — clean, spacious, visual
-            ======================================================== */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          
-          {/* CARD 1: RELOCATION ROADMAP & MILESTONES */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between text-xs pb-2 border-b border-white/10">
-                <span className="font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1">
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Roadmap Milestones</span>
-                </span>
-                <span className="text-[10px] font-bold text-[#10b981] bg-[#10b981]/20 px-2 py-0.5 rounded-full border border-[#10b981]/40">
-                  Phase 3 of 7
-                </span>
-              </div>
-
+            <div className="py-3 space-y-1.5">
               <h3 
-                className="text-lg font-bold text-white mt-2 leading-snug"
+                className="text-lg font-bold text-white leading-tight"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Inspection Contingency &amp; Repair Audit
+                Contract Review &amp; Agent Vetting
               </h3>
-              <p className="text-xs text-white/70 mt-1 leading-relaxed">
-                Dyson fiduciary team is reviewing seller disclosures and repair escrow timeline for your destination purchase.
+              <p className="text-xs text-white/70 leading-relaxed">
+                Send any agent proposal or MLS listing URL to receive an independent fiduciary audit within 2 hours.
               </p>
             </div>
 
-            <div className="pt-2 border-t border-white/10">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => navigate('/RelocationRoadmap')}
-                className="w-full py-2.5 rounded-xl font-bold text-xs text-black flex items-center justify-center gap-1.5 shadow-md cursor-pointer hover:brightness-110 active:scale-95 transition-all"
-                style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                onClick={() => navigate('/refer')}
+                className="flex-1 py-2 rounded-xl bg-[#1e1e1e] hover:bg-[#252525] border border-white/20 text-xs font-bold text-white flex items-center justify-center gap-1 cursor-pointer transition-all"
               >
-                <span>Continue Your Move</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Submit Listing to Vet</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
               </button>
-            </div>
-          </div>
 
-          {/* CARD 2: YOUR PROPERTIES & LIVE ESCROW */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between text-xs pb-2 border-b border-white/10">
-                <span className="font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1">
-                  <Home className="w-3.5 h-3.5" />
-                  <span>Your Properties</span>
-                </span>
-                <span className="text-[10px] font-bold text-[#60a5fa] bg-[#60a5fa]/20 px-2 py-0.5 rounded-full border border-[#60a5fa]/40">
-                  2 Logged
-                </span>
-              </div>
-
-              <div className="space-y-2 mt-2">
-                <div className="p-2 rounded-lg bg-[#141414] border border-white/10 text-xs">
-                  <div className="font-bold text-white truncate">14820 Blossom Hill Rd (Origin)</div>
-                  <div className="text-[10px] text-white/50">Purchase Agreement &amp; Title on file</div>
-                </div>
-                <div className="p-2 rounded-lg bg-[#141414] border border-white/10 text-xs">
-                  <div className="font-bold text-white truncate">20844 N 110th Way (Target)</div>
-                  <div className="text-[10px] text-[#D4AF37]">Inspection Checklist in review</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setIsLibraryOpen(true)}
-                className="text-xs text-[#D4AF37] underline font-bold hover:text-white cursor-pointer"
+                className="px-3 py-2 rounded-xl bg-[#1e1e1e] hover:bg-[#252525] border border-[#D4AF37]/50 text-xs font-bold text-[#D4AF37] flex items-center justify-center gap-1 cursor-pointer transition-all"
               >
-                View Documents in Library →
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsLibraryOpen(true)}
-                className="px-3 py-1 rounded bg-[#1e1e1e] border border-white/20 text-xs font-bold text-white hover:border-[#D4AF37] cursor-pointer"
-              >
-                + Add Home
-              </button>
-            </div>
-          </div>
-
-          {/* CARD 3: FIDUCIARY INTELLIGENCE & V2V ADVISOR */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-xl flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between text-xs pb-2 border-b border-white/10">
-                <span className="font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-1">
-                  <Compass className="w-3.5 h-3.5" />
-                  <span>Charlie AI Advisor</span>
-                </span>
-                <span className="text-[10px] font-bold text-[#10b981] bg-[#10b981]/20 px-2 py-0.5 rounded-full border border-[#10b981]/40">
-                  24/7 Available
-                </span>
-              </div>
-
-              <h3 
-                className="text-lg font-bold text-white mt-2 leading-snug"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                Instant Strategy &amp; Answers
-              </h3>
-              <p className="text-xs text-white/70 mt-1 leading-relaxed">
-                Ask about Arizona 0% income tax migration, Scottsdale private &amp; charter schools, or have Charlie audit any agent contract.
-              </p>
-            </div>
-
-            <div className="pt-2 border-t border-white/10">
-              <button
-                type="button"
-                onClick={handleStartV2V}
-                className="w-full py-2.5 rounded-xl font-bold text-xs text-white bg-[#151515] hover:bg-[#202020] border border-[#10b981] flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
-              >
-                <Mic className="w-3.5 h-3.5 text-[#10b981] animate-pulse" />
-                <span>Open Voice-to-Voice Debrief</span>
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Files</span>
               </button>
             </div>
           </div>
@@ -427,15 +402,15 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
         </section>
 
         {/* ========================================================
-            5. FOOTER: TRANSPARENCY & COMPLIANCE
+            4. CLEAN FOOTER
             ======================================================== */}
-        <footer className="pt-3 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#44382c]">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#10b981]" />
+        <footer className="pt-2 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#44382c]">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
             <span>Fiduciary Representation across all 50 States · Zero buyer or employer fees</span>
           </div>
-          <div className="text-[11px] font-mono text-[#0a0a0a]">
-            The Dyson &amp; Dyson Companies, Inc.
+          <div className="font-mono text-[#0a0a0a]">
+            The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118
           </div>
         </footer>
 
@@ -538,7 +513,7 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
                       setIsLibraryOpen(false);
                       navigate('/dnn-news');
                     }}
-                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left"
+                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left cursor-pointer"
                   >
                     <div className="font-bold text-white text-xs">6AM DNN News</div>
                     <div className="text-[10px] text-white/50">Daily Video Brief</div>
@@ -549,7 +524,7 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
                       setIsLibraryOpen(false);
                       navigate('/solutions');
                     }}
-                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left"
+                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left cursor-pointer"
                   >
                     <div className="font-bold text-white text-xs">Solutions Map</div>
                     <div className="text-[10px] text-white/50">Strategy Blueprints</div>
@@ -560,7 +535,7 @@ export default function ClientBacksideLabDemo({ initialClient = null }) {
                       setIsLibraryOpen(false);
                       navigate('/refer');
                     }}
-                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left"
+                    className="p-2.5 rounded-lg bg-[#141414] border border-white/10 hover:border-[#D4AF37] text-left cursor-pointer"
                   >
                     <div className="font-bold text-white text-xs">Vet a Listing</div>
                     <div className="text-[10px] text-white/50">Fiduciary Review</div>
