@@ -364,36 +364,8 @@ export default function SolutionMapEntry({ hideCharliePresenter = false }) {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                 placeholder="A listing, a stalled escrow, a buyer or seller issue, tax migration..."
-                className="relative z-10 w-full bg-transparent px-2 py-2 text-[#0a0a0a] text-sm sm:text-base font-semibold focus:outline-none placeholder:text-stone-500"
+                className="w-full bg-transparent px-2 py-2 text-[#0a0a0a] text-sm sm:text-base font-semibold focus:outline-none placeholder:text-stone-500"
               />
-              {!inputValue && (
-                <div className="absolute inset-0 flex items-center px-4 overflow-hidden whitespace-nowrap pointer-events-none">
-                  <span className="inline-flex animate-marquee text-sm sm:text-base whitespace-nowrap font-medium text-stone-600">
-                    {[
-                      'A listing',
-                      'a stalled escrow',
-                      'a buyer or seller issue',
-                      'tax migration from CA to AZ',
-                      '1031 exchange timing',
-                      'moving locally, nationally, or internationally',
-                    ].flatMap((text, i) => [
-                      <span key={`a-${i}`}>{text}</span>,
-                      <span key={`d-${i}`} className="text-stone-400">&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>,
-                    ])}
-                    {[
-                      'A listing',
-                      'a stalled escrow',
-                      'a buyer or seller issue',
-                      'tax migration from CA to AZ',
-                      '1031 exchange timing',
-                      'moving locally, nationally, or internationally',
-                    ].flatMap((text, i) => [
-                      <span key={`b-${i}`}>{text}</span>,
-                      <span key={`f-${i}`} className="text-stone-400">&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>,
-                    ])}
-                  </span>
-                </div>
-              )}
             </div>
 
             <button
