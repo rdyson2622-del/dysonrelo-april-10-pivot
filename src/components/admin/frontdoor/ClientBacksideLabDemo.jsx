@@ -63,11 +63,11 @@ export default function ClientBacksideLabDemo() {
     if (!commandText.trim()) return;
     const q = commandText.trim();
     if (q.toLowerCase().includes('roadmap') || q.toLowerCase().includes('move')) {
-      navigate('/RelocationRoadmap');
+      navigate('/client-roadmap');
     } else if (q.toLowerCase().includes('voice') || q.toLowerCase().includes('charlie')) {
       navigate('/talking-app');
     } else if (q.toLowerCase().includes('solution') || q.toLowerCase().includes('strategy')) {
-      navigate('/solutions');
+      navigate(`/solutions?prompt=${encodeURIComponent(q)}&autostart=true`);
     } else {
       const clean = q.replace(/,\s*/g, '_').replace(/\s+/g, '-');
       window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(clean)}`, '_blank', 'noopener,noreferrer');
@@ -88,7 +88,7 @@ export default function ClientBacksideLabDemo() {
       number: '2',
       title: 'Ask for a strategy or solution',
       desc: 'Tax migration, 1031 exchange, or custom relocation plan',
-      path: '/solutions',
+      path: '/solutions?prompt=Tax%20migration%20and%201031%20exchange%20strategy&autostart=true',
     },
     {
       id: 'vet',
@@ -109,7 +109,7 @@ export default function ClientBacksideLabDemo() {
       number: '5',
       title: 'View/update a Roadmap',
       desc: 'Step-by-step milestones, deadlines & escrow tracking',
-      path: '/RelocationRoadmap',
+      path: '/client-roadmap',
     },
     {
       id: 'news',
@@ -483,7 +483,7 @@ export default function ClientBacksideLabDemo() {
               <div>
                 {/* PHOTO OF A DESTINATION CITY WITH CLICK-THROUGH */}
                 <div 
-                  onClick={() => navigate('/RelocationRoadmap')}
+                  onClick={() => navigate('/client-roadmap')}
                   className="relative h-44 sm:h-48 w-full overflow-hidden cursor-pointer"
                   title="Click to View Active Relocation Roadmap"
                 >
@@ -533,7 +533,7 @@ export default function ClientBacksideLabDemo() {
               <div className="p-4 pt-0">
                 <button
                   type="button"
-                  onClick={() => navigate('/RelocationRoadmap')}
+                  onClick={() => navigate('/client-roadmap')}
                   className="w-full py-2 px-3 rounded-xl bg-[#181818] hover:bg-[#222222] border border-[#10b981] text-xs font-bold text-white flex items-center justify-center gap-1.5 cursor-pointer transition-all"
                 >
                   <span>View Full Roadmap</span>
