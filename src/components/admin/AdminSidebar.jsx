@@ -21,7 +21,7 @@ import ListingProspectsRepWidget from '@/components/admin/ListingProspectsRepWid
 import SubscriberInviteModal from '@/components/admin/SubscriberInviteModal';
 import AdminWorkingModelsScroll from '@/components/admin/AdminWorkingModelsScroll';
 const GOLD = '#D4AF37';
-const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
 // All collapsible section groups
 const NAV_SECTIONS = [
@@ -338,38 +338,51 @@ export default function AdminSidebar() {
 
   return (
     <aside ref={sidebarRef} className="w-[310px] sm:w-[320px] flex flex-col h-screen shrink-0 overflow-y-auto select-none shadow-2xl" style={{ background: '#0a0a0a', borderRight: '1px solid rgba(212,175,55,0.3)' }}>
-      {/* Top Brand Header Pill */}
-      <div className="p-3.5 pb-2 space-y-2.5 shrink-0">
+      {/* Top Brand Header: Dyson & Dyson Logo + The Dyson & Dyson Companies */}
+      <div className="p-3.5 pb-2 space-y-1.5 shrink-0 text-center">
         <Link 
-          to="/portal"
-          className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
+          to="/portal" 
+          className="block group cursor-pointer transition-transform hover:scale-[1.02] active:scale-98"
+          title="The Dyson & Dyson Companies · Return to Portal"
         >
-          <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#D4AF37]/50 flex items-center justify-center shrink-0">
-            <span className="font-serif text-base font-bold text-[#D4AF37]">D</span>
+          <div className="flex justify-center items-center py-1">
+            <img 
+              src={DYSON_LOGO} 
+              alt="The Dyson & Dyson Companies" 
+              className="h-10 sm:h-12 w-auto object-contain drop-shadow" 
+            />
           </div>
-          <div className="min-w-0">
-            <div 
-              className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight truncate"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              DysonRelo.com
-            </div>
-            <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
-              NATIONWIDE ADMIN CONCIERGE
-            </div>
+          <div className="text-xs sm:text-sm font-semibold text-white tracking-wide mt-1 font-sans">
+            The Dyson &amp; Dyson Companies
           </div>
         </Link>
 
-        {/* 55+ YEARS PILL */}
-        <div className="flex items-center justify-center gap-2 py-1 px-3 rounded-full border border-[#D4AF37]/60 bg-black/60 text-[10px] font-black tracking-widest text-[#D4AF37] uppercase shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-          <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
+        {/* Signed In Quick Status */}
+        <div className="py-1.5 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-1.5 truncate pr-2">
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+            <span className="text-white/90 font-medium truncate">
+              Signed In: <strong className="text-white font-bold">Admin Console</strong>
+            </span>
+          </div>
+          <Link
+            to="/admin"
+            className="text-[10.5px] font-bold text-[#D4AF37] hover:text-white transition-colors shrink-0 flex items-center gap-0.5"
+          >
+            <span>Console</span>
+            <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
+      </div>
 
-        {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
+      {/* Sidebar Search — searches every link in every nav section below */}
+      <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
+
+      {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
+      <div className="px-3 pt-2 pb-1 shrink-0">
         <Link
           to="/admin/app-store-mockup"
-          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group ${
+          className={`flex items-center justify-center gap-2 px-3 py-2 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
             location.pathname === '/admin/app-store-mockup'
               ? 'bg-[#2f2510] border-[#D4AF37] ring-1 ring-[#D4AF37]'
               : 'bg-[#221c0e] hover:bg-[#2c2311] border-[#D4AF37]/75 hover:border-[#D4AF37]'
@@ -385,27 +398,7 @@ export default function AdminSidebar() {
             10 PLATFORM APPS &amp; SPRINGBOARD SPECS
           </span>
         </Link>
-
-        {/* SIGNED IN STATUS STRIP */}
-        <div className="py-2 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 truncate pr-2">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-            <span className="text-white/90 font-medium truncate">
-              Signed In: <strong className="text-white font-bold">Admin Console</strong>
-            </span>
-          </div>
-          <Link
-            to="/admin"
-            className="text-[11px] font-bold text-[#D4AF37] hover:text-white transition-colors shrink-0 flex items-center gap-0.5"
-          >
-            <span>Console</span>
-            <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
       </div>
-
-      {/* Sidebar Search — searches every link in every nav section below */}
-      <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
       {/* DNN NEWS AND INTELLIGENCE — top of sidebar */}
       {(() => {
