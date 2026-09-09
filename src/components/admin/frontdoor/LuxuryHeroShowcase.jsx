@@ -61,12 +61,13 @@ export default function LuxuryHeroShowcase({
         
         {/* ========================================================
             LEFT SIDEBAR (ORGANIZED CONCIERGE TO-DO'S & PATHWAYS)
+            In portrait (< lg), this appears AFTER the house photo & search pill.
+            On desktop (lg+), this sits as the left column.
             ======================================================== */}
         <aside 
-          className="w-full lg:w-[315px] xl:w-[335px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20"
+          className="w-full lg:w-[315px] xl:w-[335px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20 order-2 lg:order-1 border-t lg:border-t-0 lg:border-r border-[#D4AF37]/40"
           style={{
             background: 'linear-gradient(180deg, #0e0e0e 0%, #080808 100%)',
-            borderRight: `1.5px solid ${GOLD}35`,
           }}
         >
           {/* Top Branding & Fiduciary Headline */}
@@ -263,9 +264,11 @@ export default function LuxuryHeroShowcase({
             2. PURE ARCHITECTURAL HOUSE PHOTO ON TAN BACKDROP
             3. CLEAN LUXURY SEARCH PILL FIRST
             4. COPY & CATEGORY TABS IN BLACK FONT COLOR
+            In portrait (< lg), this is order-1 (first right after top bar).
+            On desktop (lg+), this sits as the right column (order-2).
             ======================================================== */}
         <div 
-          className="flex-1 p-4 sm:p-6 lg:p-7 flex flex-col justify-start gap-4 sm:gap-5"
+          className="flex-1 p-4 sm:p-6 lg:p-7 flex flex-col justify-start gap-4 sm:gap-5 order-1 lg:order-2"
           style={{
             background: '#ede0cc',
           }}
