@@ -417,7 +417,7 @@ export default function LuxuryHeroShowcase({
                 }}
                 className="underline text-[#78350f] hover:text-black font-bold cursor-pointer ml-1"
               >
-                (Subscription Required)
+                (FREE Subscription Required)
               </button>
             </div>
           </div>
