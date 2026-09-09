@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles,
-  LogIn, UserPlus, Phone, MessageCircle, Home
+  LogIn, UserPlus, Phone, MessageCircle, Home, Mic
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
@@ -57,20 +57,112 @@ export default function LuxuryHeroShowcase({
   const [activeBgIndex, setActiveBgIndex] = useState(0);
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
 
-  const subscriberName = currentUser?.full_name ? currentUser.full_name.split(' ')[0] : (currentUser?.email?.split('@')[0] || 'Bob');
-  const isAdmin = currentUser?.role === 'admin';
-  const userRole = currentUser?.portal_role || (isAdmin ? 'admin' : 'client');
-  const workspaceDest = isAdmin ? '/admin' : 
-                        userRole === 'agent' ? '/agent-command-center' : 
-                        userRole === 'hr' ? '/corporate-relo' : 
-                        userRole === 'broker' ? '/brokerage' : '/home';
-  const workspaceLabel = isAdmin ? 'Open Admin Console' : 
-                         userRole === 'agent' ? 'Open Agent Workspace' : 
-                         userRole === 'hr' ? 'Open Corporate Suite' : 
-                         userRole === 'broker' ? 'Open Brokerage Portal' : 'Continue Your Move';
-  const activeProjectLabel = isAdmin ? 'DysonRelo Platform Operations' : 
-                            userRole === 'agent' ? '2 Incoming Client Referrals' : 
-                            userRole === 'hr' ? '3 Active Employee Relocations' : 'San Jose → Scottsdale, AZ';
+  // Gating rule:
+  // Family = authenticated DnnSubscriber email OR explicit view-as localStorage dyson_view_as_family_subscriber=true (optional dyson_view_as_subscriber_email)
+  // Admin alone is NEVER Family. Admin without view-as must remain Admin chrome and must not receive a Family greeting/card.
+  const [isFamilySubscriber, setIsFamilySubscriber] = useState(false);
+  const [clientRecord, setClientRecord] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function evaluateFamilyGate() {
+      const isExplicitViewAs = typeof window !== 'undefined' && (
+        localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
+        localStorage.getItem('dyson_view_as') === 'family' ||
+        isSubscriberMode === true
+      );
+      const viewAsEmail = typeof window !== 'undefined' ? localStorage.getItem('dyson_view_as_subscriber_email') : null;
+      const isAdmin = currentUser?.role === 'admin';
+
+      // Admin alone without explicit view-as is NEVER Family
+      if (isAdmin && !isExplicitViewAs) {
+        if (isMounted) {
+          setIsFamilySubscriber(false);
+          setClientRecord(null);
+        }
+        return;
+      }
+
+      let isFamily = false;
+      let targetEmail = null;
+
+      if (isExplicitViewAs) {
+        isFamily = true;
+        targetEmail = viewAsEmail || currentUser?.email;
+      } else if (currentUser?.email && !isAdmin) {
+        // Authenticated non-admin: check if email is in DnnSubscriber
+        try {
+          const subs = await base44.entities.DnnSubscriber.filter({ email: currentUser.email }, '-created_date', 1);
+          if (subs && subs.length > 0) {
+            isFamily = true;
+            targetEmail = currentUser.email;
+          }
+        } catch (_) {}
+      }
+
+      if (!isFamily) {
+        if (isMounted) {
+          setIsFamilySubscriber(false);
+          setClientRecord(null);
+        }
+        return;
+      }
+
+      // Fetch live RelocationClient data for real city information (no invented milestones)
+      let matchedClient = null;
+      if (targetEmail) {
+        try {
+          const clients = await base44.entities.RelocationClient.filter({ email: targetEmail }, '-created_date', 1);
+          if (clients && clients.length > 0) {
+            matchedClient = clients[0];
+          }
+        } catch (_) {}
+      }
+
+      // If view-as without matched email, fetch latest real client to display live database city data
+      if (!matchedClient && isExplicitViewAs) {
+        try {
+          const anyClients = await base44.entities.RelocationClient.list('-created_date', 1);
+          if (anyClients && anyClients.length > 0) {
+            matchedClient = anyClients[0];
+          }
+        } catch (_) {}
+      }
+
+      if (isMounted) {
+        setIsFamilySubscriber(true);
+        setClientRecord(matchedClient);
+      }
+    }
+
+    evaluateFamilyGate();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser, isSubscriberMode]);
+
+  // Derived live move line from live RelocationClient data (no invented milestones)
+  const currentCity = clientRecord?.current_city?.trim();
+  const destCity = clientRecord?.destination_city?.trim();
+  const hasActiveMove = Boolean(destCity || currentCity);
+
+  let activeMoveLine = 'No active move yet — start your relocation intake';
+  if (currentCity && destCity) {
+    activeMoveLine = `${currentCity} → ${destCity}`;
+  } else if (destCity) {
+    activeMoveLine = `Destination: ${destCity}`;
+  } else if (currentCity) {
+    activeMoveLine = `Origin: ${currentCity}`;
+  }
+
+  const continueMoveDest = hasActiveMove ? '/RelocationRoadmap' : '/relocation-intake';
+  const firstName = clientRecord?.full_name?.split(' ')[0] || 
+                    currentUser?.full_name?.split(' ')[0] || 
+                    currentUser?.email?.split('@')[0] || 
+                    (typeof window !== 'undefined' ? localStorage.getItem('dyson_test_subscriber_name') : null) || 
+                    'Friend';
 
   const scrollToSearch = () => {
     const searchForm = document.getElementById('hero-search-bar');
@@ -112,8 +204,14 @@ export default function LuxuryHeroShowcase({
               <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
             </div>
 
-            {isSubscriberMode ? (
-              /* PERSONAL SUBSCRIBER SIDEBAR CONSOLE */
+            {isFamilySubscriber ? (
+              /* ========================================================
+                 PERSONAL FAMILY/BUYER SUBSCRIBER SIDEBAR
+                 - Welcome/active move at top
+                 - Exactly the same 3 links + optional DNN 6AM
+                 - Concierge Desk Direct call/text at bottom
+                 - NO Admin-only items
+                 ======================================================== */
               <div className="w-full space-y-1.5 pt-0.5">
                 <div 
                   className="p-2.5 rounded-lg border text-left shadow-md space-y-1.5"
@@ -126,28 +224,116 @@ export default function LuxuryHeroShowcase({
                     <span 
                       className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-white bg-[#0a0a0a] shadow-sm"
                     >
-                      {isAdmin ? 'ADMIN CONSOLE' : 'SUBSCRIBER WORKSPACE'}
+                      RELOCATING FAMILY
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" title="Active File Connected" />
+                    <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" title="Active Account" />
                   </div>
 
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-[#0a0a0a] leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                      {subscriberName}'s Workspace
+                      Welcome back {firstName}
                     </h3>
-                    <p className="text-[10px] text-[#854d0e] font-semibold leading-snug">
-                      Active: {activeProjectLabel}
+                    <p className="text-[10px] text-[#854d0e] font-semibold leading-snug mt-0.5">
+                      {activeMoveLine}
                     </p>
                   </div>
+                </div>
 
-                  {/* One-tap direct access to personal workspace */}
+                {/* EXACTLY THE SAME 3 LINKS + OPTIONAL DNN 6AM */}
+                <div className="space-y-1 pt-1 w-full">
+                  <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 flex items-center justify-between">
+                    <span>Your Concierge Desk:</span>
+                    <span className="text-[7.5px] text-white/50 lowercase tracking-normal">quick actions</span>
+                  </div>
+
+                  {/* 1. Continue your move */}
                   <button
                     type="button"
-                    onClick={() => navigate(workspaceDest)}
-                    className="w-full py-1.5 px-2.5 rounded text-[11px] font-bold text-white bg-[#0a0a0a] hover:bg-[#1a1a1a] flex items-center justify-between shadow transition-all cursor-pointer group"
+                    onClick={() => navigate(continueMoveDest)}
+                    className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                    style={{ background: '#ede0cc' }}
                   >
-                    <span>{workspaceLabel}</span>
-                    <ArrowRight className="w-3 h-3 text-[#D4AF37] group-hover:translate-x-0.5 transition-transform" />
+                    <div className="min-w-0 pr-1">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <Home className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                        <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
+                          Continue your move
+                        </span>
+                      </div>
+                      <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
+                        {hasActiveMove ? 'View active roadmap & milestones' : 'Start your relocation intake'}
+                      </p>
+                    </div>
+                    <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+
+                  {/* 2. Talk with Charlie */}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/talking-app')}
+                    className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                    style={{ background: '#ede0cc' }}
+                  >
+                    <div className="min-w-0 pr-1">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <Mic className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                        <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
+                          Talk with Charlie
+                        </span>
+                        <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#10b981] font-bold shrink-0">
+                          Voice AI
+                        </span>
+                      </div>
+                      <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
+                        Ask questions &amp; explore options
+                      </p>
+                    </div>
+                    <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+
+                  {/* 3. Vet a listing / refer */}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/refer')}
+                    className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37] hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                    style={{ background: '#ede0cc' }}
+                  >
+                    <div className="min-w-0 pr-1">
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <Search className="w-3 h-3 text-[#0a0a0a] shrink-0" />
+                        <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
+                          Vet a listing / refer
+                        </span>
+                      </div>
+                      <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
+                        Submit listing for fiduciary audit
+                      </p>
+                    </div>
+                    <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+
+                  {/* Optional: DNN 6AM -> /dnn-news */}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/dnn-news')}
+                    className="w-full group px-2 py-1 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+                    style={{ background: '#ede0cc' }}
+                  >
+                    <div className="min-w-0 pr-1">
+                      <div className="flex items-center gap-1">
+                        <Tv className="w-2.5 h-2.5 text-red-600 shrink-0" />
+                        <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
+                          6AM DNN News Broadcast
+                        </span>
+                        <span className="text-[6.5px] px-1 py-0.2 rounded bg-[#0a0a0a] text-red-400 font-bold shrink-0">
+                          Daily
+                        </span>
+                      </div>
+                      <p className="text-[8.5px] text-[#44382c] leading-tight truncate pl-3.5">
+                        Housing pulse &amp; market intelligence
+                      </p>
+                    </div>
+                    <ArrowRight className="w-2 h-2 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -444,8 +630,8 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
-          {/* ADMIN TEAM QUICK ENTRY (DEDICATED FOR ADMINS, OUT OF TOP NAV) */}
-          {currentUser?.role === 'admin' && (
+          {/* ADMIN TEAM QUICK ENTRY (DEDICATED FOR ADMINS, NEVER SHOWN ON FAMILY SIDEBAR) */}
+          {currentUser?.role === 'admin' && !isFamilySubscriber && (
             <div className="pt-2 mt-2 border-t border-[#D4AF37]/30">
               <button
                 type="button"
@@ -467,26 +653,30 @@ export default function LuxuryHeroShowcase({
 
         {/* ========================================================
             RIGHT CANVAS: 
-            1. FEATURED DESTINATION BAR (ALL ON ONE LINE)
-            2. PURE ARCHITECTURAL HOUSE PHOTO ON TAN BACKDROP
-            3. CLEAN LUXURY SEARCH PILL FIRST
-            4. COPY & CATEGORY TABS IN BLACK FONT COLOR
-            In portrait (< lg), this is order-1 (first right after top bar).
-            On desktop (lg+), this sits as the right column (order-2).
+            If Family Subscriber: Hero Command Card (gated identically).
+            If Cold Visitor / Admin: Public Luxury Hero Showcase with architectural photography & search.
             ======================================================== */}
         <div 
           className="flex-1 p-3 sm:p-5 lg:p-6 flex flex-col justify-start gap-4 order-1 lg:order-2"
           style={{
-            background: isSubscriberMode ? '#0a0a0a' : '#ede0cc',
+            background: isFamilySubscriber ? '#0a0a0a' : '#ede0cc',
           }}
         >
-          {isSubscriberMode ? (
+          {isFamilySubscriber ? (
             <SubscriberCommandCard
               currentUser={currentUser}
+              clientRecord={clientRecord}
               onSearch={onSearch}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
-              onSwitchToVisitorView={onToggleSubscriberMode}
+              onSwitchToVisitorView={() => {
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('dyson_view_as_family_subscriber');
+                  localStorage.removeItem('dyson_view_as');
+                }
+                setIsFamilySubscriber(false);
+                onToggleSubscriberMode?.();
+              }}
             />
           ) : (
             <>

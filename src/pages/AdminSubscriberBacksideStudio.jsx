@@ -112,9 +112,16 @@ export default function AdminSubscriberBacksideStudio() {
   const handleLaunchLive = (roleId) => {
     if (roleId === 'visitor') {
       localStorage.removeItem('dyson_view_as');
+      localStorage.removeItem('dyson_view_as_family_subscriber');
+      localStorage.removeItem('dyson_view_as_subscriber_email');
       localStorage.setItem('dyson_subscriber_mode', 'false');
     } else {
       localStorage.setItem('dyson_view_as', roleId);
+      if (roleId === 'family') {
+        localStorage.setItem('dyson_view_as_family_subscriber', 'true');
+      } else {
+        localStorage.removeItem('dyson_view_as_family_subscriber');
+      }
       localStorage.setItem('dyson_subscriber_mode', 'true');
       if (testClientName) localStorage.setItem('dyson_test_subscriber_name', testClientName);
       if (overrideActiveMove && testMoveLine) localStorage.setItem('dyson_test_move_line', testMoveLine);
@@ -129,6 +136,9 @@ export default function AdminSubscriberBacksideStudio() {
 
   const handleSelectRealClient = (client) => {
     setTestClientName(client.full_name || 'Subscriber');
+    if (client.email) {
+      localStorage.setItem('dyson_view_as_subscriber_email', client.email);
+    }
     const move = client.current_city && client.destination_city 
       ? `${client.current_city} → ${client.destination_city}` 
       : (client.destination_city ? `Destination: ${client.destination_city}` : 'San Jose, CA → Scottsdale, AZ');

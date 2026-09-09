@@ -109,7 +109,11 @@ export default function FrontDoor() {
   const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'high_to_low' | 'low_to_high'
   const [activeListingFilter, setActiveListingFilter] = useState('all'); // 'all' | '0_tax' | 'waterfront' | 'mountain'
   const [showFilterBar, setShowFilterBar] = useState(false);
-  const [showSubscriberMode, setShowSubscriberMode] = useState(true);
+  const [showSubscriberMode, setShowSubscriberMode] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
+           localStorage.getItem('dyson_view_as') === 'family';
+  });
 
   // Subscriber session & direct-access detection
   const [currentUser, setCurrentUser] = useState(null);
@@ -118,16 +122,37 @@ export default function FrontDoor() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [flashNotice, setFlashNotice] = useState(null);
 
+  const handleToggleSubscriberMode = () => {
+    const next = !showSubscriberMode;
+    setShowSubscriberMode(next);
+    if (typeof window !== 'undefined') {
+      if (next) {
+        localStorage.setItem('dyson_view_as_family_subscriber', 'true');
+        localStorage.setItem('dyson_view_as', 'family');
+      } else {
+        localStorage.removeItem('dyson_view_as_family_subscriber');
+        localStorage.removeItem('dyson_view_as');
+      }
+    }
+  };
+
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user) {
         setCurrentUser(user);
         setIsSubscribed(true);
-        const firstName = user.full_name ? user.full_name.split(' ')[0] : (user.email?.split('@')[0] || 'Bob');
-        setFlashNotice(`WELCOME BACK ${firstName.toUpperCase()}`);
-        setTimeout(() => {
-          setFlashNotice(null);
-        }, 1200);
+        const isExplicitFamily = typeof window !== 'undefined' && (
+          localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
+          localStorage.getItem('dyson_view_as') === 'family'
+        );
+        // Admin without view-as must remain Admin chrome and must not receive a Family greeting/card
+        if (user.role !== 'admin' || isExplicitFamily) {
+          const firstName = user.full_name ? user.full_name.split(' ')[0] : (user.email?.split('@')[0] || 'Bob');
+          setFlashNotice(`WELCOME BACK ${firstName.toUpperCase()}`);
+          setTimeout(() => {
+            setFlashNotice(null);
+          }, 1200);
+        }
         if (user.role === 'admin') {
           setUserPortalDest('/admin');
           setUserRoleLabel('Admin Console');
@@ -309,10 +334,10 @@ export default function FrontDoor() {
               <StudioAmbiencePlayer />
 
               {/* Quick Toggle for Subscriber View Experience */}
-              <button
-                type="button"
-                onClick={() => setShowSubscriberMode(!showSubscriberMode)}
-                className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer shadow-sm shrink-0 ${
+                <button
+                  type="button"
+                  onClick={handleToggleSubscriberMode}
+                  className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer shadow-sm shrink-0 ${
                   showSubscriberMode
                     ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
                     : 'bg-[#181818] text-white/80 hover:text-white border border-white/20'
@@ -378,7 +403,7 @@ export default function FrontDoor() {
             onQuickMarketClick={handleSearch}
             currentUser={currentUser}
             isSubscriberMode={showSubscriberMode}
-            onToggleSubscriberMode={() => setShowSubscriberMode(!showSubscriberMode)}
+            onToggleSubscriberMode={handleToggleSubscriberMode}
           />
 
           {/* DIRECTLY UNDER THE LANDING PAGE IN A SCROLL: EXPLORE TOP RELOCATION DESTINATIONS */}
