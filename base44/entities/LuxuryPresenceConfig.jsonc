@@ -1,0 +1,123 @@
+{
+  "name": "LuxuryPresenceConfig",
+  "type": "object",
+  "properties": {
+    "brokerage_id": {
+      "type": "string",
+      "description": "Associated Brokerage ID"
+    },
+    "site_title": {
+      "type": "string",
+      "default": "Wisdom Properties \u2022 Luxury Relocation"
+    },
+    "theme_preset": {
+      "type": "string",
+      "enum": [
+        "obsidian_gold",
+        "champagne_taupe",
+        "beverly_minimal",
+        "monaco_navy"
+      ],
+      "default": "obsidian_gold"
+    },
+    "font_pair": {
+      "type": "string",
+      "enum": [
+        "garamond_inter",
+        "canela_sans",
+        "playfair_outfit"
+      ],
+      "default": "garamond_inter"
+    },
+    "hero_style": {
+      "type": "string",
+      "enum": [
+        "split_concierge",
+        "full_bleed_architectural",
+        "cinematic_video",
+        "minimal_search"
+      ],
+      "default": "split_concierge"
+    },
+    "headline": {
+      "type": "string",
+      "default": "We Don't Sell Real Estate. We Orchestrate Your Entire Move."
+    },
+    "subheadline": {
+      "type": "string",
+      "default": "Independent agent vetting & fiduciary relocation management across all 50 states."
+    },
+    "quote_text": {
+      "type": "string",
+      "default": "You are absolutely going to love our stressless Concierge Approach to transacting your real estate ventures."
+    },
+    "quote_author": {
+      "type": "string",
+      "default": "Bob Dyson"
+    },
+    "featured_city": {
+      "type": "string",
+      "default": "Scottsdale, AZ"
+    },
+    "search_engine_default": {
+      "type": "string",
+      "enum": [
+        "realtor",
+        "homes",
+        "internal"
+      ],
+      "default": "realtor"
+    },
+    "show_charlie_voice": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_destination_strip": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_featured_listings": {
+      "type": "boolean",
+      "default": true
+    },
+    "listing_card_style": {
+      "type": "string",
+      "enum": [
+        "luxury_black_gold",
+        "minimal_clean",
+        "editorial_white"
+      ],
+      "default": "luxury_black_gold"
+    },
+    "lead_gate_mode": {
+      "type": "string",
+      "enum": [
+        "soft_gate",
+        "free_browsing",
+        "strict_gate"
+      ],
+      "default": "soft_gate"
+    },
+    "custom_domain": {
+      "type": "string",
+      "description": "Connected custom domain or subdomain"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "site_title"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
