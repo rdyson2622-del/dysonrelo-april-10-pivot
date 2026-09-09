@@ -248,7 +248,7 @@ export default function FrontDoor() {
 
           {/* TOP BAR: TAN BACKDROP WITH COMPACT BRAND PILL & BALANCED NAVIGATION */}
           <nav
-            className="px-2.5 sm:px-4 lg:px-5 py-1.5 flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4 relative shadow-sm"
+            className="px-2 sm:px-3.5 lg:px-5 py-1 sm:py-1.5 flex items-center justify-between gap-1 sm:gap-2.5 lg:gap-4 relative shadow-sm"
             style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
             {/* BRAND STATEMENT: ULTRA-COMPACT HORIZONTALLY ON CELL PHONE PORTRAIT, EXPANDED ON LARGER SCREENS */}
@@ -262,45 +262,45 @@ export default function FrontDoor() {
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-4 sm:h-5.5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
+                className="h-4 sm:h-5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
               />
               <div className="leading-tight">
                 <span
-                  className="font-bold text-[11px] sm:text-sm md:text-base tracking-wide text-white block leading-tight"
+                  className="font-bold text-[11px] sm:text-xs md:text-sm lg:text-base tracking-wide text-white block leading-tight whitespace-nowrap"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  <span className="sm:hidden">DysonRelo</span>
-                  <span className="hidden sm:inline">DysonRelo.com</span>
+                  <span className="md:hidden">DysonRelo</span>
+                  <span className="hidden md:inline">DysonRelo.com</span>
                 </span>
-                <span className="hidden sm:block text-[7.5px] sm:text-[8px] md:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
+                <span className="hidden md:block text-[7.5px] md:text-[8px] lg:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
                   Nationwide Relocation Concierge
                 </span>
               </div>
             </div>
 
             {/* CENTER NAV LINKS IN BLACK FONT: FORMATTED ACROSS ONE OR TWO LINES TO NEVER OVERFLOW */}
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 lg:gap-5 text-[9.5px] sm:text-[11px] md:text-xs lg:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 lg:gap-5 text-[9px] sm:text-[10.5px] md:text-xs lg:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
               <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
                 <span>Corp </span>
-                <span className="block lg:inline">Relocation</span>
+                <span className="block sm:inline">Relo<span className="hidden sm:inline">cation</span></span>
               </Link>
               <Link to="/partner-benefits" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
                 <span>Agent </span>
-                <span className="block lg:inline">Network</span>
+                <span className="block sm:inline">Network</span>
               </Link>
-              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
+              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight whitespace-nowrap">
                 Transparency
               </Link>
               <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
                 <span>DNN </span>
-                <span className="block lg:inline whitespace-nowrap">
-                  <span className="hidden sm:inline">Real Estate </span>News
+                <span className="block sm:inline whitespace-nowrap">
+                  <span className="hidden md:inline">Real Estate </span>News
                 </span>
               </Link>
             </div>
 
             {/* Right Actions: Ambience + Workspaces Access (Admin pill moved elsewhere to prevent top bar crowding) */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
 
@@ -308,7 +308,7 @@ export default function FrontDoor() {
               {isSubscribed && currentUser?.role !== 'admin' ? (
                 <button
                   onClick={() => navigate(userPortalDest || '/home')}
-                  className="flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[11px] font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm shrink-0"
+                  className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm shrink-0"
                   style={{
                     background: 'linear-gradient(135deg, #1f1a0e 0%, #0d0d0d 100%)',
                     border: `1.2px solid ${GOLD}`,
@@ -317,9 +317,9 @@ export default function FrontDoor() {
                   title={`Direct Access: Open ${userRoleLabel || 'Your Workspace'}`}
                 >
                   <Building className="w-3 h-3 text-[#D4AF37]" />
-                  <span>{userRoleLabel || 'My Workspace'}</span>
+                  <span className="hidden sm:inline">{userRoleLabel || 'My Workspace'}</span>
                   <span
-                    className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
+                    className="text-[7.5px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
                     style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
                   >
                     <span>ENTER</span>
@@ -333,7 +333,7 @@ export default function FrontDoor() {
                     if (elem) elem.scrollIntoView({ behavior: 'smooth' });
                     else navigate('/subscribe');
                   }}
-                  className="flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[11px] font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm shrink-0"
+                  className="flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm shrink-0"
                   style={{
                     background: '#141414',
                     border: '1px solid rgba(212,175,55,0.4)',
@@ -341,7 +341,7 @@ export default function FrontDoor() {
                   }}
                 >
                   <Building className="w-3 h-3 text-[#D4AF37]" />
-                  <span>Workspaces</span>
+                  <span className="hidden sm:inline">Workspaces</span>
                 </button>
               ) : null}
             </div>
