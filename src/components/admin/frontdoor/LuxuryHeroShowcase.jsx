@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles 
+  Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles,
+  LogIn, UserPlus, Phone, MessageCircle
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
@@ -106,8 +107,43 @@ export default function LuxuryHeroShowcase({
               </p>
             </div>
 
+            {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN */}
+            <div className="w-full pt-1.5 pb-0.5">
+              {!currentUser ? (
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="w-full py-1.5 px-2.5 rounded-xl border border-[#D4AF37]/50 bg-[#121212] hover:bg-[#1a170f] hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <LogIn className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                    <span className="text-[10.5px] font-bold text-white/90 group-hover:text-[#D4AF37] truncate">
+                      Already Subscribed? <span className="text-[#D4AF37] underline underline-offset-2">Sign In</span>
+                    </span>
+                  </div>
+                  <ArrowRight className="w-3 h-3 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => navigate(currentUser.role === 'admin' ? '/admin' : '/home')}
+                  className="w-full py-1.5 px-2.5 rounded-xl border border-[#10b981]/50 bg-[#10b981]/10 hover:bg-[#10b981]/20 transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+                    <span className="text-[10px] font-bold text-white/90 truncate">
+                      Signed In: <span className="text-[#10b981] font-semibold">{currentUser.full_name || currentUser.email}</span>
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-bold text-[#10b981] flex items-center gap-0.5 shrink-0">
+                    Workspace <ArrowRight className="w-2.5 h-2.5" />
+                  </span>
+                </button>
+              )}
+            </div>
+
             {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S */}
-            <div className="space-y-1.5 pt-2">
+            <div className="space-y-1.5 pt-1.5">
               <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
                 <span>Concierge To-Do's:</span>
                 <span className="text-[8px] text-white/50 lowercase tracking-normal">select one to begin</span>
@@ -186,6 +222,29 @@ export default function LuxuryHeroShowcase({
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
+
+              {/* TO-DO 5: Refer a Client or Colleague */}
+              <button
+                type="button"
+                onClick={() => navigate('/refer')}
+                className="w-full group p-2.5 rounded-xl border border-white/10 bg-[#141414] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
+              >
+                <div className="min-w-0 pr-1.5">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <UserPlus className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                    <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors truncate">
+                      Refer a Client or Colleague
+                    </span>
+                    <span className="text-[7.5px] px-1 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-bold border border-[#D4AF37]/40 shrink-0">
+                      25% Payout
+                    </span>
+                  </div>
+                  <p className="text-[9.5px] text-white/55 leading-tight truncate">
+                    Submit buyer, seller, agent or vendor lead
+                  </p>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+              </button>
             </div>
 
             {/* DIRECT ACCESS: 6AM NEWS DESK & CONCIERGE ADVANTAGE */}
@@ -249,8 +308,41 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
+          {/* 3. FIDUCIARY DESK DIRECT CONTACT / TEXT LINE */}
+          <div className="pt-2 mt-2 border-t border-white/10">
+            <div className="p-2 rounded-xl bg-[#121212] border border-white/10 flex items-center justify-between gap-2 shadow-sm">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-[#D4AF37]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                  <span>Concierge Desk Direct</span>
+                </div>
+                <div className="text-[11px] font-bold text-white font-mono mt-0.5">
+                  (858) 353-1200
+                </div>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <a
+                  href="tel:+18583531200"
+                  className="px-2 py-1 rounded-lg bg-[#1e1e1e] hover:bg-[#D4AF37] hover:text-black border border-white/15 text-[9px] font-bold text-white transition-all flex items-center gap-1 cursor-pointer"
+                  title="Call Concierge Desk"
+                >
+                  <Phone className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <span>Call</span>
+                </a>
+                <a
+                  href="sms:+18583531200"
+                  className="px-2 py-1 rounded-lg bg-[#1e1e1e] hover:bg-[#D4AF37] hover:text-black border border-white/15 text-[9px] font-bold text-white transition-all flex items-center gap-1 cursor-pointer"
+                  title="Text Concierge Desk"
+                >
+                  <MessageCircle className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <span>Text</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* Bottom Compliance & Fiduciary License Line */}
-          <div className="pt-2.5 mt-2.5 border-t border-white/10 text-[9px] text-white/60 flex items-center justify-between gap-1.5">
+          <div className="pt-2 mt-2 border-t border-white/10 text-[9px] text-white/60 flex items-center justify-between gap-1.5">
             <span className="flex items-center gap-1 shrink-0">
               <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
               <span>All 50 States</span>
