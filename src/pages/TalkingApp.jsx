@@ -66,7 +66,7 @@ export default function TalkingApp() {
   }, [status, transcript]);
 
   return (
-    <div className="min-h-full p-3 sm:p-6 md:p-8 space-y-6 text-white" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-full p-3 sm:p-6 md:p-8 space-y-6 text-[#0a0a0a]" style={{ background: '#ede0cc' }}>
       
       {/* ========================================================
           PAGE HEADER: CHARLIE CONCIERGE IDENTITY

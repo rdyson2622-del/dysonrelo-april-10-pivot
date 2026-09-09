@@ -163,9 +163,12 @@ export const BROKER_DEFAULT_APPS = [
 // Alias for clean terminology
 export const MINI_APPS_CATALOG = IPHONE_DEFAULT_APPS;
 
+import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
+
 export default function IPhoneSpringboardGrid({
   apps = IPHONE_DEFAULT_APPS,
   onAppClick,
+  onInfoClick,
   columns = 3,
   showCopy = true,
   className = '',
@@ -173,6 +176,12 @@ export default function IPhoneSpringboardGrid({
 }) {
   const navigate = useNavigate();
   const [activeModalApp, setActiveModalApp] = useState(null);
+  const [activeExplainerApp, setActiveExplainerApp] = useState(null);
+
+  const isSubscriber = typeof window !== 'undefined' && (
+    sessionStorage.getItem('dyson_viewer_mode') === 'subscriber' || 
+    Boolean(sessionStorage.getItem('dyson_role'))
+  );
 
   const handleClick = (app) => {
     if (onAppClick) {
@@ -180,7 +189,18 @@ export default function IPhoneSpringboardGrid({
       return;
     }
 
-    // Interactive in-place modal for the 4 core mini apps when preferred
+    // 1ST TIME UNSUBSCRIBED VIEWERS: Read-Only Mini App Explainer
+    // No actions until they subscribe after picking their portal
+    if (!isSubscriber) {
+      if (onInfoClick) {
+        onInfoClick(app);
+      } else {
+        setActiveExplainerApp(app.id);
+      }
+      return;
+    }
+
+    // Subscribed users: Interactive actions & direct routes
     if (app.isMiniApp && useModalForMiniApps) {
       setActiveModalApp(app.id);
       return;
@@ -262,12 +282,21 @@ export default function IPhoneSpringboardGrid({
         })}
       </div>
 
-      {/* Interactive In-Place Mini App Modal */}
+      {/* Interactive In-Place Mini App Modal for Subscribers */}
       {activeModalApp && (
         <MiniAppModal
           appId={activeModalApp}
           isOpen={Boolean(activeModalApp)}
           onClose={() => setActiveModalApp(null)}
+        />
+      )}
+
+      {/* Read-Only Mini App Explainer Modal for 1st Time Unsubscribed Viewers */}
+      {activeExplainerApp && (
+        <MiniAppExplainerModal
+          appId={activeExplainerApp}
+          isOpen={Boolean(activeExplainerApp)}
+          onClose={() => setActiveExplainerApp(null)}
         />
       )}
     </>

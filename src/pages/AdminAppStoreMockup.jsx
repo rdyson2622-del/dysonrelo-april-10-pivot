@@ -207,7 +207,7 @@ export default function AdminAppStoreMockup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white p-3 sm:p-6 md:p-8 space-y-5">
+    <div className="min-h-screen text-[#0a0a0a] p-3 sm:p-6 md:p-8 space-y-5" style={{ background: '#ede0cc' }}>
       
       {/* ========================================================
           ADMIN TOP BAR & VIEW TOGGLE
@@ -506,7 +506,7 @@ export default function AdminAppStoreMockup() {
                   Otherwise, renders the default featured estate hero showcase!
                   ======================================================== */}
               {selectedApp ? (
-                <main className="flex-1 p-3 sm:p-5 flex flex-col justify-start overflow-hidden" style={{ background: '#0a0a0a' }}>
+                <main className="flex-1 p-3 sm:p-5 flex flex-col justify-start overflow-hidden" style={{ background: TAN_BG }}>
                   <AppSubjectMatterView
                     app={selectedApp}
                     onClose={() => setSelectedApp(null)}

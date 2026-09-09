@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   User, Edit3, ArrowRight, ShieldCheck, MapPin, 
-  Phone, Mail, Calendar, Compass, X, Check, Sparkles 
+  Phone, Mail, Calendar, Compass, X, Check, Sparkles, Eye 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import FirstTimeViewerSidebarIntro from './FirstTimeViewerSidebarIntro';
 
 const GOLD = '#D4AF37';
 
@@ -15,6 +16,11 @@ export default function SubscriberProfileHeader({
 }) {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [isGuestMode, setIsGuestMode] = useState(() => {
+    const stored = sessionStorage.getItem('dyson_viewer_mode');
+    if (stored) return stored === 'guest';
+    return true; // Default to 1st time unsubscribed viewer intro
+  });
   const [clientRecord, setClientRecord] = useState(null);
   const [subscriberRecord, setSubscriberRecord] = useState(null);
   const [agentRecord, setAgentRecord] = useState(null);
@@ -153,6 +159,18 @@ export default function SubscriberProfileHeader({
       setIsSaving(false);
     }
   };
+
+  // 1ST TIME UNSUBSCRIBED VIEWER INTRO AT TOP OF SIDEBAR
+  if (isGuestMode && !forcedSubscriber) {
+    return (
+      <FirstTimeViewerSidebarIntro
+        onSwitchToSubscriber={() => {
+          setIsGuestMode(false);
+          sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+        }}
+      />
+    );
+  }
 
   return (
     <>

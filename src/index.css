@@ -53,8 +53,8 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 37 43% 86%; /* #ede0cc Dyson Signature Tan - All backdrops tan! */
+    --foreground: 0 0% 5%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
@@ -95,8 +95,8 @@
     @apply border-border outline-ring/50;
   }
 
-  body {
-    background-color: #ede0cc;
+  html, body, #root {
+    background-color: #ede0cc !important;
     color: #0a0a0a;
     font-family: 'Inter', sans-serif;
   }

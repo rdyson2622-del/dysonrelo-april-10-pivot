@@ -8,6 +8,7 @@ import {
 import { MINI_APP_EXPLAINERS } from '@/lib/miniAppExplainers';
 
 const GOLD = '#D4AF37';
+const TAN_BG = '#ede0cc';
 
 const ICON_MAP = {
   Mic,
@@ -37,15 +38,6 @@ export default function MiniAppExplainerModal({
   const explainer = MINI_APP_EXPLAINERS.find((e) => e.id === appId) || MINI_APP_EXPLAINERS[0];
   const IconComponent = ICON_MAP[explainer.iconName] || Sparkles;
 
-  const handleLaunch = () => {
-    onClose();
-    if (explainer.route?.startsWith('tel:')) {
-      window.open(explainer.route);
-    } else if (explainer.route) {
-      navigate(explainer.route);
-    }
-  };
-
   const handleSubscribe = () => {
     onClose();
     if (onSubscribeClick) {
@@ -56,134 +48,147 @@ export default function MiniAppExplainerModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+      
+      {/* Modal Container — SIGNATURE DYSON TAN BACKDROP */}
       <div 
-        className="w-full max-w-xl rounded-3xl p-5 sm:p-7 border shadow-2xl text-left bg-[#0c0c0c] border-[#D4AF37] text-white relative max-h-[92vh] overflow-y-auto space-y-5"
+        className="w-full max-w-2xl rounded-3xl p-6 sm:p-8 border-2 shadow-2xl text-left relative max-h-[92vh] overflow-y-auto space-y-6 text-[#0a0a0a]"
         style={{
+          background: TAN_BG,
+          borderColor: '#854d0e',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(212,175,55,0.4) transparent',
+          scrollbarColor: 'rgba(133,77,14,0.4) transparent',
         }}
       >
-        {/* Top Header */}
-        <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/10">
-          <div className="flex items-center gap-3.5">
+        {/* Top Header Row */}
+        <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#0a0a0a]/15">
+          <div className="flex items-start gap-3.5">
+            {/* App Icon Squircle */}
             <div 
-              className="w-13 h-13 rounded-2xl bg-black border border-[#D4AF37] flex items-center justify-center shadow-lg relative shrink-0"
+              className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-black border border-[#D4AF37] flex items-center justify-center shadow-lg relative shrink-0"
               style={{
-                boxShadow: '0 4px 18px rgba(212,175,55,0.3)',
+                boxShadow: '0 4px 18px rgba(0,0,0,0.4)',
               }}
             >
-              <IconComponent className="w-6 h-6 text-[#D4AF37]" />
+              <IconComponent className="w-7 h-7 text-[#D4AF37]" />
               {explainer.badgeCount && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff3b30] text-white text-[9px] font-black flex items-center justify-center border border-black shadow">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-[#ff3b30] text-white text-[10px] font-black flex items-center justify-center border-2 border-black shadow">
                   {explainer.badgeCount}
                 </span>
               )}
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">
-                  {explainer.badge}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-black text-[#D4AF37]">
+                  {explainer.badge || 'MINI APP'}
                 </span>
-                <span className="text-[10px] text-white/50 uppercase tracking-widest font-mono">
-                  MINI APP #{explainer.number}
+                <span className="text-[10px] font-bold text-[#854d0e] uppercase tracking-wider">
+                  1ST TIME VIEWER • READ-ONLY EXPLAINER
                 </span>
               </div>
+
+              {/* Exact Title format: 1. 🎙️ Charlie AI ( /talking-app ) */}
               <h2 
-                className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-tight mt-0.5"
+                className="text-2xl sm:text-3xl font-bold text-[#0a0a0a] tracking-tight leading-tight mt-1"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                {explainer.title}
+                {explainer.number}. {explainer.title} <span className="text-sm font-sans font-normal text-[#554433]">({explainer.route})</span>
               </h2>
-              <p className="text-xs text-[#e8c84a] font-medium leading-tight">
-                {explainer.subtitle}
-              </p>
             </div>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#181818] border border-white/20 text-white/70 hover:text-white flex items-center justify-center cursor-pointer transition-all"
+            className="w-8 h-8 rounded-full bg-black/10 hover:bg-black/20 text-[#0a0a0a] flex items-center justify-center cursor-pointer transition-all shrink-0"
+            title="Close Explainer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Tagline */}
-        <div className="p-3 rounded-2xl bg-[#15120a] border border-[#D4AF37]/40 text-xs text-white/90 font-medium leading-relaxed italic flex items-center gap-2.5">
-          <Sparkles className="w-4 h-4 text-[#D4AF37] shrink-0" />
-          <span>“{explainer.tagline}”</span>
-        </div>
-
-        {/* The Problem on Other Sites */}
-        <div className="p-4 rounded-2xl bg-[#140a0a] border border-[#ef4444]/30 space-y-1.5 text-xs text-left">
-          <div className="flex items-center gap-1.5 text-[#ef4444] font-black text-[10px] uppercase tracking-wider">
-            <AlertCircle className="w-3.5 h-3.5" />
-            <span>The Problem Unsubscribed Viewers Face on Public Sites</span>
-          </div>
-          <p className="text-white/80 leading-relaxed text-[11.5px]">
-            {explainer.theProblem}
-          </p>
-        </div>
-
-        {/* The Fiduciary Solution */}
-        <div className="p-4 rounded-2xl bg-[#09150f] border border-[#10b981]/40 space-y-1.5 text-xs text-left">
-          <div className="flex items-center gap-1.5 text-[#10b981] font-black text-[10px] uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>How This Pill Solves It (The Fiduciary Advantage)</span>
-          </div>
-          <p className="text-white/85 leading-relaxed text-[11.5px]">
-            {explainer.theFiduciarySolution}
-          </p>
-        </div>
-
-        {/* Access Comparison Grid: Guest vs Subscriber */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        {/* ========================================================
+            EXACT BULLET POINT COPY SPECIFICATION (FROM SCREENSHOT)
+            ======================================================== */}
+        <div className="space-y-4 text-xs sm:text-sm text-[#0a0a0a] leading-relaxed">
           
-          {/* Guest Access (Right Now) */}
-          <div className="p-3.5 rounded-2xl bg-black/60 border border-white/15 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[9.5px] font-black uppercase tracking-wider text-white/70">
-              <Unlock className="w-3 h-3 text-[#10b981]" />
-              <span>Available to Guests Right Now:</span>
+          {/* Bullet 1: Subtitle */}
+          <div className="flex items-start gap-2.5">
+            <span className="text-[#854d0e] text-base font-bold leading-none select-none">•</span>
+            <div>
+              <strong className="text-[#0a0a0a] font-bold">Subtitle:</strong>{' '}
+              <span className="text-[#332211] font-medium">{explainer.subtitle}</span>
             </div>
-            <p className="text-white/75 text-[11px] leading-relaxed">
-              {explainer.unsubscribedAccess}
-            </p>
           </div>
 
-          {/* Subscriber Exclusive Unlock */}
-          <div className="p-3.5 rounded-2xl bg-[#1c170d] border border-[#D4AF37]/50 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[9.5px] font-black uppercase tracking-wider text-[#D4AF37]">
-              <Lock className="w-3 h-3 text-[#D4AF37]" />
-              <span>Unlocked with Free Subscription:</span>
+          {/* Bullet 2: The Problem Unsubscribed Viewers Face */}
+          <div className="flex items-start gap-2.5">
+            <span className="text-[#dc2626] text-base font-bold leading-none select-none">•</span>
+            <div>
+              <strong className="text-[#0a0a0a] font-bold">The Problem Unsubscribed Viewers Face:</strong>{' '}
+              <span className="text-[#443322] leading-relaxed">{explainer.theProblem}</span>
             </div>
-            <p className="text-white/85 text-[11px] leading-relaxed">
-              {explainer.subscriberUnlock}
-            </p>
           </div>
 
+          {/* Bullet 3: The Fiduciary Solution */}
+          <div className="flex items-start gap-2.5">
+            <span className="text-[#10b981] text-base font-bold leading-none select-none">•</span>
+            <div>
+              <strong className="text-[#0a0a0a] font-bold">The Fiduciary Solution:</strong>{' '}
+              <span className="text-[#223322] leading-relaxed">{explainer.theFiduciarySolution}</span>
+            </div>
+          </div>
+
+          {/* Bullet 4: Unsubscribed Viewer Access */}
+          <div className="flex items-start gap-2.5">
+            <span className="text-[#854d0e] text-base font-bold leading-none select-none">•</span>
+            <div>
+              <strong className="text-[#0a0a0a] font-bold">Unsubscribed Viewer Access:</strong>{' '}
+              <span className="text-[#443322] leading-relaxed">{explainer.unsubscribedAccess}</span>
+            </div>
+          </div>
+
+          {/* Bullet 5: Subscriber Unlock */}
+          <div className="flex items-start gap-2.5">
+            <span className="text-[#b45309] text-base font-bold leading-none select-none">•</span>
+            <div>
+              <strong className="text-[#0a0a0a] font-bold">Subscriber Unlock:</strong>{' '}
+              <span className="text-[#2b1f13] leading-relaxed">{explainer.subscriberUnlock}</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Read-Only Notice Box */}
+        <div className="p-3.5 rounded-2xl bg-black/5 border border-black/15 flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
+            <span className="text-[#554433]">
+              <strong>Read-Only Mode:</strong> Full interactive actions activate automatically after selecting your portal and subscribing.
+            </span>
+          </div>
         </div>
 
         {/* Action Buttons Footer */}
-        <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="pt-3 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-3">
           <button
             type="button"
-            onClick={handleSubscribe}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-black hover:bg-[#1a1a1a] border border-[#D4AF37]/70 text-[#D4AF37] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            onClick={onClose}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#0a0a0a]/25 text-[#0a0a0a] hover:bg-black/10 text-xs font-bold transition-all cursor-pointer"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
-            <span>Claim Free Subscriber Access</span>
+            <span>Close Explainer</span>
           </button>
 
           <button
             type="button"
-            onClick={handleLaunch}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#e8c84a] text-black text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-lg active:scale-95"
+            onClick={handleSubscribe}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-black hover:bg-[#1f1f1f] text-[#D4AF37] border border-[#D4AF37] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg active:scale-95"
           >
-            <span>{explainer.keyActionLabel}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Pick Your Portal &amp; Subscribe to Unlock</span>
+            <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
           </button>
         </div>
 
