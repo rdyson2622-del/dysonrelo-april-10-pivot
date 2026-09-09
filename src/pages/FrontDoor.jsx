@@ -11,6 +11,7 @@ import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCo
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
+import SubscriberCommandDeck from '@/components/admin/frontdoor/SubscriberCommandDeck';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -109,6 +110,7 @@ export default function FrontDoor() {
   const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'high_to_low' | 'low_to_high'
   const [activeListingFilter, setActiveListingFilter] = useState('all'); // 'all' | '0_tax' | 'waterfront' | 'mountain'
   const [showFilterBar, setShowFilterBar] = useState(false);
+  const [showSubscriberMode, setShowSubscriberMode] = useState(true);
 
   // Subscriber session & direct-access detection
   const [currentUser, setCurrentUser] = useState(null);
@@ -302,10 +304,26 @@ export default function FrontDoor() {
               </Link>
             </div>
 
-            {/* Right Actions: Ambience + Workspaces Access (Admin pill moved elsewhere to prevent top bar crowding) */}
+            {/* Right Actions: Ambience + Subscriber View Toggle + Workspaces Access */}
             <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
+
+              {/* Quick Toggle for Subscriber View Experience */}
+              <button
+                type="button"
+                onClick={() => setShowSubscriberMode(!showSubscriberMode)}
+                className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer shadow-sm shrink-0 ${
+                  showSubscriberMode
+                    ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
+                    : 'bg-[#181818] text-white/80 hover:text-white border border-white/20'
+                }`}
+                title="Toggle Recognized Subscriber Command Deck"
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${showSubscriberMode ? 'bg-[#10b981] animate-pulse' : 'bg-stone-500'}`} />
+                <span className="hidden sm:inline">{showSubscriberMode ? 'Subscriber View' : 'Visitor View'}</span>
+                <span className="sm:hidden">{showSubscriberMode ? 'Sub' : 'Vis'}</span>
+              </button>
 
               {/* Subscriber Workspaces & Sleek Access Button (Only for non-admin subscribers; admin pill is moved elsewhere) */}
               {isSubscribed && currentUser?.role !== 'admin' ? (
@@ -350,7 +368,15 @@ export default function FrontDoor() {
             </div>
           </nav>
 
-
+          {/* RECOGNIZED SUBSCRIBER COMMAND CENTER & DIALOGUE LEDGER */}
+          {showSubscriberMode && (
+            <SubscriberCommandDeck
+              currentUser={currentUser || { full_name: 'Bob Dyson', portal_role: 'client' }}
+              onSimulateRoleChange={(roleKey) => {
+                setSelectedRoleForSubscription(roleKey);
+              }}
+            />
+          )}
 
           {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO */}
           <LuxuryHeroShowcase
