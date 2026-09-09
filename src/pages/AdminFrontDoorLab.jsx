@@ -324,7 +324,7 @@ export default function AdminFrontDoorLab() {
                     </span>
                   </div>
                   <p className="text-[11px] text-white/70">
-                    All-about-them mobile deck with verified identity, holdings &amp; goals, 3 action buttons, integral roadmap &amp; market pulse.
+                    Clean portrait template on tan backdrop with subscriber photo, predominant search pill + Charlie voice, vertical service list, and one-click Library.
                   </p>
                 </div>
                 <button
