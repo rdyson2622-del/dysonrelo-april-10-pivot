@@ -44,7 +44,7 @@ export async function synthesizeCharlieSpeech(
   if (heygenKey) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 15000);
+      const timeout = setTimeout(() => controller.abort(), 35000);
       const res = await fetch('https://api.heygen.com/v3/voices/speech', {
         method: 'POST',
         headers: {

@@ -5,7 +5,7 @@ const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c
 const GOLD = '#D4AF37';
 
 // Authentic Charlie Simmons HeyGen Ruben voice greeting (instant 0-second CDN playback)
-const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=83b6de7f-60bc-4d1f-b68d-6950b71bc107.wav";
+const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
 
 export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, className = '' }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -177,8 +177,8 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
           I'm Charlie Simmons, your AI Concierge.
         </p>
         
-        <p className="text-[10px] sm:text-[10.5px] text-white/85 leading-relaxed font-normal pt-0.5">
-          You are viewing our platform in Guest Mode. Explore our concierge mini-apps and fiduciary intelligence below without sales pressure.
+        <p className="text-[10px] sm:text-[10.5px] text-white/90 leading-relaxed font-normal pt-0.5">
+          We’re here to make your real estate ventures far less stressful and genuinely transparent—more transparent than any traditional real estate process in the market today. Whether you’re moving across the country, buying, selling, or partnering with our network, our concierge orchestrates every step with independent fiduciary vetting, verified professionals, and real-time clarity. Explore our tools freely without sales pressure.
         </p>
       </div>
 
