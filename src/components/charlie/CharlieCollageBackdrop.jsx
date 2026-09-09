@@ -41,46 +41,13 @@ export const CHARLIE_PHOTOS = [
 export default function CharlieCollageBackdrop({ activeIndex = null, onSelectPhoto }) {
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0">
-      {/* 4-Panel Dynamic Studio Collage Grid — Full 100% Color & Brightness */}
-      <div className="grid grid-cols-2 md:grid-cols-4 w-full h-full gap-0.5 opacity-100">
-        {/* Panel 1: Main Anchor Desk Close-up */}
-        <div className="relative h-full overflow-hidden">
-          <img
-            src={CHARLIE_PHOTOS[0].url}
-            alt={CHARLIE_PHOTOS[0].title}
-            className="w-full h-full object-cover object-top scale-105 brightness-110 saturate-110 contrast-105"
-          />
-        </div>
-
-        {/* Panel 2: Solo Anchor at World Map Desk */}
-        <div className="relative h-full overflow-hidden">
-          <img
-            src={CHARLIE_PHOTOS[2].url}
-            alt={CHARLIE_PHOTOS[2].title}
-            className="w-full h-full object-cover object-center scale-105 brightness-110 saturate-110 contrast-105"
-          />
-        </div>
-
-        {/* Panel 3: Live Broadcast Studio Set */}
-        <div className="relative h-full overflow-hidden hidden md:block">
-          <img
-            src={CHARLIE_PHOTOS[4].url}
-            alt={CHARLIE_PHOTOS[4].title}
-            className="w-full h-full object-cover object-center scale-105 brightness-110 saturate-110 contrast-105"
-          />
-        </div>
-
-        {/* Panel 4: Executive Advisory Desk Portrait */}
-        <div className="relative h-full overflow-hidden">
-          <img
-            src={CHARLIE_PHOTOS[3].url}
-            alt={CHARLIE_PHOTOS[3].title}
-            className="w-full h-full object-cover object-top scale-105 brightness-110 saturate-110 contrast-105"
-          />
-        </div>
-      </div>
-
-      {/* Crisp studio border, no dark scrims hiding the full-color photos */}
+      {/* Single shot of Charlie next to the DNN logo */}
+      <img
+        src={CHARLIE_PHOTOS[0].url}
+        alt="Charlie Simmons at the DNN News Desk"
+        className="w-full h-full object-cover object-top sm:object-center brightness-105 saturate-105"
+      />
+      {/* Crisp studio border */}
       <div className="absolute inset-0 border border-[#D4AF37]/50 pointer-events-none rounded-3xl" />
     </div>
   );
