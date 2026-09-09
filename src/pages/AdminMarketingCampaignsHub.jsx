@@ -84,24 +84,19 @@ const CAMPAIGNS = [
 
 export default function AdminMarketingCampaignsHub() {
   return (
-    <div className="min-h-screen bg-dyson-black text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <Link
-          to="/admin"
-          className="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg mb-6"
-          style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
-        >
-          <ArrowLeft className="w-4 h-4" /> Admin home
-        </Link>
-
-        <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
-          Reference · For discussion
-        </p>
-        <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>DysonRelo Marketing Campaigns</h1>
-        <p className="text-sm text-gray-400 max-w-3xl leading-relaxed mb-10">
-          Nine campaign pillars Bob wants to work through with Base44 and Grok Bot — a lot to manage, but doable
-          one at a time. This page is the standing reference; each card below is a discussion topic, not a finished build.
-        </p>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#ede0cc' }}>
+      <div className="max-w-6xl mx-auto space-y-6 text-left">
+        <div>
+          <p className="text-xs font-bold tracking-[0.3em] uppercase mb-1 font-sans" style={{ color: '#854d0e' }}>
+            REFERENCE &amp; STRATEGY DISCUSSIONS
+          </p>
+          <h1 className="display-heading mb-1 text-2xl sm:text-3xl" style={{ color: '#0a0a0a' }}>
+            Marketing Campaigns Hub
+          </h1>
+          <p className="text-xs sm:text-sm text-[#44382c] font-medium max-w-3xl leading-relaxed">
+            Nine campaign pillars for affiliate growth, broker distribution, and automated relocation lead acquisition.
+          </p>
+        </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {CAMPAIGNS.map((c) => {
@@ -109,8 +104,8 @@ export default function AdminMarketingCampaignsHub() {
             return (
               <div
                 key={c.title}
-                className="rounded-2xl p-5 flex flex-col gap-3"
-                style={{ background: '#111', border: `1px solid ${GOLD}30` }}
+                className="rounded-3xl p-5 flex flex-col gap-3 shadow-xl transition-all hover:border-[#D4AF37]"
+                style={{ background: '#0a0a0a', border: `1.5px solid ${GOLD}40` }}
               >
                 <div className="flex items-center gap-3">
                   <div

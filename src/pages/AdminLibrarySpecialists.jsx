@@ -183,24 +183,27 @@ export default function AdminLibrarySpecialists() {
   };
 
   return (
-    <div className="min-h-screen bg-dyson-black text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <p className="text-[10px] font-black tracking-[0.3em] uppercase mb-2" style={{ color: GOLD }}>
-          Dyson & Dyson · Knowledge desks
-        </p>
-        <h1 className="text-3xl font-serif mb-2" style={{ color: GOLD }}>AI Library Specialists</h1>
-        <p className="text-gray-400 text-sm max-w-3xl leading-relaxed mb-6">
-          Three new desks for the three Agent Library sections that are not departments.
-          Canon, Playbook, and Conduit own the documents and pipes.
-          Marketing, Operations, Sales, DNN News, and Finance still execute the work.
-        </p>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#ede0cc' }}>
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div>
+          <p className="text-xs font-bold tracking-[0.3em] uppercase mb-1 font-sans" style={{ color: '#854d0e' }}>
+            DYSON &amp; DYSON · KNOWLEDGE DESKS
+          </p>
+          <h1 className="display-heading mb-1 text-2xl sm:text-3xl" style={{ color: '#0a0a0a' }}>
+            AI Library Specialists
+          </h1>
+          <p className="text-xs sm:text-sm text-[#44382c] font-medium max-w-3xl leading-relaxed">
+            Three dedicated desks for the three Agent Library sections: Canon, Playbook, and Conduit.
+            Marketing, Operations, Sales, DNN News, and Finance execute the work.
+          </p>
+        </div>
 
         <div
-          className="rounded-xl p-4 mb-8"
-          style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.35)' }}
+          className="rounded-2xl p-4 shadow-xl text-left"
+          style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.45)' }}
         >
-          <p className="text-sm text-gray-300 leading-relaxed">
-            <strong className="text-white">{LIBRARY_COORDINATOR_NOTE.title}.</strong>{' '}
+          <p className="text-sm text-gray-200 leading-relaxed">
+            <strong className="text-[#D4AF37]">{LIBRARY_COORDINATOR_NOTE.title}:</strong>{' '}
             {LIBRARY_COORDINATOR_NOTE.body}
           </p>
         </div>
@@ -219,8 +222,8 @@ export default function AdminLibrarySpecialists() {
         <Detail spec={selected} seededTitles={seededTitles} />
 
         <div
-          className="mt-8 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4"
-          style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.35)' }}
+          className="mt-8 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4 shadow-xl text-left"
+          style={{ background: '#0a0a0a', border: '1px solid rgba(212,175,55,0.45)' }}
         >
           <Sparkles className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
           <div className="flex-1">

@@ -25,27 +25,22 @@ export default function Connect() {
   const consentStep = (n) => step(n, <>A browser window opens to the DysonRelo consent page — <strong className="text-white">sign in with your DysonRelo account</strong> and approve. Your assistant now acts securely as you.</>);
 
   return (
-    <div className="min-h-screen bg-dyson-black text-white">
-      <header className="border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link to="/admin" className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Admin
-          </Link>
-          <h1 className="text-lg font-serif text-dyson-gold">Connect AI Assistant</h1>
-        </div>
-      </header>
-
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        <div className="mb-8">
-          <h2 className="text-3xl font-serif text-white mb-3">Connect Your AI Assistant to DysonRelo</h2>
-          <p className="text-gray-400 text-base leading-relaxed">
-            Two ways to connect: <strong className="text-white">Webhook API</strong> (simple, works today — recommended) or <strong className="text-white">MCP Server</strong> (OAuth-based, richer protocol). Use the tabs below for setup instructions for your AI client.
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#ede0cc' }}>
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div>
+          <p className="text-xs font-bold tracking-[0.3em] uppercase mb-1 font-sans" style={{ color: '#854d0e' }}>
+            INTEGRATIONS &amp; MCP PROTOCOL
+          </p>
+          <h1 className="display-heading mb-1 text-2xl sm:text-3xl" style={{ color: '#0a0a0a' }}>
+            Connect AI Assistant
+          </h1>
+          <p className="text-xs sm:text-sm text-[#44382c] font-medium leading-relaxed">
+            Two ways to connect: <strong className="text-[#0a0a0a]">Webhook API</strong> (recommended) or <strong className="text-[#0a0a0a]">MCP Server</strong> (OAuth-based).
           </p>
         </div>
 
         {/* Webhook URL Card — the working solution */}
-        <div className="mb-8 rounded-xl border border-dyson-gold/30 bg-dyson-gold/5 p-5">
+        <div className="rounded-2xl border border-[#D4AF37]/50 p-6 shadow-xl text-left" style={{ background: '#0a0a0a' }}>
           <label className="text-xs font-bold tracking-widest uppercase text-dyson-gold mb-2 block">Webhook API URL</label>
           <div className="flex items-center gap-3 mb-3">
             <code className="flex-1 px-4 py-3 rounded-lg bg-black/40 border border-white/10 text-sm text-white font-mono overflow-x-auto whitespace-nowrap">
@@ -71,25 +66,25 @@ export default function Connect() {
 
         {/* Client Tabs */}
         <Tabs defaultValue="webhook" className="w-full">
-          <TabsList className="grid grid-cols-5 mb-6 bg-dyson-charcoal border border-white/10">
-            <TabsTrigger value="webhook" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+          <TabsList className="grid grid-cols-5 mb-6 bg-[#0a0a0a] border border-[#D4AF37]/40 rounded-2xl p-1 shadow-md">
+            <TabsTrigger value="webhook" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black rounded-xl text-white/70 font-bold text-xs">
               <Webhook className="w-3.5 h-3.5 mr-1.5" /> Webhook API
             </TabsTrigger>
-            <TabsTrigger value="claude" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+            <TabsTrigger value="claude" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black rounded-xl text-white/70 font-bold text-xs">
               <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Claude (MCP)
             </TabsTrigger>
-            <TabsTrigger value="chatgpt" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+            <TabsTrigger value="chatgpt" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black rounded-xl text-white/70 font-bold text-xs">
               <MessageSquare className="w-3.5 h-3.5 mr-1.5" /> ChatGPT
             </TabsTrigger>
-            <TabsTrigger value="cursor" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+            <TabsTrigger value="cursor" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black rounded-xl text-white/70 font-bold text-xs">
               <MousePointer className="w-3.5 h-3.5 mr-1.5" /> Cursor
             </TabsTrigger>
-            <TabsTrigger value="custom" className="data-[state=active]:bg-dyson-gold/20 data-[state=active]:text-dyson-gold text-gray-400">
+            <TabsTrigger value="custom" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-black rounded-xl text-white/70 font-bold text-xs">
               <Code className="w-3.5 h-3.5 mr-1.5" /> Custom
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="webhook" className="rounded-xl border border-white/10 bg-dyson-charcoal/50 p-6">
+          <TabsContent value="webhook" className="rounded-2xl border border-[#D4AF37]/45 bg-[#0a0a0a] p-6 shadow-xl text-left">
             <div className="mb-4">
               <h3 className="text-lg font-serif text-white mb-1">Simple Webhook API (Recommended)</h3>
               <p className="text-sm text-gray-400">No OAuth, no MCP protocol. Just a POST request with an API key header. Works with any AI client that can make HTTP requests.</p>

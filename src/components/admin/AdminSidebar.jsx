@@ -401,20 +401,10 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* ── 6 CORE DEPARTMENT MINI APPS (REPLACES THE 6 OVERSIZED PILLS) ── */}
-      <div className="px-3 pt-2 pb-2 shrink-0">
-        <AdminMiniAppsGrid />
-      </div>
-
-      <ListingProspectsRepWidget />
-
-      {/* Recent Grok Dispatches — live feed from the Command Center */}
-      <AdminDispatchWidget />
-
-      {/* ── VIEW AS: Master Key Action Boxes ── */}
-      <div className="px-3 pt-3 pb-2 shrink-0">
-        <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: '#D4AF37' }}>View Portal As:</p>
-        <div className="grid grid-cols-2 gap-1.5">
+      {/* ── VIEW AS: 8 PORTAL ROLES (MOVED ABOVE MINI APPS) ── */}
+      <div className="px-3 pt-2.5 pb-2 shrink-0">
+        <p className="text-[10px] font-black tracking-[0.2em] uppercase mb-2 text-left" style={{ color: '#D4AF37' }}>VIEW PORTAL AS:</p>
+        <div className="grid grid-cols-2 gap-2">
           {[
             { label: 'D&D LANDING PAGE', role: 'landing', emoji: '🚪', path: '/' },
             { label: 'CLIENT', role: 'client', emoji: '🏠' },
@@ -422,6 +412,7 @@ export default function AdminSidebar() {
             { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
             { label: 'VENDOR', role: 'vendor', emoji: '🔧' },
             { label: 'CORP RELO HR', role: 'corporate_hr', emoji: '🏢', path: '/corporate-relo' },
+            { label: 'BROKER PORTAL', role: 'broker', emoji: '💼', path: '/broker-portal' },
             { label: 'FIRST-TIME VISITOR', role: 'first_time_visitor', emoji: '👋', path: '/broadcast-show' },
           ].map(({ label, role, emoji, path }) => (
             <button
@@ -432,19 +423,29 @@ export default function AdminSidebar() {
                 window.dispatchEvent(new Event('dyson_role_change'));
                 navigate('/dashboard');
               }}
-              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl text-center transition-all hover:scale-105 active:scale-95"
+              className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl text-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md group"
               style={{
-                background: 'rgba(212,175,55,0.1)',
-                border: '1px solid rgba(212,175,55,0.35)',
+                background: '#14120b',
+                border: '1px solid rgba(212,175,55,0.45)',
                 color: '#D4AF37',
               }}
             >
-              <span className="text-lg leading-none mb-0.5">{emoji}</span>
-              <span className="text-[9px] font-black tracking-[0.1em] leading-tight">{label}</span>
+              <span className="text-xl leading-none mb-1 group-hover:scale-110 transition-transform">{emoji}</span>
+              <span className="text-[9.5px] font-black tracking-[0.08em] leading-tight text-[#e8c84a] group-hover:text-[#D4AF37]">{label}</span>
             </button>
           ))}
         </div>
       </div>
+
+      {/* ── 6 CORE DEPARTMENT MINI APPS (BELOW PORTALS) ── */}
+      <div className="px-3 pt-2 pb-2 shrink-0">
+        <AdminMiniAppsGrid />
+      </div>
+
+      <ListingProspectsRepWidget />
+
+      {/* Recent Grok Dispatches — live feed from the Command Center */}
+      <AdminDispatchWidget />
 
       {/* ── CORE ADMIN COMMAND PILLS (UNIFIED GOLD FORMAT) ── */}
       <div className="px-3 pt-2 pb-1 space-y-2 shrink-0">

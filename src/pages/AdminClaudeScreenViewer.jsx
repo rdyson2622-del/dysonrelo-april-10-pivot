@@ -175,17 +175,20 @@ export default function AdminClaudeScreenViewer() {
   };
 
   return (
-    <div className="min-h-screen bg-dyson-black text-white p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#ede0cc' }}>
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-serif text-dyson-gold flex items-center gap-2">
-              <Monitor className="w-6 h-6" />
+            <p className="text-xs font-bold tracking-[0.3em] uppercase mb-1 font-sans" style={{ color: '#854d0e' }}>
+              REAL-TIME VISION &amp; SCREEN OBSERVATION
+            </p>
+            <h1 className="display-heading mb-1 text-2xl sm:text-3xl flex items-center gap-2" style={{ color: '#0a0a0a' }}>
+              <Monitor className="w-6 h-6" style={{ color: '#D4AF37' }} />
               Grok Screen Viewer
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
-              Share your screen and Grok will continuously observe and answer questions about what it sees.
+            <p className="text-xs sm:text-sm text-[#44382c] font-medium max-w-2xl leading-relaxed">
+              Share your screen and Grok will continuously observe and answer questions in real time.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -213,7 +216,7 @@ export default function AdminClaudeScreenViewer() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: screen preview + controls */}
           <div className="space-y-4">
-            <div className="relative rounded-xl overflow-hidden border border-white/15 bg-black aspect-video flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden border border-[#D4AF37]/45 bg-[#0a0a0a] shadow-xl aspect-video flex items-center justify-center">
               {lastFrameUrl ? (
                 <img src={lastFrameUrl} alt="Last captured frame" className="w-full h-full object-contain" />
               ) : (
@@ -272,7 +275,7 @@ export default function AdminClaudeScreenViewer() {
           </div>
 
           {/* Right: transcript + input */}
-          <div className="flex flex-col rounded-xl border border-white/15 bg-dyson-charcoal h-[70vh]">
+          <div className="flex flex-col rounded-2xl border border-[#D4AF37]/45 bg-[#0a0a0a] shadow-xl h-[70vh]">
             <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
               <span className="text-sm font-semibold text-dyson-gold">Grok Transcript</span>
               <span className="text-xs text-gray-500">{transcript.length} messages</span>
