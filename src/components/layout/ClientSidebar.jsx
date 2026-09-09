@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, Mic, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles, X
+  MessageSquare, ExternalLink, Sparkles, X, Compass, Home, Building, Users
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import SpringboardGrid, { PORTAL_SPRINGBOARD_PRESETS } from '@/components/springboard/SpringboardGrid';
 
 const GOLD = '#D4AF37';
 
@@ -20,6 +21,11 @@ export default function ClientSidebar({ onToggle }) {
   }, []);
 
   const signedInName = currentUser?.full_name || 'Robert Dyson';
+  const [sidebarMode, setSidebarMode] = useState(() => currentUser ? 'subscriber' : 'doors');
+
+  const activeAppSet = sidebarMode === 'subscriber' 
+    ? PORTAL_SPRINGBOARD_PRESETS.client_subscriber 
+    : PORTAL_SPRINGBOARD_PRESETS.first_time_sidebar;
 
   return (
     <aside 
@@ -149,162 +155,48 @@ export default function ClientSidebar({ onToggle }) {
         </div>
 
         {/* ========================================================
-            SECTION: CONCIERGE TO-DO'S: select one
+            APPLE-STYLE APP SPRINGBOARD GRID (CONSISTENT SITEWIDE)
+            First-Timer gets 3 Doors + News + Concierge
+            Subscriber gets full 8-App Personal Desk
             ======================================================== */}
-        <div className="space-y-1.5 pt-1 text-left">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-            <span>CONCIERGE TO-DO'S:</span>
-            <span className="text-white/40 normal-case font-normal text-[10px]">select one</span>
-          </div>
-
-          {/* 1. Talk with Charlie */}
-          <div
-            onClick={() => navigate('/talking-app')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-6 h-6 rounded-full bg-black text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
-                </div>
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-white shrink-0">
-                  VOICE AI
-                </span>
-              </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#86efac] border border-[#10b981] shrink-0 ml-auto" />
+        <div className="space-y-2 pt-1 text-left">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider px-1">
+            <span className="text-[#D4AF37]">
+              {sidebarMode === 'doors' ? '3 PORTAL DOORS & APPS' : 'SUBSCRIBER APP DESK'}
+            </span>
+            <div className="flex items-center gap-1 bg-[#141414] p-0.5 rounded-full border border-white/10">
+              <button
+                type="button"
+                onClick={() => setSidebarMode('doors')}
+                className={`px-2 py-0.5 rounded-full text-[9px] font-bold transition-all cursor-pointer ${
+                  sidebarMode === 'doors'
+                    ? 'bg-[#D4AF37] text-black shadow'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Doors
+              </button>
+              <button
+                type="button"
+                onClick={() => setSidebarMode('subscriber')}
+                className={`px-2 py-0.5 rounded-full text-[9px] font-bold transition-all cursor-pointer ${
+                  sidebarMode === 'subscriber'
+                    ? 'bg-[#D4AF37] text-black shadow'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Desk
+              </button>
             </div>
-            <p className="text-[10px] text-[#554433] mt-1 pl-8 leading-tight">
-              Ask anything, vet agents &amp; navigate
-            </p>
           </div>
 
-          {/* 2. Relocating Families & Buyers */}
-          <div
-            onClick={() => navigate('/relocation-intake')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Relocating Families &amp; Buyers</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
-                  FREE
-                </span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Agent vetting, tax &amp; school roadmap
-            </p>
-          </div>
-
-          {/* 3. Corporate HR & Employers */}
-          <div
-            onClick={() => navigate('/corporate-relo')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Corporate HR &amp; Employers</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] shrink-0">
-                  ZERO FEE
-                </span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Executive move packages &amp; milestones
-            </p>
-          </div>
-
-          {/* 4. Agents & Brokerages */}
-          <div
-            onClick={() => navigate('/broker-portal')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Agents &amp; Brokerages</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#1d4ed8] text-white shrink-0">
-                  25% REFERRAL
-                </span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Receiving agent bureau &amp; escrow audits
-            </p>
-          </div>
-
-          {/* 5. Refer a Client or Colleague */}
-          <div
-            onClick={() => navigate('/refer')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Refer a Client or Colleague</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shrink-0">
-                  25% PAYOUT
-                </span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Submit buyer, seller, agent or vendor lead
-            </p>
-          </div>
-        </div>
-
-        {/* ========================================================
-            SECTION: DETAILED SYSTEMS: direct
-            ======================================================== */}
-        <div className="space-y-1.5 pt-1 text-left">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-            <span>DETAILED SYSTEMS:</span>
-            <span className="text-white/40 normal-case font-normal text-[10px]">direct</span>
-          </div>
-
-          {/* 6. 6AM DNN News Broadcast */}
-          <div
-            onClick={() => navigate('/dnn-news')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News Broadcast</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
-                  DAILY
-                </span>
-              </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
-                Open →
-              </span>
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              AI Charlie &amp; Bob • Daily Housing Pulse
-            </p>
-          </div>
-
-          {/* 7. The Concierge Advantage */}
-          <div
-            onClick={() => navigate('/transparency')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-          >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">The Concierge Advantage</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
-                  FIDUCIARY
-                </span>
-              </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
-                Open →
-              </span>
-            </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Independent Vetting vs Lead Portals
-            </p>
+          <div className="p-2 rounded-2xl bg-black/60 border border-white/10 shadow-inner">
+            <SpringboardGrid
+              buttons={activeAppSet}
+              columns={3}
+              variant="sidebar"
+              theme="dark"
+            />
           </div>
         </div>
 

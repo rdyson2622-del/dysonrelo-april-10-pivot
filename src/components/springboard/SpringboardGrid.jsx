@@ -477,11 +477,14 @@ export const PORTAL_SPRINGBOARD_PRESETS = {
 export default function SpringboardGrid({ 
   buttons, 
   columns = 4, 
+  variant = 'default', // 'default' | 'sidebar'
+  theme = 'light', // 'light' | 'dark'
   onAction,
   onEditButton,
   onDeleteButton,
   isEditMode = false
 }) {
+  const isDark = theme === 'dark' || variant === 'sidebar';
   const navigate = useNavigate();
 
   const handleLaunch = (btn) => {
@@ -512,8 +515,11 @@ export default function SpringboardGrid({
     ? 'grid-cols-2' 
     : 'grid-cols-4';
 
+  const gapClass = variant === 'sidebar' ? 'gap-2.5 sm:gap-3 py-1' : 'gap-3 sm:gap-4 py-1';
+  const iconContainerSize = variant === 'sidebar' ? 'w-14 h-14 rounded-2xl' : 'w-14 h-14 sm:w-16 sm:h-16 rounded-2xl';
+
   return (
-    <div className={`grid ${gridColsClass} gap-3 sm:gap-4 py-1`}>
+    <div className={`grid ${gridColsClass} ${gapClass}`}>
       {buttons.map((btn) => {
         const IconComponent = AVAILABLE_ICONS[btn.iconName] || Home;
         return (
@@ -525,7 +531,7 @@ export default function SpringboardGrid({
             >
               {/* Squircle App Icon Container */}
               <div 
-                className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${btn.bgGradient || 'from-[#1a1a1a] to-[#0a0a0a]'} border ${btn.border || 'border-[#D4AF37]/50'} shadow-md group-hover:shadow-xl group-hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
+                className={`${iconContainerSize} bg-gradient-to-br ${btn.bgGradient || 'from-[#1a1a1a] to-[#0a0a0a]'} border ${btn.border || 'border-[#D4AF37]/50'} shadow-md group-hover:shadow-xl group-hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
               >
                 {/* Glossy top highlight */}
                 <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none rounded-t-2xl" />
@@ -546,18 +552,24 @@ export default function SpringboardGrid({
                 )}
 
                 <IconComponent 
-                  className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110" 
+                  className="w-6 h-6 sm:w-6.5 sm:h-6.5 transition-transform group-hover:scale-110" 
                   style={{ color: btn.iconColor || '#D4AF37' }} 
                 />
               </div>
 
               {/* App Label */}
-              <span className="mt-1.5 text-xs font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors leading-tight truncate max-w-[84px]">
+              <span className={`mt-1.5 text-xs font-bold transition-colors leading-tight truncate max-w-[84px] ${
+                isDark 
+                  ? 'text-white group-hover:text-[#D4AF37]' 
+                  : 'text-[#0a0a0a] group-hover:text-[#854d0e]'
+              }`}>
                 {btn.label}
               </span>
               {/* Secondary micro-label */}
               {btn.sub && (
-                <span className="text-[9px] text-[#554433] leading-none mt-0.5 hidden sm:block truncate max-w-[88px]">
+                <span className={`text-[9px] leading-none mt-0.5 truncate max-w-[88px] ${
+                  isDark ? 'text-white/60' : 'text-[#554433]'
+                }`}>
                   {btn.sub}
                 </span>
               )}
