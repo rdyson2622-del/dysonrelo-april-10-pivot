@@ -289,35 +289,39 @@ export default function AdminFrontDoorLab() {
             </div>
           </div>
 
-          {/* TOP BAR: TAN BACKDROP WITH DYSONRELO PILL IN SOLID BLACK & CONCIERGE MUSIC */}
+          {/* TOP BAR: TAN BACKDROP WITH DYSONRELO PILL CENTERED OVER THE LEFT SIDEBAR */}
           <nav
-            className="px-2 sm:px-3.5 lg:px-5 py-1 sm:py-1.5 flex items-center justify-between gap-1 sm:gap-2.5 lg:gap-4 relative shadow-sm"
+            className="py-1 sm:py-1.5 flex items-center justify-between gap-2 relative shadow-sm"
             style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
-            {/* BRAND STATEMENT: DYSONRELO PILL IN SOLID BLACK */}
-            <div 
-              className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-2xl shadow-sm border shrink-0"
-              style={{
-                background: '#0a0a0a',
-                borderColor: `${GOLD}80`,
-              }}
-            >
-              <img
-                src={DYSON_LOGO}
-                alt="Dyson & Dyson"
-                className="h-4 sm:h-5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
-              />
-              <div className="leading-tight">
-                <span
-                  className="font-bold text-[11px] sm:text-xs md:text-sm lg:text-base tracking-wide text-white block leading-tight whitespace-nowrap"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  <span className="md:hidden">DysonRelo</span>
-                  <span className="hidden md:inline">DysonRelo.com</span>
-                </span>
-                <span className="hidden md:block text-[7.5px] md:text-[8px] lg:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
-                  Nationwide Relocation Concierge
-                </span>
+            {/* BRAND STATEMENT: DYSONRELO PILL IN SOLID BLACK CENTERED OVER LEFT SIDEBAR */}
+            <div className="w-auto lg:w-[275px] xl:w-[295px] pl-3 sm:pl-4 lg:pl-0 flex items-center justify-start lg:justify-center shrink-0">
+              <div 
+                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 rounded-2xl shadow-sm border shrink-0 cursor-pointer hover:border-[#D4AF37] transition-all"
+                onClick={() => navigate('/portal')}
+                title="DysonRelo.com - Nationwide Relocation Concierge"
+                style={{
+                  background: '#0a0a0a',
+                  borderColor: `${GOLD}80`,
+                }}
+              >
+                <img
+                  src={DYSON_LOGO}
+                  alt="Dyson & Dyson"
+                  className="h-4 sm:h-5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
+                />
+                <div className="leading-tight">
+                  <span
+                    className="font-bold text-[11px] sm:text-xs md:text-sm lg:text-base tracking-wide text-white block leading-tight whitespace-nowrap"
+                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  >
+                    <span className="md:hidden">DysonRelo</span>
+                    <span className="hidden md:inline">DysonRelo.com</span>
+                  </span>
+                  <span className="hidden md:block text-[7.5px] md:text-[8px] lg:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
+                    Nationwide Relocation Concierge
+                  </span>
+                </div>
               </div>
             </div>
 

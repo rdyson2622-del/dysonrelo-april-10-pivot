@@ -55,7 +55,7 @@ export default function AppLayout() {
     <div className={`flex flex-col h-screen overflow-hidden ${landscape ? 'force-landscape' : ''}`} style={{ background: '#ede0cc' }}>
       {/* Top bar: Clean header with DysonRelo black pill & Concierge Music */}
       <div className="px-3 sm:px-4 py-2 flex items-center justify-between gap-2 sm:gap-3" style={{ background: '#0d0d0d', borderBottom: '1.5px solid rgba(212,175,55,0.4)' }}>
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="w-auto md:w-[310px] flex items-center justify-start md:justify-center gap-2 sm:gap-3 shrink-0">
           {/* Mobile sidebar toggle button */}
           <div className="md:hidden">
             <PortalHomeButton
