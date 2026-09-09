@@ -299,8 +299,8 @@ export default function ClientBacksideLabDemo() {
         <section className="pt-1 pb-2">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
             
-            {/* LEFT COLUMN: 7 SHORTENED COMPACT ACTIONS (NO BLOAT, TIGHT HORIZONTAL FOOTPRINT) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-2">
+            {/* LEFT COLUMN: ACTIONS AREA */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-2">
               <div>
                 <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20 mb-1">
                   <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
@@ -343,14 +343,14 @@ export default function ClientBacksideLabDemo() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: WIDESCREEN HORIZONTAL DNN STUDIO BOX */}
-            <div className="lg:col-span-7 flex flex-col">
+            {/* RIGHT COLUMN: WIDESCREEN HORIZONTAL DNN STUDIO BOX (20% REDUCED FOOTPRINT) */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
               <div 
                 onClick={() => {
                   if (latestNews?.id) navigate(`/dnn-news?articleId=${latestNews.id}`);
                   else navigate('/dnn-news');
                 }}
-                className="w-full h-full rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
+                className="w-full rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
                 title="Click to view Today's Daily News"
               >
                 <div>
