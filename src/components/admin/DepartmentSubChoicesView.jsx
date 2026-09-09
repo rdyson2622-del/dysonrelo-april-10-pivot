@@ -9,7 +9,7 @@ import {
   Calculator, CloudSun, Mic, Brain, Compass, Thermometer, Phone, ScrollText,
   Monitor, Plug, Megaphone, FileText, LayoutDashboard, Layers
 } from 'lucide-react';
-import { ADMIN_DEPT_MINI_APPS, MAJOR_SUBJECTS } from './AdminMiniAppsGrid';
+import { ADMIN_DEPT_MINI_APPS } from './AdminMiniAppsGrid';
 import { DEPARTMENT_DATA } from './departmentData';
 import LiveEmailTextStatusPanel from './LiveEmailTextStatusPanel';
 import CalendarMiniApp from '@/components/miniapps/CalendarMiniApp';
@@ -28,46 +28,18 @@ export default function DepartmentSubChoicesView({
   const dept = DEPARTMENT_DATA[deptId] || DEPARTMENT_DATA.dnn;
   const DeptIcon = dept.icon || Sparkles;
 
-  // Track active subject filter for the top department switcher
-  const [activeSubject, setActiveSubject] = React.useState('all');
-
-  const visibleApps = activeSubject === 'all'
-    ? ADMIN_DEPT_MINI_APPS
-    : ADMIN_DEPT_MINI_APPS.filter(a => a.subject === activeSubject);
-
   return (
     <div className="space-y-5 text-left">
-      {/* ── MAJOR SUBJECT SELECTOR & MINI APPS SWITCHER ── */}
-      <div className="p-3 rounded-2xl bg-[#0f0e0b] border border-white/10 shadow-lg space-y-2.5">
+      {/* ── TOP MINI APPS STRIP SWITCHER ── */}
+      <div className="p-3 rounded-2xl bg-[#0f0e0b] border border-white/10 shadow-lg space-y-2">
         <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-          <span>MAJOR SUBJECTS:</span>
-          <span className="text-white/40 font-normal lowercase">filter by category</span>
+          <span>DEPARTMENT MINI APPS ({ADMIN_DEPT_MINI_APPS.length}):</span>
+          <span className="text-white/40 font-normal lowercase">switch department workspace</span>
         </div>
 
-        {/* Subject Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-          {MAJOR_SUBJECTS.map((subj) => {
-            const isSubjActive = activeSubject === subj.id;
-            return (
-              <button
-                key={subj.id}
-                type="button"
-                onClick={() => setActiveSubject(subj.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
-                  isSubjActive
-                    ? 'bg-[#D4AF37] text-black shadow-md font-black scale-102'
-                    : 'bg-[#181818] hover:bg-[#252525] text-white/75 hover:text-white border border-white/5'
-                }`}
-              >
-                <span>{subj.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Filtered Mini Apps Strip */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 border-t border-white/5" style={{ scrollbarWidth: 'none' }}>
-          {visibleApps.map((app) => {
+        {/* Mini Apps Horizontal Strip */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+          {ADMIN_DEPT_MINI_APPS.map((app) => {
             const Icon = app.icon;
             const isActive = app.id === dept.id;
 

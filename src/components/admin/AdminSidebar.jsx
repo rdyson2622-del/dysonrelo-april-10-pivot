@@ -437,7 +437,7 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      {/* ── 6 CORE DEPARTMENT MINI APPS (BELOW PORTALS) ── */}
+      {/* ── 24 DEPARTMENT MINI APPS (BELOW PORTALS) ── */}
       <div className="px-3 pt-2 pb-2 shrink-0">
         <AdminMiniAppsGrid />
       </div>
