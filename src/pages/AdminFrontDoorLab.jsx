@@ -13,7 +13,6 @@ import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
 import ClientBacksideLabDemo from '@/components/admin/frontdoor/ClientBacksideLabDemo';
-import FirstTimeUserSpringboardLab from '@/components/admin/frontdoor/FirstTimeUserSpringboardLab';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -105,7 +104,14 @@ const MOCK_LISTINGS = [
 
 export default function AdminFrontDoorLab() {
   const navigate = useNavigate();
-  const [deviceView, setDeviceView] = useState('desktop');
+  const [deviceView, setDeviceView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('device') === 'desktop') return 'desktop';
+      if (p.get('device') === 'mobile') return 'mobile';
+    }
+    return 'mobile';
+  });
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
@@ -113,10 +119,10 @@ export default function AdminFrontDoorLab() {
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
   const [activeLabTab, setActiveLabTab] = useState(() => {
     if (typeof window !== 'undefined') {
-      const param = new URLSearchParams(window.location.search).get('view');
-      if (param === 'front_door' || param === 'client_backside' || param === 'springboard_lab') return param;
+      const param = new URLSearchParams(window.location.search).get('view') || new URLSearchParams(window.location.search).get('tab');
+      if (param === 'front_door' || param === 'client_backside') return param;
     }
-    return 'springboard_lab';
+    return 'client_backside';
   });
 
   // Subscriber session & direct-access detection
@@ -249,10 +255,10 @@ export default function AdminFrontDoorLab() {
       <main className="p-3 sm:p-6 md:p-8 flex justify-center items-start">
         <div
           className={`transition-all duration-300 w-full ${
-            activeLabTab === 'client_backside'
-              ? 'max-w-5xl rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden'
-              : deviceView === 'mobile'
+            deviceView === 'mobile'
               ? 'max-w-[420px] rounded-3xl border-4 border-[#333] shadow-2xl overflow-hidden'
+              : activeLabTab === 'client_backside'
+              ? 'max-w-4xl rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden'
               : 'max-w-6xl rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden'
           }`}
           style={{ background: TAN_BG }}
@@ -286,17 +292,6 @@ export default function AdminFrontDoorLab() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setActiveLabTab('springboard_lab')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                  activeLabTab === 'springboard_lab'
-                    ? 'bg-[#10b981] text-black shadow-md'
-                    : 'bg-[#1a1a1a] text-[#10b981] hover:text-white border border-[#10b981]/50'
-                }`}
-              >
-                <span>📱 1st-Time Springboard Lab</span>
-              </button>
-              <button
-                type="button"
                 onClick={() => setActiveLabTab('client_backside')}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
                   activeLabTab === 'client_backside'
@@ -320,11 +315,7 @@ export default function AdminFrontDoorLab() {
             </div>
           </div>
 
-          {activeLabTab === 'springboard_lab' ? (
-            <div className="p-3 sm:p-5 lg:p-6">
-              <FirstTimeUserSpringboardLab />
-            </div>
-          ) : activeLabTab === 'client_backside' ? (
+          {activeLabTab === 'client_backside' ? (
             <div className="p-3 sm:p-5 lg:p-6">
               <ClientBacksideLabDemo />
             </div>

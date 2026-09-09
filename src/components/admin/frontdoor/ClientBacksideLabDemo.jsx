@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, Mic, BookOpen, Phone, MessageCircle, 
-  X, ChevronRight, Sparkles, ShieldCheck, 
-  Home, MapPin, FileText, ArrowRight, CheckCircle2,
-  Building, Compass, ExternalLink, Play
+  Search, Mic, BookOpen, Phone, MessageSquare, 
+  X, Sparkles, ShieldCheck, Compass, Play, 
+  ArrowRight, FileText, CheckCircle2, Lock
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import ClientBottomCardsDeck from './ClientBottomCardsDeck';
-import UnifiedConciergeSearchPill from '@/components/portal/UnifiedConciergeSearchPill';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
 
 export default function ClientBacksideLabDemo() {
   const navigate = useNavigate();
-  const [commandText, setCommandText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
-  const [voiceStatus, setVoiceStatus] = useState('Tap microphone to start live Voice-to-Voice with Charlie');
+  const [voiceStatus, setVoiceStatus] = useState('Charlie is standing by · Tap mic for live voice');
 
   // Client Data State
   const [currentUser, setCurrentUser] = useState(null);
   const [clientRecord, setClientRecord] = useState(null);
-  const [latestNews, setLatestNews] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     base44.auth.me().then(user => {
-      if (user && isMounted) {
-        setCurrentUser(user);
-      }
+      if (user && isMounted) setCurrentUser(user);
     }).catch(() => {});
 
     base44.entities.RelocationClient.list('-created_date', 1).then(clients => {
@@ -39,161 +33,134 @@ export default function ClientBacksideLabDemo() {
       }
     }).catch(() => {});
 
-    base44.entities.DnnArticle.filter({ status: 'published' }, '-published_date', 1).then(articles => {
-      if (articles && articles.length > 0 && isMounted) {
-        setLatestNews(articles[0]);
-      }
-    }).catch(() => {});
-
     return () => { isMounted = false; };
   }, []);
 
-  // Client display metadata
   const displayName = clientRecord?.full_name || currentUser?.full_name || 'Kayden Sterling';
-  const firstName = displayName.split(' ')[0] || 'Kayden';
   const photoUrl = currentUser?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
-  const originAddress = clientRecord?.current_address || '14820 Blossom Hill Rd, Los Gatos, CA';
   const originCity = clientRecord?.current_city || 'Los Gatos, CA';
   const destinationCity = clientRecord?.destination_city ? clientRecord.destination_city.replace(/,\s*[A-Z]{2}$/i, '') : 'Scottsdale';
   const destinationState = clientRecord?.destination_state || 'AZ';
 
-  // Canonical 16:9 DNN Studio news placeholder (Charlie at desk + DNN center screen + Bob Dyson standing)
-  const DNN_STUDIO_SET_URL = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/cd821f5a9_Screenshot2026-09-09at110438AM.png';
-  const newsHeadline = latestNews?.headline || 'Seattle Office Market Stabilizes as AI Firms Drive New Leasing Demand';
-
-  const handleToggleVoice = () => {
-    if (!isVoiceActive) {
-      setIsVoiceActive(true);
-      setVoiceStatus('Charlie is listening (Live V2V)... "Hello! How can I help with your move today?"');
-    } else {
-      setIsVoiceActive(false);
-      setVoiceStatus('Tap microphone to start live Voice-to-Voice with Charlie');
-    }
-  };
-
-  const handleCommandSubmit = (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (!commandText.trim()) return;
-    const q = commandText.trim();
+    const q = searchQuery.trim();
+    if (!q) return;
     if (q.toLowerCase().includes('roadmap') || q.toLowerCase().includes('move')) {
       navigate('/client-roadmap');
     } else if (q.toLowerCase().includes('voice') || q.toLowerCase().includes('charlie')) {
       navigate('/talking-app');
-    } else if (q.toLowerCase().includes('solution') || q.toLowerCase().includes('strategy')) {
+    } else if (q.toLowerCase().includes('solution') || q.toLowerCase().includes('strategy') || q.toLowerCase().includes('tax')) {
       navigate(`/solutions?prompt=${encodeURIComponent(q)}&autostart=true`);
+    } else if (q.toLowerCase().includes('library') || q.toLowerCase().includes('file')) {
+      setIsLibraryOpen(true);
     } else {
       const clean = q.replace(/,\s*/g, '_').replace(/\s+/g, '-');
       window.open(`https://www.realtor.com/realestateandhomes-search/${encodeURIComponent(clean)}`, '_blank', 'noopener,noreferrer');
     }
   };
 
-  // iPhone-style App Symbols Grid (Springboard)
-  const APP_SYMBOLS = [
-    {
-      id: 'relocate',
-      label: 'Relocate',
-      sub: 'Start / Move',
-      badge: 'Active',
-      icon: Home,
-      iconColor: '#D4AF37',
-      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
-      border: 'border-[#D4AF37]/50',
-      path: '/relocation-intake',
-    },
+  const handleToggleVoice = () => {
+    if (!isVoiceActive) {
+      setIsVoiceActive(true);
+      setVoiceStatus('Charlie is listening (Live V2V)... "Hello Kayden, how can I assist your move today?"');
+    } else {
+      setIsVoiceActive(false);
+      setVoiceStatus('Charlie is standing by · Tap mic for live voice');
+    }
+  };
+
+  // The 6 clean iOS-style app tiles requested:
+  // 1. Strategy
+  // 2. Vet listing/agent
+  // 3. My Library
+  // 4. Roadmap
+  // 5. News / market
+  // 6. Concierge
+  const APPS = [
     {
       id: 'strategy',
       label: 'Strategy',
       sub: 'Tax & Solutions',
       icon: Sparkles,
       iconColor: '#e8c84a',
-      bgGradient: 'from-[#1c1917] via-[#121212] to-[#0a0a0a]',
-      border: 'border-[#D4AF37]/40',
-      path: '/solutions?prompt=Tax%20migration%20and%201031%20exchange%20strategy&autostart=true',
+      bgGradient: 'from-[#221d13] via-[#15130f] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/50',
+      action: () => navigate('/solutions?prompt=Tax%20migration%20and%201031%20exchange%20strategy&autostart=true'),
     },
     {
       id: 'vet',
-      label: 'Vet Agent',
-      sub: 'Search / Refer',
+      label: 'Vet listing/agent',
+      sub: 'Search / Vetting',
       icon: ShieldCheck,
-      iconColor: '#10b981',
-      bgGradient: 'from-[#064e3b]/30 via-[#121212] to-[#0a0a0a]',
+      iconColor: '#34d399',
+      bgGradient: 'from-[#0b271d] via-[#0d1a15] to-[#0a0a0a]',
       border: 'border-[#10b981]/50',
-      path: '/refer',
+      action: () => navigate('/refer'),
     },
     {
       id: 'library',
       label: 'My Library',
       sub: 'Deeds & Files',
+      badge: '3 Docs',
       icon: BookOpen,
       iconColor: '#60a5fa',
-      bgGradient: 'from-[#1e3a8a]/30 via-[#121212] to-[#0a0a0a]',
-      border: 'border-[#60a5fa]/40',
+      bgGradient: 'from-[#10223d] via-[#0c1626] to-[#0a0a0a]',
+      border: 'border-[#3b82f6]/50',
       action: () => setIsLibraryOpen(true),
     },
     {
       id: 'roadmap',
       label: 'Roadmap',
-      sub: 'Phases & Steps',
+      sub: 'Move Stages',
       icon: Compass,
       iconColor: '#D4AF37',
-      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
+      bgGradient: 'from-[#241f17] via-[#14120f] to-[#0a0a0a]',
       border: 'border-[#D4AF37]/50',
-      path: '/client-roadmap',
+      action: () => navigate('/client-roadmap'),
     },
     {
       id: 'news',
-      label: 'DNN News',
-      sub: 'Market Pulse',
+      label: 'News / market',
+      sub: '6 AM Daily Pulse',
       badge: '6 AM',
       icon: Play,
-      iconColor: '#ef4444',
-      bgGradient: 'from-[#7f1d1d]/30 via-[#121212] to-[#0a0a0a]',
-      border: 'border-[#ef4444]/40',
-      path: '/dnn-news',
-    },
-    {
-      id: 'charlie',
-      label: 'Charlie AI',
-      sub: 'Live Voice',
-      badge: 'Live',
-      icon: Mic,
-      iconColor: '#10b981',
-      bgGradient: 'from-[#064e3b]/40 via-[#121212] to-[#0a0a0a]',
-      border: 'border-[#10b981]/60',
-      action: () => navigate('/talking-app'),
+      iconColor: '#f87171',
+      bgGradient: 'from-[#2a1313] via-[#180e0e] to-[#0a0a0a]',
+      border: 'border-[#ef4444]/50',
+      action: () => navigate('/dnn-news'),
     },
     {
       id: 'concierge',
-      label: 'Fiduciary',
+      label: 'Concierge',
       sub: 'Direct Desk',
       icon: Phone,
       iconColor: '#D4AF37',
-      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
-      border: 'border-[#D4AF37]/40',
+      bgGradient: 'from-[#241f17] via-[#14120f] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/50',
       action: () => window.open('tel:+18583531200'),
     },
   ];
 
   return (
-    <div className="w-full text-left">
+    <div className="w-full text-left font-sans">
       <div 
-        className="w-full rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-[#0a0a0a]/20 text-[#0a0a0a] space-y-6"
+        className="w-full rounded-3xl p-4 sm:p-6 shadow-2xl border border-[#0a0a0a]/20 text-[#0a0a0a] space-y-5"
         style={{
           background: TAN_BG,
           boxShadow: '0 20px 50px -10px rgba(0,0,0,0.25), 0 0 0 1px rgba(212,175,55,0.4)',
         }}
       >
         {/* ========================================================
-            1. LANDSCAPE FIRST: CLIENT PHOTO & INFO ABOVE CONCIERGE CONTENT
-            Placed prominently at the very top of the client backside
+            1. TOP CLIENT HEADER: WELCOME + VERIFIED SUBSCRIBER + MY LIBRARY
             ======================================================== */}
-        <section className="p-3.5 sm:p-4 rounded-xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
+        <section className="p-3.5 sm:p-4 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="relative shrink-0">
               <img 
                 src={photoUrl} 
                 alt={displayName} 
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-[#D4AF37] shadow-md"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-[#D4AF37] shadow-md"
               />
               <span 
                 className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#10b981] border-2 border-black flex items-center justify-center text-[9px] font-black text-black"
@@ -204,284 +171,230 @@ export default function ClientBacksideLabDemo() {
             </div>
 
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
-                  DEMO / LAB
-                </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-[10px] text-[#10b981] font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                  Verified Subscriber Account
+                  Verified Subscriber
+                </span>
+                <span className="text-white/30 text-[10px]">•</span>
+                <span className="text-[10px] text-white/60 font-medium">
+                  {originCity} → {destinationCity}, {destinationState}
                 </span>
               </div>
               <h1 
-                className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight leading-tight mt-0.5"
+                className="text-base sm:text-lg font-bold text-white tracking-tight leading-tight mt-0.5 truncate"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Welcome back, {displayName}
               </h1>
-              <p className="text-xs text-white/70 font-sans mt-0.5">
-                Current Residence: <span className="text-[#D4AF37] font-semibold">{originCity}</span>
-                <span className="mx-1.5 text-white/30">•</span>
-                Relocation Target: <span className="text-[#10b981] font-semibold">{destinationCity}, {destinationState}</span>
-              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
-            <div className="hidden lg:block text-right text-xs pr-2 border-r border-white/15">
-              <div className="text-[10px] text-white/50 uppercase tracking-wider font-semibold">Fiduciary Desk</div>
-              <div className="font-mono text-white font-bold">(858) 353-1200</div>
+          {/* Dedicated My Library Top Access Button */}
+          <button
+            type="button"
+            onClick={() => setIsLibraryOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 shrink-0"
+            style={{
+              background: '#151515',
+              color: GOLD,
+              border: `1.2px solid ${GOLD}`,
+            }}
+          >
+            <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>My Library</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-[#D4AF37] text-black font-black hidden sm:inline">
+              3
+            </span>
+          </button>
+        </section>
+
+        {/* ========================================================
+            2. SEARCH + CHARLIE AI BAR
+            ======================================================== */}
+        <section className="space-y-2">
+          {/* Unified Luxury Search with Charlie Mic Trigger */}
+          <form 
+            onSubmit={handleSearchSubmit}
+            className="flex items-center gap-2 p-1.5 rounded-2xl bg-black text-white border-2 border-[#D4AF37] shadow-xl"
+          >
+            {/* Charlie Tap-to-Talk Mic Button */}
+            <button
+              type="button"
+              onClick={handleToggleVoice}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
+                isVoiceActive
+                  ? 'bg-[#10b981] text-black animate-pulse shadow-md'
+                  : 'bg-[#181818] text-[#D4AF37] hover:bg-[#222] border border-[#D4AF37]/50'
+              }`}
+              title="Talk with Charlie AI"
+            >
+              <Mic className="w-4 h-4 text-[#D4AF37]" />
+              <span className="hidden sm:inline">Charlie AI</span>
+            </button>
+
+            {/* Search Input */}
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={`Ask Charlie anything or search ${destinationCity}...`}
+              className="w-full bg-transparent text-xs sm:text-sm text-white px-2 py-1 focus:outline-none placeholder:text-white/45 font-medium"
+            />
+
+            {/* Search Submit Button */}
+            <button
+              type="submit"
+              className="px-3.5 py-2 rounded-xl bg-[#D4AF37] text-black hover:bg-[#e8c84a] transition-all font-bold text-xs flex items-center gap-1.5 shrink-0 cursor-pointer shadow active:scale-95"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Search</span>
+            </button>
+          </form>
+
+          {/* Charlie Voice Status Line */}
+          <div className="px-2 flex items-center justify-between text-[11px] text-[#554433]">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className={`w-2 h-2 rounded-full ${isVoiceActive ? 'bg-[#10b981] animate-ping' : 'bg-[#D4AF37]'}`} />
+              <span className="font-medium truncate">{voiceStatus}</span>
             </div>
             <button
               type="button"
-              onClick={() => setIsLibraryOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
-              style={{
-                background: '#151515',
-                color: GOLD,
-                border: `1.2px solid ${GOLD}`,
-              }}
+              onClick={() => navigate('/talking-app')}
+              className="text-[10px] font-bold text-[#854d0e] hover:underline shrink-0"
             >
-              <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>My Library</span>
+              Full Screen V2V →
             </button>
           </div>
         </section>
 
         {/* ========================================================
-            2. DYSON RELO CONCIERGE HEADER
+            3. CLEAN iOS-LIKE ICON GRID (6 ICONS: 3x2 ON MOBILE)
+            - Strategy
+            - Vet listing/agent
+            - My Library
+            - Roadmap
+            - News / market
+            - Concierge
             ======================================================== */}
-        <div className="space-y-0.5 text-left">
-          <h2 
-            className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            DysonRelo Concierge
-          </h2>
-          <p className="text-xs sm:text-sm font-semibold text-[#854d0e]">
-            Independent Fiduciary Relocation Management
-          </p>
-        </div>
+        <section className="space-y-2 pt-1">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-xs font-black uppercase tracking-wider text-[#854d0e]">
+              WORKSPACE APPS
+            </h2>
+            <span className="text-[10px] text-[#554433] font-medium">
+              Tap to Open
+            </span>
+          </div>
 
-        {/* ========================================================
-            THE ONE UNIFIED SEARCH & ASK PILL (INCLUDES EMBEDDED VOICE AI)
-            ======================================================== */}
-        <section className="space-y-1">
-          <UnifiedConciergeSearchPill 
-            placeholder={`Hi ${firstName.toUpperCase()}... What can we do next for you?`}
-            showVoiceToggle={true}
-            showSuggestions={false}
-          />
-        </section>
-
-        {/* ========================================================
-            2. MIDDLE SECTION: 7 SHORTENED TOOLS (LEFT) + WIDESCREEN HORIZONTAL DNN NEWS BOX (RIGHT)
-            ======================================================== */}
-        <section className="pt-1 pb-2">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-            
-            {/* LEFT COLUMN: IPHONE / ANDROID STYLE APP SYMBOLS (SPRINGBOARD) */}
-            <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
-              <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#0a0a0a]/20 mb-3">
-                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
-                    CONCIERGE WORKSPACE APPS
-                  </h3>
-                  <span className="text-[10px] text-[#44382c] font-medium">
-                    Tap to Launch
-                  </span>
-                </div>
-
-                {/* 4-COLUMN PHONE APP SPRINGBOARD GRID */}
-                <div className="grid grid-cols-4 gap-3 sm:gap-4 py-1">
-                  {APP_SYMBOLS.map((app) => {
-                    const Icon = app.icon;
-                    return (
-                      <button
-                        key={app.id}
-                        type="button"
-                        onClick={() => {
-                          if (app.action) app.action();
-                          else if (app.path) navigate(app.path);
-                        }}
-                        className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
-                      >
-                        {/* Squircle App Icon Container */}
-                        <div 
-                          className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-md group-hover:shadow-xl group-hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
-                        >
-                          {/* Glossy highlight */}
-                          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none rounded-t-2xl" />
-
-                          {/* Optional Status Badge */}
-                          {app.badge && (
-                            <span 
-                              className={`absolute top-1 right-1 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider border leading-none shadow-sm ${
-                                app.badge === 'Live' 
-                                  ? 'bg-[#10b981] text-black border-black animate-pulse'
-                                  : app.badge === '6 AM'
-                                  ? 'bg-[#ef4444] text-white border-white/20'
-                                  : 'bg-[#D4AF37] text-black border-black/40'
-                              }`}
-                            >
-                              {app.badge}
-                            </span>
-                          )}
-
-                          <Icon 
-                            className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110" 
-                            style={{ color: app.iconColor }} 
-                          />
-                        </div>
-
-                        {/* App Label */}
-                        <span className="mt-1.5 text-xs font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors leading-tight truncate max-w-[80px]">
-                          {app.label}
-                        </span>
-                        {/* Secondary micro-label */}
-                        <span className="text-[9px] text-[#554433] leading-none mt-0.5 hidden sm:block truncate max-w-[84px]">
-                          {app.sub}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Direct Desk Hotline */}
-              <div className="p-2.5 rounded-xl bg-black/5 border border-black/10 text-[11px] text-[#554433] flex items-center justify-between">
-                <span>Direct Fiduciary Desk:</span>
-                <div className="flex items-center gap-2">
-                  <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
-                    (858) 353-1200
-                  </a>
-                  <span className="text-black/30">|</span>
-                  <a href="sms:+18583531200" className="text-[10px] uppercase font-bold text-[#854d0e] hover:underline">
-                    Text Concierge
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: WIDESCREEN HORIZONTAL DNN STUDIO BOX (20% REDUCED FOOTPRINT) */}
-            <div className="lg:col-span-5 flex flex-col justify-center">
-              <div 
-                onClick={() => {
-                  if (latestNews?.id) navigate(`/dnn-news?articleId=${latestNews.id}`);
-                  else navigate('/dnn-news');
-                }}
-                className="w-full rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
-                title="Click to view Today's Daily News"
-              >
-                <div>
-                  {/* WIDESCREEN 16:9 STUDIO BACKDROP: CHARLIE AT DESK + DNN SCREEN + BOB DYSON */}
-                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
-                    <img 
-                      src={DNN_STUDIO_SET_URL} 
-                      alt="DNN News Network Studio"
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/30" />
-                    
-                    {/* Broadcast Live Badge */}
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/85 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                      <Play className="w-3 h-3 text-[#D4AF37] fill-[#D4AF37]" />
-                      <span>DNN 6AM DAILY BROADCAST</span>
-                    </div>
-
-                    <span className="absolute top-3 right-3 text-[9px] font-bold px-2.5 py-0.5 rounded-full bg-[#D4AF37] text-black">
-                      Daily News
-                    </span>
-
-                    {/* Headline and Topic Banner */}
-                    <div className="absolute bottom-3 left-3 right-3 space-y-0.5">
-                      <div className="text-[10px] text-[#fce38a] font-bold uppercase tracking-wider">
-                        Today's Market Pulse &amp; Rates
-                      </div>
-                      <div className="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug drop-shadow-md">
-                        {newsHeadline}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Content below the 16:9 broadcast photo */}
-                  <div className="p-3.5 sm:p-4 space-y-1.5">
-                    <div className="flex items-center justify-between text-[11px] text-white/70">
-                      <span>Anchor: Charlie &amp; Bob Dyson</span>
-                      <span className="text-[#10b981] font-semibold flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Updated 6:00 AM
-                      </span>
-                    </div>
-                    <p className="text-xs text-white/75 leading-relaxed line-clamp-2">
-                      Daily AI &amp; expert fiduciary relocation intelligence covering tax migration data, interest rate adjustments, and local market effects across all 50 states.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3.5 sm:p-4 pt-0">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (latestNews?.id) navigate(`/dnn-news?articleId=${latestNews.id}`);
-                      else navigate('/dnn-news');
-                    }}
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-2 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4 py-1">
+            {APPS.map((app) => {
+              const Icon = app.icon;
+              return (
+                <button
+                  key={app.id}
+                  type="button"
+                  onClick={app.action}
+                  className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
+                >
+                  {/* iOS Squircle Icon Tile */}
+                  <div 
+                    className={`w-15 h-15 sm:w-16 sm:h-16 rounded-[22px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:shadow-2xl group-hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
                   >
-                    <Play className="w-3.5 h-3.5 fill-black" />
-                    <span>Click Thru to Daily News</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
+                    {/* Glossy iOS Reflection Sheen */}
+                    <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/18 via-white/5 to-transparent pointer-events-none rounded-t-[22px]" />
 
+                    {/* Optional Badge */}
+                    {app.badge && (
+                      <span 
+                        className="absolute top-1 right-1 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider bg-[#D4AF37] text-black shadow-sm"
+                      >
+                        {app.badge}
+                      </span>
+                    )}
+
+                    <Icon 
+                      className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110 drop-shadow" 
+                      style={{ color: app.iconColor }} 
+                    />
+                  </div>
+
+                  {/* Clean Short Label Under Each Icon */}
+                  <span className="mt-1.5 text-xs font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors leading-tight truncate max-w-[95px]">
+                    {app.label}
+                  </span>
+                  {/* Micro Subtitle */}
+                  <span className="text-[9px] text-[#554433] leading-none mt-0.5 truncate max-w-[95px]">
+                    {app.sub}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </section>
 
         {/* ========================================================
-            3. AT THE BOTTOM: CLIENT BOTTOM CARDS DECK
-            IN PORTRAIT: POSTED ONE AT A TIME FULL SCREEN / FULL WIDTH
-            IN LANDSCAPE DESKTOP: 3 IN A ROW
+            4. MY LIBRARY QUICK ACCESS CARD
             ======================================================== */}
-        <ClientBottomCardsDeck 
-          originAddress={originAddress}
-          destinationCity={destinationCity}
-          destinationState={destinationState}
-          onOpenLibrary={() => setIsLibraryOpen(true)}
-        />
+        <section 
+          onClick={() => setIsLibraryOpen(true)}
+          className="p-3.5 rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/50 shadow-md flex items-center justify-between gap-3 cursor-pointer hover:border-[#D4AF37] transition-all group"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-[#141414] border border-[#3b82f6]/50 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-[#60a5fa]" />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-white">My Library Vault</span>
+                <span className="px-2 py-0.2 rounded-full text-[8.5px] font-bold bg-[#1e3a8a] text-[#93c5fd]">
+                  3 Active Files
+                </span>
+              </div>
+              <p className="text-[11px] text-white/60 truncate mt-0.5">
+                Deeds, 1031 Exchange filing, and Fiduciary Agreements
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 text-xs font-bold text-[#D4AF37] group-hover:translate-x-0.5 transition-transform shrink-0">
+            <span>Open Vault</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </section>
 
         {/* ========================================================
-            FOOTER
+            FOOTER: FIDUCIARY DESK DIRECT LINE
             ======================================================== */}
-        <footer className="pt-3 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#44382c]">
+        <footer className="pt-2 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#554433]">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
-            <span>Independent Fiduciary Representation across all 50 States</span>
+            <span>Fiduciary Representation across all 50 States · The Dyson &amp; Dyson Companies, Inc.</span>
           </div>
-          <div className="font-mono text-[#0a0a0a] text-[11px]">
-            The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118
+          <div className="flex items-center gap-2 font-mono font-bold text-[#0a0a0a] text-[11px]">
+            <a href="tel:+18583531200" className="hover:text-[#854d0e]">(858) 353-1200</a>
+            <span>•</span>
+            <a href="sms:+18583531200" className="text-[#854d0e] uppercase hover:underline">Text Concierge</a>
           </div>
         </footer>
 
       </div>
 
       {/* ========================================================
-          MY LIBRARY ARCHIVE MODAL (STORED DATA LIVES BEHIND HERE)
+          MY LIBRARY DRAWER / MODAL
           ======================================================== */}
       {isLibraryOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
-            className="w-full max-w-lg rounded-2xl p-6 border space-y-4 shadow-2xl text-left bg-[#0a0a0a] border-[#D4AF37] text-white relative"
+            className="w-full max-w-lg rounded-3xl p-6 border space-y-4 shadow-2xl text-left bg-[#0a0a0a] border-[#D4AF37] text-white relative"
           >
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-[#D4AF37]" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#3b82f6]/50 flex items-center justify-center shrink-0">
+                  <BookOpen className="w-5 h-5 text-[#60a5fa]" />
+                </div>
                 <div>
-                  <h2 className="text-base font-bold text-white">Stored Data &amp; Archives (DEMO / LAB)</h2>
-                  <p className="text-xs text-white/50">{displayName} · Secure Library</p>
+                  <h2 className="text-base font-bold text-white">My Library &amp; Stored Vault</h2>
+                  <p className="text-xs text-white/50">{displayName} · Verified Account</p>
                 </div>
               </div>
               <button 
@@ -494,19 +407,34 @@ export default function ClientBacksideLabDemo() {
             </div>
 
             <div className="space-y-3 py-2 text-xs">
-              <div className="p-3 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-                <div className="font-bold text-[#D4AF37]">Properties &amp; Ownership Files</div>
-                <p className="text-white/60 text-[11px]">Deeds, title reports, property surveys, and 1031 exchange filings for {originAddress}.</p>
+              <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#D4AF37]">Properties &amp; Deed Vault</span>
+                  <span className="text-[10px] text-[#10b981] font-semibold">Verified</span>
+                </div>
+                <p className="text-white/60 text-[11px]">
+                  Grant deed, preliminary title report, and property survey for {originCity}.
+                </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-                <div className="font-bold text-[#D4AF37]">Fiduciary Agreements &amp; Disclosure</div>
-                <p className="text-white/60 text-[11px]">Signed master engagement agreement, confidentiality agreement, and zero-fee disclosure.</p>
+              <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#D4AF37]">Fiduciary Engagement &amp; Disclosures</span>
+                  <span className="text-[10px] text-[#10b981] font-semibold">Active</span>
+                </div>
+                <p className="text-white/60 text-[11px]">
+                  Master fiduciary representation agreement and zero-fee disclosure filed with The Dyson &amp; Dyson Companies, Inc.
+                </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-                <div className="font-bold text-[#D4AF37]">Charlie AI Sessions &amp; Call Logs</div>
-                <p className="text-white/60 text-[11px]">Spoken audio logs, transcripts, and vetted agent comparison reports.</p>
+              <div className="p-3.5 rounded-2xl bg-[#141414] border border-white/10 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#D4AF37]">Charlie AI Sessions &amp; Call Logs</span>
+                  <span className="text-[10px] text-white/40">3 Turns</span>
+                </div>
+                <p className="text-white/60 text-[11px]">
+                  Spoken audio logs, transcripts, and vetted agent comparison notes for {destinationCity}.
+                </p>
               </div>
             </div>
 
@@ -514,10 +442,10 @@ export default function ClientBacksideLabDemo() {
               <button
                 type="button"
                 onClick={() => setIsLibraryOpen(false)}
-                className="w-full py-2.5 rounded-xl text-xs font-bold text-black cursor-pointer shadow hover:brightness-110"
+                className="w-full py-2.5 rounded-xl text-xs font-bold text-black cursor-pointer shadow hover:brightness-110 active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
               >
-                Close Library Drawer
+                Close Library Vault
               </button>
             </div>
           </div>
