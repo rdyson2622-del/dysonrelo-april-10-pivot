@@ -250,12 +250,15 @@ export default function LuxuryHeroShowcase({
           </div>
 
           {/* Bottom Compliance & Fiduciary License Line */}
-          <div className="pt-2.5 mt-2.5 border-t border-white/10 text-[9.5px] text-white/60 flex items-center justify-between">
-            <span className="flex items-center gap-1">
+          <div className="pt-2.5 mt-2.5 border-t border-white/10 text-[9px] text-white/60 flex items-center justify-between gap-1.5">
+            <span className="flex items-center gap-1 shrink-0">
               <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
               <span>All 50 States</span>
             </span>
-            <span className="font-mono text-white/80">CA DRE #02303118</span>
+            <div className="text-right leading-tight">
+              <div className="text-white/85 font-medium text-[8.5px] tracking-tight">The Dyson &amp; Dyson Companies, Inc.</div>
+              <div className="font-mono text-white/70 text-[8.5px]">CA DRE #02303118</div>
+            </div>
           </div>
 
           {/* ADMIN TEAM QUICK ENTRY (DEDICATED FOR ADMINS, OUT OF TOP NAV) */}
