@@ -86,48 +86,89 @@ export default function ClientBacksideLabDemo() {
     }
   };
 
-  // 7 Core Actions: Shortened & concise per user direction (no bloated descriptions)
-  const TEXT_ACTIONS = [
+  // iPhone-style App Symbols Grid (Springboard)
+  const APP_SYMBOLS = [
     {
-      id: 'request',
-      number: '1',
-      title: 'Start / update relocation request',
+      id: 'relocate',
+      label: 'Relocate',
+      sub: 'Start / Move',
+      badge: 'Active',
+      icon: Home,
+      iconColor: '#D4AF37',
+      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/50',
       path: '/relocation-intake',
     },
     {
       id: 'strategy',
-      number: '2',
-      title: 'Ask for a strategy or solution',
+      label: 'Strategy',
+      sub: 'Tax & Solutions',
+      icon: Sparkles,
+      iconColor: '#e8c84a',
+      bgGradient: 'from-[#1c1917] via-[#121212] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/40',
       path: '/solutions?prompt=Tax%20migration%20and%201031%20exchange%20strategy&autostart=true',
     },
     {
       id: 'vet',
-      number: '3',
-      title: 'Search / vet a property or agent',
+      label: 'Vet Agent',
+      sub: 'Search / Refer',
+      icon: ShieldCheck,
+      iconColor: '#10b981',
+      bgGradient: 'from-[#064e3b]/30 via-[#121212] to-[#0a0a0a]',
+      border: 'border-[#10b981]/50',
       path: '/refer',
     },
     {
       id: 'library',
-      number: '4',
-      title: 'Open My Library',
+      label: 'My Library',
+      sub: 'Deeds & Files',
+      icon: BookOpen,
+      iconColor: '#60a5fa',
+      bgGradient: 'from-[#1e3a8a]/30 via-[#121212] to-[#0a0a0a]',
+      border: 'border-[#60a5fa]/40',
       action: () => setIsLibraryOpen(true),
     },
     {
       id: 'roadmap',
-      number: '5',
-      title: 'View / update a Roadmap',
+      label: 'Roadmap',
+      sub: 'Phases & Steps',
+      icon: Compass,
+      iconColor: '#D4AF37',
+      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/50',
       path: '/client-roadmap',
     },
     {
       id: 'news',
-      number: '6',
-      title: 'Get news / market effects',
+      label: 'DNN News',
+      sub: 'Market Pulse',
+      badge: '6 AM',
+      icon: Play,
+      iconColor: '#ef4444',
+      bgGradient: 'from-[#7f1d1d]/30 via-[#121212] to-[#0a0a0a]',
+      border: 'border-[#ef4444]/40',
       path: '/dnn-news',
     },
     {
+      id: 'charlie',
+      label: 'Charlie AI',
+      sub: 'Live Voice',
+      badge: 'Live',
+      icon: Mic,
+      iconColor: '#10b981',
+      bgGradient: 'from-[#064e3b]/40 via-[#121212] to-[#0a0a0a]',
+      border: 'border-[#10b981]/60',
+      action: () => navigate('/talking-app'),
+    },
+    {
       id: 'concierge',
-      number: '7',
-      title: 'Contact concierge',
+      label: 'Fiduciary',
+      sub: 'Direct Desk',
+      icon: Phone,
+      iconColor: '#D4AF37',
+      bgGradient: 'from-[#1a1a1a] via-[#111111] to-[#0a0a0a]',
+      border: 'border-[#D4AF37]/40',
       action: () => window.open('tel:+18583531200'),
     },
   ];
@@ -299,47 +340,86 @@ export default function ClientBacksideLabDemo() {
         <section className="pt-1 pb-2">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
             
-            {/* LEFT COLUMN: ACTIONS AREA */}
-            <div className="lg:col-span-7 flex flex-col justify-between space-y-2">
+            {/* LEFT COLUMN: IPHONE / ANDROID STYLE APP SYMBOLS (SPRINGBOARD) */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
               <div>
-                <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20 mb-1">
+                <div className="flex items-center justify-between pb-2 border-b border-[#0a0a0a]/20 mb-3">
                   <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
-                    WHAT DYSONRELO DOES FOR YOU:
+                    CONCIERGE WORKSPACE APPS
                   </h3>
-                  <span className="text-[10px] text-[#44382c] font-medium hidden sm:inline">
-                    7 Quick Actions
+                  <span className="text-[10px] text-[#44382c] font-medium">
+                    Tap to Launch
                   </span>
                 </div>
 
-                <div className="divide-y divide-[#0a0a0a]/10">
-                  {TEXT_ACTIONS.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => {
-                        if (item.action) item.action();
-                        else if (item.path) navigate(item.path);
-                      }}
-                      className="w-full py-2 px-1 flex items-center justify-between text-left cursor-pointer transition-all hover:bg-black/5 group rounded-lg"
-                    >
-                      <div className="text-xs sm:text-sm font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors flex items-center gap-1.5 truncate pr-2">
-                        <span className="text-xs font-mono font-bold text-[#854d0e] shrink-0">{item.number}.</span>
-                        <span className="truncate">{item.title}</span>
-                      </div>
-                      <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#854d0e] group-hover:translate-x-1 transition-transform shrink-0">
-                        <span>Continue</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </span>
-                    </button>
-                  ))}
+                {/* 4-COLUMN PHONE APP SPRINGBOARD GRID */}
+                <div className="grid grid-cols-4 gap-3 sm:gap-4 py-1">
+                  {APP_SYMBOLS.map((app) => {
+                    const Icon = app.icon;
+                    return (
+                      <button
+                        key={app.id}
+                        type="button"
+                        onClick={() => {
+                          if (app.action) app.action();
+                          else if (app.path) navigate(app.path);
+                        }}
+                        className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
+                      >
+                        {/* Squircle App Icon Container */}
+                        <div 
+                          className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-md group-hover:shadow-xl group-hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
+                        >
+                          {/* Glossy highlight */}
+                          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none rounded-t-2xl" />
+
+                          {/* Optional Status Badge */}
+                          {app.badge && (
+                            <span 
+                              className={`absolute top-1 right-1 px-1.5 py-0.2 rounded-full text-[8px] font-black uppercase tracking-wider border leading-none shadow-sm ${
+                                app.badge === 'Live' 
+                                  ? 'bg-[#10b981] text-black border-black animate-pulse'
+                                  : app.badge === '6 AM'
+                                  ? 'bg-[#ef4444] text-white border-white/20'
+                                  : 'bg-[#D4AF37] text-black border-black/40'
+                              }`}
+                            >
+                              {app.badge}
+                            </span>
+                          )}
+
+                          <Icon 
+                            className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110" 
+                            style={{ color: app.iconColor }} 
+                          />
+                        </div>
+
+                        {/* App Label */}
+                        <span className="mt-1.5 text-xs font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors leading-tight truncate max-w-[80px]">
+                          {app.label}
+                        </span>
+                        {/* Secondary micro-label */}
+                        <span className="text-[9px] text-[#554433] leading-none mt-0.5 hidden sm:block truncate max-w-[84px]">
+                          {app.sub}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
+              {/* Direct Desk Hotline */}
               <div className="p-2.5 rounded-xl bg-black/5 border border-black/10 text-[11px] text-[#554433] flex items-center justify-between">
                 <span>Direct Fiduciary Desk:</span>
-                <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
-                  (858) 353-1200
-                </a>
+                <div className="flex items-center gap-2">
+                  <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
+                    (858) 353-1200
+                  </a>
+                  <span className="text-black/30">|</span>
+                  <a href="sms:+18583531200" className="text-[10px] uppercase font-bold text-[#854d0e] hover:underline">
+                    Text Concierge
+                  </a>
+                </div>
               </div>
             </div>
 

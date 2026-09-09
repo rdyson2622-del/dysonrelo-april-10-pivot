@@ -20,7 +20,7 @@ export default function AppLayout() {
   const location = useLocation();
   const { landscape } = useLayout();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
   const [portalRole, setPortalRole] = useState(() => sessionStorage.getItem('dyson_role'));
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
@@ -86,7 +86,20 @@ export default function AppLayout() {
       <PortalIntelligenceRail />
       {/* Content area — sidebar takes layout space on desktop */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Sidebar — permanent on desktop, takes layout space */}
+        {/* Mobile slide-out drawer */}
+        {sidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-50 flex">
+            <div 
+              className="fixed inset-0 bg-black/70 backdrop-blur-xs" 
+              onClick={toggleSidebar}
+            />
+            <div className="relative z-10 h-full max-w-[85vw] animate-in slide-in-from-left duration-200">
+              <ClientSidebar onToggle={toggleSidebar} />
+            </div>
+          </div>
+        )}
+
+        {/* Sidebar — desktop docked */}
         {sidebarOpen && (
           <div className="hidden md:block shrink-0 h-full">
             <ClientSidebar onToggle={toggleSidebar} />
