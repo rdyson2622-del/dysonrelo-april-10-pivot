@@ -294,9 +294,11 @@ export default function FrontDoor() {
               <span className="hidden sm:inline">MENU</span>
             </button>
 
-            {/* BRAND STATEMENT: ULTRA-COMPACT HORIZONTALLY ON CELL PHONE PORTRAIT, EXPANDED ON LARGER SCREENS */}
+            {/* BRAND STATEMENT: DYSONRELO PILL IN SOLID BLACK */}
             <div 
-              className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-2xl shadow-sm border shrink-0"
+              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded-2xl shadow-sm border shrink-0 cursor-pointer"
+              onClick={() => setIsSidebarOpen(true)}
+              title="Open Navigation Directory"
               style={{
                 background: '#0a0a0a',
                 borderColor: `${GOLD}80`,
@@ -319,27 +321,6 @@ export default function FrontDoor() {
                   Nationwide Relocation Concierge
                 </span>
               </div>
-            </div>
-
-            {/* CENTER NAV LINKS IN BLACK FONT: FORMATTED ACROSS ONE OR TWO LINES TO NEVER OVERFLOW */}
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 lg:gap-5 text-[9px] sm:text-[10.5px] md:text-xs lg:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
-              <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
-                <span>Corp </span>
-                <span className="block sm:inline">Relo<span className="hidden sm:inline">cation</span></span>
-              </Link>
-              <Link to="/partner-benefits" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
-                <span>Agent </span>
-                <span className="block sm:inline">Network</span>
-              </Link>
-              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight whitespace-nowrap">
-                Transparency
-              </Link>
-              <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
-                <span>DNN </span>
-                <span className="block sm:inline whitespace-nowrap">
-                  <span className="hidden md:inline">Real Estate </span>News
-                </span>
-              </Link>
             </div>
 
             {/* Right Actions: Ambience + Subscriber View Toggle + Workspaces Access */}

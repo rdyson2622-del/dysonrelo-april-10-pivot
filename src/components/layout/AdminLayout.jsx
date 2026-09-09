@@ -10,7 +10,6 @@ import AdminCharliePanel from '../admin/AdminCharliePanel';
 import ReferralFloatingPill from '../portal/ReferralFloatingPill';
 import CommandPills from './CommandPills';
 import PortalHomeButton from './PortalHomeButton';
-import PortalIntelligenceRail from './PortalIntelligenceRail';
 
 export default function AdminLayout() {
   const { landscape } = useLayout();
@@ -56,7 +55,6 @@ export default function AdminLayout() {
       )}
 
       <main className="flex-1 w-full overflow-auto relative" style={{ background: '#ede0cc' }}>
-        {location.pathname !== '/admin/front-door-lab' && <PortalIntelligenceRail />}
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />

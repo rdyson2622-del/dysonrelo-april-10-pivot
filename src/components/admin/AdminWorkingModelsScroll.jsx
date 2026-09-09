@@ -36,15 +36,7 @@ export const WORKING_MODELS = [
     icon: Sparkles,
     iconColor: '#e8c84a',
   },
-  {
-    id: 'client_backside',
-    title: 'Client Backside Demo',
-    sub: 'Verified subscriber workspace',
-    badge: 'DEMO',
-    path: '/admin/front-door-lab?view=client_backside',
-    icon: Star,
-    iconColor: '#60a5fa',
-  },
+
   {
     id: 'front_door_lab',
     title: 'Front Door Prototype',

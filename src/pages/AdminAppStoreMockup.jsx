@@ -134,7 +134,7 @@ export const PLATFORM_APP_CATALOG = [
     tagline: 'Deeds, 1031 Exchange filings & agreements',
     purpose: 'Personal secure cloud storage vault for registered subscribers. Stores grant deeds, preliminary title audits, fiduciary representation agreements, and recorded Charlie AI voice debriefs in one click.',
     targetAudience: 'Active moving families & subscribed agents',
-    route: '/admin/front-door-lab?view=client_backside',
+    route: '/relocation-roadmap',
   },
   {
     id: 'strategy_solutions',

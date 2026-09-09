@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
-import PortalIntelligenceRail from '@/components/layout/PortalIntelligenceRail';
 import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
 
 const GOLD = '#D4AF37';
@@ -361,7 +360,6 @@ export default function BrokerageLayout() {
 
       {/* ── Main ── */}
       <main className="flex-1 overflow-auto">
-        <PortalIntelligenceRail />
         {/* Top bar */}
         <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 sticky top-0 z-10" style={{ background: '#0a0a0a' }}>
           <div className="flex items-center gap-2">

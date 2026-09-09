@@ -28,24 +28,9 @@ export default function LabInspectorHeader({
           <div className="flex items-center bg-[#181818] p-0.5 rounded-lg border border-[#D4AF37]/50 shadow-inner">
             <button
               onClick={() => setActiveLabView('front_door')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer ${
-                activeLabView === 'front_door'
-                  ? 'bg-[#D4AF37] text-black shadow-sm'
-                  : 'text-white/70 hover:text-white'
-              }`}
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold transition-all cursor-pointer bg-[#D4AF37] text-black shadow-sm"
             >
               Public Front Door
-            </button>
-            <button
-              onClick={() => setActiveLabView('client_backside')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-                activeLabView === 'client_backside'
-                  ? 'bg-[#10b981] text-black shadow-sm'
-                  : 'text-[#fce38a] hover:text-white'
-              }`}
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>Client Backside DEMO</span>
             </button>
             <Link
               to="/admin/app-store-mockup?tab=app_store_catalog"

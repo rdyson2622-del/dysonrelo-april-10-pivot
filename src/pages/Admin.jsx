@@ -9,7 +9,6 @@ import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText,
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
-import ClientBacksideLabDemo from '@/components/admin/frontdoor/ClientBacksideLabDemo';
 import { Volume2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -137,11 +136,11 @@ export default function Admin() {
           </p>
           <div className="flex flex-wrap gap-3 mt-4">
             <Link
-              to="/admin/front-door-lab?view=client_backside"
+              to="/admin/app-store-mockup?tab=full_mockup"
               className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg transition-transform hover:scale-105"
               style={{ border: '2px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
             >
-              <Sparkles className="w-4 h-4 text-black" /> 🌟 First Visual Draft: Client Backside DEMO
+              <Sparkles className="w-4 h-4 text-black" /> 🌟 Platform Apps &amp; Springboard Specs
             </Link>
             <Link
               to="/admin/front-door-lab"
@@ -170,57 +169,6 @@ export default function Admin() {
         {testingVoiceGreeting && (
           <VoiceGreetingWidget key={Date.now()} onClose={() => setTestingVoiceGreeting(false)} />
         )}
-
-        {/* ========================================================
-            SPOTLIGHT: FIRST VISUAL DRAFT — CLIENT BACKSIDE DEMO
-            ======================================================== */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl overflow-hidden border border-[#D4AF37] shadow-2xl"
-          style={{ background: '#ede0cc' }}
-        >
-          {/* Spotlight Header Bar */}
-          <div className="p-3 sm:p-4 bg-[#0a0a0a] border-b border-[#D4AF37]/50 flex flex-wrap items-center justify-between gap-3 text-white">
-            <div className="flex items-center gap-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping" />
-              <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
-                FIRST VISUAL DRAFT · LAB REVIEW
-              </span>
-              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                Client Backside DEMO — Subscriber-Gated Experience
-              </h2>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setShowBacksideDraft(!showBacksideDraft)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold text-white/80 hover:text-white bg-[#1a1a1a] border border-white/20 transition-all cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>{showBacksideDraft ? 'Collapse Preview' : 'Show Visual Draft'}</span>
-                {showBacksideDraft ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-              </button>
-
-              <Link
-                to="/admin/front-door-lab?view=client_backside"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider text-black transition-all hover:brightness-110 shadow"
-                style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-              >
-                <span>Full Lab Mode</span>
-                <ArrowRight className="w-3 h-3 text-black" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Collapsible Content */}
-          {showBacksideDraft && (
-            <div className="p-2 sm:p-4 lg:p-6 animate-in fade-in duration-300">
-              <ClientBacksideLabDemo />
-            </div>
-          )}
-        </motion.div>
 
         {/* Summary Dashboard Charts */}
         <motion.div
