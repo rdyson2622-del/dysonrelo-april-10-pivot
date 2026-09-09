@@ -254,49 +254,33 @@ export default function FrontDoor() {
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-10 w-auto object-contain shrink-0 drop-shadow"
+                className="h-9 w-auto object-contain shrink-0 drop-shadow"
               />
               <div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className="font-bold text-lg sm:text-xl tracking-wider text-white"
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                  >
-                    DysonRelo.com
-                  </span>
-                  <span
-                    className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full hidden sm:inline-flex"
-                    style={{ background: GOLD, color: '#0a0a0a' }}
-                  >
-                    RELOCATION CONCIERGE
-                  </span>
-                </div>
-                <span className="text-[10px] text-white/70 block tracking-widest uppercase font-sans -mt-0.5">
-                  A Dyson &amp; Dyson Company • Nationwide Relocation Concierge
+                <span
+                  className="font-bold text-lg sm:text-xl tracking-wider text-white"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  DysonRelo.com
+                </span>
+                <span className="text-[10px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
+                  Nationwide Relocation Concierge
                 </span>
               </div>
             </div>
 
-            {/* Quick Actions & GoDaddy Pointer Info */}
+            {/* Center Clean Links (Like Homes.com & Realtor) */}
+            <div className="hidden lg:flex items-center gap-6 text-xs text-white/80 font-medium">
+              <Link to="/corporate-relo" className="hover:text-[#D4AF37] transition-colors">Corporate Relo</Link>
+              <Link to="/partner-benefits" className="hover:text-[#D4AF37] transition-colors">Agent Network</Link>
+              <Link to="/transparency" className="hover:text-[#D4AF37] transition-colors">Transparency</Link>
+              <Link to="/dnn-news" className="hover:text-[#D4AF37] transition-colors">Daily 6AM News</Link>
+            </div>
+
+            {/* Right Actions: Ambience + Workspaces Access */}
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
-
-              {/* GoDaddy Domain Status Badge */}
-              <button
-                onClick={() => setDomainModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all hover:scale-105 cursor-pointer"
-                style={{
-                  background: 'rgba(212,175,55,0.15)',
-                  borderColor: GOLD,
-                  color: GOLD,
-                }}
-                title="View GoDaddy DNS Pointer Instructions"
-              >
-                <Globe className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="hidden sm:inline">Domain:</span>
-                <span className="font-bold underline">dysonrelo.com</span>
-              </button>
 
               {/* Subscriber Workspaces & Direct Access Button */}
               <div className="relative flex items-center">

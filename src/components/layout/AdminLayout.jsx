@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
@@ -15,6 +15,7 @@ import PortalIntelligenceRail from './PortalIntelligenceRail';
 export default function AdminLayout() {
   const { landscape } = useLayout();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [access, setAccess] = useState('loading'); // 'loading' | 'allowed' | 'denied'
 
@@ -55,7 +56,7 @@ export default function AdminLayout() {
       )}
 
       <main className="flex-1 w-full overflow-auto relative" style={{ background: '#ede0cc' }}>
-        <PortalIntelligenceRail />
+        {location.pathname !== '/admin/front-door-lab' && <PortalIntelligenceRail />}
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[260px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
@@ -92,7 +93,7 @@ export default function AdminLayout() {
         </div>
         <PageNumberBadge />
         <AdminCharliePanel />
-        <ReferralFloatingPill />
+        {location.pathname !== '/admin/front-door-lab' && <ReferralFloatingPill />}
       </main>
     </div>
   );
