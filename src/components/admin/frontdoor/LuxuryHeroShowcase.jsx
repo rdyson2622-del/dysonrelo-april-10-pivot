@@ -485,12 +485,12 @@ export default function LuxuryHeroShowcase({
             {/* 2ND: WRITING FORMAT QUOTE FROM BOB DYSON (JUST ABOVE SEARCH PILL) */}
             <div className="max-w-xl mx-auto pt-1 pb-1">
               <p
-                className="text-base sm:text-lg lg:text-xl italic font-semibold text-[#0a0a0a] tracking-normal leading-snug"
+                className="text-base sm:text-lg lg:text-xl italic font-medium text-[#0a0a0a] tracking-normal leading-snug"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                “YOU ARE ABSOLUTELY GOING TO LOVE THIS STRESSLESS NEW METHOD OF TRANSACTING YOUR REAL ESTATE VENTURES”
+                “You are absolutely going to love this stressless new method of transacting your real estate ventures.”
               </p>
-              <div className="text-[11px] sm:text-xs font-bold text-[#854d0e] tracking-widest uppercase mt-1">
+              <div className="text-right pr-1 sm:pr-3 text-xs sm:text-sm font-bold text-[#854d0e] tracking-wide mt-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 — Bob Dyson
               </div>
             </div>
