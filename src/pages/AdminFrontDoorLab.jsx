@@ -320,11 +320,11 @@ export default function AdminFrontDoorLab() {
                       CLIENT BACKSIDE DEMO · LAB ONLY
                     </span>
                     <span className="text-xs font-bold text-white">
-                      Portrait-Mobile-First (~390px) Client Backside Template
+                      Widescreen Landscape V2V &amp; Request Pill Model
                     </span>
                   </div>
                   <p className="text-[11px] text-white/70">
-                    Clean portrait template on tan backdrop with subscriber photo, predominant search pill + Charlie voice, vertical service list, and one-click Library.
+                    Clean landscape big picture: Subscriber identity, V2V Voice &amp; Request Pill as the main communicator, 3 high-impact project horizons, and one-click Library.
                   </p>
                 </div>
                 <button
