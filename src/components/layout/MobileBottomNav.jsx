@@ -10,7 +10,7 @@ export default function MobileBottomNav() {
   const items = [
     { label: 'Home',      path: '/',                      Icon: Home },
     { label: 'Dashboard', path: '/dashboard',             Icon: LayoutDashboard },
-    { label: 'Roadmap',   path: '/RelocationRoadmap',     Icon: Map },
+    { label: 'Roadmaps',  path: '/RelocationRoadmap',     Icon: Map },
     { label: 'DNN News',  path: '/dnn-news',              Icon: Newspaper },
     { label: 'Intel',     path: '/solutions',              Icon: Sparkles },
     { label: 'Transp.',   path: '/transparency',           Icon: ShieldCheck },

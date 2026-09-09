@@ -4,7 +4,7 @@ import {
   Sparkles, Mic, Home, Building, Users, Play, ShieldCheck, 
   BookOpen, Phone, MessageSquare, ArrowRight, CheckCircle2, 
   Search, SlidersHorizontal, ExternalLink, Smartphone, 
-  Layout, Eye, Copy, Check, Layers, Calendar, Mail, Calculator, CloudSun
+  Layout, Eye, Copy, Check, Layers, Calendar, Mail, Calculator, CloudSun, Compass
 } from 'lucide-react';
 import { WORKING_MODELS } from '@/components/admin/AdminWorkingModelsScroll';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
@@ -165,6 +165,21 @@ export const PLATFORM_APP_CATALOG = [
     purpose: 'Immediate cellular phone and 2-way SMS access to Bob Dyson and the California corporate concierge desk. No call centers or automated phone trees — direct human fiduciary consultation.',
     targetAudience: 'Urgent transactions, escalations & client questions',
     action: 'tel:+18583531200',
+  },
+  {
+    id: 'roadmap',
+    title: 'Client Relocation Roadmaps',
+    shortLabel: 'Roadmaps',
+    badge: 'ACTIVE',
+    badgeColor: 'bg-black text-[#D4AF37] border border-[#D4AF37]/50',
+    icon: Compass,
+    iconColor: '#D4AF37',
+    bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
+    border: 'border-[#D4AF37]/50',
+    tagline: 'Phased moving milestones & fiduciary escrow tracking',
+    purpose: 'Interactive step-by-step relocation roadmap tracking every phase of the move from agent vetting to contract audit, escrow milestones, packing logistics, and utility activation.',
+    targetAudience: 'Relocating clients, HR managers, and partner agents',
+    route: '/client-roadmap',
   },
 ];
 

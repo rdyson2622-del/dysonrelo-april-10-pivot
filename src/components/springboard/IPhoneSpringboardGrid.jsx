@@ -22,7 +22,7 @@ export const IPHONE_DEFAULT_APPS = [
   },
   {
     id: 'roadmap',
-    label: 'Roadmap',
+    label: 'Roadmaps',
     copy: 'Move Milestones',
     icon: Compass,
     iconColor: '#D4AF37',

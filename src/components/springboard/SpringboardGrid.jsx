@@ -181,7 +181,7 @@ export const PORTAL_SPRINGBOARD_PRESETS = {
     },
     {
       id: 'roadmap',
-      label: 'My Roadmap',
+      label: 'Roadmaps',
       sub: 'Phases & Steps',
       badge: 'Active',
       iconName: 'Compass',
@@ -268,7 +268,7 @@ export const PORTAL_SPRINGBOARD_PRESETS = {
     },
     {
       id: 'employee_roadmap',
-      label: 'Roadmap',
+      label: 'Roadmaps',
       sub: 'Phase Tracking',
       iconName: 'Compass',
       iconColor: '#e8c84a',
