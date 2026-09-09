@@ -4,7 +4,7 @@ import {
   Search, Mic, BookOpen, Phone, MessageCircle, 
   X, ChevronRight, Sparkles, ShieldCheck, 
   Home, MapPin, FileText, ArrowRight, CheckCircle2,
-  Building, Compass, ExternalLink
+  Building, Compass, ExternalLink, Play
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -21,6 +21,7 @@ export default function ClientBacksideLabDemo() {
   // Client Data State
   const [currentUser, setCurrentUser] = useState(null);
   const [clientRecord, setClientRecord] = useState(null);
+  const [latestNews, setLatestNews] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -36,6 +37,12 @@ export default function ClientBacksideLabDemo() {
       }
     }).catch(() => {});
 
+    base44.entities.DnnArticle.filter({ status: 'published' }, '-published_date', 1).then(articles => {
+      if (articles && articles.length > 0 && isMounted) {
+        setLatestNews(articles[0]);
+      }
+    }).catch(() => {});
+
     return () => { isMounted = false; };
   }, []);
 
@@ -47,6 +54,10 @@ export default function ClientBacksideLabDemo() {
   const originCity = clientRecord?.current_city || 'Los Gatos, CA';
   const destinationCity = clientRecord?.destination_city ? clientRecord.destination_city.replace(/,\s*[A-Z]{2}$/i, '') : 'Scottsdale';
   const destinationState = clientRecord?.destination_state || 'AZ';
+
+  const newsPhotoUrl = latestNews?.thumbnail_url || 
+    'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/40bacd8ac_charlie_desk_widescreen_1280x720.png';
+  const newsHeadline = latestNews?.headline || 'Daily 6AM Real Estate Broadcast: Today’s Market Effects & Housing Trends';
 
   const handleToggleVoice = () => {
     if (!isVoiceActive) {
@@ -289,45 +300,126 @@ export default function ClientBacksideLabDemo() {
         </section>
 
         {/* ========================================================
-            2. TEXT ONLY ACTIONS (NO BOXES / NO PILLS)
-            Clean, elegant text links that take users to the next step when clicked
+            2. MIDDLE SECTION: 7 TOOLS (LEFT) + DNN NEWS PHOTO BOX (RIGHT)
+            Eliminating wasted horizontal space and aligning "Continue >" adjacent to tools
             ======================================================== */}
-        <section className="space-y-2 pt-1 pb-2">
-          <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
-              WHAT DYSONRELO IS BUILT TO DO FOR YOU:
-            </h3>
-            <span className="text-[10px] text-[#44382c] font-medium hidden sm:inline">
-              Click any item to continue
-            </span>
-          </div>
+        <section className="pt-1 pb-2">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            {/* LEFT COLUMN: 7 TOOLS WITH "CONTINUE >" DIRECTLY TO THE RIGHT */}
+            <div className="lg:col-span-7 space-y-1.5">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#0a0a0a]/20">
+                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#854d0e]">
+                  WHAT DYSONRELO IS BUILT TO DO FOR YOU:
+                </h3>
+                <span className="text-[10px] text-[#44382c] font-medium hidden sm:inline">
+                  Click any item to continue
+                </span>
+              </div>
 
-          <div className="divide-y divide-[#0a0a0a]/10">
-            {TEXT_ACTIONS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  if (item.action) item.action();
-                  else if (item.path) navigate(item.path);
-                }}
-                className="w-full py-2.5 px-1 sm:px-2 flex items-center justify-between text-left cursor-pointer transition-all hover:bg-black/5 group rounded-lg"
+              <div className="divide-y divide-[#0a0a0a]/10">
+                {TEXT_ACTIONS.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      if (item.action) item.action();
+                      else if (item.path) navigate(item.path);
+                    }}
+                    className="w-full py-2 px-1 sm:px-1.5 flex items-start text-left cursor-pointer transition-all hover:bg-black/5 group rounded-lg"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors flex items-center flex-wrap gap-x-1.5 gap-y-0.5">
+                        <span className="text-xs font-mono font-bold text-[#854d0e]">{item.number}.</span>
+                        <span>{item.title}</span>
+                        {/* "Continue >" positioned immediately to the right of each tool */}
+                        <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-[#854d0e] ml-1 group-hover:translate-x-1 transition-transform shrink-0">
+                          <span>Continue</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </span>
+                      </div>
+                      <div className="text-xs text-[#44382c] pl-4 sm:pl-5 mt-0.5 leading-snug">
+                        {item.desc}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: DNN NEWS PHOTO IN A BOX (CLICK THRU TO DAILY NEWS) */}
+            <div className="lg:col-span-5">
+              <div 
+                onClick={() => navigate('/dnn-news')}
+                className="rounded-2xl bg-[#0a0a0a] text-white border border-[#D4AF37]/60 shadow-xl overflow-hidden flex flex-col justify-between group cursor-pointer hover:border-[#D4AF37] hover:shadow-2xl transition-all"
+                title="Click to view Today's Daily News"
               >
-                <div className="min-w-0 pr-3">
-                  <div className="text-sm sm:text-base font-bold text-[#0a0a0a] group-hover:text-[#854d0e] transition-colors flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-[#854d0e]">{item.number}.</span>
-                    <span>{item.title}</span>
+                <div>
+                  {/* PHOTO WITH LIVE BROADCAST BADGE & OVERLAY */}
+                  <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-black">
+                    <img 
+                      src={newsPhotoUrl} 
+                      alt="DNN Real Estate News"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/30" />
+                    
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/85 text-[#D4AF37] border border-[#D4AF37]/60 backdrop-blur-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <Play className="w-3 h-3 text-[#D4AF37] fill-[#D4AF37]" />
+                      <span>DNN 6AM DAILY BROADCAST</span>
+                    </div>
+
+                    <span className="absolute top-2.5 right-2.5 text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">
+                      Daily News
+                    </span>
+
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 space-y-0.5">
+                      <div className="text-[10px] text-[#fce38a] font-bold uppercase tracking-wider">
+                        Today's Market Pulse &amp; Rates
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug drop-shadow">
+                        {newsHeadline}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-[#44382c] pl-5 mt-0.5">
-                    {item.desc}
+
+                  {/* CONTENT BELOW */}
+                  <div className="p-4 space-y-2">
+                    <div className="flex items-center justify-between text-[11px] text-white/60">
+                      <span>Anchor: Charlie &amp; Bob Dyson</span>
+                      <span className="text-[#10b981] font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Updated 6:00 AM
+                      </span>
+                    </div>
+                    <p className="text-xs text-white/70 leading-relaxed">
+                      Daily AI &amp; expert fiduciary relocation intelligence covering tax migration data, interest rate adjustments, and local market effects across all 50 states.
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-xs font-bold text-[#854d0e] group-hover:translate-x-1 transition-transform shrink-0">
-                  <span className="hidden sm:inline text-[11px]">Continue</span>
-                  <ChevronRight className="w-4 h-4" />
+
+                <div className="p-4 pt-0">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate('/dnn-news');
+                    }}
+                    className="w-full py-2.5 px-3 rounded-xl text-xs font-bold text-black flex items-center justify-center gap-2 cursor-pointer shadow hover:brightness-110 active:scale-95 transition-all"
+                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                  >
+                    <Play className="w-3.5 h-3.5 fill-black" />
+                    <span>Click Thru to Daily News</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              </button>
-            ))}
+              </div>
+            </div>
+
           </div>
         </section>
 
