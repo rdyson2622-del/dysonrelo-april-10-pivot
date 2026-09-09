@@ -320,11 +320,11 @@ export default function AdminFrontDoorLab() {
                       CLIENT BACKSIDE DEMO · LAB ONLY
                     </span>
                     <span className="text-xs font-bold text-white">
-                      Visual-Only Client Subscriber Backside Shell
+                      Portrait-Mobile-First (~390px) Client Backside Template
                     </span>
                   </div>
                   <p className="text-[11px] text-white/70">
-                    All-about-them subscriber deck with personal sidebar, active roadmap line, 3 action buttons &amp; landing blocks.
+                    All-about-them mobile deck with verified identity, holdings &amp; goals, 3 action buttons, integral roadmap &amp; market pulse.
                   </p>
                 </div>
                 <button
