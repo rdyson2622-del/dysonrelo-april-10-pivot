@@ -250,14 +250,7 @@ export default function IPhoneSpringboardGrid({
                   </span>
                 )}
 
-                {/* Text Badge Fallback */}
-                {!app.badgeCount && app.badge && (
-                  <span 
-                    className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[6.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow-md z-10"
-                  >
-                    {app.badge}
-                  </span>
-                )}
+
 
                 {/* App Icon */}
                 <Icon 

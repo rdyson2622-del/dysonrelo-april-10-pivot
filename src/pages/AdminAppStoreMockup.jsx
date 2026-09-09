@@ -9,6 +9,7 @@ import {
 import { WORKING_MODELS } from '@/components/admin/AdminWorkingModelsScroll';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import AppSubjectMatterView from '@/components/admin/frontdoor/AppSubjectMatterView';
+import IPhoneSpringboardGrid, { IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -368,101 +369,39 @@ export default function AdminAppStoreMockup() {
                 style={{ background: '#0a0a0a' }}
               >
                 <div className="space-y-3">
-                  {/* TOP BRAND HEADER PILL */}
+                  {/* TOP BRAND HEADER: Dyson & Dyson Logo + The Dyson & Dyson Companies */}
                   <div 
                     onClick={() => {
                       setSelectedApp(null);
                       navigate('/portal');
                     }}
-                    className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
+                    className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/50 shadow-lg flex flex-col items-center justify-center text-center cursor-pointer hover:border-[#D4AF37] transition-all group"
                   >
-                    <img src={DYSON_LOGO} alt="Dyson" className="h-6 w-auto object-contain shrink-0 drop-shadow" />
-                    <div className="min-w-0">
-                      <div 
-                        className="text-sm font-bold text-white tracking-tight leading-tight truncate"
-                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                      >
-                        DysonRelo.com
-                      </div>
-                      <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
-                        NATIONWIDE CONCIERGE
-                      </div>
+                    <img src={DYSON_LOGO} alt="The Dyson & Dyson Companies" className="h-9 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform" />
+                    <div className="text-xs font-semibold text-white tracking-wide mt-1.5 font-sans">
+                      The Dyson &amp; Dyson Companies
                     </div>
                   </div>
 
-                  {/* 55+ YEARS PILL */}
-                  <div className="flex items-center justify-center gap-1.5 py-1 px-3 rounded-full border border-[#D4AF37]/60 bg-black text-[9.5px] font-black tracking-widest text-[#D4AF37] uppercase shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
-                    <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
-                  </div>
-
-                  {/* SUBSCRIBER PROFILE HEADER (REPLACES SEARCH DESTINATIONS) */}
+                  {/* CHARLIE SIMMONS AI CONCIERGE WELCOME & SUBSCRIBER PROFILE */}
                   <SubscriberProfileHeader />
 
                   {/* ========================================================
-                      INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND
-                      (EXACT IPHONE SPRINGBOARD LOOK — NO BEIGE PILLS!)
+                      AUTHENTIC CONCIERGE MINI APPS (CLEAN IPHONE SPRINGBOARD)
+                      No abnormal clipped pills or overflowing text tags!
                       ======================================================== */}
                   <div className="pt-2 text-left">
                     <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2.5">
-                      <span>IPHONE APPS:</span>
+                      <span>CONCIERGE MINI APPS:</span>
                       <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
                     </div>
 
-                    {/* 3-Column iPhone Springboard Grid directly on black background */}
-                    <div className="grid grid-cols-3 gap-y-4 gap-x-2 px-1">
-                      {PLATFORM_APP_CATALOG.slice(0, 9).map((app) => {
-                        const Icon = app.icon;
-                        const isSelected = selectedApp?.id === app.id;
-                        return (
-                          <button
-                            key={app.id}
-                            type="button"
-                            onClick={() => setSelectedApp(app)}
-                            className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
-                            title={`Click to open ${app.title} on right side`}
-                          >
-                            {/* Standalone Apple Squircle Icon Tile on Black Background */}
-                            <div 
-                              className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden ${
-                                isSelected ? 'ring-2 ring-[#D4AF37] ring-offset-2 ring-offset-black scale-105' : ''
-                              }`}
-                              style={{
-                                boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
-                              }}
-                            >
-                              {/* iPhone Glossy Top Sheen */}
-                              <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 via-white/10 to-transparent pointer-events-none rounded-t-[18px]" />
-
-                              {/* Notification Pill Badge */}
-                              {app.badge && (
-                                <span 
-                                  className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow-md"
-                                >
-                                  {app.badge.split(' ')[0]}
-                                </span>
-                              )}
-
-                              <Icon 
-                                className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110 drop-shadow" 
-                                style={{ color: app.iconColor }} 
-                              />
-                            </div>
-
-                            {/* Clean iPhone App Label directly on Black */}
-                            <span className={`mt-1.5 text-[11px] font-semibold transition-colors leading-tight text-center max-w-[76px] truncate ${
-                              isSelected ? 'text-[#D4AF37] font-bold' : 'text-white group-hover:text-[#D4AF37]'
-                            }`}>
-                              {app.shortLabel}
-                            </span>
-                            {/* Micro Purpose Tag */}
-                            <span className="text-[8.5px] text-white/45 leading-none mt-0.5 text-center max-w-[76px] truncate">
-                              {app.tagline.split(' ')[0]} {app.tagline.split(' ')[1] || ''}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                    {/* Standardized iPhone Springboard Grid */}
+                    <IPhoneSpringboardGrid
+                      onAppClick={(app) => {
+                        setSelectedApp(app);
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -762,11 +701,6 @@ export default function AdminAppStoreMockup() {
                           style={{ boxShadow: '0 8px 20px rgba(0,0,0,0.7)' }}
                         >
                           <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 via-white/10 to-transparent pointer-events-none rounded-t-[18px]" />
-                          {app.badge && (
-                            <span className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow">
-                              {app.badge.split(' ')[0]}
-                            </span>
-                          )}
                           <Icon className="w-6 h-6 drop-shadow" style={{ color: app.iconColor }} />
                         </div>
                         <span className="mt-1.5 text-[11px] font-semibold text-white group-hover:text-[#D4AF37] transition-colors leading-tight truncate max-w-[85px]">
