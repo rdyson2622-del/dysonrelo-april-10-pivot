@@ -1,0 +1,145 @@
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  Newspaper, GitBranch, ClipboardList, MapPin, 
+  Building2, SendHorizontal, Sparkles
+} from 'lucide-react';
+
+export const ADMIN_DEPT_MINI_APPS = [
+  {
+    id: 'dnn',
+    label: 'DNN News',
+    copy: 'Studio & Broadcast',
+    icon: Newspaper,
+    iconColor: '#ef4444',
+    bgGradient: 'from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a]',
+    border: 'border-[#ef4444]/60',
+    badgeCount: 3,
+  },
+  {
+    id: 'workflows',
+    label: 'Workflows',
+    copy: 'Atlas & Roadmap',
+    icon: GitBranch,
+    iconColor: '#38bdf8',
+    bgGradient: 'from-[#0369a1] via-[#075985] to-[#0a0a0a]',
+    border: 'border-[#38bdf8]/60',
+  },
+  {
+    id: 'agents',
+    label: 'Agent Desk',
+    copy: 'Command & Roster',
+    icon: ClipboardList,
+    iconColor: '#60a5fa',
+    bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
+    border: 'border-[#3b82f6]/60',
+    badgeCount: 2,
+  },
+  {
+    id: 'listing_outreach',
+    label: 'MLS Outreach',
+    copy: 'Listing Agent CRM',
+    icon: MapPin,
+    iconColor: '#f59e0b',
+    bgGradient: 'from-[#78350f] via-[#451a03] to-[#0a0a0a]',
+    border: 'border-[#f59e0b]/60',
+    badgeCount: 1,
+  },
+  {
+    id: 'wisdom',
+    label: 'Wisdom Relo',
+    copy: 'Escrow & Audit',
+    icon: Building2,
+    iconColor: '#10b981',
+    bgGradient: 'from-[#064e3b] via-[#06281e] to-[#0a0a0a]',
+    border: 'border-[#10b981]/60',
+  },
+  {
+    id: 'marketing',
+    label: 'Marketing',
+    copy: 'Campaigns & SMS',
+    icon: SendHorizontal,
+    iconColor: '#ec4899',
+    bgGradient: 'from-[#831843] via-[#500724] to-[#0a0a0a]',
+    border: 'border-[#ec4899]/60',
+  },
+];
+
+export default function AdminMiniAppsGrid({ className = '', onSelectApp }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentDept = new URLSearchParams(location.search).get('dept');
+
+  const handleClick = (app) => {
+    if (onSelectApp) {
+      onSelectApp(app.id);
+    }
+    navigate(`/admin?dept=${app.id}`);
+  };
+
+  return (
+    <div className={`space-y-2 select-none ${className}`}>
+      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
+        <span>DEPARTMENT MINI APPS:</span>
+        <span className="text-white/40 font-normal lowercase">tap for sub-choices</span>
+      </div>
+
+      <div className="grid grid-cols-3 gap-y-3.5 gap-x-2 px-0.5">
+        {ADMIN_DEPT_MINI_APPS.map((app) => {
+          const Icon = app.icon;
+          const isActive = currentDept === app.id;
+
+          return (
+            <button
+              key={app.id}
+              type="button"
+              onClick={() => handleClick(app)}
+              className="flex flex-col items-center text-center group cursor-pointer focus:outline-none transition-transform active:scale-90"
+              title={`${app.label} · ${app.copy}`}
+            >
+              {/* Mini App Squircle Tile */}
+              <div 
+                className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${
+                  isActive ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]' : app.border
+                } relative flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_8px_25px_rgba(212,175,55,0.3)]`}
+                style={{
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.2)',
+                }}
+              >
+                {/* Top Half Glass Sheen */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/25 via-white/8 to-transparent pointer-events-none rounded-t-[18px]" />
+
+                {/* Optional Badge Count */}
+                {app.badgeCount && (
+                  <span 
+                    className="absolute -top-1.5 -right-1.5 min-w-[19px] h-[19px] px-1 rounded-full bg-[#ff3b30] text-white font-black text-[9.5px] flex items-center justify-center shadow-lg border-[1.5px] border-black tracking-tight z-10"
+                  >
+                    {app.badgeCount}
+                  </span>
+                )}
+
+                {/* Icon */}
+                <Icon 
+                  className="w-6 h-6 sm:w-6.5 sm:h-6.5 transition-transform duration-200 group-hover:scale-110 drop-shadow" 
+                  style={{ color: app.iconColor }} 
+                />
+              </div>
+
+              {/* Line 1: Label */}
+              <span className={`mt-1.5 text-[11px] font-semibold tracking-tight transition-colors leading-tight text-center max-w-[85px] truncate ${
+                isActive ? 'text-[#D4AF37] font-bold' : 'text-white group-hover:text-[#D4AF37]'
+              }`}>
+                {app.label}
+              </span>
+
+              {/* Line 2: Copy */}
+              <span className="text-[8.5px] text-white/50 group-hover:text-white/80 leading-tight mt-0.5 text-center max-w-[85px] line-clamp-1">
+                {app.copy}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

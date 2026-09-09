@@ -20,6 +20,7 @@ import AdminSidebarSearch, { buildSearchIndex } from '@/components/admin/AdminSi
 import ListingProspectsRepWidget from '@/components/admin/ListingProspectsRepWidget';
 import SubscriberInviteModal from '@/components/admin/SubscriberInviteModal';
 import AdminWorkingModelsScroll from '@/components/admin/AdminWorkingModelsScroll';
+import AdminMiniAppsGrid from '@/components/admin/AdminMiniAppsGrid';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
@@ -400,187 +401,12 @@ export default function AdminSidebar() {
         </Link>
       </div>
 
-      {/* DNN NEWS AND INTELLIGENCE — top of sidebar */}
-      {(() => {
-        const section = NAV_SECTIONS.find(s => s.key === 'dnn');
-        const isOpen = openSections[section.key];
-        const SectionIcon = section.icon;
-        const borderColor = 'rgba(212,175,55,0.2)';
-        return (
-          <div className="px-3 pt-3 pb-2 shrink-0">
-            <button
-              onClick={() => toggleSection(section.key)}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-              style={{
-                background: isOpen ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-                color: '#D4AF37',
-                border: '1px solid rgba(212,175,55,0.35)',
-              }}
-            >
-              {SectionIcon && <SectionIcon className="w-4 h-4 shrink-0" />}
-              <span className="text-center leading-tight tracking-[0.15em]">{section.label}</span>
-              {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-            </button>
-            {isOpen && (
-              <div className="mt-0.5 ml-2 pl-3 pb-1 space-y-0.5 border-l" style={{ borderColor }}>
-                {section.children.map((child, ci) => {
-                  if (child.isCommsBadge) {
-                    return <div key={ci} className="py-1"><AdminCommsBadge /></div>;
-                  }
-                  if (child.isHeader) {
-                    return (
-                      <div key={ci} className="px-3 pt-3 pb-1">
-                        <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#D4AF37' }}>{child.label}</span>
-                      </div>
-                    );
-                  }
-                  const isActive = location.pathname === child.path;
-                  const childColor = section.color || '#D4AF37';
-                  return (
-                    <Link
-                      key={`${child.path}-${ci}`}
-                      to={child.path}
-                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all"
-                      style={{
-                        background: child.highlight ? 'rgba(212,175,55,0.15)' : (isActive ? `${childColor}22` : 'transparent'),
-                        color: child.highlight ? GOLD : (child.indent ? '#ffffff' : (isActive ? childColor : '#ccc')),
-                        border: child.highlight ? `1px solid rgba(212,175,55,0.4)` : 'none',
-                        marginLeft: child.indent ? '8px' : '0',
-                        fontSize: child.indent ? '12px' : '14px',
-                        paddingTop: child.indent ? '4px' : undefined,
-                        paddingBottom: child.indent ? '4px' : undefined,
-                        fontWeight: child.highlight ? 900 : undefined,
-                      }}
-                    >
-                      <child.icon className="w-3 h-3 shrink-0" style={{ opacity: child.indent ? 0.5 : 1 }} />
-                      <span className="truncate">{child.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })()}
-
-      {/* Master Workflow Atlas — directly under DNN News and Intelligence */}
-      <div className="px-3 pb-2 shrink-0">
-        <Link
-          to="/admin/workflows"
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname.startsWith('/admin/workflows') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <GitBranch className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">WORKFLOW<br/>ATLAS</span>
-        </Link>
-      </div>
-
-      {/* Road Map to Completion — master one-glance dashboard */}
-      <div className="px-3 pb-2 shrink-0">
-        <Link
-          to="/admin/roadmap"
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname === '/admin/roadmap' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Map className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">ROAD MAP<br/>TO COMPLETION</span>
-        </Link>
-      </div>
-
-      {/* Agent Command Center — our client-tracking mechanism, pinned near top */}
-      <div className="px-3 pb-2 shrink-0">
-        <Link
-          to="/agent-command-center"
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname.startsWith('/agent-command-center') || location.pathname.startsWith('/agent-workfile') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <ClipboardList className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">AGENT COMMAND<br/>CENTER</span>
-        </Link>
-      </div>
-
-      {/* MLS Listing Agent Outreach — pinned so it's never buried in a collapsed section */}
-      <div className="px-3 pb-2 shrink-0">
-        <Link
-          to="/admin/listing-prospects"
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname === '/admin/listing-prospects' ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <MapPin className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">MLS LISTING<br/>AGENT OUTREACH</span>
-        </Link>
+      {/* ── 6 CORE DEPARTMENT MINI APPS (REPLACES THE 6 OVERSIZED PILLS) ── */}
+      <div className="px-3 pt-2 pb-2 shrink-0">
+        <AdminMiniAppsGrid />
       </div>
 
       <ListingProspectsRepWidget />
-
-      {/* Wisdom Properties — escrow/listing/agent management suite */}
-      <div className="px-3 pb-2 shrink-0">
-        <button
-          onClick={() => setWisdomOpen(v => !v)}
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold transition-all w-full"
-          style={{
-            background: location.pathname.startsWith('/admin/wisdom') ? 'rgba(212,175,55,0.2)' : 'rgba(212,175,55,0.08)',
-            color: '#D4AF37',
-            border: '1px solid rgba(212,175,55,0.35)',
-          }}
-        >
-          <Building2 className="w-4 h-4 shrink-0" />
-          <span className="text-center leading-tight">WISDOM<br/>PROPERTIES</span>
-          {wisdomOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRightIcon className="w-3 h-3" />}
-        </button>
-        {wisdomOpen && (
-          <div className="mt-1 ml-2 pl-3 space-y-0.5 border-l" style={{ borderColor: 'rgba(212,175,55,0.2)' }}>
-            <Link to="/admin/wisdom/escrow" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/escrow' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/escrow' ? '#D4AF37' : '#ccc' }}>
-              <Shield className="w-3 h-3 shrink-0" />
-              <span className="truncate">Escrows</span>
-            </Link>
-            <Link to="/admin/wisdom/audit" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/audit' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/audit' ? '#D4AF37' : '#ccc' }}>
-              <FileSearch className="w-3 h-3 shrink-0" />
-              <span className="truncate">Doc Audit (Escrow #)</span>
-            </Link>
-            <Link to="/admin/compliance-review" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/compliance-review' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/compliance-review' ? '#D4AF37' : '#ccc' }}>
-              <ShieldCheck className="w-3 h-3 shrink-0" />
-              <span className="truncate">Upload Files for AI Review</span>
-            </Link>
-            <Link to="/admin/wisdom/listings" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/listings' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/listings' ? '#D4AF37' : '#ccc' }}>
-              <Home className="w-3 h-3 shrink-0" />
-              <span className="truncate">Listing Clients</span>
-            </Link>
-            <Link to="/admin/wisdom/buying-clients" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/buying-clients' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/buying-clients' ? '#D4AF37' : '#ccc' }}>
-              <ShoppingBag className="w-3 h-3 shrink-0" />
-              <span className="truncate">Buying Clients</span>
-            </Link>
-            <Link to="/admin/wisdom/agents" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/agents' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/agents' ? '#D4AF37' : '#ccc' }}>
-              <Users className="w-3 h-3 shrink-0" />
-              <span className="truncate">Company Agents and Other Agents</span>
-            </Link>
-            <Link to="/admin/wisdom/marketing" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/marketing' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/marketing' ? '#D4AF37' : '#ccc' }}>
-              <TrendingUp className="w-3 h-3 shrink-0" />
-              <span className="truncate">Marketing Campaigns</span>
-            </Link>
-            <Link to="/admin/wisdom/luxury" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all" style={{ background: location.pathname === '/admin/wisdom/luxury' ? 'rgba(212,175,55,0.12)' : 'transparent', color: location.pathname === '/admin/wisdom/luxury' ? '#D4AF37' : '#ccc' }}>
-              <Star className="w-3 h-3 shrink-0" />
-              <span className="truncate">Luxury Presence Website</span>
-            </Link>
-          </div>
-        )}
-      </div>
 
       {/* Recent Grok Dispatches — live feed from the Command Center */}
       <AdminDispatchWidget />

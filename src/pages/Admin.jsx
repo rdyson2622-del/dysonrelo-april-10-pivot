@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText, ArrowRight, Download,
-  Brain, AlertTriangle, Sparkles, TrendingUp
+  Brain, AlertTriangle, Sparkles, TrendingUp, Layers, LayoutGrid, Volume2, Eye, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
-import { Volume2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import DepartmentSubChoicesView from '@/components/admin/DepartmentSubChoicesView';
 
 const GOLD = '#D4AF37';
 
@@ -121,50 +121,103 @@ function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
 }
 
 export default function Admin() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const deptParam = searchParams.get('dept') || 'dnn';
+
+  const [activeView, setActiveView] = useState(() => {
+    // If explicitly viewing stats or overview
+    return searchParams.get('view') || 'subchoices';
+  });
   const [testingVoiceGreeting, setTestingVoiceGreeting] = useState(false);
-  const [showBacksideDraft, setShowBacksideDraft] = useState(true);
 
   return (
-    <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#0a0a0a' }}>
+      <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
-          <h1 className="display-heading mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', color: '#fff' }}>Dyson & Dyson Admin Dashboard</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Live stats below — click any card to jump directly to those records.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-4">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
+              <h1 className="display-heading mb-1 whitespace-nowrap" style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.6rem)', color: '#fff' }}>
+                Dyson &amp; Dyson Admin Dashboard
+              </h1>
+              <p className="text-xs sm:text-sm text-white/70">
+                Department Mini Apps &amp; Sub-Choices Workspace
+              </p>
+            </div>
+
+            {/* View Mode Toggle Pill */}
+            <div className="flex items-center bg-[#151515] p-1 rounded-2xl border border-white/10 self-start sm:self-auto shadow-inner">
+              <button
+                type="button"
+                onClick={() => setActiveView('subchoices')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeView === 'subchoices'
+                    ? 'bg-[#D4AF37] text-black shadow-md'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Department Sub-Choices</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveView('overview')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeView === 'overview'
+                    ? 'bg-[#D4AF37] text-black shadow-md'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Live Metrics &amp; Charts</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5 mt-3">
             <Link
               to="/admin/app-store-mockup?tab=full_mockup"
-              className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg transition-transform hover:scale-105"
-              style={{ border: '2px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
+              style={{ border: '1.5px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
             >
-              <Sparkles className="w-4 h-4 text-black" /> 🌟 Platform Apps &amp; Springboard Specs
+              <Sparkles className="w-3.5 h-3.5 text-black" /> 🌟 Platform Apps Specs
             </Link>
             <Link
               to="/admin/front-door-lab"
-              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
-              style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 text-white/80 hover:text-white hover:border-[#D4AF37]"
             >
-              ✨ Front Door Lab (MLS + News)
+              ✨ Front Door Lab
             </Link>
             <Link
               to="/admin/workflows"
-              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
-              style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 text-white/80 hover:text-white hover:border-[#D4AF37]"
             >
-              🗺️ Master Workflow Atlas
+              🗺️ Master Atlas
             </Link>
             <button
               onClick={() => setTestingVoiceGreeting(true)}
-              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
-              style={{ border: '1px solid rgba(167,139,250,0.4)', color: '#A78BFA', background: 'rgba(167,139,250,0.08)' }}
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-purple-500/40 text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 cursor-pointer"
             >
-              <Volume2 className="w-4 h-4" /> Guinea Pig: Test First-Visit Voice Greeting
+              <Volume2 className="w-3.5 h-3.5" /> Test Voice Greeting
             </button>
           </div>
         </motion.div>
+
+        {/* ── DEPARTMENT SUB-CHOICES VIEW (SHOWN WHEN IN SUBCHOICES MODE) ── */}
+        {activeView === 'subchoices' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <DepartmentSubChoicesView 
+              deptId={deptParam}
+              onSelectDept={(newDept) => {
+                navigate(`/admin?dept=${newDept}`);
+              }}
+            />
+          </motion.div>
+        )}
 
         {testingVoiceGreeting && (
           <VoiceGreetingWidget key={Date.now()} onClose={() => setTestingVoiceGreeting(false)} />
