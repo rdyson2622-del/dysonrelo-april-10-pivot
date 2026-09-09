@@ -4,6 +4,8 @@ import { Sparkles, MapPin, ExternalLink, Heart } from 'lucide-react';
 const GOLD = '#D4AF37';
 
 export default function LabListingCard({ listing, onAskCharlie }) {
+  const [isSaved, setIsSaved] = React.useState(false);
+
   const handleOpenMls = (e) => {
     e.stopPropagation();
     const cleanLocation = `${listing.city}_${listing.state}`.replace(/\s+/g, '-');
@@ -39,10 +41,16 @@ export default function LabListingCard({ listing, onAskCharlie }) {
 
           <button 
             type="button"
-            className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white/80 hover:text-white transition-colors cursor-pointer"
-            title="Save Property"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsSaved(!isSaved);
+            }}
+            className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full backdrop-blur-md flex items-center justify-center transition-all cursor-pointer ${
+              isSaved ? 'bg-red-500/90 text-white shadow-lg scale-110' : 'bg-black/60 text-white/80 hover:text-white hover:scale-105'
+            }`}
+            title={isSaved ? "Saved to Favorites" : "Save Property"}
           >
-            <Heart className="w-3.5 h-3.5" />
+            <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />
           </button>
 
           <span

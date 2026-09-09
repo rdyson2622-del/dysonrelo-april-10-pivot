@@ -106,6 +106,9 @@ export default function FrontDoor() {
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [latestBroadcast, setLatestBroadcast] = useState(null);
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
+  const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'high_to_low' | 'low_to_high'
+  const [activeListingFilter, setActiveListingFilter] = useState('all'); // 'all' | '0_tax' | 'waterfront' | 'mountain'
+  const [showFilterBar, setShowFilterBar] = useState(false);
 
   // Subscriber session & direct-access detection
   const [currentUser, setCurrentUser] = useState(null);
@@ -392,31 +395,79 @@ export default function FrontDoor() {
 
                 <div className="flex items-center gap-2 text-xs">
                   <button
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-white font-semibold shadow-sm"
+                    type="button"
+                    onClick={() => setShowFilterBar(!showFilterBar)}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-white font-semibold shadow-sm cursor-pointer transition-all hover:brightness-110 active:scale-95"
                     style={{ background: '#0a0a0a', border: `1px solid ${GOLD}` }}
                   >
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#D4AF37]" /> Filters
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>{showFilterBar ? 'Hide Filters' : 'Filters'}</span>
                   </button>
                   <select
-                    className="rounded-lg px-3 py-1.5 text-white text-xs font-medium focus:outline-none shadow-sm"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="rounded-lg px-3 py-1.5 text-white text-xs font-medium focus:outline-none shadow-sm cursor-pointer"
                     style={{ background: '#0a0a0a', border: `1px solid ${GOLD}` }}
                   >
-                    <option>Sort: Newest Listings</option>
-                    <option>Sort: Price: High to Low</option>
-                    <option>Sort: Price: Low to High</option>
+                    <option value="newest">Sort: Newest Listings</option>
+                    <option value="high_to_low">Sort: Price: High to Low</option>
+                    <option value="low_to_high">Sort: Price: Low to High</option>
                   </select>
                 </div>
               </div>
 
+              {/* Interactive Quick Filter Chips */}
+              {showFilterBar && (
+                <div className="flex flex-wrap items-center gap-2 mb-4 p-2.5 rounded-xl bg-[#0a0a0a]/90 border border-[#D4AF37]/40 shadow-inner animate-in fade-in slide-in-from-top-1 duration-200">
+                  <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider pl-1">Filter by:</span>
+                  {[
+                    { id: 'all', label: 'All Curated' },
+                    { id: '0_tax', label: '0% State Tax' },
+                    { id: 'waterfront', label: 'Waterfront / Coastal' },
+                    { id: 'mountain', label: 'Alpine / Mountain' },
+                  ].map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setActiveListingFilter(f.id)}
+                      className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        activeListingFilter === f.id
+                          ? 'bg-[#D4AF37] text-black shadow-md scale-105'
+                          : 'bg-[#181818] text-white/80 hover:text-white border border-white/20'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Grid of Black Listing Cards: Exactly 4 in a Single Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {MOCK_LISTINGS.slice(0, 4).map((listing) => (
-                  <LabListingCard
-                    key={listing.id}
-                    listing={listing}
-                    onAskCharlie={handleAskCharlie}
-                  />
-                ))}
+                {(() => {
+                  let filtered = [...MOCK_LISTINGS];
+                  if (activeListingFilter === '0_tax') {
+                    filtered = filtered.filter(l => l.tag?.includes('0% State Tax'));
+                  } else if (activeListingFilter === 'waterfront') {
+                    filtered = filtered.filter(l => l.tag?.toLowerCase().includes('waterfront') || l.city === 'Naples');
+                  } else if (activeListingFilter === 'mountain') {
+                    filtered = filtered.filter(l => l.tag?.toLowerCase().includes('alpine') || l.city === 'Boulder');
+                  }
+
+                  if (sortBy === 'high_to_low') {
+                    filtered.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
+                  } else if (sortBy === 'low_to_high') {
+                    filtered.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
+                  }
+
+                  return filtered.slice(0, 4).map((listing) => (
+                    <LabListingCard
+                      key={listing.id}
+                      listing={listing}
+                      onAskCharlie={handleAskCharlie}
+                    />
+                  ));
+                })()}
               </div>
             </div>
           </section>
@@ -424,7 +475,7 @@ export default function FrontDoor() {
 
 
           {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
-          <section className="px-5 sm:px-8 py-6 border-t" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
+          <section id="portal-subscribe-section" className="px-5 sm:px-8 py-6 border-t scroll-mt-6" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
             <PartnerPortalGateways onSelectRole={setSelectedRoleForSubscription} />
             <RoleSubscriptionDeck
               activeRole={selectedRoleForSubscription}
