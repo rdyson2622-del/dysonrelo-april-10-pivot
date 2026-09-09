@@ -662,9 +662,9 @@ export default function FrontDoor() {
                 </div>
               </div>
 
-              {/* Grid of Black Listing Cards */}
+              {/* Grid of Black Listing Cards: Exactly 4 in a Single Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {MOCK_LISTINGS.map((listing) => (
+                {MOCK_LISTINGS.slice(0, 4).map((listing) => (
                   <LabListingCard
                     key={listing.id}
                     listing={listing}
