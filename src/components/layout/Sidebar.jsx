@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, Mic, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles, X
+  MessageSquare, ExternalLink, Sparkles, X, Home, Building, Users, Play
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -149,7 +149,7 @@ export default function Sidebar({ userRole, onToggle }) {
         </div>
 
         {/* ========================================================
-            SECTION: CONCIERGE TO-DO'S: select one
+            SECTION: CONCIERGE TO-DO'S: APPLE-STYLE PILLS
             ======================================================== */}
         <div className="space-y-1.5 pt-1 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
@@ -157,107 +157,134 @@ export default function Sidebar({ userRole, onToggle }) {
             <span className="text-white/40 normal-case font-normal text-[10px]">select one</span>
           </div>
 
-          {/* 1. Talk with Charlie */}
+          {/* 1. Talk with Charlie (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/talking-app')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-6 h-6 rounded-full bg-black text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
-                </div>
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-white shrink-0">
-                  VOICE AI
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#064e3b] via-[#0d281e] to-[#0a0a0a] border border-[#10b981]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <Mic className="w-4 h-4 text-[#10b981] drop-shadow" />
               </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#86efac] border border-[#10b981] shrink-0 ml-auto" />
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
+                    VOICE AI
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Ask anything, vet agents &amp; navigate
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-1 pl-8 leading-tight">
-              Ask anything, vet agents &amp; navigate
-            </p>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] border border-black/20 shrink-0 ml-1" />
           </div>
 
-          {/* 2. Relocating Families & Buyers */}
+          {/* 2. Relocating Families & Buyers (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/relocation-intake')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Relocating Families &amp; Buyers</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
-                  FREE
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#2e2617] via-[#17140f] to-[#0a0a0a] border border-[#D4AF37]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <Home className="w-4 h-4 text-[#D4AF37] drop-shadow" />
               </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Relocating Families</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
+                    FREE
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Agent vetting, tax &amp; school roadmap
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Agent vetting, tax &amp; school roadmap
-            </p>
+            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
           </div>
 
-          {/* 3. Corporate HR & Employers */}
+          {/* 3. Corporate HR & Employers (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/corporate-relo')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Corporate HR &amp; Employers</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] shrink-0">
-                  ZERO FEE
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#332a18] via-[#1a160d] to-[#0a0a0a] border border-[#e8c84a]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <Building className="w-4 h-4 text-[#e8c84a] drop-shadow" />
               </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Corporate HR</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#e8c84a] shrink-0">
+                    ZERO FEE
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Executive move packages &amp; milestones
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Executive move packages &amp; milestones
-            </p>
+            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
           </div>
 
-          {/* 4. Agents & Brokerages */}
+          {/* 4. Agents & Brokerages (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/broker-portal')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Agents &amp; Brokerages</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#1d4ed8] text-white shrink-0">
-                  25% REFERRAL
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#172554] via-[#0f172a] to-[#0a0a0a] border border-[#3b82f6]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <Users className="w-4 h-4 text-[#60a5fa] drop-shadow" />
               </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Agents &amp; Brokerages</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#1d4ed8] text-white shrink-0">
+                    25% FEE
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Receiving agent bureau &amp; escrow audits
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Receiving agent bureau &amp; escrow audits
-            </p>
+            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
           </div>
 
-          {/* 5. Refer a Client or Colleague */}
+          {/* 5. Refer a Client or Colleague (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/refer')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">Refer a Client or Colleague</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shrink-0">
-                  25% PAYOUT
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#2b2210] via-[#17130b] to-[#0a0a0a] border border-[#D4AF37]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <ArrowRight className="w-4 h-4 text-[#D4AF37] drop-shadow" />
               </div>
-              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Refer a Client</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shrink-0">
+                    25% PAYOUT
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Submit buyer, seller, agent or vendor lead
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Submit buyer, seller, agent or vendor lead
-            </p>
+            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
           </div>
         </div>
 
         {/* ========================================================
-            SECTION: DETAILED SYSTEMS: direct
+            SECTION: DETAILED SYSTEMS: APPLE-STYLE PILLS
             ======================================================== */}
         <div className="space-y-1.5 pt-1 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
@@ -265,46 +292,58 @@ export default function Sidebar({ userRole, onToggle }) {
             <span className="text-white/40 normal-case font-normal text-[10px]">direct</span>
           </div>
 
-          {/* 6. 6AM DNN News Broadcast */}
+          {/* 6. 6AM DNN News Broadcast (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/dnn-news')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News Broadcast</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
-                  DAILY
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a] border border-[#ef4444]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <Play className="w-4 h-4 text-[#ef4444] drop-shadow" />
               </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
-                Open →
-              </span>
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
+                    DAILY
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  AI Charlie &amp; Bob • Daily Housing Pulse
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              AI Charlie &amp; Bob • Daily Housing Pulse
-            </p>
+            <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
+              Open →
+            </span>
           </div>
 
-          {/* 7. The Concierge Advantage */}
+          {/* 7. The Concierge Advantage (Apple Squircle Pill) */}
           <div
             onClick={() => navigate('/transparency')}
-            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
+            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1.5">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs font-bold text-[#0a0a0a] truncate">The Concierge Advantage</span>
-                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
-                  FIDUCIARY
-                </span>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#064e3b] via-[#0d281e] to-[#0a0a0a] border border-[#10b981]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
+                <ShieldCheck className="w-4 h-4 text-[#34d399] drop-shadow" />
               </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
-                Open →
-              </span>
+              <div className="min-w-0 leading-tight">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Concierge Advantage</span>
+                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
+                    FIDUCIARY
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
+                  Independent Vetting vs Lead Portals
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-              Independent Vetting vs Lead Portals
-            </p>
+            <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
+              Open →
+            </span>
           </div>
         </div>
 

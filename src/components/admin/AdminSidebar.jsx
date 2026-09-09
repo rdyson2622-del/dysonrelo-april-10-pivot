@@ -29,6 +29,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '📱 APPLE APP STORE & SIDEBAR PILLS MOCKUP', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { label: '🌟 CLIENT BACKSIDE DEMO (Subscriber Deck)', path: '/admin/front-door-lab?view=client_backside', icon: Star, highlight: true },
       { label: '✨ FRONT DOOR LAB (MLS + News + Charlie)', path: '/admin/front-door-lab', icon: Star, highlight: true },
       { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
