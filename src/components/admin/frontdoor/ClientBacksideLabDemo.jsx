@@ -235,7 +235,7 @@ export default function ClientBacksideLabDemo() {
                     type="text"
                     value={commandText}
                     onChange={(e) => setCommandText(e.target.value)}
-                    placeholder="Hi KAYDEN... What will you do next for you?"
+                    placeholder={`Hi ${firstName.toUpperCase()}... What can we do next for you?`}
                     className="w-full bg-transparent text-xs sm:text-sm text-[#0a0a0a] placeholder:text-stone-500 font-medium focus:outline-none"
                   />
                 </div>
