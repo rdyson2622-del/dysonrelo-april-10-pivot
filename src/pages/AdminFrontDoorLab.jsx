@@ -13,6 +13,7 @@ import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionD
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
+import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -654,6 +655,14 @@ export default function AdminFrontDoorLab() {
           <section className="px-5 sm:px-8 py-6" style={{ background: TAN_BG }}>
             <DualFeatureEngine latestBroadcast={latestBroadcast} />
           </section>
+
+          {/* BELOW THE CREASE: EXPLORE TOP RELOCATION DESTINATION PHOTO CARDS */}
+          <ExploreDestinationsStrip
+            onMarketClick={(city) => {
+              setSearchQuery(city);
+              handleSearch(city);
+            }}
+          />
 
           {/* SIMULATED NATIONAL MLS FEED RESULTS (BLACK CARDS ON TAN) */}
           <section className="px-5 sm:px-8 py-8 border-t" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>

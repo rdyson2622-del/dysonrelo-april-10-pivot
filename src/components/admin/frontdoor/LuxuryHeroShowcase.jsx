@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Search, ArrowRight, ShieldCheck, CheckCircle2, TrendingUp,
-  Sun, Mountain, Waves, Users, Briefcase, Building, Compass
+  Search, ArrowRight, ShieldCheck, Users, Briefcase, Building 
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
@@ -37,58 +36,6 @@ const HERO_BACKGROUNDS = [
     title: 'Mountain Contemporary Glass Manor',
     tag: '$9.2M • Alpine Lifestyle Relo',
     url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=95',
-  },
-];
-
-// Top destination market cards shown in the clean destination strip
-const QUICK_MARKETS = [
-  {
-    city: 'Scottsdale, AZ',
-    state: 'AZ',
-    avgPrice: '$3.85M',
-    tag: 'Low Tax • Sunbelt',
-    icon: Sun,
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=90',
-  },
-  {
-    city: 'Austin, TX',
-    state: 'TX',
-    avgPrice: '$4.25M',
-    tag: '0% State Tax • Tech',
-    icon: TrendingUp,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=90',
-  },
-  {
-    city: 'Naples, FL',
-    state: 'FL',
-    avgPrice: '$6.75M',
-    tag: 'Waterfront • No Tax',
-    icon: Waves,
-    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=90',
-  },
-  {
-    city: 'Boulder, CO',
-    state: 'CO',
-    avgPrice: '$4.90M',
-    tag: 'Mountain Outdoors',
-    icon: Mountain,
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=90',
-  },
-  {
-    city: 'Nashville, TN',
-    state: 'TN',
-    avgPrice: '$3.95M',
-    tag: '0% State Tax • Belle Meade',
-    icon: Sun,
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=90',
-  },
-  {
-    city: 'Dallas, TX',
-    state: 'TX',
-    avgPrice: '$5.40M',
-    tag: 'Highland Park • Executive',
-    icon: Building,
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=90',
   },
 ];
 
@@ -247,70 +194,61 @@ export default function LuxuryHeroShowcase({
 
         {/* ========================================================
             RIGHT CANVAS: 
-            1. PURE & REDUCED-SIZE HOUSE PHOTO ON TOP
-            2. SEARCH PILL 1ST DIRECTLY BELOW PHOTO
-            3. THEN ALL COPY & TABS
+            1. FEATURED DESTINATION BAR ABOVE PHOTO
+            2. PURE ARCHITECTURAL HOUSE PHOTO (SHOWS ENTIRE HOUSE, NO COPY ON PHOTO)
+            3. LUXURY SEARCH PILL FIRST
+            4. COPY & CATEGORY TABS
             ======================================================== */}
         <div 
-          className="flex-1 p-4 sm:p-5 flex flex-col justify-start text-white gap-3.5"
+          className="flex-1 p-5 sm:p-6 lg:p-7 flex flex-col justify-start text-white gap-4 sm:gap-5"
           style={{
             background: 'radial-gradient(ellipse at top, #151515 0%, #0a0a0a 100%)',
           }}
         >
-          {/* ================= TOP: PURE & REDUCED-SIZE HOUSE PHOTO ================= */}
-          <div className="relative w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl group bg-black h-[180px] sm:h-[210px] lg:h-[225px] shrink-0">
-            {/* Pure Architectural Photo */}
-            <img
-              src={currentBg.url}
-              alt={currentBg.title}
-              key={currentBg.id}
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-            />
-
-            {/* Subtle soft gradient overlay to preserve crystal-clear architectural view */}
+          {/* ================= 1. FEATURED DESTINATIONS BAR (ABOVE THE PHOTO) ================= */}
+          <div className="w-full max-w-2xl mx-auto flex flex-wrap items-center justify-between gap-2.5 px-0.5">
             <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%)',
-              }}
-            />
-
-            {/* Top Bar on Photo: Location Badge + Switcher Pills */}
-            <div className="absolute top-2.5 left-3 right-3 flex items-center justify-between gap-2 z-10">
-              <div className="bg-black/75 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-semibold text-white/95 shadow-md flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-                <span className="text-[#D4AF37] font-bold">Featured Destination:</span>
-                <span>{currentBg.city}</span>
-                <span className="text-white/60 text-[10.5px] hidden sm:inline ml-1 font-mono">({currentBg.tag})</span>
-              </div>
-
-              {/* Photo Switcher Pills */}
-              <div className="flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/20 p-0.5 rounded-full text-[10.5px] shadow-md">
-                {HERO_BACKGROUNDS.map((bg, idx) => (
-                  <button
-                    key={bg.id}
-                    onClick={() => setActiveBgIndex(idx)}
-                    className={`px-2.5 py-0.5 rounded-full font-medium transition-all cursor-pointer ${
-                      activeBgIndex === idx
-                        ? 'bg-[#D4AF37] text-black font-bold shadow'
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                  >
-                    {bg.city.split(',')[0]}
-                  </button>
-                ))}
-              </div>
+              className="bg-black/90 border border-[#D4AF37]/50 px-3.5 py-1.5 rounded-full text-xs font-semibold text-white/95 shadow-lg flex items-center gap-2"
+            >
+              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+              <span className="text-[#D4AF37] font-bold">Featured Destination:</span>
+              <span className="font-bold">{currentBg.city}</span>
+              <span className="text-white/60 text-[10.5px] font-mono hidden sm:inline">({currentBg.tag})</span>
             </div>
 
-            {/* Bottom Caption on Photo */}
-            <div className="absolute bottom-2 left-4 right-4 flex items-center justify-between text-[11px] text-white/90 z-10 font-medium drop-shadow">
-              <span>{currentBg.title}</span>
-              <span className="text-white/60 text-[10px]">Pure Architectural View</span>
+            {/* Destination Switcher Buttons */}
+            <div className="flex items-center gap-1 bg-black/85 border border-white/20 p-1 rounded-full text-[11px] shadow-lg">
+              {HERO_BACKGROUNDS.map((bg, idx) => (
+                <button
+                  key={bg.id}
+                  type="button"
+                  onClick={() => setActiveBgIndex(idx)}
+                  className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+                    activeBgIndex === idx
+                      ? 'bg-[#D4AF37] text-black shadow-md'
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  {bg.city.split(',')[0]}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ================= BELOW PHOTO: SEARCH PILL 1ST, THEN COPY ================= */}
-          <div className="w-full max-w-2xl mx-auto space-y-2.5 text-center">
+          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO (NO COPY ON PHOTO, ENTIRE HOUSE VISIBLE) ================= */}
+          <div className="w-full max-w-2xl mx-auto rounded-2xl overflow-hidden border border-white/25 shadow-2xl bg-black">
+            <div className="w-full aspect-[16/10] sm:aspect-[16/9] relative bg-black flex items-center justify-center">
+              <img
+                src={currentBg.url}
+                alt={currentBg.title}
+                key={currentBg.id}
+                className="w-full h-full object-cover object-center transition-transform duration-700 ease-out"
+              />
+            </div>
+          </div>
+
+          {/* ================= 3. SEARCH PILL 1ST DIRECTLY BELOW PHOTO, THEN COPY ================= */}
+          <div className="w-full max-w-2xl mx-auto space-y-3.5 text-center pt-1">
             
             {/* 1ST: THE FLOATING LUXURY SEARCH PILL PLACED FIRST ABOVE ALL COPY */}
             <form
@@ -361,20 +299,20 @@ export default function LuxuryHeroShowcase({
             </form>
 
             {/* THEN: THE HEADER & EXPLANATION COPY */}
-            <div className="space-y-0.5 pt-0.5">
+            <div className="space-y-1 pt-1">
               <h3 
-                className="text-xl sm:text-2xl font-bold tracking-tight text-white"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Search Destinations or let us Vet Any Listing for you.
               </h3>
-              <p className="text-xs text-white/70 font-medium">
+              <p className="text-xs sm:text-sm text-white/70 font-medium">
                 Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
               </p>
             </div>
 
             {/* THEN: CATEGORY INTENT TABS */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
               {[
                 { id: 'buy', label: 'All Destination Homes' },
                 { id: 'low_tax', label: '0% State Tax Havens' },
@@ -382,8 +320,9 @@ export default function LuxuryHeroShowcase({
               ].map((tab) => (
                 <button
                   key={tab.id}
+                  type="button"
                   onClick={() => setSearchTab(tab.id)}
-                  className={`px-3 py-1 rounded-full text-[10.5px] font-bold transition-all cursor-pointer shadow ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
                     searchTab === tab.id
                       ? 'bg-[#D4AF37] text-black shadow-md scale-105'
                       : 'bg-[#181818] text-white/75 hover:text-white border border-white/15'
@@ -395,7 +334,7 @@ export default function LuxuryHeroShowcase({
             </div>
 
             {/* THEN: VETTING HELPER NOTE */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 text-[10.5px] text-white/75 pt-0.5">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-white/75 pt-1">
               <span>Looking at a specific listing?</span>
               <span className="text-[#fce38a] font-bold">
                 Subscribe to have our fiduciary team vet the listing agent &amp; audit the escrow for you.
@@ -407,69 +346,11 @@ export default function LuxuryHeroShowcase({
                   if (elem) elem.scrollIntoView({ behavior: 'smooth' });
                   else navigate('/subscribe');
                 }}
-                className="underline text-[#D4AF37] hover:text-[#fce38a] font-semibold cursor-pointer ml-0.5"
+                className="underline text-[#D4AF37] hover:text-[#fce38a] font-semibold cursor-pointer ml-1"
               >
                 (Subscription Required)
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* QUICK DESTINATION PHOTO STRIP (HOMES.COM CATEGORIES STYLE) */}
-      <div className="px-5 sm:px-8 py-4 border-b border-[#0a0a0a]/10" style={{ background: '#f5eee2' }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-2.5">
-            <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-xs font-black uppercase tracking-wider text-[#0a0a0a]">
-                Explore Top Relocation Destinations:
-              </span>
-            </div>
-            <span className="text-[11px] text-[#665a4c] font-medium hidden sm:inline">
-              Zero state tax &amp; executive growth hubs
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {QUICK_MARKETS.map((m) => {
-              const MarketIcon = m.icon;
-              return (
-                <button
-                  key={m.city}
-                  onClick={() => {
-                    setSearchQuery(m.city);
-                    onSearch(m.city);
-                  }}
-                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.03] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[95px] bg-[#0a0a0a]"
-                >
-                  <img
-                    src={m.image}
-                    alt={m.city}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%)',
-                    }}
-                  />
-                  <div className="relative z-10">
-                    <span className="text-[9px] font-black text-[#D4AF37] uppercase tracking-wider flex items-center gap-1 drop-shadow">
-                      <MarketIcon className="w-2.5 h-2.5" />
-                      <span>{m.tag}</span>
-                    </span>
-                    <span className="text-xs font-bold text-white leading-tight group-hover:text-[#D4AF37] transition-colors drop-shadow block">
-                      {m.city}
-                    </span>
-                    <span className="text-[10px] text-white/90 font-mono block drop-shadow">
-                      Avg {m.avgPrice}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
