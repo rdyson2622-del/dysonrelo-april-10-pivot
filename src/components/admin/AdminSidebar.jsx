@@ -342,12 +342,50 @@ export default function AdminSidebar() {
     : [];
 
   return (
-    <aside ref={sidebarRef} className="w-64 flex flex-col h-screen shrink-0 overflow-y-auto" style={{ background: '#000', borderRight: '1px solid rgba(212,175,55,0.12)' }}>
-      {/* Logo */}
-      <div className="p-6 flex items-center gap-3 shrink-0" style={{ borderBottom: '1px solid #D4AF3733' }}>
-        <Link to="/home"><img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-14 w-auto cursor-pointer" /></Link>
-        <div>
-          <p className="text-xs tracking-widest font-light" style={{ color: '#D4AF37' }}>ADMIN PANEL</p>
+    <aside ref={sidebarRef} className="w-[310px] sm:w-[320px] flex flex-col h-screen shrink-0 overflow-y-auto select-none shadow-2xl" style={{ background: '#0a0a0a', borderRight: '1px solid rgba(212,175,55,0.3)' }}>
+      {/* Top Brand Header Pill */}
+      <div className="p-3.5 pb-2 space-y-2.5 shrink-0">
+        <Link 
+          to="/portal"
+          className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
+        >
+          <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#D4AF37]/50 flex items-center justify-center shrink-0">
+            <span className="font-serif text-base font-bold text-[#D4AF37]">D</span>
+          </div>
+          <div className="min-w-0">
+            <div 
+              className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight truncate"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              DysonRelo.com
+            </div>
+            <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
+              NATIONWIDE ADMIN CONCIERGE
+            </div>
+          </div>
+        </Link>
+
+        {/* 55+ YEARS PILL */}
+        <div className="flex items-center justify-center gap-2 py-1 px-3 rounded-full border border-[#D4AF37]/60 bg-black/60 text-[10px] font-black tracking-widest text-[#D4AF37] uppercase shadow-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+          <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
+        </div>
+
+        {/* SIGNED IN STATUS STRIP */}
+        <div className="py-2 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2 truncate pr-2">
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+            <span className="text-white/90 font-medium truncate">
+              Signed In: <strong className="text-white font-bold">Admin Console</strong>
+            </span>
+          </div>
+          <Link
+            to="/admin"
+            className="text-[11px] font-bold text-[#D4AF37] hover:text-white transition-colors shrink-0 flex items-center gap-0.5"
+          >
+            <span>Console</span>
+            <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
       </div>
 

@@ -48,17 +48,17 @@ export default function AdminLayout() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-40" onClick={() => setMobileMenuOpen(false)}>
-          <div onClick={e => e.stopPropagation()} className="fixed left-0 top-0 h-full w-56 z-50">
+          <div onClick={e => e.stopPropagation()} className="fixed left-0 top-0 h-full w-[310px] sm:w-[320px] z-50">
             <AdminSidebar />
           </div>
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs" />
         </div>
       )}
 
       <main className="flex-1 w-full overflow-auto relative" style={{ background: '#ede0cc' }}>
         {location.pathname !== '/admin/front-door-lab' && <PortalIntelligenceRail />}
         {/* Top Controls */}
-        <div className="fixed top-3 left-3 md:left-[260px] z-50 flex items-center gap-2">
+        <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

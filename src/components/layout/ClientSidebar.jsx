@@ -137,19 +137,19 @@ export default function ClientSidebar({ onToggle }) {
           {/* 1. Talk with Charlie */}
           <div
             onClick={() => navigate('/talking-app')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-6 h-6 rounded-full bg-black text-[#D4AF37] flex items-center justify-center shrink-0">
                   <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
                 </div>
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-black text-white shrink-0">
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-white shrink-0">
                   VOICE AI
                 </span>
               </div>
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping shrink-0" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#86efac] border border-[#10b981] shrink-0 ml-auto" />
             </div>
             <p className="text-[10px] text-[#554433] mt-1 pl-8 leading-tight">
               Ask anything, vet agents &amp; navigate
@@ -159,16 +159,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 2. Relocating Families & Buyers */}
           <div
             onClick={() => navigate('/relocation-intake')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">Relocating Families &amp; Buyers</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
-                  Free
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
+                  FREE
                 </span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
             </div>
             <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
               Agent vetting, tax &amp; school roadmap
@@ -178,16 +178,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 3. Corporate HR & Employers */}
           <div
             onClick={() => navigate('/corporate-relo')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">Corporate HR &amp; Employers</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-black text-[#D4AF37] shrink-0">
-                  Zero Fee
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] shrink-0">
+                  ZERO FEE
                 </span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
             </div>
             <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
               Executive move packages &amp; milestones
@@ -197,16 +197,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 4. Agents & Brokerages */}
           <div
             onClick={() => navigate('/broker-portal')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">Agents &amp; Brokerages</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-[#1e40af] text-white shrink-0">
-                  25% Referral
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#1d4ed8] text-white shrink-0">
+                  25% REFERRAL
                 </span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
             </div>
             <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
               Receiving agent bureau &amp; escrow audits
@@ -216,16 +216,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 5. Refer a Client or Colleague */}
           <div
             onClick={() => navigate('/refer')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">Refer a Client or Colleague</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37]/50 shrink-0">
-                  25% Payout
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shrink-0">
+                  25% PAYOUT
                 </span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
+              <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto" />
             </div>
             <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
               Submit buyer, seller, agent or vendor lead
@@ -245,16 +245,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 6. 6AM DNN News Broadcast */}
           <div
             onClick={() => navigate('/dnn-news')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News Broadcast</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-red-600 text-white shrink-0">
-                  Daily
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
+                  DAILY
                 </span>
               </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
+              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
                 Open →
               </span>
             </div>
@@ -266,16 +266,16 @@ export default function ClientSidebar({ onToggle }) {
           {/* 7. The Concierge Advantage */}
           <div
             onClick={() => navigate('/transparency')}
-            className="p-2.5 rounded-xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow border border-black/10 group active:scale-98"
+            className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
           >
-            <div className="flex items-center justify-between gap-1">
+            <div className="flex items-center justify-between gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-xs font-bold text-[#0a0a0a] truncate">The Concierge Advantage</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
-                  Fiduciary
+                <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
+                  FIDUCIARY
                 </span>
               </div>
-              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
+              <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
                 Open →
               </span>
             </div>
