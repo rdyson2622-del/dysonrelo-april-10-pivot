@@ -251,9 +251,9 @@ export default function FrontDoor() {
             className="px-2.5 sm:px-4 lg:px-5 py-1.5 flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4 relative shadow-sm"
             style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
-            {/* BRAND STATEMENT: COMPACT WIDTH & REDUCED VERTICAL SIZE */}
+            {/* BRAND STATEMENT: ULTRA-COMPACT HORIZONTALLY ON CELL PHONE PORTRAIT, EXPANDED ON LARGER SCREENS */}
             <div 
-              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1 rounded-lg shadow-sm border shrink-0"
+              className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg shadow-sm border shrink-0"
               style={{
                 background: '#0a0a0a',
                 borderColor: `${GOLD}80`,
@@ -262,23 +262,24 @@ export default function FrontDoor() {
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-5 sm:h-5.5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
+                className="h-4 sm:h-5.5 md:h-6 w-auto object-contain shrink-0 drop-shadow"
               />
               <div className="leading-tight">
                 <span
-                  className="font-bold text-xs sm:text-sm md:text-base tracking-wide text-white block leading-tight"
+                  className="font-bold text-[11px] sm:text-sm md:text-base tracking-wide text-white block leading-tight"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
-                  DysonRelo.com
+                  <span className="sm:hidden">DysonRelo</span>
+                  <span className="hidden sm:inline">DysonRelo.com</span>
                 </span>
-                <span className="text-[7.5px] sm:text-[8px] md:text-[8.5px] text-[#D4AF37] block tracking-wider uppercase font-sans font-semibold leading-tight">
+                <span className="hidden sm:block text-[7.5px] sm:text-[8px] md:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
                   Nationwide Relocation Concierge
                 </span>
               </div>
             </div>
 
             {/* CENTER NAV LINKS IN BLACK FONT: FORMATTED ACROSS ONE OR TWO LINES TO NEVER OVERFLOW */}
-            <div className="flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3.5 lg:gap-5 text-[10.5px] sm:text-[11px] md:text-xs lg:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 lg:gap-5 text-[9.5px] sm:text-[11px] md:text-xs lg:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
               <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
                 <span>Corp </span>
                 <span className="block lg:inline">Relocation</span>
@@ -292,7 +293,9 @@ export default function FrontDoor() {
               </Link>
               <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4 text-center leading-tight">
                 <span>DNN </span>
-                <span className="block lg:inline whitespace-nowrap">Real Estate News</span>
+                <span className="block lg:inline whitespace-nowrap">
+                  <span className="hidden sm:inline">Real Estate </span>News
+                </span>
               </Link>
             </div>
 

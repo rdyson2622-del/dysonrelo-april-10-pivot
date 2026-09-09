@@ -98,7 +98,7 @@ export default function StudioAmbiencePlayer() {
     <div className="flex items-center gap-1.5">
       <button
         onClick={togglePlay}
-        className={`flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[10px] font-bold border transition-all cursor-pointer shadow-sm shrink-0 ${
+        className={`flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] font-bold border transition-all cursor-pointer shadow-sm shrink-0 ${
           isPlaying
             ? 'bg-[#1a1508] border-[#D4AF37] text-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.25)]'
             : 'bg-[#141414] border-white/20 text-white/80 hover:text-white hover:border-[#D4AF37]/50'
@@ -110,7 +110,7 @@ export default function StudioAmbiencePlayer() {
             {/* Spinning vinyl / active music waves */}
             <Disc3 className="w-3.5 h-3.5 text-[#D4AF37] animate-spin" style={{ animationDuration: '4s' }} />
             <span className="flex items-center gap-1">
-              <span>Lounge</span>
+              <span className="hidden sm:inline">Lounge</span>
               {/* Minimal equalizer animation */}
               <span className="flex items-end gap-0.5 h-3 ml-0.5">
                 <span className={`w-0.5 bg-[#D4AF37] rounded-full transition-all ${isDucked ? 'h-1 opacity-50' : 'h-2.5 animate-pulse'}`} />
@@ -128,7 +128,7 @@ export default function StudioAmbiencePlayer() {
           <>
             <Music className="w-3.5 h-3.5 text-stone-400" />
             <span className="hidden lg:inline">Concierge Lounge</span>
-            <span className="lg:hidden">Lounge</span>
+            <span className="hidden sm:inline lg:hidden">Lounge</span>
           </>
         )}
       </button>
