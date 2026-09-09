@@ -366,6 +366,26 @@ export default function AdminSidebar() {
           <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
         </div>
 
+        {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
+        <Link
+          to="/admin/app-store-mockup"
+          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group ${
+            location.pathname === '/admin/app-store-mockup'
+              ? 'bg-[#2f2510] border-[#D4AF37] ring-1 ring-[#D4AF37]'
+              : 'bg-[#221c0e] hover:bg-[#2c2311] border-[#D4AF37]/75 hover:border-[#D4AF37]'
+          }`}
+          style={{
+            boxShadow: '0 4px 14px rgba(0,0,0,0.6)',
+          }}
+          title="Open 10 Platform Apps & Springboard Specs Catalog"
+        >
+          <Star className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="text-sm leading-none shrink-0">📱</span>
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
+            10 PLATFORM APPS &amp; SPRINGBOARD SPECS
+          </span>
+        </Link>
+
         {/* SIGNED IN STATUS STRIP */}
         <div className="py-2 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2 truncate pr-2">
