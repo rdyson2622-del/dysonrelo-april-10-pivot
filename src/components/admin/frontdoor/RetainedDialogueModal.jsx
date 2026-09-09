@@ -7,8 +7,6 @@ import {
 const GOLD = '#D4AF37';
 
 export default function RetainedDialogueModal({ isOpen, onClose, subscriberRole = 'client', subscriberName = 'Bob Dyson', realLogs = [] }) {
-  if (!isOpen) return null;
-
   // Curated historical dialogues tailored by subscriber persona if user has no prior logs yet
   const ROLE_DEFAULT_DIALOGUES = {
     client: [
@@ -123,6 +121,8 @@ export default function RetainedDialogueModal({ isOpen, onClose, subscriberRole 
   const sampleList = ROLE_DEFAULT_DIALOGUES[subscriberRole] || ROLE_DEFAULT_DIALOGUES.client;
   const displayLogs = realLogs && realLogs.length > 0 ? realLogs : sampleList;
   const [selectedDialogue, setSelectedDialogue] = useState(displayLogs[0] || null);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">

@@ -5,6 +5,7 @@ import {
   LogIn, UserPlus, Phone, MessageCircle
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
+import SubscriberCommandCard from './SubscriberCommandCard';
 
 const GOLD = '#D4AF37';
 
@@ -48,6 +49,8 @@ export default function LuxuryHeroShowcase({
   setSearchEngine,
   onQuickMarketClick,
   currentUser,
+  isSubscriberMode = false,
+  onToggleSubscriberMode,
 }) {
   const navigate = useNavigate();
   const [activeBgIndex, setActiveBgIndex] = useState(0);
@@ -408,12 +411,22 @@ export default function LuxuryHeroShowcase({
             On desktop (lg+), this sits as the right column (order-2).
             ======================================================== */}
         <div 
-          className="flex-1 p-4 sm:p-6 lg:p-7 flex flex-col justify-start gap-4 sm:gap-5 order-1 lg:order-2"
+          className="flex-1 p-3 sm:p-5 lg:p-6 flex flex-col justify-start gap-4 order-1 lg:order-2"
           style={{
-            background: '#ede0cc',
+            background: isSubscriberMode ? '#0a0a0a' : '#ede0cc',
           }}
         >
-          {/* ================= 1. FEATURED DESTINATIONS BAR (ALL ON ONE LINE) ================= */}
+          {isSubscriberMode ? (
+            <SubscriberCommandCard
+              currentUser={currentUser}
+              onSearch={onSearch}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onSwitchToVisitorView={onToggleSubscriberMode}
+            />
+          ) : (
+            <>
+              {/* ================= 1. FEATURED DESTINATIONS BAR (ALL ON ONE LINE) ================= */}
           <div 
             className="w-full max-w-2xl mx-auto flex items-center justify-between gap-2 px-3 py-1.5 rounded-full text-xs shadow-md"
             style={{
@@ -561,6 +574,8 @@ export default function LuxuryHeroShowcase({
               </button>
             </div>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>
