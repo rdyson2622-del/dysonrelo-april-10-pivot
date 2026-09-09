@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, Mic, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles, X, Home, Building, Users, Play
+  MessageSquare, ExternalLink, Sparkles, X, Home, Building, Users, Play, BookOpen
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -149,201 +149,168 @@ export default function Sidebar({ userRole, onToggle }) {
         </div>
 
         {/* ========================================================
-            SECTION: CONCIERGE TO-DO'S: APPLE-STYLE PILLS
+            INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND
+            (EXACT IPHONE SPRINGBOARD LOOK — NO BEIGE PILLS!)
             ======================================================== */}
-        <div className="space-y-1.5 pt-1 text-left">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-            <span>CONCIERGE TO-DO'S:</span>
-            <span className="text-white/40 normal-case font-normal text-[10px]">select one</span>
+        <div className="pt-2 text-left">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2.5">
+            <span>CONCIERGE APPS:</span>
+            <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
           </div>
 
-          {/* 1. Talk with Charlie (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/talking-app')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#064e3b] via-[#0d281e] to-[#0a0a0a] border border-[#10b981]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <Mic className="w-4 h-4 text-[#10b981] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
-                    VOICE AI
+          {/* 3-Column iPhone Springboard Grid directly on black background */}
+          <div className="grid grid-cols-3 gap-y-4 gap-x-2 px-1">
+            {[
+              {
+                id: 'charlie',
+                shortLabel: 'Charlie AI',
+                tag: 'Voice AI',
+                icon: Mic,
+                iconColor: '#10b981',
+                bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
+                border: 'border-[#10b981]/60',
+                badge: 'VOICE',
+                route: '/talking-app',
+              },
+              {
+                id: 'family',
+                shortLabel: 'Family Relo',
+                tag: 'Intake',
+                icon: Home,
+                iconColor: '#D4AF37',
+                bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
+                border: 'border-[#D4AF37]/60',
+                badge: 'FREE',
+                route: '/relocation-intake',
+              },
+              {
+                id: 'hr',
+                shortLabel: 'Corp HR',
+                tag: 'Exec Move',
+                icon: Building,
+                iconColor: '#e8c84a',
+                bgGradient: 'from-[#332a18] via-[#1a160d] to-[#0a0a0a]',
+                border: 'border-[#e8c84a]/60',
+                badge: 'ZERO',
+                route: '/corporate-relo',
+              },
+              {
+                id: 'agents',
+                shortLabel: 'Agent Bureau',
+                tag: 'PRN Network',
+                icon: Users,
+                iconColor: '#60a5fa',
+                bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
+                border: 'border-[#3b82f6]/60',
+                badge: '25%',
+                route: '/broker-portal',
+              },
+              {
+                id: 'refer',
+                shortLabel: 'Refer Lead',
+                tag: 'Payout',
+                icon: ArrowRight,
+                iconColor: '#D4AF37',
+                bgGradient: 'from-[#2b2210] via-[#17130b] to-[#0a0a0a]',
+                border: 'border-[#D4AF37]/60',
+                badge: 'PAYOUT',
+                route: '/refer',
+              },
+              {
+                id: 'news',
+                shortLabel: '6AM News',
+                tag: 'Daily Pulse',
+                icon: Play,
+                iconColor: '#ef4444',
+                bgGradient: 'from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a]',
+                border: 'border-[#ef4444]/60',
+                badge: 'DAILY',
+                route: '/dnn-news',
+              },
+              {
+                id: 'advantage',
+                shortLabel: 'Advantage',
+                tag: 'Fiduciary',
+                icon: ShieldCheck,
+                iconColor: '#34d399',
+                bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
+                border: 'border-[#10b981]/60',
+                badge: '100%',
+                route: '/transparency',
+              },
+              {
+                id: 'library',
+                shortLabel: 'My Library',
+                tag: 'Vault',
+                icon: BookOpen,
+                iconColor: '#60a5fa',
+                bgGradient: 'from-[#10223d] via-[#0c1626] to-[#0a0a0a]',
+                border: 'border-[#3b82f6]/60',
+                badge: 'VAULT',
+                route: '/media',
+              },
+              {
+                id: 'concierge',
+                shortLabel: 'Concierge',
+                tag: 'Direct Desk',
+                icon: Phone,
+                iconColor: '#D4AF37',
+                bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
+                border: 'border-[#D4AF37]/60',
+                badge: 'CALL',
+                route: 'tel:+18583531200',
+              },
+            ].map((app) => {
+              const Icon = app.icon;
+              return (
+                <button
+                  key={app.id}
+                  type="button"
+                  onClick={() => {
+                    if (app.route.startsWith('tel:')) {
+                      window.open(app.route);
+                    } else {
+                      navigate(app.route);
+                    }
+                  }}
+                  className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
+                >
+                  {/* Standalone Apple Squircle Icon Tile on Black Background */}
+                  <div 
+                    className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
+                    style={{
+                      boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
+                    }}
+                  >
+                    {/* iPhone Glossy Top Sheen */}
+                    <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 via-white/10 to-transparent pointer-events-none rounded-t-[18px]" />
+
+                    {/* Notification Pill Badge */}
+                    {app.badge && (
+                      <span 
+                        className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow-md"
+                      >
+                        {app.badge}
+                      </span>
+                    )}
+
+                    <Icon 
+                      className="w-6 h-6 sm:w-7 sm:h-7 transition-transform group-hover:scale-110 drop-shadow" 
+                      style={{ color: app.iconColor }} 
+                    />
+                  </div>
+
+                  {/* Clean iPhone App Label directly on Black */}
+                  <span className="mt-1.5 text-[11px] font-semibold text-white group-hover:text-[#D4AF37] transition-colors leading-tight text-center max-w-[76px] truncate">
+                    {app.shortLabel}
                   </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Ask anything, vet agents &amp; navigate
-                </p>
-              </div>
-            </div>
-            <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] border border-black/20 shrink-0 ml-1" />
-          </div>
-
-          {/* 2. Relocating Families & Buyers (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/relocation-intake')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#2e2617] via-[#17140f] to-[#0a0a0a] border border-[#D4AF37]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <Home className="w-4 h-4 text-[#D4AF37] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Relocating Families</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#10b981] shrink-0">
-                    FREE
+                  {/* Micro Purpose Tag */}
+                  <span className="text-[8.5px] text-white/45 leading-none mt-0.5 text-center max-w-[76px] truncate">
+                    {app.tag}
                   </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Agent vetting, tax &amp; school roadmap
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </div>
-
-          {/* 3. Corporate HR & Employers (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/corporate-relo')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#332a18] via-[#1a160d] to-[#0a0a0a] border border-[#e8c84a]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <Building className="w-4 h-4 text-[#e8c84a] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Corporate HR</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#e8c84a] shrink-0">
-                    ZERO FEE
-                  </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Executive move packages &amp; milestones
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </div>
-
-          {/* 4. Agents & Brokerages (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/broker-portal')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#172554] via-[#0f172a] to-[#0a0a0a] border border-[#3b82f6]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <Users className="w-4 h-4 text-[#60a5fa] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Agents &amp; Brokerages</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#1d4ed8] text-white shrink-0">
-                    25% FEE
-                  </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Receiving agent bureau &amp; escrow audits
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </div>
-
-          {/* 5. Refer a Client or Colleague (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/refer')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#2b2210] via-[#17130b] to-[#0a0a0a] border border-[#D4AF37]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <ArrowRight className="w-4 h-4 text-[#D4AF37] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Refer a Client</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shrink-0">
-                    25% PAYOUT
-                  </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Submit buyer, seller, agent or vendor lead
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-[#0a0a0a] group-hover:translate-x-0.5 transition-transform shrink-0" />
-          </div>
-        </div>
-
-        {/* ========================================================
-            SECTION: DETAILED SYSTEMS: APPLE-STYLE PILLS
-            ======================================================== */}
-        <div className="space-y-1.5 pt-1 text-left">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-            <span>DETAILED SYSTEMS:</span>
-            <span className="text-white/40 normal-case font-normal text-[10px]">direct</span>
-          </div>
-
-          {/* 6. 6AM DNN News Broadcast (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/dnn-news')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a] border border-[#ef4444]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <Play className="w-4 h-4 text-[#ef4444] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
-                    DAILY
-                  </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  AI Charlie &amp; Bob • Daily Housing Pulse
-                </p>
-              </div>
-            </div>
-            <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
-              Open →
-            </span>
-          </div>
-
-          {/* 7. The Concierge Advantage (Apple Squircle Pill) */}
-          <div
-            onClick={() => navigate('/transparency')}
-            className="p-2 sm:p-2.5 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/15 flex items-center justify-between gap-2.5 group active:scale-98"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-[11px] bg-gradient-to-br from-[#064e3b] via-[#0d281e] to-[#0a0a0a] border border-[#10b981]/50 flex items-center justify-center shrink-0 shadow relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 rounded-t-[11px]" />
-                <ShieldCheck className="w-4 h-4 text-[#34d399] drop-shadow" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Concierge Advantage</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-[#047857] text-white shrink-0">
-                    FIDUCIARY
-                  </span>
-                </div>
-                <p className="text-[9.5px] text-[#554433] truncate mt-0.5">
-                  Independent Vetting vs Lead Portals
-                </p>
-              </div>
-            </div>
-            <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0">
-              Open →
-            </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

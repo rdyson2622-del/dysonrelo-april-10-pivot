@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles,
-  LogIn, UserPlus, Phone, MessageCircle, Home, Mic
+  LogIn, UserPlus, Phone, MessageCircle, Home, Mic, Play, BookOpen
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
@@ -410,175 +410,167 @@ export default function LuxuryHeroShowcase({
               </>
             )}
 
-            {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S — REVERSE COLOR TAN PILLS WITH BLACK TEXT */}
-            <div className="space-y-1 pt-1 w-full">
-              <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 flex items-center justify-between">
-                <span>Concierge To-Do's:</span>
-                <span className="text-[7.5px] text-white/50 lowercase tracking-normal">select one</span>
+            {/* INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND (NO BEIGE PILLS!) */}
+            <div className="pt-1.5 w-full text-left">
+              <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 mb-2 flex items-center justify-between">
+                <span>Concierge Apps:</span>
+                <span className="text-[7.5px] text-white/50 lowercase tracking-normal">tap to launch</span>
               </div>
 
-              {/* TO-DO 1: TALK WITH CHARLIE (AI VOICE CONCIERGE) */}
-              <div className="pb-0.5">
-                <HeroGeminiConcierge sidebarMode={true} />
+              {/* 3-Column iPhone Springboard Grid directly on solid black */}
+              <div className="grid grid-cols-3 gap-y-3 gap-x-1.5 px-0.5">
+                {[
+                  {
+                    id: 'charlie',
+                    shortLabel: 'Charlie AI',
+                    tag: 'Voice AI',
+                    icon: Mic,
+                    iconColor: '#10b981',
+                    bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
+                    border: 'border-[#10b981]/60',
+                    badge: 'VOICE',
+                    route: '/talking-app',
+                  },
+                  {
+                    id: 'family',
+                    shortLabel: 'Family Relo',
+                    tag: 'Intake',
+                    icon: Home,
+                    iconColor: '#D4AF37',
+                    bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
+                    border: 'border-[#D4AF37]/60',
+                    badge: 'FREE',
+                    route: '/relocation-intake',
+                  },
+                  {
+                    id: 'hr',
+                    shortLabel: 'Corp HR',
+                    tag: 'Exec Move',
+                    icon: Building,
+                    iconColor: '#e8c84a',
+                    bgGradient: 'from-[#332a18] via-[#1a160d] to-[#0a0a0a]',
+                    border: 'border-[#e8c84a]/60',
+                    badge: 'ZERO',
+                    route: '/corporate-relo',
+                  },
+                  {
+                    id: 'agents',
+                    shortLabel: 'Agent Bureau',
+                    tag: 'PRN Network',
+                    icon: Users,
+                    iconColor: '#60a5fa',
+                    bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
+                    border: 'border-[#3b82f6]/60',
+                    badge: '25%',
+                    route: '/broker-portal',
+                  },
+                  {
+                    id: 'refer',
+                    shortLabel: 'Refer Lead',
+                    tag: 'Payout',
+                    icon: ArrowRight,
+                    iconColor: '#D4AF37',
+                    bgGradient: 'from-[#2b2210] via-[#17130b] to-[#0a0a0a]',
+                    border: 'border-[#D4AF37]/60',
+                    badge: 'PAYOUT',
+                    route: '/refer',
+                  },
+                  {
+                    id: 'news',
+                    shortLabel: '6AM News',
+                    tag: 'Daily Pulse',
+                    icon: Play,
+                    iconColor: '#ef4444',
+                    bgGradient: 'from-[#450a0a] via-[#1f0a0a] to-[#0a0a0a]',
+                    border: 'border-[#ef4444]/60',
+                    badge: 'DAILY',
+                    route: '/dnn-news',
+                  },
+                  {
+                    id: 'advantage',
+                    shortLabel: 'Advantage',
+                    tag: 'Fiduciary',
+                    icon: ShieldCheck,
+                    iconColor: '#34d399',
+                    bgGradient: 'from-[#064e3b] via-[#0d281e] to-[#0a0a0a]',
+                    border: 'border-[#10b981]/60',
+                    badge: '100%',
+                    route: '/transparency',
+                  },
+                  {
+                    id: 'library',
+                    shortLabel: 'My Library',
+                    tag: 'Vault',
+                    icon: BookOpen,
+                    iconColor: '#60a5fa',
+                    bgGradient: 'from-[#10223d] via-[#0c1626] to-[#0a0a0a]',
+                    border: 'border-[#3b82f6]/60',
+                    badge: 'VAULT',
+                    route: '/media',
+                  },
+                  {
+                    id: 'concierge',
+                    shortLabel: 'Concierge',
+                    tag: 'Direct Desk',
+                    icon: Phone,
+                    iconColor: '#D4AF37',
+                    bgGradient: 'from-[#2e2617] via-[#17140f] to-[#0a0a0a]',
+                    border: 'border-[#D4AF37]/60',
+                    badge: 'CALL',
+                    route: 'tel:+18583531200',
+                  },
+                ].map((app) => {
+                  const Icon = app.icon;
+                  return (
+                    <button
+                      key={app.id}
+                      type="button"
+                      onClick={() => {
+                        if (app.route.startsWith('tel:')) {
+                          window.open(app.route);
+                        } else {
+                          navigate(app.route);
+                        }
+                      }}
+                      className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
+                    >
+                      {/* Standalone iPhone Squircle Icon Tile on Black Background */}
+                      <div 
+                        className={`w-13 h-13 sm:w-14 sm:h-14 rounded-[16px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
+                        style={{
+                          boxShadow: '0 6px 18px rgba(0,0,0,0.6)',
+                        }}
+                      >
+                        {/* iPhone Glossy Top Sheen */}
+                        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 via-white/10 to-transparent pointer-events-none rounded-t-[16px]" />
+
+                        {/* Notification Pill Badge */}
+                        {app.badge && (
+                          <span 
+                            className="absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full text-[6.5px] font-black uppercase tracking-wider bg-black text-[#D4AF37] border border-[#D4AF37] shadow-md"
+                          >
+                            {app.badge}
+                          </span>
+                        )}
+
+                        <Icon 
+                          className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:scale-110 drop-shadow" 
+                          style={{ color: app.iconColor }} 
+                        />
+                      </div>
+
+                      {/* Clean iPhone App Label directly on Black */}
+                      <span className="mt-1 text-[10.5px] font-semibold text-white group-hover:text-[#D4AF37] transition-colors leading-tight text-center max-w-[72px] truncate">
+                        {app.shortLabel}
+                      </span>
+                      {/* Micro Purpose Tag */}
+                      <span className="text-[8px] text-white/45 leading-none mt-0.5 text-center max-w-[72px] truncate">
+                        {app.tag}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-
-              {/* TO-DO 2: Families & Buyers — REVERSE COLOR TAN PILL */}
-              <button
-                type="button"
-                onClick={() => navigate('/relocation-intake')}
-                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1 mb-0.2">
-                    <Users className="w-3 h-3 text-[#0a0a0a] shrink-0" />
-                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
-                      Relocating Families &amp; Buyers
-                    </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#10b981] font-bold shrink-0">
-                      Free
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
-                    Agent vetting, tax &amp; school roadmap
-                  </p>
-                </div>
-                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-
-              {/* TO-DO 3: Corporate HR & Employers — REVERSE COLOR TAN PILL */}
-              <button
-                type="button"
-                onClick={() => navigate('/corporate-relo')}
-                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1 mb-0.2">
-                    <Briefcase className="w-3 h-3 text-[#0a0a0a] shrink-0" />
-                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
-                      Corporate HR &amp; Employers
-                    </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#D4AF37] font-bold shrink-0">
-                      Zero Fee
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
-                    Executive move packages &amp; milestones
-                  </p>
-                </div>
-                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-
-              {/* TO-DO 4: Agents & Brokerages — REVERSE COLOR TAN PILL */}
-              <button
-                type="button"
-                onClick={() => navigate('/partner-benefits')}
-                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1 mb-0.2">
-                    <Building className="w-3 h-3 text-[#0a0a0a] shrink-0" />
-                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
-                      Agents &amp; Brokerages
-                    </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#60a5fa] font-bold shrink-0">
-                      25% Referral
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
-                    Receiving agent bureau &amp; escrow audits
-                  </p>
-                </div>
-                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-
-              {/* TO-DO 5: Refer a Client or Colleague — REVERSE COLOR TAN PILL */}
-              <button
-                type="button"
-                onClick={() => navigate('/refer')}
-                className="w-full group p-1.5 sm:p-2 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1 mb-0.2">
-                    <UserPlus className="w-3 h-3 text-[#0a0a0a] shrink-0" />
-                    <span className="text-[10px] font-bold text-[#0a0a0a] truncate">
-                      Refer a Client or Colleague
-                    </span>
-                    <span className="text-[7px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#D4AF37] font-bold shrink-0">
-                      25% Payout
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate">
-                    Submit buyer, seller, agent or vendor lead
-                  </p>
-                </div>
-                <ArrowRight className="w-3 h-3 text-[#0a0a0a] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-
-            {/* DIRECT ACCESS: 6AM NEWS DESK & CONCIERGE ADVANTAGE — REVERSE COLOR TAN PILLS */}
-            <div className="pt-1 mt-1 border-t border-white/10 space-y-1 w-full">
-              <div className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] px-0.5 flex items-center justify-between">
-                <span>Detailed Systems:</span>
-                <span className="text-[7.5px] text-white/50 lowercase tracking-normal">direct</span>
-              </div>
-
-              {/* 1. 6AM NEWS BROADCAST LINK */}
-              <button
-                type="button"
-                onClick={() => navigate('/dnn-news')}
-                className="w-full group px-2 py-1 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1">
-                    <Tv className="w-2.5 h-2.5 text-red-600 shrink-0" />
-                    <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
-                      6AM DNN News Broadcast
-                    </span>
-                    <span className="text-[6.5px] px-1 py-0.2 rounded bg-[#0a0a0a] text-red-400 font-bold shrink-0">
-                      Daily
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate pl-3.5">
-                    AI Charlie &amp; Bob • Daily Housing Pulse
-                  </p>
-                </div>
-                <span className="text-[8px] text-[#0a0a0a] underline font-bold whitespace-nowrap shrink-0 flex items-center gap-0.5">
-                  <span>Open</span>
-                  <ArrowRight className="w-2 h-2" />
-                </span>
-              </button>
-
-              {/* 2. THE CONCIERGE ADVANTAGE LINK */}
-              <button
-                type="button"
-                onClick={() => navigate('/relocation-intake')}
-                className="w-full group px-2 py-1 rounded-lg border border-[#D4AF37]/60 hover:brightness-105 transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
-                style={{ background: '#ede0cc' }}
-              >
-                <div className="min-w-0 pr-1">
-                  <div className="flex items-center gap-1">
-                    <ShieldCheck className="w-2.5 h-2.5 text-[#10b981] shrink-0" />
-                    <span className="text-[9.5px] font-bold text-[#0a0a0a] truncate">
-                      The Concierge Advantage
-                    </span>
-                    <span className="text-[6.5px] px-1 py-0.2 rounded bg-[#0a0a0a] text-[#10b981] font-bold shrink-0">
-                      Fiduciary
-                    </span>
-                  </div>
-                  <p className="text-[8.5px] text-[#44382c] leading-tight truncate pl-3.5">
-                    Independent Vetting vs Lead Portals
-                  </p>
-                </div>
-                <span className="text-[8px] text-[#0a0a0a] underline font-bold whitespace-nowrap shrink-0 flex items-center gap-0.5">
-                  <span>Open</span>
-                  <ArrowRight className="w-2 h-2" />
-                </span>
-              </button>
             </div>
           </div>
 
