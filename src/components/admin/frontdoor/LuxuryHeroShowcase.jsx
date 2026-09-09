@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, ShieldCheck, Users, Briefcase, Building, Tv, Compass, Sparkles,
-  LogIn, UserPlus, Phone, MessageCircle
+  LogIn, UserPlus, Phone, MessageCircle, Home
 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 import SubscriberCommandCard from './SubscriberCommandCard';
 

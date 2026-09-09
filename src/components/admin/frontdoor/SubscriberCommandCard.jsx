@@ -14,6 +14,7 @@ export default function SubscriberCommandCard({
   searchQuery,
   setSearchQuery,
   onSwitchToVisitorView,
+  activeMoveOverride,
 }) {
   const navigate = useNavigate();
   const [isDialogueModalOpen, setIsDialogueModalOpen] = useState(false);
@@ -25,24 +26,24 @@ export default function SubscriberCommandCard({
   // Persona configuration following Grok CoS specification:
   // Family/Buyer first, with dedicated Admin handling so admins aren't greeted as relocating buyers
   let personaLabel = 'Relocating Client';
-  let activeProject = 'San Jose → Scottsdale, AZ';
+  let activeProject = activeMoveOverride || 'San Jose, CA → Scottsdale, AZ';
   let button1Label = 'Continue your move';
-  let button1Dest = '/home';
+  let button1Dest = '/RelocationRoadmap';
   let RoleIcon = Home;
 
-  if (isAdmin) {
+  if (isAdmin && !activeMoveOverride) {
     personaLabel = 'Platform Administrator';
     activeProject = 'DysonRelo Platform Operations & Escrow Audits';
     button1Label = 'Open Admin Console';
     button1Dest = '/admin';
     RoleIcon = ShieldCheck;
-  } else if (roleKey === 'agent') {
+  } else if (roleKey === 'agent' && !activeMoveOverride) {
     personaLabel = 'Partner Agent';
     activeProject = '2 Open Client Referrals in Progress';
     button1Label = 'Open Agent Workspace';
     button1Dest = '/agent-command-center';
     RoleIcon = Star;
-  } else if (roleKey === 'hr') {
+  } else if (roleKey === 'hr' && !activeMoveOverride) {
     personaLabel = 'Corporate HR & Relocation';
     activeProject = '3 Active Employee Relocations';
     button1Label = 'Open Corporate Suite';
