@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, Mic, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles
+  MessageSquare, ExternalLink, Sparkles, X
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -34,24 +34,36 @@ export default function ClientSidebar({ onToggle }) {
         {/* ========================================================
             TOP BRAND HEADER PILL
             ======================================================== */}
-        <div 
-          onClick={() => navigate('/portal')}
-          className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-3 cursor-pointer hover:border-[#D4AF37] transition-all"
-        >
-          <div className="w-10 h-10 rounded-xl bg-[#141414] border border-[#D4AF37]/50 flex items-center justify-center shrink-0">
-            <span className="font-serif text-lg font-bold text-[#D4AF37]">D</span>
+        <div className="flex items-center justify-between gap-1.5">
+          <div 
+            onClick={() => navigate('/portal')}
+            className="flex-1 p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
+          >
+            <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#D4AF37]/50 flex items-center justify-center shrink-0">
+              <span className="font-serif text-base font-bold text-[#D4AF37]">D</span>
+            </div>
+            <div className="min-w-0">
+              <div 
+                className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight truncate"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                DysonRelo.com
+              </div>
+              <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
+                NATIONWIDE CONCIERGE
+              </div>
+            </div>
           </div>
-          <div className="min-w-0">
-            <div 
-              className="text-base sm:text-lg font-bold text-white tracking-tight leading-tight"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          {onToggle && (
+            <button
+              type="button"
+              onClick={onToggle}
+              className="w-9 h-9 rounded-xl bg-black border border-white/20 text-white/70 hover:text-white hover:border-[#D4AF37] flex items-center justify-center cursor-pointer shrink-0 transition-all shadow-md active:scale-95"
+              title="Close Sidebar"
             >
-              DysonRelo.com
-            </div>
-            <div className="text-[9px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
-              NATIONWIDE RELOCATION CONCIERGE
-            </div>
-          </div>
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         {/* 55+ YEARS PILL */}
