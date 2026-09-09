@@ -55,15 +55,15 @@ export default function LuxuryHeroShowcase({
   return (
     <div className="w-full">
       {/* 2-COLUMN STRUCTURE:
-          Left Sidebar: Narrowed by 15% (lg:w-[285px] xl:w-[310px]) to save space and make all content fit snugly.
-          Right Canvas: Pure, reduced-size architectural home photo on top, followed by Search Pill 1ST, then the copy & category tabs. */}
+          Left Sidebar: Elongated organized list of to-do's, including Talk with Charlie voice concierge & doorway pathways.
+          Right Canvas: Unified single-line featured destination bar, pure architectural photo with luxury tan backdrop, and clean search pill. */}
       <div className="flex flex-col lg:flex-row w-full rounded-t-2xl overflow-hidden shadow-2xl bg-[#0a0a0a] border-b border-[#D4AF37]/30">
         
         {/* ========================================================
-            LEFT SIDEBAR (NARROWED BY 15% — SNUG & ELEGANT)
+            LEFT SIDEBAR (ORGANIZED CONCIERGE TO-DO'S & PATHWAYS)
             ======================================================== */}
         <aside 
-          className="w-full lg:w-[285px] xl:w-[310px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20"
+          className="w-full lg:w-[315px] xl:w-[335px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20"
           style={{
             background: 'linear-gradient(180deg, #0e0e0e 0%, #080808 100%)',
             borderRight: `1.5px solid ${GOLD}35`,
@@ -89,7 +89,6 @@ export default function LuxuryHeroShowcase({
               >
                 We Don't Sell Real Estate.
               </h2>
-              {/* REQUESTED CHANGE: We Orchestrate Your Entire Move. */}
               <p
                 className="font-semibold mt-0.5 tracking-wide leading-snug"
                 style={{
@@ -105,13 +104,19 @@ export default function LuxuryHeroShowcase({
               </p>
             </div>
 
-            {/* THREE STRATEGIC DOORWAY TILES */}
-            <div className="space-y-1.5 pt-1.5">
-              <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5">
-                Select Your Pathway:
+            {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S */}
+            <div className="space-y-1.5 pt-2">
+              <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
+                <span>Concierge To-Do's:</span>
+                <span className="text-[8px] text-white/50 lowercase tracking-normal">select one to begin</span>
               </div>
 
-              {/* Door 1: Families & Buyers */}
+              {/* TO-DO 1: TALK WITH CHARLIE (AI VOICE CONCIERGE) */}
+              <div className="pb-0.5">
+                <HeroGeminiConcierge sidebarMode={true} />
+              </div>
+
+              {/* TO-DO 2: Families & Buyers */}
               <button
                 type="button"
                 onClick={() => navigate('/relocation-intake')}
@@ -134,7 +139,7 @@ export default function LuxuryHeroShowcase({
                 <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* Door 2: Corporate HR & Employers */}
+              {/* TO-DO 3: Corporate HR & Employers */}
               <button
                 type="button"
                 onClick={() => navigate('/corporate-relo')}
@@ -157,7 +162,7 @@ export default function LuxuryHeroShowcase({
                 <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
-              {/* Door 3: Agents & Brokerages */}
+              {/* TO-DO 4: Agents & Brokerages */}
               <button
                 type="button"
                 onClick={() => navigate('/partner-benefits')}
@@ -194,9 +199,9 @@ export default function LuxuryHeroShowcase({
 
         {/* ========================================================
             RIGHT CANVAS: 
-            1. FEATURED DESTINATION BAR ABOVE PHOTO
-            2. PURE ARCHITECTURAL HOUSE PHOTO (SHOWS ENTIRE HOUSE, NO COPY ON PHOTO)
-            3. LUXURY SEARCH PILL FIRST
+            1. FEATURED DESTINATION BAR (ALL ON ONE LINE)
+            2. PURE ARCHITECTURAL HOUSE PHOTO WITH TAN BACKDROP
+            3. CLEAN LUXURY SEARCH PILL FIRST
             4. COPY & CATEGORY TABS
             ======================================================== */}
         <div 
@@ -205,25 +210,29 @@ export default function LuxuryHeroShowcase({
             background: 'radial-gradient(ellipse at top, #151515 0%, #0a0a0a 100%)',
           }}
         >
-          {/* ================= 1. FEATURED DESTINATIONS BAR (ABOVE THE PHOTO) ================= */}
-          <div className="w-full max-w-2xl mx-auto flex flex-wrap items-center justify-between gap-2.5 px-0.5">
-            <div 
-              className="bg-black/90 border border-[#D4AF37]/50 px-3.5 py-1.5 rounded-full text-xs font-semibold text-white/95 shadow-lg flex items-center gap-2"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-              <span className="text-[#D4AF37] font-bold">Featured Destination:</span>
-              <span className="font-bold">{currentBg.city}</span>
-              <span className="text-white/60 text-[10.5px] font-mono hidden sm:inline">({currentBg.tag})</span>
+          {/* ================= 1. FEATURED DESTINATIONS BAR (ALL ON ONE LINE) ================= */}
+          <div 
+            className="w-full max-w-2xl mx-auto flex items-center justify-between gap-2 px-3 py-1.5 rounded-full text-xs shadow-lg"
+            style={{
+              background: '#0a0a0a',
+              border: `1.5px solid ${GOLD}75`,
+            }}
+          >
+            <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
+              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse shrink-0" />
+              <span className="text-[#D4AF37] font-bold shrink-0 text-[11px] sm:text-xs">Featured:</span>
+              <span className="font-bold text-white text-[11px] sm:text-xs truncate">{currentBg.city}</span>
+              <span className="text-white/60 text-[10px] font-mono hidden md:inline truncate">({currentBg.tag})</span>
             </div>
 
             {/* Destination Switcher Buttons */}
-            <div className="flex items-center gap-1 bg-black/85 border border-white/20 p-1 rounded-full text-[11px] shadow-lg">
+            <div className="flex items-center gap-1 bg-[#151515] border border-white/20 p-0.5 rounded-full text-[10.5px] shrink-0">
               {HERO_BACKGROUNDS.map((bg, idx) => (
                 <button
                   key={bg.id}
                   type="button"
                   onClick={() => setActiveBgIndex(idx)}
-                  className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+                  className={`px-2.5 py-0.5 rounded-full font-bold transition-all cursor-pointer whitespace-nowrap ${
                     activeBgIndex === idx
                       ? 'bg-[#D4AF37] text-black shadow-md'
                       : 'text-white/70 hover:text-white'
@@ -235,9 +244,16 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
-          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO (NO COPY ON PHOTO, ENTIRE HOUSE VISIBLE) ================= */}
-          <div className="w-full max-w-2xl mx-auto rounded-2xl overflow-hidden border border-white/25 shadow-2xl bg-black">
-            <div className="w-full aspect-[16/10] sm:aspect-[16/9] relative bg-black flex items-center justify-center">
+          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO WITH TAN BACKDROP ================= */}
+          <div 
+            className="w-full max-w-2xl mx-auto rounded-2xl p-2 sm:p-3 shadow-2xl border transition-all"
+            style={{
+              background: '#ede0cc',
+              borderColor: `${GOLD}90`,
+              boxShadow: '0 16px 45px rgba(0,0,0,0.4)',
+            }}
+          >
+            <div className="w-full aspect-[16/10] sm:aspect-[16/9] relative rounded-xl overflow-hidden shadow-inner flex items-center justify-center bg-[#ede0cc]">
               <img
                 src={currentBg.url}
                 alt={currentBg.title}
@@ -247,16 +263,16 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
-          {/* ================= 3. SEARCH PILL 1ST DIRECTLY BELOW PHOTO, THEN COPY ================= */}
+          {/* ================= 3. CLEAN SEARCH PILL DIRECTLY BELOW PHOTO ================= */}
           <div className="w-full max-w-2xl mx-auto space-y-3.5 text-center pt-1">
             
-            {/* 1ST: THE FLOATING LUXURY SEARCH PILL PLACED FIRST ABOVE ALL COPY */}
+            {/* 1ST: THE FLOATING LUXURY SEARCH PILL (CLEAN & UNCLUTTERED) */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 onSearch(searchQuery);
               }}
-              className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full transition-all shadow-xl"
+              className="flex items-center gap-2 p-1.5 rounded-full transition-all shadow-xl"
               style={{
                 background: '#faf6ee',
                 border: `2px solid ${GOLD}`,
@@ -281,12 +297,11 @@ export default function LuxuryHeroShowcase({
                 />
               </div>
 
-              {/* Charlie Voice Concierge & Action Button */}
-              <div className="flex items-center gap-1.5 w-full sm:w-auto shrink-0 pr-1">
-                <HeroGeminiConcierge />
+              {/* Action Button */}
+              <div className="flex items-center pr-1 shrink-0">
                 <button
                   type="submit"
-                  className="w-full sm:w-auto font-bold text-xs sm:text-sm px-6 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-105"
+                  className="font-bold text-xs sm:text-sm px-6 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-105"
                   style={{
                     background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
                     color: '#0a0a0a',

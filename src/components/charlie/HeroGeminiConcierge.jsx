@@ -9,7 +9,7 @@ const GOLD = '#D4AF37';
 
 const CHARLIE_CONCIERGE_PROMPT = CHARLIE_SIMMONS_SYSTEM_PROMPT;
 
-export default function HeroGeminiConcierge() {
+export default function HeroGeminiConcierge({ sidebarMode = false }) {
   const navigate = useNavigate();
   const [status, setStatus] = useState('ready'); // ready, connecting, listening, speaking, error
   const [errorMessage, setErrorMessage] = useState(null);
@@ -108,6 +108,125 @@ export default function HeroGeminiConcierge() {
 
   const isActive = status === 'listening' || status === 'speaking' || status === 'connecting';
 
+  if (sidebarMode) {
+    return (
+      <div className="w-full text-left">
+        {!isActive ? (
+          <button
+            type="button"
+            onClick={handleStart}
+            className="w-full group p-2.5 rounded-xl border border-[#D4AF37]/60 hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between shadow-lg"
+            style={{
+              background: 'linear-gradient(135deg, #1b160a 0%, #0d0d0d 100%)',
+            }}
+          >
+            <div className="flex items-center gap-2 min-w-0 pr-1">
+              <span
+                className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow"
+                style={{ background: 'rgba(212,175,55,0.25)', border: `1px solid ${GOLD}` }}
+              >
+                <Mic className="w-3.5 h-3.5 text-[#D4AF37]" />
+              </span>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-[11px] font-bold text-white group-hover:text-[#D4AF37] transition-colors">
+                    Talk with Charlie
+                  </span>
+                  <span
+                    className="text-[7.5px] px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider text-black"
+                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                  >
+                    Voice AI
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-white/60 leading-tight truncate">
+                  Ask anything, vet agents &amp; navigate
+                </p>
+              </div>
+            </div>
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse shrink-0" title="Online" />
+          </button>
+        ) : (
+          <div
+            className="w-full p-2.5 rounded-xl border border-[#D4AF37] shadow-xl space-y-2 text-left"
+            style={{ background: '#12100a' }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    background: status === 'speaking' ? GOLD : status === 'listening' ? '#22c55e' : GOLD,
+                    boxShadow: status === 'speaking' ? `0 0 8px ${GOLD}` : '0 0 8px #22c55e',
+                  }}
+                />
+                <span className="text-[11px] font-bold text-white">
+                  {status === 'connecting' && 'Connecting to Charlie…'}
+                  {status === 'listening' && 'Listening (Speak now)…'}
+                  {status === 'speaking' && 'Charlie Speaking…'}
+                </span>
+
+                {status === 'speaking' && (
+                  <div className="flex items-center gap-0.5 ml-1">
+                    <span className="w-0.5 h-3 bg-[#D4AF37] animate-pulse rounded-full" />
+                    <span className="w-0.5 h-4 bg-[#D4AF37] animate-pulse delay-75 rounded-full" />
+                    <span className="w-0.5 h-2 bg-[#D4AF37] animate-pulse delay-150 rounded-full" />
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleEnd}
+                className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30 cursor-pointer transition-colors"
+                title="End session"
+              >
+                <Square className="w-2.5 h-2.5" /> Stop
+              </button>
+            </div>
+
+            {/* Live speech turn */}
+            {(liveText || navNotice) && !activeAction && (
+              <div className="text-[10px] text-white/80 leading-relaxed bg-black/60 p-2 rounded-lg border border-white/10">
+                {navNotice ? (
+                  <span className="inline-flex items-center gap-1 text-[#fce38a] font-bold">
+                    <Compass className="w-3 h-3 text-[#D4AF37]" /> Opening {navNotice.title || navNotice.path}
+                  </span>
+                ) : (
+                  <span>
+                    <strong className="text-[#D4AF37] uppercase text-[9px] mr-1">
+                      {speakerRole === 'user' ? 'You:' : 'Charlie:'}
+                    </strong>
+                    {liveText}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Charlie Action Pointer */}
+            {activeAction && (
+              <div className="w-full pt-1">
+                <CharlieActionPointer
+                  action={activeAction}
+                  onDismiss={() => {
+                    setActiveAction(null);
+                    setNavNotice(null);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {status === 'error' && (
+          <p className="text-[9.5px] text-amber-400 mt-1 pl-1">
+            {errorMessage || 'Connection issue. Tap to retry.'}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="inline-flex flex-col items-start max-w-full">
       {/* Discreet Gemini-style audio pill */}
@@ -182,21 +301,21 @@ export default function HeroGeminiConcierge() {
 
       {/* Error note if any */}
       {status === 'error' && (
-        <p className="text-[10px] text-amber-600 mt-1 pl-1">
+        <p className="text-[10px] text-amber-400 mt-1 pl-1">
           {errorMessage || 'Connection issue. Tap to retry.'}
         </p>
       )}
 
       {/* Discreet single-line caption / navigation alert */}
       {isActive && (liveText || navNotice) && !activeAction && (
-        <div className="mt-1.5 max-w-md text-[11px] text-[#2c2217] font-medium leading-tight pl-1 flex items-center gap-1.5">
+        <div className="mt-1.5 max-w-md text-[11px] text-white/80 font-medium leading-tight pl-1 flex items-center gap-1.5">
           {navNotice ? (
-            <span className="inline-flex items-center gap-1 text-[#0d0d0d] font-bold bg-[#D4AF37]/30 px-2 py-0.5 rounded">
+            <span className="inline-flex items-center gap-1 text-[#fce38a] font-bold bg-[#D4AF37]/30 px-2 py-0.5 rounded">
               <Compass className="w-3 h-3 text-[#b8920a]" /> Directing to {navNotice.title || navNotice.path}
             </span>
           ) : (
             <span className="truncate">
-              <strong className="text-[#b8920a] uppercase text-[9px] mr-1">
+              <strong className="text-[#D4AF37] uppercase text-[9px] mr-1">
                 {speakerRole === 'user' ? 'You:' : 'Charlie:'}
               </strong>
               {liveText}
