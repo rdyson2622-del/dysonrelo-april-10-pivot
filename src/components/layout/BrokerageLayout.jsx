@@ -9,6 +9,7 @@ import {
 import BrokerageOnboarding from '@/components/brokerage/BrokerageOnboarding';
 import BrokerageAlertBanner from '@/components/brokerage/BrokerageAlertBanner';
 import ReferralFloatingPill from '@/components/portal/ReferralFloatingPill';
+import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 
 const GOLD = '#D4AF37';
 
@@ -272,52 +273,16 @@ export default function BrokerageLayout() {
             </div>
           </div>
 
-          {/* SECTION: CONCIERGE SYSTEMS: direct */}
-          <div className="space-y-1.5 pt-1 text-left">
-            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
-              <span>CONCIERGE SYSTEMS:</span>
-              <span className="text-white/40 normal-case font-normal text-[10px]">direct</span>
+          {/* ========================================================
+              BROKER MINI APPS GRID (SOLID BLACK BACKGROUND)
+              Includes "My Agent" exclusively for the Broker Portal sidebar
+              ======================================================== */}
+          <div className="pt-2 text-left">
+            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
+              <span>BROKER MINI APPS:</span>
+              <span className="text-white/40 normal-case font-normal text-[9px]">tap to launch</span>
             </div>
-
-            {/* Talk with Charlie */}
-            <div
-              onClick={() => navigate('/talking-app')}
-              className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-            >
-              <div className="flex items-center justify-between gap-1.5">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">Talk with Charlie</span>
-                  <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-black text-white shrink-0">
-                    VOICE AI
-                  </span>
-                </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-[#86efac] border border-[#10b981] shrink-0 ml-auto" />
-              </div>
-              <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-                Ask anything, vet agents &amp; navigate
-              </p>
-            </div>
-
-            {/* 6AM DNN News Broadcast */}
-            <div
-              onClick={() => navigate('/dnn-news')}
-              className="p-3 rounded-2xl bg-[#ede0cc] text-[#0a0a0a] hover:bg-[#f6efe3] transition-all cursor-pointer shadow-sm border border-black/10 group active:scale-98"
-            >
-              <div className="flex items-center justify-between gap-1.5">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="text-xs font-bold text-[#0a0a0a] truncate">6AM DNN News Broadcast</span>
-                  <span className="px-2 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-wider bg-[#dc2626] text-white shrink-0">
-                    DAILY
-                  </span>
-                </div>
-                <span className="text-[11px] font-bold text-[#854d0e] group-hover:translate-x-0.5 transition-transform shrink-0 ml-auto">
-                  Open →
-                </span>
-              </div>
-              <p className="text-[10px] text-[#554433] mt-0.5 leading-tight">
-                AI Charlie &amp; Bob • Daily Housing Pulse
-              </p>
-            </div>
+            <IPhoneSpringboardGrid apps={BROKER_DEFAULT_APPS} />
           </div>
 
         </div>

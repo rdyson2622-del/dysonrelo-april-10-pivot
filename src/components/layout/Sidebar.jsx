@@ -4,7 +4,7 @@ import {
   Search, ArrowRight, ShieldCheck, Phone, 
   MessageSquare, ExternalLink, Sparkles, X
 } from 'lucide-react';
-import IPhoneSpringboardGrid from '@/components/springboard/IPhoneSpringboardGrid';
+import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import { base44 } from '@/api/base44Client';
 
@@ -83,13 +83,14 @@ export default function Sidebar({ userRole, onToggle }) {
 
         {/* ========================================================
             CONCIERGE MINI APPS ON SOLID BLACK BACKGROUND
+            "My Agent" is exclusive to broker portal routes.
             ======================================================== */}
         <div className="pt-2 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2.5">
             <span>CONCIERGE MINI APPS:</span>
             <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
           </div>
-          <IPhoneSpringboardGrid />
+          <IPhoneSpringboardGrid apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS} />
         </div>
 
       </div>

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
-import IPhoneSpringboardGrid from '@/components/springboard/IPhoneSpringboardGrid';
+import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 
 const GOLD = '#D4AF37';
 
@@ -81,13 +81,14 @@ export default function ClientSidebar({ onToggle }) {
         {/* ========================================================
             MINI APPS GRID (SOLID BLACK BACKGROUND)
             Clicking any mini app opens the subject matter on the full right side page.
+            "My Agent" is exclusively shown if in a broker role or broker portal.
             ======================================================== */}
         <div className="pt-1.5 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
             <span>SUBSCRIBER MINI APPS:</span>
             <span className="text-white/40 normal-case font-normal text-[9px]">tap to launch on page</span>
           </div>
-          <IPhoneSpringboardGrid />
+          <IPhoneSpringboardGrid apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS} />
         </div>
 
       </div>

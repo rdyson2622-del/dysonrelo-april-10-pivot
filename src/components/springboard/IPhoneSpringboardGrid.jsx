@@ -119,16 +119,6 @@ export const IPHONE_DEFAULT_APPS = [
     route: '/dnn-news',
   },
   {
-    id: 'agent',
-    label: 'My Agent',
-    copy: 'Vetted Broker',
-    icon: Users,
-    iconColor: '#93c5fd',
-    bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
-    border: 'border-[#3b82f6]/50',
-    route: '/my-agent',
-  },
-  {
     id: 'refer',
     label: 'Refer Lead',
     copy: 'Client & Earn Fee',
@@ -149,6 +139,25 @@ export const IPHONE_DEFAULT_APPS = [
     border: 'border-[#D4AF37]/50',
     route: 'tel:+18583531200',
   },
+];
+
+// Dedicated "My Agent" mini app — for Broker Portal sidebar only
+export const MY_AGENT_APP = {
+  id: 'agent',
+  label: 'My Agent',
+  copy: 'Vetted Broker',
+  icon: Users,
+  iconColor: '#93c5fd',
+  bgGradient: 'from-[#172554] via-[#0f172a] to-[#0a0a0a]',
+  border: 'border-[#3b82f6]/50',
+  route: '/my-agent',
+};
+
+// Broker Portal Sidebar Mini Apps suite — includes "My Agent" exclusively
+export const BROKER_DEFAULT_APPS = [
+  ...IPHONE_DEFAULT_APPS.slice(0, 10), // Charlie, Roadmaps, Calendar, Email, Calculator, Weather, Strategy, Vet, Library, DNN News
+  MY_AGENT_APP,                        // My Agent (Vetted Broker) — Brokers Portal Sidebar Only!
+  ...IPHONE_DEFAULT_APPS.slice(10),     // Refer Lead, Concierge
 ];
 
 // Alias for clean terminology
