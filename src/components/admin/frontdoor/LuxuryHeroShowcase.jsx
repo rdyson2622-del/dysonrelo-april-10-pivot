@@ -366,7 +366,7 @@ export default function LuxuryHeroShowcase({
                 className="text-xl sm:text-2xl font-bold tracking-tight text-white"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Search Destinations or Vet Any Listing
+                Search Destinations or let us Vet Any Listing for you.
               </h3>
               <p className="text-xs text-white/70 font-medium">
                 Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
@@ -395,9 +395,22 @@ export default function LuxuryHeroShowcase({
             </div>
 
             {/* THEN: VETTING HELPER NOTE */}
-            <div className="flex items-center justify-center gap-1.5 text-[10.5px] text-white/75 pt-0.5">
-              <span>Looking at an address?</span>
-              <span className="text-[#fce38a] font-bold">We vet the listing agent &amp; audit the escrow for you at no cost.</span>
+            <div className="flex flex-wrap items-center justify-center gap-1.5 text-[10.5px] text-white/75 pt-0.5">
+              <span>Looking at a specific listing?</span>
+              <span className="text-[#fce38a] font-bold">
+                Subscribe to have our fiduciary team vet the listing agent &amp; audit the escrow for you.
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  const elem = document.getElementById('portal-subscribe-section');
+                  if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+                  else navigate('/subscribe');
+                }}
+                className="underline text-[#D4AF37] hover:text-[#fce38a] font-semibold cursor-pointer ml-0.5"
+              >
+                (Subscription Required)
+              </button>
             </div>
           </div>
         </div>

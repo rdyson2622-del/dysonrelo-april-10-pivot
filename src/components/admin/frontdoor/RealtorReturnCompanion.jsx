@@ -70,7 +70,7 @@ export default function RealtorReturnCompanion({ activeSearch, onClose }) {
             Keep this DysonRelo tab open while searching {activeSearch.location ? `in ${activeSearch.location}` : 'properties'}.
           </p>
           <p className="text-[11px] text-white/70 leading-relaxed">
-            When you spot a home you like on {activeSearch.engineName || 'MLS'}, do NOT click "Contact Agent" (that sells your info to 3 random paying agents). Paste the address below and our team will independently vet the listing agent for you.
+            When you spot a home you like on {activeSearch.engineName || 'MLS'}, do NOT click "Contact Agent" (that sells your info to 3 random paying agents). Subscribe and paste the address below for independent fiduciary agent vetting &amp; escrow auditing.
           </p>
         </div>
 
