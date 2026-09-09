@@ -87,23 +87,23 @@ export default function LuxuryHeroShowcase({
                 className="font-bold leading-tight text-white tracking-tight"
                 style={{
                   fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.35rem, 1.75vw, 1.7rem)',
+                  fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
                 }}
               >
-                We Don't Sell Real Estate
+                Search Destinations
               </h2>
               <p
                 className="font-semibold mt-0.5 tracking-wide leading-snug"
                 style={{
                   fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: '1.15rem',
+                  fontSize: '1.1rem',
                   color: '#fce38a',
                 }}
               >
-                We Orchestrate Your Entire Move.
+                Or Let Us Vet Any Listing For You.
               </p>
               <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
-                Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
+                Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
               </p>
             </div>
 
@@ -484,15 +484,24 @@ export default function LuxuryHeroShowcase({
             </form>
 
             {/* THEN: THE HEADER & EXPLANATION COPY (ALL IN BLACK FONT COLOR) */}
-            <div className="space-y-1 pt-1 text-center">
+            <div className="space-y-0.5 pt-1 text-center">
               <h3 
-                className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#0a0a0a]"
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0a0a0a]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Search Destinations or let us Vet Any Listing for you.
+                We Don't Sell Real Estate
               </h3>
-              <p className="text-xs sm:text-sm text-[#0a0a0a]/80 font-semibold">
-                Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
+              <p
+                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide"
+                style={{
+                  fontFamily: 'Cormorant Garamond, serif',
+                  color: '#854d0e',
+                }}
+              >
+                We Orchestrate Your Entire Move.
+              </p>
+              <p className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5">
+                Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
               </p>
             </div>
 
