@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Phone, MessageSquare, X, ArrowRight
+  Phone, MessageSquare, X, ArrowRight, HelpCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
+import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
 
 const GOLD = '#D4AF37';
 
@@ -13,6 +14,7 @@ export default function ClientSidebar({ onToggle }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
+  const [explainerAppId, setExplainerAppId] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -86,12 +88,30 @@ export default function ClientSidebar({ onToggle }) {
         <div className="pt-1.5 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
             <span>SUBSCRIBER MINI APPS:</span>
-            <span className="text-white/40 normal-case font-normal text-[9px]">tap to launch on page</span>
+            <button
+              type="button"
+              onClick={() => setExplainerAppId('charlie')}
+              className="text-[#D4AF37] hover:text-[#e8c84a] font-bold text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+              title="Explainers for unsubscribed viewers"
+            >
+              <HelpCircle className="w-3 h-3 text-[#D4AF37]" />
+              <span>Pill Guide</span>
+            </button>
           </div>
-          <IPhoneSpringboardGrid apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS} />
+          <IPhoneSpringboardGrid 
+            apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS}
+            onInfoClick={(app) => setExplainerAppId(app.id)}
+          />
         </div>
 
       </div>
+
+      {/* Mini App Explainer Modal for Unsubscribed Viewers */}
+      <MiniAppExplainerModal
+        appId={explainerAppId}
+        isOpen={Boolean(explainerAppId)}
+        onClose={() => setExplainerAppId(null)}
+      />
 
       {/* ========================================================
           BOTTOM DOCKED: CONCIERGE DIRECT
