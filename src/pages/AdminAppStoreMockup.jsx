@@ -176,6 +176,7 @@ export default function AdminAppStoreMockup() {
   const initialTab = searchParams.get('tab') || 'full_mockup';
   const [activeTab, setActiveTab] = useState(initialTab);
   const [copiedId, setCopiedId] = useState(null);
+  const [selectedApp, setSelectedApp] = useState(null);
 
   useEffect(() => {
     const tabParam = new URLSearchParams(location.search).get('tab');
@@ -341,114 +342,47 @@ export default function AdminAppStoreMockup() {
             className="w-full max-w-6xl mx-auto rounded-3xl border-2 border-[#D4AF37]/50 shadow-2xl overflow-hidden"
             style={{ background: TAN_BG }}
           >
-            {/* TOP BAR FROM SCREENSHOT */}
-            <nav 
-              className="px-4 py-2.5 flex items-center justify-between gap-3 shadow-md border-b"
-              style={{ background: TAN_BG, borderColor: `${GOLD}70` }}
-            >
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="px-3 py-1 rounded-full text-xs font-bold bg-[#0a0a0a] text-white border border-[#D4AF37] shadow-sm flex items-center gap-1"
-                >
-                  <span className="text-sm">≡</span>
-                  <span>MENU</span>
-                </button>
-
-                <div 
-                  className="flex items-center gap-2 px-3 py-1 rounded-2xl bg-black border border-[#D4AF37]/70 shadow-sm"
-                >
-                  <img src={DYSON_LOGO} alt="Dyson" className="h-5 w-auto object-contain" />
-                  <div className="leading-tight text-left">
-                    <span 
-                      className="text-xs sm:text-sm font-bold text-white tracking-wide block"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
-                      DysonRelo.com
-                    </span>
-                    <span className="text-[7.5px] text-[#D4AF37] uppercase font-bold tracking-wider block">
-                      NATIONWIDE RELOCATION CONCIERGE
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Nav links */}
-              <div className="hidden md:flex items-center gap-5 text-xs font-bold text-[#0a0a0a]">
-                <Link to="/corporate-relo" className="hover:text-[#b8920a]">Corp Relocation</Link>
-                <Link to="/partner-benefits" className="hover:text-[#b8920a]">Agent Network</Link>
-                <Link to="/transparency" className="hover:text-[#b8920a]">Transparency</Link>
-                <Link to="/dnn-news" className="hover:text-[#b8920a]">DNN Real Estate News</Link>
-              </div>
-
-              {/* Right buttons */}
-              <div className="flex items-center gap-2">
-                <button 
-                  type="button"
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#141414] text-white border border-white/20 shadow-sm"
-                >
-                  ♫ Concierge Lounge
-                </button>
-                <button 
-                  type="button"
-                  className="px-3 py-1 rounded-full text-xs font-bold bg-[#0a0a0a] text-white border border-[#D4AF37] shadow-sm"
-                >
-                  ● Visitor View
-                </button>
-              </div>
-            </nav>
-
-            {/* MAIN 2-COLUMN SECTION: SIDEBAR + HERO */}
+            {/* MAIN 2-COLUMN SECTION: SIDEBAR (THE PERMANENT MENU BAR) + HERO */}
             <div className="flex flex-col lg:flex-row w-full min-h-[640px]">
               
               {/* ========================================================
-                  LEFT SIDEBAR WITH APPLE-STYLE PILLS
+                  LEFT SIDEBAR — THIS IS THE PERMANENT MENU BAR (NO TOP MENU BAR)
                   ======================================================== */}
               <aside 
                 className="w-full lg:w-[320px] shrink-0 p-3 sm:p-3.5 flex flex-col justify-between text-left border-r border-[#D4AF37]/40 shadow-xl space-y-3"
                 style={{ background: '#0a0a0a' }}
               >
                 <div className="space-y-3">
+                  {/* TOP BRAND HEADER PILL */}
+                  <div 
+                    onClick={() => {
+                      setSelectedApp(null);
+                      navigate('/portal');
+                    }}
+                    className="p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
+                  >
+                    <img src={DYSON_LOGO} alt="Dyson" className="h-6 w-auto object-contain shrink-0 drop-shadow" />
+                    <div className="min-w-0">
+                      <div 
+                        className="text-sm font-bold text-white tracking-tight leading-tight truncate"
+                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                      >
+                        DysonRelo.com
+                      </div>
+                      <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
+                        NATIONWIDE CONCIERGE
+                      </div>
+                    </div>
+                  </div>
+
                   {/* 55+ YEARS PILL */}
                   <div className="flex items-center justify-center gap-1.5 py-1 px-3 rounded-full border border-[#D4AF37]/60 bg-black text-[9.5px] font-black tracking-widest text-[#D4AF37] uppercase shadow-sm">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
                     <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
                   </div>
 
-                  {/* SEARCH DESTINATIONS CARD */}
-                  <div 
-                    className="p-3 rounded-2xl text-center text-[#0a0a0a] shadow-md border border-[#D4AF37] space-y-1"
-                    style={{ background: '#ede0cc' }}
-                  >
-                    <h2 
-                      className="text-base font-bold text-[#0a0a0a] leading-tight"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
-                      Search Destinations
-                    </h2>
-                    <p className="text-xs italic font-serif font-bold text-[#854d0e]">
-                      Or Let Us Vet Any Listing For You.
-                    </p>
-                    <p className="text-[10px] text-[#44382c] leading-tight">
-                      Destination market, or paste link from Realtor, Zillow, or Homes.com
-                    </p>
-                    <button
-                      type="button"
-                      className="mt-1 px-3 py-1 rounded-full bg-[#0a0a0a] text-white text-[10px] font-bold inline-flex items-center gap-1 shadow"
-                    >
-                      <Search className="w-2.5 h-2.5 text-[#D4AF37]" />
-                      <span>CLICK TO SEARCH →</span>
-                    </button>
-                  </div>
-
-                  {/* SIGNED IN STRIP */}
-                  <div className="py-1.5 px-3 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-white/90 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-                      <span>Signed In: <strong>Robert Dyson</strong></span>
-                    </div>
-                    <span className="text-[10px] font-bold text-[#D4AF37]">Workspace →</span>
-                  </div>
+                  {/* SUBSCRIBER PROFILE HEADER (REPLACES SEARCH DESTINATIONS) */}
+                  <SubscriberProfileHeader />
 
                   {/* ========================================================
                       INDIVIDUAL APPLE APPS ON SOLID BLACK BACKGROUND
@@ -464,16 +398,20 @@ export default function AdminAppStoreMockup() {
                     <div className="grid grid-cols-3 gap-y-4 gap-x-2 px-1">
                       {PLATFORM_APP_CATALOG.slice(0, 9).map((app) => {
                         const Icon = app.icon;
+                        const isSelected = selectedApp?.id === app.id;
                         return (
                           <button
                             key={app.id}
                             type="button"
-                            onClick={() => navigate(app.route)}
+                            onClick={() => setSelectedApp(app)}
                             className="flex flex-col items-center text-center group cursor-pointer focus:outline-none"
+                            title={`Click to open ${app.title} on right side`}
                           >
                             {/* Standalone Apple Squircle Icon Tile on Black Background */}
                             <div 
-                              className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden`}
+                              className={`w-14 h-14 sm:w-15 sm:h-15 rounded-[18px] bg-gradient-to-br ${app.bgGradient} border ${app.border} shadow-lg group-hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center relative overflow-hidden ${
+                                isSelected ? 'ring-2 ring-[#D4AF37] ring-offset-2 ring-offset-black scale-105' : ''
+                              }`}
                               style={{
                                 boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
                               }}
@@ -497,7 +435,9 @@ export default function AdminAppStoreMockup() {
                             </div>
 
                             {/* Clean iPhone App Label directly on Black */}
-                            <span className="mt-1.5 text-[11px] font-semibold text-white group-hover:text-[#D4AF37] transition-colors leading-tight text-center max-w-[76px] truncate">
+                            <span className={`mt-1.5 text-[11px] font-semibold transition-colors leading-tight text-center max-w-[76px] truncate ${
+                              isSelected ? 'text-[#D4AF37] font-bold' : 'text-white group-hover:text-[#D4AF37]'
+                            }`}>
                               {app.shortLabel}
                             </span>
                             {/* Micro Purpose Tag */}
