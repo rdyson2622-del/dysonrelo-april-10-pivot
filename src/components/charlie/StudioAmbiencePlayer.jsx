@@ -127,8 +127,8 @@ export default function StudioAmbiencePlayer() {
         ) : (
           <>
             <Music className="w-3.5 h-3.5 text-stone-400" />
-            <span className="hidden sm:inline">Concierge Lounge</span>
-            <span className="sm:hidden">Lounge</span>
+            <span className="hidden lg:inline">Concierge Lounge</span>
+            <span className="lg:hidden">Lounge</span>
           </>
         )}
       </button>
