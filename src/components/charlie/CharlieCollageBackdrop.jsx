@@ -41,16 +41,15 @@ export const CHARLIE_PHOTOS = [
 export default function CharlieCollageBackdrop({ activeIndex = null, onSelectPhoto }) {
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0">
-      {/* 4-Panel Dynamic Studio Collage Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 w-full h-full gap-0.5 opacity-55 transition-opacity duration-500">
+      {/* 4-Panel Dynamic Studio Collage Grid — Full 100% Color & Brightness */}
+      <div className="grid grid-cols-2 md:grid-cols-4 w-full h-full gap-0.5 opacity-100">
         {/* Panel 1: Main Anchor Desk Close-up */}
         <div className="relative h-full overflow-hidden">
           <img
             src={CHARLIE_PHOTOS[0].url}
             alt={CHARLIE_PHOTOS[0].title}
-            className="w-full h-full object-cover object-top scale-105"
+            className="w-full h-full object-cover object-top scale-105 brightness-110 saturate-110 contrast-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30" />
         </div>
 
         {/* Panel 2: Solo Anchor at World Map Desk */}
@@ -58,7 +57,7 @@ export default function CharlieCollageBackdrop({ activeIndex = null, onSelectPho
           <img
             src={CHARLIE_PHOTOS[2].url}
             alt={CHARLIE_PHOTOS[2].title}
-            className="w-full h-full object-cover object-center scale-105"
+            className="w-full h-full object-cover object-center scale-105 brightness-110 saturate-110 contrast-105"
           />
         </div>
 
@@ -67,7 +66,7 @@ export default function CharlieCollageBackdrop({ activeIndex = null, onSelectPho
           <img
             src={CHARLIE_PHOTOS[4].url}
             alt={CHARLIE_PHOTOS[4].title}
-            className="w-full h-full object-cover object-center scale-105"
+            className="w-full h-full object-cover object-center scale-105 brightness-110 saturate-110 contrast-105"
           />
         </div>
 
@@ -76,21 +75,13 @@ export default function CharlieCollageBackdrop({ activeIndex = null, onSelectPho
           <img
             src={CHARLIE_PHOTOS[3].url}
             alt={CHARLIE_PHOTOS[3].title}
-            className="w-full h-full object-cover object-top scale-105"
+            className="w-full h-full object-cover object-top scale-105 brightness-110 saturate-110 contrast-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/30" />
         </div>
       </div>
 
-      {/* Cinematic Studio Scrim & Vignette Overlay — preserves high contrast for the Mic Button */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.85) 60%, rgba(5,5,5,0.96) 100%)',
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-[#0a0a0a]/80" />
-      <div className="absolute inset-0 border border-[#D4AF37]/30 pointer-events-none rounded-3xl" />
+      {/* Crisp studio border, no dark scrims hiding the full-color photos */}
+      <div className="absolute inset-0 border border-[#D4AF37]/50 pointer-events-none rounded-3xl" />
     </div>
   );
 }

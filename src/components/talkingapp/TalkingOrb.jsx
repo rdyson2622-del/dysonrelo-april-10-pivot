@@ -127,17 +127,19 @@ export default function TalkingOrb({
         )}
       </div>
 
-      {/* Status label */}
+      {/* Status label with frosted backdrop for perfect legibility over full-color photos */}
       <div className="text-center px-2 max-w-xs">
-        <p className="text-xs font-bold tracking-wide" style={{ color: '#fff' }}>
-          {status === 'ready' && 'Tap below to connect with Charlie'}
-          {status === 'connecting' && 'Connecting Gemini Live…'}
-          {status === 'listening' && 'Listening… speak naturally'}
-          {status === 'speaking' && 'Charlie is speaking…'}
-          {status === 'error' && (errorMessage || 'Connection interrupted. Tap below to retry.')}
-        </p>
+        <div className="inline-block bg-black/80 px-3.5 py-1 rounded-full border border-white/10 backdrop-blur-md shadow-lg">
+          <p className="text-xs font-bold tracking-wide" style={{ color: '#fff' }}>
+            {status === 'ready' && 'Tap below to connect with Charlie'}
+            {status === 'connecting' && 'Connecting Gemini Live…'}
+            {status === 'listening' && 'Listening… speak naturally'}
+            {status === 'speaking' && 'Charlie is speaking…'}
+            {status === 'error' && (errorMessage || 'Connection interrupted. Tap below to retry.')}
+          </p>
+        </div>
         {errorMessage && status !== 'error' && (
-          <p className="text-[11px] text-amber-400 mt-1 leading-tight flex items-center justify-center gap-1">
+          <p className="text-[11px] text-amber-400 mt-1 leading-tight flex items-center justify-center gap-1 bg-black/85 px-3 py-1 rounded-full border border-amber-500/30 backdrop-blur-md">
             <AlertCircle className="w-3 h-3 shrink-0" /> {errorMessage}
           </p>
         )}
