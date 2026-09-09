@@ -248,7 +248,9 @@ export default function AdminFrontDoorLab() {
       <main className="p-3 sm:p-6 md:p-8 flex justify-center items-start">
         <div
           className={`transition-all duration-300 w-full ${
-            deviceView === 'mobile'
+            activeLabTab === 'client_backside'
+              ? 'max-w-5xl rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden'
+              : deviceView === 'mobile'
               ? 'max-w-[420px] rounded-3xl border-4 border-[#333] shadow-2xl overflow-hidden'
               : 'max-w-6xl rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden'
           }`}
@@ -568,7 +570,7 @@ export default function AdminFrontDoorLab() {
       </main>
 
       {/* FLOATING ADMIN PILL — DEDICATED QUICK-ACCESS FOR THE ADMIN TEAM (OFF TOP BAR) */}
-      {currentUser?.role === 'admin' && (
+      {currentUser?.role === 'admin' && activeLabTab !== 'client_backside' && (
         <div className="fixed bottom-4 left-4 z-40 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <button
             type="button"

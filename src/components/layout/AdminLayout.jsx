@@ -92,7 +92,7 @@ export default function AdminLayout() {
           <Outlet />
         </div>
         <PageNumberBadge />
-        <AdminCharliePanel />
+        {location.pathname !== '/admin/front-door-lab' && <AdminCharliePanel />}
         {location.pathname !== '/admin/front-door-lab' && <ReferralFloatingPill />}
       </main>
     </div>
