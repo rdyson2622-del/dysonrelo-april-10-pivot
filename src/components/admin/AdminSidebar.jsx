@@ -19,6 +19,7 @@ import AdminDispatchWidget from '@/components/admin/AdminDispatchWidget';
 import AdminSidebarSearch, { buildSearchIndex } from '@/components/admin/AdminSidebarSearch';
 import ListingProspectsRepWidget from '@/components/admin/ListingProspectsRepWidget';
 import SubscriberInviteModal from '@/components/admin/SubscriberInviteModal';
+import AdminWorkingModelsScroll from '@/components/admin/AdminWorkingModelsScroll';
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
 
@@ -30,16 +31,9 @@ const NAV_SECTIONS = [
     children: [
       { isCommsBadge: true },
       { label: '📱 APPLE APP STORE & SIDEBAR PILLS MOCKUP', path: '/admin/app-store-mockup', icon: Star, highlight: true },
-      { label: '🌟 CLIENT BACKSIDE DEMO (Subscriber Deck)', path: '/admin/front-door-lab?view=client_backside', icon: Star, highlight: true },
-      { label: '✨ FRONT DOOR LAB (MLS + News + Charlie)', path: '/admin/front-door-lab', icon: Star, highlight: true },
-      { label: '🗺️ Entry Page Preview (Road Map Lead)', path: '/', icon: Map, highlight: true },
-      { label: '🧭 Role Selector Page', path: '/portal?choose=1', icon: Map, highlight: true },
-      { label: '🏢 Brokerage Portal (Wisdom)', path: '/brokerage', icon: Building2, highlight: true },
+      { isWorkingModelsScroll: true },
       { label: '✉️ Send Subscriber Invite (Email & Text)', path: '/admin/subscriber-invite', icon: Mail, highlight: true },
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
-      { label: '🚪 6th Portal: Entry Page (First-Time Visitor)', path: '/admin/entry-portal', icon: DoorOpen, highlight: true },
-      { label: '🛡️ Transparency Explainer Page', path: '/admin/transparency', icon: ShieldCheck, highlight: true },
-      { label: '💬 Talk To Us — Request Library', path: '/admin/talk-to-us-requests', icon: MessageCircle, highlight: true },
       { label: '📋 MLS Listing Agent Outreach', path: '/admin/listing-prospects', icon: MapPin, highlight: true },
       { label: '📜 Master Referral & Relo Mgmt Agreement', path: '/admin/master-agreement', icon: ScrollText, highlight: true },
       { label: '📤 Quick Send (Page/Video → SMS or Email)', path: '/admin/quick-send', icon: Send, highlight: true },
