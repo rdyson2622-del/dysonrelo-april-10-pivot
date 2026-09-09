@@ -9,8 +9,8 @@ import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
-const CARD_BG = '#f5ebd9';
-const INPUT_BG = '#ffffff';
+const CARD_BG = '#0a0a0a';
+const INPUT_BG = '#161616';
 
 const EMPTY = {
   referral_type: 'relocation_client',
@@ -42,13 +42,9 @@ export default function ReferSomeone() {
   const canSubmit = form.referred_name.trim() && form.referred_email.trim();
   const isRelocationClient = form.referral_type === 'relocation_client';
 
-  // Reliable, guaranteed exit
+  // Reliable, guaranteed exit to portal
   const handleExit = () => {
-    if (window.history && window.history.length > 1) {
-      window.history.back();
-    } else {
-      navigate('/portal');
-    }
+    navigate('/portal');
   };
 
   const handleSubmit = async (e) => {
@@ -89,8 +85,8 @@ export default function ReferSomeone() {
           {/* Return to Portal Button */}
           <button
             type="button"
-            onClick={handleExit}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-[#0a0a0a] text-white hover:bg-[#1f1f1f] transition-all cursor-pointer shadow-sm active:scale-95"
+            onClick={() => navigate('/portal')}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-[#0a0a0a] text-white hover:bg-[#1f1f1f] border border-[#D4AF37]/60 hover:border-[#D4AF37] transition-all cursor-pointer shadow-sm active:scale-95"
             title="Return to Portal"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
@@ -106,12 +102,12 @@ export default function ReferSomeone() {
           {/* Close button */}
           <button
             type="button"
-            onClick={handleExit}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#854d0e] text-white hover:bg-[#0a0a0a] transition-all cursor-pointer shadow-sm active:scale-95"
-            title="Close this page"
+            onClick={() => navigate('/portal')}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] border border-[#D4AF37]/50 hover:border-[#D4AF37] transition-all cursor-pointer shadow-sm active:scale-95"
+            title="Close this page and return to portal"
           >
             <span>Close</span>
-            <X className="w-3.5 h-3.5" />
+            <X className="w-3.5 h-3.5 text-[#D4AF37]" />
           </button>
 
         </div>
@@ -125,8 +121,8 @@ export default function ReferSomeone() {
         {/* SUCCESS STATE */}
         {done ? (
           <div 
-            className="max-w-lg mx-auto my-8 p-8 sm:p-10 rounded-3xl border-2 border-[#D4AF37] shadow-lg text-center space-y-6"
-            style={{ background: CARD_BG }}
+            className="max-w-lg mx-auto my-8 p-8 sm:p-10 rounded-3xl border-2 border-[#D4AF37] shadow-2xl text-center space-y-6 text-white"
+            style={{ background: '#0a0a0a' }}
           >
             <div className="w-16 h-16 rounded-full bg-[#10b981]/15 border-2 border-[#10b981] flex items-center justify-center mx-auto text-[#10b981]">
               <CheckCircle2 className="w-8 h-8" />
@@ -134,29 +130,29 @@ export default function ReferSomeone() {
 
             <div className="space-y-2">
               <h2 
-                className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
+                className="text-2xl sm:text-3xl font-bold tracking-tight text-white"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Referral Received
               </h2>
-              <p className="text-sm text-[#44382c] max-w-md mx-auto leading-relaxed">
-                Thank you. Bob Dyson and our senior fiduciary relocation desk will personally review your introduction for <strong className="text-[#854d0e]">{form.referred_name}</strong> and reach out with white-glove care.
+              <p className="text-sm text-white/85 max-w-md mx-auto leading-relaxed">
+                Thank you. Bob Dyson and our senior fiduciary relocation desk will personally review your introduction for <strong className="text-[#D4AF37]">{form.referred_name}</strong> and reach out with white-glove care.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#ede0cc] border border-[#0a0a0a]/15 text-xs text-[#44382c] space-y-2 text-left max-w-md mx-auto">
+            <div className="p-4 rounded-2xl bg-[#161616] border border-white/15 text-xs text-white/80 space-y-2 text-left max-w-md mx-auto">
               <div className="flex justify-between">
-                <span className="text-[#0a0a0a]/50">Referred:</span>
-                <span className="font-semibold text-[#0a0a0a]">{form.referred_name} ({form.referred_email})</span>
+                <span className="text-white/50">Referred:</span>
+                <span className="font-semibold text-white">{form.referred_name} ({form.referred_email})</span>
               </div>
               {form.destination_city && (
                 <div className="flex justify-between">
-                  <span className="text-[#0a0a0a]/50">Target Destination:</span>
-                  <span className="font-semibold text-[#854d0e]">{form.destination_city}, {form.destination_state}</span>
+                  <span className="text-white/50">Target Destination:</span>
+                  <span className="font-semibold text-[#D4AF37]">{form.destination_city}, {form.destination_state}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-[#0a0a0a]/50">Fiduciary Review:</span>
+                <span className="text-white/50">Fiduciary Review:</span>
                 <span className="text-[#10b981] font-semibold">Active</span>
               </div>
             </div>
@@ -165,15 +161,15 @@ export default function ReferSomeone() {
               <button
                 type="button"
                 onClick={() => { setForm(EMPTY); setDone(false); }}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-black transition-all shadow cursor-pointer hover:brightness-105"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-black transition-all shadow-md cursor-pointer hover:brightness-105"
                 style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
               >
                 Refer Another Contact
               </button>
               <button
                 type="button"
-                onClick={handleExit}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-[#0a0a0a] bg-black/5 hover:bg-black/10 border border-black/15 transition-all cursor-pointer"
+                onClick={() => navigate('/portal')}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-white bg-[#1a1a1a] hover:bg-[#252525] border border-white/20 transition-all cursor-pointer"
               >
                 Return to Portal
               </button>
@@ -207,37 +203,37 @@ export default function ReferSomeone() {
                 </p>
               </div>
 
-              {/* HOW WE TREAT YOUR REFERRAL (TAN CARD, NOT BLACK!) */}
+              {/* HOW WE TREAT YOUR REFERRAL (SOLID BLACK BACKGROUND, CRISP WHITE FONT!) */}
               <div 
-                className="p-5 sm:p-6 rounded-3xl border-2 border-[#D4AF37]/60 shadow-md space-y-3.5"
-                style={{ background: CARD_BG }}
+                className="p-5 sm:p-6 rounded-3xl border-2 border-[#D4AF37] shadow-2xl space-y-4"
+                style={{ background: '#0a0a0a' }}
               >
-                <div className="text-xs font-black uppercase tracking-wider text-[#854d0e] flex items-center gap-2">
+                <div className="text-xs font-black uppercase tracking-wider text-[#D4AF37] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#10b981]" />
                   <span>How We Treat Your Referral:</span>
                 </div>
 
-                <ul className="space-y-2.5 text-xs text-[#44382c] leading-relaxed">
-                  <li className="flex items-start gap-2">
+                <ul className="space-y-3 text-xs text-white leading-relaxed">
+                  <li className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-[#10b981] shrink-0 mt-0.5 stroke-[3]" />
-                    <span><strong>Zero Sales Pressure:</strong> We never blast or sell lead contacts to generic broker pools.</span>
+                    <span><strong className="text-white">Zero Sales Pressure:</strong> We never blast or sell lead contacts to generic broker pools.</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-[#10b981] shrink-0 mt-0.5 stroke-[3]" />
-                    <span><strong>Fiduciary Agent Vetting:</strong> We audit local license history, volume, and reputation before making any introduction.</span>
+                    <span><strong className="text-white">Fiduciary Agent Vetting:</strong> We audit local license history, volume, and reputation before making any introduction.</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-2.5">
                     <Check className="w-4 h-4 text-[#10b981] shrink-0 mt-0.5 stroke-[3]" />
-                    <span><strong>Personal Executive Oversight:</strong> Bob Dyson's desk monitors every milestone from first call to keys.</span>
+                    <span><strong className="text-white">Personal Executive Oversight:</strong> Bob Dyson's desk monitors every milestone from first call to keys.</span>
                   </li>
                 </ul>
 
-                <div className="pt-3 border-t border-[#0a0a0a]/15 flex items-center justify-between text-xs text-[#554433]">
-                  <div className="flex items-center gap-1.5 font-semibold">
-                    <Phone className="w-3.5 h-3.5 text-[#854d0e]" />
+                <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs text-white">
+                  <div className="flex items-center gap-1.5 font-semibold text-white/90">
+                    <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>Direct Concierge Desk:</span>
                   </div>
-                  <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
+                  <a href="tel:+18583531200" className="font-mono font-bold text-[#D4AF37] hover:text-[#e8c84a] text-sm">
                     (858) 353-1200
                   </a>
                 </div>
@@ -250,18 +246,18 @@ export default function ReferSomeone() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: THE REFERRAL FORM (WARM TAN CONTAINER, NOT BLACK!) */}
+            {/* RIGHT COLUMN: THE REFERRAL FORM (SOLID BLACK BACKGROUND, CRISP WHITE FONT!) */}
             <div className="w-full lg:col-span-7">
               <div 
-                className="rounded-3xl p-5 sm:p-8 border-2 border-[#D4AF37]/40 shadow-xl space-y-6 text-left"
+                className="rounded-3xl p-5 sm:p-8 border-2 border-[#D4AF37] shadow-2xl space-y-6 text-left"
                 style={{
-                  background: CARD_BG,
+                  background: '#0a0a0a',
                 }}
               >
                 
                 {/* 1. WHO ARE YOU REFERRING? */}
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
+                <div className="space-y-2.5">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#D4AF37] block">
                     1. Who are you referring?
                   </label>
 
@@ -275,20 +271,20 @@ export default function ReferSomeone() {
                           onClick={() => set('referral_type', value)}
                           className={`flex items-start gap-2.5 p-3 rounded-2xl text-left transition-all cursor-pointer border-2 ${
                             active
-                              ? 'border-[#D4AF37] shadow-md'
-                              : 'bg-white/80 text-[#0a0a0a] border-[#0a0a0a]/15 hover:border-[#D4AF37]'
+                              ? 'border-[#D4AF37] shadow-lg scale-[1.02]'
+                              : 'bg-[#161616] text-white border-white/15 hover:border-[#D4AF37]'
                           }`}
                           style={{
-                            background: active ? 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' : '#ffffff',
-                            color: active ? '#000000' : '#0a0a0a',
+                            background: active ? 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' : '#161616',
+                            color: active ? '#000000' : '#ffffff',
                           }}
                         >
-                          <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${active ? 'text-black' : 'text-[#854d0e]'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${active ? 'text-black' : 'text-[#D4AF37]'}`} />
                           <div className="min-w-0">
                             <span className="text-xs sm:text-sm block font-bold leading-tight">
                               {label}
                             </span>
-                            <span className={`text-[10px] block leading-tight mt-0.5 ${active ? 'text-black/80 font-medium' : 'text-[#554433]'}`}>
+                            <span className={`text-[10px] block leading-tight mt-0.5 ${active ? 'text-black/85 font-medium' : 'text-white/60'}`}>
                               {sub}
                             </span>
                           </div>
@@ -302,35 +298,35 @@ export default function ReferSomeone() {
                 <form onSubmit={handleSubmit} className="space-y-4 pt-1">
                   
                   <div className="space-y-3">
-                    <label className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
+                    <label className="text-xs font-black uppercase tracking-wider text-[#D4AF37] block">
                       2. Their Contact Details
                     </label>
 
                     {/* Full Name & Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-[#0a0a0a]">Full Name *</span>
+                        <span className="text-[11px] font-bold text-white">Full Name *</span>
                         <input
                           required
                           type="text"
                           placeholder="e.g. Sarah Jenkins"
                           value={form.referred_name}
                           onChange={e => set('referred_name', e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 transition-all shadow-sm"
-                          style={{ background: INPUT_BG }}
+                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-sm"
+                          style={{ background: '#161616' }}
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-[#0a0a0a]">Email Address *</span>
+                        <span className="text-[11px] font-bold text-white">Email Address *</span>
                         <input
                           required
                           type="email"
                           placeholder="sarah@example.com"
                           value={form.referred_email}
                           onChange={e => set('referred_email', e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 transition-all shadow-sm"
-                          style={{ background: INPUT_BG }}
+                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-sm"
+                          style={{ background: '#161616' }}
                         />
                       </div>
                     </div>
@@ -338,19 +334,19 @@ export default function ReferSomeone() {
                     {/* Phone & Current City */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-[#0a0a0a]">Phone Number (optional)</span>
+                        <span className="text-[11px] font-bold text-white">Phone Number (optional)</span>
                         <input
                           type="tel"
                           placeholder="(555) 000-0000"
                           value={form.referred_phone}
                           onChange={e => set('referred_phone', e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 transition-all shadow-sm"
-                          style={{ background: INPUT_BG }}
+                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-sm"
+                          style={{ background: '#161616' }}
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-[#0a0a0a]">
+                        <span className="text-[11px] font-bold text-white">
                           {form.referral_type === 'agent' ? 'Brokerage Firm' : form.referral_type === 'vendor' ? 'Company Name' : 'Current City (optional)'}
                         </span>
                         <input
@@ -358,8 +354,8 @@ export default function ReferSomeone() {
                           placeholder={form.referral_type === 'agent' ? 'e.g. Compass, Sotheby\'s' : form.referral_type === 'vendor' ? 'e.g. Apex Title, MovePro' : 'e.g. San Jose, CA'}
                           value={form.referred_company}
                           onChange={e => set('referred_company', e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 transition-all shadow-sm"
-                          style={{ background: INPUT_BG }}
+                          className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-sm"
+                          style={{ background: '#161616' }}
                         />
                       </div>
                     </div>
@@ -368,26 +364,26 @@ export default function ReferSomeone() {
                     {isRelocationClient && (
                       <div className="grid grid-cols-3 gap-3">
                         <div className="col-span-2 space-y-1">
-                          <span className="text-[11px] font-bold text-[#0a0a0a]">Destination Target City</span>
+                          <span className="text-[11px] font-bold text-white">Destination Target City</span>
                           <input
                             type="text"
                             placeholder="e.g. Scottsdale or Austin"
                             value={form.destination_city}
                             onChange={e => set('destination_city', e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 transition-all shadow-sm"
-                            style={{ background: INPUT_BG }}
+                            className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-sm"
+                            style={{ background: '#161616' }}
                           />
                         </div>
                         <div className="space-y-1">
-                          <span className="text-[11px] font-bold text-[#0a0a0a]">State</span>
+                          <span className="text-[11px] font-bold text-white">State</span>
                           <input
                             type="text"
                             placeholder="AZ"
                             maxLength={2}
                             value={form.destination_state}
                             onChange={e => set('destination_state', e.target.value.toUpperCase())}
-                            className="w-full px-4 py-2.5 rounded-xl text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 uppercase transition-all shadow-sm"
-                            style={{ background: INPUT_BG }}
+                            className="w-full px-4 py-2.5 rounded-xl text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] uppercase transition-all shadow-sm"
+                            style={{ background: '#161616' }}
                           />
                         </div>
                       </div>
@@ -395,8 +391,8 @@ export default function ReferSomeone() {
                   </div>
 
                   {/* 3. YOUR INFO (OPTIONAL) */}
-                  <div className="pt-2 border-t border-[#0a0a0a]/15 space-y-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
+                  <div className="pt-2 border-t border-white/15 space-y-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#D4AF37] block">
                       3. Your Info (Optional)
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -405,30 +401,30 @@ export default function ReferSomeone() {
                         placeholder="Your name (optional)"
                         value={form.referrer_name}
                         onChange={e => set('referrer_name', e.target.value)}
-                        className="w-full px-4 py-2 rounded-xl text-xs sm:text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] transition-all shadow-sm"
-                        style={{ background: INPUT_BG }}
+                        className="w-full px-4 py-2 rounded-xl text-xs sm:text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] transition-all shadow-sm"
+                        style={{ background: '#161616' }}
                       />
                       <input
                         type="email"
                         placeholder="Your email (optional)"
                         value={form.referrer_email}
                         onChange={e => set('referrer_email', e.target.value)}
-                        className="w-full px-4 py-2 rounded-xl text-xs sm:text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] transition-all shadow-sm"
-                        style={{ background: INPUT_BG }}
+                        className="w-full px-4 py-2 rounded-xl text-xs sm:text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] transition-all shadow-sm"
+                        style={{ background: '#161616' }}
                       />
                     </div>
                   </div>
 
                   {/* Notes / Special Circumstances */}
                   <div className="space-y-1">
-                    <span className="text-[11px] font-bold text-[#0a0a0a]">Notes or special circumstances (optional)</span>
+                    <span className="text-[11px] font-bold text-white">Notes or special circumstances (optional)</span>
                     <textarea
                       rows={3}
                       placeholder="e.g. Looking for homes near great schools, needs 1031 exchange guidance, prefers quiet neighborhood..."
                       value={form.notes}
                       onChange={e => set('notes', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] resize-none transition-all shadow-sm"
-                      style={{ background: INPUT_BG }}
+                      className="w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-[#D4AF37] resize-none transition-all shadow-sm"
+                      style={{ background: '#161616' }}
                     />
                   </div>
 
@@ -437,7 +433,7 @@ export default function ReferSomeone() {
                     <button
                       type="submit"
                       disabled={!canSubmit || submitting}
-                      className="w-full py-3.5 px-6 rounded-full font-bold text-sm text-black flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="w-full py-3.5 px-6 rounded-full font-bold text-sm text-black flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
                     >
                       {submitting ? (
@@ -457,10 +453,10 @@ export default function ReferSomeone() {
                     <div className="text-center">
                       <button
                         type="button"
-                        onClick={handleExit}
-                        className="text-xs font-semibold text-[#554433] hover:text-[#0a0a0a] transition-colors inline-flex items-center gap-1 cursor-pointer"
+                        onClick={() => navigate('/portal')}
+                        className="text-xs font-bold text-white/70 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                       >
-                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
                         <span>Cancel &amp; Return to Portal</span>
                       </button>
                     </div>

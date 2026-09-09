@@ -223,9 +223,6 @@ const AuthenticatedApp = () => {
       {/* Public agreement fill-out link — sent to referring/receiving broker & agent, no login required */}
       <Route path="/agreement-fill" element={<AgreementFillForm />} />
 
-      {/* Public referral submission page — the Refer Someone floating pill links here, no login required */}
-      <Route path="/refer" element={<ReferSomeone />} />
-
       {/* Public personalized listing-agent preview — sent/shown to MLS listing agents, no login required */}
       <Route path="/agent-preview/:token" element={<ListingAgentPreview />} />
 
@@ -252,6 +249,9 @@ const AuthenticatedApp = () => {
         <Route path="/client-roadmap" element={<ClientMoveRoadmap />} />
         <Route path="/relocation-roadmap" element={<ClientMoveRoadmap />} />
         <Route path="/RelocationRoadmap" element={<ClientMoveRoadmap />} />
+
+        {/* Public referral submission page */}
+        <Route path="/refer" element={<ReferSomeone />} />
 
         {/* Public Concierge Directories navigated by Charlie */}
         <Route path="/find-agent" element={<FindAgent />} />
