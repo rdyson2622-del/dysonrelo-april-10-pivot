@@ -115,12 +115,18 @@ export default function FrontDoor() {
   const [userPortalDest, setUserPortalDest] = useState(null);
   const [userRoleLabel, setUserRoleLabel] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [flashNotice, setFlashNotice] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user) {
         setCurrentUser(user);
         setIsSubscribed(true);
+        const firstName = user.full_name ? user.full_name.split(' ')[0] : (user.email?.split('@')[0] || 'Bob');
+        setFlashNotice(`WELCOME BACK ${firstName.toUpperCase()}`);
+        setTimeout(() => {
+          setFlashNotice(null);
+        }, 1200);
         if (user.role === 'admin') {
           setUserPortalDest('/admin');
           setUserRoleLabel('Admin Console');
@@ -245,91 +251,103 @@ export default function FrontDoor() {
           className="w-full max-w-6xl rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden"
           style={{ background: TAN_BG }}
         >
-          {/* TOP BLACK BAR: BRAND HEADER (DysonRelo.com) */}
+          {/* ONE-SECOND FLASH NOTICE: WELCOME BACK BOB */}
+          {flashNotice && (
+            <div className="fixed top-12 right-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-none">
+              <div
+                className="px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider text-black flex items-center gap-2 shadow-2xl border border-black/30"
+                style={{
+                  background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                }}
+              >
+                <span className="w-2 h-2 rounded-full bg-black animate-ping" />
+                <span>{flashNotice}</span>
+              </div>
+            </div>
+          )}
+
+          {/* TOP BLACK BAR: SLEEK REDUCED-HEIGHT HEADER */}
           <nav
-            className="px-5 py-3.5 flex items-center justify-between relative shadow-md"
-            style={{ background: '#0a0a0a', borderBottom: `2px solid ${GOLD}` }}
+            className="px-4 sm:px-5 py-2 flex items-center justify-between relative shadow-md"
+            style={{ background: '#0a0a0a', borderBottom: `1.5px solid ${GOLD}` }}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-9 w-auto object-contain shrink-0 drop-shadow"
+                className="h-7 sm:h-8 w-auto object-contain shrink-0 drop-shadow"
               />
               <div>
                 <span
-                  className="font-bold text-lg sm:text-xl tracking-wider text-white"
+                  className="font-bold text-base sm:text-lg tracking-wider text-white"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
                   DysonRelo.com
                 </span>
-                <span className="text-[10px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
+                <span className="text-[9.5px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
                   Nationwide Relocation Concierge
                 </span>
               </div>
             </div>
 
             {/* Center Clean Links (Like Homes.com & Realtor) */}
-            <div className="hidden lg:flex items-center gap-6 text-xs text-white/80 font-medium">
+            <div className="hidden lg:flex items-center gap-5 text-xs text-white/80 font-medium">
               <Link to="/corporate-relo" className="hover:text-[#D4AF37] transition-colors">Corporate Relo</Link>
               <Link to="/partner-benefits" className="hover:text-[#D4AF37] transition-colors">Agent Network</Link>
               <Link to="/transparency" className="hover:text-[#D4AF37] transition-colors">Transparency</Link>
               <Link to="/dnn-news" className="hover:text-[#D4AF37] transition-colors">Daily 6AM News</Link>
             </div>
 
-            {/* Right Actions: Ambience + Workspaces Access */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            {/* Right Actions: Ambience + Sleek Workspaces Access */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
 
-              {/* Subscriber Workspaces & Direct Access Button */}
+              {/* Subscriber Workspaces & Sleek Access Button */}
               <div className="relative flex items-center">
                 {isSubscribed ? (
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => navigate(userPortalDest || '/home')}
-                      className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+                      className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
                       style={{
                         background: 'linear-gradient(135deg, #1f1a0e 0%, #0d0d0d 100%)',
-                        border: `1.5px solid ${GOLD}`,
+                        border: `1.2px solid ${GOLD}`,
                         color: GOLD,
                       }}
                       title={`Direct Access: Open ${userRoleLabel || 'Your Workspace'}`}
                     >
-                      <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <Building className="w-3 h-3 text-[#D4AF37]" />
                       <span>{userRoleLabel || 'My Workspace'}</span>
                       <span
-                        className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-black flex items-center gap-1 shadow-sm"
+                        className="text-[8.5px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
                         style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
                       >
-                        <span>ENTER SITE</span>
-                        <ArrowRight className="w-2.5 h-2.5" />
+                        <span>ENTER</span>
+                        <ArrowRight className="w-2 h-2" />
                       </span>
                     </button>
                     <button
                       onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                      className="p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                      className="p-1 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                       title="Switch Workspace / Options"
                     >
-                      <ChevronDown className="w-3.5 h-3.5" />
+                      <ChevronDown className="w-3 h-3" />
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
                     style={{
                       background: '#141414',
-                      border: '1.5px solid rgba(212,175,55,0.4)',
+                      border: '1px solid rgba(212,175,55,0.4)',
                       color: GOLD,
                     }}
                   >
-                    <Building className="w-3.5 h-3.5 text-[#D4AF37]" />
-                    <span>Subscriber Workspaces</span>
-                    <span className="text-[9px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded font-black uppercase tracking-wider hidden sm:inline">
-                      Subscribers Only
-                    </span>
-                    <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+                    <Building className="w-3 h-3 text-[#D4AF37]" />
+                    <span>Workspaces</span>
+                    <ChevronDown className="w-3 h-3 opacity-80" />
                   </button>
                 )}
 
@@ -568,37 +586,7 @@ export default function FrontDoor() {
             </div>
           </nav>
 
-          {/* SUBSCRIBER WELCOME-BACK ACCESS BAR */}
-          {isSubscribed && (
-            <div 
-              className="px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs shadow-inner"
-              style={{
-                background: 'linear-gradient(90deg, #110e08 0%, #1f180a 50%, #110e08 100%)',
-                borderBottom: `1px solid ${GOLD}50`,
-                color: '#fff',
-              }}
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-                <span className="text-white/85 text-[11px] sm:text-xs">
-                  Welcome back{currentUser?.full_name ? `, ${currentUser.full_name}` : ''}! Active workspace: <strong className="text-[#D4AF37] font-semibold">{userRoleLabel || 'Subscriber Portal'}</strong>
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => navigate(userPortalDest || '/home')}
-                  className="px-4 py-1.5 rounded-full text-xs font-bold text-black flex items-center gap-1.5 transition-transform hover:scale-105 active:scale-95 cursor-pointer shadow-md"
-                  style={{
-                    background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-                  }}
-                >
-                  <span>Enter {userRoleLabel || 'My Workspace'}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-black" />
-                </button>
-              </div>
-            </div>
-          )}
+
 
           {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO */}
           <LuxuryHeroShowcase

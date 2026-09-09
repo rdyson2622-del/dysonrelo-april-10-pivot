@@ -118,12 +118,18 @@ export default function AdminFrontDoorLab() {
   const [userPortalDest, setUserPortalDest] = useState(null);
   const [userRoleLabel, setUserRoleLabel] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [flashNotice, setFlashNotice] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(user => {
       if (user) {
         setCurrentUser(user);
         setIsSubscribed(true);
+        const firstName = user.full_name ? user.full_name.split(' ')[0] : (user.email?.split('@')[0] || 'Bob');
+        setFlashNotice(`WELCOME BACK ${firstName.toUpperCase()}`);
+        setTimeout(() => {
+          setFlashNotice(null);
+        }, 1200);
         if (user.role === 'admin') {
           setUserPortalDest('/admin');
           setUserRoleLabel('Admin Portal');
@@ -258,25 +264,40 @@ export default function AdminFrontDoorLab() {
           }`}
           style={{ background: TAN_BG }}
         >
-          {/* TOP BLACK BAR: BRAND HEADER (DysonRelo.com) */}
+          {/* ONE-SECOND FLASH NOTICE: WELCOME BACK BOB */}
+          {flashNotice && (
+            <div className="fixed top-12 right-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-none">
+              <div
+                className="px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider text-black flex items-center gap-2 shadow-2xl border border-black/30"
+                style={{
+                  background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
+                }}
+              >
+                <span className="w-2 h-2 rounded-full bg-black animate-ping" />
+                <span>{flashNotice}</span>
+              </div>
+            </div>
+          )}
+
+          {/* TOP BLACK BAR: SLEEK REDUCED-HEIGHT HEADER */}
           <nav
-            className="px-5 py-3.5 flex items-center justify-between relative shadow-md"
-            style={{ background: '#0a0a0a', borderBottom: `2px solid ${GOLD}` }}
+            className="px-4 sm:px-5 py-2 flex items-center justify-between relative shadow-md"
+            style={{ background: '#0a0a0a', borderBottom: `1.5px solid ${GOLD}` }}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-9 w-auto object-contain shrink-0 drop-shadow"
+                className="h-7 sm:h-8 w-auto object-contain shrink-0 drop-shadow"
               />
               <div>
                 <span
-                  className="font-bold text-lg sm:text-xl tracking-wider text-white"
+                  className="font-bold text-base sm:text-lg tracking-wider text-white"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
                   DysonRelo.com
                 </span>
-                <span className="text-[10px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
+                <span className="text-[9.5px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
                   Nationwide Relocation Concierge
                 </span>
               </div>

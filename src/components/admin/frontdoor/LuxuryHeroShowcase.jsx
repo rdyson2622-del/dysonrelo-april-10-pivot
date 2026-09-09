@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, ArrowRight, ShieldCheck, CheckCircle2, TrendingUp,
-  Sun, Mountain, Waves, Users, Briefcase, Building, Compass, Sparkles
+  Sun, Mountain, Waves, Users, Briefcase, Building, Compass
 } from 'lucide-react';
 import HeroGeminiConcierge from '@/components/charlie/HeroGeminiConcierge';
 
@@ -109,11 +109,11 @@ export default function LuxuryHeroShowcase({
     <div className="w-full">
       {/* 2-COLUMN STRUCTURE:
           Left Sidebar: Narrowed by 15% (lg:w-[285px] xl:w-[310px]) to save space and make all content fit snugly.
-          Right Canvas: All search copy, tabs, search bar, Charlie, and notes placed ABOVE the pure, reduced-size architectural home photo. */}
+          Right Canvas: Pure, reduced-size architectural home photo on top, followed by Search Pill 1ST, then the copy & category tabs. */}
       <div className="flex flex-col lg:flex-row w-full rounded-t-2xl overflow-hidden shadow-2xl bg-[#0a0a0a] border-b border-[#D4AF37]/30">
         
         {/* ========================================================
-            LEFT SIDEBAR (NARROWED BY 15% — PRECISE & SNUG)
+            LEFT SIDEBAR (NARROWED BY 15% — SNUG & ELEGANT)
             ======================================================== */}
         <aside 
           className="w-full lg:w-[285px] xl:w-[310px] shrink-0 p-4 sm:p-5 flex flex-col justify-between text-left relative z-20"
@@ -123,7 +123,7 @@ export default function LuxuryHeroShowcase({
           }}
         >
           {/* Top Branding & Fiduciary Headline */}
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             <div 
               className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase shadow-sm"
               style={{ background: 'rgba(212,175,55,0.12)', border: `1px solid ${GOLD}60`, color: GOLD }}
@@ -137,11 +137,12 @@ export default function LuxuryHeroShowcase({
                 className="font-bold leading-tight text-white tracking-tight"
                 style={{
                   fontFamily: 'Cormorant Garamond, serif',
-                  fontSize: 'clamp(1.4rem, 1.8vw, 1.75rem)',
+                  fontSize: 'clamp(1.35rem, 1.75vw, 1.7rem)',
                 }}
               >
                 We Don't Sell Real Estate.
               </h2>
+              {/* REQUESTED CHANGE: We Orchestrate Your Entire Move. */}
               <p
                 className="font-semibold mt-0.5 tracking-wide leading-snug"
                 style={{
@@ -150,14 +151,14 @@ export default function LuxuryHeroShowcase({
                   color: '#fce38a',
                 }}
               >
-                We Protect Your Entire Move.
+                We Orchestrate Your Entire Move.
               </p>
               <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
                 Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
               </p>
             </div>
 
-            {/* THREE STRATEGIC DOORWAY TILES (COMPACT & SNUG) */}
+            {/* THREE STRATEGIC DOORWAY TILES */}
             <div className="space-y-1.5 pt-1.5">
               <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5">
                 Select Your Pathway:
@@ -235,7 +236,7 @@ export default function LuxuryHeroShowcase({
           </div>
 
           {/* Bottom Compliance & Fiduciary License Line */}
-          <div className="pt-3 mt-3 border-t border-white/10 text-[9.5px] text-white/60 flex items-center justify-between">
+          <div className="pt-2.5 mt-2.5 border-t border-white/10 text-[9.5px] text-white/60 flex items-center justify-between">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
               <span>All 50 States</span>
@@ -245,52 +246,73 @@ export default function LuxuryHeroShowcase({
         </aside>
 
         {/* ========================================================
-            RIGHT CANVAS: ALL COPY ABOVE THE HOME PHOTO,
-            THE HOUSE PHOTO PURE AND REDUCED IN SIZE BELOW IT!
+            RIGHT CANVAS: 
+            1. PURE & REDUCED-SIZE HOUSE PHOTO ON TOP
+            2. SEARCH PILL 1ST DIRECTLY BELOW PHOTO
+            3. THEN ALL COPY & TABS
             ======================================================== */}
         <div 
-          className="flex-1 p-5 sm:p-7 flex flex-col justify-between text-white"
+          className="flex-1 p-4 sm:p-5 flex flex-col justify-start text-white gap-3.5"
           style={{
-            background: 'radial-gradient(ellipse at top, #161616 0%, #0a0a0a 100%)',
+            background: 'radial-gradient(ellipse at top, #151515 0%, #0a0a0a 100%)',
           }}
         >
-          {/* ================= TOP SECTION: ALL SEARCH COPY ================= */}
-          <div className="w-full max-w-2xl mx-auto space-y-2.5 text-center mb-5">
-            {/* Header copy */}
-            <div className="space-y-0.5">
-              <h3 
-                className="text-2xl sm:text-3xl font-bold tracking-tight text-white"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                Search Destinations or Vet Any Listing
-              </h3>
-              <p className="text-xs sm:text-sm text-white/75 font-medium">
-                Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
-              </p>
+          {/* ================= TOP: PURE & REDUCED-SIZE HOUSE PHOTO ================= */}
+          <div className="relative w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl group bg-black h-[180px] sm:h-[210px] lg:h-[225px] shrink-0">
+            {/* Pure Architectural Photo */}
+            <img
+              src={currentBg.url}
+              alt={currentBg.title}
+              key={currentBg.id}
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+
+            {/* Subtle soft gradient overlay to preserve crystal-clear architectural view */}
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%)',
+              }}
+            />
+
+            {/* Top Bar on Photo: Location Badge + Switcher Pills */}
+            <div className="absolute top-2.5 left-3 right-3 flex items-center justify-between gap-2 z-10">
+              <div className="bg-black/75 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-semibold text-white/95 shadow-md flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                <span className="text-[#D4AF37] font-bold">Featured Destination:</span>
+                <span>{currentBg.city}</span>
+                <span className="text-white/60 text-[10.5px] hidden sm:inline ml-1 font-mono">({currentBg.tag})</span>
+              </div>
+
+              {/* Photo Switcher Pills */}
+              <div className="flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/20 p-0.5 rounded-full text-[10.5px] shadow-md">
+                {HERO_BACKGROUNDS.map((bg, idx) => (
+                  <button
+                    key={bg.id}
+                    onClick={() => setActiveBgIndex(idx)}
+                    className={`px-2.5 py-0.5 rounded-full font-medium transition-all cursor-pointer ${
+                      activeBgIndex === idx
+                        ? 'bg-[#D4AF37] text-black font-bold shadow'
+                        : 'text-white/70 hover:text-white'
+                    }`}
+                  >
+                    {bg.city.split(',')[0]}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Quick Intent Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
-              {[
-                { id: 'buy', label: 'All Destination Homes' },
-                { id: 'low_tax', label: '0% State Tax Havens' },
-                { id: 'new_construction', label: 'New Construction' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSearchTab(tab.id)}
-                  className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer shadow ${
-                    searchTab === tab.id
-                      ? 'bg-[#D4AF37] text-black shadow-md scale-105'
-                      : 'bg-[#181818] text-white/75 hover:text-white border border-white/15'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            {/* Bottom Caption on Photo */}
+            <div className="absolute bottom-2 left-4 right-4 flex items-center justify-between text-[11px] text-white/90 z-10 font-medium drop-shadow">
+              <span>{currentBg.title}</span>
+              <span className="text-white/60 text-[10px]">Pure Architectural View</span>
             </div>
+          </div>
 
-            {/* FLOATING LUXURY SEARCH PILL */}
+          {/* ================= BELOW PHOTO: SEARCH PILL 1ST, THEN COPY ================= */}
+          <div className="w-full max-w-2xl mx-auto space-y-2.5 text-center">
+            
+            {/* 1ST: THE FLOATING LUXURY SEARCH PILL PLACED FIRST ABOVE ALL COPY */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -300,7 +322,7 @@ export default function LuxuryHeroShowcase({
               style={{
                 background: '#faf6ee',
                 border: `2px solid ${GOLD}`,
-                boxShadow: '0 12px 35px rgba(0,0,0,0.5)',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
               }}
             >
               <div className="flex items-center gap-2.5 w-full pl-5 py-1">
@@ -338,71 +360,53 @@ export default function LuxuryHeroShowcase({
               </div>
             </form>
 
-            {/* Helper Note */}
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-white/80 pt-0.5">
+            {/* THEN: THE HEADER & EXPLANATION COPY */}
+            <div className="space-y-0.5 pt-0.5">
+              <h3 
+                className="text-xl sm:text-2xl font-bold tracking-tight text-white"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                Search Destinations or Vet Any Listing
+              </h3>
+              <p className="text-xs text-white/70 font-medium">
+                Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
+              </p>
+            </div>
+
+            {/* THEN: CATEGORY INTENT TABS */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              {[
+                { id: 'buy', label: 'All Destination Homes' },
+                { id: 'low_tax', label: '0% State Tax Havens' },
+                { id: 'new_construction', label: 'New Construction' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSearchTab(tab.id)}
+                  className={`px-3 py-1 rounded-full text-[10.5px] font-bold transition-all cursor-pointer shadow ${
+                    searchTab === tab.id
+                      ? 'bg-[#D4AF37] text-black shadow-md scale-105'
+                      : 'bg-[#181818] text-white/75 hover:text-white border border-white/15'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* THEN: VETTING HELPER NOTE */}
+            <div className="flex items-center justify-center gap-1.5 text-[10.5px] text-white/75 pt-0.5">
               <span>Looking at an address?</span>
               <span className="text-[#fce38a] font-bold">We vet the listing agent &amp; audit the escrow for you at no cost.</span>
-            </div>
-          </div>
-
-          {/* ================= BOTTOM SECTION: PURE & REDUCED-SIZE HOUSE PHOTO ================= */}
-          <div className="relative w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl group bg-black h-[220px] sm:h-[250px] lg:h-[265px]">
-            {/* Pure Architectural Photo */}
-            <img
-              src={currentBg.url}
-              alt={currentBg.title}
-              key={currentBg.id}
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-            />
-
-            {/* Soft subtle bottom vignette so photo remains 90% pure and visible */}
-            <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%)',
-              }}
-            />
-
-            {/* Top Bar on Photo: Clean Location Badge + Discrete Photo Switcher */}
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
-              <div className="bg-black/75 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-semibold text-white/95 shadow-md flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-                <span className="text-[#D4AF37] font-bold">Featured Destination:</span>
-                <span>{currentBg.city}</span>
-                <span className="text-white/60 text-[10.5px] hidden sm:inline ml-1 font-mono">({currentBg.tag})</span>
-              </div>
-
-              {/* Photo Switcher Pills */}
-              <div className="flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/20 p-1 rounded-full text-[10.5px] shadow-md">
-                {HERO_BACKGROUNDS.map((bg, idx) => (
-                  <button
-                    key={bg.id}
-                    onClick={() => setActiveBgIndex(idx)}
-                    className={`px-2.5 py-0.5 rounded-full font-medium transition-all cursor-pointer ${
-                      activeBgIndex === idx
-                        ? 'bg-[#D4AF37] text-black font-bold shadow'
-                        : 'text-white/70 hover:text-white'
-                    }`}
-                  >
-                    {bg.city.split(',')[0]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Bottom Caption on Photo */}
-            <div className="absolute bottom-2.5 left-4 right-4 flex items-center justify-between text-[11px] text-white/90 z-10 font-medium drop-shadow">
-              <span>{currentBg.title}</span>
-              <span className="text-white/60 text-[10px]">Pure Architectural View</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* QUICK DESTINATION PHOTO STRIP (HOMES.COM CATEGORIES STYLE) */}
-      <div className="px-5 sm:px-8 py-5 border-b border-[#0a0a0a]/10" style={{ background: '#f5eee2' }}>
+      <div className="px-5 sm:px-8 py-4 border-b border-[#0a0a0a]/10" style={{ background: '#f5eee2' }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-2">
               <Compass className="w-4 h-4 text-[#D4AF37]" />
               <span className="text-xs font-black uppercase tracking-wider text-[#0a0a0a]">
@@ -424,7 +428,7 @@ export default function LuxuryHeroShowcase({
                     setSearchQuery(m.city);
                     onSearch(m.city);
                   }}
-                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.03] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[105px] bg-[#0a0a0a]"
+                  className="group relative rounded-xl overflow-hidden p-2.5 text-left border border-[#D4AF37]/50 shadow-md transition-all hover:scale-[1.03] hover:shadow-xl cursor-pointer flex flex-col justify-end min-h-[95px] bg-[#0a0a0a]"
                 >
                   <img
                     src={m.image}
