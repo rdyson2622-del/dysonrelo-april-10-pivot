@@ -404,10 +404,10 @@ export default function DepartmentSubChoicesView({
                   navigate(`/admin?dept=${app.id}`);
                 }
               }}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl shrink-0 font-bold text-xs transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl shrink-0 font-bold text-xs transition-all cursor-pointer shadow-sm ${
                 isActive
-                  ? 'bg-[#1e1b14] border-2 border-[#D4AF37] text-white shadow-lg scale-102'
-                  : 'bg-[#121212] hover:bg-[#1a1a1a] border border-white/10 text-white/70 hover:text-white'
+                  ? 'bg-[#0a0a0a] border-2 border-[#D4AF37] text-white shadow-md scale-102'
+                  : 'bg-[#141414] hover:bg-[#222222] border border-black/30 text-white/85 hover:text-white'
               }`}
             >
               <div 
@@ -485,7 +485,7 @@ export default function DepartmentSubChoicesView({
           return (
             <div 
               key={choice.id}
-              className="p-5 rounded-3xl bg-[#0f0f0f] border border-white/10 hover:border-[#D4AF37]/70 transition-all shadow-xl flex flex-col justify-between space-y-4 group"
+              className="p-5 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/35 hover:border-[#D4AF37] transition-all shadow-2xl flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-3">
                 {/* Header with Icon & Sub-Choice Number */}

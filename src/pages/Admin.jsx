@@ -133,23 +133,23 @@ export default function Admin() {
   const [testingVoiceGreeting, setTestingVoiceGreeting] = useState(false);
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: '#ede0cc' }}>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-bold tracking-[0.3em] mb-1" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
-              <h1 className="display-heading mb-1 whitespace-nowrap" style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.6rem)', color: '#fff' }}>
+              <p className="text-xs font-bold tracking-[0.3em] mb-1 font-sans" style={{ color: '#854d0e' }}>ADMIN COMMAND CENTER</p>
+              <h1 className="display-heading mb-1 whitespace-nowrap" style={{ fontSize: 'clamp(1.15rem, 2.3vw, 1.65rem)', color: '#0a0a0a' }}>
                 Dyson &amp; Dyson Admin Dashboard
               </h1>
-              <p className="text-xs sm:text-sm text-white/70">
+              <p className="text-xs sm:text-sm text-[#44382c] font-medium">
                 Department Mini Apps &amp; Sub-Choices Workspace
               </p>
             </div>
 
             {/* View Mode Toggle Pill */}
-            <div className="flex items-center bg-[#151515] p-1 rounded-2xl border border-white/10 self-start sm:self-auto shadow-inner">
+            <div className="flex items-center bg-[#0a0a0a] p-1 rounded-2xl border border-[#D4AF37]/50 self-start sm:self-auto shadow-md">
               <button
                 type="button"
                 onClick={() => setActiveView('subchoices')}
@@ -178,7 +178,7 @@ export default function Admin() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 mt-3">
+          <div className="flex flex-wrap gap-2 mt-3">
             <Link
               to="/admin/app-store-mockup?tab=full_mockup"
               className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
@@ -188,21 +188,21 @@ export default function Admin() {
             </Link>
             <Link
               to="/admin/front-door-lab"
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 text-white/80 hover:text-white hover:border-[#D4AF37]"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-black/20 bg-black text-white hover:border-[#D4AF37] shadow-sm"
             >
               ✨ Front Door Lab
             </Link>
             <Link
               to="/admin/workflows"
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 text-white/80 hover:text-white hover:border-[#D4AF37]"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-black/20 bg-black text-white hover:border-[#D4AF37] shadow-sm"
             >
               🗺️ Master Atlas
             </Link>
             <button
               onClick={() => setTestingVoiceGreeting(true)}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-purple-500/40 text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-purple-500/50 text-purple-200 bg-black hover:bg-[#1a1a1a] shadow-sm cursor-pointer"
             >
-              <Volume2 className="w-3.5 h-3.5" /> Test Voice Greeting
+              <Volume2 className="w-3.5 h-3.5 text-purple-400" /> Test Voice Greeting
             </button>
           </div>
         </motion.div>
@@ -223,208 +223,182 @@ export default function Admin() {
           <VoiceGreetingWidget key={Date.now()} onClose={() => setTestingVoiceGreeting(false)} />
         )}
 
-        {/* Summary Dashboard Charts */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
-        >
-          {/* Active Listings Chart */}
-          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <Home className="w-5 h-5" style={{ color: '#10B981' }} />
-              <h3 className="font-bold text-white">Active Listings by Status</h3>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={[
-                { status: 'Not Contacted', count: 142 },
-                { status: 'In Progress', count: 87 },
-                { status: 'Interested', count: 54 },
-                { status: 'Converted', count: 23 }
-              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="status" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }} />
-                <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        {/* ── OVERVIEW METRICS & CHARTS (SHOWN WHEN IN OVERVIEW MODE) ── */}
+        {activeView === 'overview' && (
+          <div className="space-y-8 animate-in fade-in duration-200">
+            {/* Summary Dashboard Charts */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+            >
+              {/* Active Listings Chart */}
+              <div className="rounded-2xl p-6 shadow-xl" style={{ background: '#000', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Home className="w-5 h-5" style={{ color: '#10B981' }} />
+                  <h3 className="font-bold text-white">Active Listings by Status</h3>
+                </div>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={[
+                    { status: 'Not Contacted', count: 142 },
+                    { status: 'In Progress', count: 87 },
+                    { status: 'Interested', count: 54 },
+                    { status: 'Converted', count: 23 }
+                  ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="status" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                    <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '8px' }} />
+                    <Bar dataKey="count" fill="#10B981" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
 
-          {/* Incoming Referrals Chart */}
-          <div className="rounded-2xl p-6" style={{ background: '#000', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5" style={{ color: '#EF4444' }} />
-              <h3 className="font-bold text-white">Incoming Referrals Trend</h3>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={[
-                { week: 'W1', referrals: 12 },
-                { week: 'W2', referrals: 18 },
-                { week: 'W3', referrals: 15 },
-                { week: 'W4', referrals: 28 },
-                { week: 'W5', referrals: 32 },
-                { week: 'W6', referrals: 27 }
-              ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="week" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
-                <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="referrals" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
+              {/* Incoming Referrals Chart */}
+              <div className="rounded-2xl p-6 shadow-xl" style={{ background: '#000', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="w-5 h-5" style={{ color: '#EF4444' }} />
+                  <h3 className="font-bold text-white">Incoming Referrals Trend</h3>
+                </div>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={[
+                    { week: 'W1', referrals: 12 },
+                    { week: 'W2', referrals: 18 },
+                    { week: 'W3', referrals: 15 },
+                    { week: 'W4', referrals: 28 },
+                    { week: 'W5', referrals: 32 },
+                    { week: 'W6', referrals: 27 }
+                  ]} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="week" stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="rgba(255,255,255,0.5)" style={{ fontSize: '12px' }} />
+                    <Tooltip contentStyle={{ background: '#0d0d0d', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px' }} />
+                    <Line type="monotone" dataKey="referrals" stroke="#EF4444" strokeWidth={2} dot={{ fill: '#EF4444', r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
 
-        {/* Live Interactive Stats */}
-         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ delay: 0.2 }}
-           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-         >
-          <LiveStatCard
-            label="Active Clients"
-            icon={UserCheck}
-            path="/admin/clients"
-            accentColor="#8B5CF6"
-            query={() => base44.entities.RelocationClient.list('-created_date', 200)}
-            filter={c => !['closed', 'inactive', 'moved'].includes(c.status)}
-          />
-          <LiveStatCard
-            label="Listing Owners"
-            icon={Home}
-            path="/admin/owners"
-            accentColor="#10B981"
-            query={async () => {
-              const owners = await base44.entities.ListingOwner.list('-created_date', 200);
-              return owners.map(o => ({ ...o, _preview: o.owner_name || o.property_address, _badge: o.contact_status?.replace('_', ' ') }));
-            }}
-          />
-          <LiveStatCard
-            label="Active Campaigns"
-            icon={SendHorizontal}
-            path="/admin/scheduled-campaigns"
-            accentColor="#F97316"
-            query={async () => {
-              const campaigns = await base44.entities.ScheduledCampaign.list('-scheduled_for', 100);
-              return campaigns
-                .filter(c => c.status === 'scheduled' || c.status === 'sending')
-                .map(c => ({ ...c, _preview: c.city, _badge: c.status }));
-            }}
-          />
-          <LiveStatCard
-            label="Pending Referrals"
-            icon={LinkIcon}
-            path="/admin/referrals"
-            accentColor="#EF4444"
-            query={async () => {
-              const refs = await base44.entities.AgentReferral.list('-created_date', 100);
-              return refs
-                .filter(r => r.referral_status === 'proposal_sent' || r.referral_status === 'agreed' || r.referral_status === 'in_process')
-                .map(r => ({ ...r, _preview: r.list_agent_name, _badge: r.referral_status?.replace('_', ' ') }));
-            }}
-          />
-        </motion.div>
+            {/* Live Interactive Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            >
+              <LiveStatCard
+                label="Active Clients"
+                icon={UserCheck}
+                path="/admin/clients"
+                accentColor="#8B5CF6"
+                query={() => base44.entities.RelocationClient.list('-created_date', 200)}
+                filter={c => !['closed', 'inactive', 'moved'].includes(c.status)}
+              />
+              <LiveStatCard
+                label="Listing Owners"
+                icon={Home}
+                path="/admin/owners"
+                accentColor="#10B981"
+                query={async () => {
+                  const owners = await base44.entities.ListingOwner.list('-created_date', 200);
+                  return owners.map(o => ({ ...o, _preview: o.owner_name || o.property_address, _badge: o.contact_status?.replace('_', ' ') }));
+                }}
+              />
+              <LiveStatCard
+                label="Active Campaigns"
+                icon={SendHorizontal}
+                path="/admin/scheduled-campaigns"
+                accentColor="#F97316"
+                query={async () => {
+                  const campaigns = await base44.entities.ScheduledCampaign.list('-scheduled_for', 100);
+                  return campaigns
+                    .filter(c => c.status === 'scheduled' || c.status === 'sending')
+                    .map(c => ({ ...c, _preview: c.city, _badge: c.status }));
+                }}
+              />
+              <LiveStatCard
+                label="Pending Referrals"
+                icon={LinkIcon}
+                path="/admin/referrals"
+                accentColor="#EF4444"
+                query={async () => {
+                  const refs = await base44.entities.AgentReferral.list('-created_date', 100);
+                  return refs
+                    .filter(r => r.referral_status === 'proposal_sent' || r.referral_status === 'agreed' || r.referral_status === 'in_process')
+                    .map(r => ({ ...r, _preview: r.list_agent_name, _badge: r.referral_status?.replace('_', ' ') }));
+                }}
+              />
+            </motion.div>
 
-        {/* Admin Sections */}
-        {adminSections.map((section, sectionIdx) => (
-          <motion.div
-            key={section.heading}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + sectionIdx * 0.05 }}
-            className="mt-8"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-1 h-6" style={{ background: GOLD }} />
-              <p className="text-xs font-bold tracking-[0.3em]" style={{ color: GOLD }}>{section.heading}</p>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {section.modules.map((module) => {
-                const Icon = module.icon;
-                return (
-                  <Link
-                    key={module.path}
-                    to={module.path}
-                    className="group rounded-2xl p-5 transition-all hover:scale-[1.02]"
-                    style={{ background: '#000', border: '1px solid rgba(212,175,55,0.2)' }}
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                        style={{ background: `${module.color}22`, border: `1px solid ${module.color}44` }}>
-                        <Icon className="w-6 h-6" style={{ color: module.color }} />
-                      </div>
-                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" style={{ color: GOLD }} />
-                    </div>
-                    <h3 className="font-bold mb-1" style={{ color: '#fff' }}>{module.name}</h3>
-                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{module.description}</p>
-                  </Link>
-                );
-              })}
-            </div>
-          </motion.div>
-        ))}
+            {/* Admin Sections */}
+            {adminSections.map((section, sectionIdx) => (
+              <motion.div
+                key={section.heading}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + sectionIdx * 0.05 }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: GOLD }} />
+                  <h2 className="text-lg font-bold text-[#0a0a0a]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                    {section.heading}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {section.items.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.label}
+                        to={item.path}
+                        className="p-4 rounded-xl border border-white/10 hover:border-[#D4AF37] transition-all group block shadow-md"
+                        style={{ background: '#0f0f0f' }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5">
+                            <Icon className="w-4 h-4 text-white group-hover:text-[#D4AF37] transition-colors" />
+                          </div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-white/50">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-sm text-white group-hover:text-[#D4AF37] transition-colors mb-1">
+                          {item.label}
+                        </h3>
+                        <p className="text-xs text-white/60">
+                          {item.description}
+                        </p>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            ))}
 
-        {/* Charlie Command Center */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="mt-8 rounded-2xl p-6"
-          style={{ background: '#000', border: `1px solid #A78BFA44` }}
-        >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#A78BFA22', border: '1px solid #A78BFA44' }}>
-              <Brain className="w-5 h-5" style={{ color: '#A78BFA' }} />
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-[0.3em]" style={{ color: '#A78BFA' }}>CHARLIE'S BRAIN</p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Build, train & monitor your AI advisor</p>
-            </div>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-3">
-            {[
-              { label: "Scripts", sub: "What Charlie says", path: '/admin/charlie-scripts', icon: ScrollText, color: '#F97316' },
-              { label: "Knowledge Base", sub: "What Charlie knows", path: '/admin/charlie-knowledge-base', icon: Brain, color: '#A78BFA' },
-              { label: "Escalations", sub: "What Charlie missed", path: '/admin/charlie-escalations', icon: AlertTriangle, color: '#EF4444' },
-            ].map(item => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.path} to={item.path}
-                  className="group rounded-xl p-4 transition-all hover:scale-[1.02]"
-                  style={{ background: '#0d0d0d', border: `1px solid ${item.color}33` }}>
-                  <Icon className="w-5 h-5 mb-2" style={{ color: item.color }} />
-                  <p className="font-bold text-sm" style={{ color: '#fff' }}>{item.label}</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.sub}</p>
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-8 rounded-2xl p-6 shadow-xl"
+              style={{ background: '#000', border: `1px solid ${GOLD}` }}
+            >
+              <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>QUICK ACTIONS</p>
+              <div className="flex flex-wrap gap-3">
+                <Link to="/admin/outreach-campaigns" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: GOLD, color: '#000' }}>
+                  + New Campaign
                 </Link>
-              );
-            })}
+                <Link to="/admin/clients" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
+                  View All Clients
+                </Link>
+                <Link to="/admin/charlie-scripts" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
+                  Edit Charlie Scripts
+                </Link>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 rounded-2xl p-6"
-          style={{ background: '#000', border: `1px solid ${GOLD}` }}
-        >
-          <p className="text-xs font-bold tracking-[0.3em] mb-4" style={{ color: GOLD }}>QUICK ACTIONS</p>
-          <div className="flex flex-wrap gap-3">
-            <Link to="/admin/outreach-campaigns" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: GOLD, color: '#000' }}>
-              + New Campaign
-            </Link>
-            <Link to="/admin/clients" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
-              View All Clients
-            </Link>
-            <Link to="/admin/charlie-scripts" className="px-4 py-2 rounded-full text-sm font-semibold transition-all" style={{ background: 'rgba(212,175,55,0.2)', color: GOLD, border: '1px solid rgba(212,175,55,0.3)' }}>
-              Edit Charlie Scripts
-            </Link>
-          </div>
-        </motion.div>
+        )}
       </div>
     </div>
   );

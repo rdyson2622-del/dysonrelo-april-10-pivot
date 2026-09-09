@@ -12,13 +12,13 @@ export default function MiniAppPage({ appType }) {
   const currentApp = appType || type;
 
   return (
-    <div className="min-h-screen bg-[#070707] text-white p-3 sm:p-6 flex flex-col items-center">
+    <div className="min-h-screen text-[#0a0a0a] p-3 sm:p-6 flex flex-col items-center" style={{ background: '#ede0cc' }}>
       {/* Top Breadcrumb Header */}
-      <div className="w-full max-w-4xl flex items-center justify-between pb-3 mb-4 border-b border-[#D4AF37]/20">
+      <div className="w-full max-w-4xl flex items-center justify-between pb-3 mb-4 border-b border-black/15">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-xs font-bold text-white/70 hover:text-[#D4AF37] transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-black/80 hover:text-[#854d0e] transition-colors cursor-pointer px-3 py-1.5 rounded-xl bg-black/5 hover:bg-black/10 border border-black/10"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Workspace</span>
@@ -27,7 +27,7 @@ export default function MiniAppPage({ appType }) {
         <button
           type="button"
           onClick={() => navigate('/portal')}
-          className="flex items-center gap-1.5 text-xs font-bold text-[#D4AF37] hover:underline cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-bold text-black hover:text-[#854d0e] cursor-pointer px-3 py-1.5 rounded-xl bg-[#D4AF37] shadow-sm hover:bg-[#e8c84a]"
         >
           <Home className="w-3.5 h-3.5" />
           <span>Portal Front Door</span>
