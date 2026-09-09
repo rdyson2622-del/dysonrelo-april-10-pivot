@@ -244,23 +244,14 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
-          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO WITH TAN BACKDROP ================= */}
-          <div 
-            className="w-full max-w-2xl mx-auto rounded-2xl p-2 sm:p-3 shadow-2xl border transition-all"
-            style={{
-              background: '#ede0cc',
-              borderColor: `${GOLD}90`,
-              boxShadow: '0 16px 45px rgba(0,0,0,0.4)',
-            }}
-          >
-            <div className="w-full aspect-[16/10] sm:aspect-[16/9] relative rounded-xl overflow-hidden shadow-inner flex items-center justify-center bg-[#ede0cc]">
-              <img
-                src={currentBg.url}
-                alt={currentBg.title}
-                key={currentBg.id}
-                className="w-full h-full object-cover object-center transition-transform duration-700 ease-out"
-              />
-            </div>
+          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO (CLEAN & BORDERLESS) ================= */}
+          <div className="w-full max-w-2xl mx-auto relative rounded-xl overflow-hidden shadow-2xl aspect-[16/10] sm:aspect-[16/9] bg-black">
+            <img
+              src={currentBg.url}
+              alt={currentBg.title}
+              key={currentBg.id}
+              className="w-full h-full object-cover object-center transition-transform duration-700 ease-out"
+            />
           </div>
 
           {/* ================= 3. CLEAN SEARCH PILL DIRECTLY BELOW PHOTO ================= */}
