@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Newspaper, GitBranch, ClipboardList, MapPin, 
-  Building2, SendHorizontal, Sparkles, Calendar, Mail, MessageSquare
+  Building2, SendHorizontal, Sparkles, Calendar, Mail, MessageSquare,
+  Calculator, CloudSun, Mic
 } from 'lucide-react';
 
 export const ADMIN_DEPT_MINI_APPS = [
@@ -33,6 +34,34 @@ export const ADMIN_DEPT_MINI_APPS = [
     iconColor: '#10b981',
     bgGradient: 'from-[#064e3b] via-[#06281e] to-[#0a0a0a]',
     border: 'border-[#10b981]/60',
+  },
+  {
+    id: 'calculator',
+    label: 'Calculator',
+    copy: 'Mortgage & Relo',
+    icon: Calculator,
+    iconColor: '#34d399',
+    bgGradient: 'from-[#065f46] via-[#064e3b] to-[#0a0a0a]',
+    border: 'border-[#10b981]/60',
+  },
+  {
+    id: 'weather',
+    label: 'Weather',
+    copy: 'Relo Climates',
+    icon: CloudSun,
+    iconColor: '#38bdf8',
+    bgGradient: 'from-[#0369a1] via-[#075985] to-[#0a0a0a]',
+    border: 'border-[#38bdf8]/60',
+  },
+  {
+    id: 'charlie',
+    label: 'Charlie AI',
+    copy: 'Voice Concierge',
+    icon: Mic,
+    iconColor: '#e8c84a',
+    bgGradient: 'from-[#332a18] via-[#1a160d] to-[#0a0a0a]',
+    border: 'border-[#D4AF37]/60',
+    badgeCount: 'V2V',
   },
   {
     id: 'dnn',

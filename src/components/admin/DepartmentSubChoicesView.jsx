@@ -5,11 +5,14 @@ import {
   Video, Edit, Library, Clapperboard, Zap, BarChart3, Users, Send, Shield, 
   BookOpen, Star, FileCheck, DollarSign, Archive, ArrowRight, Sparkles,
   Map, ShieldCheck, FileSearch, Home, ShoppingBag, TrendingUp, Calendar,
-  MessageCircle, Fingerprint, List, ExternalLink, Play, Mail, MessageSquare, CheckCircle2, Inbox, Clock
+  MessageCircle, Fingerprint, List, ExternalLink, Play, Mail, MessageSquare, CheckCircle2, Inbox, Clock,
+  Calculator, CloudSun, Mic, Brain, Compass, Thermometer, Phone, ScrollText
 } from 'lucide-react';
 import { ADMIN_DEPT_MINI_APPS } from './AdminMiniAppsGrid';
 import LiveEmailTextStatusPanel from './LiveEmailTextStatusPanel';
 import CalendarMiniApp from '@/components/miniapps/CalendarMiniApp';
+import CalculatorMiniApp from '@/components/miniapps/CalculatorMiniApp';
+import WeatherMiniApp from '@/components/miniapps/WeatherMiniApp';
 
 const GOLD = '#D4AF37';
 
@@ -542,6 +545,171 @@ export const DEPARTMENT_DATA = {
       },
     ],
   },
+  calculator: {
+    id: 'calculator',
+    name: 'Mortgage & Relocation Calculator',
+    subtitle: 'Principal & interest, property taxes, van line moving costs, and temporary lodging',
+    icon: Calculator,
+    accentColor: '#34d399',
+    badge: 'MORTGAGE & RELO',
+    subChoices: [
+      {
+        id: 'mortgage_calc',
+        title: 'Mortgage & Payment Estimator',
+        tagline: 'Home price, down payment %, interest rate & taxes',
+        icon: Calculator,
+        color: '#34d399',
+        badge: 'P&I + TAXES',
+        description: 'Accurate monthly mortgage calculation including P&I, state-specific property taxes, and hazard insurance.',
+        primaryLink: { label: 'Open Calculator', path: '/calculator' },
+        links: [
+          { label: '🧮 Mortgage & Payment Tool', path: '/calculator', highlight: true },
+          { label: '💳 Financial Services Hub', path: '/financial-services' },
+          { label: '🏦 Select a Vetted Lender', path: '/admin/dnn/lender-vetting' },
+        ],
+      },
+      {
+        id: 'moving_costs',
+        title: 'Van Line & Relocation Logistics',
+        tagline: 'Distance, bedrooms, packing & storage estimation',
+        icon: Compass,
+        color: '#f59e0b',
+        badge: 'MOVING ESTIMATE',
+        description: 'Calculate comprehensive interstate moving costs, storage units, mileage allowances, and transition budgets.',
+        primaryLink: { label: 'Relo Estimator', path: '/calculator' },
+        links: [
+          { label: '🚚 Relocation Expense Estimator', path: '/calculator', highlight: true },
+          { label: '📋 Master Client Roadmaps', path: '/client-roadmap' },
+          { label: '🏡 Relocation Intake Planner', path: '/relocation-intake' },
+        ],
+      },
+      {
+        id: 'tax_savings',
+        title: 'State Tax Differential & Net Sheet',
+        tagline: 'California vs Texas/Florida/Nevada tax comparisons',
+        icon: Sparkles,
+        color: '#D4AF37',
+        badge: 'TAX BATTLEPLAN',
+        description: 'Model real cash-flow advantages of moving between state tax brackets, capital gains timing, and 1031 exchanges.',
+        primaryLink: { label: 'Tax & Solutions Map', path: '/solutions' },
+        links: [
+          { label: '✨ Tax & Relo Solutions Map', path: '/solutions', highlight: true },
+          { label: '⚖️ Fiduciary Transparency Deck', path: '/transparency' },
+          { label: '📊 Market Data Hub', path: '/admin/dnn/market-data' },
+        ],
+      },
+    ],
+  },
+  weather: {
+    id: 'weather',
+    name: 'Destination Climates & Weather Hub',
+    subtitle: 'Seasonal temperatures, annual sunny days, and live 5-day forecasts for top relocation destinations',
+    icon: CloudSun,
+    accentColor: '#38bdf8',
+    badge: 'CLIMATE RADAR',
+    subChoices: [
+      {
+        id: 'destination_forecasts',
+        title: 'Top Relocation Market Forecasts',
+        tagline: 'Scottsdale, Austin, Nashville, Miami & Incline Village',
+        icon: CloudSun,
+        color: '#38bdf8',
+        badge: '5-DAY WEATHER',
+        description: 'Live weather updates, seasonal temperatures, humidity indexes, and conditions in top relocation cities.',
+        primaryLink: { label: 'Open Weather Hub', path: '/weather' },
+        links: [
+          { label: '☀️ Weather & Climate Mini App', path: '/weather', highlight: true },
+          { label: '🗺️ Explore Destination Strip', path: '/city-guide' },
+          { label: '🌆 City Relocation Guides', path: '/city-guide' },
+        ],
+      },
+      {
+        id: 'climate_comparison',
+        title: 'Climate vs California Benchmark',
+        tagline: 'Compare winter lows, annual sun days, and summer humidity',
+        icon: Thermometer,
+        color: '#f59e0b',
+        badge: 'BENCHMARK',
+        description: 'Side-by-side analysis comparing California coastal weather with destination mountain, desert, and sun-belt climates.',
+        primaryLink: { label: 'Compare Climates', path: '/weather' },
+        links: [
+          { label: '🌡️ Climate Comparison Tool', path: '/weather', highlight: true },
+          { label: '📍 Vetted Agents by City', path: '/find-agent' },
+          { label: '📰 DNN Market Data Feed', path: '/admin/dnn/market-data' },
+        ],
+      },
+      {
+        id: 'lifestyle_matching',
+        title: 'Weather & Tax Matchmaker',
+        tagline: 'Match buyers to ideal climate and 0% tax states',
+        icon: Sparkles,
+        color: '#10b981',
+        badge: 'MATCHMAKER',
+        description: 'Synthesize optimal lifestyle factors: 300+ days of sun, low tax jurisdiction, and luxury real estate availability.',
+        primaryLink: { label: 'Relo Solutions Map', path: '/solutions' },
+        links: [
+          { label: '🌟 Lifestyle & Tax Solutions', path: '/solutions', highlight: true },
+          { label: '🏡 Search Listing Profiles', path: '/admin/search-profiles' },
+          { label: '💬 Talk with Charlie AI', path: '/talking-app' },
+        ],
+      },
+    ],
+  },
+  charlie: {
+    id: 'charlie',
+    name: "Charlie Simmons AI Concierge Desk",
+    subtitle: 'Real-time conversational voice mode (V2V), trained knowledge base Q&A, and spoken script studio',
+    icon: Mic,
+    accentColor: '#e8c84a',
+    badge: 'VOICE-TO-VOICE',
+    subChoices: [
+      {
+        id: 'v2v_voice',
+        title: 'Voice-to-Voice (V2V) Concierge',
+        tagline: 'Real-time two-way spoken conversation with Gemini Live',
+        icon: Mic,
+        color: '#10b981',
+        badge: 'LIVE AUDIO',
+        description: 'Experience hands-free voice interaction. Charlie speaks in an authentic broadcast tone, answering relocation queries instantly.',
+        primaryLink: { label: 'Launch Voice Studio', path: '/talking-app' },
+        links: [
+          { label: '🎙️ Spoken Voice Studio (Talking App)', path: '/talking-app', highlight: true },
+          { label: '📊 Voice Concierge Analytics', path: '/admin/voice-concierge-analytics' },
+          { label: '🗣️ Charlie Voice Presentation', path: '/charlie-voice' },
+        ],
+      },
+      {
+        id: 'knowledge_brain',
+        title: 'Charlie Knowledge Base & Q&A Brain',
+        tagline: 'Vetting criteria, process knowledge, and escalation handling',
+        icon: Brain,
+        color: '#a855f7',
+        badge: 'TRAINED BRAIN',
+        description: 'Manage Charlie’s trained facts, vetted partner standards, relocation processes, and consumer answers.',
+        primaryLink: { label: 'Knowledge Base', path: '/admin/charlie-knowledge-base' },
+        links: [
+          { label: '🧠 Charlie Knowledge Base Roster', path: '/admin/charlie-knowledge-base', highlight: true },
+          { label: '⚠️ Review Flagged Escalations', path: '/admin/charlie-escalations' },
+          { label: '🎥 Bob Dyson Video Answers Library', path: '/admin/bob-library' },
+        ],
+      },
+      {
+        id: 'broadcast_scripts',
+        title: 'Spoken Scripts & HeyGen Pipeline',
+        tagline: 'Daily 6AM broadcast scripts, audio synthesis, and avatars',
+        icon: ScrollText,
+        color: '#D4AF37',
+        badge: 'SCRIPT STUDIO',
+        description: 'Audit and edit AI-generated morning brief scripts, verify Ruben American voice synthesis, and test HeyGen renders.',
+        primaryLink: { label: 'Charlie Scripts', path: '/admin/charlie-scripts' },
+        links: [
+          { label: '📜 Charlie Spoken Scripts Roster', path: '/admin/charlie-scripts', highlight: true },
+          { label: '🎬 DNN Script Review Desk', path: '/admin/dnn/script-review' },
+          { label: '⚡ Pipeline Credit Monitor', path: '/admin/heygen-credits' },
+        ],
+      },
+    ],
+  },
 };
 
 export default function DepartmentSubChoicesView({ 
@@ -667,6 +835,94 @@ export default function DepartmentSubChoicesView({
             </Link>
           </div>
           <CalendarMiniApp />
+        </div>
+      )}
+
+      {/* ── CALCULATOR MINI APP EMBED (FOR CALCULATOR DESK) ── */}
+      {dept.id === 'calculator' && (
+        <div className="p-4 sm:p-6 rounded-3xl bg-[#0a0a0a] border border-[#34d399]/40 shadow-2xl space-y-3">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <span className="text-xs font-bold text-[#34d399] uppercase tracking-wider">
+              INTERACTIVE MORTGAGE &amp; RELOCATION CALCULATOR
+            </span>
+            <Link 
+              to="/calculator" 
+              className="text-xs text-[#D4AF37] hover:underline font-bold flex items-center gap-1"
+            >
+              <span>Full Screen</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
+          <CalculatorMiniApp />
+        </div>
+      )}
+
+      {/* ── WEATHER MINI APP EMBED (FOR WEATHER DESK) ── */}
+      {dept.id === 'weather' && (
+        <div className="p-4 sm:p-6 rounded-3xl bg-[#0a0a0a] border border-[#38bdf8]/40 shadow-2xl space-y-3">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <span className="text-xs font-bold text-[#38bdf8] uppercase tracking-wider">
+              DESTINATION MARKETS &amp; CLIMATE WEATHER HUB
+            </span>
+            <Link 
+              to="/weather" 
+              className="text-xs text-[#D4AF37] hover:underline font-bold flex items-center gap-1"
+            >
+              <span>Full Screen</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
+          <WeatherMiniApp />
+        </div>
+      )}
+
+      {/* ── CHARLIE AI VOICE CONCIERGE EMBED (FOR CHARLIE DESK) ── */}
+      {dept.id === 'charlie' && (
+        <div className="p-5 sm:p-6 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <span className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">
+              CHARLIE SIMMONS AI CONCIERGE · VOICE &amp; BRAIN CONTROLS
+            </span>
+            <Link 
+              to="/talking-app" 
+              className="text-xs text-[#10b981] hover:underline font-bold flex items-center gap-1"
+            >
+              <span>Launch Voice Studio (V2V)</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-2xl bg-[#141414] border border-[#10b981]/40 flex flex-col justify-between space-y-3">
+              <div>
+                <span className="text-[10px] font-bold text-[#10b981] uppercase tracking-wider">V2V REAL-TIME</span>
+                <h4 className="text-sm font-bold text-white mt-1">Spoken Voice Concierge</h4>
+                <p className="text-xs text-white/70 mt-1">Engage Charlie directly in high-fidelity two-way conversational voice mode powered by Gemini Live.</p>
+              </div>
+              <Link to="/talking-app" className="py-2 px-3 rounded-xl bg-[#10b981] hover:bg-[#059669] text-black font-bold text-xs text-center">
+                Launch Voice Studio
+              </Link>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#141414] border border-[#a855f7]/40 flex flex-col justify-between space-y-3">
+              <div>
+                <span className="text-[10px] font-bold text-[#a855f7] uppercase tracking-wider">KNOWLEDGE BASE</span>
+                <h4 className="text-sm font-bold text-white mt-1">Trained Real Estate Q&amp;A</h4>
+                <p className="text-xs text-white/70 mt-1">Review and fine-tune Charlie's answers on agent vetting, tax migration, and relocation process.</p>
+              </div>
+              <Link to="/admin/charlie-knowledge-base" className="py-2 px-3 rounded-xl bg-[#a855f7] hover:bg-[#9333ea] text-white font-bold text-xs text-center">
+                Manage Q&amp;A Brain
+              </Link>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/40 flex flex-col justify-between space-y-3">
+              <div>
+                <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">SCRIPT STUDIO</span>
+                <h4 className="text-sm font-bold text-white mt-1">Spoken Broadcast Scripts</h4>
+                <p className="text-xs text-white/70 mt-1">Configure and edit opening, body, and closing broadcast scripts voiced by Charlie.</p>
+              </div>
+              <Link to="/admin/charlie-scripts" className="py-2 px-3 rounded-xl bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-bold text-xs text-center">
+                Open Script Studio
+              </Link>
+            </div>
+          </div>
         </div>
       )}
 
