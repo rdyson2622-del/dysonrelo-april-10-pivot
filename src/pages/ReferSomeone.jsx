@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   UserPlus, CheckCircle2, Loader2, ArrowLeft, Home, 
   Wrench, Star, MoreHorizontal, ShieldCheck, Phone, 
@@ -25,30 +25,11 @@ const EMPTY = {
 };
 
 const TYPES = [
-  { value: 'relocation_client', label: 'Someone Relocating', icon: Home, short: 'Client Move' },
-  { value: 'agent', label: 'Real Estate Agent', icon: Star, short: 'Top Agent' },
-  { value: 'vendor', label: 'Vendor / Specialist', icon: Wrench, short: 'Lender / Mover' },
-  { value: 'other', label: 'Something Else', icon: MoreHorizontal, short: 'Partnership' },
+  { value: 'relocation_client', label: 'Client Relocating', sub: 'Buyer / Seller', icon: Home },
+  { value: 'agent', label: 'Real Estate Agent', sub: 'Vetted Network', icon: Star },
+  { value: 'vendor', label: 'Vendor / Partner', sub: 'Lender, Mover, Title', icon: Wrench },
+  { value: 'other', label: 'Something Else', sub: 'Custom Introduction', icon: MoreHorizontal },
 ];
-
-const COPY = {
-  relocation_client: { 
-    headline: "We'll Orchestrate Their Entire Move", 
-    subhead: "We represent your client or friend with an independent fiduciary shield — zero buyer fees, vetted local top agents, and complete peace of mind.",
-  },
-  agent: { 
-    headline: "Recommend an Elite Agent", 
-    subhead: "Know a top-tier producer with exceptional fiduciary integrity? We'll review their credentials for our national referral and partner network.",
-  },
-  vendor: { 
-    headline: "Introduce a Relocation Specialist", 
-    subhead: "Connect a proven lender, mover, title officer, or property inspector who provides high-touch luxury service.",
-  },
-  other: { 
-    headline: "Share an Opportunity or Introduction", 
-    subhead: "Tell us who they are and how we can best assist them.",
-  },
-};
 
 export default function ReferSomeone() {
   const navigate = useNavigate();
@@ -58,25 +39,15 @@ export default function ReferSomeone() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const canSubmit = form.referred_name.trim() && form.referred_email.trim();
-  const activeCopy = COPY[form.referral_type] || COPY.other;
   const isRelocationClient = form.referral_type === 'relocation_client';
 
-  // Reliable navigation back to portal or home
-  const handleExit = () => {
+  // Absolute foolproof exit: tries browser back first; if still on /refer, goes to portal
+  const handleBack = () => {
     if (window.history && window.history.length > 1) {
-      navigate(-1);
-      setTimeout(() => {
-        if (window.location.pathname.includes('/refer')) {
-          navigate('/portal');
-        }
-      }, 150);
+      window.history.back();
     } else {
       navigate('/portal');
     }
-  };
-
-  const handleHardHome = () => {
-    navigate('/portal');
   };
 
   const handleSubmit = async (e) => {
@@ -109,72 +80,75 @@ export default function ReferSomeone() {
     <div className="min-h-screen text-[#0a0a0a] flex flex-col justify-between" style={{ background: TAN_BG }}>
       
       {/* ========================================================
-          TOP NAVIGATION BAR (TAN BACKDROP THEMED)
+          STICKY TOP BAR — CLEAR EXIT & STUDIO BUTTONS (CANNOT BE TRAPPED)
           ======================================================== */}
-      <header className="sticky top-0 z-40 px-4 sm:px-8 py-3 border-b border-[#0a0a0a]/15 bg-[#ede0cc]/90 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-50 px-3 sm:px-6 py-2.5 border-b border-[#0a0a0a]/15 bg-[#ede0cc]/95 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
           
-          {/* Studio Portal Return */}
+          {/* Back button */}
           <button
             type="button"
-            onClick={handleHardHome}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-sm active:scale-95"
-            title="Return to Studio Portal"
+            onClick={handleBack}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#0a0a0a] text-white hover:bg-[#1a1a1a] transition-all cursor-pointer shadow-sm active:scale-95"
+            title="Go back to previous page"
           >
-            <Compass className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="tracking-wide">STUDIO PORTAL</span>
+            <ArrowLeft className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Back</span>
           </button>
 
-          {/* Fiduciary Credential Badge */}
-          <div className="flex items-center gap-1.5 text-xs text-[#554433] font-medium">
-            <ShieldCheck className="w-4 h-4 text-[#10b981]" />
-            <span className="hidden sm:inline font-mono">CA DRE #02303118 · Fiduciary Management</span>
-            <span className="sm:hidden font-mono text-[11px]">DRE #02303118</span>
-          </div>
-
-          {/* Unmissable Exit Button */}
-          <button
-            type="button"
-            onClick={handleExit}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37] hover:bg-[#151515] transition-all shadow-sm cursor-pointer active:scale-95"
-            title="Exit this page"
+          {/* Center Brand / Studio */}
+          <Link
+            to="/portal"
+            className="flex items-center gap-1.5 text-xs font-black tracking-wider uppercase text-[#0a0a0a] hover:text-[#854d0e] transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5 stroke-[3]" />
-            <span>EXIT</span>
-            <X className="w-3.5 h-3.5 stroke-[3] ml-0.5" />
-          </button>
+            <Compass className="w-4 h-4 text-[#854d0e]" />
+            <span className="hidden sm:inline">DysonRelo Studio</span>
+            <span className="sm:hidden font-mono text-[11px]">DysonRelo</span>
+          </Link>
+
+          {/* Close / Exit to Portal */}
+          <Link
+            to="/portal"
+            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-[#854d0e] text-white hover:bg-[#0a0a0a] transition-all shadow-sm active:scale-95"
+            title="Close and return to Studio Portal"
+          >
+            <span>Close</span>
+            <X className="w-3.5 h-3.5 stroke-[3]" />
+          </Link>
 
         </div>
       </header>
 
       {/* ========================================================
-          MAIN VIEWPORT (RESPONSIVE: SIMPLE PORTRAIT / EDITORIAL LANDSCAPE)
+          MAIN VIEWPORT
+          - PORTRAIT: Simple, proper, direct form with zero clutter
+          - LANDSCAPE: Rich 2-column editorial concierge experience
           ======================================================== */}
-      <main className="flex-1 max-w-6xl w-full mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto py-5 sm:py-8 px-4 sm:px-6 lg:px-8">
         
-        {/* SUCCESS CONFIRMATION VIEW */}
+        {/* SUCCESS CONFIRMATION */}
         {done ? (
           <div 
-            className="max-w-xl mx-auto my-6 sm:my-12 p-6 sm:p-10 rounded-3xl border-2 border-[#D4AF37] shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200"
+            className="max-w-lg mx-auto my-6 sm:my-12 p-6 sm:p-10 rounded-3xl border-2 border-[#D4AF37] shadow-xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200"
             style={{ background: WARM_PAPER }}
           >
-            <div className="w-16 h-16 rounded-full bg-[#10b981]/15 border-2 border-[#10b981] flex items-center justify-center mx-auto text-[#10b981]">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#10b981]/15 border-2 border-[#10b981] flex items-center justify-center mx-auto text-[#10b981]">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <h2 
-                className="text-2xl sm:text-4xl font-bold tracking-tight text-[#0a0a0a]"
+                className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Referral Received
               </h2>
               <p className="text-xs sm:text-sm text-[#44382c] max-w-md mx-auto leading-relaxed">
-                Thank you for trusting Dyson &amp; Dyson. Bob Dyson and our senior fiduciary desk will personally review your introduction for <strong className="text-[#854d0e]">{form.referred_name}</strong> and reach out with white-glove care.
+                Thank you. Bob Dyson and our senior fiduciary relocation desk will personally review your introduction for <strong className="text-[#854d0e]">{form.referred_name}</strong> and reach out with white-glove care.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-black/5 border border-black/10 text-xs text-[#44382c] space-y-1.5 text-left max-w-md mx-auto">
+            <div className="p-3.5 rounded-2xl bg-black/5 border border-black/10 text-xs text-[#44382c] space-y-1.5 text-left max-w-md mx-auto">
               <div className="flex justify-between">
                 <span className="text-[#0a0a0a]/50">Referred:</span>
                 <span className="font-semibold text-[#0a0a0a] truncate max-w-[200px]">{form.referred_name} ({form.referred_email})</span>
@@ -186,12 +160,12 @@ export default function ReferSomeone() {
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-[#0a0a0a]/50">Fiduciary Desk:</span>
-                <span className="text-[#10b981] font-semibold">Assigned for Audit</span>
+                <span className="text-[#0a0a0a]/50">Desk Review:</span>
+                <span className="text-[#10b981] font-semibold">Active</span>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => { setForm(EMPTY); setDone(false); }}
@@ -200,53 +174,49 @@ export default function ReferSomeone() {
               >
                 Refer Another Contact
               </button>
-              <button
-                type="button"
-                onClick={handleHardHome}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-[#0a0a0a] bg-black/5 hover:bg-black/10 border border-black/15 transition-all cursor-pointer"
+              <Link
+                to="/portal"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-[#0a0a0a] bg-black/5 hover:bg-black/10 border border-black/15 transition-all text-center"
               >
-                Exit to Studio Portal
-              </button>
+                Exit to Studio
+              </Link>
             </div>
           </div>
         ) : (
           /* ========================================================
-              ACTIVE REFERRAL FORM:
-              - PORTRAIT (mobile): Clean, uncluttered, simple single column
-              - LANDSCAPE (desktop/tablet): Dual-column editorial layout
+              ACTIVE REFERRAL WORKSPACE
               ======================================================== */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
             
             {/* ----------------------------------------------------
-                COLUMN 1: EDITORIAL & FIDUCIARY INTRO
-                (Hidden or simplified on mobile portrait, rich on landscape)
+                LANDSCAPE-ONLY COLUMN: FULL EDITORIAL INTRO
+                (Hidden on mobile portrait to keep portrait proper and fast)
                 ---------------------------------------------------- */}
-            <div className="lg:col-span-5 space-y-4 sm:space-y-6 text-left">
-              
-              <div className="space-y-1.5 sm:space-y-2">
+            <div className="hidden lg:block lg:col-span-5 space-y-6 text-left">
+              <div className="space-y-2">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]/50 shadow-sm">
                   <Sparkles className="w-3 h-3 text-[#D4AF37]" />
                   <span>Fiduciary Concierge Introduction</span>
                 </div>
 
                 <h1 
-                  className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
+                  className="text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
                   Refer Someone to DysonRelo
                 </h1>
 
-                <p className="text-sm sm:text-base font-semibold text-[#854d0e]">
-                  {activeCopy.headline}
+                <p className="text-base font-semibold text-[#854d0e]">
+                  We Don't Sell Real Estate. We Vet &amp; Orchestrate.
                 </p>
 
-                <p className="text-xs sm:text-sm text-[#44382c] leading-relaxed">
-                  {activeCopy.subhead}
+                <p className="text-sm text-[#44382c] leading-relaxed">
+                  We represent your client, friend, or partner with an independent fiduciary shield across all 50 states — zero buyer fees, vetted local top agents, and complete peace of mind.
                 </p>
               </div>
 
-              {/* Landscape Fiduciary Pillars Card */}
-              <div className="p-4 sm:p-5 rounded-2xl border border-[#0a0a0a]/15 shadow-sm space-y-3" style={{ background: WARM_PAPER }}>
+              {/* Fiduciary Pillars Card */}
+              <div className="p-5 rounded-2xl border border-[#0a0a0a]/15 shadow-sm space-y-3" style={{ background: WARM_PAPER }}>
                 <div className="text-xs font-black uppercase tracking-wider text-[#854d0e] flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#10b981]" />
                   <span>The Dyson Fiduciary Shield:</span>
@@ -255,7 +225,7 @@ export default function ReferSomeone() {
                 <ul className="space-y-2 text-xs text-[#44382c] leading-relaxed">
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-[#10b981] shrink-0 mt-0.5 stroke-[3]" />
-                    <span><strong>100% Free to Buyers &amp; Movers:</strong> We charge zero buyer fees. Our compensation is handled independently.</span>
+                    <span><strong>100% Free to Buyers &amp; Movers:</strong> We charge zero buyer fees. Compensation is handled independently.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-4 h-4 text-[#10b981] shrink-0 mt-0.5 stroke-[3]" />
@@ -270,7 +240,7 @@ export default function ReferSomeone() {
                 <div className="pt-2 border-t border-[#0a0a0a]/10 flex items-center justify-between text-xs text-[#554433]">
                   <div className="flex items-center gap-1.5 font-semibold">
                     <Phone className="w-3.5 h-3.5 text-[#854d0e]" />
-                    <span>Fiduciary Desk:</span>
+                    <span>Direct Concierge Desk:</span>
                   </div>
                   <a href="tel:+18583531200" className="font-mono font-bold text-[#0a0a0a] hover:text-[#854d0e]">
                     (858) 353-1200
@@ -278,54 +248,67 @@ export default function ReferSomeone() {
                 </div>
               </div>
 
-              {/* Direct Quote */}
-              <div className="hidden lg:block italic text-xs text-[#554433] border-l-2 border-[#D4AF37] pl-3 py-1">
+              {/* Bob Dyson Quote */}
+              <div className="italic text-xs text-[#554433] border-l-2 border-[#D4AF37] pl-3 py-1">
                 "You are absolutely going to love our stressless Concierge Approach to transacting your real estate ventures."
                 <span className="block font-sans not-italic font-bold text-[#0a0a0a] mt-1">— Bob Dyson</span>
               </div>
-
             </div>
 
             {/* ----------------------------------------------------
-                COLUMN 2: CLEAN, CRISP FORM CARD ON WARM PAPER
-                (Proper & simple for portrait, polished for landscape)
+                FORM COLUMN (MOBILE-FIRST PROPER & SIMPLE)
                 ---------------------------------------------------- */}
-            <div className="lg:col-span-7">
+            <div className="w-full lg:col-span-7">
+              
+              {/* Mobile Header (Concise & Clean) */}
+              <div className="lg:hidden text-left mb-4 space-y-1">
+                <h1 
+                  className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  Refer Someone
+                </h1>
+                <p className="text-xs text-[#554433]">
+                  We'll take great care of them with independent fiduciary representation and zero buyer fees.
+                </p>
+              </div>
+
+              {/* Main Form Card on Warm Paper */}
               <div 
-                className="rounded-3xl p-5 sm:p-7 md:p-8 border border-[#0a0a0a]/15 shadow-xl space-y-5 text-left"
+                className="rounded-3xl p-4 sm:p-7 border border-[#0a0a0a]/15 shadow-lg space-y-4 text-left"
                 style={{
                   background: WARM_PAPER,
-                  boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1), 0 0 0 1px rgba(212,175,55,0.25)',
+                  boxShadow: '0 10px 30px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(212,175,55,0.2)',
                 }}
               >
                 
                 {/* 1. Category Switcher */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
-                      Who Are You Referring?
-                    </label>
-                    <span className="text-[11px] text-[#554433] hidden sm:inline">Select category</span>
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-[#854d0e] block">
+                    Who are you referring?
+                  </label>
 
                   <div className="grid grid-cols-2 gap-2">
-                    {TYPES.map(({ value, label, icon: Icon, short }) => {
+                    {TYPES.map(({ value, label, sub, icon: Icon }) => {
                       const active = form.referral_type === value;
                       return (
                         <button
                           key={value}
                           type="button"
                           onClick={() => set('referral_type', value)}
-                          className={`flex items-center gap-2 p-2.5 sm:p-3 rounded-2xl text-left transition-all cursor-pointer border ${
+                          className={`flex items-start gap-2 p-2.5 sm:p-3 rounded-xl text-left transition-all cursor-pointer border ${
                             active
-                              ? 'bg-[#0a0a0a] text-white border-[#0a0a0a] shadow-md font-bold'
+                              ? 'bg-[#0a0a0a] text-white border-[#0a0a0a] shadow font-bold'
                               : 'bg-white text-[#0a0a0a] border-[#0a0a0a]/15 hover:border-[#D4AF37]'
                           }`}
                         >
-                          <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-[#D4AF37]' : 'text-[#854d0e]'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${active ? 'text-[#D4AF37]' : 'text-[#854d0e]'}`} />
                           <div className="min-w-0">
-                            <span className="text-xs sm:text-sm block leading-tight font-semibold truncate">
+                            <span className="text-xs sm:text-sm block font-bold leading-tight">
                               {label}
+                            </span>
+                            <span className={`text-[10px] block leading-tight mt-0.5 ${active ? 'text-white/70' : 'text-[#554433]'}`}>
+                              {sub}
                             </span>
                           </div>
                         </button>
@@ -334,19 +317,13 @@ export default function ReferSomeone() {
                   </div>
                 </div>
 
-                {/* 2. Referral Details Form */}
-                <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+                {/* 2. Referral Form */}
+                <form onSubmit={handleSubmit} className="space-y-3 pt-1">
                   
-                  <div className="space-y-1">
-                    <label className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
-                      Contact Details
-                    </label>
-                  </div>
-
                   {/* Name and Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div className="space-y-1">
-                      <span className="text-xs font-semibold text-[#0a0a0a]/80">Their Full Name *</span>
+                      <span className="text-[11px] font-bold text-[#0a0a0a]/80">Their Full Name *</span>
                       <input
                         required
                         type="text"
@@ -358,7 +335,7 @@ export default function ReferSomeone() {
                     </div>
 
                     <div className="space-y-1">
-                      <span className="text-xs font-semibold text-[#0a0a0a]/80">Their Email Address *</span>
+                      <span className="text-[11px] font-bold text-[#0a0a0a]/80">Their Email Address *</span>
                       <input
                         required
                         type="email"
@@ -370,10 +347,10 @@ export default function ReferSomeone() {
                     </div>
                   </div>
 
-                  {/* Phone & Company/Current City */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Phone & Current City / Company */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div className="space-y-1">
-                      <span className="text-xs font-semibold text-[#0a0a0a]/80">Phone Number (optional)</span>
+                      <span className="text-[11px] font-bold text-[#0a0a0a]/80">Their Phone (optional)</span>
                       <input
                         type="tel"
                         placeholder="(555) 000-0000"
@@ -384,7 +361,7 @@ export default function ReferSomeone() {
                     </div>
 
                     <div className="space-y-1">
-                      <span className="text-xs font-semibold text-[#0a0a0a]/80">
+                      <span className="text-[11px] font-bold text-[#0a0a0a]/80">
                         {form.referral_type === 'agent' ? 'Brokerage Firm' : form.referral_type === 'vendor' ? 'Company Name' : 'Current City (optional)'}
                       </span>
                       <input
@@ -397,11 +374,11 @@ export default function ReferSomeone() {
                     </div>
                   </div>
 
-                  {/* Destination City & State for Relocation Client */}
+                  {/* Destination City & State (if relocating client) */}
                   {isRelocationClient && (
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2.5">
                       <div className="col-span-2 space-y-1">
-                        <span className="text-xs font-semibold text-[#0a0a0a]/80">Destination Target City</span>
+                        <span className="text-[11px] font-bold text-[#0a0a0a]/80">Destination City</span>
                         <input
                           type="text"
                           placeholder="e.g. Scottsdale or Austin"
@@ -411,10 +388,10 @@ export default function ReferSomeone() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <span className="text-xs font-semibold text-[#0a0a0a]/80">State</span>
+                        <span className="text-[11px] font-bold text-[#0a0a0a]/80">State</span>
                         <input
                           type="text"
-                          placeholder="e.g. AZ"
+                          placeholder="AZ"
                           maxLength={2}
                           value={form.destination_state}
                           onChange={e => set('destination_state', e.target.value.toUpperCase())}
@@ -425,11 +402,11 @@ export default function ReferSomeone() {
                   )}
 
                   {/* Referrer Info */}
-                  <div className="pt-2 border-t border-[#0a0a0a]/10 space-y-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-[#854d0e] block">
+                  <div className="pt-1.5 border-t border-[#0a0a0a]/10 space-y-1.5">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-[#854d0e] block">
                       Your Info (Optional)
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <input
                         type="text"
                         placeholder="Your name (optional)"
@@ -447,53 +424,52 @@ export default function ReferSomeone() {
                     </div>
                   </div>
 
-                  {/* Notes / Special Circumstances */}
+                  {/* Notes */}
                   <div className="space-y-1">
-                    <span className="text-xs font-semibold text-[#0a0a0a]/80">Notes or special circumstances (optional)</span>
+                    <span className="text-[11px] font-bold text-[#0a0a0a]/80">Notes or context (optional)</span>
                     <textarea
                       rows={2}
-                      placeholder="e.g. Looking for homes near great schools, needs 1031 exchange guidance..."
+                      placeholder="Special criteria, timeline, or circumstances..."
                       value={form.notes}
                       onChange={e => set('notes', e.target.value)}
                       className="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-white border border-[#0a0a0a]/20 text-[#0a0a0a] placeholder:text-stone-400 focus:outline-none focus:border-[#D4AF37] resize-none transition-all shadow-sm"
                     />
                   </div>
 
-                  {/* Action Buttons: Submit & Cancel */}
-                  <div className="pt-3 space-y-2.5">
+                  {/* Buttons: Submit & Cancel */}
+                  <div className="pt-2 space-y-2">
                     <button
                       type="submit"
                       disabled={!canSubmit || submitting}
-                      className="w-full py-3.5 px-6 rounded-full font-bold text-sm text-black flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="w-full py-3 px-6 rounded-full font-bold text-sm text-black flex items-center justify-center gap-2 cursor-pointer shadow-md hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
                     >
                       {submitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin text-black" />
-                          <span>Routing Referral to Fiduciary Desk…</span>
+                          <span>Submitting Referral…</span>
                         </>
                       ) : (
                         <>
                           <UserPlus className="w-4 h-4 text-black" />
-                          <span>Submit Referral to Bob Dyson Desk</span>
-                          <ArrowRight className="w-4 h-4 text-black ml-1" />
+                          <span>Send Referral</span>
+                          <ArrowRight className="w-4 h-4 text-black ml-0.5" />
                         </>
                       )}
                     </button>
 
-                    {/* Secondary Bottom Exit Button */}
-                    <button
-                      type="button"
-                      onClick={handleExit}
-                      className="w-full py-2.5 px-4 rounded-full text-xs font-bold text-[#554433] hover:text-[#0a0a0a] bg-black/5 hover:bg-black/10 border border-black/10 flex items-center justify-center gap-1.5 cursor-pointer transition-all"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5 text-[#854d0e]" />
-                      <span>Cancel &amp; Return to Studio Portal</span>
-                    </button>
+                    {/* Exit Link */}
+                    <div className="text-center pt-1">
+                      <button
+                        type="button"
+                        onClick={handleBack}
+                        className="text-xs font-semibold text-[#554433] hover:text-[#0a0a0a] transition-colors inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <span>Cancel &amp; Return to Previous Page</span>
+                      </button>
+                    </div>
 
-                    <p className="text-[11px] text-[#554433] text-center pt-1">
-                      All introductions are handled confidentially under California DRE #02303118 fiduciary oversight.
-                    </p>
                   </div>
                 </form>
 
@@ -505,9 +481,9 @@ export default function ReferSomeone() {
 
       </main>
 
-      {/* Simple Footer */}
-      <footer className="py-4 border-t border-[#0a0a0a]/10 text-center text-xs text-[#554433]">
-        The Dyson &amp; Dyson Companies, Inc. · Independent Relocation Concierge &amp; Fiduciary Network
+      {/* Footer */}
+      <footer className="py-3 border-t border-[#0a0a0a]/10 text-center text-[11px] text-[#554433]">
+        The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118 · Independent Fiduciary Relocation Network
       </footer>
 
     </div>
