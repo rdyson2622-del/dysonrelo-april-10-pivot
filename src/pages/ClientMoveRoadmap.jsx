@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from '@/components/ui/use-toast';
+import VisualProjectRoadmap, { ROADMAP_TEMPLATES } from '@/components/roadmap/VisualProjectRoadmap';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -26,6 +27,16 @@ export default function ClientMoveRoadmap() {
   const [newMessageText, setNewMessageText] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
   const [expandedPhase, setExpandedPhase] = useState(2); // Phase 2 active by default
+  const [activePhaseNumber, setActivePhaseNumber] = useState(2);
+
+  // Selected visual roadmap template (dynamic matching to project requirements)
+  const [selectedTemplate, setSelectedTemplate] = useState(() => {
+    const qType = (searchParams.get('type') || searchParams.get('prompt') || '').toLowerCase();
+    if (qType.includes('tax') || qType.includes('1031')) return 'tax_strategy';
+    if (qType.includes('escrow')) return 'escrow_audit';
+    if (qType.includes('agent') || qType.includes('vet')) return 'agent_vetting';
+    return 'relocation';
+  });
 
   // Load client data & communications
   useEffect(() => {
@@ -345,7 +356,27 @@ export default function ClientMoveRoadmap() {
         </section>
 
         {/* ========================================================
-            2. THE RELOCATION ROADMAP (STEP-BY-STEP MILESTONES)
+            2. VISIBLE PROJECT ROADMAP (DYNAMIC TESLA FSD ROUTE LINE)
+            Visible linear route with glowing milestones matching project requirements
+            ======================================================== */}
+        <VisualProjectRoadmap
+          selectedTemplate={selectedTemplate}
+          onSelectTemplate={(tmplId) => {
+            setSelectedTemplate(tmplId);
+            setActivePhaseNumber(2);
+            setExpandedPhase(2);
+          }}
+          activePhaseNumber={activePhaseNumber}
+          onSelectPhase={(phaseNum) => {
+            setActivePhaseNumber(phaseNum);
+            setExpandedPhase(phaseNum);
+          }}
+          originCity={originCity}
+          destinationCity={destinationCity}
+        />
+
+        {/* ========================================================
+            3. MILESTONES & FIDUCIARY CHECKPOINTS (EXPANDABLE DETAILS)
             ======================================================== */}
         <section className="space-y-3">
           <div className="flex items-center justify-between pb-1 border-b border-[#0a0a0a]/15">
@@ -354,7 +385,7 @@ export default function ClientMoveRoadmap() {
                 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0a0a0a]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Your Relocation Roadmap
+                {ROADMAP_TEMPLATES[selectedTemplate]?.name || 'Relocation Roadmap'} Milestones
               </h2>
               <p className="text-xs text-[#854d0e] font-semibold">
                 Milestones &amp; Fiduciary Checkpoints Along Your Move
@@ -362,15 +393,15 @@ export default function ClientMoveRoadmap() {
             </div>
 
             <div className="text-xs font-mono font-bold text-[#0a0a0a]">
-              Phase 2 of 6 Active
+              Phase {activePhaseNumber} of {(ROADMAP_TEMPLATES[selectedTemplate]?.phases || ROADMAP_PHASES).length} Active
             </div>
           </div>
 
           <div className="space-y-2.5">
-            {ROADMAP_PHASES.map((phase) => {
+            {(ROADMAP_TEMPLATES[selectedTemplate]?.phases || ROADMAP_PHASES).map((phase) => {
               const isExpanded = expandedPhase === phase.number;
-              const isCompleted = phase.status === 'completed';
-              const isActive = phase.status === 'active';
+              const isCompleted = phase.number < activePhaseNumber || phase.status === 'completed';
+              const isActive = phase.number === activePhaseNumber;
 
               return (
                 <div
@@ -432,7 +463,7 @@ export default function ClientMoveRoadmap() {
                           Dyson Fiduciary Deliverable:
                         </div>
                         <p className="text-white/85 text-xs">
-                          {phase.dysonDeliverable}
+                          {phase.dysonDeliverable || phase.deliverable}
                         </p>
                       </div>
 
@@ -440,7 +471,7 @@ export default function ClientMoveRoadmap() {
                         <div className="text-[10px] text-white/50 uppercase tracking-wider font-semibold">
                           Checkpoint Actions:
                         </div>
-                        {phase.items.map((item, idx) => (
+                        {phase.items?.map((item, idx) => (
                           <div key={idx} className="flex items-start gap-2 text-white/75">
                             <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isCompleted ? 'text-[#10b981]' : isActive ? 'text-[#D4AF37]' : 'text-white/30'}`} />
                             <span>{item}</span>
