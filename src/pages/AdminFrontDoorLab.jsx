@@ -280,12 +280,19 @@ export default function AdminFrontDoorLab() {
             </div>
           )}
 
-          {/* TOP BLACK BAR: SLEEK REDUCED-HEIGHT HEADER */}
+          {/* TOP BAR: TAN BACKDROP WITH BLACK BRAND STATEMENT CARD */}
           <nav
-            className="px-4 sm:px-5 py-2 flex items-center justify-between relative shadow-md"
-            style={{ background: '#0a0a0a', borderBottom: `1.5px solid ${GOLD}` }}
+            className="px-4 sm:px-5 py-2.5 flex flex-wrap lg:flex-nowrap items-center justify-between gap-3 relative shadow-md"
+            style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
-            <div className="flex items-center gap-2.5">
+            {/* BRAND STATEMENT: RETAINED IN BLACK WITH GOLD TRIM */}
+            <div 
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl shadow-md border"
+              style={{
+                background: '#0a0a0a',
+                borderColor: `${GOLD}80`,
+              }}
+            >
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
@@ -304,12 +311,20 @@ export default function AdminFrontDoorLab() {
               </div>
             </div>
 
-            {/* Center Clean Links (Like Homes.com & Realtor) */}
-            <div className="hidden lg:flex items-center gap-6 text-xs text-white/80 font-medium">
-              <Link to="/corporate-relo" className="hover:text-[#D4AF37] transition-colors">Corporate Relo</Link>
-              <Link to="/partner-benefits" className="hover:text-[#D4AF37] transition-colors">Agent Network</Link>
-              <Link to="/transparency" className="hover:text-[#D4AF37] transition-colors">Transparency</Link>
-              <Link to="/dnn-news" className="hover:text-[#D4AF37] transition-colors">Daily 6AM News</Link>
+            {/* CENTER NAV LINKS IN BLACK FONT (RENAMED PER INSTRUCTION, 1 OR 2 LINES AS NECESSARY) */}
+            <div className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-6 gap-y-1 text-xs sm:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
+              <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+                Corp Relocation
+              </Link>
+              <Link to="/partner-benefits" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+                Agent Network
+              </Link>
+              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+                Transparency
+              </Link>
+              <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+                DNN Real Estate News
+              </Link>
             </div>
 
             {/* Right Actions: Ambience + Workspaces Access */}
