@@ -491,7 +491,8 @@ export default function LuxuryHeroShowcase({
                 className="text-lg sm:text-xl lg:text-2xl italic font-bold text-[#0a0a0a] tracking-normal leading-snug"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                “You are absolutely going to love our stressless new Concierge Approach to transacting your real estate ventures.”
+                <span>“You are absolutely going to love our stressless </span>
+                <span className="block">Concierge Approach to transacting your real estate ventures.”</span>
               </p>
               <div className="text-right pr-1 sm:pr-3 text-xs sm:text-sm md:text-base font-bold text-[#854d0e] tracking-wide mt-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 — Bob Dyson
