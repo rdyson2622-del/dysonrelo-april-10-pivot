@@ -52,17 +52,6 @@ export default function LuxuryHeroShowcase({
   const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, new_construction
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
 
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      el.classList.add('ring-4', 'ring-[#D4AF37]', 'transition-all', 'duration-500');
-      setTimeout(() => {
-        el.classList.remove('ring-4', 'ring-[#D4AF37]');
-      }, 2500);
-    }
-  };
-
   return (
     <div className="w-full">
       {/* 2-COLUMN STRUCTURE:
@@ -197,17 +186,17 @@ export default function LuxuryHeroShowcase({
               </button>
             </div>
 
-            {/* QUICK-JUMP LINKS: 6AM NEWS DESK & CONCIERGE ADVANTAGE EXPLANATIONS */}
+            {/* DIRECT ACCESS: 6AM NEWS DESK & CONCIERGE ADVANTAGE */}
             <div className="pt-2 mt-1 border-t border-white/10 space-y-1.5">
               <div className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37]/90 px-0.5 flex items-center justify-between">
                 <span>Detailed Systems:</span>
-                <span className="text-[8px] text-white/50 lowercase tracking-normal">click to view box</span>
+                <span className="text-[8px] text-white/50 lowercase tracking-normal">direct access</span>
               </div>
 
               {/* 1. 6AM NEWS BROADCAST LINK */}
               <button
                 type="button"
-                onClick={() => scrollToSection('dnn-broadcast-engine')}
+                onClick={() => navigate('/dnn-news')}
                 className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
               >
                 <div className="min-w-0 pr-1">
@@ -225,7 +214,7 @@ export default function LuxuryHeroShowcase({
                   </p>
                 </div>
                 <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                  <span>View</span>
+                  <span>Open</span>
                   <ArrowRight className="w-2.5 h-2.5" />
                 </span>
               </button>
@@ -233,7 +222,7 @@ export default function LuxuryHeroShowcase({
               {/* 2. THE CONCIERGE ADVANTAGE LINK */}
               <button
                 type="button"
-                onClick={() => scrollToSection('concierge-advantage-engine')}
+                onClick={() => navigate('/relocation-intake')}
                 className="w-full group px-2.5 py-1.5 rounded-xl border border-white/10 bg-[#121212] hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all text-left cursor-pointer flex items-center justify-between shadow-sm"
               >
                 <div className="min-w-0 pr-1">
@@ -251,7 +240,7 @@ export default function LuxuryHeroShowcase({
                   </p>
                 </div>
                 <span className="text-[8.5px] text-[#D4AF37] underline font-bold whitespace-nowrap shrink-0 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                  <span>View</span>
+                  <span>Open</span>
                   <ArrowRight className="w-2.5 h-2.5" />
                 </span>
               </button>

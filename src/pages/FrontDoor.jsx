@@ -5,7 +5,6 @@ import {
   SlidersHorizontal, Globe, Lock 
 } from 'lucide-react';
 import LabListingCard from '@/components/admin/frontdoor/LabListingCard';
-import DualFeatureEngine from '@/components/admin/frontdoor/DualFeatureEngine';
 import GoDaddyDomainModal from '@/components/admin/frontdoor/GoDaddyDomainModal';
 import PartnerPortalGateways from '@/components/admin/frontdoor/PartnerPortalGateways';
 import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionDeck';
@@ -675,34 +674,7 @@ export default function FrontDoor() {
             </div>
           </section>
 
-          {/* DUAL FEATURE ENGINE & DETAILED EXPLANATIONS (LINKED FROM SIDEBAR) */}
-          <section 
-            id="dual-feature-engine" 
-            className="px-5 sm:px-8 py-8 border-t scroll-mt-20" 
-            style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}
-          >
-            <div className="max-w-6xl mx-auto mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3
-                  className="text-xl sm:text-2xl font-bold text-[#0a0a0a]"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  Systems &amp; Operations: 6AM News Desk &amp; Concierge Advantage
-                </h3>
-                <p className="text-xs text-[#554738] font-medium">
-                  Detailed briefings on our daily media broadcast pipeline and independent fiduciary buyer-advocacy standards.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="text-xs font-bold text-[#0a0a0a] hover:text-[#b8920a] underline cursor-pointer"
-              >
-                ↑ Back to Top
-              </button>
-            </div>
-            <DualFeatureEngine latestBroadcast={latestBroadcast} />
-          </section>
+
 
           {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
           <section className="px-5 sm:px-8 py-6 border-t" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
