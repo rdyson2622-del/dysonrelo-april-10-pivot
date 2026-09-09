@@ -11,7 +11,6 @@ import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCo
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
-import SubscriberCommandDeck from '@/components/admin/frontdoor/SubscriberCommandDeck';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -368,17 +367,8 @@ export default function FrontDoor() {
             </div>
           </nav>
 
-          {/* RECOGNIZED SUBSCRIBER COMMAND CENTER & DIALOGUE LEDGER */}
-          {showSubscriberMode && (
-            <SubscriberCommandDeck
-              currentUser={currentUser || { full_name: 'Bob Dyson', portal_role: 'client' }}
-              onSimulateRoleChange={(roleKey) => {
-                setSelectedRoleForSubscription(roleKey);
-              }}
-            />
-          )}
-
-          {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO */}
+          {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO:
+              Behind the subscriber gate, this swaps to the Subscriber Command Card + Personal Sidebar! */}
           <LuxuryHeroShowcase
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -387,6 +377,8 @@ export default function FrontDoor() {
             setSearchEngine={setSearchEngine}
             onQuickMarketClick={handleSearch}
             currentUser={currentUser}
+            isSubscriberMode={showSubscriberMode}
+            onToggleSubscriberMode={() => setShowSubscriberMode(!showSubscriberMode)}
           />
 
           {/* DIRECTLY UNDER THE LANDING PAGE IN A SCROLL: EXPLORE TOP RELOCATION DESTINATIONS */}

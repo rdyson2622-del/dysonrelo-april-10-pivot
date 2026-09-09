@@ -56,6 +56,21 @@ export default function LuxuryHeroShowcase({
   const [activeBgIndex, setActiveBgIndex] = useState(0);
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
 
+  const subscriberName = currentUser?.full_name ? currentUser.full_name.split(' ')[0] : (currentUser?.email?.split('@')[0] || 'Bob');
+  const isAdmin = currentUser?.role === 'admin';
+  const userRole = currentUser?.portal_role || (isAdmin ? 'admin' : 'client');
+  const workspaceDest = isAdmin ? '/admin' : 
+                        userRole === 'agent' ? '/agent-command-center' : 
+                        userRole === 'hr' ? '/corporate-relo' : 
+                        userRole === 'broker' ? '/brokerage' : '/home';
+  const workspaceLabel = isAdmin ? 'Open Admin Console' : 
+                         userRole === 'agent' ? 'Open Agent Workspace' : 
+                         userRole === 'hr' ? 'Open Corporate Suite' : 
+                         userRole === 'broker' ? 'Open Brokerage Portal' : 'Continue Your Move';
+  const activeProjectLabel = isAdmin ? 'DysonRelo Platform Operations' : 
+                            userRole === 'agent' ? '2 Incoming Client Referrals' : 
+                            userRole === 'hr' ? '3 Active Employee Relocations' : 'San Jose → Scottsdale, AZ';
+
   const scrollToSearch = () => {
     const searchForm = document.getElementById('hero-search-bar');
     const searchInput = document.getElementById('hero-search-input');
@@ -97,77 +112,123 @@ export default function LuxuryHeroShowcase({
               <span>55+ YEARS • NATIONWIDE CONCIERGE</span>
             </div>
 
-            <button
-              type="button"
-              onClick={scrollToSearch}
-              className="text-center w-full p-2.5 rounded-xl border border-white/10 hover:border-[#D4AF37] bg-[#141414] hover:bg-[#1a170f] transition-all cursor-pointer group shadow-sm text-left"
-              title="Click to jump directly to Search Destinations"
-            >
-              <div className="text-center w-full">
-                <h2
-                  className="font-bold leading-tight text-white tracking-tight group-hover:text-[#D4AF37] transition-colors"
+            {isSubscriberMode ? (
+              /* PERSONAL SUBSCRIBER SIDEBAR CONSOLE */
+              <div className="w-full space-y-2 pt-1">
+                <div 
+                  className="p-3 rounded-xl border text-left shadow-lg space-y-2"
                   style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
+                    background: 'linear-gradient(135deg, #18140c 0%, #0d0d0d 100%)',
+                    borderColor: `${GOLD}70`,
                   }}
                 >
-                  Search Destinations
-                </h2>
-                <p
-                  className="font-semibold mt-0.5 tracking-wide leading-snug"
-                  style={{
-                    fontFamily: 'Cormorant Garamond, serif',
-                    fontSize: '1.1rem',
-                    color: '#fce38a',
-                  }}
-                >
-                  Or Let Us Vet Any Listing For You.
-                </p>
-                <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
-                  Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
-                </p>
-                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-[#D4AF37] border border-[#D4AF37]/50 bg-[#D4AF37]/10 group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
-                  <Search className="w-2.5 h-2.5" />
-                  <span>Click to Search</span>
-                  <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+                  <div className="flex items-center justify-between gap-1">
+                    <span 
+                      className="text-[8.5px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full text-black shadow-sm"
+                      style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+                    >
+                      {isAdmin ? 'ADMIN CONSOLE' : 'SUBSCRIBER WORKSPACE'}
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" title="Active File Connected" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      {subscriberName}'s Workspace
+                    </h3>
+                    <p className="text-[10.5px] text-[#fce38a] font-medium mt-0.5 leading-snug">
+                      Active: {activeProjectLabel}
+                    </p>
+                  </div>
+
+                  {/* One-tap direct access to personal workspace */}
+                  <button
+                    type="button"
+                    onClick={() => navigate(workspaceDest)}
+                    className="w-full py-2 px-3 rounded-lg text-xs font-bold text-black flex items-center justify-between shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer group"
+                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
+                  >
+                    <span>{workspaceLabel}</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
                 </div>
               </div>
-            </button>
+            ) : (
+              /* PUBLIC VISITOR SIDEBAR TOP */
+              <>
+                <button
+                  type="button"
+                  onClick={scrollToSearch}
+                  className="text-center w-full p-2.5 rounded-xl border border-white/10 hover:border-[#D4AF37] bg-[#141414] hover:bg-[#1a170f] transition-all cursor-pointer group shadow-sm text-left"
+                  title="Click to jump directly to Search Destinations"
+                >
+                  <div className="text-center w-full">
+                    <h2
+                      className="font-bold leading-tight text-white tracking-tight group-hover:text-[#D4AF37] transition-colors"
+                      style={{
+                        fontFamily: 'Cormorant Garamond, serif',
+                        fontSize: 'clamp(1.25rem, 1.6vw, 1.55rem)',
+                      }}
+                    >
+                      Search Destinations
+                    </h2>
+                    <p
+                      className="font-semibold mt-0.5 tracking-wide leading-snug"
+                      style={{
+                        fontFamily: 'Cormorant Garamond, serif',
+                        fontSize: '1.1rem',
+                        color: '#fce38a',
+                      }}
+                    >
+                      Or Let Us Vet Any Listing For You.
+                    </p>
+                    <p className="text-[11px] text-white/70 font-sans font-medium mt-1 leading-relaxed">
+                      Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
+                    </p>
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-[#D4AF37] border border-[#D4AF37]/50 bg-[#D4AF37]/10 group-hover:bg-[#D4AF37] group-hover:text-black transition-all">
+                      <Search className="w-2.5 h-2.5" />
+                      <span>Click to Search</span>
+                      <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+                </button>
 
-            {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN */}
-            <div className="w-full pt-1.5 pb-0.5">
-              {!currentUser ? (
-                <button
-                  type="button"
-                  onClick={() => navigate('/login')}
-                  className="w-full py-1.5 px-2.5 rounded-xl border border-[#D4AF37]/50 bg-[#121212] hover:bg-[#1a170f] hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
-                >
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <LogIn className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                    <span className="text-[10.5px] font-bold text-white/90 group-hover:text-[#D4AF37] truncate">
-                      Already Subscribed? <span className="text-[#D4AF37] underline underline-offset-2">Sign In</span>
-                    </span>
-                  </div>
-                  <ArrowRight className="w-3 h-3 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => navigate(currentUser.role === 'admin' ? '/admin' : '/home')}
-                  className="w-full py-1.5 px-2.5 rounded-xl border border-[#10b981]/50 bg-[#10b981]/10 hover:bg-[#10b981]/20 transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
-                >
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
-                    <span className="text-[10px] font-bold text-white/90 truncate">
-                      Signed In: <span className="text-[#10b981] font-semibold">{currentUser.full_name || currentUser.email}</span>
-                    </span>
-                  </div>
-                  <span className="text-[9px] font-bold text-[#10b981] flex items-center gap-0.5 shrink-0">
-                    Workspace <ArrowRight className="w-2.5 h-2.5" />
-                  </span>
-                </button>
-              )}
-            </div>
+                {/* 1. RETURNING SUBSCRIBER QUICK SIGN-IN */}
+                <div className="w-full pt-1.5 pb-0.5">
+                  {!currentUser ? (
+                    <button
+                      type="button"
+                      onClick={() => navigate('/login')}
+                      className="w-full py-1.5 px-2.5 rounded-xl border border-[#D4AF37]/50 bg-[#121212] hover:bg-[#1a170f] hover:border-[#D4AF37] transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <LogIn className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                        <span className="text-[10.5px] font-bold text-white/90 group-hover:text-[#D4AF37] truncate">
+                          Already Subscribed? <span className="text-[#D4AF37] underline underline-offset-2">Sign In</span>
+                        </span>
+                      </div>
+                      <ArrowRight className="w-3 h-3 text-[#D4AF37] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => navigate(currentUser.role === 'admin' ? '/admin' : '/home')}
+                      className="w-full py-1.5 px-2.5 rounded-xl border border-[#10b981]/50 bg-[#10b981]/10 hover:bg-[#10b981]/20 transition-all text-left cursor-pointer flex items-center justify-between group shadow-sm"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+                        <span className="text-[10px] font-bold text-white/90 truncate">
+                          Signed In: <span className="text-[#10b981] font-semibold">{currentUser.full_name || currentUser.email}</span>
+                        </span>
+                      </div>
+                      <span className="text-[9px] font-bold text-[#10b981] flex items-center gap-0.5 shrink-0">
+                        Workspace <ArrowRight className="w-2.5 h-2.5" />
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
 
             {/* ORGANIZED CONCIERGE ACTIONS & TO-DO'S */}
             <div className="space-y-1.5 pt-1.5">
