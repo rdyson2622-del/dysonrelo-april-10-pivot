@@ -267,14 +267,14 @@ export default function FrontDoor() {
             </div>
           )}
 
-          {/* TOP BAR: TAN BACKDROP WITH BLACK BRAND STATEMENT CARD */}
+          {/* TOP BAR: TAN BACKDROP WITH COMPACT BRAND PILL & SINGLE-ROW NAVIGATION */}
           <nav
-            className="px-4 sm:px-5 py-2.5 flex flex-wrap lg:flex-nowrap items-center justify-between gap-3 relative shadow-md"
+            className="px-3 sm:px-5 py-1.5 flex items-center justify-between gap-2 sm:gap-4 relative shadow-sm overflow-x-auto overflow-y-visible"
             style={{ background: TAN_BG, borderBottom: `1.5px solid ${GOLD}` }}
           >
-            {/* BRAND STATEMENT: RETAINED IN BLACK WITH GOLD TRIM */}
+            {/* BRAND STATEMENT: COMPACT WIDTH & REDUCED VERTICAL SIZE */}
             <div 
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl shadow-md border"
+              className="flex items-center gap-2 px-2.5 py-1 rounded-lg shadow-sm border shrink-0"
               style={{
                 background: '#0a0a0a',
                 borderColor: `${GOLD}80`,
@@ -283,39 +283,39 @@ export default function FrontDoor() {
               <img
                 src={DYSON_LOGO}
                 alt="Dyson & Dyson"
-                className="h-7 sm:h-8 w-auto object-contain shrink-0 drop-shadow"
+                className="h-5 sm:h-6 w-auto object-contain shrink-0 drop-shadow"
               />
-              <div>
+              <div className="leading-tight">
                 <span
-                  className="font-bold text-base sm:text-lg tracking-wider text-white"
+                  className="font-bold text-sm sm:text-base tracking-wide text-white block leading-tight"
                   style={{ fontFamily: 'Cormorant Garamond, serif' }}
                 >
                   DysonRelo.com
                 </span>
-                <span className="text-[9.5px] text-[#D4AF37] block tracking-widest uppercase font-sans font-semibold -mt-0.5">
+                <span className="text-[8px] sm:text-[8.5px] text-[#D4AF37] block tracking-wider uppercase font-sans font-semibold leading-tight">
                   Nationwide Relocation Concierge
                 </span>
               </div>
             </div>
 
-            {/* CENTER NAV LINKS IN BLACK FONT (RENAMED PER INSTRUCTION, 1 OR 2 LINES AS NECESSARY) */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-6 gap-y-1 text-xs sm:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight">
-              <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+            {/* CENTER NAV LINKS IN BLACK FONT: STRICTLY ONE ROW */}
+            <div className="flex items-center flex-nowrap whitespace-nowrap gap-3 sm:gap-4 md:gap-5 lg:gap-6 text-xs sm:text-[12.5px] text-[#0a0a0a] font-bold tracking-tight shrink-0">
+              <Link to="/corporate-relo" className="hover:text-[#b8920a] transition-colors whitespace-nowrap hover:underline underline-offset-4">
                 Corp Relocation
               </Link>
-              <Link to="/partner-benefits" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+              <Link to="/partner-benefits" className="hover:text-[#b8920a] transition-colors whitespace-nowrap hover:underline underline-offset-4">
                 Agent Network
               </Link>
-              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+              <Link to="/transparency" className="hover:text-[#b8920a] transition-colors whitespace-nowrap hover:underline underline-offset-4">
                 Transparency
               </Link>
-              <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors hover:underline underline-offset-4">
+              <Link to="/dnn-news" className="hover:text-[#b8920a] transition-colors whitespace-nowrap hover:underline underline-offset-4">
                 DNN Real Estate News
               </Link>
             </div>
 
-            {/* Right Actions: Ambience + Sleek Workspaces Access */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Right Actions: Ambience + Sleek Workspaces Access (Reduced Vertical Size) */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
 
@@ -325,7 +325,7 @@ export default function FrontDoor() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => navigate(userPortalDest || '/home')}
-                      className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                      className="flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[11px] font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm shrink-0"
                       style={{
                         background: 'linear-gradient(135deg, #1f1a0e 0%, #0d0d0d 100%)',
                         border: `1.2px solid ${GOLD}`,
@@ -336,7 +336,7 @@ export default function FrontDoor() {
                       <Building className="w-3 h-3 text-[#D4AF37]" />
                       <span>{userRoleLabel || 'My Workspace'}</span>
                       <span
-                        className="text-[8.5px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
+                        className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
                         style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
                       >
                         <span>ENTER</span>
@@ -345,7 +345,7 @@ export default function FrontDoor() {
                     </button>
                     <button
                       onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                      className="p-1 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                      className="p-1 rounded-full text-stone-700 hover:text-black transition-colors cursor-pointer"
                       title="Switch Workspace / Options"
                     >
                       <ChevronDown className="w-3 h-3" />
@@ -354,7 +354,7 @@ export default function FrontDoor() {
                 ) : (
                   <button
                     onClick={() => setPortalMenuOpen(!portalMenuOpen)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm"
+                    className="flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[11px] font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm shrink-0"
                     style={{
                       background: '#141414',
                       border: '1px solid rgba(212,175,55,0.4)',

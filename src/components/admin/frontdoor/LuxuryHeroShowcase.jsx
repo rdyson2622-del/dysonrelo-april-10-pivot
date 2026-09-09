@@ -200,22 +200,22 @@ export default function LuxuryHeroShowcase({
         {/* ========================================================
             RIGHT CANVAS: 
             1. FEATURED DESTINATION BAR (ALL ON ONE LINE)
-            2. PURE ARCHITECTURAL HOUSE PHOTO WITH TAN BACKDROP
+            2. PURE ARCHITECTURAL HOUSE PHOTO ON TAN BACKDROP
             3. CLEAN LUXURY SEARCH PILL FIRST
-            4. COPY & CATEGORY TABS
+            4. COPY & CATEGORY TABS IN BLACK FONT COLOR
             ======================================================== */}
         <div 
-          className="flex-1 p-5 sm:p-6 lg:p-7 flex flex-col justify-start text-white gap-4 sm:gap-5"
+          className="flex-1 p-4 sm:p-6 lg:p-7 flex flex-col justify-start gap-4 sm:gap-5"
           style={{
-            background: 'radial-gradient(ellipse at top, #151515 0%, #0a0a0a 100%)',
+            background: '#ede0cc',
           }}
         >
           {/* ================= 1. FEATURED DESTINATIONS BAR (ALL ON ONE LINE) ================= */}
           <div 
-            className="w-full max-w-2xl mx-auto flex items-center justify-between gap-2 px-3 py-1.5 rounded-full text-xs shadow-lg"
+            className="w-full max-w-2xl mx-auto flex items-center justify-between gap-2 px-3 py-1.5 rounded-full text-xs shadow-md"
             style={{
               background: '#0a0a0a',
-              border: `1.5px solid ${GOLD}75`,
+              border: `1.5px solid ${GOLD}85`,
             }}
           >
             <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
@@ -244,7 +244,7 @@ export default function LuxuryHeroShowcase({
             </div>
           </div>
 
-          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO (CLEAN & BORDERLESS) ================= */}
+          {/* ================= 2. PURE ARCHITECTURAL HOUSE PHOTO (ON TAN BACKDROP) ================= */}
           <div className="w-full max-w-2xl mx-auto relative rounded-xl overflow-hidden shadow-2xl aspect-[16/10] sm:aspect-[16/9] bg-black">
             <img
               src={currentBg.url}
@@ -267,7 +267,7 @@ export default function LuxuryHeroShowcase({
               style={{
                 background: '#faf6ee',
                 border: `2px solid ${GOLD}`,
-                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
               }}
             >
               <div className="flex items-center gap-2.5 w-full pl-5 py-1">
@@ -304,15 +304,15 @@ export default function LuxuryHeroShowcase({
               </div>
             </form>
 
-            {/* THEN: THE HEADER & EXPLANATION COPY */}
-            <div className="space-y-1 pt-1">
+            {/* THEN: THE HEADER & EXPLANATION COPY (ALL IN BLACK FONT COLOR) */}
+            <div className="space-y-1 pt-1 text-center">
               <h3 
-                className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white"
+                className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#0a0a0a]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 Search Destinations or let us Vet Any Listing for you.
               </h3>
-              <p className="text-xs sm:text-sm text-white/70 font-medium">
+              <p className="text-xs sm:text-sm text-[#0a0a0a]/80 font-semibold">
                 Enter any destination market, or paste a link from Realtor, Zillow, or Homes.com
               </p>
             </div>
@@ -330,8 +330,8 @@ export default function LuxuryHeroShowcase({
                   onClick={() => setSearchTab(tab.id)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
                     searchTab === tab.id
-                      ? 'bg-[#D4AF37] text-black shadow-md scale-105'
-                      : 'bg-[#181818] text-white/75 hover:text-white border border-white/15'
+                      ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#0a0a0a] shadow-md scale-105'
+                      : 'bg-[#0a0a0a]/90 text-white hover:bg-[#0a0a0a] border border-[#D4AF37]/40'
                   }`}
                 >
                   {tab.label}
@@ -339,10 +339,10 @@ export default function LuxuryHeroShowcase({
               ))}
             </div>
 
-            {/* THEN: VETTING HELPER NOTE */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-white/75 pt-1">
+            {/* THEN: VETTING HELPER NOTE (IN BLACK FONT COLOR) */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-[#0a0a0a] pt-1 font-medium">
               <span>Looking at a specific listing?</span>
-              <span className="text-[#fce38a] font-bold">
+              <span className="text-[#854d0e] font-bold">
                 Subscribe to have our fiduciary team vet the listing agent &amp; audit the escrow for you.
               </span>
               <button
@@ -352,7 +352,7 @@ export default function LuxuryHeroShowcase({
                   if (elem) elem.scrollIntoView({ behavior: 'smooth' });
                   else navigate('/subscribe');
                 }}
-                className="underline text-[#D4AF37] hover:text-[#fce38a] font-semibold cursor-pointer ml-1"
+                className="underline text-[#78350f] hover:text-black font-bold cursor-pointer ml-1"
               >
                 (Subscription Required)
               </button>

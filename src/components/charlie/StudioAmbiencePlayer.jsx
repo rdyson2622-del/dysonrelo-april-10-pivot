@@ -98,7 +98,7 @@ export default function StudioAmbiencePlayer() {
     <div className="flex items-center gap-1.5">
       <button
         onClick={togglePlay}
-        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-bold border transition-all cursor-pointer shadow-sm ${
+        className={`flex items-center gap-1.5 px-2.5 py-0.5 h-7 rounded-full text-[10px] font-bold border transition-all cursor-pointer shadow-sm shrink-0 ${
           isPlaying
             ? 'bg-[#1a1508] border-[#D4AF37] text-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.25)]'
             : 'bg-[#141414] border-white/20 text-white/80 hover:text-white hover:border-[#D4AF37]/50'
