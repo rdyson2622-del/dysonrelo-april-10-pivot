@@ -46,6 +46,7 @@ export default function LuxuryHeroShowcase({
   searchEngine = 'realtor',
   setSearchEngine,
   onQuickMarketClick,
+  currentUser,
 }) {
   const navigate = useNavigate();
   const [activeBgIndex, setActiveBgIndex] = useState(0);
@@ -256,6 +257,26 @@ export default function LuxuryHeroShowcase({
             </span>
             <span className="font-mono text-white/80">CA DRE #02303118</span>
           </div>
+
+          {/* ADMIN TEAM QUICK ENTRY (DEDICATED FOR ADMINS, OUT OF TOP NAV) */}
+          {currentUser?.role === 'admin' && (
+            <div className="pt-2 mt-2 border-t border-[#D4AF37]/30">
+              <button
+                type="button"
+                onClick={() => navigate('/admin')}
+                className="w-full py-1.5 px-2.5 rounded-lg border border-[#D4AF37]/60 bg-[#141414] hover:bg-[#201c12] text-[#D4AF37] flex items-center justify-between text-[10.5px] font-bold transition-all shadow-sm cursor-pointer group"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+                  <span>Admin Console</span>
+                </div>
+                <span className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#D4AF37] text-black flex items-center gap-0.5 group-hover:scale-105 transition-transform">
+                  <span>ENTER</span>
+                  <ArrowRight className="w-2 h-2" />
+                </span>
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* ========================================================
