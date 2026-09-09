@@ -346,11 +346,12 @@ export default function Admin() {
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
+                  {(section.modules || section.items || []).map((item) => {
+                    const Icon = item.icon || Sparkles;
+                    const itemTitle = item.name || item.label;
                     return (
                       <Link
-                        key={item.label}
+                        key={itemTitle}
                         to={item.path}
                         className="p-4 rounded-xl border border-white/10 hover:border-[#D4AF37] transition-all group block shadow-md"
                         style={{ background: '#0f0f0f' }}
@@ -359,12 +360,15 @@ export default function Admin() {
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5">
                             <Icon className="w-4 h-4 text-white group-hover:text-[#D4AF37] transition-colors" />
                           </div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-white/50">
-                            {item.badge}
+                          <span 
+                            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5"
+                            style={{ color: item.color || '#D4AF37' }}
+                          >
+                            {item.badge || 'MODULE'}
                           </span>
                         </div>
                         <h3 className="font-bold text-sm text-white group-hover:text-[#D4AF37] transition-colors mb-1">
-                          {item.label}
+                          {itemTitle}
                         </h3>
                         <p className="text-xs text-white/60">
                           {item.description}
