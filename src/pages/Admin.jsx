@@ -9,7 +9,8 @@ import { Home, UserCheck, Search, SendHorizontal, Flag, MessageCircle, FileText,
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import VoiceGreetingWidget from '@/components/portal/VoiceGreetingWidget';
-import { Volume2 } from 'lucide-react';
+import ClientBacksideLabDemo from '@/components/admin/frontdoor/ClientBacksideLabDemo';
+import { Volume2, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -122,12 +123,13 @@ function LiveStatCard({ label, icon: Icon, path, query, filter, accentColor }) {
 
 export default function Admin() {
   const [testingVoiceGreeting, setTestingVoiceGreeting] = useState(false);
+  const [showBacksideDraft, setShowBacksideDraft] = useState(true);
 
   return (
     <div className="min-h-screen p-6" style={{ background: '#0a0a0a' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <p className="text-xs font-bold tracking-[0.3em] mb-2" style={{ color: GOLD }}>ADMIN COMMAND CENTER</p>
           <h1 className="display-heading mb-2 whitespace-nowrap" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', color: '#fff' }}>Dyson & Dyson Admin Dashboard</h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -135,11 +137,18 @@ export default function Admin() {
           </p>
           <div className="flex flex-wrap gap-3 mt-4">
             <Link
-              to="/admin/front-door-lab"
+              to="/admin/front-door-lab?view=client_backside"
               className="inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg transition-transform hover:scale-105"
               style={{ border: '2px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
             >
-              <Sparkles className="w-4 h-4 text-black" /> ✨ Open Front Door Lab (MLS + News + Charlie)
+              <Sparkles className="w-4 h-4 text-black" /> 🌟 First Visual Draft: Client Backside DEMO
+            </Link>
+            <Link
+              to="/admin/front-door-lab"
+              className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl"
+              style={{ border: '1px solid rgba(212,175,55,0.4)', color: GOLD, background: 'rgba(212,175,55,0.08)' }}
+            >
+              ✨ Front Door Lab (MLS + News)
             </Link>
             <Link
               to="/admin/workflows"
@@ -162,13 +171,55 @@ export default function Admin() {
           <VoiceGreetingWidget key={Date.now()} onClose={() => setTestingVoiceGreeting(false)} />
         )}
 
-        {/* Standard landing page banner — same tan hero used across all portals */}
+        {/* ========================================================
+            SPOTLIGHT: FIRST VISUAL DRAFT — CLIENT BACKSIDE DEMO
+            ======================================================== */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl overflow-hidden"
+          className="mb-8 rounded-2xl overflow-hidden border border-[#D4AF37] shadow-2xl"
+          style={{ background: '#ede0cc' }}
         >
-          <ClientHeroMockup />
+          {/* Spotlight Header Bar */}
+          <div className="p-3 sm:p-4 bg-[#0a0a0a] border-b border-[#D4AF37]/50 flex flex-wrap items-center justify-between gap-3 text-white">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping" />
+              <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
+                FIRST VISUAL DRAFT · LAB REVIEW
+              </span>
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                Client Backside DEMO — Subscriber-Gated Experience
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowBacksideDraft(!showBacksideDraft)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold text-white/80 hover:text-white bg-[#1a1a1a] border border-white/20 transition-all cursor-pointer"
+              >
+                <Eye className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>{showBacksideDraft ? 'Collapse Preview' : 'Show Visual Draft'}</span>
+                {showBacksideDraft ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
+
+              <Link
+                to="/admin/front-door-lab?view=client_backside"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider text-black transition-all hover:brightness-110 shadow"
+                style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+              >
+                <span>Full Lab Mode</span>
+                <ArrowRight className="w-3 h-3 text-black" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Collapsible Content */}
+          {showBacksideDraft && (
+            <div className="p-2 sm:p-4 lg:p-6 animate-in fade-in duration-300">
+              <ClientBacksideLabDemo />
+            </div>
+          )}
         </motion.div>
 
         {/* Summary Dashboard Charts */}

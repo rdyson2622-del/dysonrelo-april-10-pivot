@@ -110,7 +110,13 @@ export default function AdminFrontDoorLab() {
   const [searchEngine, setSearchEngine] = useState('realtor'); // 'realtor' | 'homes'
   const [latestBroadcast, setLatestBroadcast] = useState(null);
   const [selectedRoleForSubscription, setSelectedRoleForSubscription] = useState('hr');
-  const [activeLabTab, setActiveLabTab] = useState('client_backside'); // 'client_backside' | 'front_door'
+  const [activeLabTab, setActiveLabTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const param = new URLSearchParams(window.location.search).get('view');
+      if (param === 'front_door' || param === 'client_backside') return param;
+    }
+    return 'client_backside';
+  });
 
   // Subscriber session & direct-access detection
   const [currentUser, setCurrentUser] = useState(null);
