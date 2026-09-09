@@ -249,9 +249,9 @@ export default function SubscriberProfileHeader({
               sessionStorage.setItem('dyson_viewer_mode', 'guest');
             }}
             className="text-[8px] text-white/45 hover:text-[#D4AF37] transition-colors cursor-pointer"
-            title="Switch back to 1st Time Visitor Card"
+            title="Switch back to Guest Welcome Card"
           >
-            ← 1st Time Mode
+            ← Guest Mode
           </button>
         </div>
       </div>
