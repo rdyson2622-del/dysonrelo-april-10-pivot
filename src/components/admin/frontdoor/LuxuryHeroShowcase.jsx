@@ -51,7 +51,6 @@ export default function LuxuryHeroShowcase({
 }) {
   const navigate = useNavigate();
   const [activeBgIndex, setActiveBgIndex] = useState(0);
-  const [searchTab, setSearchTab] = useState('buy'); // buy, low_tax, new_construction
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
 
   const scrollToSearch = () => {
@@ -482,8 +481,21 @@ export default function LuxuryHeroShowcase({
                 Independent agent vetting &amp; fiduciary relocation management across all 50 states — zero fees to buyers &amp; employers.
               </p>
             </div>
+
+            {/* 2ND: WRITING FORMAT QUOTE FROM BOB DYSON (JUST ABOVE SEARCH PILL) */}
+            <div className="max-w-xl mx-auto pt-1 pb-1">
+              <p
+                className="text-base sm:text-lg lg:text-xl italic font-semibold text-[#0a0a0a] tracking-normal leading-snug"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                “YOU ARE ABSOLUTELY GOING TO LOVE THIS STRESSLESS NEW METHOD OF TRANSACTING YOUR REAL ESTATE VENTURES”
+              </p>
+              <div className="text-[11px] sm:text-xs font-bold text-[#854d0e] tracking-widest uppercase mt-1">
+                — Bob Dyson
+              </div>
+            </div>
             
-            {/* 2ND: THE FLOATING LUXURY SEARCH PILL (JUST BELOW THE STATEMENT) */}
+            {/* 3RD: THE FLOATING LUXURY SEARCH PILL (JUST BELOW BOB'S QUOTE) */}
             <form
               id="hero-search-bar"
               onSubmit={(e) => {
@@ -504,13 +516,7 @@ export default function LuxuryHeroShowcase({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={
-                    searchTab === 'low_tax'
-                      ? "Search 0% state tax havens (e.g. Scottsdale, Austin, Naples)..."
-                      : searchTab === 'new_construction'
-                      ? "Search new developments (e.g. Austin, Phoenix, Dallas)..."
-                      : "Enter City, State, ZIP, or paste any listing URL to vet agent..."
-                  }
+                  placeholder="Enter City, State, ZIP, or paste any listing URL to vet agent..."
                   className="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none placeholder:text-stone-500"
                   style={{ color: '#0a0a0a' }}
                 />
@@ -531,28 +537,6 @@ export default function LuxuryHeroShowcase({
                 </button>
               </div>
             </form>
-
-            {/* THEN: CATEGORY INTENT TABS */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
-              {[
-                { id: 'buy', label: 'All Destination Homes' },
-                { id: 'low_tax', label: '0% State Tax Havens' },
-                { id: 'new_construction', label: 'New Construction' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setSearchTab(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow ${
-                    searchTab === tab.id
-                      ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#0a0a0a] shadow-md scale-105'
-                      : 'bg-[#0a0a0a]/90 text-white hover:bg-[#0a0a0a] border border-[#D4AF37]/40'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
 
             {/* THEN: VETTING HELPER NOTE (IN BLACK FONT COLOR) */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-[#0a0a0a] pt-1 font-medium">
