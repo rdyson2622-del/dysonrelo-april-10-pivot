@@ -28,9 +28,11 @@ Deno.serve(async (req) => {
       return Response.json({ total: all.length, matches });
     }
 
-    const [groupsRes, voicesRes] = await Promise.all([
+    // Also fetch talking_photo list or direct avatar lookup
+    const [groupsRes, voicesRes, tpRes] = await Promise.all([
       fetch('https://api.heygen.com/v2/avatar_group.list?include_public=false', { headers }).then(r => r.json()),
       fetch('https://api.heygen.com/v2/voices', { headers }).then(r => r.json()),
+      fetch('https://api.heygen.com/v1/talking_photo.list', { headers }).then(r => r.json()).catch(() => null),
     ]);
 
     const groups = groupsRes?.data?.avatar_group_list || [];
@@ -58,11 +60,25 @@ Deno.serve(async (req) => {
       (v.name || '').toLowerCase().includes('dyson')
     ).map(v => ({ voiceId: v.voice_id, name: v.name, gender: v.gender, language: v.language, is_custom: v.is_custom }));
 
+    const tpList = tpRes?.data?.talking_photos || [];
+    const bobPhotoMatch = tpList.find(t => t.talking_photo_id === '31b79a86784e495090472af2e7b9407c' || t.id === '31b79a86784e495090472af2e7b9407c');
+
+    // Also look inside all looks
+    let lookMatch = null;
+    for (const g of groupsWithLooks) {
+      for (const l of g.looks) {
+        if (l.avatarId === '31b79a86784e495090472af2e7b9407c' || (l.name || '').toLowerCase().includes('bob')) {
+          lookMatch = l;
+          break;
+        }
+      }
+      if (lookMatch) break;
+    }
+
+    const bobGroup = groupsWithLooks.find(g => (g.groupName || '').toLowerCase().includes('bob') || (g.groupName || '').toLowerCase().includes('dyson'));
     return Response.json({
-      groupCount: groups.length,
-      groups: groupsWithLooks,
-      customVoices,
-      totalVoices: voicesRaw.length,
+      bobGroupName: bobGroup?.groupName,
+      bobLooks: bobGroup?.looks || [],
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
