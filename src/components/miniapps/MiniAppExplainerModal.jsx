@@ -308,11 +308,17 @@ export default function MiniAppExplainerModal({
             >
               {isVideoDesk ? (
                 <video
+                  key={explainer?.id || 'video'}
                   ref={videoRef}
-                  src={CHARLIE_DNN_DESK_VIDEO}
+                  src={explainer?.charlieVideoUrl || CHARLIE_DNN_DESK_VIDEO}
                   playsInline
                   preload="auto"
-                  onEnded={() => setIsPlaying(false)}
+                  onEnded={() => {
+                    setIsPlaying(false);
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+                    }
+                  }}
                   className="w-full h-full object-cover object-top"
                 />
               ) : (
