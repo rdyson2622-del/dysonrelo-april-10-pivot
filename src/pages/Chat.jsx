@@ -27,7 +27,7 @@ export default function Chat() {
         </div>
       </header>
 
-      {/* Gemini Live CTA banner */}
+      {/* Gemini CTA banner */}
       <div className="max-w-3xl w-full mx-auto px-6 pt-4 shrink-0">
         <Link to="/GeminiSession">
           <div className="rounded-xl px-4 py-3 flex items-center gap-3 cursor-pointer transition-all hover:opacity-90"
@@ -35,7 +35,7 @@ export default function Chat() {
             <Sparkles className="w-5 h-5 shrink-0" style={{ color: GOLD }} />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold" style={{ color: GOLD }}>Ready for your deep-dive interview?</p>
-              <p className="text-sm truncate" style={{ color: '#f5f5f5' }}>Start your live Gemini session — builds your full relocation profile</p>
+              <p className="text-sm truncate" style={{ color: '#f5f5f5' }}>Start your Gemini session — builds your full relocation profile</p>
             </div>
             <span className="text-sm font-bold shrink-0" style={{ color: GOLD }}>Begin →</span>
           </div>
