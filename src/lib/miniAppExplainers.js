@@ -26,7 +26,7 @@ export const MINI_APP_EXPLAINERS = [
     keyActionLabel: 'Talk with Charlie Now',
     charlieScript: "Hello, I'm Charlie Simmons, your Dyson and Dyson AI Concierge. Traditional portals auction your contact info to aggressive sales agents. Here, you talk directly with me out loud. I help you compare cost of living, audit destination school districts, calculate tax savings, or vet listings across all fifty states with zero sales pressure. Tap the microphone to ask me anything.",
     charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=f2b8008d-67d7-4500-b0e4-a3844a890f5a.wav",
-    charlieVideoUrl: null,
+    charlieVideoUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/db3cfa038_charlie_explainer_avatar_charlie_ai.mp4",
   },
   {
     id: 'roadmap',
