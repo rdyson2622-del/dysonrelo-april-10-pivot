@@ -2,7 +2,11 @@
 // MINI APP EXPLAINERS CATALOG
 // Plain-English explainers for viewers who have NOT yet subscribed.
 // Explains the problem they face, what each pill unlocks, and the free value.
+// Includes authentic Charlie Simmons DNN studio desk scripts & audio URLs.
 // ========================================================
+
+export const CHARLIE_DNN_DESK_VIDEO = "https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/1cf8b48b0_CHARLIE-INTRODNNNEWS.mp4";
+export const CHARLIE_DNN_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 
 export const MINI_APP_EXPLAINERS = [
   {
@@ -20,6 +24,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Free guest questions anytime. Tap the microphone and experience live conversational voice-to-voice real estate intelligence.',
     subscriberUnlock: 'Unlimited 2-way voice debriefs, custom relocation roadmap generation, and automatic audio transcripts saved to your private file vault.',
     keyActionLabel: 'Talk with Charlie Now',
+    charlieScript: "Hello, I'm Charlie Simmons, your Dyson and Dyson AI Concierge. Traditional portals auction your contact info to aggressive sales agents. Here, you talk directly with me out loud. I help you compare cost of living, audit destination school districts, calculate tax savings, or vet listings across all fifty states with zero sales pressure. Tap the microphone to ask me anything.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/433ae92d7_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'roadmap',
@@ -36,6 +43,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Full interactive preview of the 5-phase relocation milestone sequence and fiduciary checklist.',
     subscriberUnlock: 'A live, personalized transaction roadmap synced to your specific closing dates with automated deadline reminders and agent accountability.',
     keyActionLabel: 'Explore Relocation Roadmap',
+    charlieScript: "I'm Charlie Simmons. Moving out of state involves over forty complex milestones across two states. Buyers frequently miss contingency dates or utility transfers, leading to costly delays. Our interactive Relocation Roadmap sequences every phase—from agent vetting to packing logistics. Explore our five-phase flight plan now, or subscribe to synchronize your live transaction dates.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7270bac7f_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'calendar',
@@ -53,6 +63,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Interactive move timeline calculator and sample milestone calendar.',
     subscriberUnlock: 'Direct 1-click sync to your personal Google Calendar, Apple iCal, or Outlook with push notifications.',
     keyActionLabel: 'Open Move Calendar',
+    charlieScript: "Charlie Simmons here. In real estate contracts, missing a deadline by twenty-four hours can forfeit thousands in earnest money deposits. Our move calendar pre-populates your timeline with contract milestones, ten-thirty-one exchange cutoffs, and mover arrival windows. Subscribing gives you direct one-click synchronization to your personal calendar with automated reminders.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/e96b4d1b4_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'email',
@@ -70,6 +83,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Preview our zero-spam privacy guarantee and sample communication dispatch protocol.',
     subscriberUnlock: 'Dedicated subscriber concierge inbox with 1-click messaging to Bob Dyson and your hand-selected vetted agent.',
     keyActionLabel: 'View Private Inbox',
+    charlieScript: "Hello, I'm Charlie Simmons. When you enter your real email on public real estate sites, your inbox gets bombarded with automated sales drips. Our private concierge inbox acts as a secure firewall. All communications with your fiduciary coordinator and vetted agent route safely through here, protecting your personal email from unwanted solicitation.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/1afdca301_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'calculator',
@@ -87,6 +103,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Full interactive mortgage and state income tax comparison calculator with live sliders.',
     subscriberUnlock: 'Save customized financial profiles, export lender-ready debt-to-income worksheets, and share with your CPA.',
     keyActionLabel: 'Launch Financial Calculator',
+    charlieScript: "Charlie Simmons here. Many buyers calculate a mortgage without factoring in state income tax differences, local assessment caps, or home insurance variances. Our financial calculator lets you compare your current take-home pay against your destination state, compute capital gains exemptions, and model your true purchasing power before making an offer.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/962bb3535_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'weather',
@@ -104,6 +123,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Live weather search and historical climate comparisons between any two U.S. cities.',
     subscriberUnlock: 'Pin your top 3 destination cities for real-time weather alerts and seasonal acclimatization tips.',
     keyActionLabel: 'Compare City Climates',
+    charlieScript: "I'm Charlie Simmons. Relocating families often visit a new city during pleasant spring weather, only to be caught off guard by summer humidity, extreme heat, or winter freezes. Our climate comparison tool provides side-by-side historical climate intelligence—comparing highs, lows, sunshine days, and seasonal shifts between your origin and target markets.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/85c013332_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'strategy',
@@ -120,6 +142,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Explore the full Tax & Relocation Strategy Solutions Map with sample scenarios.',
     subscriberUnlock: 'Request a custom AI-generated strategy road map reviewed by our fiduciary team.',
     keyActionLabel: 'Explore Strategy Solutions',
+    charlieScript: "Hello, I'm Charlie Simmons. Leaving high-tax states like California or New York requires strict documentation to defeat state residency audits. Our Solutions Map matches your relocation profile with proven tax strategies, primary residence exclusions, and safe-harbor residency timelines. Explore our free strategy scenarios, or subscribe for a custom road map.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7a42ad29c_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'vet',
@@ -136,6 +161,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Submit any single address for a complimentary fiduciary second-opinion audit.',
     subscriberUnlock: 'Priority multi-property vetting queue with direct agent disclosure review and contract guidance.',
     keyActionLabel: 'Vet a Property Address',
+    charlieScript: "Charlie Simmons here. Listing agents on public portals are legally obligated to get the seller the highest possible price. When you paste any property address into our vetting engine, we pull public records, permit histories, flood risk zones, and neighborhood comps to provide an honest, independent fiduciary second opinion before you write an offer.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/ea3ba35a1_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'library',
@@ -152,6 +180,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Browse our free educational library of relocation guides, checklists, and fiduciary whitepapers.',
     subscriberUnlock: 'Private cloud storage allocated exclusively for your family’s real estate transactions and deed archives.',
     keyActionLabel: 'Open Document Library',
+    charlieScript: "Hello, I'm Charlie Simmons. During a cross-country move, critical documents like title reports, deeds, warranties, and addendums get scattered across emails and text messages. My Library provides an encrypted, bank-grade document vault where every report I generate and every contract milestone is organized in one secure place with one-click access.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/fa8637df8_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'news',
@@ -168,6 +199,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Watch today’s televised broadcast and browse the national news headline archive for free.',
     subscriberUnlock: 'Daily morning email brief with hyper-local market pulse commentary tailored to your destination city.',
     keyActionLabel: 'Watch DNN 6AM Broadcast',
+    charlieScript: "Good evening and welcome to DNN, the Dyson News Network. I'm Charlie Simmons at the news desk. Every weekday at six A.M., Bob Dyson and I deliver televised morning briefs on thirty-year mortgage rates, Fed policy, housing inventory, and interstate migration data. Watch today's broadcast for free right here.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7b09f59e4_speech.mp3",
+    charlieVideoUrl: CHARLIE_DNN_DESK_VIDEO,
   },
   {
     id: 'agent',
@@ -184,6 +218,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Review our 7-point fiduciary agent vetting standards and directory of partner markets.',
     subscriberUnlock: 'Direct VIP introduction to your personal vetted agent with our fiduciary oversight at zero fee to you.',
     keyActionLabel: 'See Vetting Standards',
+    charlieScript: "I'm Charlie Simmons. Over eighty percent of real estate agents are part-time or buy leads from marketing portals. Choosing the wrong agent in an unfamiliar market can cost you tens of thousands. We curate the top one percent of vetted producing independent agents across all fifty states—holding them strictly accountable to your timeline with zero fee to you.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/d6751e163_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'refer',
@@ -200,6 +237,9 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Anyone can submit a relocation referral and receive a tracking confirmation.',
     subscriberUnlock: 'Real-time referral milestone tracking dashboard with automated closing notifications and escrow fee ledger.',
     keyActionLabel: 'Submit a Referral',
+    charlieScript: "Hello, I'm Charlie Simmons. Sending an out-of-state referral usually means hoping you don't get forgotten. Our Private Referral Network executes formal legal agreements, assigns top-tier vetted agents, manages every escrow milestone, and securely disburses your twenty-five percent referral fee at closing. Submit any relocating friend or client to get started.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/93b853ac2_speech.mp3",
+    charlieVideoUrl: null,
   },
   {
     id: 'concierge',
@@ -216,5 +256,8 @@ export const MINI_APP_EXPLAINERS = [
     unsubscribedAccess: 'Open to any visitor needing urgent fiduciary guidance or second-opinion advice.',
     subscriberUnlock: 'Priority client routing with dedicated concierge callback guarantee within 15 minutes.',
     keyActionLabel: 'Call (858) 353-1200',
+    charlieScript: "I'm Charlie Simmons. When an urgent issue arises during an escrow or relocation, you don't want automated support tickets. Concierge Direct connects you directly via cell phone or text to Bob Dyson and our California executive desk—backed by fifty-five years of continuous real estate leadership.",
+    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/be5167121_speech.mp3",
+    charlieVideoUrl: null,
   },
 ];
