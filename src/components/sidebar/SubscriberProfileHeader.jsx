@@ -88,19 +88,21 @@ export default function SubscriberProfileHeader({
   const savedRole = sessionStorage.getItem('dyson_role') || (currentUser?.role === 'admin' ? 'admin' : 'client');
   const roleType = forcedSubscriber?.role_type || (savedRole === 'agent' ? 'agent' : savedRole === 'hr' ? 'hr' : 'client');
 
-  // Compute Name, Photo, Location
+  // Canonical Bob Dyson asset
+  const BOB_PHOTO = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
+
+  // Compute Name, Photo, Location (defaults to Bob Dyson as verified subscriber)
   const displayName = forcedSubscriber?.full_name || 
                       clientRecord?.full_name || 
                       currentUser?.full_name || 
                       subscriberRecord?.full_name || 
-                      'Kayden Sterling';
+                      'Bob Dyson';
 
   const photoUrl = forcedSubscriber?.photo_url || 
-                   currentUser?.avatar_url || 
                    clientRecord?.photo_url || 
-                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+                   BOB_PHOTO;
 
-  const currentCity = forcedSubscriber?.current_city || clientRecord?.current_city || 'Los Gatos, CA';
+  const currentCity = forcedSubscriber?.current_city || clientRecord?.current_city || 'Del Mar, CA';
   const destCity = forcedSubscriber?.destination_city || clientRecord?.destination_city?.replace(/,\s*[A-Z]{2}$/i, '') || 'Scottsdale';
   const destState = forcedSubscriber?.destination_state || clientRecord?.destination_state || 'AZ';
 
@@ -119,15 +121,15 @@ export default function SubscriberProfileHeader({
   const handleOpenModal = () => {
     setFormData({
       full_name: displayName,
-      email: currentUser?.email || clientRecord?.email || 'kayden@sterlingfamily.com',
-      phone: clientRecord?.phone || '(408) 555-0192',
+      email: currentUser?.email || clientRecord?.email || 'rdyson2622@gmail.com',
+      phone: clientRecord?.phone || '(858) 353-1200',
       current_city: currentCity,
       destination_city: destCity,
       destination_state: destState,
-      target_move_date: clientRecord?.target_move_date || 'Summer 2026',
+      target_move_date: clientRecord?.target_move_date || 'Fall 2026',
       role_type: roleType,
       photo_url: photoUrl,
-      notes: clientRecord?.notes || 'Seeking 4-bed single-story home near top-rated school district. 1031 exchange planned.',
+      notes: clientRecord?.notes || 'Executive founder relocation file. Full fiduciary concierge move coordination.',
     });
     setSaveSuccess(false);
     setIsModalOpen(true);

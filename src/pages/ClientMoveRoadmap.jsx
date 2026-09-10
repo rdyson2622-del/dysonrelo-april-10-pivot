@@ -93,7 +93,7 @@ export default function ClientMoveRoadmap() {
   }, [location.search]);
 
   // Derived client details
-  const clientName = clientRecord?.full_name || searchParams.get('name') || currentUser?.full_name || 'Kayden Sterling';
+  const clientName = clientRecord?.full_name || searchParams.get('name') || currentUser?.full_name || 'Bob Dyson';
   const originCity = clientRecord?.current_city || 'Santa Cruz, CA';
   const destinationCity = clientRecord?.destination_city || searchParams.get('destination') || 'Austin, TX';
   const budget = clientRecord?.budget || '$800K – $1.5M';

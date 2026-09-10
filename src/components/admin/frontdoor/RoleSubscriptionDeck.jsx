@@ -127,11 +127,11 @@ const ROLES = [
 export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
   const [selectedRoleId, setSelectedRoleId] = useState(activeRole || 'hr');
   const [form, setForm] = useState({
-    full_name: '',
-    email: '',
-    phone: '',
-    company: '',
-    detail: '',
+    full_name: 'Bob Dyson',
+    email: 'rdyson2622@gmail.com',
+    phone: '(858) 353-1200',
+    company: 'The Dyson & Dyson Companies, Inc.',
+    detail: 'CA DRE #02303118',
   });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -143,6 +143,21 @@ export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
     setSelectedRoleId(id);
     setSuccess(false);
     onSelectRole?.(id);
+
+    // Context-specific defaults for Bob Dyson
+    if (id === 'hr') {
+      setForm(prev => ({ ...prev, company: 'The Dyson & Dyson Companies, Inc.', detail: '5-25 corporate moves/yr' }));
+    } else if (id === 'agent') {
+      setForm(prev => ({ ...prev, company: 'The Dyson & Dyson Companies, Inc.', detail: 'CA DRE #02303118' }));
+    } else if (id === 'broker') {
+      setForm(prev => ({ ...prev, company: 'The Dyson & Dyson Companies / Wisdom Properties', detail: '45 producing agents' }));
+    } else if (id === 'inactive_agent') {
+      setForm(prev => ({ ...prev, company: 'The Dyson & Dyson Companies, Inc.', detail: 'CA DRE #02303118' }));
+    } else if (id === 'vendor') {
+      setForm(prev => ({ ...prev, company: 'Dyson Relocation Concierge Services', detail: 'Concierge Moving & Fiduciary Management' }));
+    } else if (id === 'client') {
+      setForm(prev => ({ ...prev, company: 'Del Mar, CA', detail: 'Del Mar, CA → Scottsdale, AZ' }));
+    }
   };
 
   const handleSubmit = async (e) => {

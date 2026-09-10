@@ -407,20 +407,30 @@ export default function AdminSidebar() {
         <div className="grid grid-cols-2 gap-2">
           {[
             { label: 'D&D LANDING PAGE', role: 'landing', emoji: '🚪', path: '/' },
-            { label: 'CLIENT', role: 'client', emoji: '🏠' },
-            { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐' },
-            { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝' },
-            { label: 'VENDOR', role: 'vendor', emoji: '🔧' },
+            { label: 'CLIENT', role: 'client', emoji: '🏠', path: '/home' },
+            { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐', path: '/agent-command-center' },
+            { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝', path: '/partner-benefits' },
+            { label: 'VENDOR', role: 'vendor', emoji: '🔧', path: '/search' },
             { label: 'CORP RELO HR', role: 'corporate_hr', emoji: '🏢', path: '/corporate-relo' },
             { label: 'BROKER PORTAL', role: 'broker', emoji: '💼', path: '/broker-portal' },
-            { label: 'FIRST-TIME VISITOR', role: 'first_time_visitor', emoji: '👋', path: '/broadcast-show' },
+            { label: 'FIRST-TIME VISITOR', role: 'first_time_visitor', emoji: '👋', path: '/?visitor=1' },
           ].map(({ label, role, emoji, path }) => (
             <button
               key={role}
               onClick={() => {
-                if (path) { navigate(path); return; }
+                if (role === 'first_time_visitor') {
+                  sessionStorage.setItem('dyson_viewer_mode', 'guest');
+                  sessionStorage.removeItem('dyson_role');
+                  localStorage.removeItem('dyson_view_as_family_subscriber');
+                  localStorage.removeItem('dyson_view_as');
+                  window.dispatchEvent(new Event('dyson_role_change'));
+                  navigate('/?visitor=1');
+                  return;
+                }
+                sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
                 sessionStorage.setItem('dyson_role', role);
                 window.dispatchEvent(new Event('dyson_role_change'));
+                if (path) { navigate(path); return; }
                 navigate('/dashboard');
               }}
               className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl text-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md group"
