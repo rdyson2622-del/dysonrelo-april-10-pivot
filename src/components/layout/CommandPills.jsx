@@ -22,8 +22,14 @@ export default function CommandPills() {
 
   const switchRole = (role, path) => {
     sessionStorage.setItem('dyson_role', role);
+    if (role === 'first_time_visitor') {
+      sessionStorage.setItem('dyson_viewer_mode', 'guest');
+    } else {
+      sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+    }
     setActiveRole(role);
     window.dispatchEvent(new Event('dyson_role_change'));
+    window.dispatchEvent(new Event('dyson_viewer_mode_change'));
     navigate(path);
   };
 

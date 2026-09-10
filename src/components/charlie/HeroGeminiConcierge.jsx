@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, Square, Loader2, Volume2, Compass, X } from 'lucide-react';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { useLocation } from 'react-router-dom';
 import { CHARLIE_SIMMONS_SYSTEM_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
+import { CHARLIE_PORTAL_WELCOME_SCRIPTS, getActivePortalRole } from '@/lib/charliePortalWelcomeScripts';
 import CharlieActionPointer from './CharlieActionPointer';
 
 const GOLD = '#D4AF37';
@@ -11,6 +13,7 @@ const CHARLIE_CONCIERGE_PROMPT = CHARLIE_SIMMONS_SYSTEM_PROMPT;
 
 export default function HeroGeminiConcierge({ sidebarMode = false }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [status, setStatus] = useState('ready'); // ready, connecting, listening, speaking, error
   const [errorMessage, setErrorMessage] = useState(null);
   const [liveText, setLiveText] = useState('');
@@ -31,9 +34,14 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
       clientRef.current.stop();
     }
 
+    const currentRole = getActivePortalRole(location?.pathname, sessionStorage.getItem('dyson_role'));
+    const portalConfig = CHARLIE_PORTAL_WELCOME_SCRIPTS[currentRole] || CHARLIE_PORTAL_WELCOME_SCRIPTS.client;
+
     const client = new GeminiLiveSessionClient({
       systemPrompt: CHARLIE_CONCIERGE_PROMPT,
       voiceName: CHARLIE_VOICE_NAME,
+      openingGreetingText: portalConfig.script,
+      openingGreetingAudioUrl: portalConfig.audioUrl,
       onStatusChange: (newStatus) => {
         setStatus(newStatus);
         if (newStatus === 'listening') {
