@@ -111,6 +111,11 @@ export default function FrontDoor() {
   const [showFilterBar, setShowFilterBar] = useState(false);
   const [showSubscriberMode, setShowSubscriberMode] = useState(() => {
     if (typeof window === 'undefined') return false;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('visitor') === '1') {
+      sessionStorage.setItem('dyson_viewer_mode', 'guest');
+      return false;
+    }
     return localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
            localStorage.getItem('dyson_view_as') === 'family';
   });
