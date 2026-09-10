@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Compass, Lightbulb, UserCheck, BookOpen, Route, 
   Tv, Sparkles, ShieldCheck, Mic, Volume2, Square, 
@@ -11,44 +12,12 @@ const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c
 const BOB_PHOTO = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/09d1d285a_bob_dyson_black_shirt.webp";
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
-// Authentic Charlie Simmons voice greeting (0ms CDN)
-const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
-
 export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const navigate = useNavigate();
   const [activeTileNotice, setActiveTileNotice] = useState(null);
-  const audioRef = useRef(null);
 
-  // Audio cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  const toggleCharlieVoice = () => {
-    if (isPlayingAudio) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      setIsPlayingAudio(false);
-      return;
-    }
-
-    try {
-      const audio = new Audio(CHARLIE_GREETING_AUDIO);
-      audio.onended = () => setIsPlayingAudio(false);
-      audio.onerror = () => setIsPlayingAudio(false);
-      audioRef.current = audio;
-      setIsPlayingAudio(true);
-      audio.play().catch(() => setIsPlayingAudio(false));
-    } catch {
-      setIsPlayingAudio(false);
-    }
+  const handleTalkWithCharlie = () => {
+    navigate('/talking-app');
   };
 
   // EXACT 8 TILES REQUESTED
@@ -137,10 +106,8 @@ export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
           className="mt-3.5 rounded-2xl p-4 sm:p-4.5 border shadow-xl text-left relative overflow-hidden space-y-3.5"
           style={{
             background: 'linear-gradient(160deg, #16130e 0%, #0a0a0a 100%)',
-            borderColor: isPlayingAudio ? GOLD : `${GOLD}80`,
-            boxShadow: isPlayingAudio 
-              ? '0 0 25px rgba(212,175,55,0.35), 0 8px 24px rgba(0,0,0,0.8)' 
-              : '0 8px 24px rgba(0,0,0,0.7)',
+            borderColor: `${GOLD}80`,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
           }}
         >
           {/* Subtle Top Gold Hairline */}
@@ -167,12 +134,8 @@ export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
 
           {/* VISUALLY INTEGRATED "TALK WITH CHARLIE" AS THE SPEAKING FACE OF THIS SAME CLIENT DESK */}
           <div 
-            onClick={toggleCharlieVoice}
-            className={`w-full p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-3 relative overflow-hidden group ${
-              isPlayingAudio 
-                ? 'bg-[#221a0d] border-[#D4AF37] ring-2 ring-[#D4AF37]/50 shadow-lg' 
-                : 'bg-[#121212] border-white/15 hover:border-[#D4AF37] hover:bg-[#1a1712]'
-            }`}
+            onClick={handleTalkWithCharlie}
+            className="w-full p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-3 relative overflow-hidden group bg-[#121212] border-white/15 hover:border-[#D4AF37] hover:bg-[#1a1712]"
             title="Click to speak with Charlie Simmons (Speaking Face of Desk)"
           >
             {/* Charlie Headshot / Studio Desk Face */}
@@ -196,25 +159,17 @@ export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
                 <span className="text-xs font-bold text-white group-hover:text-[#D4AF37] transition-colors">
                   Talk with Charlie
                 </span>
-                <span className={`w-1.5 h-1.5 rounded-full ${isPlayingAudio ? 'bg-[#D4AF37] animate-ping' : 'bg-[#10b981]'}`} />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
               </div>
               <div className="text-[10px] text-white/60 leading-tight truncate">
-                {isPlayingAudio ? 'Speaking authentic greeting now…' : 'Speaking Face of this Client Desk'}
+                Speaking Face of this Client Desk
               </div>
             </div>
 
             {/* Action Icon */}
             <div className="shrink-0">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                isPlayingAudio 
-                  ? 'bg-[#D4AF37] text-black shadow-md' 
-                  : 'bg-white/10 text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black'
-              }`}>
-                {isPlayingAudio ? (
-                  <Square className="w-3.5 h-3.5 fill-black" />
-                ) : (
-                  <Mic className="w-4 h-4" />
-                )}
+              <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all bg-white/10 text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black">
+                <Mic className="w-4 h-4" />
               </div>
             </div>
           </div>
