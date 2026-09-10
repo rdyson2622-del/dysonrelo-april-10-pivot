@@ -2,7 +2,7 @@
 // MINI APP EXPLAINERS CATALOG
 // Plain-English explainers for viewers who have NOT yet subscribed.
 // Explains the problem they face, what each pill unlocks, and the free value.
-// Includes authentic Charlie Simmons DNN studio desk scripts & audio URLs.
+// Uses authentic Charlie Simmons HeyGen Ruben voice audio exclusively.
 // ========================================================
 
 export const CHARLIE_DNN_DESK_VIDEO = "https://media.base44.com/videos/public/69d905d72ff7c93b5ef050c4/1cf8b48b0_CHARLIE-INTRODNNNEWS.mp4";
@@ -25,7 +25,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Unlimited 2-way voice debriefs, custom relocation roadmap generation, and automatic audio transcripts saved to your private file vault.',
     keyActionLabel: 'Talk with Charlie Now',
     charlieScript: "Hello, I'm Charlie Simmons, your Dyson and Dyson AI Concierge. Traditional portals auction your contact info to aggressive sales agents. Here, you talk directly with me out loud. I help you compare cost of living, audit destination school districts, calculate tax savings, or vet listings across all fifty states with zero sales pressure. Tap the microphone to ask me anything.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/433ae92d7_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=f2b8008d-67d7-4500-b0e4-a3844a890f5a.wav",
     charlieVideoUrl: null,
   },
   {
@@ -44,7 +44,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'A live, personalized transaction roadmap synced to your specific closing dates with automated deadline reminders and agent accountability.',
     keyActionLabel: 'Explore Relocation Roadmap',
     charlieScript: "I'm Charlie Simmons. Moving out of state involves over forty complex milestones across two states. Buyers frequently miss contingency dates or utility transfers, leading to costly delays. Our interactive Relocation Roadmap sequences every phase—from agent vetting to packing logistics. Explore our five-phase flight plan now, or subscribe to synchronize your live transaction dates.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7270bac7f_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=32f0d705-5fb6-45c9-a0c9-0f1db1ad08c7.wav",
     charlieVideoUrl: null,
   },
   {
@@ -64,7 +64,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Direct 1-click sync to your personal Google Calendar, Apple iCal, or Outlook with push notifications.',
     keyActionLabel: 'Open Move Calendar',
     charlieScript: "Charlie Simmons here. In real estate contracts, missing a deadline by twenty-four hours can forfeit thousands in earnest money deposits. Our move calendar pre-populates your timeline with contract milestones, ten-thirty-one exchange cutoffs, and mover arrival windows. Subscribing gives you direct one-click synchronization to your personal calendar with automated reminders.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/e96b4d1b4_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2edb511d-4a34-4a47-9e4e-dd75aabd984c.wav",
     charlieVideoUrl: null,
   },
   {
@@ -84,7 +84,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Dedicated subscriber concierge inbox with 1-click messaging to Bob Dyson and your hand-selected vetted agent.',
     keyActionLabel: 'View Private Inbox',
     charlieScript: "Hello, I'm Charlie Simmons. When you enter your real email on public real estate sites, your inbox gets bombarded with automated sales drips. Our private concierge inbox acts as a secure firewall. All communications with your fiduciary coordinator and vetted agent route safely through here, protecting your personal email from unwanted solicitation.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/1afdca301_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=c19a3e47-f9f1-4f68-b4cf-58c97fdee06a.wav",
     charlieVideoUrl: null,
   },
   {
@@ -104,7 +104,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Save customized financial profiles, export lender-ready debt-to-income worksheets, and share with your CPA.',
     keyActionLabel: 'Launch Financial Calculator',
     charlieScript: "Charlie Simmons here. Many buyers calculate a mortgage without factoring in state income tax differences, local assessment caps, or home insurance variances. Our financial calculator lets you compare your current take-home pay against your destination state, compute capital gains exemptions, and model your true purchasing power before making an offer.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/962bb3535_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=21f2e371-060e-4cea-aae5-53dc61a27ca7.wav",
     charlieVideoUrl: null,
   },
   {
@@ -124,7 +124,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Pin your top 3 destination cities for real-time weather alerts and seasonal acclimatization tips.',
     keyActionLabel: 'Compare City Climates',
     charlieScript: "I'm Charlie Simmons. Relocating families often visit a new city during pleasant spring weather, only to be caught off guard by summer humidity, extreme heat, or winter freezes. Our climate comparison tool provides side-by-side historical climate intelligence—comparing highs, lows, sunshine days, and seasonal shifts between your origin and target markets.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/85c013332_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=94d3135c-91ed-4dc2-89fc-8e91383f677a.wav",
     charlieVideoUrl: null,
   },
   {
@@ -143,7 +143,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Request a custom AI-generated strategy road map reviewed by our fiduciary team.',
     keyActionLabel: 'Explore Strategy Solutions',
     charlieScript: "Hello, I'm Charlie Simmons. Leaving high-tax states like California or New York requires strict documentation to defeat state residency audits. Our Solutions Map matches your relocation profile with proven tax strategies, primary residence exclusions, and safe-harbor residency timelines. Explore our free strategy scenarios, or subscribe for a custom road map.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7a42ad29c_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=afb8623b-3e76-4755-8bbc-986cd950bd89.wav",
     charlieVideoUrl: null,
   },
   {
@@ -162,7 +162,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Priority multi-property vetting queue with direct agent disclosure review and contract guidance.',
     keyActionLabel: 'Vet a Property Address',
     charlieScript: "Charlie Simmons here. Listing agents on public portals are legally obligated to get the seller the highest possible price. When you paste any property address into our vetting engine, we pull public records, permit histories, flood risk zones, and neighborhood comps to provide an honest, independent fiduciary second opinion before you write an offer.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/ea3ba35a1_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=ce2f0183-6bc2-4f75-9ee8-05429bc315b2.wav",
     charlieVideoUrl: null,
   },
   {
@@ -181,7 +181,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Private cloud storage allocated exclusively for your family’s real estate transactions and deed archives.',
     keyActionLabel: 'Open Document Library',
     charlieScript: "Hello, I'm Charlie Simmons. During a cross-country move, critical documents like title reports, deeds, warranties, and addendums get scattered across emails and text messages. My Library provides an encrypted, bank-grade document vault where every report I generate and every contract milestone is organized in one secure place with one-click access.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/fa8637df8_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=ab32f39a-9e7b-4626-b501-2fb3f3b68b0b.wav",
     charlieVideoUrl: null,
   },
   {
@@ -200,7 +200,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Daily morning email brief with hyper-local market pulse commentary tailored to your destination city.',
     keyActionLabel: 'Watch DNN 6AM Broadcast',
     charlieScript: "Good evening and welcome to DNN, the Dyson News Network. I'm Charlie Simmons at the news desk. Every weekday at six A.M., Bob Dyson and I deliver televised morning briefs on thirty-year mortgage rates, Fed policy, housing inventory, and interstate migration data. Watch today's broadcast for free right here.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/7b09f59e4_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=027d51db-c5c3-4fef-a91c-348ae4eeb97d.wav",
     charlieVideoUrl: CHARLIE_DNN_DESK_VIDEO,
   },
   {
@@ -219,7 +219,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Direct VIP introduction to your personal vetted agent with our fiduciary oversight at zero fee to you.',
     keyActionLabel: 'See Vetting Standards',
     charlieScript: "I'm Charlie Simmons. Over eighty percent of real estate agents are part-time or buy leads from marketing portals. Choosing the wrong agent in an unfamiliar market can cost you tens of thousands. We curate the top one percent of vetted producing independent agents across all fifty states—holding them strictly accountable to your timeline with zero fee to you.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/d6751e163_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=01dc633a-0e57-420a-8225-2ffc02e9440c.wav",
     charlieVideoUrl: null,
   },
   {
@@ -238,7 +238,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Real-time referral milestone tracking dashboard with automated closing notifications and escrow fee ledger.',
     keyActionLabel: 'Submit a Referral',
     charlieScript: "Hello, I'm Charlie Simmons. Sending an out-of-state referral usually means hoping you don't get forgotten. Our Private Referral Network executes formal legal agreements, assigns top-tier vetted agents, manages every escrow milestone, and securely disburses your twenty-five percent referral fee at closing. Submit any relocating friend or client to get started.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/93b853ac2_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=0af86874-7d50-47eb-8da4-f57c1b840dd9.wav",
     charlieVideoUrl: null,
   },
   {
@@ -257,7 +257,7 @@ export const MINI_APP_EXPLAINERS = [
     subscriberUnlock: 'Priority client routing with dedicated concierge callback guarantee within 15 minutes.',
     keyActionLabel: 'Call (858) 353-1200',
     charlieScript: "I'm Charlie Simmons. When an urgent issue arises during an escrow or relocation, you don't want automated support tickets. Concierge Direct connects you directly via cell phone or text to Bob Dyson and our California executive desk—backed by fifty-five years of continuous real estate leadership.",
-    charlieAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/be5167121_speech.mp3",
+    charlieAudioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=23573769-ff96-4659-b561-f7ea0c40f4a3.wav",
     charlieVideoUrl: null,
   },
 ];
