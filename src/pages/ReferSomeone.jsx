@@ -3,9 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   UserPlus, CheckCircle2, Loader2, ArrowLeft, Home, 
   Wrench, Star, MoreHorizontal, ShieldCheck, Phone, 
-  Sparkles, X, Compass, Check, ArrowRight
+  Sparkles, X, Compass, Check, ArrowRight, Mic
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import CharlieVoiceReferralAssistant from '@/components/referral/CharlieVoiceReferralAssistant';
+import VoiceToTextButton from '@/components/ui/VoiceToTextButton';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -47,9 +49,13 @@ export default function ReferSomeone() {
     navigate('/portal');
   };
 
+  const handleUpdateFields = (updates) => {
+    setForm(prev => ({ ...prev, ...updates }));
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!canSubmit || submitting) return;
+    if (e && e.preventDefault) e.preventDefault();
+    if (!form.referred_name.trim() || !form.referred_email.trim() || submitting) return;
     setSubmitting(true);
     let referrer_role = null;
     try { referrer_role = sessionStorage.getItem('dyson_role') || null; } catch {}
@@ -247,7 +253,15 @@ export default function ReferSomeone() {
             </div>
 
             {/* RIGHT COLUMN: THE REFERRAL FORM (SOLID BLACK BACKGROUND, CRISP WHITE FONT!) */}
-            <div className="w-full lg:col-span-7">
+            <div className="w-full lg:col-span-7 space-y-5">
+              {/* CHARLIE HANDS-FREE V2V VOICE INTAKE CONSOLE */}
+              <CharlieVoiceReferralAssistant
+                form={form}
+                onUpdateFields={handleUpdateFields}
+                onSubmitReferral={handleSubmit}
+                isSubmitting={submitting}
+              />
+
               <div 
                 className="rounded-3xl p-5 sm:p-8 border-2 border-[#D4AF37] shadow-2xl space-y-6 text-left"
                 style={{
@@ -305,7 +319,13 @@ export default function ReferSomeone() {
                     {/* Full Name & Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-white">Full Name *</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-white">Full Name *</span>
+                          <VoiceToTextButton
+                            value={form.referred_name}
+                            onChange={(val) => set('referred_name', val)}
+                          />
+                        </div>
                         <input
                           required
                           type="text"
@@ -318,7 +338,13 @@ export default function ReferSomeone() {
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-bold text-white">Email Address *</span>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-white">Email Address *</span>
+                          <VoiceToTextButton
+                            value={form.referred_email}
+                            onChange={(val) => set('referred_email', val.replace(/\s+/g, '').toLowerCase())}
+                          />
+                        </div>
                         <input
                           required
                           type="email"
@@ -417,7 +443,13 @@ export default function ReferSomeone() {
 
                   {/* Notes / Special Circumstances */}
                   <div className="space-y-1">
-                    <span className="text-[11px] font-bold text-white">Notes or special circumstances (optional)</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-white">Notes or special circumstances (optional)</span>
+                      <VoiceToTextButton
+                        value={form.notes}
+                        onChange={(val) => set('notes', val)}
+                      />
+                    </div>
                     <textarea
                       rows={3}
                       placeholder="e.g. Looking for homes near great schools, needs 1031 exchange guidance, prefers quiet neighborhood..."
