@@ -12,7 +12,6 @@ import ClientCommunicationsExplainer from './ClientCommunicationsExplainer';
 import SolveMyStory from './SolveMyStory';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
 import HRSubscriberDashboard from '@/components/dashboard/HRSubscriberDashboard';
-import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -190,16 +189,6 @@ export default function CorporateRelo() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0d0d0d', color: '#fff' }}>
-      <ClientHeroMockup
-        label="Your Corporate Relocation Portal"
-        quoteLine1='"We provide a Real Time, lifetime workspace designed to maximize your real estate opportunities.'
-        quoteLine2="No sales pitches, just real-time solutions and a clear path to execute results."
-        attribution="— Bob Dyson"
-        showSubscriberBox={true}
-        subscriberName="Bob Dyson"
-        subscriberRole="HR Relocation Director"
-      />
-
       <SolutionMapEntry hideCharliePresenter />
 
       {/* ── FIRST PAGE: Corporate Relocation hero ── */}
