@@ -199,7 +199,7 @@ export const ADMIN_DEPT_MINI_APPS = [
   },
   {
     id: 'admin_dashboard',
-    label: 'Admin Console',
+    label: 'Admin Dashboard',
     copy: 'Metrics & Tools',
     icon: LayoutDashboard,
     iconColor: '#e8c84a',
