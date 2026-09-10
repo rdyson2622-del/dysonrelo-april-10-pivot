@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  CheckCircle2, ArrowLeft, ShieldCheck, 
+  CheckCircle2, ShieldCheck, 
   Phone, Mic, ChevronDown, ChevronUp,
   Send, Check, Sparkles
 } from 'lucide-react';
@@ -155,30 +155,7 @@ export default function ClientMoveRoadmap() {
       <div className="max-w-4xl mx-auto space-y-8 text-left">
         
         {/* ========================================================
-            1. TOP MINIMAL NAVIGATION & FILE META (NO BOXES)
-            ======================================================== */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs border-b border-[#0a0a0a]/15 pb-3">
-          <button
-            type="button"
-            onClick={() => navigate('/admin/front-door-lab?view=client_backside')}
-            className="inline-flex items-center gap-1.5 font-bold text-[#0a0a0a] hover:text-[#854d0e] transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Client Backside Workspace</span>
-          </button>
-
-          <div className="flex items-center gap-3 font-mono text-xs text-[#554433]">
-            <span>File #{dispatchRef}</span>
-            <span>•</span>
-            <span className="text-[#10b981] font-semibold flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#10b981] inline-block animate-pulse" />
-              Desk Review Active
-            </span>
-          </div>
-        </div>
-
-        {/* ========================================================
-            2. EDITORIAL EXECUTIVE HEADER (OPEN LAYOUT — ZERO BOXES)
+            EDITORIAL EXECUTIVE HEADER (OPEN LAYOUT — ZERO BOXES)
             ======================================================== */}
         <section className="space-y-3">
           <div className="space-y-1">
