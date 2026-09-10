@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, Play, Square, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Play, Square, Sparkles, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 const GOLD = '#D4AF37';
@@ -8,6 +9,7 @@ const GOLD = '#D4AF37';
 const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
 
 export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, className = '' }) {
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
@@ -183,23 +185,34 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
         </p>
       </div>
 
-      {/* Subtle Link for Subscribed Users */}
-      <div className="pt-1.5 border-t border-white/10 flex items-center justify-between text-[9.5px]">
-        <span className="text-white/45">Already subscribed?</span>
+      {/* Direct Sign In & Access for Subscribed Users */}
+      <div className="pt-2 border-t border-white/10 flex flex-col gap-1.5">
         <button
           type="button"
-          onClick={() => {
-            if (onSwitchToSubscriber) {
-              onSwitchToSubscriber();
-            } else {
-              sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
-              window.location.reload();
-            }
-          }}
-          className="text-[#D4AF37] hover:text-[#e8c84a] font-semibold transition-colors cursor-pointer"
+          onClick={() => navigate('/login?returnTo=/portal')}
+          className="w-full py-1.5 px-3 rounded-xl text-[10px] font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition-all hover:brightness-105 active:scale-95"
+          style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
         >
-          Show Subscriber Card →
+          <LogIn className="w-3 h-3 text-black" />
+          <span>Subscriber Sign In</span>
         </button>
+        <div className="flex items-center justify-between text-[9px] text-white/45 px-1">
+          <span>First time viewing?</span>
+          <button
+            type="button"
+            onClick={() => {
+              if (onSwitchToSubscriber) {
+                onSwitchToSubscriber();
+              } else {
+                sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+                window.location.reload();
+              }
+            }}
+            className="text-[#D4AF37] hover:underline cursor-pointer"
+          >
+            Preview Subscriber Card →
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import RoleSubscriptionDeck from '@/components/admin/frontdoor/RoleSubscriptionD
 import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCompanion';
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
+import SubscriberSignInButton from '@/components/auth/SubscriberSignInButton';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
 import { base44 } from '@/api/base44Client';
 
@@ -313,67 +314,29 @@ export default function FrontDoor() {
               </div>
             </div>
 
-            {/* Right Actions: Ambience + Subscriber View Toggle + Workspaces Access */}
-            <div className="pr-2 sm:pr-3.5 lg:pr-5 flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Right Actions: Ambience + Subscriber Sign In + Subscriber View Toggle */}
+            <div className="pr-2 sm:pr-3.5 lg:pr-5 flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Studio Ambience / Concierge Lounge Audio Player */}
               <StudioAmbiencePlayer />
 
               {/* Quick Toggle for Subscriber View Experience */}
-                <button
-                  type="button"
-                  onClick={handleToggleSubscriberMode}
-                  className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all cursor-pointer shadow-sm shrink-0 ${
+              <button
+                type="button"
+                onClick={handleToggleSubscriberMode}
+                className={`flex items-center gap-1 px-2 py-0.5 h-7 rounded-full text-[10px] font-bold transition-all cursor-pointer shadow-sm shrink-0 ${
                   showSubscriberMode
                     ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
                     : 'bg-[#181818] text-white/80 hover:text-white border border-white/20'
                 }`}
-                title="Toggle Recognized Subscriber Command Deck"
+                title="Toggle Demo Subscriber vs First-Time Visitor View"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${showSubscriberMode ? 'bg-[#10b981] animate-pulse' : 'bg-stone-500'}`} />
-                <span className="hidden sm:inline">{showSubscriberMode ? 'Subscriber View' : 'Visitor View'}</span>
-                <span className="sm:hidden">{showSubscriberMode ? 'Sub' : 'Vis'}</span>
+                <span className="hidden sm:inline">{showSubscriberMode ? 'Demo Sub' : 'Demo Vis'}</span>
+                <span className="sm:hidden">{showSubscriberMode ? 'Demo' : 'Vis'}</span>
               </button>
 
-              {/* Subscriber Workspaces & Sleek Access Button (Only for non-admin subscribers; admin pill is moved elsewhere) */}
-              {isSubscribed && currentUser?.role !== 'admin' ? (
-                <button
-                  onClick={() => navigate(userPortalDest || '/home')}
-                  className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm shrink-0"
-                  style={{
-                    background: 'linear-gradient(135deg, #1f1a0e 0%, #0d0d0d 100%)',
-                    border: `1.2px solid ${GOLD}`,
-                    color: GOLD,
-                  }}
-                  title={`Direct Access: Open ${userRoleLabel || 'Your Workspace'}`}
-                >
-                  <Building className="w-3 h-3 text-[#D4AF37]" />
-                  <span className="hidden sm:inline">{userRoleLabel || 'My Workspace'}</span>
-                  <span
-                    className="text-[7.5px] sm:text-[8px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black flex items-center gap-0.5 ml-0.5 shadow-sm"
-                    style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)' }}
-                  >
-                    <span>ENTER</span>
-                    <ArrowRight className="w-2 h-2" />
-                  </span>
-                </button>
-              ) : !isSubscribed ? (
-                <button
-                  onClick={() => {
-                    const elem = document.getElementById('portal-subscribe-section');
-                    if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-                    else navigate('/subscribe');
-                  }}
-                  className="flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 h-7 rounded-full text-[10px] sm:text-[11px] font-bold transition-all hover:brightness-110 cursor-pointer shadow-sm shrink-0"
-                  style={{
-                    background: '#141414',
-                    border: '1px solid rgba(212,175,55,0.4)',
-                    color: GOLD,
-                  }}
-                >
-                  <Building className="w-3 h-3 text-[#D4AF37]" />
-                  <span className="hidden sm:inline">Workspaces</span>
-                </button>
-              ) : null}
+              {/* Official Subscriber Sign In / Status Button */}
+              <SubscriberSignInButton />
             </div>
           </nav>
 

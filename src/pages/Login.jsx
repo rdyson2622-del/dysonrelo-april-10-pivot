@@ -53,17 +53,22 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title="Welcome back"
-      subtitle="Log in to your account"
+      title="Subscriber Sign In"
+      subtitle="Access your DysonRelo file, concierge desk, or partner workspace"
       footer={
         <>
-          Don't have an account?{" "}
+          Need to enroll as a new subscriber?{" "}
           <Link
             to={"/register" + (returnTo !== "/portal" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}
             className="text-primary font-medium hover:underline"
           >
-            Create one
+            Create an Account
           </Link>
+          <div className="mt-2 text-xs">
+            <Link to="/portal" className="text-muted-foreground hover:underline">
+              ← Return to DysonRelo Public Portal
+            </Link>
+          </div>
         </>
       }
     >

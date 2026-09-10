@@ -13,6 +13,7 @@ import PortalHomeButton from './PortalHomeButton';
 import PortalAccessGuard from './PortalAccessGuard';
 import LayoutToggleButton from './LayoutToggleButton';
 import StudioAmbiencePlayer from '../charlie/StudioAmbiencePlayer';
+import SubscriberSignInButton from '../auth/SubscriberSignInButton';
 import { useLayout } from '@/lib/LayoutContext';
 
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
@@ -89,9 +90,12 @@ export default function AppLayout() {
           </div>
         </div>
 
-        {/* Right side tools: Concierge Music + Landscape Toggle + Back + Admin tools */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Right side tools: Concierge Music + Subscriber Sign In + Landscape Toggle + Back + Admin tools */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           <StudioAmbiencePlayer />
+
+          {/* Dedicated Subscriber Sign In / Account Status */}
+          <SubscriberSignInButton />
 
           <LayoutToggleButton />
 

@@ -154,10 +154,11 @@ export default function PartnerPortalGateways({ onSelectRole }) {
 
               <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                 <Link
-                  to={gateway.path}
-                  className="text-[11px] text-white/60 hover:text-white underline"
+                  to={`/login?returnTo=${encodeURIComponent(gateway.path)}`}
+                  className="text-[11px] text-[#D4AF37] hover:text-[#e8c84a] font-semibold underline flex items-center gap-1"
+                  title={`Sign in directly to ${gateway.role}`}
                 >
-                  Direct Login →
+                  <span>Subscriber Sign In →</span>
                 </Link>
 
                 <button
