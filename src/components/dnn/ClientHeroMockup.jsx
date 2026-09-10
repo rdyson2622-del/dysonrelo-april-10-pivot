@@ -12,7 +12,7 @@ const STUDIO_LOOP_VIDEO = 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/
  * Tan background, headline copy on the left, DNN studio video shrunk to
  * ~50% size on the right.
  */
-const BOB_HEADSHOT = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png";
+const BOB_HEADSHOT = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/09d1d285a_bob_dyson_black_shirt.webp";
 
 export default function ClientHeroMockup({
   label = 'Your Client Portal',
@@ -148,15 +148,22 @@ export default function ClientHeroMockup({
                   </span>
                 </div>
 
-                {/* Bob Dyson headshot in black shirt */}
+                {/* Ambient backdrop fill to prevent pillarboxing */}
+                <img 
+                  src={subscriberPhoto} 
+                  alt="" 
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover object-[center_30%] filter blur-lg opacity-40 scale-125 pointer-events-none"
+                />
+                {/* Bob Dyson headshot in black shirt - uncropped with full head, collar, and shirt */}
                 <img
                   src={subscriberPhoto}
                   alt={subscriberName}
-                  className={`w-full h-full object-cover object-[center_18%] transition-transform duration-500 ${
+                  className={`relative z-0 h-full w-auto max-w-full object-contain transition-transform duration-500 ${
                     userSpeaking ? 'scale-105' : 'group-hover:scale-105'
                   }`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none z-10" />
 
                 {/* LOWER LEFT CORNER: Name tag just like Charlie's */}
                 <div className="absolute bottom-2.5 left-2.5 z-10 flex items-center gap-2 px-2.5 py-1 rounded-full bg-black/85 border border-[#D4AF37]/75 shadow-lg backdrop-blur-md">

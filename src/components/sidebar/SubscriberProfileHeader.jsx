@@ -7,15 +7,17 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import FirstTimeViewerSidebarIntro from './FirstTimeViewerSidebarIntro';
+import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
+import { CHARLIE_SIMMONS_SYSTEM_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
+import { CHARLIE_PORTAL_WELCOME_SCRIPTS, getActivePortalRole } from '@/lib/charliePortalWelcomeScripts';
 
 const GOLD = '#D4AF37';
 
 // Authentic Bob Dyson black-shirt headshot in Base44 storage (single source of truth)
 const BOB_PHOTO_PERMANENT = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/09d1d285a_bob_dyson_black_shirt.webp";
 
-// Authentic Charlie Simmons studio desk photo & audio greeting
+// Authentic Charlie Simmons studio desk photo
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
-const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
 
 export default function SubscriberProfileHeader({ 
   onProfileClick,
@@ -26,26 +28,30 @@ export default function SubscriberProfileHeader({
   const location = useLocation();
   const currentPath = (location?.pathname || '').toLowerCase();
 
-  // Detect which of the 6 subscriber portals we are in
-  const isCorporatePortal = currentPath.includes('corporate-relo');
-  const isBrokerPortal = currentPath.includes('broker');
-  const isAgentPortal = currentPath.includes('partner-benefits') || currentPath.includes('agent-command') || currentPath.includes('sending-agent') || currentPath.includes('my-agent');
-  const isReferralAgentPortal = currentPath.includes('referral-agent') || currentPath.includes('referral-process') || currentPath.includes('referral-forms');
-  const isVendorPortal = currentPath.includes('financial-services') || currentPath.includes('vendor');
-  const isClientPortal = currentPath.includes('client-roadmap') || currentPath.includes('relocation-roadmap') || currentPath.includes('relocation-intake') || currentPath.includes('dashboard') || currentPath.includes('home');
-  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
-
-  const isOneOfSixPortals = isCorporatePortal || isBrokerPortal || isAgentPortal || isReferralAgentPortal || isVendorPortal || isClientPortal;
-
   const [currentUser, setCurrentUser] = useState(null);
-  const [isGuestMode, setIsGuestMode] = useState(() => {
-    // If explicitly in one of the 6 portals, default to Subscriber mode with the dual box!
-    const stored = sessionStorage.getItem('dyson_viewer_mode');
-    if (stored === 'subscriber') return false;
-    if (stored === 'guest') return true;
-    // On the front door / public entry, default to 1st-timer guest view
-    return isFrontDoor;
-  });
+  const [savedRole, setSavedRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
+  const [viewerMode, setViewerMode] = useState(() => sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+
+  // Listen to role changes from top command bar
+  useEffect(() => {
+    const syncRole = () => {
+      setSavedRole(sessionStorage.getItem('dyson_role') || 'client');
+      setViewerMode(sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+    };
+    window.addEventListener('dyson_role_change', syncRole);
+    window.addEventListener('dyson_viewer_mode_change', syncRole);
+    return () => {
+      window.removeEventListener('dyson_role_change', syncRole);
+      window.removeEventListener('dyson_viewer_mode_change', syncRole);
+    };
+  }, []);
+
+  // Resolve active portal role among the 6 subscriber roles
+  const activePortalRole = getActivePortalRole(currentPath, savedRole);
+  const welcomeConfig = CHARLIE_PORTAL_WELCOME_SCRIPTS[activePortalRole] || CHARLIE_PORTAL_WELCOME_SCRIPTS.client;
+
+  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
+  const isFirstTimeVisitor = savedRole === 'first_time_visitor' || (isFrontDoor && viewerMode === 'guest');
 
   const [clientRecord, setClientRecord] = useState(null);
   const [subscriberRecord, setSubscriberRecord] = useState(null);
@@ -54,9 +60,11 @@ export default function SubscriberProfileHeader({
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Charlie audio greeting state
-  const [isCharliePlaying, setIsCharliePlaying] = useState(false);
-  const audioRef = useRef(null);
+  // V2V Two-Way Voice State
+  const [v2vStatus, setV2vStatus] = useState('ready'); // ready, connecting, listening, speaking, error
+  const [speakerRole, setSpeakerRole] = useState(null); // 'assistant', 'user', null
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const v2vClientRef = useRef(null);
 
   // Editable Form State
   const [formData, setFormData] = useState({
@@ -72,81 +80,79 @@ export default function SubscriberProfileHeader({
     notes: '',
   });
 
+  // End V2V on unmount
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (v2vClientRef.current) {
+        v2vClientRef.current.stop();
+        v2vClientRef.current = null;
       }
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+        window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status: 'ready', isActive: false } }));
       }
     };
   }, []);
 
-  const toggleCharlieVoice = (e) => {
+  // Start / Stop Two-Way V2V Session
+  const toggleV2V = async (e) => {
     if (e) e.stopPropagation();
 
-    if (isCharliePlaying) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      setIsCharliePlaying(false);
+    // If currently active, stop it
+    if (v2vClientRef.current) {
+      v2vClientRef.current.stop();
+      v2vClientRef.current = null;
+      setV2vStatus('ready');
+      setSpeakerRole(null);
+      setLiveTranscript('');
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+        window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status: 'ready', isActive: false } }));
       }
       return;
     }
 
+    // Launch two-way V2V session starting with Charlie's customized portal welcome back greeting
     try {
-      if (!audioRef.current) {
-        const audio = new Audio(CHARLIE_GREETING_AUDIO);
-        audio.preload = 'auto';
+      setV2vStatus('connecting');
+      setLiveTranscript('');
 
-        audio.onplay = () => {
-          setIsCharliePlaying(true);
+      const client = new GeminiLiveSessionClient({
+        systemPrompt: CHARLIE_SIMMONS_SYSTEM_PROMPT,
+        voiceName: CHARLIE_VOICE_NAME,
+        openingGreetingText: welcomeConfig.script,
+        openingGreetingAudioUrl: welcomeConfig.audioUrl,
+        onStatusChange: (status) => {
+          setV2vStatus(status);
+          const active = status === 'listening' || status === 'speaking' || status === 'connecting';
           if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
+            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active } }));
+            window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status, isActive: active } }));
           }
-        };
-
-        audio.onended = () => {
-          setIsCharliePlaying(false);
+        },
+        onTranscript: (t) => {
+          if (t?.text) setLiveTranscript(t.text);
+        },
+        onSpeaker: (role) => {
+          setSpeakerRole(role);
           if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+            window.dispatchEvent(new CustomEvent('v2v-speaker-change', { detail: { speaker: role } }));
           }
-        };
+        },
+        onError: (err) => {
+          console.warn('V2V session error:', err);
+          setV2vStatus('error');
+        },
+        onNavigate: (nav) => {
+          if (nav?.path) navigate(nav.path);
+        },
+      });
 
-        audio.onpause = () => {
-          setIsCharliePlaying(false);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
-          }
-        };
-
-        audio.onerror = () => {
-          setIsCharliePlaying(false);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
-          }
-        };
-
-        audioRef.current = audio;
-      } else {
-        audioRef.current.currentTime = 0;
-      }
-
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Playback error or blocked by autoplay policy:', err);
-          setIsCharliePlaying(false);
-        });
-      }
+      v2vClientRef.current = client;
+      await client.start();
     } catch (err) {
-      console.error('Failed to trigger Charlie greeting audio:', err);
-      setIsCharliePlaying(false);
+      console.error('Failed to start V2V session:', err);
+      setV2vStatus('error');
     }
   };
 
@@ -155,27 +161,26 @@ export default function SubscriberProfileHeader({
 
     async function loadSubscriberData() {
       try {
-        const me = await base44.auth.me();
+        const me = await base44.auth.me().catch(() => null);
         if (me && isMounted) setCurrentUser(me);
 
-        // 1. Fetch Relocation Client data
-        const clients = await base44.entities.RelocationClient.list('-created_date', 1);
+        // Fetch Relocation Client data
+        const clients = await base44.entities.RelocationClient.list('-created_date', 1).catch(() => []);
         if (clients && clients.length > 0 && isMounted) {
           setClientRecord(clients[0]);
         }
 
-        // 2. Fetch DnnSubscriber data
+        // Fetch DnnSubscriber data
         if (me?.email) {
-          const subs = await base44.entities.DnnSubscriber.filter({ email: me.email }, '-created_date', 1);
+          const subs = await base44.entities.DnnSubscriber.filter({ email: me.email }, '-created_date', 1).catch(() => []);
           if (subs && subs.length > 0 && isMounted) {
             setSubscriberRecord(subs[0]);
           }
         }
 
-        // 3. Fetch ActiveRelocationAgent if applicable
-        const savedRole = sessionStorage.getItem('dyson_role') || (me?.role === 'admin' ? 'admin' : 'client');
-        if (savedRole === 'agent' || me?.email) {
-          const agents = await base44.entities.ActiveRelocationAgent.list('-created_date', 1);
+        // Fetch ActiveRelocationAgent if applicable
+        if (activePortalRole === 'agent' || me?.email) {
+          const agents = await base44.entities.ActiveRelocationAgent.list('-created_date', 1).catch(() => []);
           if (agents && agents.length > 0 && isMounted) {
             setAgentRecord(agents[0]);
           }
@@ -187,18 +192,7 @@ export default function SubscriberProfileHeader({
 
     loadSubscriberData();
     return () => { isMounted = false; };
-  }, []);
-
-  // Compute Active Persona / Role across the 6 portals
-  const savedRole = sessionStorage.getItem('dyson_role') || (currentUser?.role === 'admin' ? 'admin' : 'client');
-  let roleType = forcedSubscriber?.role_type || (savedRole === 'agent' ? 'agent' : savedRole === 'hr' ? 'hr' : 'client');
-
-  if (isCorporatePortal) roleType = 'hr';
-  else if (isBrokerPortal) roleType = 'broker';
-  else if (isAgentPortal) roleType = 'agent';
-  else if (isReferralAgentPortal) roleType = 'referral_agent';
-  else if (isVendorPortal) roleType = 'vendor';
-  else if (isClientPortal) roleType = 'client';
+  }, [activePortalRole]);
 
   // Compute Name, Photo, Location (defaults to Bob Dyson as verified subscriber)
   const displayName = forcedSubscriber?.full_name || 
@@ -217,25 +211,8 @@ export default function SubscriberProfileHeader({
   const destCity = forcedSubscriber?.destination_city || clientRecord?.destination_city?.replace(/,\s*[A-Z]{2}$/i, '') || 'Scottsdale';
   const destState = forcedSubscriber?.destination_state || clientRecord?.destination_state || 'AZ';
 
-  // Role Badge info tailored to which of the 6 portals is active
-  let roleBadge = 'SUBSCRIBER • RELOCATING FAMILY';
-  let roleSubtitle = `${currentCity} → ${destCity}, ${destState}`;
-  if (roleType === 'hr' || isCorporatePortal) {
-    roleBadge = 'SUBSCRIBER • HR DESK';
-    roleSubtitle = 'Executive Relocation Hub';
-  } else if (roleType === 'broker' || isBrokerPortal) {
-    roleBadge = 'SUBSCRIBER • BROKER DESK';
-    roleSubtitle = 'Wisdom Properties • Pilot Brokerage';
-  } else if (roleType === 'agent' || isAgentPortal) {
-    roleBadge = 'SUBSCRIBER • PRN AGENT';
-    roleSubtitle = agentRecord ? `${agentRecord.brokerage || 'Dyson Relo'} • ${agentRecord.city || 'Scottsdale'}` : 'Vetted Referral Network';
-  } else if (roleType === 'referral_agent' || isReferralAgentPortal) {
-    roleBadge = 'SUBSCRIBER • REFERRAL AGENT';
-    roleSubtitle = 'Affiliate Referral Network';
-  } else if (roleType === 'vendor' || isVendorPortal) {
-    roleBadge = 'SUBSCRIBER • VETTED VENDOR';
-    roleSubtitle = 'Fiduciary Service Partner';
-  }
+  // Role Badge info tailored to the active portal
+  const roleBadge = welcomeConfig.roleLabel;
 
   // Populate form data when modal opens
   const handleOpenModal = () => {
@@ -247,7 +224,7 @@ export default function SubscriberProfileHeader({
       destination_city: destCity,
       destination_state: destState,
       target_move_date: clientRecord?.target_move_date || 'Fall 2026',
-      role_type: roleType,
+      role_type: activePortalRole,
       photo_url: photoUrl,
       notes: clientRecord?.notes || 'Executive founder relocation file. Full fiduciary concierge move coordination.',
     });
@@ -267,9 +244,8 @@ export default function SubscriberProfileHeader({
           destination_city: formData.destination_city,
           destination_state: formData.destination_state,
           notes: formData.notes,
-          photo_url: formData.photo_url || BOB_PHOTO_PERMANENT,
         });
-        setClientRecord(prev => ({ ...prev, ...formData, photo_url: formData.photo_url || BOB_PHOTO_PERMANENT }));
+        setClientRecord(prev => ({ ...prev, ...formData }));
       }
       setSaveSuccess(true);
       setTimeout(() => {
@@ -285,21 +261,28 @@ export default function SubscriberProfileHeader({
 
   // 1ST TIME UNSUBSCRIBED VIEWER INTRO AT TOP OF SIDEBAR
   // Strictly reserved for the 1st timer / cold visitor on Front Door
-  if (isGuestMode && !isOneOfSixPortals && !forcedSubscriber) {
+  if (isFirstTimeVisitor && !forcedSubscriber) {
     return (
       <FirstTimeViewerSidebarIntro
         onSwitchToSubscriber={() => {
-          setIsGuestMode(false);
           sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+          sessionStorage.setItem('dyson_role', 'client');
+          window.dispatchEvent(new Event('dyson_role_change'));
+          window.dispatchEvent(new Event('dyson_viewer_mode_change'));
         }}
       />
     );
   }
 
+  const isV2VActive = v2vStatus === 'listening' || v2vStatus === 'speaking' || v2vStatus === 'connecting';
+  const isCharlieSpeaking = isV2VActive && (speakerRole === 'assistant' || v2vStatus === 'speaking');
+  const isUserSpeaking = isV2VActive && (speakerRole === 'user' || v2vStatus === 'listening');
+
   // ========================================================
-  // SUBSCRIBER DUAL BOX FOR THE 6 PORTALS:
-  // 1. TOP BOX: Bob Dyson (Subscriber headshot in black shirt, same size as Charlie)
-  // 2. BOTTOM BOX: Charlie Simmons at his studio desk
+  // SUBSCRIBER DUAL BOX FOR ALL 6 PORTALS:
+  // 1. TOP BOX: Bob Dyson (Subscriber headshot in black shirt, properly framed)
+  // 2. BOTTOM BOX: Charlie Simmons at his studio desk with 2-way V2V wiring
+  // 3. Welcome back message with exact required closing sentence
   // ========================================================
   return (
     <>
@@ -307,8 +290,10 @@ export default function SubscriberProfileHeader({
         className={`w-full p-2.5 sm:p-3 rounded-2xl border text-left shadow-xl transition-all relative overflow-hidden select-none space-y-2.5 ${className}`}
         style={{
           background: 'linear-gradient(160deg, #16130e 0%, #0c0b08 100%)',
-          borderColor: `${GOLD}80`,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1)',
+          borderColor: isV2VActive ? (isCharlieSpeaking ? GOLD : '#10b981') : `${GOLD}80`,
+          boxShadow: isV2VActive 
+            ? '0 0 25px rgba(212,175,55,0.35), 0 8px 24px rgba(0,0,0,0.8)' 
+            : '0 8px 24px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1)',
         }}
       >
         {/* Top Subtle Gold Accent Line */}
@@ -316,39 +301,48 @@ export default function SubscriberProfileHeader({
 
         {/* ========================================================
             1. TOP BOX: BOB DYSON (SUBSCRIBER HEADSHOT IN BLACK SHIRT)
-            Pulls from subscriber profile, exactly same 16:9 size as Charlie's box
+            Pulls from subscriber profile, framed cleanly showing head, face, and black shirt!
             ======================================================== */}
         <div 
           onClick={handleOpenModal}
-          className="relative rounded-xl overflow-hidden border border-[#D4AF37]/60 hover:border-[#D4AF37] shadow-md aspect-[16/9] w-full bg-black group cursor-pointer transition-all duration-300"
+          className="relative rounded-xl overflow-hidden border border-[#D4AF37]/60 hover:border-[#D4AF37] shadow-md aspect-[16/9] w-full bg-black group cursor-pointer transition-all duration-300 flex items-center justify-center"
           title="Click to view full subscriber profile & move file"
         >
+          {/* Ambient blurred backdrop fill to keep 16:9 studio depth without pillarboxing */}
+          <img 
+            src={photoUrl} 
+            alt="" 
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-[center_30%] filter blur-lg opacity-40 scale-125 pointer-events-none"
+          />
+
+          {/* Uncropped, natural Bob Dyson headshot displaying full head, face, collar, and black shirt */}
           <img 
             src={photoUrl} 
             alt={displayName} 
-            className="w-full h-full object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-105"
+            className="relative z-0 h-full w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none z-10" />
 
           {/* Top-left: Role badge */}
-          <div className="absolute top-1.5 left-1.5 z-10">
+          <div className="absolute top-1.5 left-1.5 z-20">
             <span 
-              className="px-2 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 shadow-sm"
+              className="px-2 py-0.5 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 shadow-sm"
             >
               {roleBadge}
             </span>
           </div>
 
           {/* Top-right: Active status */}
-          <div className="absolute top-1.5 right-1.5 z-10">
-            <span className="flex items-center gap-1 text-[8px] font-bold text-[#10b981] bg-black/80 px-1.5 py-0.2 rounded-full border border-[#10b981]/50">
+          <div className="absolute top-1.5 right-1.5 z-20">
+            <span className="flex items-center gap-1 text-[8px] font-bold text-[#10b981] bg-black/80 px-1.5 py-0.5 rounded-full border border-[#10b981]/50">
               <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
               <span>Active</span>
             </span>
           </div>
 
           {/* Lower Left Corner: Subscriber Name */}
-          <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-bold text-white tracking-wide">
+          <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-bold text-white tracking-wide z-20">
             <span className="flex items-center gap-1 drop-shadow">
               <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
               <span>{displayName}</span>
@@ -362,48 +356,68 @@ export default function SubscriberProfileHeader({
         {/* ========================================================
             2. BOTTOM BOX: CHARLIE SIMMONS AT STUDIO DESK
             Same 16:9 aspect ratio directly below Bob Dyson's box
+            Wired for Two-Way V2V communication!
             ======================================================== */}
         <div 
-          onClick={toggleCharlieVoice}
+          onClick={toggleV2V}
           className={`relative rounded-xl overflow-hidden border shadow-md aspect-[16/9] w-full bg-black group cursor-pointer transition-all duration-300 ${
-            isCharliePlaying 
-              ? 'border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.6)] scale-[1.01]' 
+            isCharlieSpeaking 
+              ? 'border-2 border-[#D4AF37] ring-4 ring-[#D4AF37]/50 shadow-[0_0_25px_rgba(212,175,55,0.6)] scale-[1.01]' 
+              : isUserSpeaking
+              ? 'border-2 border-emerald-400 ring-4 ring-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.5)] scale-[1.01]'
+              : isV2VActive
+              ? 'border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/30'
               : 'border-[#D4AF37]/60 hover:border-[#D4AF37]'
           }`}
-          title={isCharliePlaying ? "Click to pause Charlie's voice" : "Click to hear Charlie speak"}
+          title={isV2VActive ? "Live V2V Connected — Click to disconnect" : "Click to hear Charlie and begin two-way voice conversation"}
         >
           <img 
             src={CHARLIE_DESK_PHOTO} 
             alt="Charlie Simmons at DNN Studio Desk" 
             className={`w-full h-full object-cover object-top transition-transform duration-500 ${
-              isCharliePlaying ? 'scale-105' : 'group-hover:scale-105'
+              isV2VActive ? 'scale-105' : 'group-hover:scale-105'
             }`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
           
-          {/* Play/Speaking Badge in Corner */}
+          {/* Top-Right: Two-Way V2V Live Indicator Badge */}
           <div className="absolute top-1.5 right-1.5 z-10">
             <div 
               className={`px-2 py-0.5 rounded-full text-[8.5px] font-bold flex items-center gap-1 shadow-lg border transition-all ${
-                isCharliePlaying 
+                isCharlieSpeaking 
                   ? 'bg-[#D4AF37] text-black border-black animate-pulse' 
+                  : isUserSpeaking
+                  ? 'bg-emerald-400 text-black border-black animate-pulse'
+                  : isV2VActive
+                  ? 'bg-black/90 text-[#D4AF37] border-[#D4AF37]'
                   : 'bg-black/80 text-white/90 border-[#D4AF37]/60 group-hover:border-[#D4AF37] group-hover:text-white'
               }`}
             >
-              {isCharliePlaying ? (
+              {isCharlieSpeaking ? (
                 <>
-                  <Square className="w-2 h-2 fill-black" />
-                  <span className="uppercase tracking-wider text-[7.5px] font-black">Playing</span>
+                  <Volume2 className="w-2.5 h-2.5 fill-black" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black">Speaking</span>
                   <span className="flex items-center gap-0.5">
                     <span className="w-0.5 h-2 bg-black animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-0.5 h-2.5 bg-black animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-0.5 h-2 bg-black animate-bounce" style={{ animationDelay: '300ms' }} />
                   </span>
                 </>
+              ) : isUserSpeaking ? (
+                <>
+                  <Mic className="w-2.5 h-2.5 fill-black" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black">Listening</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
+                </>
+              ) : isV2VActive ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black text-emerald-400">V2V Active</span>
+                </>
               ) : (
                 <>
-                  <Volume2 className="w-2.5 h-2.5 text-[#D4AF37]" />
-                  <span className="uppercase tracking-wider text-[7.5px] font-black text-[#D4AF37]">Click to Hear</span>
+                  <Mic className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black text-[#D4AF37]">Tap for 2-Way V2V</span>
                 </>
               )}
             </div>
@@ -412,13 +426,80 @@ export default function SubscriberProfileHeader({
           {/* Lower Left Corner: Charlie Simmons Name Tag */}
           <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-bold text-white tracking-wide">
             <span className="flex items-center gap-1 drop-shadow">
-              <span className={`w-1.5 h-1.5 rounded-full ${isCharliePlaying ? 'bg-[#D4AF37] animate-ping' : 'bg-[#10b981] animate-pulse'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${isV2VActive ? (isCharlieSpeaking ? 'bg-[#D4AF37] animate-ping' : 'bg-emerald-400 animate-ping') : 'bg-[#10b981] animate-pulse'}`} />
               <span>Charlie Simmons</span>
             </span>
             <span className="text-[#D4AF37] drop-shadow text-[8px] uppercase tracking-wider font-semibold">
               AI Concierge
             </span>
           </div>
+        </div>
+
+        {/* ========================================================
+            3. TWO-WAY V2V CONNECTION BAR (Interactive Voice Bridge)
+            ======================================================== */}
+        <div 
+          className="w-full flex items-center justify-between px-2.5 py-1 rounded-xl shadow-md text-[9px] font-bold"
+          style={{
+            background: 'linear-gradient(90deg, #18140e 0%, #0d0b07 100%)',
+            border: `1px solid ${isV2VActive ? (isCharlieSpeaking ? GOLD : '#10b981') : `${GOLD}60`}`,
+          }}
+        >
+          <div className="flex items-center gap-1.5 min-w-0 pr-1">
+            <span 
+              className={`w-2 h-2 rounded-full shrink-0 ${
+                isCharlieSpeaking ? 'bg-[#D4AF37] animate-ping' : isUserSpeaking ? 'bg-emerald-400 animate-ping' : isV2VActive ? 'bg-emerald-400' : 'bg-[#D4AF37]'
+              }`} 
+            />
+            <span className="text-[#D4AF37] tracking-wider uppercase font-sans truncate text-[8.5px]">
+              {isCharlieSpeaking ? 'Charlie Speaking…' : isUserSpeaking ? 'Listening to You…' : isV2VActive ? 'Two-Way V2V Active' : '2-Way Voice Communication'}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleV2V}
+            className={`px-2.5 py-1 rounded-lg text-[8.5px] font-black uppercase tracking-wider transition-all cursor-pointer shrink-0 shadow-sm flex items-center gap-1 ${
+              isV2VActive
+                ? 'bg-red-500/25 text-red-300 border border-red-500/50 hover:bg-red-500/40'
+                : 'bg-[#D4AF37] text-black hover:bg-[#e8c84a]'
+            }`}
+          >
+            {isV2VActive ? (
+              <>
+                <Square className="w-2 h-2 fill-current" />
+                <span>End Call</span>
+              </>
+            ) : (
+              <>
+                <Mic className="w-2.5 h-2.5" />
+                <span>Talk to Charlie</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* ========================================================
+            4. CHARLIE WELCOME BACK MESSAGE (CUSTOM FOR EACH OF THE 6 PORTALS)
+            Strictly ends with:
+            "All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit."
+            ======================================================== */}
+        <div className="space-y-1 pt-0.5">
+          <div className="flex items-center justify-between gap-1">
+            <h3 
+              className="text-xs sm:text-[13px] font-bold text-white tracking-tight leading-tight"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              {welcomeConfig.welcomeHeading}
+            </h3>
+            <span className="text-[7.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/70 border border-[#D4AF37]/50 text-[#D4AF37]">
+              {welcomeConfig.badge}
+            </span>
+          </div>
+          
+          <p className="text-[10px] sm:text-[10.5px] text-white/90 leading-relaxed font-normal">
+            {welcomeConfig.script}
+          </p>
         </div>
 
         {/* Action Row: View / Edit Profile & Switch back to guest if desired */}
@@ -435,8 +516,10 @@ export default function SubscriberProfileHeader({
           <button
             type="button"
             onClick={() => {
-              setIsGuestMode(true);
               sessionStorage.setItem('dyson_viewer_mode', 'guest');
+              sessionStorage.setItem('dyson_role', 'first_time_visitor');
+              window.dispatchEvent(new Event('dyson_role_change'));
+              window.dispatchEvent(new Event('dyson_viewer_mode_change'));
             }}
             className="text-white/40 hover:text-white transition-colors cursor-pointer text-[8px]"
             title="Switch to 1st Time Guest View"
