@@ -8,10 +8,13 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 
+// Authentic HeyGen Ruben voice audio for Charlie's referral greeting (instant 0ms CDN playback, authoritative American male)
+const CHARLIE_RUBEN_REFERRAL_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=0f04d227-dac5-4059-9a22-d4bcb18ce92a.wav";
+
 /**
  * CharlieVoiceReferralAssistant
  * Allows hands-free voice intake where Charlie converses with the user
- * or transcribes their spoken words to auto-populate the referral form.
+ * using his authentic HeyGen Ruben voice and transcribes their spoken words to auto-populate the referral form.
  */
 export default function CharlieVoiceReferralAssistant({ 
   form, 
@@ -29,7 +32,7 @@ export default function CharlieVoiceReferralAssistant({
   const [browserSupported, setBrowserSupported] = useState(true);
 
   const recognitionRef = useRef(null);
-  const synthRef = useRef(typeof window !== 'undefined' ? window.speechSynthesis : null);
+  const audioPlayerRef = useRef(null);
   const activeSessionRef = useRef(false);
   const transcriptBufferRef = useRef('');
 
@@ -48,46 +51,105 @@ export default function CharlieVoiceReferralAssistant({
       if (recognitionRef.current) {
         try { recognitionRef.current.abort(); } catch {}
       }
-      if (synthRef.current) {
-        try { synthRef.current.cancel(); } catch {}
+      if (audioPlayerRef.current) {
+        try {
+          audioPlayerRef.current.pause();
+          audioPlayerRef.current = null;
+        } catch {}
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
       }
     };
   }, []);
 
-  // Charlie Voice Synthesizer
-  const speakText = (text, onComplete) => {
-    if (!synthRef.current) {
-      if (onComplete) onComplete();
-      return;
-    }
+  // Plays Charlie's authentic Ruben voice from an audio URL
+  const playCharlieAudio = (audioUrl, onComplete) => {
     try {
-      synthRef.current.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
-      
-      // Look for a calm, authoritative male voice if available
-      const voices = synthRef.current.getVoices();
-      const chosen = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Guy') || v.name.includes('David') || v.name.includes('George')));
-      if (chosen) utterance.voice = chosen;
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
 
-      utterance.onstart = () => {
+      const audio = new Audio(audioUrl);
+      audioPlayerRef.current = audio;
+
+      audio.onplay = () => {
         setIsSpeaking(true);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
+        }
       };
-      utterance.onend = () => {
+
+      audio.onended = () => {
         setIsSpeaking(false);
-        if (onComplete) onComplete();
-      };
-      utterance.onerror = () => {
-        setIsSpeaking(false);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+        }
         if (onComplete) onComplete();
       };
 
-      synthRef.current.speak(utterance);
-    } catch {
+      audio.onerror = (e) => {
+        console.warn('Charlie audio playback error:', e);
+        setIsSpeaking(false);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+        }
+        if (onComplete) onComplete();
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Autoplay prevented or interrupted:', err);
+          setIsSpeaking(false);
+          if (onComplete) onComplete();
+        });
+      }
+    } catch (err) {
+      console.warn('Error initiating audio playback:', err);
       setIsSpeaking(false);
       if (onComplete) onComplete();
     }
+  };
+
+  // Charlie Voice Synthesizer — ALWAYS uses authentic HeyGen Ruben voice, NEVER browser female TTS!
+  const speakText = async (text, onComplete, isInitialGreeting = false) => {
+    // 1. If it's the initial referral greeting, use the pre-rendered 0ms CDN HeyGen Ruben audio
+    if (isInitialGreeting || text.includes("Hello! I'm Charlie Simmons. Just speak naturally")) {
+      playCharlieAudio(CHARLIE_RUBEN_REFERRAL_GREETING_AUDIO, onComplete);
+      return;
+    }
+
+    // 2. For custom spoken text, invoke Charlie's authentic Ruben voice synthesizer backend function
+    try {
+      setIsSpeaking(true);
+      const res = await base44.functions.invoke('charlieSpeak', { text });
+      const audioUrl = res?.data?.audioUrl;
+      if (audioUrl) {
+        playCharlieAudio(audioUrl, onComplete);
+        return;
+      }
+    } catch (err) {
+      console.warn('charlieSpeak invocation error, using male voice fallback:', err);
+    }
+
+    // 3. Fallback: Generate speech with authoritative male voice (never browser Samantha/female!)
+    try {
+      const ttsRes = await base44.integrations.Core.GenerateSpeech({
+        text,
+        voice: 'storm', // Authoritative American male voice
+      });
+      if (ttsRes?.url) {
+        playCharlieAudio(ttsRes.url, onComplete);
+        return;
+      }
+    } catch (fallbackErr) {
+      console.warn('Fallback male TTS error:', fallbackErr);
+    }
+
+    setIsSpeaking(false);
+    if (onComplete) onComplete();
   };
 
   // Start Speech Recognition
@@ -261,12 +323,18 @@ Rules:
       // Disconnect
       activeSessionRef.current = false;
       stopListening();
-      if (synthRef.current) {
-        try { synthRef.current.cancel(); } catch {}
+      if (audioPlayerRef.current) {
+        try {
+          audioPlayerRef.current.pause();
+          audioPlayerRef.current = null;
+        } catch {}
       }
       setIsActive(false);
       setIsSpeaking(false);
       setStatusMessage('Voice intake paused. Tap to restart anytime.');
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+      }
       return;
     }
 
@@ -283,7 +351,7 @@ Rules:
       if (activeSessionRef.current) {
         startListening();
       }
-    });
+    }, true);
   };
 
   // Single Quick-Mic Dictation toggle (finish dictating)

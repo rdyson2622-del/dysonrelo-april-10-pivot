@@ -11,10 +11,10 @@ const speakText = (text) => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = 0.95;
-  utterance.pitch = 1.05;
-  // Prefer a natural female voice
+  utterance.pitch = 0.95;
+  // Authentic American male voice for Charlie
   const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Karen') || v.name.includes('Moira'));
+  const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Guy') || v.name.includes('David') || v.name.includes('George') || v.name.includes('Alex')));
   if (preferred) utterance.voice = preferred;
   window.speechSynthesis.speak(utterance);
 };
