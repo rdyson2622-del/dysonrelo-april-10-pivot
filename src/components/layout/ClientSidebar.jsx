@@ -32,40 +32,19 @@ export default function ClientSidebar({ onToggle }) {
     >
       <div className="p-3.5 space-y-3 flex-1">
         
-        {/* ========================================================
-            TOP BRAND HEADER PILL
-            ======================================================== */}
-        <div className="flex items-center justify-between gap-1.5">
-          <div 
-            onClick={() => navigate('/portal')}
-            className="flex-1 p-2.5 rounded-2xl bg-black border border-[#D4AF37]/40 shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#D4AF37] transition-all"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#D4AF37]/50 flex items-center justify-center shrink-0">
-              <span className="font-serif text-base font-bold text-[#D4AF37]">D</span>
-            </div>
-            <div className="min-w-0">
-              <div 
-                className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight truncate"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                DysonRelo.com
-              </div>
-              <div className="text-[8px] font-black uppercase tracking-[0.15em] text-[#D4AF37] truncate">
-                NATIONWIDE CONCIERGE
-              </div>
-            </div>
-          </div>
-          {onToggle && (
+        {/* Mobile close button if opened via drawer */}
+        {onToggle && (
+          <div className="flex justify-end pb-1">
             <button
               type="button"
               onClick={onToggle}
-              className="w-9 h-9 rounded-xl bg-black border border-white/20 text-white/70 hover:text-white hover:border-[#D4AF37] flex items-center justify-center cursor-pointer shrink-0 transition-all shadow-md active:scale-95"
+              className="w-8 h-8 rounded-xl bg-black border border-white/20 text-white/70 hover:text-white hover:border-[#D4AF37] flex items-center justify-center cursor-pointer shrink-0 transition-all shadow-md active:scale-95"
               title="Close Sidebar"
             >
               <X className="w-4 h-4" />
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* 55+ YEARS PILL */}
         <div className="flex items-center justify-center gap-2 py-1 px-3 rounded-full border border-[#D4AF37]/60 bg-black/60 text-[10px] font-black tracking-widest text-[#D4AF37] uppercase shadow-sm">
