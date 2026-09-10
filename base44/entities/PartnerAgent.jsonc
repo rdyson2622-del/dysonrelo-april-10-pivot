@@ -71,6 +71,16 @@
       "default": 0,
       "description": "Number of subscribers tagged to this agent"
     },
+    "charlie_walkthrough_done": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the partner agent completed the Meet Charlie walkthrough session"
+    },
+    "charlie_walkthrough_skipped_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp if user dismissed the initial walkthrough modal"
+    },
     "notes": {
       "type": "string",
       "description": "Internal notes"
