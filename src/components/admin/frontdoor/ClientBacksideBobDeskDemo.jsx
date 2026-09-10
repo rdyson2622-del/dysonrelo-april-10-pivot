@@ -118,18 +118,18 @@ export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
           <div className="flex items-center gap-1.5">
             <img 
               src={BOB_PHOTO} 
-              alt="Bob Dyson" 
+              alt="Subscriber" 
               className="w-5 h-5 rounded-full object-cover border border-[#0a0a0a]"
             />
             <span className="text-[9px] font-bold text-[#0a0a0a] uppercase tracking-wide">
-              Bob Dyson
+              Subscriber Desk
             </span>
           </div>
         </div>
 
         {/* ========================================================
             3. THE ONE SHORT COMMAND CARD
-            - “Where am I? Bob’s Client Desk.”
+            - “Where am I? Subscriber Client Desk.”
             - “What’s next? Talk with Charlie or choose a starting point.”
             - Visually integrated "Talk with Charlie" as the speaking face
             ======================================================== */}
@@ -150,14 +150,14 @@ export default function ClientBacksideBobDeskDemo({ deviceView = 'mobile' }) {
           <div className="space-y-1">
             <div className="text-[9px] font-bold uppercase tracking-wider text-[#D4AF37] flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-              <span>Verified Client Desk Session</span>
+              <span>Verified Subscriber Desk Session</span>
             </div>
 
             <h2 
               className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
-              Where am I? Bob’s Client Desk.
+              Where am I? Subscriber Client Desk.
             </h2>
 
             <p className="text-xs text-[#fce38a] font-medium leading-snug">
