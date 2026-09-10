@@ -10,7 +10,6 @@ const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec
 
 export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, className = '' }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
   const audioRef = useRef(null);
 
   // V2V live session tracking
@@ -75,7 +74,6 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
 
         audio.onplay = () => {
           setIsPlaying(true);
-          setHasPlayedOnce(true);
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
           }
@@ -309,36 +307,6 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
           </span>
         </div>
       </div>
-
-      {/* Prominent Voice Greeting Button (Text removed to pick up sidebar vertical space) */}
-      <button
-        type="button"
-        onClick={toggleVoice}
-        className={`w-full py-1.5 px-3 rounded-xl border font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md active:scale-98 ${
-          isPlaying
-            ? 'bg-[#2a2211] border-[#D4AF37] text-[#D4AF37]'
-            : 'bg-[#15120c] hover:bg-[#1d1911] border-[#D4AF37]/60 hover:border-[#D4AF37] text-white'
-        }`}
-      >
-        {isPlaying ? (
-          <>
-            <Square className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />
-            <span className="text-[11px]">Pause Charlie's Greeting</span>
-            <span className="flex items-center gap-0.5 ml-1">
-              <span className="w-1 h-3 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1 h-4 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1 h-2.5 bg-[#D4AF37] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </span>
-          </>
-        ) : (
-          <>
-            <Volume2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="text-[11px] font-semibold">
-              {hasPlayedOnce ? "Replay Charlie's Greeting" : "Hear Charlie's Welcome Greeting"}
-            </span>
-          </>
-        )}
-      </button>
 
       {/* Subtle Link for Subscribed Users */}
       <div className="pt-1.5 border-t border-white/10 flex items-center justify-between text-[9.5px]">
