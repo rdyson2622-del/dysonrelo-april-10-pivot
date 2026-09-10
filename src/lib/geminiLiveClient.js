@@ -34,14 +34,14 @@ class StreamingPcmPlayer {
 
     try {
       const binary = atob(base64Data);
-      const len = binary.length;
+      const len = binary.length - (binary.length % 2);
       const bytes = new Uint8Array(len);
       for (let i = 0; i < len; i++) {
         bytes[i] = binary.charCodeAt(i);
       }
 
       // Convert 16-bit signed PCM (little endian) to Float32
-      const pcm16 = new Int16Array(bytes.buffer);
+      const pcm16 = new Int16Array(bytes.buffer, 0, len / 2);
       const float32 = new Float32Array(pcm16.length);
       for (let i = 0; i < pcm16.length; i++) {
         float32[i] = pcm16[i] / 32768.0;
@@ -216,6 +216,9 @@ export class GeminiLiveSessionClient {
       this.startTime = Date.now();
       this.onStatusChange?.('connecting');
 
+      // Unlock AudioContext immediately within user tap gesture
+      this.pcmPlayer.ensureContext();
+
       // 1. Handshake with backend to validate session & get secure Google WebSocket URL
       const res = await base44.functions.invoke('geminiLiveProxy', {
         action: 'start_session',
@@ -278,6 +281,20 @@ export class GeminiLiveSessionClient {
 
         // 5. Start passive speech recognition for local transcript display
         this.startPassiveSpeechRecognition();
+
+        // 6. Prompt Charlie to speak his opening voice greeting over Algieba
+        const greetingPrompt = {
+          clientContent: {
+            turns: [
+              {
+                role: 'user',
+                parts: [{ text: 'Hello Charlie. Please introduce yourself in one short sentence and ask how you can assist.' }],
+              },
+            ],
+            turnComplete: true,
+          },
+        };
+        ws.send(JSON.stringify(greetingPrompt));
 
         this.onStatusChange?.('listening');
       };

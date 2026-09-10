@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
       }
 
       // Native-audio Live model
-      const model = 'gemini-2.5-flash-preview-native-audio-dialog';
+      const model = 'gemini-2.0-flash-exp';
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${GEMINI_API_KEY}`;
 
       // Log the session start for admin analytics/cost tracking
