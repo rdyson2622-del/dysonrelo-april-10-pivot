@@ -61,24 +61,16 @@ export default function ClientSidebar({ onToggle }) {
 
         {/* ========================================================
             MINI APPS GRID (SOLID BLACK BACKGROUND)
-            Clicking any mini app opens the subject matter on the full right side page.
+            Clicking any mini app opens Charlie's interactive video/audio explainer!
             "My Agent" is exclusively shown if in a broker role or broker portal.
             ======================================================== */}
         <div className="pt-1.5 text-left">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
+          <div className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
             <span>SUBSCRIBER MINI APPS:</span>
-            <button
-              type="button"
-              onClick={() => setExplainerAppId('charlie')}
-              className="text-[#D4AF37] hover:text-[#e8c84a] font-bold text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
-              title="Explainers for unsubscribed viewers"
-            >
-              <HelpCircle className="w-3 h-3 text-[#D4AF37]" />
-              <span>Pill Guide</span>
-            </button>
           </div>
           <IPhoneSpringboardGrid 
             apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS}
+            onAppClick={(app) => setExplainerAppId(app.id)}
             onInfoClick={(app) => setExplainerAppId(app.id)}
           />
         </div>

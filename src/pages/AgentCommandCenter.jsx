@@ -7,6 +7,7 @@ import RelocationProjectCard from '@/components/agentPortal/RelocationProjectCar
 import AddRelocationProjectModal from '@/components/agentPortal/AddRelocationProjectModal';
 import AgentPortalGuide from '@/components/agentPortal/AgentPortalGuide';
 import { GOLD } from '@/components/agentPortal/relocationProjectStatus';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 /**
  * AgentCommandCenter — the Relo Agent Portal's daily command center: KPI
@@ -96,6 +97,9 @@ export default function AgentCommandCenter() {
           onCreated={() => { setShowAddModal(false); refresh(); }}
         />
       )}
+
+      {/* Charlie — page-specific explainer video for the Agent Portal */}
+      <CharliePagePresenter pageKey="portal-relocation-agent" />
     </div>
   );
 }

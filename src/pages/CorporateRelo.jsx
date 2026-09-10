@@ -12,6 +12,7 @@ import ClientCommunicationsExplainer from './ClientCommunicationsExplainer';
 import SolveMyStory from './SolveMyStory';
 import FeaturedBroadcast from '@/components/dnn/FeaturedBroadcast';
 import HRSubscriberDashboard from '@/components/dashboard/HRSubscriberDashboard';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/aa2b5389f_Screenshot2026-08-01at41912PM.png";
@@ -417,6 +418,8 @@ export default function CorporateRelo() {
         {hrSubscriber && <HRSubscriberDashboard subscriber={hrSubscriber} />}
       </div>
 
+      {/* Charlie — page-specific explainer video for the Corporate Relocation / HR Portal */}
+      <CharliePagePresenter pageKey="corporate-relo" />
     </div>
   );
 }

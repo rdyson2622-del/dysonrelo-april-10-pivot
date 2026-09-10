@@ -217,6 +217,16 @@ export default function MiniAppExplainerModal({
     }
   };
 
+  const handleOpenApp = () => {
+    cleanupPlayback();
+    onClose();
+    if (explainer?.route?.startsWith('tel:')) {
+      window.open(explainer.route);
+    } else if (explainer?.route) {
+      navigate(explainer.route);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       
@@ -495,7 +505,7 @@ export default function MiniAppExplainerModal({
         </div>
 
         {/* Action Buttons Footer */}
-        <div className="pt-2 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="pt-2 border-t border-[#0a0a0a]/15 flex flex-col sm:flex-row items-center justify-between gap-2.5">
           <button
             type="button"
             onClick={() => {
@@ -504,18 +514,31 @@ export default function MiniAppExplainerModal({
             }}
             className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#0a0a0a]/25 text-[#0a0a0a] hover:bg-black/10 text-xs font-bold transition-all cursor-pointer"
           >
-            <span>Close Explainer</span>
+            <span>Close</span>
           </button>
 
-          <button
-            type="button"
-            onClick={handleSubscribe}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-black hover:bg-[#1f1f1f] text-[#D4AF37] border border-[#D4AF37] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg active:scale-95"
-          >
-            <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>Pick Your Portal &amp; Subscribe to Unlock</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+            {explainer?.route && (
+              <button
+                type="button"
+                onClick={handleOpenApp}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#0a0a0a] hover:bg-[#1a1a1a] text-white border border-[#D4AF37]/50 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow active:scale-95"
+              >
+                <span>{explainer.keyActionLabel || `Open ${explainer.title}`}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={handleSubscribe}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-black hover:bg-[#1f1f1f] text-[#D4AF37] border border-[#D4AF37] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-lg active:scale-95"
+            >
+              <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Subscribe to Unlock</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+            </button>
+          </div>
         </div>
 
       </div>

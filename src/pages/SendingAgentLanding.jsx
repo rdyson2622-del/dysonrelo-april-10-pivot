@@ -7,6 +7,7 @@ import FindAProWidget from '@/components/portal/FindAProWidget';
 import PropertyPlatformSearch from '@/components/portal/PropertyPlatformSearch';
 import ClientHeroMockup from '@/components/dnn/ClientHeroMockup';
 import SolutionMapEntry from './SolutionMapEntry';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 
@@ -205,6 +206,9 @@ export default function SendingAgentLanding() {
           </p>
         </div>
       </div>
+
+      {/* Charlie — page-specific explainer video for the Relocation Agent Portal */}
+      <CharliePagePresenter pageKey="portal-relocation-agent" />
     </div>
   );
 }
