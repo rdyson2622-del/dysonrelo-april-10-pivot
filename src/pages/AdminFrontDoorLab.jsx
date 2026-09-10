@@ -12,6 +12,7 @@ import RealtorReturnCompanion from '@/components/admin/frontdoor/RealtorReturnCo
 import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
+import ClientBacksideBobDeskDemo from '@/components/admin/frontdoor/ClientBacksideBobDeskDemo';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
