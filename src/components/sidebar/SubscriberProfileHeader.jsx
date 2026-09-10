@@ -324,15 +324,6 @@ export default function SubscriberProfileHeader({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none z-10" />
 
-          {/* Top-left: Role badge */}
-          <div className="absolute top-1.5 left-1.5 z-20">
-            <span 
-              className="px-2 py-0.5 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 shadow-sm"
-            >
-              {roleBadge}
-            </span>
-          </div>
-
           {/* Top-right: Active status */}
           <div className="absolute top-1.5 right-1.5 z-20">
             <span className="flex items-center gap-1 text-[8px] font-bold text-[#10b981] bg-black/80 px-1.5 py-0.5 rounded-full border border-[#10b981]/50">

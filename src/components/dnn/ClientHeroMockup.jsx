@@ -108,15 +108,6 @@ export default function ClientHeroMockup({
                 }`}
                 title={isV2VActive ? "Connected to Charlie V2V — Click to disconnect" : "Click to start live V2V conversation with Charlie"}
               >
-                {/* Top-left: Role badge */}
-                <span 
-                  className="absolute top-2 left-2 z-10 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase shadow-md"
-                  style={{ background: 'rgba(0,0,0,0.85)', border: `1px solid ${GOLD}`, color: GOLD }}
-                >
-                  <span className={`w-1.5 h-1.5 rounded-full ${userSpeaking ? 'bg-emerald-400 animate-ping' : 'bg-emerald-400'}`} />
-                  SUBSCRIBER • HR DESK
-                </span>
-
                 {/* Top-right: V2V status */}
                 <div className="absolute top-2 right-2 z-10">
                   <span 
