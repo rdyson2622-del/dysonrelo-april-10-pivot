@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   User, Edit3, ArrowRight, ShieldCheck, MapPin, 
-  Phone, Mail, Calendar, Compass, X, Check, Sparkles, Eye 
+  Phone, Mail, Calendar, Compass, X, Check, Sparkles, Eye,
+  Volume2, Play, Square, Mic
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import FirstTimeViewerSidebarIntro from './FirstTimeViewerSidebarIntro';
 
 const GOLD = '#D4AF37';
+
+// Authentic Bob Dyson black-shirt headshot in Base44 storage (single source of truth)
+const BOB_PHOTO_PERMANENT = "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/09d1d285a_bob_dyson_black_shirt.webp";
+
+// Authentic Charlie Simmons studio desk photo & audio greeting
+const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
+const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
 
 export default function SubscriberProfileHeader({ 
   onProfileClick,
@@ -15,18 +23,40 @@ export default function SubscriberProfileHeader({
   forcedSubscriber = null,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = (location?.pathname || '').toLowerCase();
+
+  // Detect which of the 6 subscriber portals we are in
+  const isCorporatePortal = currentPath.includes('corporate-relo');
+  const isBrokerPortal = currentPath.includes('broker');
+  const isAgentPortal = currentPath.includes('partner-benefits') || currentPath.includes('agent-command') || currentPath.includes('sending-agent') || currentPath.includes('my-agent');
+  const isReferralAgentPortal = currentPath.includes('referral-agent') || currentPath.includes('referral-process') || currentPath.includes('referral-forms');
+  const isVendorPortal = currentPath.includes('financial-services') || currentPath.includes('vendor');
+  const isClientPortal = currentPath.includes('client-roadmap') || currentPath.includes('relocation-roadmap') || currentPath.includes('relocation-intake') || currentPath.includes('dashboard') || currentPath.includes('home');
+  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
+
+  const isOneOfSixPortals = isCorporatePortal || isBrokerPortal || isAgentPortal || isReferralAgentPortal || isVendorPortal || isClientPortal;
+
   const [currentUser, setCurrentUser] = useState(null);
   const [isGuestMode, setIsGuestMode] = useState(() => {
+    // If explicitly in one of the 6 portals, default to Subscriber mode with the dual box!
     const stored = sessionStorage.getItem('dyson_viewer_mode');
-    if (stored) return stored === 'guest';
-    return true; // Default to 1st time unsubscribed viewer intro
+    if (stored === 'subscriber') return false;
+    if (stored === 'guest') return true;
+    // On the front door / public entry, default to 1st-timer guest view
+    return isFrontDoor;
   });
+
   const [clientRecord, setClientRecord] = useState(null);
   const [subscriberRecord, setSubscriberRecord] = useState(null);
   const [agentRecord, setAgentRecord] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Charlie audio greeting state
+  const [isCharliePlaying, setIsCharliePlaying] = useState(false);
+  const audioRef = useRef(null);
 
   // Editable Form State
   const [formData, setFormData] = useState({
@@ -37,10 +67,88 @@ export default function SubscriberProfileHeader({
     destination_city: '',
     destination_state: 'AZ',
     target_move_date: '',
-    role_type: 'client', // 'client' | 'hr' | 'agent'
+    role_type: 'client',
     photo_url: '',
     notes: '',
   });
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+      }
+    };
+  }, []);
+
+  const toggleCharlieVoice = (e) => {
+    if (e) e.stopPropagation();
+
+    if (isCharliePlaying) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      setIsCharliePlaying(false);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+      }
+      return;
+    }
+
+    try {
+      if (!audioRef.current) {
+        const audio = new Audio(CHARLIE_GREETING_AUDIO);
+        audio.preload = 'auto';
+
+        audio.onplay = () => {
+          setIsCharliePlaying(true);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
+          }
+        };
+
+        audio.onended = () => {
+          setIsCharliePlaying(false);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+          }
+        };
+
+        audio.onpause = () => {
+          setIsCharliePlaying(false);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+          }
+        };
+
+        audio.onerror = () => {
+          setIsCharliePlaying(false);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+          }
+        };
+
+        audioRef.current = audio;
+      } else {
+        audioRef.current.currentTime = 0;
+      }
+
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Playback error or blocked by autoplay policy:', err);
+          setIsCharliePlaying(false);
+        });
+      }
+    } catch (err) {
+      console.error('Failed to trigger Charlie greeting audio:', err);
+      setIsCharliePlaying(false);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -50,14 +158,10 @@ export default function SubscriberProfileHeader({
         const me = await base44.auth.me();
         if (me && isMounted) setCurrentUser(me);
 
-        // Check if explicit role in sessionStorage
-        const savedRole = sessionStorage.getItem('dyson_role') || (me?.role === 'admin' ? 'admin' : 'client');
-
         // 1. Fetch Relocation Client data
         const clients = await base44.entities.RelocationClient.list('-created_date', 1);
         if (clients && clients.length > 0 && isMounted) {
-          const client = clients[0];
-          setClientRecord(client);
+          setClientRecord(clients[0]);
         }
 
         // 2. Fetch DnnSubscriber data
@@ -69,6 +173,7 @@ export default function SubscriberProfileHeader({
         }
 
         // 3. Fetch ActiveRelocationAgent if applicable
+        const savedRole = sessionStorage.getItem('dyson_role') || (me?.role === 'admin' ? 'admin' : 'client');
         if (savedRole === 'agent' || me?.email) {
           const agents = await base44.entities.ActiveRelocationAgent.list('-created_date', 1);
           if (agents && agents.length > 0 && isMounted) {
@@ -84,12 +189,16 @@ export default function SubscriberProfileHeader({
     return () => { isMounted = false; };
   }, []);
 
-  // Compute Active Persona / Role
+  // Compute Active Persona / Role across the 6 portals
   const savedRole = sessionStorage.getItem('dyson_role') || (currentUser?.role === 'admin' ? 'admin' : 'client');
-  const roleType = forcedSubscriber?.role_type || (savedRole === 'agent' ? 'agent' : savedRole === 'hr' ? 'hr' : 'client');
+  let roleType = forcedSubscriber?.role_type || (savedRole === 'agent' ? 'agent' : savedRole === 'hr' ? 'hr' : 'client');
 
-  // Canonical Bob Dyson asset
-  const BOB_PHOTO = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69b57d0bb4c61271a073eceb/fa3407553_Screenshot2026-02-20at90227PM.png';
+  if (isCorporatePortal) roleType = 'hr';
+  else if (isBrokerPortal) roleType = 'broker';
+  else if (isAgentPortal) roleType = 'agent';
+  else if (isReferralAgentPortal) roleType = 'referral_agent';
+  else if (isVendorPortal) roleType = 'vendor';
+  else if (isClientPortal) roleType = 'client';
 
   // Compute Name, Photo, Location (defaults to Bob Dyson as verified subscriber)
   const displayName = forcedSubscriber?.full_name || 
@@ -98,23 +207,34 @@ export default function SubscriberProfileHeader({
                       subscriberRecord?.full_name || 
                       'Bob Dyson';
 
+  // Headshot is pulled from user/client profile, falling back to Bob's black shirt photo
   const photoUrl = forcedSubscriber?.photo_url || 
                    clientRecord?.photo_url || 
-                   BOB_PHOTO;
+                   currentUser?.data?.photo_url || 
+                   BOB_PHOTO_PERMANENT;
 
   const currentCity = forcedSubscriber?.current_city || clientRecord?.current_city || 'Del Mar, CA';
   const destCity = forcedSubscriber?.destination_city || clientRecord?.destination_city?.replace(/,\s*[A-Z]{2}$/i, '') || 'Scottsdale';
   const destState = forcedSubscriber?.destination_state || clientRecord?.destination_state || 'AZ';
 
-  // Role Badge info
-  let roleBadge = 'RELOCATING SUBSCRIBER';
+  // Role Badge info tailored to which of the 6 portals is active
+  let roleBadge = 'SUBSCRIBER • RELOCATING FAMILY';
   let roleSubtitle = `${currentCity} → ${destCity}, ${destState}`;
-  if (roleType === 'hr') {
-    roleBadge = 'CORPORATE HR DESK';
+  if (roleType === 'hr' || isCorporatePortal) {
+    roleBadge = 'SUBSCRIBER • HR DESK';
     roleSubtitle = 'Executive Relocation Hub';
-  } else if (roleType === 'agent') {
-    roleBadge = 'PRN AFFILIATE AGENT';
+  } else if (roleType === 'broker' || isBrokerPortal) {
+    roleBadge = 'SUBSCRIBER • BROKER DESK';
+    roleSubtitle = 'Wisdom Properties • Pilot Brokerage';
+  } else if (roleType === 'agent' || isAgentPortal) {
+    roleBadge = 'SUBSCRIBER • PRN AGENT';
     roleSubtitle = agentRecord ? `${agentRecord.brokerage || 'Dyson Relo'} • ${agentRecord.city || 'Scottsdale'}` : 'Vetted Referral Network';
+  } else if (roleType === 'referral_agent' || isReferralAgentPortal) {
+    roleBadge = 'SUBSCRIBER • REFERRAL AGENT';
+    roleSubtitle = 'Affiliate Referral Network';
+  } else if (roleType === 'vendor' || isVendorPortal) {
+    roleBadge = 'SUBSCRIBER • VETTED VENDOR';
+    roleSubtitle = 'Fiduciary Service Partner';
   }
 
   // Populate form data when modal opens
@@ -147,8 +267,9 @@ export default function SubscriberProfileHeader({
           destination_city: formData.destination_city,
           destination_state: formData.destination_state,
           notes: formData.notes,
+          photo_url: formData.photo_url || BOB_PHOTO_PERMANENT,
         });
-        setClientRecord(prev => ({ ...prev, ...formData }));
+        setClientRecord(prev => ({ ...prev, ...formData, photo_url: formData.photo_url || BOB_PHOTO_PERMANENT }));
       }
       setSaveSuccess(true);
       setTimeout(() => {
@@ -163,7 +284,8 @@ export default function SubscriberProfileHeader({
   };
 
   // 1ST TIME UNSUBSCRIBED VIEWER INTRO AT TOP OF SIDEBAR
-  if (isGuestMode && !forcedSubscriber) {
+  // Strictly reserved for the 1st timer / cold visitor on Front Door
+  if (isGuestMode && !isOneOfSixPortals && !forcedSubscriber) {
     return (
       <FirstTimeViewerSidebarIntro
         onSwitchToSubscriber={() => {
@@ -174,86 +296,152 @@ export default function SubscriberProfileHeader({
     );
   }
 
+  // ========================================================
+  // SUBSCRIBER DUAL BOX FOR THE 6 PORTALS:
+  // 1. TOP BOX: Bob Dyson (Subscriber headshot in black shirt, same size as Charlie)
+  // 2. BOTTOM BOX: Charlie Simmons at his studio desk
+  // ========================================================
   return (
     <>
-      {/* ========================================================
-          SUBSCRIBER PROFILE HEADER IN SIDEBAR
-          Replaces the generic "Search Destinations" cream box.
-          Always visible at top of sidebar across all searches & pages.
-          ======================================================== */}
       <div 
-        onClick={handleOpenModal}
-        className={`w-full p-2.5 sm:p-3 rounded-2xl border text-left shadow-xl transition-all cursor-pointer group hover:border-[#D4AF37] relative overflow-hidden select-none ${className}`}
+        className={`w-full p-2.5 sm:p-3 rounded-2xl border text-left shadow-xl transition-all relative overflow-hidden select-none space-y-2.5 ${className}`}
         style={{
-          background: 'linear-gradient(135deg, #18150f 0%, #0d0b08 100%)',
-          borderColor: `${GOLD}75`,
+          background: 'linear-gradient(160deg, #16130e 0%, #0c0b08 100%)',
+          borderColor: `${GOLD}80`,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1)',
         }}
-        title="Click to view full subscriber details or edit move file"
       >
-        {/* Subtle Top Gold Glow */}
+        {/* Top Subtle Gold Accent Line */}
         <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent pointer-events-none" />
 
-        <div className="flex items-center gap-2.5">
-          {/* Avatar with gold border & active pulse dot */}
-          <div className="relative shrink-0">
-            <img 
-              src={photoUrl} 
-              alt={displayName} 
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-[#D4AF37] shadow-md group-hover:scale-105 transition-transform"
-            />
+        {/* ========================================================
+            1. TOP BOX: BOB DYSON (SUBSCRIBER HEADSHOT IN BLACK SHIRT)
+            Pulls from subscriber profile, exactly same 16:9 size as Charlie's box
+            ======================================================== */}
+        <div 
+          onClick={handleOpenModal}
+          className="relative rounded-xl overflow-hidden border border-[#D4AF37]/60 hover:border-[#D4AF37] shadow-md aspect-[16/9] w-full bg-black group cursor-pointer transition-all duration-300"
+          title="Click to view full subscriber profile & move file"
+        >
+          <img 
+            src={photoUrl} 
+            alt={displayName} 
+            className="w-full h-full object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+
+          {/* Top-left: Role badge */}
+          <div className="absolute top-1.5 left-1.5 z-10">
             <span 
-              className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#10b981] border-2 border-black flex items-center justify-center text-[7.5px] font-black text-black shadow"
-              title="Active Verified Account"
+              className="px-2 py-0.2 rounded-full text-[7.5px] font-black uppercase tracking-wider bg-black/80 text-[#D4AF37] border border-[#D4AF37]/60 shadow-sm"
             >
-              ✓
+              {roleBadge}
             </span>
           </div>
 
-          {/* Name & Basic Info */}
-          <div className="min-w-0 flex-1 leading-tight">
-            <div className="flex items-center justify-between gap-1 mb-0.5">
-              <span 
-                className="text-[7.5px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full text-black bg-[#D4AF37] shadow-xs truncate"
-              >
-                {roleBadge}
-              </span>
-              <span className="text-[8.5px] text-[#10b981] font-bold flex items-center gap-1 shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                Active
-              </span>
-            </div>
+          {/* Top-right: Active status */}
+          <div className="absolute top-1.5 right-1.5 z-10">
+            <span className="flex items-center gap-1 text-[8px] font-bold text-[#10b981] bg-black/80 px-1.5 py-0.2 rounded-full border border-[#10b981]/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+              <span>Active</span>
+            </span>
+          </div>
 
-            <h3 
-              className="text-xs sm:text-sm font-bold text-white tracking-tight truncate group-hover:text-[#D4AF37] transition-colors"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {displayName}
-            </h3>
-
-            <p className="text-[9.5px] text-[#e8c84a] font-semibold truncate mt-0.5 flex items-center gap-1">
-              <MapPin className="w-2.5 h-2.5 shrink-0 text-[#D4AF37]" />
-              <span className="truncate">{roleSubtitle}</span>
-            </p>
+          {/* Lower Left Corner: Subscriber Name */}
+          <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-bold text-white tracking-wide">
+            <span className="flex items-center gap-1 drop-shadow">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+              <span>{displayName}</span>
+            </span>
+            <span className="text-[#D4AF37] drop-shadow text-[8px] uppercase tracking-wider font-semibold">
+              Edit File ✎
+            </span>
           </div>
         </div>
 
-        {/* Action Link: Click to view details / edit */}
-        <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between text-[8.5px] text-white/70 group-hover:text-white transition-colors">
-          <span className="flex items-center gap-1 text-[#D4AF37] font-semibold">
-            <Edit3 className="w-2.5 h-2.5" />
-            <span>Subscriber Details &amp; File</span>
-          </span>
+        {/* ========================================================
+            2. BOTTOM BOX: CHARLIE SIMMONS AT STUDIO DESK
+            Same 16:9 aspect ratio directly below Bob Dyson's box
+            ======================================================== */}
+        <div 
+          onClick={toggleCharlieVoice}
+          className={`relative rounded-xl overflow-hidden border shadow-md aspect-[16/9] w-full bg-black group cursor-pointer transition-all duration-300 ${
+            isCharliePlaying 
+              ? 'border-2 border-[#D4AF37] ring-2 ring-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.6)] scale-[1.01]' 
+              : 'border-[#D4AF37]/60 hover:border-[#D4AF37]'
+          }`}
+          title={isCharliePlaying ? "Click to pause Charlie's voice" : "Click to hear Charlie speak"}
+        >
+          <img 
+            src={CHARLIE_DESK_PHOTO} 
+            alt="Charlie Simmons at DNN Studio Desk" 
+            className={`w-full h-full object-cover object-top transition-transform duration-500 ${
+              isCharliePlaying ? 'scale-105' : 'group-hover:scale-105'
+            }`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          
+          {/* Play/Speaking Badge in Corner */}
+          <div className="absolute top-1.5 right-1.5 z-10">
+            <div 
+              className={`px-2 py-0.5 rounded-full text-[8.5px] font-bold flex items-center gap-1 shadow-lg border transition-all ${
+                isCharliePlaying 
+                  ? 'bg-[#D4AF37] text-black border-black animate-pulse' 
+                  : 'bg-black/80 text-white/90 border-[#D4AF37]/60 group-hover:border-[#D4AF37] group-hover:text-white'
+              }`}
+            >
+              {isCharliePlaying ? (
+                <>
+                  <Square className="w-2 h-2 fill-black" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black">Playing</span>
+                  <span className="flex items-center gap-0.5">
+                    <span className="w-0.5 h-2 bg-black animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-0.5 h-2.5 bg-black animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-0.5 h-2 bg-black animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-2.5 h-2.5 text-[#D4AF37]" />
+                  <span className="uppercase tracking-wider text-[7.5px] font-black text-[#D4AF37]">Click to Hear</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Lower Left Corner: Charlie Simmons Name Tag */}
+          <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-bold text-white tracking-wide">
+            <span className="flex items-center gap-1 drop-shadow">
+              <span className={`w-1.5 h-1.5 rounded-full ${isCharliePlaying ? 'bg-[#D4AF37] animate-ping' : 'bg-[#10b981] animate-pulse'}`} />
+              <span>Charlie Simmons</span>
+            </span>
+            <span className="text-[#D4AF37] drop-shadow text-[8px] uppercase tracking-wider font-semibold">
+              AI Concierge
+            </span>
+          </div>
+        </div>
+
+        {/* Action Row: View / Edit Profile & Switch back to guest if desired */}
+        <div className="pt-1.5 border-t border-white/10 flex items-center justify-between text-[9px]">
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={handleOpenModal}
+            className="text-[#D4AF37] hover:text-[#e8c84a] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+          >
+            <Edit3 className="w-2.5 h-2.5" />
+            <span>Manage Move File</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
               setIsGuestMode(true);
               sessionStorage.setItem('dyson_viewer_mode', 'guest');
             }}
-            className="text-[8px] text-white/45 hover:text-[#D4AF37] transition-colors cursor-pointer"
-            title="Switch back to Guest Welcome Card"
+            className="text-white/40 hover:text-white transition-colors cursor-pointer text-[8px]"
+            title="Switch to 1st Time Guest View"
           >
-            ← Guest Mode
+            1st Timer View
           </button>
         </div>
       </div>
