@@ -69,16 +69,9 @@ export default function LuxuryHeroShowcase({
     let isMounted = true;
 
     async function evaluateFamilyGate() {
-      const isExplicitViewAs = typeof window !== 'undefined' && (
-        localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
-        localStorage.getItem('dyson_view_as') === 'family' ||
-        isSubscriberMode === true
-      );
-      const viewAsEmail = typeof window !== 'undefined' ? localStorage.getItem('dyson_view_as_subscriber_email') : null;
-      const isAdmin = currentUser?.role === 'admin';
-
-      // Admin alone without explicit view-as is NEVER Family
-      if (isAdmin && !isExplicitViewAs) {
+      // The public front door strictly defaults to First-Timer View.
+      // Subscriber mode ONLY activates when explicitly toggled on via isSubscriberMode prop.
+      if (!isSubscriberMode) {
         if (isMounted) {
           setIsFamilySubscriber(false);
           setClientRecord(null);
@@ -86,30 +79,9 @@ export default function LuxuryHeroShowcase({
         return;
       }
 
-      let isFamily = false;
-      let targetEmail = null;
-
-      if (isExplicitViewAs) {
-        isFamily = true;
-        targetEmail = viewAsEmail || currentUser?.email;
-      } else if (currentUser?.email && !isAdmin) {
-        // Authenticated non-admin: check if email is in DnnSubscriber
-        try {
-          const subs = await base44.entities.DnnSubscriber.filter({ email: currentUser.email }, '-created_date', 1);
-          if (subs && subs.length > 0) {
-            isFamily = true;
-            targetEmail = currentUser.email;
-          }
-        } catch (_) {}
-      }
-
-      if (!isFamily) {
-        if (isMounted) {
-          setIsFamilySubscriber(false);
-          setClientRecord(null);
-        }
-        return;
-      }
+      let isFamily = true;
+      let targetEmail = typeof window !== 'undefined' ? localStorage.getItem('dyson_view_as_subscriber_email') : null;
+      targetEmail = targetEmail || currentUser?.email;
 
       // Fetch live RelocationClient data for real city information (no invented milestones)
       let matchedClient = null;
@@ -123,7 +95,7 @@ export default function LuxuryHeroShowcase({
       }
 
       // If view-as without matched email, fetch latest real client to display live database city data
-      if (!matchedClient && isExplicitViewAs) {
+      if (!matchedClient && isSubscriberMode) {
         try {
           const anyClients = await base44.entities.RelocationClient.list('-created_date', 1);
           if (anyClients && anyClients.length > 0) {

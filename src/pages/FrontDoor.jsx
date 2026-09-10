@@ -109,15 +109,16 @@ export default function FrontDoor() {
   const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'high_to_low' | 'low_to_high'
   const [activeListingFilter, setActiveListingFilter] = useState('all'); // 'all' | '0_tax' | 'waterfront' | 'mountain'
   const [showFilterBar, setShowFilterBar] = useState(false);
+  // Default to First-Timer View on the public front door (Charlie intro at top of sidebar)
   const [showSubscriberMode, setShowSubscriberMode] = useState(() => {
     if (typeof window === 'undefined') return false;
     const params = new URLSearchParams(window.location.search);
-    if (params.get('visitor') === '1') {
-      sessionStorage.setItem('dyson_viewer_mode', 'guest');
-      return false;
-    }
-    return localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
-           localStorage.getItem('dyson_view_as') === 'family';
+    if (params.get('subscriber') === '1') return true;
+    // Always default to 1st Timer View
+    sessionStorage.setItem('dyson_viewer_mode', 'guest');
+    localStorage.removeItem('dyson_view_as_family_subscriber');
+    localStorage.removeItem('dyson_view_as');
+    return false;
   });
 
   // Subscriber session & direct-access detection
@@ -146,12 +147,8 @@ export default function FrontDoor() {
       if (user) {
         setCurrentUser(user);
         setIsSubscribed(true);
-        const isExplicitFamily = typeof window !== 'undefined' && (
-          localStorage.getItem('dyson_view_as_family_subscriber') === 'true' ||
-          localStorage.getItem('dyson_view_as') === 'family'
-        );
-        // Admin without view-as must remain Admin chrome and must not receive a Family greeting/card
-        if (user.role !== 'admin' || isExplicitFamily) {
+        // Only show flash notice if explicitly toggled into subscriber mode
+        if (showSubscriberMode) {
           const firstName = user.full_name ? user.full_name.split(' ')[0] : (user.email?.split('@')[0] || 'Bob');
           setFlashNotice(`WELCOME BACK ${firstName.toUpperCase()}`);
           setTimeout(() => {
