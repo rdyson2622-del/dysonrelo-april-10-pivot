@@ -479,54 +479,6 @@ export default function SubscriberProfileHeader({
           </button>
         </div>
 
-        {/* ========================================================
-            4. CHARLIE WELCOME BACK MESSAGE (CUSTOM FOR EACH OF THE 6 PORTALS)
-            Strictly ends with:
-            "All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit."
-            ======================================================== */}
-        <div className="space-y-1 pt-0.5">
-          <div className="flex items-center justify-between gap-1">
-            <h3 
-              className="text-xs sm:text-[13px] font-bold text-white tracking-tight leading-tight"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              {welcomeConfig.welcomeHeading}
-            </h3>
-            <span className="text-[7.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/70 border border-[#D4AF37]/50 text-[#D4AF37]">
-              {welcomeConfig.badge}
-            </span>
-          </div>
-          
-          <p className="text-[10px] sm:text-[10.5px] text-white/90 leading-relaxed font-normal">
-            {welcomeConfig.script}
-          </p>
-        </div>
-
-        {/* Action Row: View / Edit Profile & Switch back to guest if desired */}
-        <div className="pt-1.5 border-t border-white/10 flex items-center justify-between text-[9px]">
-          <button
-            type="button"
-            onClick={handleOpenModal}
-            className="text-[#D4AF37] hover:text-[#e8c84a] font-bold flex items-center gap-1 transition-colors cursor-pointer"
-          >
-            <Edit3 className="w-2.5 h-2.5" />
-            <span>Manage Move File</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              sessionStorage.setItem('dyson_viewer_mode', 'guest');
-              sessionStorage.setItem('dyson_role', 'first_time_visitor');
-              window.dispatchEvent(new Event('dyson_role_change'));
-              window.dispatchEvent(new Event('dyson_viewer_mode_change'));
-            }}
-            className="text-white/40 hover:text-white transition-colors cursor-pointer text-[8px]"
-            title="Switch to 1st Time Guest View"
-          >
-            1st Timer View
-          </button>
-        </div>
       </div>
 
       {/* ========================================================
