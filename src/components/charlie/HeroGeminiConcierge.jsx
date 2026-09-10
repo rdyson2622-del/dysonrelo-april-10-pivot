@@ -43,6 +43,7 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
         if (typeof window !== 'undefined') {
           const isActive = newStatus === 'listening' || newStatus === 'speaking' || newStatus === 'connecting';
           window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: isActive } }));
+          window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status: newStatus, isActive } }));
         }
       },
       onTranscript: (t) => {
@@ -53,6 +54,9 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
       },
       onSpeaker: (role) => {
         setSpeakerRole(role);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('v2v-speaker-change', { detail: { speaker: role } }));
+        }
       },
       onError: (err) => {
         setErrorMessage(err);
@@ -93,11 +97,23 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
     setLiveText('');
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+      window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status: 'ready', isActive: false } }));
+      window.dispatchEvent(new CustomEvent('v2v-speaker-change', { detail: { speaker: null } }));
     }
   };
 
   useEffect(() => {
+    const handleToggleV2V = () => {
+      if (clientRef.current) {
+        handleEnd();
+      } else {
+        handleStart();
+      }
+    };
+    window.addEventListener('toggle-charlie-v2v', handleToggleV2V);
+
     return () => {
+      window.removeEventListener('toggle-charlie-v2v', handleToggleV2V);
       if (clientRef.current) {
         clientRef.current.stop();
         clientRef.current = null;

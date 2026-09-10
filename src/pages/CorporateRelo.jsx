@@ -195,6 +195,9 @@ export default function CorporateRelo() {
         quoteLine1='"We provide a Real Time, lifetime workspace designed to maximize your real estate opportunities.'
         quoteLine2="No sales pitches, just real-time solutions and a clear path to execute results."
         attribution="— Bob Dyson"
+        showSubscriberBox={true}
+        subscriberName="Bob Dyson"
+        subscriberRole="HR Relocation Director"
       />
 
       <SolutionMapEntry hideCharliePresenter />
