@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Radio, Phone } from 'lucide-react';
+import { Compass, Radio, Phone, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import TalkingOrb from '@/components/talkingapp/TalkingOrb';
 import LiveDiscussionBox from '@/components/talkingapp/LiveDiscussionBox';
+import { markCharlieWalkthroughDone } from '@/lib/charlieWalkthrough';
 
 const GOLD = '#D4AF37';
 const CHARLIE_DNN_DESK_PHOTO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png';
@@ -24,8 +25,21 @@ export default function TalkingApp() {
   const [generatingRoadmap, setGeneratingRoadmap] = useState(false);
   const [navTarget, setNavTarget] = useState(null);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const fromParam = urlParams.get('from');
+  const slugParam = urlParams.get('slug');
+  const isWalkthrough = urlParams.get('walkthrough') === '1';
+
   const prevStatusRef = useRef(status);
   const sessionLogIdRef = useRef(null);
+
+  // Mark walkthrough as done once session engages or starts
+  useEffect(() => {
+    const isLive = ['active', 'listening', 'speaking'].includes(status);
+    if (isLive || isWalkthrough) {
+      markCharlieWalkthroughDone({ slug: slugParam });
+    }
+  }, [status, isWalkthrough, slugParam]);
 
   const addTranscript = (entry) => {
     setTranscript((prev) => [
@@ -68,6 +82,40 @@ export default function TalkingApp() {
   return (
     <div className="min-h-full p-3 sm:p-6 md:p-8 space-y-6 text-[#0a0a0a]" style={{ background: '#ede0cc' }}>
       
+      {/* Referral Agent Portal Walkthrough Context Banner */}
+      {fromParam === 'referral_agent' && (
+        <div 
+          className="p-3.5 sm:p-4 rounded-2xl border shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+          style={{
+            background: 'linear-gradient(135deg, #18140e 0%, #0c0b08 100%)',
+            borderColor: '#D4AF37',
+            color: '#ffffff',
+          }}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+            <div>
+              <p className="font-bold text-white text-xs sm:text-sm">
+                Referral Agent Desk Walkthrough with Charlie
+              </p>
+              <p className="text-[11px] text-white/70">
+                Ask Charlie about your 25% referral fee protection, client handoffs, and agent portal features.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate(slugParam ? `/referral-agent/${slugParam}` : '/partner-benefits')}
+            className="px-4 py-2 rounded-xl text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md shrink-0 cursor-pointer hover:scale-105 active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+          >
+            <span>Return to Agent Desk</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* ========================================================
           PAGE HEADER: CHARLIE CONCIERGE IDENTITY
           ======================================================== */}

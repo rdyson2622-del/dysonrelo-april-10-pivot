@@ -96,6 +96,27 @@ The Dyson & Dyson Companies, Inc. provides zero-fee relocation management for em
 Activate your corporate relocation portal suite using the link below:`,
     smsBody: `Hi {{first_name}}, DysonRelo provides zero-fee executive relocation orchestration & independent agent vetting for employers nationwide. Access our corporate suite here: {{return_link}} — Bob Dyson (858) 353-1200`,
   },
+  {
+    id: 'referral_agent_opportunity',
+    name: 'Pre-Enrolled Referral Agent (25% Network)',
+    badge: 'Referral Agent',
+    targetRole: 'referral_agent',
+    subject: 'Your DysonRelo Referral Agent Desk & Charlie AI Concierge Walkthrough',
+    emailIntro: `Dear {{first_name}},
+
+You have been pre-enrolled as an affiliate subscriber in the Dyson & Dyson Referral Agent Network (CA DRE #02303118).
+
+As a Referral Agent Subscriber:
+• You never list, market properties, or handle transaction paperwork.
+• You refer buyers, sellers, and relocating families into our nationwide fiduciary desk and receive a guaranteed 25% referral payout at closing.
+• Charlie Simmons, our AI voice concierge, is live on your desk to walk you through fee protections, client handoffs, and your agent workspace.
+
+Meet Charlie and access your pre-enrolled referral desk here:
+{{return_link}}
+
+Direct voice line to Charlie: https://dysonrelo.com/talking-app`,
+    smsBody: `Hi {{first_name}}, Bob Dyson here. You are pre-enrolled in our DysonRelo 25% Referral Agent Network. Walk the portal with Charlie, our AI concierge: {{return_link}} (or speak directly with Charlie at https://dysonrelo.com/talking-app) — CA DRE #02303118`,
+  },
 ];
 
 export default function SubscriberInviteConsole({ onSentSuccess }) {
@@ -215,8 +236,12 @@ export default function SubscriberInviteConsole({ onSentSuccess }) {
     if (activeRecipient.phone) params.set('phone', activeRecipient.phone);
     if (targetRole) params.set('role', targetRole);
     params.set('ref', 'bob_dyson_invite');
+
+    if (targetRole === 'referral_agent' && selectedContact?.portal_slug) {
+      return `${origin}/referral-agent/${selectedContact.portal_slug}`;
+    }
     return `${origin}/subscribe?${params.toString()}`;
-  }, [activeRecipient, targetRole]);
+  }, [activeRecipient, targetRole, selectedContact]);
 
   // Formatted preview of email message with merge tags replaced
   const formattedEmailBody = useMemo(() => {

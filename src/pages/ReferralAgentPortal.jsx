@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ShieldCheck, Phone, Mail, MapPin, BadgeCheck, Loader2, Users, Send, Megaphone, CalendarClock, PlayCircle } from 'lucide-react';
 import AgentOpportunityPitch from '@/components/referral/AgentOpportunityPitch';
 import ClientExperiencePreview from '@/components/referral/ClientExperiencePreview';
 import ReferralSectionExplainer from '@/components/referral/ReferralSectionExplainer';
 import ReferralAgentSidebar from '@/components/referral/ReferralAgentSidebar';
+import MeetCharlieWalkthroughModal from '@/components/referral/MeetCharlieWalkthroughModal';
+import CharlieDeskCommandCard from '@/components/referral/CharlieDeskCommandCard';
+import {
+  checkCharlieWalkthroughDone,
+  checkCharlieWalkthroughDismissedSession,
+  markCharlieWalkthroughDone,
+  markCharlieWalkthroughSkipped,
+} from '@/lib/charlieWalkthrough';
 
 const GOLD = '#D4AF37';
 const PROCESS_FALLBACK = [
@@ -148,15 +156,68 @@ function CharlieExplainsSection() {
 
 export default function ReferralAgentPortal() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [agent, setAgent] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [confirming, setConfirming] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   useEffect(() => {
-    base44.entities.ReferralAgent.filter({ portal_slug: slug }, '-created_date', 1)
-      .then((res) => setAgent(res?.[0] || null))
-      .finally(() => setLoading(false));
+    let isMounted = true;
+    Promise.all([
+      base44.entities.ReferralAgent.filter({ portal_slug: slug }, '-created_date', 1).catch(() => []),
+      base44.auth.me().catch(() => null),
+    ]).then(([res, user]) => {
+      if (!isMounted) return;
+      const foundAgent = res?.[0] || null;
+      setAgent(foundAgent);
+      if (user) setCurrentUser(user);
+
+      // Check walkthrough requirement
+      const isDone = checkCharlieWalkthroughDone({ user, agent: foundAgent, slug });
+      const isDismissed = checkCharlieWalkthroughDismissedSession({ user, agent: foundAgent, slug });
+      if (!isDone && !isDismissed) {
+        setShowWalkthrough(true);
+      }
+    }).finally(() => {
+      if (isMounted) setLoading(false);
+    });
+
+    return () => { isMounted = false; };
   }, [slug]);
+
+  // Listen for walkthrough completion events
+  useEffect(() => {
+    const handleStatus = (e) => {
+      if (e?.detail?.done) {
+        setShowWalkthrough(false);
+      }
+    };
+    window.addEventListener('charlie-walkthrough-status-changed', handleStatus);
+    return () => window.removeEventListener('charlie-walkthrough-status-changed', handleStatus);
+  }, []);
+
+  const handleTalkWithCharlie = () => {
+    setShowWalkthrough(false);
+    markCharlieWalkthroughDone({
+      userId: currentUser?.id,
+      agentId: agent?.id,
+      agentType: 'referral',
+      slug,
+    });
+    navigate(`/talking-app?from=referral_agent&slug=${encodeURIComponent(slug || '')}&walkthrough=1`);
+  };
+
+  const handleContinueToDesk = () => {
+    setShowWalkthrough(false);
+    markCharlieWalkthroughSkipped({
+      userId: currentUser?.id,
+      agentId: agent?.id,
+      agentType: 'referral',
+      slug,
+    });
+  };
 
   const confirmLicense = async () => {
     if (!agent) return;
@@ -188,7 +249,23 @@ export default function ReferralAgentPortal() {
   return (
     <div className="min-h-screen px-6 py-12 md:pl-64" style={{ background: '#0a0a0a' }}>
       <ReferralAgentSidebar slug={slug} />
-      <div className="max-w-2xl mx-auto">
+
+      {/* First-time Meet Charlie Concierge Walkthrough Modal */}
+      <MeetCharlieWalkthroughModal
+        isOpen={showWalkthrough}
+        agentName={agent?.preferred_name || agent?.name}
+        onTalkWithCharlie={handleTalkWithCharlie}
+        onContinueToDesk={handleContinueToDesk}
+      />
+
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Persistent Speaking Charlie Concierge Command Card on Agent Desk */}
+        <CharlieDeskCommandCard
+          agentName={agent?.preferred_name || agent?.name}
+          portalLabel="Referral Agent Desk"
+          agentSlug={slug}
+        />
+
         <div id="opportunity" className="rounded-2xl overflow-hidden" style={{ background: '#111', border: `1px solid ${GOLD}40` }}>
           <div className="p-8 text-center" style={{ borderBottom: `1px solid ${GOLD}30` }}>
             {agent.photo_url ? (

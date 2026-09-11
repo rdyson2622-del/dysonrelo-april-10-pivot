@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Sparkles, Workflow, FileSignature, Send, Users, 
-  Radio, X, Search, Phone, MessageSquare, ArrowRight, ShieldCheck 
+  Radio, X, Search, Phone, MessageSquare, ArrowRight, ShieldCheck, Mic 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -161,6 +161,38 @@ export default function ReferralAgentSidebar({ slug, onToggle }) {
             </button>
           </div>
 
+          {/* TALK WITH CHARLIE AI CONCIERGE BUTTON */}
+          <div
+            onClick={() => navigate(`/talking-app?from=referral_agent&slug=${encodeURIComponent(agentSlug || '')}`)}
+            className="p-3 rounded-2xl bg-gradient-to-r from-[#1c1810] to-[#0d0b07] border border-[#D4AF37]/80 hover:border-[#D4AF37] transition-all cursor-pointer flex items-center gap-3 shadow-lg group active:scale-98"
+            title="Talk with Charlie Simmons — 2-Way Voice AI Concierge"
+          >
+            <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-[#D4AF37] shrink-0 bg-black shadow">
+              <img
+                src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png"
+                alt="Charlie Simmons"
+                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
+              />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#10b981] border border-black animate-pulse" />
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-black text-white group-hover:text-[#D4AF37] transition-colors">
+                  Talk with Charlie
+                </span>
+                <span className="px-1.5 py-0.2 rounded-full text-[8px] font-bold bg-[#D4AF37] text-black">
+                  V2V
+                </span>
+              </div>
+              <p className="text-[10px] text-white/60 truncate mt-0.5">
+                Voice Walkthrough &amp; Desk Guide
+              </p>
+            </div>
+            <div className="w-7 h-7 rounded-full bg-[#D4AF37] text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow">
+              <Mic className="w-3.5 h-3.5" />
+            </div>
+          </div>
+
           {/* SECTION: REFERRAL TO-DO'S */}
           <div className="space-y-1.5 pt-1 text-left">
             <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1">
@@ -258,6 +290,15 @@ export default function ReferralAgentSidebar({ slug, onToggle }) {
 
       {/* Mobile: horizontal nav bar */}
       <div className="flex md:hidden items-center gap-2 mb-6 flex-wrap sticky top-2 z-20">
+        <button
+          type="button"
+          onClick={() => navigate(`/talking-app?from=referral_agent&slug=${encodeURIComponent(agentSlug || '')}`)}
+          className="px-3 py-1.5 rounded-full text-[10px] font-black tracking-wide uppercase flex items-center gap-1.5 cursor-pointer shadow-md"
+          style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)', color: '#000' }}
+        >
+          <Mic className="w-3 h-3 text-black" />
+          <span>Talk with Charlie</span>
+        </button>
         {items.map(({ key, label, path }) => (
           <button
             key={key}
