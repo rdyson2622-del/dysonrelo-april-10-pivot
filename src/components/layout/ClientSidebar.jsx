@@ -4,6 +4,7 @@ import {
   Phone, MessageSquare, X, ArrowRight, HelpCircle
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
@@ -13,14 +14,34 @@ const GOLD = '#D4AF37';
 export default function ClientSidebar({ onToggle }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isAuthenticated } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
   const [explainerAppId, setExplainerAppId] = useState(null);
+  const [savedRole, setSavedRole] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('dyson_role') || 'client') : 'client');
+  const [viewerMode, setViewerMode] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('dyson_viewer_mode') || 'subscriber') : 'subscriber');
+
+  useEffect(() => {
+    const syncRole = () => {
+      setSavedRole(sessionStorage.getItem('dyson_role') || 'client');
+      setViewerMode(sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+    };
+    window.addEventListener('dyson_role_change', syncRole);
+    window.addEventListener('dyson_viewer_mode_change', syncRole);
+    return () => {
+      window.removeEventListener('dyson_role_change', syncRole);
+      window.removeEventListener('dyson_viewer_mode_change', syncRole);
+    };
+  }, []);
 
   useEffect(() => {
     base44.auth.me().then(u => {
       if (u) setCurrentUser(u);
     }).catch(() => {});
   }, []);
+
+  const currentPath = (location?.pathname || '').toLowerCase();
+  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
+  const isFirstTimeVisitor = !isAuthenticated && (savedRole === 'first_time_visitor' || (isFrontDoor && viewerMode === 'guest'));
 
   return (
     <aside 
@@ -61,28 +82,43 @@ export default function ClientSidebar({ onToggle }) {
 
         {/* ========================================================
             MINI APPS GRID (SOLID BLACK BACKGROUND)
-            Clicking any mini app opens Charlie's interactive video/audio explainer!
-            "My Agent" is exclusively shown if in a broker role or broker portal.
+            Subscribers get full interactive in-place mini apps & routes.
+            1st time / guest viewers see the Pill Guide button & explainer videos.
             ======================================================== */}
         <div className="pt-1.5 text-left">
-          <div className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2">
             <span>SUBSCRIBER MINI APPS:</span>
+            {isFirstTimeVisitor ? (
+              <button
+                type="button"
+                onClick={() => setExplainerAppId('charlie')}
+                className="text-[#D4AF37] hover:text-[#e8c84a] font-bold text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+                title="Pill Guide for new viewers"
+              >
+                <HelpCircle className="w-3 h-3 text-[#D4AF37]" />
+                <span>Pill Guide</span>
+              </button>
+            ) : (
+              <span className="text-white/40 normal-case font-normal text-[9px]">tap to launch on page</span>
+            )}
           </div>
           <IPhoneSpringboardGrid 
             apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS}
-            onAppClick={(app) => setExplainerAppId(app.id)}
+            onAppClick={isFirstTimeVisitor ? (app) => setExplainerAppId(app.id) : undefined}
             onInfoClick={(app) => setExplainerAppId(app.id)}
           />
         </div>
 
       </div>
 
-      {/* Mini App Explainer Modal for Unsubscribed Viewers */}
-      <MiniAppExplainerModal
-        appId={explainerAppId}
-        isOpen={Boolean(explainerAppId)}
-        onClose={() => setExplainerAppId(null)}
-      />
+      {/* Mini App Explainer Modal exclusively for 1st Time / Unsubscribed Viewers */}
+      {isFirstTimeVisitor && (
+        <MiniAppExplainerModal
+          appId={explainerAppId}
+          isOpen={Boolean(explainerAppId)}
+          onClose={() => setExplainerAppId(null)}
+        />
+      )}
 
       {/* ========================================================
           BOTTOM DOCKED: CONCIERGE DIRECT

@@ -6,6 +6,7 @@ import {
   Sparkles, FileText, Search, MessageSquare,
   Calendar, Mail, Calculator, CloudSun
 } from 'lucide-react';
+import { useAuth } from '@/lib/AuthContext';
 import MiniAppModal from '@/components/miniapps/MiniAppModal';
 
 export const IPHONE_DEFAULT_APPS = [
@@ -175,13 +176,16 @@ export default function IPhoneSpringboardGrid({
   useModalForMiniApps = true,
 }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [activeModalApp, setActiveModalApp] = useState(null);
   const [activeExplainerApp, setActiveExplainerApp] = useState(null);
 
-  const isSubscriber = typeof window !== 'undefined' && (
-    sessionStorage.getItem('dyson_viewer_mode') === 'subscriber' || 
-    Boolean(sessionStorage.getItem('dyson_role'))
-  );
+  const savedRole = typeof window !== 'undefined' ? sessionStorage.getItem('dyson_role') : null;
+  const viewerMode = typeof window !== 'undefined' ? sessionStorage.getItem('dyson_viewer_mode') : null;
+
+  const isSubscriber = isAuthenticated || 
+    viewerMode === 'subscriber' || 
+    (Boolean(savedRole) && savedRole !== 'first_time_visitor');
 
   const handleClick = (app) => {
     if (onAppClick) {
