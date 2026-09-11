@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, Play, Square, Sparkles, LogIn } from 'lucide-react';
+import { Volume2, VolumeX, Play, Square, Sparkles, LogIn, ArrowRight, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
 
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 const GOLD = '#D4AF37';
@@ -10,6 +11,7 @@ const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec
 
 export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, className = '' }) {
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
@@ -187,32 +189,74 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
 
       {/* Direct Sign In & Access for Subscribed Users */}
       <div className="pt-2 border-t border-white/10 flex flex-col gap-1.5">
-        <button
-          type="button"
-          onClick={() => navigate('/login?returnTo=/portal')}
-          className="w-full py-1.5 px-3 rounded-xl text-[10px] font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition-all hover:brightness-105 active:scale-95"
-          style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
-        >
-          <LogIn className="w-3 h-3 text-black" />
-          <span>Subscriber Sign In</span>
-        </button>
-        <div className="flex items-center justify-between text-[9px] text-white/45 px-1">
-          <span>First time viewing?</span>
-          <button
-            type="button"
-            onClick={() => {
-              if (onSwitchToSubscriber) {
-                onSwitchToSubscriber();
-              } else {
-                sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
-                window.location.reload();
-              }
-            }}
-            className="text-[#D4AF37] hover:underline cursor-pointer"
-          >
-            Preview Subscriber Card →
-          </button>
-        </div>
+        {isAuthenticated && user ? (
+          <>
+            <div className="flex items-center justify-between text-[9px] px-1 text-white/80">
+              <span className="flex items-center gap-1 truncate max-w-[170px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+                <span className="truncate">Signed in: <strong className="text-white">{user.full_name || user.email}</strong></span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  logout(false);
+                  window.location.href = '/login';
+                }}
+                className="text-[#D4AF37] hover:underline cursor-pointer shrink-0 ml-1"
+                title="Sign out or sign in as a different subscriber"
+              >
+                Switch
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onSwitchToSubscriber) {
+                  onSwitchToSubscriber();
+                } else {
+                  sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+                  window.location.reload();
+                }
+              }}
+              className="w-full py-1.5 px-3 rounded-xl text-[10px] font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition-all hover:brightness-105 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+              title="Open Subscriber Desk & Mini Apps"
+            >
+              <UserCheck className="w-3 h-3 text-black" />
+              <span>Open Subscriber Desk →</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => navigate('/login?returnTo=/portal')}
+              className="w-full py-1.5 px-3 rounded-xl text-[10px] font-bold text-black flex items-center justify-center gap-1.5 cursor-pointer shadow-md transition-all hover:brightness-105 active:scale-95"
+              style={{ background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 100%)' }}
+            >
+              <LogIn className="w-3 h-3 text-black" />
+              <span>Subscriber Sign In</span>
+            </button>
+            <div className="flex items-center justify-between text-[9px] text-white/45 px-1">
+              <span>First time viewing?</span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onSwitchToSubscriber) {
+                    onSwitchToSubscriber();
+                  } else {
+                    sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+                    window.location.reload();
+                  }
+                }}
+                className="text-[#D4AF37] hover:underline cursor-pointer"
+              >
+                Preview Subscriber Card →
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
