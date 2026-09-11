@@ -10,6 +10,7 @@ import FirstTimeViewerSidebarIntro from './FirstTimeViewerSidebarIntro';
 import { GeminiLiveSessionClient } from '@/lib/geminiLiveClient';
 import { CHARLIE_SIMMONS_SYSTEM_PROMPT, CHARLIE_VOICE_NAME } from '@/lib/charlieSimmonsPrompt';
 import { CHARLIE_PORTAL_WELCOME_SCRIPTS, getActivePortalRole } from '@/lib/charliePortalWelcomeScripts';
+import { isFirstTimeVisitorMode } from '@/lib/miniAppExplainers';
 
 const GOLD = '#D4AF37';
 
@@ -29,14 +30,14 @@ export default function SubscriberProfileHeader({
   const currentPath = (location?.pathname || '').toLowerCase();
 
   const [currentUser, setCurrentUser] = useState(null);
-  const [savedRole, setSavedRole] = useState(() => sessionStorage.getItem('dyson_role') || 'client');
-  const [viewerMode, setViewerMode] = useState(() => sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+  const [savedRole, setSavedRole] = useState(() => sessionStorage.getItem('dyson_role') || null);
+  const [, setModeTick] = useState(0);
 
   // Listen to role changes from top command bar
   useEffect(() => {
     const syncRole = () => {
-      setSavedRole(sessionStorage.getItem('dyson_role') || 'client');
-      setViewerMode(sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+      setSavedRole(sessionStorage.getItem('dyson_role') || null);
+      setModeTick((t) => t + 1);
     };
     window.addEventListener('dyson_role_change', syncRole);
     window.addEventListener('dyson_viewer_mode_change', syncRole);
@@ -47,11 +48,16 @@ export default function SubscriberProfileHeader({
   }, []);
 
   // Resolve active portal role among the 6 subscriber roles
-  const activePortalRole = getActivePortalRole(currentPath, savedRole);
+  const activePortalRole = getActivePortalRole(currentPath, savedRole || 'client');
   const welcomeConfig = CHARLIE_PORTAL_WELCOME_SCRIPTS[activePortalRole] || CHARLIE_PORTAL_WELCOME_SCRIPTS.client;
 
-  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
-  const isFirstTimeVisitor = savedRole === 'first_time_visitor' || (isFrontDoor && viewerMode === 'guest');
+  // Show Pill Guide / First-Timer View for:
+  // - sessionStorage guest
+  // - role first_time_visitor
+  // - URL ?visitor=1
+  // - unauthenticated missing role/mode (not subscriber)
+  // Hide ONLY subscriber or role set != first_time_visitor (no !isAuthenticated gate)
+  const isFirstTimeVisitor = isFirstTimeVisitorMode();
 
   const [clientRecord, setClientRecord] = useState(null);
   const [subscriberRecord, setSubscriberRecord] = useState(null);

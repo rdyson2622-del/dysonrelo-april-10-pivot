@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Mic, Home, Building, Users, ArrowRight, 
@@ -6,8 +6,9 @@ import {
   Sparkles, FileText, Search, MessageSquare,
   Calendar, Mail, Calculator, CloudSun
 } from 'lucide-react';
-import { useAuth } from '@/lib/AuthContext';
 import MiniAppModal from '@/components/miniapps/MiniAppModal';
+import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
+import { isSubscriberMode } from '@/lib/miniAppExplainers';
 
 export const IPHONE_DEFAULT_APPS = [
   {
@@ -164,8 +165,6 @@ export const BROKER_DEFAULT_APPS = [
 // Alias for clean terminology
 export const MINI_APPS_CATALOG = IPHONE_DEFAULT_APPS;
 
-import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
-
 export default function IPhoneSpringboardGrid({
   apps = IPHONE_DEFAULT_APPS,
   onAppClick,
@@ -176,16 +175,23 @@ export default function IPhoneSpringboardGrid({
   useModalForMiniApps = true,
 }) {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const [activeModalApp, setActiveModalApp] = useState(null);
   const [activeExplainerApp, setActiveExplainerApp] = useState(null);
+  const [, setModeTick] = useState(0);
 
-  const savedRole = typeof window !== 'undefined' ? sessionStorage.getItem('dyson_role') : null;
-  const viewerMode = typeof window !== 'undefined' ? sessionStorage.getItem('dyson_viewer_mode') : null;
+  useEffect(() => {
+    const handleModeChange = () => setModeTick((t) => t + 1);
+    window.addEventListener('dyson_role_change', handleModeChange);
+    window.addEventListener('dyson_viewer_mode_change', handleModeChange);
+    return () => {
+      window.removeEventListener('dyson_role_change', handleModeChange);
+      window.removeEventListener('dyson_viewer_mode_change', handleModeChange);
+    };
+  }, []);
 
-  const isSubscriber = isAuthenticated || 
-    viewerMode === 'subscriber' || 
-    (Boolean(savedRole) && savedRole !== 'first_time_visitor');
+  // Show explainer for guest, first_time_visitor, ?visitor=1, or unauthenticated missing mode/role.
+  // Hide only subscriber or role set != first_time_visitor (no !isAuthenticated gate).
+  const isSubscriber = isSubscriberMode();
 
   const handleClick = (app) => {
     if (onAppClick) {

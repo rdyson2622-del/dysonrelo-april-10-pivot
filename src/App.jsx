@@ -194,6 +194,17 @@ import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 import MiniAppPage from './pages/MiniAppPage';
 
+// On boot: ?visitor=1 sets dyson_viewer_mode=guest
+if (typeof window !== 'undefined') {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('visitor') === '1') {
+      sessionStorage.setItem('dyson_viewer_mode', 'guest');
+      window.dispatchEvent(new Event('dyson_viewer_mode_change'));
+    }
+  } catch (e) {}
+}
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, isAuthenticated } = useAuth();
 
@@ -480,6 +491,18 @@ const AuthenticatedApp = () => {
 };
 
 function App() {
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('visitor') === '1') {
+          sessionStorage.setItem('dyson_viewer_mode', 'guest');
+          window.dispatchEvent(new Event('dyson_viewer_mode_change'));
+        }
+      } catch (e) {}
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <LayoutProvider>

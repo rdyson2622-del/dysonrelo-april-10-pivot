@@ -262,3 +262,49 @@ export const MINI_APP_EXPLAINERS = [
     charlieVideoUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/7c79ea117_charlie_avatar_clean_concierge.mp4",
   },
 ];
+
+/**
+ * Audit gate for first-time / guest viewers vs. active subscribers.
+ * Show Pill Guide + charlieVideoUrl explainer for:
+ * - sessionStorage guest (dyson_viewer_mode === 'guest')
+ * - role first_time_visitor (dyson_role === 'first_time_visitor')
+ * - URL ?visitor=1
+ * - unauthenticated missing role/mode (not subscriber)
+ *
+ * Hide ONLY:
+ * - subscriber (dyson_viewer_mode === 'subscriber')
+ * - or role set != first_time_visitor (e.g. client, agent, broker, admin)
+ */
+export function isFirstTimeVisitorMode() {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('visitor') === '1') {
+      sessionStorage.setItem('dyson_viewer_mode', 'guest');
+      return true;
+    }
+  } catch (e) {}
+
+  let viewerMode = null;
+  let savedRole = null;
+  try {
+    viewerMode = sessionStorage.getItem('dyson_viewer_mode');
+    savedRole = sessionStorage.getItem('dyson_role');
+  } catch (e) {}
+
+  // Explicit guest / visitor triggers
+  if (viewerMode === 'guest') return true;
+  if (savedRole === 'first_time_visitor') return true;
+
+  // Hide ONLY subscriber or role set != first_time_visitor
+  if (viewerMode === 'subscriber') return false;
+  if (savedRole && savedRole !== 'first_time_visitor') return false;
+
+  // Missing mode/role -> treat as first-time visitor (do not default to subscriber/client)
+  return true;
+}
+
+export function isSubscriberMode() {
+  return !isFirstTimeVisitorMode();
+}

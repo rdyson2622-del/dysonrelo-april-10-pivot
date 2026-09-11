@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, ArrowRight, ShieldCheck, Phone, 
-  MessageSquare, ExternalLink, Sparkles, X
+  MessageSquare, ExternalLink, Sparkles, X, HelpCircle
 } from 'lucide-react';
 import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
+import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
+import { isFirstTimeVisitorMode } from '@/lib/miniAppExplainers';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -14,6 +16,18 @@ export default function Sidebar({ userRole, onToggle }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState(null);
+  const [explainerAppId, setExplainerAppId] = useState(null);
+  const [, setModeTick] = useState(0);
+
+  useEffect(() => {
+    const syncRole = () => setModeTick((t) => t + 1);
+    window.addEventListener('dyson_role_change', syncRole);
+    window.addEventListener('dyson_viewer_mode_change', syncRole);
+    return () => {
+      window.removeEventListener('dyson_role_change', syncRole);
+      window.removeEventListener('dyson_viewer_mode_change', syncRole);
+    };
+  }, []);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -22,6 +36,7 @@ export default function Sidebar({ userRole, onToggle }) {
   }, []);
 
   const signedInName = currentUser?.full_name || 'Robert Dyson';
+  const isFirstTimeVisitor = isFirstTimeVisitorMode();
 
   return (
     <aside 
@@ -67,12 +82,37 @@ export default function Sidebar({ userRole, onToggle }) {
         <div className="pt-2 text-left">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-[#D4AF37] px-1 mb-2.5">
             <span>CONCIERGE MINI APPS:</span>
-            <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
+            {isFirstTimeVisitor ? (
+              <button
+                type="button"
+                onClick={() => setExplainerAppId('charlie')}
+                className="text-[#D4AF37] hover:text-[#e8c84a] font-bold text-[9px] flex items-center gap-1 cursor-pointer transition-colors"
+                title="Pill Guide for new viewers"
+              >
+                <HelpCircle className="w-3 h-3 text-[#D4AF37]" />
+                <span>Pill Guide</span>
+              </button>
+            ) : (
+              <span className="text-white/40 normal-case font-normal text-[10px]">tap to launch</span>
+            )}
           </div>
-          <IPhoneSpringboardGrid apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS} />
+          <IPhoneSpringboardGrid 
+            apps={location.pathname.startsWith('/broker') ? BROKER_DEFAULT_APPS : IPHONE_DEFAULT_APPS}
+            onAppClick={isFirstTimeVisitor ? (app) => setExplainerAppId(app.id) : undefined}
+            onInfoClick={(app) => setExplainerAppId(app.id)}
+          />
         </div>
 
       </div>
+
+      {/* Mini App Explainer Modal exclusively for 1st Time / Unsubscribed Viewers */}
+      {isFirstTimeVisitor && (
+        <MiniAppExplainerModal
+          appId={explainerAppId}
+          isOpen={Boolean(explainerAppId)}
+          onClose={() => setExplainerAppId(null)}
+        />
+      )}
 
       {/* ========================================================
           BOTTOM DOCKED: CONCIERGE DIRECT

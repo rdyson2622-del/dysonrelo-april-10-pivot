@@ -8,22 +8,21 @@ import { useAuth } from '@/lib/AuthContext';
 import SubscriberProfileHeader from '@/components/sidebar/SubscriberProfileHeader';
 import IPhoneSpringboardGrid, { BROKER_DEFAULT_APPS, IPHONE_DEFAULT_APPS } from '@/components/springboard/IPhoneSpringboardGrid';
 import MiniAppExplainerModal from '@/components/miniapps/MiniAppExplainerModal';
+import { isFirstTimeVisitorMode } from '@/lib/miniAppExplainers';
 
 const GOLD = '#D4AF37';
 
 export default function ClientSidebar({ onToggle }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
   const [explainerAppId, setExplainerAppId] = useState(null);
-  const [savedRole, setSavedRole] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('dyson_role') || 'client') : 'client');
-  const [viewerMode, setViewerMode] = useState(() => typeof window !== 'undefined' ? (sessionStorage.getItem('dyson_viewer_mode') || 'subscriber') : 'subscriber');
+  const [, setModeTick] = useState(0);
 
   useEffect(() => {
     const syncRole = () => {
-      setSavedRole(sessionStorage.getItem('dyson_role') || 'client');
-      setViewerMode(sessionStorage.getItem('dyson_viewer_mode') || 'subscriber');
+      setModeTick((t) => t + 1);
     };
     window.addEventListener('dyson_role_change', syncRole);
     window.addEventListener('dyson_viewer_mode_change', syncRole);
@@ -39,9 +38,13 @@ export default function ClientSidebar({ onToggle }) {
     }).catch(() => {});
   }, []);
 
-  const currentPath = (location?.pathname || '').toLowerCase();
-  const isFrontDoor = currentPath === '/' || currentPath === '/portal';
-  const isFirstTimeVisitor = !isAuthenticated && (savedRole === 'first_time_visitor' || (isFrontDoor && viewerMode === 'guest'));
+  // Show Pill Guide + charlieVideoUrl explainer for:
+  // - sessionStorage guest (dyson_viewer_mode === 'guest')
+  // - role first_time_visitor (dyson_role === 'first_time_visitor')
+  // - URL ?visitor=1
+  // - unauthenticated missing role/mode (not subscriber)
+  // Hide ONLY subscriber or role set != first_time_visitor (no !isAuthenticated gate)
+  const isFirstTimeVisitor = isFirstTimeVisitorMode();
 
   return (
     <aside 
