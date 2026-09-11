@@ -53,6 +53,13 @@ export default function LabInspectorHeader({
             >
               <span>📱 10 App Catalog</span>
             </Link>
+            <Link
+              to="/admin/relocation-call-desk"
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold text-[#D4AF37] hover:text-white hover:bg-white/10 transition-all cursor-pointer border-l border-white/20 ml-1 pl-2"
+              title="Relocation Call Desk (Step 1 Stub)"
+            >
+              <span>📞 Relocation Call Desk</span>
+            </Link>
           </div>
         )}
 

@@ -190,6 +190,7 @@ import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
+import AdminRelocationCallDesk from './pages/AdminRelocationCallDesk';
 import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 import MiniAppPage from './pages/MiniAppPage';
@@ -462,6 +463,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/voice-concierge-analytics" element={<AdminVoiceConciergeAnalytics />} />
         <Route path="/admin/front-door-lab" element={<AdminFrontDoorLab />} />
         <Route path="/admin/app-store-mockup" element={<AdminAppStoreMockup />} />
+        <Route path="/admin/relocation-call-desk" element={<AdminRelocationCallDesk />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
         <Route path="/admin/dnn/studio-landing-source" element={<AdminDnnStudioLandingSource />} />
         <Route path="/admin/dnn/charlie-studio-solution" element={<AdminDnnCharlieStudioSolution />} />

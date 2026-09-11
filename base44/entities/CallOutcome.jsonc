@@ -1,0 +1,50 @@
+{
+  "name": "CallOutcome",
+  "type": "object",
+  "properties": {
+    "pending_lead": {
+      "type": "string",
+      "description": "Reference to PendingLead ID"
+    },
+    "called_by": {
+      "type": "string",
+      "description": "Name or email of the caller"
+    },
+    "called_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when call was made"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Call outcome (e.g. connected, voicemail, callback, no_answer)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes from the call"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Scheduled follow up date"
+    },
+    "open_referral": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether an open referral opportunity resulted from this call"
+    }
+  },
+  "required": [
+    "called_by"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

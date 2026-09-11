@@ -1,0 +1,52 @@
+{
+  "name": "LeadListBatch",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Batch descriptive name or label"
+    },
+    "market": {
+      "type": "string",
+      "description": "Target market (e.g. LA, SF_Bay, SD)"
+    },
+    "min_price": {
+      "type": "number",
+      "description": "Minimum listing price threshold"
+    },
+    "pending_window_days": {
+      "type": "number",
+      "description": "Days in pending status window"
+    },
+    "list_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Batch reference listing date"
+    },
+    "assigned_relocation_agent": {
+      "type": "string",
+      "description": "Reference to assigned relocation agent"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Admin email or user who created this batch"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Batch notes or criteria"
+    }
+  },
+  "required": [
+    "label"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

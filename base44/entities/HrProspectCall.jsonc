@@ -1,0 +1,52 @@
+{
+  "name": "HrProspectCall",
+  "type": "object",
+  "properties": {
+    "company": {
+      "type": "string",
+      "description": "Target company name"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "HR contact or executive name"
+    },
+    "title": {
+      "type": "string",
+      "description": "Contact title or position"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number called"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Call outcome result"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Call discussion notes"
+    },
+    "called_by": {
+      "type": "string",
+      "description": "Name or email of the caller"
+    },
+    "called_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when call occurred"
+    }
+  },
+  "required": [
+    "company"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

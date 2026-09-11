@@ -1,0 +1,99 @@
+{
+  "name": "PendingLead",
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "string",
+      "description": "Property street address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "market": {
+      "type": "string",
+      "enum": [
+        "LA",
+        "SF_Bay",
+        "SD",
+        "other"
+      ],
+      "description": "Target California/regional market"
+    },
+    "list_price": {
+      "type": "number",
+      "description": "Listing price"
+    },
+    "pending_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date property entered pending status"
+    },
+    "property_type": {
+      "type": "string",
+      "description": "Property type (e.g. Single Family, Condo, Luxury Estate)"
+    },
+    "listing_office": {
+      "type": "string",
+      "description": "Listing brokerage office"
+    },
+    "listing_agent_name": {
+      "type": "string",
+      "description": "Listing agent name"
+    },
+    "listing_agent_phone": {
+      "type": "string",
+      "description": "Listing agent phone number"
+    },
+    "listing_agent_email": {
+      "type": "string",
+      "description": "Listing agent email address"
+    },
+    "brokerage_independent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the listing brokerage is an independent boutique"
+    },
+    "source": {
+      "type": "string",
+      "description": "Data source (e.g. MLS, Batch, Manual Import)"
+    },
+    "assigned_relocation_agent": {
+      "type": "string",
+      "description": "Reference to assigned relocation agent"
+    },
+    "list_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Original MLS listing date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "called",
+        "callback",
+        "yes_moving",
+        "no",
+        "wrong_number",
+        "do_not_call"
+      ],
+      "default": "new",
+      "description": "Lead call lifecycle status"
+    }
+  },
+  "required": [
+    "address",
+    "market"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

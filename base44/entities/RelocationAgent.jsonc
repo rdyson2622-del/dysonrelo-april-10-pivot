@@ -1,0 +1,57 @@
+{
+  "name": "RelocationAgent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Agent's full name"
+    },
+    "preferred_name": {
+      "type": "string",
+      "description": "First name or preferred outreach name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Agent's email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Agent's phone number"
+    },
+    "brokerage": {
+      "type": "string",
+      "description": "Brokerage name or affiliation"
+    },
+    "city": {
+      "type": "string",
+      "description": "Operating city"
+    },
+    "target_territories": {
+      "type": "string",
+      "description": "Residential territories and markets served"
+    },
+    "status": {
+      "type": "string",
+      "default": "Relocation Agent",
+      "description": "Agent status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    }
+  },
+  "required": [
+    "name",
+    "email"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

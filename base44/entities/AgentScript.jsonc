@@ -1,0 +1,47 @@
+{
+  "name": "AgentScript",
+  "type": "object",
+  "properties": {
+    "script_key": {
+      "type": "string",
+      "enum": [
+        "pending_listing",
+        "hr"
+      ],
+      "description": "Script identifier type: pending_listing or hr"
+    },
+    "title": {
+      "type": "string",
+      "description": "Script title"
+    },
+    "body": {
+      "type": "string",
+      "description": "Full script text for call desk operator"
+    },
+    "version_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Version date of script"
+    },
+    "is_current": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this is the current active script version"
+    }
+  },
+  "required": [
+    "script_key",
+    "title",
+    "body"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
