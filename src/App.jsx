@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import PageNotFound from './lib/PageNotFound';
 import PageNumberBadge from './components/PageNumberBadge';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { safeReturnTo } from '@/lib/authReturnTo';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -220,7 +221,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Public auth routes */}
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/portal" replace /> : <Login />} />
+      <Route path="/login" element={isAuthenticated ? <Navigate to={safeReturnTo()} replace /> : <Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
@@ -294,7 +295,7 @@ const AuthenticatedApp = () => {
       <Route path="/role-selector" element={<RoleSelector />} />
 
       {/* Everything below requires authentication */}
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+      <Route element={<ProtectedRoute />}>
         {/* Consumer Routes with Sidebar Layout */}
         {/* ⚠️ CRITICAL: These routes are essential for the app. Do not remove without careful review. */}
         <Route element={<AppLayout />}>

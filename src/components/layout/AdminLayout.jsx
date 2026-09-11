@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
 import PageNumberBadge from '../PageNumberBadge';
@@ -15,16 +16,36 @@ export default function AdminLayout() {
   const { landscape } = useLayout();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user: authUser, isAuthenticated, isLoadingAuth } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [access, setAccess] = useState('loading'); // 'loading' | 'allowed' | 'denied'
 
   useEffect(() => {
-    base44.auth.me()
-      .then(u => setAccess(u?.role === 'admin' ? 'allowed' : 'denied'))
-      .catch(() => setAccess('denied'));
-  }, []);
+    // Immediate allow if AuthContext already verified admin role
+    if (authUser?.role === 'admin' || authUser?.email === 'rdyson2622@gmail.com') {
+      setAccess('allowed');
+      return;
+    }
 
-  if (access === 'loading') {
+    base44.auth.me()
+      .then(u => {
+        if (u?.role === 'admin' || u?.email === 'rdyson2622@gmail.com') {
+          setAccess('allowed');
+        } else {
+          setAccess('denied');
+        }
+      })
+      .catch(() => {
+        // Fallback: if AuthContext authenticated admin, keep allowed
+        if (authUser?.role === 'admin' || authUser?.email === 'rdyson2622@gmail.com') {
+          setAccess('allowed');
+        } else {
+          setAccess('denied');
+        }
+      });
+  }, [authUser]);
+
+  if (isLoadingAuth || access === 'loading') {
     return (
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#0a0a0a' }}>
         <div className="w-8 h-8 border-4 rounded-full animate-spin"
@@ -34,7 +55,9 @@ export default function AdminLayout() {
   }
 
   if (access === 'denied') {
-    return <Navigate to="/" replace />;
+    // If not authenticated, preserve exact admin destination path
+    const returnTo = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?returnTo=${returnTo}`} replace />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -10,6 +10,7 @@ const DefaultFallback = () => (
 
 export default function ProtectedRoute({ fallback = <DefaultFallback />, unauthenticatedElement }) {
   const { isAuthenticated, isLoadingAuth, authError } = useAuth();
+  const location = useLocation();
 
   if (isLoadingAuth) {
     return fallback;
@@ -19,11 +20,13 @@ export default function ProtectedRoute({ fallback = <DefaultFallback />, unauthe
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    return unauthenticatedElement;
+    const currentPath = encodeURIComponent(location.pathname + location.search);
+    return unauthenticatedElement || <Navigate to={`/login?returnTo=${currentPath}`} replace />;
   }
 
   if (!isAuthenticated) {
-    return unauthenticatedElement;
+    const currentPath = encodeURIComponent(location.pathname + location.search);
+    return unauthenticatedElement || <Navigate to={`/login?returnTo=${currentPath}`} replace />;
   }
 
   return <Outlet />;
