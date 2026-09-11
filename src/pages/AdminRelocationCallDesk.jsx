@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { 
   PhoneCall, Users, FileText, Database, ShieldAlert,
   Plus, CheckCircle, Clock, Calendar, Search, Filter,
-  Phone, Building2, User, ArrowRight
+  Phone, Building2, User, ArrowRight, Lock, FileSpreadsheet,
+  UserCheck, LayoutDashboard, BookOpen, BarChart3, Shield
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -83,6 +84,159 @@ export default function AdminRelocationCallDesk() {
             {agents.find(a => a.email === 'lisa@lisahurt.com')?.name || 'Lisa Hurt'}
           </span>
           <span className="text-[10px] text-[#10b981] font-bold">(Assigned)</span>
+        </div>
+      </div>
+
+      {/* STEP 1: PURPOSE LINE & GOVERNANCE LOCK BADGES */}
+      <div 
+        className="p-4 rounded-2xl border space-y-3 shadow-md"
+        style={{
+          background: '#0d0d0d',
+          borderColor: 'rgba(212,175,55,0.3)',
+        }}
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-2 border-b border-white/10">
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37] mb-1">
+              STEP 1 PURPOSE &amp; OPERATIONAL BOUNDARY
+            </div>
+            <p className="text-sm sm:text-base font-semibold text-white tracking-tight">
+              Daily $2M+ pending listing calls for relocation agents (Lisa Hurt) — separate from referral agents.
+            </p>
+          </div>
+        </div>
+
+        {/* 3 Dedicated Lock Badges */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black border border-amber-500/60 text-amber-400 text-xs font-bold shadow-sm">
+            <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>No blast email/SMS</span>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black border border-[#D4AF37] text-[#D4AF37] text-xs font-bold shadow-sm">
+            <Lock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+            <span>Relocation agent ≠ referral agent</span>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black border border-sky-500/60 text-sky-400 text-xs font-bold shadow-sm">
+            <Lock className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+            <span>Manual import until MLS feed</span>
+          </div>
+        </div>
+      </div>
+
+      {/* COMING NEXT: FIVE LABELED STUB CARDS */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+            <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-[#D4AF37]">
+              COMING NEXT
+            </h2>
+            <span className="text-[10px] text-white/50 font-medium">
+              (Stage 2 Call Desk Architecture)
+            </span>
+          </div>
+          <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider">
+            5 Stubs In Place
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {/* Card 1 */}
+          <div className="p-3.5 rounded-2xl bg-[#0d0d0d] border border-white/10 hover:border-[#D4AF37]/50 transition-all flex flex-col justify-between space-y-2">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center text-[#D4AF37]">
+                <FileSpreadsheet className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-bold text-white leading-tight">
+                Generate / Import today’s list (CSV/Numbers)
+              </h3>
+              <p className="text-[11px] text-white/60 leading-snug">
+                Daily $2M+ pending listings import via CSV or Numbers spreadsheet into PendingLead schema.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/40 font-mono">
+              <span>Stub 1/5</span>
+              <span className="text-[#D4AF37] font-semibold">Placeholder</span>
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-3.5 rounded-2xl bg-[#0d0d0d] border border-white/10 hover:border-[#D4AF37]/50 transition-all flex flex-col justify-between space-y-2">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center text-[#D4AF37]">
+                <UserCheck className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-bold text-white leading-tight">
+                Assign batch to relocation agent
+              </h3>
+              <p className="text-[11px] text-white/60 leading-snug">
+                One-click allocation of targeted batch to assigned relocation affiliate (Lisa Hurt).
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/40 font-mono">
+              <span>Stub 2/5</span>
+              <span className="text-[#D4AF37] font-semibold">Placeholder</span>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-3.5 rounded-2xl bg-[#0d0d0d] border border-white/10 hover:border-[#D4AF37]/50 transition-all flex flex-col justify-between space-y-2">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center text-[#D4AF37]">
+                <LayoutDashboard className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-bold text-white leading-tight">
+                Agent working board
+              </h3>
+              <p className="text-[11px] text-white/60 leading-snug">
+                High-density daily caller board with inline disposition, outcome logging, and callback calendar.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/40 font-mono">
+              <span>Stub 3/5</span>
+              <span className="text-[#D4AF37] font-semibold">Placeholder</span>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="p-3.5 rounded-2xl bg-[#0d0d0d] border border-white/10 hover:border-[#D4AF37]/50 transition-all flex flex-col justify-between space-y-2">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center text-[#D4AF37]">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-bold text-white leading-tight">
+                Scripts library (pending + HR)
+              </h3>
+              <p className="text-[11px] text-white/60 leading-snug">
+                Version-controlled fiduciary scripts for Pending Listing inquiries and Corporate HR onboarding calls.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/40 font-mono">
+              <span>Stub 4/5</span>
+              <span className="text-[#D4AF37] font-semibold">Placeholder</span>
+            </div>
+          </div>
+
+          {/* Card 5 */}
+          <div className="p-3.5 rounded-2xl bg-[#0d0d0d] border border-white/10 hover:border-[#D4AF37]/50 transition-all flex flex-col justify-between space-y-2">
+            <div className="space-y-1.5">
+              <div className="w-8 h-8 rounded-xl bg-black border border-white/20 flex items-center justify-center text-[#D4AF37]">
+                <BarChart3 className="w-4 h-4" />
+              </div>
+              <h3 className="text-xs font-bold text-white leading-tight">
+                Analytics (pending vs HR separate)
+              </h3>
+              <p className="text-[11px] text-white/60 leading-snug">
+                Split performance telemetry tracking pending lead connect rates independently from HR prospect calls.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-white/40 font-mono">
+              <span>Stub 5/5</span>
+              <span className="text-[#D4AF37] font-semibold">Placeholder</span>
+            </div>
+          </div>
         </div>
       </div>
 
