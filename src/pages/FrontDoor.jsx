@@ -466,7 +466,7 @@ export default function FrontDoor() {
 
 
           {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
-          <section id="portal-subscribe-section" className="px-5 sm:px-8 py-6 border-t scroll-mt-6" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
+          <section id="institutional-gateways-section" className="px-5 sm:px-8 py-6 border-t scroll-mt-6" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
             <PartnerPortalGateways onSelectRole={setSelectedRoleForSubscription} />
             <RoleSubscriptionDeck
               activeRole={selectedRoleForSubscription}

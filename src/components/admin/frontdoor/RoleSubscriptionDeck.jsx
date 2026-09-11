@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
   Building2, Star, Briefcase, Handshake, Wrench, Home,
@@ -126,6 +127,12 @@ const ROLES = [
 
 export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
   const [selectedRoleId, setSelectedRoleId] = useState(activeRole || 'hr');
+
+  useEffect(() => {
+    if (activeRole) {
+      setSelectedRoleId(activeRole);
+    }
+  }, [activeRole]);
   const [form, setForm] = useState({
     full_name: 'Bob Dyson',
     email: 'rdyson2622@gmail.com',
@@ -192,7 +199,7 @@ export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
   };
 
   return (
-    <div id="portal-subscribe-section" className="w-full max-w-6xl mx-auto py-10 scroll-mt-6">
+    <div id="role-subscription-deck" className="w-full max-w-6xl mx-auto py-10 scroll-mt-6">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-8">
         <div
@@ -325,8 +332,8 @@ export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
                   <p className="text-xs text-white/70">
                     Your subscription has been activated. You can now access your dedicated workspace and all relocation tools.
                   </p>
-                  <a
-                    href={currentRole.dest}
+                  <Link
+                    to={currentRole.dest}
                     className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full text-xs font-black uppercase tracking-wider cursor-pointer shadow-lg hover:brightness-110"
                     style={{
                       background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
@@ -335,7 +342,7 @@ export default function RoleSubscriptionDeck({ activeRole, onSelectRole }) {
                   >
                     <span>Enter {currentRole.label} Portal Now</span>
                     <ArrowRight className="w-4 h-4" />
-                  </a>
+                  </Link>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-3.5">

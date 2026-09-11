@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Building2, Briefcase, Star, Handshake, Wrench, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Building2, Briefcase, Star, Handshake, Wrench, ShieldCheck, ArrowRight, Sparkles, LogIn } from 'lucide-react';
+import { useAuth } from '@/lib/AuthContext';
 
 const GOLD = '#D4AF37';
 
@@ -14,6 +15,7 @@ const GATEWAYS = [
     description: 'White-glove executive and employee relocation with zero management fees. Dedicated concierge tracking and full policy compliance.',
     cta: 'Subscribe to HR Relo',
     path: '/corporate-relo',
+    enrollPath: '/corporate-relo',
     highlight: true,
   },
   {
@@ -25,6 +27,7 @@ const GATEWAYS = [
     description: 'Receive pre-qualified buyers and sellers from our corporate and consumer relocation pipeline. 20+ vetting standards.',
     cta: 'Join Agent Network',
     path: '/agent-command-center',
+    enrollPath: '/agent-subscribe',
     highlight: false,
   },
   {
@@ -36,6 +39,7 @@ const GATEWAYS = [
     description: 'Institutional referral pipeline management, transaction oversight, and co-branded concierge tools for your entire firm.',
     cta: 'Enroll Brokerage',
     path: '/broker-portal',
+    enrollPath: '/broker-portal',
     highlight: false,
   },
   {
@@ -47,6 +51,7 @@ const GATEWAYS = [
     description: 'Protect and monetize your real estate license. Introduce out-of-market clients — we manage every milestone while your 25% fee is secure.',
     cta: 'Activate 25% Referral',
     path: '/partner-benefits',
+    enrollPath: '/partner-benefits',
     highlight: false,
   },
   {
@@ -57,18 +62,34 @@ const GATEWAYS = [
     headline: 'Relocation Vendors & Lenders',
     description: 'Movers, inspectors, title officers, appraisers, and home service providers integrated directly into active client roadmaps.',
     cta: 'Apply as Vendor',
-    path: '/search',
+    path: '/financial-services',
+    enrollPath: '/financial-services',
     highlight: false,
   },
 ];
 
 export default function PartnerPortalGateways({ onSelectRole }) {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
   const handleScrollToSubscribe = (roleId) => {
     onSelectRole?.(roleId);
-    const target = document.getElementById('portal-subscribe-section');
+    const target = document.getElementById('role-subscription-deck');
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleSignInClick = (gateway) => {
+    if (isAuthenticated) {
+      navigate(gateway.path);
+    } else {
+      navigate(`/login?returnTo=${encodeURIComponent(gateway.path)}`);
+    }
+  };
+
+  const handleCtaClick = (gateway) => {
+    navigate(gateway.enrollPath || gateway.path);
   };
 
   return (
@@ -152,27 +173,43 @@ export default function PartnerPortalGateways({ onSelectRole }) {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                <Link
-                  to={`/login?returnTo=${encodeURIComponent(gateway.path)}`}
-                  className="text-[11px] text-[#D4AF37] hover:text-[#e8c84a] font-semibold underline flex items-center gap-1"
-                  title={`Sign in directly to ${gateway.role}`}
-                >
-                  <span>Subscriber Sign In →</span>
-                </Link>
+              <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSignInClick(gateway)}
+                    className="text-[11px] text-[#D4AF37] hover:text-[#e8c84a] font-semibold underline flex items-center gap-1 cursor-pointer transition-colors"
+                    title={isAuthenticated ? `Enter ${gateway.role} portal directly` : `Sign in directly to ${gateway.role}`}
+                  >
+                    <span>{isAuthenticated ? 'Enter Portal →' : 'Subscriber Sign In →'}</span>
+                  </button>
 
-                <button
-                  onClick={() => handleScrollToSubscribe(gateway.id)}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg transition-transform active:scale-95 cursor-pointer shadow-md"
-                  style={{
-                    background: gateway.highlight ? 'linear-gradient(135deg, #e8c84a, #D4AF37)' : '#181818',
-                    color: gateway.highlight ? '#0a0a0a' : GOLD,
-                    border: gateway.highlight ? 'none' : `1px solid ${GOLD}`,
-                  }}
-                >
-                  <span>{gateway.cta}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCtaClick(gateway)}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg transition-transform active:scale-95 cursor-pointer shadow-md hover:brightness-110"
+                    style={{
+                      background: gateway.highlight ? 'linear-gradient(135deg, #e8c84a, #D4AF37)' : '#181818',
+                      color: gateway.highlight ? '#0a0a0a' : GOLD,
+                      border: gateway.highlight ? 'none' : `1px solid ${GOLD}`,
+                    }}
+                    title={`Open ${gateway.role} page`}
+                  >
+                    <span>{gateway.cta}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => handleScrollToSubscribe(gateway.id)}
+                    className="text-[9.5px] text-white/40 hover:text-[#D4AF37] transition-colors cursor-pointer flex items-center gap-1"
+                    title="Or enroll directly using the form below"
+                  >
+                    <span>Or quick-enroll on this page ↓</span>
+                  </button>
+                </div>
               </div>
             </div>
           );
