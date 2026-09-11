@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 
@@ -33,28 +33,51 @@ const getSavedPortal = () => {
 export default function PortalAccessGuard({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setReady(false);
-    base44.auth.me().then(user => {
-      if (user?.role === 'admin') return setReady(true);
-      const assigned = user?.portal_role || getSavedPortal()?.roleKey;
-      if (assigned) {
-        sessionStorage.setItem('dyson_role', assigned);
-        window.dispatchEvent(new Event('dyson_role_change'));
-      }
-      const requested = (location.pathname.startsWith('/vetted-agents/') || location.pathname.startsWith('/agent-workfile'))
-        ? 'agent'
-        : PORTAL_ROUTES[location.pathname.toLowerCase()];
-      if (assigned && requested && requested !== assigned) {
-        navigate(PORTAL_HOMES[assigned] || '/?choose=1', { replace: true });
-        return;
-      }
-      setReady(true);
-    }).catch(() => setReady(true));
+    let active = true;
+
+    // 2-second timeout: if auth.me() takes longer, treat as guest and don't block
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('auth_timeout')), 2000)
+    );
+
+    Promise.race([base44.auth.me(), timeoutPromise])
+      .then(user => {
+        if (!active) return;
+        if (user?.role === 'admin') return;
+
+        const assigned = user?.portal_role || getSavedPortal()?.roleKey;
+        if (assigned) {
+          sessionStorage.setItem('dyson_role', assigned);
+          window.dispatchEvent(new Event('dyson_role_change'));
+        }
+
+        const pathLower = location.pathname.toLowerCase();
+
+        // Guests can freely view /talking-app and /partner-benefits without login
+        if (!user && (pathLower === '/talking-app' || pathLower === '/partner-benefits')) {
+          return;
+        }
+
+        const requested = (pathLower.startsWith('/vetted-agents/') || pathLower.startsWith('/agent-workfile'))
+          ? 'agent'
+          : PORTAL_ROUTES[pathLower];
+
+        // Only redirect if an authenticated user with an assigned portal_role mismatches the page
+        if (user && assigned && requested && requested !== assigned) {
+          navigate(PORTAL_HOMES[assigned] || '/?choose=1', { replace: true });
+        }
+      })
+      .catch(() => {
+        // Timeout or unauthenticated: treat as guest and keep page visible
+      });
+
+    return () => {
+      active = false;
+    };
   }, [location.pathname, navigate]);
 
-  if (!ready) return <div className="min-h-screen bg-black" />;
+  // Immediately render children — never block first paint with a full-screen black screen
   return children;
 }

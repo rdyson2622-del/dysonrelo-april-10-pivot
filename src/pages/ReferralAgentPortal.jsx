@@ -165,18 +165,33 @@ export default function ReferralAgentPortal() {
 
   useEffect(() => {
     let isMounted = true;
+    const cleanSlug = (slug || '').trim().toLowerCase();
+
     Promise.all([
-      base44.entities.ReferralAgent.filter({ portal_slug: slug }, '-created_date', 1).catch(() => []),
+      cleanSlug ? base44.entities.ReferralAgent.filter({ portal_slug: cleanSlug }, '-created_date', 1).catch(() => []) : Promise.resolve([]),
       base44.auth.me().catch(() => null),
-    ]).then(([res, user]) => {
+    ]).then(async ([res, user]) => {
       if (!isMounted) return;
-      const foundAgent = res?.[0] || null;
+      let foundAgent = res?.[0] || null;
+
+      // Resilient fallback lookup if direct slug filter did not match
+      if (!foundAgent && cleanSlug) {
+        try {
+          const allAgents = await base44.entities.ReferralAgent.list('-created_date', 50);
+          foundAgent = allAgents.find(a => 
+            (a.portal_slug && a.portal_slug.toLowerCase() === cleanSlug) ||
+            (a.name && a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === cleanSlug) ||
+            (cleanSlug.includes('bob') && (a.name?.toLowerCase().includes('bob') || a.portal_slug?.includes('bob')))
+          ) || null;
+        } catch (_) {}
+      }
+
       setAgent(foundAgent);
       if (user) setCurrentUser(user);
 
       // Check walkthrough requirement
-      const isDone = checkCharlieWalkthroughDone({ user, agent: foundAgent, slug });
-      const isDismissed = checkCharlieWalkthroughDismissedSession({ user, agent: foundAgent, slug });
+      const isDone = checkCharlieWalkthroughDone({ user, agent: foundAgent, slug: cleanSlug });
+      const isDismissed = checkCharlieWalkthroughDismissedSession({ user, agent: foundAgent, slug: cleanSlug });
       if (!isDone && !isDismissed) {
         setShowWalkthrough(true);
       }
@@ -240,8 +255,32 @@ export default function ReferralAgentPortal() {
 
   if (!agent) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0a' }}>
-        <p className="text-white text-sm">This referral agent portal could not be found.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center" style={{ background: '#0a0a0a' }}>
+        <div className="max-w-md p-8 rounded-2xl border space-y-4" style={{ background: '#111', borderColor: `${GOLD}50` }}>
+          <div className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">
+            THE DYSON &amp; DYSON COMPANIES • CA DRE #02303118
+          </div>
+          <h2 className="text-xl font-serif text-white">Referral Agent Portal Not Found</h2>
+          <p className="text-xs text-gray-400 leading-relaxed">
+            We couldn't locate an active referral desk matching "{slug}". You can explore our 25% referral network benefits or speak directly with Charlie, our AI concierge.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+            <button
+              onClick={() => navigate('/partner-benefits')}
+              className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-black"
+              style={{ background: GOLD }}
+            >
+              View Partner Benefits
+            </button>
+            <button
+              onClick={() => navigate('/talking-app?from=referral_agent')}
+              className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-white border border-white/20 hover:border-[#D4AF37]"
+              style={{ background: '#181818' }}
+            >
+              Talk with Charlie
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
