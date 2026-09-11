@@ -8,6 +8,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import { toast } from '@/components/ui/use-toast';
 import { ROADMAP_TEMPLATES } from '@/components/roadmap/VisualProjectRoadmap';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -421,6 +422,9 @@ export default function ClientMoveRoadmap() {
         </section>
 
       </div>
+
+      {/* Charlie Page Explainer for Client Relocation Roadmap */}
+      <CharliePagePresenter pageKey="client-roadmap" />
     </div>
   );
 }

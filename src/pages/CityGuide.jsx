@@ -8,6 +8,7 @@ import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 
@@ -655,6 +656,9 @@ export default function CityGuide({ heroHeading = "Here's What's Coming For You"
           </div>
         )}
     </div>
+
+    {/* Charlie Page Explainer for Destination City Guides */}
+    <CharliePagePresenter pageKey="city-guide" />
     </div>
   );
 }

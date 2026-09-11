@@ -7,6 +7,7 @@ import {
   UserCheck, LayoutDashboard, BookOpen, BarChart3, Shield
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 
@@ -463,6 +464,9 @@ export default function AdminRelocationCallDesk() {
           </div>
         </div>
       )}
+
+      {/* Charlie Page Explainer for Relocation Call Desk */}
+      <CharliePagePresenter pageKey="relocation-call-desk" />
     </div>
   );
 }

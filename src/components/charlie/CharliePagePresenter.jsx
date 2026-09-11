@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Play, Pause, Volume2, VolumeX, RotateCcw, X } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, RotateCcw, X, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { CHARLIE_PAGE_EXPLAINER_SCRIPTS } from '@/lib/charliePageExplainerScripts';
 
 const GOLD = '#D4AF37';
 
@@ -25,11 +26,17 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
   const [ended, setEnded] = useState(false);
   const videoRef = useRef(null);
 
+  const staticFallback = CHARLIE_PAGE_EXPLAINER_SCRIPTS[pageKey] || null;
+
   useEffect(() => {
     let cancelled = false;
     base44.entities.CharliePageExplainer.filter({ pageKey })
       .then((arr) => {
-        if (!cancelled) setExplainer(arr?.[0] || null);
+        if (!cancelled) {
+          const completedWithVideo = arr?.find(a => a.renderStatus === 'completed' && a.presenterVideoUrl);
+          const withScript = arr?.find(a => a.finalScript);
+          setExplainer(completedWithVideo || withScript || arr?.[0] || null);
+        }
       })
       .catch(() => {})
       .finally(() => { if (!cancelled) setLoaded(true); });
@@ -38,8 +45,7 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
 
   if (!loaded) return null;
 
-  // Prefer the Charlie-only presenter clip; the composed full-screen video
-  // (finalVideoUrl) is a demo/render artifact and is NOT shown in the widget.
+  const activeScript = explainer?.finalScript || staticFallback?.finalScript || null;
   const presenterSrc = explainer?.renderStatus === 'completed' ? explainer?.presenterVideoUrl : null;
   const hasVideo = Boolean(presenterSrc);
 
@@ -143,9 +149,9 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
   return (
     <div className="fixed top-32 right-4 md:top-36 md:right-6 z-50">
       <div
-        className="relative rounded-xl overflow-hidden"
+        className="relative rounded-xl overflow-hidden transition-all duration-200"
         style={{
-          width: 150,
+          width: hasVideo ? 150 : (activeScript ? 280 : 160),
           background: '#1a1a1a',
           border: `2px solid ${GOLD}`,
           boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
@@ -213,16 +219,40 @@ export default function CharliePagePresenter({ pageKey, topOffsetClass, inline =
             </div>
           </>
         ) : (
-          /* Fallback: no completed video yet */
-          <div className="px-4 py-5 flex flex-col items-center text-center gap-2">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
-              <Play className="w-5 h-5" style={{ color: GOLD }} />
+          /* Fallback: approved script text view if video not yet rendered */
+          <div className="p-3 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                style={{ background: 'rgba(212,175,55,0.15)', border: `1px solid ${GOLD}` }}>
+                <FileText className="w-3.5 h-3.5" style={{ color: GOLD }} />
+              </div>
+              <div className="leading-tight">
+                <span className="text-[8.5px] font-black uppercase tracking-wider text-[#D4AF37] block">
+                  Approved Script
+                </span>
+                <span className="text-xs font-bold text-white block">
+                  {explainer?.pageTitle || staticFallback?.pageTitle || 'Charlie Explainer'}
+                </span>
+              </div>
             </div>
-            <p className="text-xs font-bold text-white">Charlie overview coming soon</p>
-            <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              A short video walkthrough of this page is on its way.
-            </p>
+
+            {activeScript ? (
+              <div 
+                className="p-2.5 rounded-lg bg-black/60 border border-white/10 text-[11px] text-white/80 leading-relaxed max-h-48 overflow-y-auto"
+                style={{ scrollbarWidth: 'thin' }}
+              >
+                {activeScript}
+              </div>
+            ) : (
+              <p className="text-[10px] text-white/60 text-center py-2">
+                A short video walkthrough of this page is on its way.
+              </p>
+            )}
+
+            <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[9px] text-white/40">
+              <span>Status: Video queued</span>
+              <span className="text-[#D4AF37] font-semibold">Script Ready</span>
+            </div>
           </div>
         )}
       </div>

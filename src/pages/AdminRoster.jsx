@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Search, Upload, Phone, Mail, ChevronDown, ChevronUp, Edit2, Check, X, Trash2, UserPlus, Send, Loader2 } from 'lucide-react';
 import VettedPartnerCSVImport from '@/components/admin/VettedPartnerCSVImport';
 import AddAgentModal from '@/components/admin/AddAgentModal';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const FRANCHISE_BRANDS = ['compass', 'coldwell banker', 'sotheby', 'century 21', 'remax', 're/max', 'berkshire hathaway', 'keller williams', 'exp realty', 'better homes'];
@@ -317,6 +318,9 @@ export default function AdminRoster() {
           ))
         )}
       </div>
+
+      {/* Charlie Page Explainer for PRN Network Roster */}
+      <CharliePagePresenter pageKey="admin-roster" />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
 import { base44 } from '@/api/base44Client';
 import CharlieVoiceReferralAssistant from '@/components/referral/CharlieVoiceReferralAssistant';
 import VoiceToTextButton from '@/components/ui/VoiceToTextButton';
+import CharliePagePresenter from '@/components/charlie/CharliePagePresenter';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -508,6 +509,9 @@ export default function ReferSomeone() {
       <footer className="py-4 border-t border-[#0a0a0a]/10 text-center text-xs text-[#554433]">
         The Dyson &amp; Dyson Companies, Inc. · CA DRE #02303118 · Independent Fiduciary Relocation Network
       </footer>
+
+      {/* Charlie Page Explainer for Refer a Moving Client */}
+      <CharliePagePresenter pageKey="refer-someone" />
 
     </div>
   );
