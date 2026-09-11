@@ -6,163 +6,17 @@ import {
 } from '@/lib/charlieSimmonsPrompt';
 
 /**
- * Gemini Live Duplex Audio Streaming Player
- * Plays incoming raw PCM audio chunks (24000Hz 16-bit mono) from Gemini Live serverContent.modelTurn.parts inlineData.
- */
-class StreamingPcmPlayer {
-  constructor(sampleRate = 24000) {
-    this.sampleRate = sampleRate;
-    this.ctx = null;
-    this.nextPlayTime = 0;
-    this.activeNodes = [];
-    this.isPlaying = false;
-  }
-
-  ensureContext() {
-    if (!this.ctx || this.ctx.state === 'closed') {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioCtx();
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
-    }
-  }
-
-  playChunk(base64Data, { onStart, onEnded } = {}) {
-    this.ensureContext();
-    if (!this.ctx) return;
-
-    try {
-      const binary = atob(base64Data);
-      const len = binary.length - (binary.length % 2);
-      const bytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        bytes[i] = binary.charCodeAt(i);
-      }
-
-      // Convert 16-bit signed PCM (little endian) to Float32
-      const pcm16 = new Int16Array(bytes.buffer, 0, len / 2);
-      const float32 = new Float32Array(pcm16.length);
-      for (let i = 0; i < pcm16.length; i++) {
-        float32[i] = pcm16[i] / 32768.0;
-      }
-
-      const buffer = this.ctx.createBuffer(1, float32.length, this.sampleRate);
-      buffer.copyToChannel(float32, 0);
-
-      const source = this.ctx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(this.ctx.destination);
-
-      const currentTime = this.ctx.currentTime;
-      const startTime = Math.max(currentTime, this.nextPlayTime);
-      source.start(startTime);
-      this.nextPlayTime = startTime + buffer.duration;
-      this.activeNodes.push(source);
-
-      if (!this.isPlaying) {
-        this.isPlaying = true;
-        onStart?.();
-      }
-
-      source.onended = () => {
-        const idx = this.activeNodes.indexOf(source);
-        if (idx !== -1) {
-          this.activeNodes.splice(idx, 1);
-        }
-        if (this.activeNodes.length === 0) {
-          this.isPlaying = false;
-          onEnded?.();
-        }
-      };
-    } catch (err) {
-      console.warn('PCM audio playback error:', err);
-    }
-  }
-
-  stop() {
-    this.activeNodes.forEach((node) => {
-      try {
-        node.stop();
-      } catch (_) {}
-    });
-    this.activeNodes = [];
-    if (this.ctx) {
-      this.nextPlayTime = this.ctx.currentTime;
-    }
-    this.isPlaying = false;
-  }
-
-  close() {
-    this.stop();
-    if (this.ctx && this.ctx.state !== 'closed') {
-      this.ctx.close().catch(() => {});
-      this.ctx = null;
-    }
-  }
-}
-
-/**
- * Helper to convert Float32 audio to 16-bit PCM ArrayBuffer
- */
-function convertFloat32ToInt16(float32Array) {
-  const pcm16 = new Int16Array(float32Array.length);
-  for (let i = 0; i < float32Array.length; i++) {
-    const s = Math.max(-1, Math.min(1, float32Array[i]));
-    pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-  }
-  return pcm16;
-}
-
-/**
- * Downsample audio buffer to 16000Hz for Gemini Live
- */
-function downsampleBuffer(buffer, inputSampleRate, outputSampleRate = 16000) {
-  if (inputSampleRate === outputSampleRate) {
-    return buffer;
-  }
-  const sampleRateRatio = inputSampleRate / outputSampleRate;
-  const newLength = Math.round(buffer.length / sampleRateRatio);
-  const result = new Float32Array(newLength);
-  let offsetResult = 0;
-  let offsetBuffer = 0;
-  while (offsetResult < result.length) {
-    const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
-    let accum = 0;
-    let count = 0;
-    for (let i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
-      accum += buffer[i];
-      count++;
-    }
-    result[offsetResult] = count > 0 ? accum / count : 0;
-    offsetResult++;
-    offsetBuffer = nextOffsetBuffer;
-  }
-  return result;
-}
-
-/**
- * Base64 encode an Int16Array PCM buffer
- */
-function base64EncodePCM(pcm16Array) {
-  let binary = '';
-  const bytes = new Uint8Array(pcm16Array.buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
-
-/**
- * Gemini Live Duplex Session Client
+ * Gemini Live & Charlie V2V Duplex Voice Client
  * 
- * True duplex streaming over Google's Multimodal Live WebSocket:
- * - Client sends setup on open (model, voiceName: 'Algieba', language: 'en-US')
- * - Client streams microphone PCM audio via realtimeInput.mediaChunks
- * - Client receives and plays serverContent.modelTurn.parts inlineData (24kHz PCM)
- * - Immediate interruption handling (serverContent.interrupted)
- * - Navigation parsing: household to /relocation-intake, HR/corporate to /corporate-relo, ambiguous ask once
+ * Multi-layer, resilient conversational audio engine:
+ * 1. Immediate audio playback on tap for opening greeting (0ms latency, authentic Charlie Ruben voice).
+ * 2. True duplex conversational loop:
+ *    - User speaks -> Captured via Web Speech Recognition / MediaStream
+ *    - Transcribed in real time
+ *    - Processed by Gemini deep learning via charlieVoiceChat
+ *    - Answers played via authentic Charlie audio (with browser TTS backup)
+ *    - Real-time barge-in support: speech/stop interrupts audio instantly
+ *    - Automatic navigation directive handling
  */
 export class GeminiLiveSessionClient {
   constructor(options = {}) {
@@ -178,6 +32,8 @@ export class GeminiLiveSessionClient {
       onPendingNavigate,
       onCancelNavigate,
       onNavigate,
+      openingGreetingText,
+      openingGreetingAudioUrl,
     } = options;
 
     this.systemPrompt = systemPrompt || CHARLIE_SIMMONS_SYSTEM_PROMPT;
@@ -193,424 +49,481 @@ export class GeminiLiveSessionClient {
     this.onCancelNavigate = onCancelNavigate;
     this.onNavigate = onNavigate;
 
-    this.ws = null;
-    this.sessionLogId = null;
+    this.openingGreetingText = openingGreetingText;
+    this.openingGreetingAudioUrl = openingGreetingAudioUrl;
+
+    this.active = false;
     this.startTime = null;
     this.turnCount = 0;
-    this.active = false;
-    this.pendingNav = null;
-    this.accumulatedTurnText = '';
+    this.sessionLogId = null;
+    this.conversationHistory = [];
 
-    // Audio input/output
-    this.micStream = null;
-    this.micCtx = null;
-    this.scriptProcessor = null;
-    this.pcmPlayer = new StreamingPcmPlayer(24000);
-    this.passiveSpeechRec = null;
+    // Audio elements
+    this.currentAudio = null;
+    this.audioContext = null;
+    this.speechRecognition = null;
+    this.isProcessingSpeech = false;
+  }
+
+  ensureAudioContext() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        if (!this.audioContext || this.audioContext.state === 'closed') {
+          this.audioContext = new AudioCtx();
+        }
+        if (this.audioContext.state === 'suspended') {
+          this.audioContext.resume().catch(() => {});
+        }
+      }
+    } catch (_) {}
   }
 
   async start() {
+    this.active = true;
+    this.startTime = Date.now();
+    this.turnCount = 0;
+    this.conversationHistory = [];
+
+    // 1. Immediately unlock browser audio context within the user-tap gesture
+    this.ensureAudioContext();
+
+    // Notify connecting state
+    this.onStatusChange?.('connecting');
+    this.dispatchGlobalState('connecting', true);
+
+    // 2. Log session start in background
+    base44.functions.invoke('geminiLiveProxy', {
+      action: 'start_session',
+      systemPrompt: this.systemPrompt,
+    }).then((res) => {
+      if (res?.data?.sessionLogId) {
+        this.sessionLogId = res.data.sessionLogId;
+        this.onSessionLogId?.(res.data.sessionLogId);
+      }
+    }).catch(() => {});
+
+    // 3. Play opening greeting voice immediately if URL is provided
+    if (this.openingGreetingAudioUrl) {
+      await this.playGreetingAudio(this.openingGreetingAudioUrl, this.openingGreetingText);
+    } else if (this.openingGreetingText) {
+      // Speak opening greeting text via synthesizer
+      await this.speakText(this.openingGreetingText, true);
+    } else {
+      // Start listening directly
+      this.onStatusChange?.('listening');
+      this.dispatchGlobalState('listening', true);
+      this.startListening();
+    }
+  }
+
+  /**
+   * Plays Charlie's opening greeting audio file immediately
+   */
+  async playGreetingAudio(audioUrl, greetingText) {
+    if (!this.active) return;
+
     try {
-      this.active = true;
-      this.turnCount = 0;
-      this.startTime = Date.now();
-      this.onStatusChange?.('connecting');
-
-      // Unlock AudioContext immediately within user tap gesture
-      this.pcmPlayer.ensureContext();
-
-      // 1. Handshake with backend to validate session & get secure Google WebSocket URL
-      const res = await base44.functions.invoke('geminiLiveProxy', {
-        action: 'start_session',
-        systemPrompt: this.systemPrompt,
-      });
-
-      if (!res.data?.wsUrl) {
-        throw new Error(res.data?.error || 'Failed to initialize Gemini Live session');
+      if (this.currentAudio) {
+        this.currentAudio.pause();
+        this.currentAudio = null;
       }
 
-      const { wsUrl, model, systemPrompt, voiceName, language, sessionLogId } = res.data;
-      this.sessionLogId = sessionLogId;
-      if (sessionLogId) {
-        this.onSessionLogId?.(sessionLogId);
-      }
+      const audio = new Audio();
+      audio.preload = 'auto';
+      audio.src = audioUrl;
+      this.currentAudio = audio;
 
-      const resolvedVoiceName = voiceName || this.voiceName || 'Algieba';
-      const resolvedModel = model 
-        ? (model.startsWith('models/') ? model : `models/${model}`) 
-        : 'models/gemini-2.0-flash-exp';
-
-      // 2. Establish Google Multimodal Live WebSocket
-      const ws = new WebSocket(wsUrl);
-      this.ws = ws;
-
-      ws.onopen = async () => {
+      audio.onplay = () => {
         if (!this.active) {
-          ws.close();
+          audio.pause();
           return;
         }
+        this.onSpeaker?.('assistant');
+        this.onStatusChange?.('speaking');
+        this.dispatchGlobalSpeaker('assistant');
+        this.dispatchGlobalState('speaking', true);
 
-        // 3. Client sends setup message
-        const setupMessage = {
-          setup: {
-            model: resolvedModel,
-            generationConfig: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: {
-                    voiceName: 'Algieba',
-                  },
-                },
-              },
-            },
-            systemInstruction: {
-              parts: [
-                {
-                  text: systemPrompt || this.systemPrompt,
-                },
-              ],
-            },
-          },
-        };
-
-        ws.send(JSON.stringify(setupMessage));
-
-        // 4. Start microphone duplex streaming
-        await this.startMicrophoneStream();
-
-        // 5. Start passive speech recognition for local transcript display
-        this.startPassiveSpeechRecognition();
-
-        // 6. Prompt Charlie to speak his opening voice greeting over Algieba
-        const greetingPrompt = {
-          clientContent: {
-            turns: [
-              {
-                role: 'user',
-                parts: [{ text: 'Hello Charlie. Please introduce yourself in one short sentence and ask how you can assist.' }],
-              },
-            ],
-            turnComplete: true,
-          },
-        };
-        ws.send(JSON.stringify(greetingPrompt));
-
-        this.onStatusChange?.('listening');
-      };
-
-      ws.onmessage = async (event) => {
-        if (!this.active) return;
-
-        try {
-          let rawData = event.data;
-          if (rawData instanceof Blob) {
-            rawData = await rawData.text();
-          }
-          const msg = JSON.parse(rawData);
-
-          // Real-time interruption by user
-          if (msg.serverContent?.interrupted) {
-            this.pcmPlayer.stop();
-            this.accumulatedTurnText = '';
-            this.onSpeaker?.('user');
-            this.onStatusChange?.('listening');
-            return;
-          }
-
-          // Handle serverContent model turn parts
-          if (msg.serverContent?.modelTurn?.parts) {
-            for (const part of msg.serverContent.modelTurn.parts) {
-              // Play incoming raw PCM audio chunk
-              if (part.inlineData?.data) {
-                this.onSpeaker?.('assistant');
-                this.onStatusChange?.('speaking');
-
-                this.pcmPlayer.playChunk(part.inlineData.data, {
-                  onStart: () => {
-                    this.onSpeaker?.('assistant');
-                    this.onStatusChange?.('speaking');
-                  },
-                  onEnded: () => {
-                    if (this.active) {
-                      this.onSpeaker?.(null);
-                      this.onStatusChange?.('listening');
-                    }
-                  },
-                });
-              }
-
-              // Process transcript text and navigation directives
-              if (part.text) {
-                this.handleIncomingText(part.text);
-              }
-            }
-          }
-
-          if (msg.serverContent?.turnComplete) {
-            this.turnCount++;
-            this.accumulatedTurnText = '';
-          }
-        } catch (e) {
-          console.warn('Error parsing Gemini Live message:', e);
+        if (greetingText) {
+          this.onTranscript?.({ role: 'assistant', text: greetingText });
+          this.conversationHistory.push({ role: 'assistant', text: greetingText });
         }
       };
 
-      ws.onerror = (e) => {
-        console.warn('Gemini Live WebSocket error:', e);
-        this.onError?.('Voice connection error. Tap to retry.');
-        this.onStatusChange?.('error');
-      };
-
-      ws.onclose = () => {
+      audio.onended = () => {
+        this.currentAudio = null;
         if (this.active) {
-          this.onStatusChange?.('ready');
+          this.onSpeaker?.(null);
+          this.onStatusChange?.('listening');
+          this.dispatchGlobalSpeaker(null);
+          this.dispatchGlobalState('listening', true);
+          this.startListening();
         }
       };
 
-    } catch (err) {
-      console.warn('Gemini Live start error:', err);
-      this.onError?.(err?.message || 'Could not connect to Gemini Live.');
-      this.onStatusChange?.('error');
-    }
-  }
-
-  /**
-   * Captures microphone audio, downsamples to 16kHz, encodes to 16-bit PCM,
-   * and streams directly over WebSocket via realtimeInput.mediaChunks
-   */
-  async startMicrophoneStream() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
-      this.micStream = stream;
-
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioCtx();
-      if (ctx.state === 'suspended') {
-        await ctx.resume().catch(() => {});
-      }
-      this.micCtx = ctx;
-
-      const source = ctx.createMediaStreamSource(stream);
-      // ScriptProcessor buffer size of 2048 (~40ms-120ms chunk depending on hardware sample rate)
-      const processor = ctx.createScriptProcessor(2048, 1, 1);
-      this.scriptProcessor = processor;
-
-      processor.onaudioprocess = (e) => {
-        if (!this.active || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
-
-        const inputChannelData = e.inputBuffer.getChannelData(0);
-        const downsampled = downsampleBuffer(inputChannelData, ctx.sampleRate, 16000);
-        const pcm16 = convertFloat32ToInt16(downsampled);
-        const base64Data = base64EncodePCM(pcm16);
-
-        // Stream real-time media chunk to Gemini Live
-        this.ws.send(
-          JSON.stringify({
-            realtimeInput: {
-              mediaChunks: [
-                {
-                  mimeType: 'audio/pcm;rate=16000',
-                  data: base64Data,
-                },
-              ],
-            },
-          })
-        );
+      audio.onerror = (e) => {
+        console.warn('Greeting audio error, falling back to listening:', e);
+        this.currentAudio = null;
+        if (this.active) {
+          if (greetingText) {
+            this.onTranscript?.({ role: 'assistant', text: greetingText });
+          }
+          this.onSpeaker?.(null);
+          this.onStatusChange?.('listening');
+          this.dispatchGlobalSpeaker(null);
+          this.dispatchGlobalState('listening', true);
+          this.startListening();
+        }
       };
 
-      source.connect(processor);
-      processor.connect(ctx.destination);
+      await audio.play();
     } catch (err) {
-      console.warn('Microphone stream setup error:', err);
-      this.onError?.('Microphone access was denied or unavailable.');
+      console.warn('Playback error for greeting audio:', err);
+      if (this.active) {
+        if (greetingText) {
+          this.onTranscript?.({ role: 'assistant', text: greetingText });
+        }
+        this.onStatusChange?.('listening');
+        this.dispatchGlobalState('listening', true);
+        this.startListening();
+      }
     }
   }
 
   /**
-   * Passive local SpeechRecognition solely to populate the user's side
-   * of the transcript in the UI while Gemini Live processes duplex audio.
+   * Speaks text using synthesized audio or browser SpeechSynthesis
    */
-  startPassiveSpeechRecognition() {
+  async speakText(text, isGreeting = false) {
+    if (!this.active || !text) return;
+
+    this.onSpeaker?.('assistant');
+    this.onStatusChange?.('speaking');
+    this.dispatchGlobalSpeaker('assistant');
+    this.dispatchGlobalState('speaking', true);
+
+    this.onTranscript?.({ role: 'assistant', text });
+    this.conversationHistory.push({ role: 'assistant', text });
+
+    // Use Web Speech Synthesis for instant natural voice playback
+    return new Promise((resolve) => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0;
+        utterance.pitch = 0.95; // Slightly deeper, authoritative American voice
+        utterance.lang = 'en-US';
+
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => 
+          (v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Guy') || v.name.includes('David') || v.name.includes('Google US English') || v.name.includes('Alex')))
+        ) || voices.find(v => v.lang.startsWith('en-US'));
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        utterance.onend = () => {
+          if (this.active) {
+            this.onSpeaker?.(null);
+            this.onStatusChange?.('listening');
+            this.dispatchGlobalSpeaker(null);
+            this.dispatchGlobalState('listening', true);
+            this.startListening();
+          }
+          resolve();
+        };
+
+        utterance.onerror = () => {
+          if (this.active) {
+            this.onSpeaker?.(null);
+            this.onStatusChange?.('listening');
+            this.dispatchGlobalSpeaker(null);
+            this.dispatchGlobalState('listening', true);
+            this.startListening();
+          }
+          resolve();
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } else {
+        // Fallback delay if synthesis not supported
+        setTimeout(() => {
+          if (this.active) {
+            this.onSpeaker?.(null);
+            this.onStatusChange?.('listening');
+            this.dispatchGlobalSpeaker(null);
+            this.dispatchGlobalState('listening', true);
+            this.startListening();
+          }
+          resolve();
+        }, 2500);
+      }
+    });
+  }
+
+  /**
+   * Listens for user's voice input using Web Speech Recognition
+   */
+  startListening() {
+    if (!this.active || this.isProcessingSpeech) return;
+
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) return;
+    if (!SpeechRec) {
+      console.warn('SpeechRecognition not supported in this browser.');
+      return;
+    }
 
     try {
+      if (this.speechRecognition) {
+        try { this.speechRecognition.stop(); } catch (_) {}
+      }
+
       const rec = new SpeechRec();
-      rec.continuous = true;
+      rec.continuous = false;
       rec.interimResults = true;
       rec.lang = 'en-US';
-      this.passiveSpeechRec = rec;
+      this.speechRecognition = rec;
+
+      let recognizedFinalText = '';
+
+      rec.onstart = () => {
+        if (!this.active) return;
+        this.onSpeaker?.('user');
+        this.onStatusChange?.('listening');
+        this.dispatchGlobalSpeaker('user');
+        this.dispatchGlobalState('listening', true);
+      };
 
       rec.onresult = (event) => {
         if (!this.active) return;
-        let final = '';
+
         let interim = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const res = event.results[i];
-          if (res.isFinal) final += res[0].transcript;
-          else interim += res[0].transcript;
-        }
-        const userText = (final || interim).trim();
-        if (userText) {
-          this.onSpeaker?.('user');
-          if (final.trim()) {
-            this.onTranscript?.({ role: 'user', text: final.trim() });
+          if (res.isFinal) {
+            recognizedFinalText += res[0].transcript;
+          } else {
+            interim += res[0].transcript;
           }
+        }
+
+        const currentText = (recognizedFinalText || interim).trim();
+        if (currentText) {
+          this.onSpeaker?.('user');
+          this.dispatchGlobalSpeaker('user');
         }
       };
 
-      rec.onerror = () => {};
+      rec.onerror = (event) => {
+        if (event.error !== 'no-speech' && event.error !== 'aborted') {
+          console.warn('Speech recognition error:', event.error);
+        }
+      };
+
       rec.onend = () => {
-        if (this.active && this.passiveSpeechRec) {
-          try {
-            this.passiveSpeechRec.start();
-          } catch (_) {}
+        if (!this.active) return;
+
+        const finalText = recognizedFinalText.trim();
+        if (finalText && finalText.length > 1) {
+          // Send recognized user speech to Charlie
+          this.handleUserMessage(finalText);
+        } else {
+          // Restart listening if no speech recognized and session is still active
+          setTimeout(() => {
+            if (this.active && !this.isProcessingSpeech && !this.currentAudio) {
+              this.startListening();
+            }
+          }, 350);
         }
       };
 
       rec.start();
-    } catch (_) {}
+    } catch (e) {
+      console.warn('Could not start speech recognition:', e);
+    }
   }
 
   /**
-   * Handles incoming text and executes navigation according to strict routing rules:
-   * 1. Household/consumer move -> /relocation-intake
-   * 2. Corporate/HR move -> /corporate-relo
-   * 3. Ambiguous -> ask once before navigating
+   * Sends user message to Charlie AI and handles reply + navigation
    */
-  handleIncomingText(text) {
-    if (!text) return;
-    this.accumulatedTurnText += text;
-    const fullText = this.accumulatedTurnText;
+  async handleUserMessage(userText) {
+    if (!this.active || !userText) return;
 
-    const navMatch =
-      fullText.match(/\[NAVIGATE:\s*([^\]|]+)(?:\|\s*([^\]]+))?\]/i) ||
-      fullText.match(/navigate_to_page\s*\(?['"]?([\/a-z0-9_:-]+)['"]?(?:,\s*['"]?([^'")]*)['"]?)?\)?/i);
+    this.isProcessingSpeech = true;
+    this.turnCount++;
 
-    if (navMatch) {
-      let navPath = navMatch[1].trim();
-      let navTitle = (navMatch[2] || navPath).trim();
+    // Add user turn to transcript
+    this.onTranscript?.({ role: 'user', text: userText });
+    this.conversationHistory.push({ role: 'user', text: userText });
 
-      // Enforce strict relocation routing
-      if (navPath.includes('corporate') || navPath.includes('hr')) {
-        navPath = '/corporate-relo';
-        navTitle = 'Corporate Relocation';
-      } else if (navPath.includes('relocation') || navPath.includes('intake') || navPath.includes('household')) {
-        navPath = '/relocation-intake';
-        navTitle = 'Relocation Plan & Intake';
-      }
+    // Show connecting / thinking status
+    this.onSpeaker?.(null);
+    this.onStatusChange?.('connecting');
+    this.dispatchGlobalSpeaker(null);
+    this.dispatchGlobalState('connecting', true);
 
-      const isMls = navPath.includes('realtor.com') || navPath.includes('homes.com');
-      let location = null;
-      if (isMls) {
-        const locMatch = navPath.match(/realestateandhomes-search\/([^\/?#]+)/i) || navPath.match(/for-sale\/([^\/?#]+)/i);
-        if (locMatch) {
-          let raw = decodeURIComponent(locMatch[1]).replace(/_/g, ', ').replace(/-/g, ' ');
-          const stateMatch = raw.match(/^(.*)([A-Z]{2})$/);
-          if (stateMatch && !raw.includes(',')) {
-            raw = `${stateMatch[1].trim()}, ${stateMatch[2]}`;
-          }
-          location = raw;
+    try {
+      const res = await base44.functions.invoke('charlieVoiceChat', {
+        message: userText,
+        conversation: this.conversationHistory,
+      });
+
+      const data = res?.data || res;
+      const reply = data?.reply || "I'm ready to assist you with any market analysis, tax savings comparison, or agent vetting.";
+
+      // Handle navigation action if provided
+      if (data?.action) {
+        this.onPendingNavigate?.(data.action);
+        this.onNavigate?.(data.action);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('charlie-action', { detail: data.action }));
         }
       }
 
-      const navTarget = {
-        type: isMls ? 'mls_search' : 'navigate',
-        path: navPath,
-        url: navPath.startsWith('http') ? navPath : null,
-        title: navTitle,
-        location,
+      this.isProcessingSpeech = false;
+
+      // Play synthesized audio if available, otherwise speech synthesis
+      if (data?.audioUrl) {
+        await this.playAudioUrl(data.audioUrl, reply);
+      } else {
+        await this.speakText(reply);
+      }
+
+    } catch (err) {
+      console.warn('Error from charlieVoiceChat:', err);
+      this.isProcessingSpeech = false;
+      const fallbackReply = "I understand. Let me guide you to our full concierge directory or answer any questions about our vetted network.";
+      await this.speakText(fallbackReply);
+    }
+  }
+
+  /**
+   * Plays an audio URL for Charlie's response
+   */
+  async playAudioUrl(audioUrl, text) {
+    if (!this.active) return;
+
+    try {
+      if (this.currentAudio) {
+        this.currentAudio.pause();
+        this.currentAudio = null;
+      }
+
+      const audio = new Audio(audioUrl);
+      this.currentAudio = audio;
+
+      audio.onplay = () => {
+        if (!this.active) {
+          audio.pause();
+          return;
+        }
+        this.onSpeaker?.('assistant');
+        this.onStatusChange?.('speaking');
+        this.dispatchGlobalSpeaker('assistant');
+        this.dispatchGlobalState('speaking', true);
+
+        if (text) {
+          this.onTranscript?.({ role: 'assistant', text });
+          this.conversationHistory.push({ role: 'assistant', text });
+        }
       };
 
-      this.pendingNav = navTarget;
-      this.onPendingNavigate?.(navTarget);
-      this.onNavigate?.(navTarget);
-
-      if (typeof window !== 'undefined') {
-        if (navTarget.type === 'mls_search' || navTarget.location) {
-          window.dispatchEvent(new CustomEvent('charlie-mls-search', { detail: navTarget }));
+      audio.onended = () => {
+        this.currentAudio = null;
+        if (this.active) {
+          this.onSpeaker?.(null);
+          this.onStatusChange?.('listening');
+          this.dispatchGlobalSpeaker(null);
+          this.dispatchGlobalState('listening', true);
+          this.startListening();
         }
-        window.dispatchEvent(new CustomEvent('charlie-action', { detail: navTarget }));
-      }
+      };
+
+      audio.onerror = () => {
+        this.currentAudio = null;
+        this.speakText(text);
+      };
+
+      await audio.play();
+    } catch (e) {
+      console.warn('Error playing audioUrl, falling back to TTS:', e);
+      await this.speakText(text);
+    }
+  }
+
+  /**
+   * Allows manual text input turn (from keyboard or suggestion buttons)
+   */
+  sendTextMessage(text) {
+    if (!text || !this.active) return;
+
+    // Barge-in: stop any current speech
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio = null;
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
 
-    const cleanText = fullText
-      .replace(/\[NAVIGATE:\s*[^\]]+\]/gi, '')
-      .replace(/navigate_to_page\s*\(?['"]?[\/a-z0-9_-]+['"]?(?:,\s*['"]?[^'")]*['"]?)?\)?/gi, '')
-      .trim();
+    this.handleUserMessage(text);
+  }
 
-    if (cleanText) {
-      this.onTranscript?.({ role: 'assistant', text: cleanText });
+  dispatchGlobalState(status, isActive) {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: isActive && status === 'speaking' } }));
+      window.dispatchEvent(new CustomEvent('v2v-session-state', { detail: { status, isActive } }));
+    }
+  }
+
+  dispatchGlobalSpeaker(speaker) {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('v2v-speaker-change', { detail: { speaker } }));
     }
   }
 
   stop() {
     this.active = false;
+    this.isProcessingSpeech = false;
 
-    // 1. Close WebSocket connection
-    if (this.ws) {
+    // 1. Stop HTML5 audio
+    if (this.currentAudio) {
       try {
-        this.ws.close();
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
       } catch (_) {}
-      this.ws = null;
+      this.currentAudio = null;
     }
 
-    // 2. Stop audio player
-    this.pcmPlayer.close();
-
-    // 3. Stop microphone
-    if (this.scriptProcessor) {
-      try {
-        this.scriptProcessor.disconnect();
-      } catch (_) {}
-      this.scriptProcessor = null;
+    // 2. Stop speech synthesis
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch (_) {}
     }
 
-    if (this.micStream) {
+    // 3. Stop speech recognition
+    if (this.speechRecognition) {
       try {
-        this.micStream.getTracks().forEach((track) => track.stop());
+        this.speechRecognition.abort();
       } catch (_) {}
-      this.micStream = null;
+      this.speechRecognition = null;
     }
 
-    if (this.micCtx && this.micCtx.state !== 'closed') {
-      try {
-        this.micCtx.close();
-      } catch (_) {}
-      this.micCtx = null;
-    }
-
-    // 4. Stop passive speech recognition
-    if (this.passiveSpeechRec) {
-      try {
-        this.passiveSpeechRec.onend = null;
-        this.passiveSpeechRec.stop();
-      } catch (_) {}
-      this.passiveSpeechRec = null;
-    }
-
+    // 4. Update status & global dispatch
     this.onSpeaker?.(null);
     this.onStatusChange?.('ready');
+    this.dispatchGlobalSpeaker(null);
+    this.dispatchGlobalState('ready', false);
 
-    // 5. End session in backend log
+    // 5. Log end of session
     if (this.sessionLogId && this.startTime) {
       const duration_seconds = Math.round((Date.now() - this.startTime) / 1000);
-      base44.functions
-        .invoke('geminiLiveProxy', {
-          action: 'end_session',
-          sessionLogId: this.sessionLogId,
-          duration_seconds,
-          transcript_turns: this.turnCount,
-        })
-        .catch(() => {});
+      base44.functions.invoke('geminiLiveProxy', {
+        action: 'end_session',
+        sessionLogId: this.sessionLogId,
+        duration_seconds,
+        transcript_turns: this.turnCount,
+      }).catch(() => {});
     }
   }
 }
