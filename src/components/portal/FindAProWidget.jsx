@@ -1,5 +1,6 @@
 import React from 'react';
-import { Wrench, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Wrench, ExternalLink, Sparkles, ArrowRight } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 
@@ -22,6 +23,36 @@ export default function FindAProWidget({
       <p className="text-sm mb-6 font-medium" style={{ color: '#2c2217' }}>
         {subtitle}
       </p>
+      {/* Dedicated Dyson Fiduciary Vendor Finder Link */}
+      <div className="mb-4">
+        <Link
+          to="/vendor-finder"
+          className="flex items-center justify-between gap-3 px-5 py-3.5 rounded-2xl transition-all hover:scale-[1.02] shadow-xl"
+          style={{
+            background: 'linear-gradient(135deg, #18140c 0%, #0a0a0a 100%)',
+            border: '2px solid #D4AF37',
+          }}
+        >
+          <div className="flex items-center gap-3 text-left">
+            <div className="w-9 h-9 rounded-xl bg-black border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-sm">Dyson Preferred Vendor Finder</span>
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">
+                  Recommended
+                </span>
+              </div>
+              <span className="text-xs text-white/60 block mt-0.5">
+                Curated national leaders, guaranteed pricing caps, and on-demand local trade matching.
+              </span>
+            </div>
+          </div>
+          <ArrowRight className="w-5 h-5 text-[#D4AF37] shrink-0" />
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {PROS.map((p) => (
           <a

@@ -351,6 +351,9 @@ const AuthenticatedApp = () => {
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />
       <Route path="/vetted-agents/:citySlug" element={<VettedAgentsCity />} />
       <Route path="/solve-my-story" element={<SolveMyStory />} />
+      <Route path="/vendor-finder" element={<SubscriberVendorFinder />} />
+      <Route path="/subscriber-vendors" element={<SubscriberVendorFinder />} />
+      <Route path="/vendors" element={<SubscriberVendorFinder />} />
       </Route>
       
       {/* Admin Routes with Sidebar Layout */}

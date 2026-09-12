@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Wrench, ShieldCheck, Lock, Upload, Plus, Search, 
@@ -152,8 +153,15 @@ export default function AdminPreferredVendors() {
                 Preferred Vendors
               </h1>
               <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/50">
-                ADMIN STUB • STEP 1
+                ADMIN CONSOLE
               </span>
+              <Link
+                to="/vendor-finder"
+                className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-[#D4AF37] text-black hover:brightness-110 shadow flex items-center gap-1 transition-all"
+                title="Preview live subscriber vendor finder"
+              >
+                <span>Launch Subscriber Finder →</span>
+              </Link>
             </div>
             <p className="text-xs text-white/70 mt-0.5">
               Curated national providers (~2/industry) &amp; on-demand local trade match engine.
