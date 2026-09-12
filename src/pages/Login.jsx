@@ -24,7 +24,22 @@ export default function Login() {
   // computed destination instead of leaving the user stuck on /login.
   useEffect(() => {
     if (isAuthenticated) {
-      window.location.href = returnTo;
+      base44.auth.me().then(me => {
+        const isLisa = me?.email?.toLowerCase() === 'lisa@lisahurt.com';
+        if (me?.portal_role === 'relocation_agent' || isLisa) {
+          sessionStorage.setItem('dyson_role', 'relocation_agent');
+          sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+          window.dispatchEvent(new Event('dyson_role_change'));
+          if (me && me.portal_role !== 'relocation_agent') {
+            base44.auth.updateMe({ portal_role: 'relocation_agent' }).catch(() => {});
+          }
+          window.location.href = '/relocation-agent-desk';
+        } else {
+          window.location.href = returnTo;
+        }
+      }).catch(() => {
+        window.location.href = returnTo;
+      });
     }
   }, [isAuthenticated, returnTo]);
 
@@ -37,7 +52,29 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       await base44.auth.loginViaEmailPassword(email, password);
+      
+      if (normalizedEmail === 'lisa@lisahurt.com') {
+        sessionStorage.setItem('dyson_role', 'relocation_agent');
+        sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+        window.dispatchEvent(new Event('dyson_role_change'));
+        base44.auth.updateMe({ portal_role: 'relocation_agent' }).catch(() => {});
+        window.location.href = '/relocation-agent-desk';
+        return;
+      }
+
+      try {
+        const me = await base44.auth.me();
+        if (me?.portal_role === 'relocation_agent' || me?.email?.toLowerCase() === 'lisa@lisahurt.com') {
+          sessionStorage.setItem('dyson_role', 'relocation_agent');
+          sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+          window.dispatchEvent(new Event('dyson_role_change'));
+          window.location.href = '/relocation-agent-desk';
+          return;
+        }
+      } catch (meErr) {}
+
       window.location.href = returnTo;
     } catch (err) {
       setError(err.message || "Invalid email or password");

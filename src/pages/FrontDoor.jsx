@@ -156,9 +156,21 @@ export default function FrontDoor() {
             setFlashNotice(null);
           }, 1200);
         }
+        const isLisa = user.email?.toLowerCase() === 'lisa@lisahurt.com';
         if (user.role === 'admin') {
           setUserPortalDest('/admin');
           setUserRoleLabel('Admin Console');
+        } else if (user.portal_role === 'relocation_agent' || isLisa) {
+          sessionStorage.setItem('dyson_role', 'relocation_agent');
+          sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
+          window.dispatchEvent(new Event('dyson_role_change'));
+          if (user.portal_role !== 'relocation_agent') {
+            base44.auth.updateMe({ portal_role: 'relocation_agent' }).catch(() => {});
+          }
+          setUserPortalDest('/relocation-agent-desk');
+          setUserRoleLabel('Relocation Agent Desk');
+          navigate('/relocation-agent-desk', { replace: true });
+          return;
         } else if (user.portal_role === 'brokerage_admin' || user.portal_role === 'broker') {
           setUserPortalDest('/brokerage');
           setUserRoleLabel('Brokerage Portal');
