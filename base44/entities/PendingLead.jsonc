@@ -70,6 +70,14 @@
       "type": "string",
       "description": "Reference to LeadListBatch ID"
     },
+    "assigned_agent": {
+      "type": "string",
+      "description": "Assigned relocation agent name"
+    },
+    "assigned_email": {
+      "type": "string",
+      "description": "Assigned relocation agent email"
+    },
     "assigned_relocation_agent": {
       "type": "string",
       "description": "Reference to assigned relocation agent"

@@ -28,6 +28,10 @@
       "default": "ready",
       "description": "Batch status (e.g. ready, in_progress, completed)"
     },
+    "assigned_agent": {
+      "type": "string",
+      "description": "Assigned relocation agent name or identifier"
+    },
     "assigned_relocation_agent": {
       "type": "string",
       "description": "Reference to assigned relocation agent"

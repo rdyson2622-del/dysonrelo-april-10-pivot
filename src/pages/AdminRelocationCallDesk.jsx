@@ -208,7 +208,7 @@ export default function AdminRelocationCallDesk() {
                 className="px-3 py-1.5 rounded-xl bg-black border border-[#D4AF37]/50 text-[#D4AF37] hover:border-[#D4AF37] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <UserCheck className="w-3.5 h-3.5" />
-                <span>Create Batch</span>
+                <span>Assign Batch</span>
               </button>
             </div>
           </div>
@@ -291,8 +291,8 @@ export default function AdminRelocationCallDesk() {
               onClick={() => setIsAssignBatchOpen(true)}
               className="px-3.5 py-1.5 rounded-xl bg-[#D4AF37] text-black text-xs font-bold hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Create New Batch</span>
+              <UserCheck className="w-3.5 h-3.5" />
+              <span>Assign Batch to Agent</span>
             </button>
           </div>
 
@@ -491,9 +491,10 @@ export default function AdminRelocationCallDesk() {
         isOpen={isAssignBatchOpen}
         onClose={() => setIsAssignBatchOpen(false)}
         agents={agents}
-        onAssignSuccess={({ batch, updatedCount }) => {
-          setFlashMessage(`Created batch "${batch.label}" and allocated ${updatedCount} leads.`);
-          setTimeout(() => setFlashMessage(null), 3500);
+        onAssignSuccess={({ agentName, count, bannerText }) => {
+          const msg = bannerText || `Assigned ${count} leads to ${agentName || 'Lisa Hurt'}.`;
+          setFlashMessage(msg);
+          setTimeout(() => setFlashMessage(null), 5000);
           queryClient.invalidateQueries({ queryKey: ['adminPendingLeads'] });
           queryClient.invalidateQueries({ queryKey: ['adminLeadListBatches'] });
         }}
