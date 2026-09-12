@@ -79,6 +79,7 @@ export const PAGE_REGISTRY = {
   79: { name: 'Department Flow Chart',  path: '/admin/workflows/:deskId',     section: 'Admin' },
   80: { name: 'Relocation Call Desk',   path: '/admin/relocation-call-desk',  section: 'Admin' },
   81: { name: 'Relocation Agent Desk',  path: '/relocation-agent-desk',       section: 'Portal' },
+  82: { name: 'Preferred Vendors',      path: '/admin/preferred-vendors',     section: 'Admin' },
 };
 
 // Helper function: Get page number by path

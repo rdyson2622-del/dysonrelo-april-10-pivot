@@ -1,0 +1,62 @@
+{
+  "name": "VendorMatchRequest",
+  "type": "object",
+  "properties": {
+    "requester_email": {
+      "type": "string",
+      "description": "Email address of client or agent requesting vendor match"
+    },
+    "industry_key": {
+      "type": "string",
+      "description": "Industry category requested"
+    },
+    "city": {
+      "type": "string",
+      "description": "Target destination city"
+    },
+    "zip": {
+      "type": "string",
+      "description": "Destination ZIP code"
+    },
+    "answers_json": {
+      "type": "string",
+      "description": "Serialized JSON answers to guided triage questions"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "in_review",
+        "matched",
+        "closed"
+      ],
+      "default": "new",
+      "description": "Match request workflow lifecycle status"
+    },
+    "result_summary": {
+      "type": "string",
+      "description": "Fiduciary match notes and allocated local vendors"
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Timestamp when match request was initiated"
+    }
+  },
+  "required": [
+    "industry_key"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

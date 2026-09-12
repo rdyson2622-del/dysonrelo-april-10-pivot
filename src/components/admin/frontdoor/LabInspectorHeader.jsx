@@ -60,6 +60,13 @@ export default function LabInspectorHeader({
             >
               <span>📞 Relocation Call Desk</span>
             </Link>
+            <Link
+              to="/admin/preferred-vendors"
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold text-[#D4AF37] hover:text-white hover:bg-white/10 transition-all cursor-pointer border-l border-white/20 ml-1 pl-2"
+              title="Preferred Vendors (Step 1 Stub)"
+            >
+              <span>🛠️ Preferred Vendors</span>
+            </Link>
           </div>
         )}
 

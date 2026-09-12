@@ -1,0 +1,50 @@
+{
+  "name": "VendorIndustry",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unique industry identifier (e.g. moving, staging, home_inspection)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Display name of the industry trade"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Display order in catalogs and selection menus"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this industry is active in vendor matching"
+    },
+    "consumer_blurb": {
+      "type": "string",
+      "description": "Consumer-facing explanation and guidance for this trade"
+    }
+  },
+  "required": [
+    "key",
+    "label"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

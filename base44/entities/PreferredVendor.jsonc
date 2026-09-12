@@ -1,0 +1,65 @@
+{
+  "name": "PreferredVendor",
+  "type": "object",
+  "properties": {
+    "industry_key": {
+      "type": "string",
+      "description": "Industry trade identifier linking to VendorIndustry.key"
+    },
+    "name": {
+      "type": "string",
+      "description": "Vendor business name"
+    },
+    "national_rank": {
+      "type": "number",
+      "description": "Curated national rank (~#1 or #2 per industry)"
+    },
+    "website": {
+      "type": "string",
+      "description": "Official company website URL"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Direct contact phone number"
+    },
+    "coverage": {
+      "type": "string",
+      "description": "Geographic service coverage (e.g. Nationwide 50 states, West Coast)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes, vetted differentiators, and special service terms"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Company logo image URL"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this vendor is an active curated national provider"
+    }
+  },
+  "required": [
+    "industry_key",
+    "name"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

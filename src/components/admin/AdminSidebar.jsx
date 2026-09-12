@@ -8,7 +8,7 @@ import {
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
   FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList, Megaphone,
-  Mail, PhoneCall
+  Mail, PhoneCall, Wrench
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -34,6 +34,7 @@ const NAV_SECTIONS = [
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
+      { label: '🛠️ Preferred Vendors', path: '/admin/preferred-vendors', icon: Wrench, highlight: true },
       { label: '✉️ Send Subscriber Invite (Email & Text)', path: '/admin/subscriber-invite', icon: Mail, highlight: true },
       { label: '👤 Add Subscriber to Any Portal', path: '/admin/add-subscriber', icon: UserPlus, highlight: true },
       { label: '📋 MLS Listing Agent Outreach', path: '/admin/listing-prospects', icon: MapPin, highlight: true },
@@ -153,6 +154,7 @@ const NAV_SECTIONS = [
     children: [
       { label: '📊 Operations Flow Chart', path: '/admin/workflows/operations', icon: GitBranch, highlight: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
+      { label: '🛠️ Preferred Vendors', path: '/admin/preferred-vendors', icon: Wrench, highlight: true },
       { label: 'Relo Management Explainer', path: '/admin/relo-management', icon: Home },
     ],
   },
