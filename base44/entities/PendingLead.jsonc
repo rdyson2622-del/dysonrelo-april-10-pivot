@@ -10,6 +10,10 @@
       "type": "string",
       "description": "City"
     },
+    "county": {
+      "type": "string",
+      "description": "County"
+    },
     "market": {
       "type": "string",
       "enum": [
@@ -49,6 +53,10 @@
       "type": "string",
       "description": "Listing agent email address"
     },
+    "brokerage_type": {
+      "type": "string",
+      "description": "Brokerage classification (e.g. independent, boutique, corporate)"
+    },
     "brokerage_independent": {
       "type": "boolean",
       "default": false,
@@ -57,6 +65,10 @@
     "source": {
       "type": "string",
       "description": "Data source (e.g. MLS, Batch, Manual Import)"
+    },
+    "batch_id": {
+      "type": "string",
+      "description": "Reference to LeadListBatch ID"
     },
     "assigned_relocation_agent": {
       "type": "string",

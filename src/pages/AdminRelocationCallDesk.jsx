@@ -479,8 +479,8 @@ export default function AdminRelocationCallDesk() {
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         agents={agents}
-        onImportSuccess={(count) => {
-          setFlashMessage(`Successfully imported ${count} pending listings.`);
+        onImportSuccess={(count, batchId) => {
+          setFlashMessage(batchId ? `Successfully imported ${count} pending listings (Batch ID: ${batchId}).` : `Successfully imported ${count} pending listings.`);
           setTimeout(() => setFlashMessage(null), 3500);
           queryClient.invalidateQueries({ queryKey: ['adminPendingLeads'] });
           queryClient.invalidateQueries({ queryKey: ['adminLeadListBatches'] });
