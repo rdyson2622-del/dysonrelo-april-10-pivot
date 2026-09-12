@@ -162,7 +162,7 @@ function base64EncodePCM(pcm16Array) {
  * Gemini Live Duplex Session Client
  * 
  * Native Audio Duplex streaming via Google Multimodal Live BidiGenerateContent:
- * - Handshakes with backend geminiLiveProxy (returns wsUrl, model: "gemini-2.5-flash-preview-native-audio-dialog", sessionLogId)
+ * - Handshakes with backend geminiLiveProxy (returns wsUrl, model: "models/gemini-2.5-flash-preview-native-audio-dialog", sessionLogId)
  * - Sends setup on WebSocket open (model, voiceName: 'Algieba')
  * - Awaits setupComplete before starting mic stream / transitioning status
  * - Streams mic audio via realtimeInput.mediaChunks ONLY after _setupDone
@@ -258,7 +258,11 @@ export class GeminiLiveSessionClient {
           return;
         }
 
-        // 3. Send setup message
+        this._setupDone = false;
+        this.onStatusChange?.('connecting');
+        this.dispatchGlobalState('connecting', true);
+
+        // 3. Send setup message (do not start mic until setupComplete)
         const setupMessage = {
           setup: {
             model: resolvedModel,

@@ -22,7 +22,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Fiduciary Relocation Hub',
     welcomeHeading: 'Welcome back to your Relocation Portal',
     script: "Welcome back! I'm Charlie Simmons, your AI Concierge at Dyson & Dyson. We've updated your fiduciary relocation roadmap with your latest destination market data, vetted local agents, and timeline milestones. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=bab1cfa3-46c8-4fde-a086-6a803660240c.wav",
   },
   hr: {
     portalId: 'hr',
@@ -31,7 +30,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Executive Relocation Hub',
     welcomeHeading: 'Welcome back to the Corporate Relocation Desk',
     script: "Welcome back to the Corporate Relocation Desk! I'm Charlie Simmons. Your executive employee relocation files, policy compliance tracking, and direct tax-differential tools are ready for review. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=c8548638-d204-4b91-8b58-cb4bc61a570d.wav",
   },
   broker: {
     portalId: 'broker',
@@ -40,7 +38,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Wisdom Properties • Pilot Brokerage',
     welcomeHeading: 'Welcome back to your Brokerage Portal',
     script: "Welcome back to your Brokerage Command Portal! I'm Charlie Simmons. Your escrow pipelines, agent production rosters, transaction audit files, and luxury syndication tools are up to the minute. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=870e231a-aa8c-4c92-b94f-b59a98e7b4f4.wav",
   },
   agent: {
     portalId: 'agent',
@@ -49,7 +46,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Vetted Referral Network',
     welcomeHeading: 'Welcome back to your Agent Portal',
     script: "Welcome back to your PRN Agent Portal! I'm Charlie Simmons. Your inbound vetted referral leads, active client workfiles, and pipeline tracking are synchronized and ready. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=9496300c-2f4c-401c-b87d-1bc09871c713.wav",
   },
   referral_agent: {
     portalId: 'referral_agent',
@@ -58,7 +54,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Affiliate Referral Network',
     welcomeHeading: 'Welcome back to your Referral Portal',
     script: "Welcome back to your Referral Agent Portal! I'm Charlie Simmons. Your referral pipeline, commission tracking, buyer-broker handoffs, and agreements are ready at your fingertips. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=04ec29de-8449-416f-ae99-d924e7253eeb.wav",
   },
   vendor: {
     portalId: 'vendor',
@@ -67,7 +62,6 @@ export const CHARLIE_PORTAL_WELCOME_SCRIPTS = {
     badge: 'Fiduciary Service Partner',
     welcomeHeading: 'Welcome back to the Vendor Partner Desk',
     script: "Welcome back to the Dyson & Dyson Vetted Partner Desk! I'm Charlie Simmons. Your territory dispatch, fiduciary service requests, lender and title integrations, and mutual client milestones are active. All your tools and services are outlined below in your mini apps which display on your main page and we can discuss anything throughout your visit.",
-    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=574cae29-c8f2-44b9-a6e4-1a75eb545104.wav",
   },
 };
 

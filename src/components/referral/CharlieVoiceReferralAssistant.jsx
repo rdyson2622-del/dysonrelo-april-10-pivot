@@ -8,8 +8,7 @@ import { base44 } from '@/api/base44Client';
 const GOLD = '#D4AF37';
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 
-// Authentic HeyGen Ruben voice audio for Charlie's referral greeting (instant 0ms CDN playback, authoritative American male)
-const CHARLIE_RUBEN_REFERRAL_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=0f04d227-dac5-4059-9a22-d4bcb18ce92a.wav";
+// HeyGen hardcoded WAV removed — dynamically synthesized via Charlie voice service
 
 /**
  * CharlieVoiceReferralAssistant
@@ -113,15 +112,9 @@ export default function CharlieVoiceReferralAssistant({
     }
   };
 
-  // Charlie Voice Synthesizer — ALWAYS uses authentic HeyGen Ruben voice, NEVER browser female TTS!
+  // Charlie Voice Synthesizer — uses authentic Charlie voice synthesis
   const speakText = async (text, onComplete, isInitialGreeting = false) => {
-    // 1. If it's the initial referral greeting, use the pre-rendered 0ms CDN HeyGen Ruben audio
-    if (isInitialGreeting || text.includes("Hello! I'm Charlie Simmons. Just speak naturally")) {
-      playCharlieAudio(CHARLIE_RUBEN_REFERRAL_GREETING_AUDIO, onComplete);
-      return;
-    }
-
-    // 2. For custom spoken text, invoke Charlie's authentic Ruben voice synthesizer backend function
+    // 1. Invoke Charlie voice synthesizer backend function
     try {
       setIsSpeaking(true);
       const res = await base44.functions.invoke('charlieSpeak', { text });

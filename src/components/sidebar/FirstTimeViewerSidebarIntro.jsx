@@ -6,8 +6,8 @@ import { useAuth } from '@/lib/AuthContext';
 const CHARLIE_DESK_PHOTO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/2e7121744_Screenshot2026-09-09at25842PM.png";
 const GOLD = '#D4AF37';
 
-// Authentic Charlie Simmons HeyGen Ruben voice greeting (instant 0-second CDN playback)
-const CHARLIE_GREETING_AUDIO = "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=2b2fe5ab-819c-4d92-a6b7-8ce1f65f86df.wav";
+import { base44 } from '@/api/base44Client';
+const CHARLIE_GREETING_TEXT = "Welcome to Dyson Relocation. I am Charlie Simmons, your AI concierge. All your tools and services are outlined below in your mini apps.";
 
 export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, className = '' }) {
   const navigate = useNavigate();
@@ -44,50 +44,54 @@ export default function FirstTimeViewerSidebarIntro({ onSwitchToSubscriber, clas
     }
 
     try {
-      if (!audioRef.current) {
-        const audio = new Audio(CHARLIE_GREETING_AUDIO);
-        audio.preload = 'auto';
-
-        audio.onplay = () => {
-          setIsPlaying(true);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
-          }
-        };
-
-        audio.onended = () => {
-          setIsPlaying(false);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
-          }
-        };
-
-        audio.onpause = () => {
-          setIsPlaying(false);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
-          }
-        };
-
-        audio.onerror = () => {
-          setIsPlaying(false);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
-          }
-        };
-
-        audioRef.current = audio;
-      } else {
+      if (audioRef.current) {
         audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => setIsPlaying(false));
+        return;
       }
 
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Playback error or blocked by autoplay policy:', err);
-          setIsPlaying(false);
-        });
-      }
+      base44.functions.invoke('charlieSpeak', { text: CHARLIE_GREETING_TEXT })
+        .then((res) => {
+          const url = res?.data?.audioUrl;
+          if (!url) {
+            setIsPlaying(false);
+            return;
+          }
+          const audio = new Audio(url);
+          audio.preload = 'auto';
+          audioRef.current = audio;
+
+          audio.onplay = () => {
+            setIsPlaying(true);
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: true } }));
+            }
+          };
+
+          audio.onended = () => {
+            setIsPlaying(false);
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+            }
+          };
+
+          audio.onpause = () => {
+            setIsPlaying(false);
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+            }
+          };
+
+          audio.onerror = () => {
+            setIsPlaying(false);
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('charlie-speech-active', { detail: { active: false } }));
+            }
+          };
+
+          audio.play().catch(() => setIsPlaying(false));
+        })
+        .catch(() => setIsPlaying(false));
     } catch (err) {
       console.error('Failed to trigger Charlie greeting audio:', err);
       setIsPlaying(false);

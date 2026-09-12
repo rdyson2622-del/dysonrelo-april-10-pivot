@@ -42,7 +42,6 @@ export default function HeroGeminiConcierge({ sidebarMode = false }) {
       systemPrompt: CHARLIE_CONCIERGE_PROMPT,
       voiceName: CHARLIE_VOICE_NAME,
       openingGreetingText: portalConfig.script,
-      openingGreetingAudioUrl: portalConfig.audioUrl,
       onStatusChange: (newStatus) => {
         setStatus(newStatus);
         if (newStatus === 'listening') {

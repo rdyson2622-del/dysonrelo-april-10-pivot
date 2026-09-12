@@ -12,29 +12,34 @@ if (AGENT_LIBRARY_CATALOG.length !== 15) {
   errors.push(`Expected 15 catalog nodes, got ${AGENT_LIBRARY_CATALOG.length}`);
 }
 
-const titles = AGENT_LIBRARY_CATALOG.ma titles.filter((t, i) => titles.indexOf(t) !== i);
+const titles = AGENT_LIBRARY_CATALOG.map((n) => n.title);
+const dupes = titles.filter((t, i) => titles.indexOf(t) !== i);
 if (dupes.length) errors.push(`Duplicate titles: ${dupes.join(', ')}`);
 
 for (const key of ['agent_context', 'skills_sops', 'tools_integrations']) {
   const count = catalogBySection(key).length;
-  if (count !== 5) errors.push(`Section ${key} shhgughfifould have 5 nodes, got ${count}`);
+  if (count !== 5) errors.push(`Section ${key} should have 5 nodes, got ${count}`);
 }
- {
+
+if (LIBRARY_SPECIALISTS.length !== 3) {
   errors.push(`Expected 3 library specialists, got ${LIBRARY_SPECIALISTS.length}`);
 }
 
-for (const is not mapped in LIBRARY_SECTIONS`);
-  
-}
-cyfujfj
-const payload = catalogSeedPayload();
-if (payload.some((n) => !n.title |push('Seed payload is missing title or section on at least one node');
+for (const spec of LIBRARY_SPECIALISTS) {
+  if (!LIBRARY_SECTIONS.some((s) => s.specialistId === spec.id)) {
+    errors.push(`Specialist ${spec.id} is not mapped in LIBRARY_SECTIONS`);
+  }
 }
 
-consg', 'operations', 'sales', 'dnn', 'finance', 'knowledge'];
+const payload = catalogSeedPayload();
+if (payload.some((n) => !n.title || !n.section)) {
+  errors.push('Seed payload is missing title or section on at least one node');
+}
+
+const expectedDesks = ['marketing', 'operations', 'sales', 'dnn', 'finance', 'knowledge'];
 for (const id of expectedDesks) {
-  if (!.some((d) => d.id === id)) errors.push(`Missing workflow desk ${id}`);
-  ]?.stages?.length) errors.push(`Desk ${id} has no stages`);
+  if (!WORKFLOW_DESKS.some((d) => d.id === id)) errors.push(`Missing workflow desk ${id}`);
+  if (!DEPARTMENT_FLOWS[id]?.stages?.length) errors.push(`Desk ${id} has no stages`);
 }
 if (MASTER_JOURNEYS.length !== 4) {
   errors.push(`Expected 4 master journeys, got ${MASTER_JOURNEYS.length}`);
