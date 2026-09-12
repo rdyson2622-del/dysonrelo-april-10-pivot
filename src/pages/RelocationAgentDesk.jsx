@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
+import LisaAssignedLeadsTable from '@/components/admin/reloCallDesk/LisaAssignedLeadsTable';
 
 const GOLD = '#D4AF37';
 
@@ -45,14 +46,68 @@ export default function RelocationAgentDesk() {
     status: 'Relocation Agent',
   };
 
-  // Fetch Pending Leads
-  const { data: pendingLeads = [], isLoading: isLoadingLeads } = useQuery({
-    queryKey: ['pendingLeadsAgentView', selectedMarket],
+  // Fetch Batches to find Lisa's latest or today's batch
+  const { data: batches = [] } = useQuery({
+    queryKey: ['agentBatchesView'],
     queryFn: async () => {
-      const query = selectedMarket === 'all' ? {} : { market: selectedMarket };
-      return await base44.entities.PendingLead.filter(query, '-created_date', 100).catch(() => []);
+      return await base44.entities.LeadListBatch.list('-created_date', 50).catch(() => []);
     },
   });
+
+  // Fetch Pending Leads
+  const { data: allPendingLeads = [], isLoading: isLoadingLeads } = useQuery({
+    queryKey: ['pendingLeadsAgentView'],
+    queryFn: async () => {
+      return await base44.entities.PendingLead.list('-created_date', 150).catch(() => []);
+    },
+  });
+
+  // Find Lisa's assigned batch for today or latest assigned batch
+  const today = new Date().toISOString().slice(0, 10);
+  const lisaBatches = React.useMemo(() => {
+    return batches.filter(b => 
+      b.assigned_agent?.toLowerCase().includes('lisa') ||
+      b.assigned_email?.toLowerCase() === 'lisa@lisahurt.com' ||
+      b.assigned_relocation_agent === currentAgent.id
+    ).sort((a, b) => {
+      const aToday = a.list_date === today || a.created_date?.startsWith(today);
+      const bToday = b.list_date === today || b.created_date?.startsWith(today);
+      if (aToday && !bToday) return -1;
+      if (!aToday && bToday) return 1;
+      return new Date(b.created_date || b.list_date || 0) - new Date(a.created_date || a.list_date || 0);
+    });
+  }, [batches, today, currentAgent.id]);
+
+  const latestAssignedBatch = lisaBatches[0] || null;
+
+  // Filter Lisa's assigned PendingLead for today or latest assigned batch
+  const assignedToLisa = React.useMemo(() => {
+    if (!allPendingLeads || allPendingLeads.length === 0) return [];
+
+    let pool = [];
+    if (latestAssignedBatch) {
+      pool = allPendingLeads.filter(l => 
+        l.batch_id === latestAssignedBatch.id &&
+        (l.assigned_agent?.toLowerCase().includes('lisa') ||
+         l.assigned_email?.toLowerCase() === 'lisa@lisahurt.com' ||
+         l.assigned_relocation_agent === currentAgent.id ||
+         !l.assigned_agent)
+      );
+    }
+
+    if (pool.length === 0) {
+      pool = allPendingLeads.filter(l => 
+        l.assigned_email?.toLowerCase() === 'lisa@lisahurt.com' ||
+        l.assigned_agent?.toLowerCase().includes('lisa') ||
+        l.assigned_relocation_agent === currentAgent.id
+      );
+    }
+
+    if (selectedMarket !== 'all') {
+      return pool.filter(l => l.market === selectedMarket);
+    }
+    return pool;
+  }, [allPendingLeads, latestAssignedBatch, selectedMarket, currentAgent.id]);
 
   // Fetch Scripts
   const { data: scripts = [] } = useQuery({
@@ -113,6 +168,17 @@ export default function RelocationAgentDesk() {
       console.error('Failed to log outcome:', err);
     } finally {
       setSubmittingOutcome(false);
+    }
+  };
+
+  const handleQuickStatusChange = async (leadId, newStatus) => {
+    try {
+      await base44.entities.PendingLead.update(leadId, { status: newStatus });
+      queryClient.invalidateQueries({ queryKey: ['pendingLeadsAgentView'] });
+      setSuccessMessage(`Updated lead status to "${newStatus.replace('_', ' ').toUpperCase()}"`);
+      setTimeout(() => setSuccessMessage(null), 2500);
+    } catch (err) {
+      console.error('Failed to update lead status:', err);
     }
   };
 
@@ -224,9 +290,11 @@ export default function RelocationAgentDesk() {
       {/* METRIC STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3.5 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/30 text-left">
-          <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Pending Leads in Queue</div>
-          <div className="text-2xl font-black text-white mt-1">{pendingLeads.length}</div>
-          <div className="text-[10px] text-[#D4AF37] mt-0.5 font-medium">$2M+ listings</div>
+          <div className="text-[10px] font-bold text-white/50 uppercase tracking-wider">Lisa's Assigned Leads</div>
+          <div className="text-2xl font-black text-white mt-1">{assignedToLisa.length}</div>
+          <div className="text-[10px] text-[#D4AF37] mt-0.5 font-medium">
+            {latestAssignedBatch ? (latestAssignedBatch.list_date === today ? "Today's Batch" : latestAssignedBatch.label) : 'Assigned queue'}
+          </div>
         </div>
 
         <div className="p-3.5 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/30 text-left">
@@ -251,7 +319,7 @@ export default function RelocationAgentDesk() {
       {/* TABS ROW */}
       <div className="flex items-center gap-2 border-b border-white/10 pb-2 overflow-x-auto">
         {[
-          { key: 'call_board', label: 'Daily Call Queue', count: pendingLeads.length },
+          { key: 'call_board', label: 'Daily Call Queue', count: assignedToLisa.length },
           { key: 'scripts', label: 'Relocation Scripts', count: scripts.length || 2 },
           { key: 'outcomes', label: 'Call Log History', count: recentOutcomes.length },
         ].map(tab => (
@@ -303,97 +371,18 @@ export default function RelocationAgentDesk() {
             </div>
 
             <div className="text-xs text-white/50 italic">
-              Lisa Hurt Calling Board • Click "Log Outcome" after each conversation
+              Lisa Hurt Calling Board • Fiduciary 1-on-1 calls only • No blast email/SMS
             </div>
           </div>
 
-          {/* Pending Leads Table / List */}
-          <div className="rounded-3xl border border-white/10 bg-[#0a0a0a] overflow-hidden shadow-2xl">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between text-xs text-white/60 bg-black/40">
-              <span className="font-bold text-white">Showing {pendingLeads.length} leads in queue</span>
-              <span className="text-[#D4AF37]">One-touch Disposition Logging</span>
-            </div>
-
-            {pendingLeads.length === 0 ? (
-              <div className="p-12 text-center text-white/50 space-y-3">
-                <PhoneCall className="w-10 h-10 mx-auto text-[#D4AF37]/50" />
-                <p className="text-base font-bold text-white">No pending leads in this market queue.</p>
-                <p className="text-xs text-white/40 max-w-sm mx-auto">
-                  New $2M+ pending listings will appear here once imported.
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-white/10 text-xs">
-                {pendingLeads.map(lead => (
-                  <div key={lead.id} className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors">
-                    <div className="space-y-1.5 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-white text-sm sm:text-base">{lead.address}</span>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40">
-                          {lead.market}
-                        </span>
-                        <span className="text-white/60 text-xs font-medium">({lead.city})</span>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-white/70 text-xs pt-1">
-                        <div>
-                          <span className="text-white/40 block text-[10px] uppercase font-bold">List Price</span>
-                          <strong className="text-[#D4AF37] text-sm">${lead.list_price?.toLocaleString() || 'N/A'}</strong>
-                        </div>
-                        <div>
-                          <span className="text-white/40 block text-[10px] uppercase font-bold">Listing Office</span>
-                          <span className="truncate block">{lead.listing_office || '—'}</span>
-                        </div>
-                        <div>
-                          <span className="text-white/40 block text-[10px] uppercase font-bold">Listing Agent</span>
-                          <span className="truncate block">{lead.listing_agent_name || '—'}</span>
-                        </div>
-                        <div>
-                          <span className="text-white/40 block text-[10px] uppercase font-bold">Status</span>
-                          <span className="uppercase font-bold text-[#10b981]">{lead.status || 'new'}</span>
-                        </div>
-                      </div>
-
-                      {lead.listing_agent_phone && (
-                        <div className="text-[11px] text-white/50 flex items-center gap-1.5 pt-0.5">
-                          <Phone className="w-3 h-3 text-[#D4AF37]" />
-                          <span>Agent Phone: <strong className="text-white">{lead.listing_agent_phone}</strong></span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      {lead.listing_agent_phone ? (
-                        <a
-                          href={`tel:${lead.listing_agent_phone}`}
-                          className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-400 text-xs font-bold transition-all flex items-center gap-1.5"
-                        >
-                          <Phone className="w-3.5 h-3.5" />
-                          <span>Call</span>
-                        </a>
-                      ) : (
-                        <button
-                          type="button"
-                          className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white/40 text-xs font-bold cursor-not-allowed"
-                          title="Phone not on file"
-                        >
-                          No Phone
-                        </button>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => handleOpenCallModal(lead)}
-                        className="px-4 py-2 rounded-xl bg-[#D4AF37] text-black font-bold text-xs hover:brightness-110 active:scale-95 transition-all shadow-md cursor-pointer"
-                      >
-                        Log Outcome
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Lisa's Assigned Leads Table with Exact Empty State */}
+          <LisaAssignedLeadsTable
+            leads={assignedToLisa}
+            activeBatch={latestAssignedBatch}
+            isLoading={isLoadingLeads}
+            onOpenCallModal={handleOpenCallModal}
+            onQuickStatusChange={handleQuickStatusChange}
+          />
         </div>
       )}
 
