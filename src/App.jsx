@@ -194,6 +194,7 @@ import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
 import AdminRelocationCallDesk from './pages/AdminRelocationCallDesk';
 import RelocationAgentDesk from './pages/RelocationAgentDesk';
 import AdminPreferredVendors from './pages/AdminPreferredVendors';
+import SubscriberVendorFinder from './pages/SubscriberVendorFinder';
 import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
 import MiniAppPage from './pages/MiniAppPage';
@@ -277,6 +278,9 @@ const AuthenticatedApp = () => {
         <Route path="/city-guide" element={<CityGuide />} />
         <Route path="/CityGuide" element={<CityGuide />} />
         <Route path="/financial-services" element={<FinancialServices />} />
+        <Route path="/vendor-finder" element={<SubscriberVendorFinder />} />
+        <Route path="/subscriber-vendors" element={<SubscriberVendorFinder />} />
+        <Route path="/vendors" element={<SubscriberVendorFinder />} />
         <Route path="/broker-portal" element={<BrokerPortalLanding />} />
         <Route path="/partner-benefits" element={<SendingAgentLanding />} />
         <Route path="/ai-assistants" element={<AIAssistants />} />
