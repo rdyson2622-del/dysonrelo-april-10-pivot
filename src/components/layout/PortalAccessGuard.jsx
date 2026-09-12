@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 const PORTAL_HOMES = {
   client: '/home',
   agent: '/agent-command-center',
+  relocation_agent: '/relocation-agent-desk',
   referral_agent: '/partner-benefits',
   vendor: '/search',
   hr: '/corporate-relo',
@@ -20,6 +21,7 @@ const PORTAL_ROUTES = {
   '/agent-subscribe': 'agent',
   '/agent-invited-clients': 'agent',
   '/national-directory': 'agent',
+  '/relocation-agent-desk': 'relocation_agent',
   '/partner-benefits': 'referral_agent',
   '/search': 'vendor',
   '/corporate-relo': 'hr',
@@ -47,9 +49,17 @@ export default function PortalAccessGuard({ children }) {
         if (!active) return;
         if (user?.role === 'admin') return;
 
-        const assigned = user?.portal_role || getSavedPortal()?.roleKey;
+        const isLisa = user?.email?.toLowerCase() === 'lisa@lisahurt.com';
+        let assigned = user?.portal_role || getSavedPortal()?.roleKey;
+        if (isLisa || user?.portal_role === 'relocation_agent') {
+          assigned = 'relocation_agent';
+          if (user && user.portal_role !== 'relocation_agent') {
+            base44.auth.updateMe({ portal_role: 'relocation_agent' }).catch(() => {});
+          }
+        }
         if (assigned) {
           sessionStorage.setItem('dyson_role', assigned);
+          sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
           window.dispatchEvent(new Event('dyson_role_change'));
         }
 

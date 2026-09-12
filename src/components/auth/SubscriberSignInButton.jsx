@@ -28,7 +28,9 @@ export default function SubscriberSignInButton({ className = '' }) {
   const resolvePortalPath = () => {
     if (!user) return '/portal';
     if (user.role === 'admin') return '/admin';
+    const isLisa = user.email?.toLowerCase() === 'lisa@lisahurt.com';
     const pRole = user.portal_role || sessionStorage.getItem('dyson_role');
+    if (isLisa || pRole === 'relocation_agent') return '/relocation-agent-desk';
     if (pRole === 'brokerage_admin' || pRole === 'broker') return '/brokerage';
     if (pRole === 'agent') return '/agent-command-center';
     if (pRole === 'referral_agent' || pRole === 'inactive_agent') return '/partner-benefits';
@@ -38,9 +40,12 @@ export default function SubscriberSignInButton({ className = '' }) {
   };
 
   const displayName = user?.full_name || user?.email?.split('@')[0] || 'Subscriber';
+  const isLisa = user?.email?.toLowerCase() === 'lisa@lisahurt.com';
   const roleLabel = user?.role === 'admin' 
     ? 'Admin Console' 
-    : (user?.portal_role ? user.portal_role.toUpperCase() : 'SUBSCRIBER');
+    : (isLisa || user?.portal_role === 'relocation_agent' 
+        ? 'RELOCATION AGENT' 
+        : (user?.portal_role ? user.portal_role.toUpperCase() : 'SUBSCRIBER'));
 
   const handleSignInClick = () => {
     const currentPath = location.pathname + location.search;

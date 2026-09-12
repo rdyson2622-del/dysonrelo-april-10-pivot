@@ -35,6 +35,15 @@ const PATHS = [
   },
   {
     icon: Star,
+    label: 'I am an Assigned Relocation Agent',
+    sub: 'Daily $2M+ pending listing call desk and fiduciary destination client matching.',
+    badge: 'RELOCATION AGENT',
+    dest: '/relocation-agent-desk',
+    roleKey: 'relocation_agent',
+    featured: true,
+  },
+  {
+    icon: Star,
     label: 'I am a Active Real Estate Agent',
     sub: 'Join our vetted national network and receive managed, pre-qualified relocation clients.',
     badge: 'RELOCATION AGENT NETWORK',
@@ -71,6 +80,7 @@ const PORTAL_DESTS = {
   admin: '/admin',
   client: '/home',
   hr: '/corporate-relo',
+  relocation_agent: '/relocation-agent-desk',
   agent: '/agent-command-center',
   broker: '/brokerage',
   brokerage_admin: '/brokerage',
@@ -105,9 +115,16 @@ export default function RoleSelector() {
       let targetRole = 'client';
       let targetDest = '/home';
 
+      const isLisa = user?.email?.toLowerCase() === 'lisa@lisahurt.com';
       if (admin) {
         targetRole = 'admin';
         targetDest = '/admin';
+      } else if (isLisa || user?.portal_role === 'relocation_agent') {
+        targetRole = 'relocation_agent';
+        targetDest = '/relocation-agent-desk';
+        if (user && user.portal_role !== 'relocation_agent') {
+          base44.auth.updateMe({ portal_role: 'relocation_agent' }).catch(() => {});
+        }
       } else if (user?.portal_role && PORTAL_DESTS[user.portal_role]) {
         targetRole = user.portal_role;
         targetDest = PORTAL_DESTS[user.portal_role];
@@ -121,6 +138,7 @@ export default function RoleSelector() {
 
       setAssignedRole(targetRole);
       sessionStorage.setItem('dyson_role', targetRole);
+      sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
       window.dispatchEvent(new Event('dyson_role_change'));
       setAccessReady(true);
 
@@ -144,6 +162,7 @@ export default function RoleSelector() {
       ? PATHS.find(item => item.roleKey === assignedRole)
       : path;
     sessionStorage.setItem('dyson_role', selected.roleKey);
+    sessionStorage.setItem('dyson_viewer_mode', 'subscriber');
     window.dispatchEvent(new Event('dyson_role_change'));
     navigate(selected.dest);
   };

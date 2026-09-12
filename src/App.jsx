@@ -192,6 +192,7 @@ import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
 import AdminRelocationCallDesk from './pages/AdminRelocationCallDesk';
+import RelocationAgentDesk from './pages/RelocationAgentDesk';
 import AdminPreferredVendors from './pages/AdminPreferredVendors';
 import FrontDoor from './pages/FrontDoor';
 import ClientMoveRoadmap from './pages/ClientMoveRoadmap';
@@ -263,6 +264,7 @@ const AuthenticatedApp = () => {
         <Route path="/client-roadmap" element={<ClientMoveRoadmap />} />
         <Route path="/relocation-roadmap" element={<ClientMoveRoadmap />} />
         <Route path="/RelocationRoadmap" element={<ClientMoveRoadmap />} />
+        <Route path="/relocation-agent-desk" element={<RelocationAgentDesk />} />
 
         {/* Public referral submission page */}
         <Route path="/refer" element={<ReferSomeone />} />
@@ -339,6 +341,7 @@ const AuthenticatedApp = () => {
         <Route path="/national-directory" element={<NationalVettedDirectory />} />
       <Route path="/master-show-sheet" element={<MasterShowSheet />} />
       <Route path="/agent-command-center" element={<AgentCommandCenter />} />
+      <Route path="/relocation-agent-desk" element={<RelocationAgentDesk />} />
       <Route path="/agent-workfile/:id" element={<AgentWorkfile />} />
       <Route path="/agent-subscribe" element={<AgentSubscribe />} />
       <Route path="/partner-benefits" element={<SendingAgentLanding />} />

@@ -412,7 +412,7 @@ export default function AdminSidebar() {
           {[
             { label: 'D&D LANDING PAGE', role: 'landing', emoji: '🚪', path: '/' },
             { label: 'CLIENT', role: 'client', emoji: '🏠', path: '/home' },
-            { label: 'RELOCATION AGENT', role: 'agent', emoji: '⭐', path: '/agent-command-center' },
+            { label: 'RELOCATION AGENT', role: 'relocation_agent', emoji: '📞', path: '/relocation-agent-desk' },
             { label: 'REFERRAL AGENT', role: 'referral_agent', emoji: '🤝', path: '/partner-benefits' },
             { label: 'VENDOR', role: 'vendor', emoji: '🔧', path: '/search' },
             { label: 'CORP RELO HR', role: 'corporate_hr', emoji: '🏢', path: '/corporate-relo' },
