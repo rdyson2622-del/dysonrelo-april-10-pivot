@@ -23,7 +23,7 @@ export default function AdminDeskHeader({ leadAgent }) {
                 Relocation Call Desk
               </h1>
               <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#D4AF37] text-black">
-                STAGE 3 ACTIVE • OPERATIONAL
+                STAGE 4 ACTIVE • OPERATIONAL
               </span>
             </div>
             <p className="text-xs text-white/60 mt-0.5">

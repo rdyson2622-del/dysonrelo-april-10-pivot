@@ -164,7 +164,7 @@ export default function AssignBatchModal({ isOpen, onClose, onAssignSuccess, age
             </div>
             <div>
               <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">
-                STAGE 3 BATCH ASSIGNMENT
+                STAGE 4 BATCH ASSIGNMENT
               </span>
               <h3 className="text-base sm:text-lg font-bold text-white">
                 Assign Lead List Batch to Agent

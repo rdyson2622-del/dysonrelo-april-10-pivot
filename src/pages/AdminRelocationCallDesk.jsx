@@ -132,6 +132,7 @@ export default function AdminRelocationCallDesk() {
           { key: 'pending_leads', label: 'Pending Leads', count: pendingLeads.length },
           { key: 'batches', label: 'Lead List Batches', count: batches.length },
           { key: 'hr_calls', label: 'HR Prospect Calls', count: hrCalls.length },
+          { key: 'outcomes', label: 'Call Log Audit', count: callOutcomes.length },
           { key: 'scripts', label: 'Agent Scripts', count: scripts.length || 2 },
           { key: 'analytics', label: 'Split Telemetry' },
         ].map(tab => (
@@ -448,6 +449,79 @@ export default function AdminRelocationCallDesk() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB: CALL OUTCOMES AUDIT */}
+      {activeTab === 'outcomes' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-white">Call Disposition Audit Log (CallOutcome)</h3>
+              <p className="text-xs text-white/60">
+                Audited fiduciary calls logged by relocation agents and desk operators.
+              </p>
+            </div>
+            <span className="text-xs text-[#D4AF37] font-bold">
+              {callOutcomes.length} recorded calls
+            </span>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-black/40 overflow-hidden divide-y divide-white/10 shadow-xl">
+            {callOutcomes.length === 0 ? (
+              <div className="p-10 text-center text-white/50 space-y-2">
+                <Phone className="w-8 h-8 mx-auto text-[#D4AF37]/50" />
+                <p className="text-sm font-medium">No call outcomes logged yet.</p>
+                <p className="text-xs text-white/40">
+                  Click "Log Outcome" on any lead in the Pending Leads tab to record telemetry.
+                </p>
+              </div>
+            ) : (
+              callOutcomes.map(rec => {
+                const associatedLead = pendingLeads.find(l => l.id === rec.pending_lead);
+                return (
+                  <div key={rec.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-white/5 transition-colors text-xs">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-white text-sm">
+                          {associatedLead?.address || 'Lead Address Recorded'}
+                        </span>
+                        {associatedLead?.city && (
+                          <span className="text-white/50 text-xs">({associatedLead.city})</span>
+                        )}
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 capitalize">
+                          {rec.outcome?.replace('_', ' ') || 'Connected'}
+                        </span>
+                        {rec.open_referral && (
+                          <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                            ★ 25% Open Referral
+                          </span>
+                        )}
+                      </div>
+
+                      {rec.notes && (
+                        <p className="text-white/70 text-[11px] italic bg-black/50 p-2 rounded-lg border border-white/5 max-w-2xl">
+                          "{rec.notes}"
+                        </p>
+                      )}
+
+                      {rec.follow_up_date && (
+                        <div className="text-[10px] text-sky-400 font-semibold flex items-center gap-1">
+                          <span>Callback Scheduled:</span>
+                          <strong>{rec.follow_up_date}</strong>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-right text-[10px] text-white/40 shrink-0">
+                      <div>Operator: <strong className="text-white/80">{rec.called_by || 'Lisa Hurt'}</strong></div>
+                      <div>{rec.called_at ? new Date(rec.called_at).toLocaleString() : '—'}</div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}

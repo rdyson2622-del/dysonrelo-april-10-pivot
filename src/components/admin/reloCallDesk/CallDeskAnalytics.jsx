@@ -23,7 +23,7 @@ export default function CallDeskAnalytics({ pendingLeads = [], callOutcomes = []
       <div className="flex items-center justify-between pb-2 border-b border-white/10">
         <div>
           <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37]">
-            STAGE 3 SPLIT PERFORMANCE TELEMETRY
+            STAGE 4 SPLIT PERFORMANCE TELEMETRY
           </span>
           <h3 className="text-lg font-bold text-white mt-0.5">
             Pending Listing Pipeline vs HR Corporate Inquiries

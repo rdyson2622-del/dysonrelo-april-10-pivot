@@ -18,7 +18,7 @@ export default function WorkflowModuleCards({
             OPERATIONAL WORKFLOW MODULES
           </h2>
           <span className="text-[10px] text-white/50 font-medium">
-            (Stage 3 Call Desk Architecture)
+            (Stage 4 Call Desk Architecture)
           </span>
         </div>
         <span className="text-[10px] uppercase font-bold text-white/60 tracking-wider">
