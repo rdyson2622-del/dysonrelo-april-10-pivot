@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
+import ObsidianTwilightCandidate from '@/components/admin/copilot/ObsidianTwilightCandidate';
+import WarmChampagneCandidate from '@/components/admin/copilot/WarmChampagneCandidate';
 import GrokCandidateA from '@/components/admin/copilot/GrokCandidateA';
 import GrokCandidateB from '@/components/admin/copilot/GrokCandidateB';
 import CopilotCandidatesScroll from '@/components/admin/copilot/CopilotCandidatesScroll';
@@ -92,7 +94,7 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('grok_candidate_a'); // baseline_hero | grok_candidate_a | grok_candidate_b
+  const [selectedCandidate, setSelectedCandidate] = useState('obsidian_twilight'); // obsidian_twilight | warm_champagne | grok_candidate_a | grok_candidate_b | baseline_hero
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -260,9 +262,11 @@ export default function AdminDysonHomesCopilot() {
             {/* Candidate Pills */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'grok_candidate_a', label: 'Candidate 2: Grok Format A (Split)' },
-                { id: 'grok_candidate_b', label: 'Candidate 3: Grok Format B (Centered)' },
-                { id: 'baseline_hero', label: 'Candidate 1: Showcase & Concierge' },
+                { id: 'obsidian_twilight', label: 'Option 1: Obsidian Twilight (Night)' },
+                { id: 'warm_champagne', label: 'Option 2: Warm Champagne (Dyson Tan)' },
+                { id: 'grok_candidate_a', label: 'Option 3: Grok Split (Format A)' },
+                { id: 'grok_candidate_b', label: 'Option 4: Grok Centered (Format B)' },
+                { id: 'baseline_hero', label: 'Option 5: Showcase Hybrid' },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -309,11 +313,67 @@ export default function AdminDysonHomesCopilot() {
                   <span>https://dysonhomes.com</span>
                 </div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
-                  {selectedCandidate === 'grok_candidate_a' ? 'Grok Format A' : selectedCandidate === 'grok_candidate_b' ? 'Grok Format B' : 'Visual Showcase'}
+                  {selectedCandidate === 'obsidian_twilight' 
+                    ? 'Option 1: Obsidian Twilight' 
+                    : selectedCandidate === 'warm_champagne' 
+                    ? 'Option 2: Warm Champagne' 
+                    : selectedCandidate === 'grok_candidate_a' 
+                    ? 'Option 3: Grok Format A' 
+                    : selectedCandidate === 'grok_candidate_b' 
+                    ? 'Option 4: Grok Format B' 
+                    : 'Option 5: Showcase Hybrid'}
                 </span>
               </div>
 
               {/* ── CONDITIONALLY RENDER ACTIVE CANDIDATE ── */}
+
+              {/* OPTION 1: OBSIDIAN TWILIGHT (PRIVATE WEALTH NIGHT MOCK) */}
+              {selectedCandidate === 'obsidian_twilight' && (
+                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: '#050505' }}>
+                  <ObsidianTwilightCandidate
+                    selectedAddress={selectedProperty.address}
+                    rebateAmount={selectedProperty.rebate}
+                    onRunAudit={(addr) => {
+                      setAddressInput(addr);
+                      handleCustomSearch({ preventDefault: () => {} });
+                    }}
+                  />
+
+                  {/* Added Scroll: Copilot Intelligence Dossier */}
+                  <div className="max-w-2xl mx-auto pt-2">
+                    <div className="text-center pb-2">
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#D4AF37]">
+                        POST-SEARCH AUDIT DOSSIER
+                      </span>
+                    </div>
+                    <CopilotPropertyDossier property={selectedProperty} />
+                  </div>
+                </div>
+              )}
+
+              {/* OPTION 2: WARM CHAMPAGNE (DYSON TAN SIGNATURE SUNSET MOCK) */}
+              {selectedCandidate === 'warm_champagne' && (
+                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: TAN_BG }}>
+                  <WarmChampagneCandidate
+                    selectedAddress={selectedProperty.address}
+                    rebateAmount={selectedProperty.rebate}
+                    onRunAudit={(addr) => {
+                      setAddressInput(addr);
+                      handleCustomSearch({ preventDefault: () => {} });
+                    }}
+                  />
+
+                  {/* Added Scroll: Copilot Intelligence Dossier */}
+                  <div className="max-w-2xl mx-auto pt-2">
+                    <div className="text-center pb-2">
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
+                        POST-SEARCH AUDIT DOSSIER
+                      </span>
+                    </div>
+                    <CopilotPropertyDossier property={selectedProperty} />
+                  </div>
+                </div>
+              )}
               
               {/* CANDIDATE 2: GROK FORMAT A (ASYMMETRICAL ESTATE SPLIT) */}
               {selectedCandidate === 'grok_candidate_a' && (
@@ -531,27 +591,27 @@ export default function AdminDysonHomesCopilot() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-white/80">
-              <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
+              <div className="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/40 space-y-2">
                 <h4 className="font-bold text-[#D4AF37] text-sm flex items-center gap-1.5">
-                  <span>Format A: Asymmetrical Editorial Elevation</span>
+                  <span>Option 1: Obsidian Twilight (Aspirational Night)</span>
                 </h4>
                 <ul className="space-y-1.5 text-[11px] text-white/70">
-                  <li>• <strong>Typography:</strong> Cormorant Garamond serif headings replace plain sans-serif to convey high-end private banking &amp; architecture.</li>
-                  <li>• <strong>Estate Visuals:</strong> Replaced generic suburban rendering with genuine $3.5M+ stone luxury estate with manicured landscaping.</li>
-                  <li>• <strong>Rebate Clarity:</strong> Elevated "closing rebate" to explicit 50% referral commission credit on HUD-1 settlement ($12k–$25k+).</li>
-                  <li>• <strong>Independent Fiduciary Shield:</strong> Added explicit protection guarantee ("Not the listing agent; no phone number auctioning").</li>
+                  <li>• <strong>Atmosphere:</strong> Illuminated hillside modern estate with infinity pool overlooking twilight valley lights.</li>
+                  <li>• <strong>Target Persona:</strong> Accredited investors and private wealth seeking discretion and institutional comps.</li>
+                  <li>• <strong>Shield Message:</strong> "Trusted by private wealth. No agent spam."</li>
+                  <li>• <strong>4-Step Process:</strong> Paste Address → AI + Human Analysis → Intelligence Delivered → Better Decisions.</li>
                 </ul>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
-                <h4 className="font-bold text-[#D4AF37] text-sm flex items-center gap-1.5">
-                  <span>Format B: Symmetrical Centered Luxury Elevation</span>
+              <div className="p-4 rounded-2xl bg-[#141414] border border-[#d8cab6]/40 space-y-2">
+                <h4 className="font-bold text-[#e8c84a] text-sm flex items-center gap-1.5">
+                  <span>Option 2: Warm Champagne (Dyson Tan Signature)</span>
                 </h4>
                 <ul className="space-y-1.5 text-[11px] text-white/70">
-                  <li>• <strong>Warm Vignette:</strong> Softly blended luxury estate photography into Dyson Tan (#ede0cc) to eliminate sterile all-white look.</li>
-                  <li>• <strong>Floating Glass Search:</strong> Gold-rimmed search pill creates a sleek, high-end feel similar to private club concierge desks.</li>
-                  <li>• <strong>Elevated Trio Cards:</strong> Smart Comps, Risk Insights, and Closing Rebate are housed in floating white-and-gold cards.</li>
-                  <li>• <strong>Process Integrity:</strong> 1-2-3 connected line illustrates end-to-end relocation and purchasing governance under Bob Dyson.</li>
+                  <li>• <strong>Atmosphere:</strong> Warm golden-hour coastal villa with infinity pool blended seamlessly into Dyson Tan (#ede0cc).</li>
+                  <li>• <strong>Target Persona:</strong> Relocating luxury homebuyers wanting warmth, trust, and unvarnished reality.</li>
+                  <li>• <strong>Legacy Anchor:</strong> "35 years of high-end brokerage. Now augmented by AI."</li>
+                  <li>• <strong>3 Pillars:</strong> Honest comps, Hidden risks, Closing-cost credit.</li>
                 </ul>
               </div>
             </div>

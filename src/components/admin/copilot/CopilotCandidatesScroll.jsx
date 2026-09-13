@@ -8,42 +8,68 @@ const GOLD = '#D4AF37';
 
 export const CANDIDATES_LIST = [
   {
-    id: 'baseline_hero',
-    title: 'Candidate 1: Architectural Showcase & Charlie Concierge',
-    badge: 'Current Hybrid',
-    concept: 'Visual-First Hybrid',
-    description: 'Prominent 16:9 full-color luxury home photography above the fold with Charlie Voice AI concierge, 1-click address pills, and an instant scroll down to the comprehensive property dossier.',
-    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+    id: 'obsidian_twilight',
+    title: 'Option 1: Obsidian Twilight Suite (Private Wealth)',
+    badge: 'Aspirational Night',
+    concept: 'Obsidian & Gold Luxury',
+    description: 'Deep obsidian night aesthetic featuring hillside estate with illuminated infinity pool. Left column delivers the copilot search, fiduciary shield ("Trusted by private wealth. No agent spam"), 3 gold-accented audit cards, and 4-step execution line.',
+    thumbnail: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80',
     strengths: [
-      'Maximum color and prestige from actual architectural photography',
-      'Keeps Charlie Simmons voice AI persona accessible immediately',
-      'Deep transaction audit dossier reveals rebate, risks & comps in one scroll'
+      'Private banking and family-office level prestige',
+      'Explicit 4-step workflow: Paste -> Analyze -> Deliver -> Decide',
+      'Striking dark mode visual authority with gold accents'
+    ]
+  },
+  {
+    id: 'warm_champagne',
+    title: 'Option 2: Warm Champagne Estate (Dyson Tan Signature)',
+    badge: 'Dyson Tan Sunset',
+    concept: 'Warm Editorial Villa',
+    description: 'Bespoke cream & Dyson Tan palette with golden-hour villa & infinity pool. Features unvarnished comps, hidden risks, closing-cost credit, and 35-year brokerage legacy anchor ("35 years of high-end brokerage. Now augmented by AI").',
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
+    strengths: [
+      'Seamless alignment with brand-wide Dyson Tan (#ede0cc) palette',
+      'Warm, welcoming, non-intimidating luxury aesthetic',
+      '3-pillar cards: Honest comps, Hidden risks, Closing-cost credit'
     ]
   },
   {
     id: 'grok_candidate_a',
-    title: 'Candidate 2: Grok Format A — Asymmetrical Estate Split',
-    badge: 'Grok Proposal A',
-    concept: 'Editorial Split Screen',
-    description: 'Classed up for executive buyers. Left column features the headline, fiduciary trust shield ("No agent spam"), property search bar with MLS options, and 3 benefit cards. Right column showcases a warm craftsman luxury estate.',
-    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
+    title: 'Option 3: Grok Format A — Asymmetrical Split',
+    badge: 'Editorial Split',
+    concept: 'Clean Split Screen',
+    description: 'Balanced split-screen layout with left-hand input and right-hand estate photography, paired with an interactive 3-card benefit breakdown and MLS source selector.',
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
     strengths: [
-      'Zero visual clutter — clear 3-card layout (Comps, Risks, Rebate)',
-      'Asymmetrical split delivers high-end magazine / editorial feel',
-      '3-step "How It Works" footer provides instant clarity before scrolling'
+      'Zero visual friction with prominent search input',
+      'Clear fiduciary trust guarantee front and center',
+      'Immediate property audit dossier in one scroll'
     ]
   },
   {
     id: 'grok_candidate_b',
-    title: 'Candidate 3: Grok Format B — Symmetrical Executive Centered',
-    badge: 'Grok Proposal B',
+    title: 'Option 4: Grok Format B — Symmetrical Executive Centered',
+    badge: 'Centered Vignette',
     concept: 'Centered Luxury Vignette',
-    description: 'Classed up for high-net-worth clients. Twin estate imagery softly vignetted into Dyson Tan background, a floating pill search bar, and 3 elevated white-and-gold cards, followed by a connected milestone roadmap.',
-    thumbnail: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80',
+    description: 'Symmetrical centered layout with estate backdrop vignetted into tan, floating pill search, and 3 elevated white-and-gold cards.',
+    thumbnail: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80',
     strengths: [
-      'Balanced, symmetrical focus puts the value statement front and center',
-      'Subtle estate background delivers elegance without heavy contrast',
-      'Connected 1-2-3 milestone flow builds trust without sales jargon'
+      'Centered focus puts the value statement front and center',
+      'Connected 1-2-3 milestone flow builds trust without sales jargon',
+      'Clean card grid delivers fast scanning on mobile'
+    ]
+  },
+  {
+    id: 'baseline_hero',
+    title: 'Option 5: Architectural Showcase & Concierge Hybrid',
+    badge: 'Current Hybrid',
+    concept: 'Visual-First Hybrid',
+    description: 'Prominent 16:9 full-color luxury home photography above the fold with Charlie Voice AI concierge, 1-click address pills, and live ticker.',
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+    strengths: [
+      'Maximum color and prestige from architectural photography',
+      'Keeps Charlie Simmons voice AI persona accessible immediately',
+      'Deep transaction audit dossier reveals rebate, risks & comps in one scroll'
     ]
   }
 ];
@@ -77,7 +103,7 @@ export default function CopilotCandidatesScroll({
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-white/40 font-mono text-[11px]">3 Designs Active</span>
+          <span className="text-white/40 font-mono text-[11px]">5 Designs Active</span>
         </div>
       </div>
 
