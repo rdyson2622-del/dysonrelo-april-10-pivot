@@ -384,7 +384,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
 
         <div className="text-center pt-2">
           <p 
-            className="text-xs sm:text-sm font-serif italic text-[#854d0e] tracking-wider font-medium"
+            className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;

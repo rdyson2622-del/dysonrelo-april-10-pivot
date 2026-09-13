@@ -202,7 +202,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
         {/* Footer Subtitle */}
         <div className="text-center pt-2">
           <p 
-            className="text-xs sm:text-sm font-serif italic text-[#D4AF37]/90 tracking-wider"
+            className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#D4AF37] tracking-wider"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;

@@ -214,6 +214,16 @@ export default function SlideOneTanOverview({ onRunAudit }) {
             <div className="w-12 h-0.5 bg-[#d8cab6]" />
           </div>
         </div>
+
+        {/* Footer Slogan */}
+        <div className="text-center pt-2">
+          <p 
+            className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
+          </p>
+        </div>
       </div>
     </div>
   );
