@@ -4,8 +4,6 @@ import {
   MapPin, Home, Brain, FileText, Gem, Volume2, 
   CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info, HelpCircle
 } from 'lucide-react';
-import CopilotWorkflowExplainerModal from './CopilotWorkflowExplainerModal';
-import CharlieBobTagTeamBox from './CharlieBobTagTeamBox';
 import CopilotDocumentViewer from './CopilotDocumentViewer';
 import CopilotChatDossierCanvas from './CopilotChatDossierCanvas';
 
@@ -76,14 +74,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditComplete, setAuditComplete] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
-  const [explainerStep, setExplainerStep] = useState(1);
   const [activeProperty, setActiveProperty] = useState(INITIAL_PROPERTIES['742 Vista Del Mar, La Jolla, CA 92037']);
-
-  const handleOpenExplainer = (step) => {
-    setExplainerStep(step);
-    setIsExplainerOpen(true);
-  };
 
   const handleSubmit = (e, customAddr) => {
     if (e) e.preventDefault();
@@ -322,54 +313,12 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         </div>
       </div>
 
-      {/* ── LOWER SECTION BELOW THE CREASE (SIGNATURE DYSON TAN #ede0cc) ── */}
+      {/* ── LOWER SECTION: STEP 2 DIRECT CONNECTION (SIGNATURE DYSON TAN #ede0cc) ── */}
       <div 
-        className="w-full px-6 sm:px-10 py-8 space-y-6 border-t border-[#d8cab6]/60"
+        className="w-full px-6 sm:px-10 py-6 space-y-6 border-t border-[#d8cab6]/60"
         style={{ background: '#ede0cc', color: '#1a1815' }}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span className="text-[11px] font-bold tracking-widest text-[#0a0a0a] uppercase">
-            HOW DYSON HOMES <span className="font-serif italic text-base text-[#854d0e] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
-          </span>
-          <span className="text-xs text-[#554c40] font-medium flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            Click any step below for full detailed guide &amp; examples
-          </span>
-        </div>
-
-        {/* HIGH-VISIBILITY BUYER GUIDANCE BANNER */}
-        <div className="p-4 rounded-2xl bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl text-left flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldAlert className="w-5 h-5 text-[#D4AF37]" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs sm:text-[13px] font-black tracking-wider uppercase text-[#D4AF37]">
-                  CRITICAL BUYER ADVICE WHEN BROWSING MLS:
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 text-[10px] font-bold uppercase tracking-wide">
-                  DO NOT REQUEST AN AGENT ON PORTAL SITES
-                </span>
-              </div>
-              <p className="text-xs sm:text-[12.5px] text-white/90 leading-snug">
-                When searching on Realtor.com, Homes.com, or Zillow, <strong>never click &ldquo;Request an Agent&rdquo; or &ldquo;Contact Agent&rdquo;</strong>. Instead, simply copy the address and <strong>vet the property here first</strong>. You&rsquo;ll save thousands in closing cash rebates while making a far more vetted choice of both property and fiduciary agent representation.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleOpenExplainer(1)}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs whitespace-nowrap shadow-md transition-all cursor-pointer shrink-0"
-          >
-            Read Full Guide
-          </button>
-        </div>
-
-        {/* Charlie & Bob Dyson Tag-Team Box */}
-        <CharlieBobTagTeamBox onOpenExplainer={handleOpenExplainer} />
-
-        {/* ── STEP 2: 2-COLUMN CHAT CANVAS & DOSSIER ARTIFACT (LOADED DIRECTLY BELOW LANDING PAGE) ── */}
+        {/* ── STEP 2: 2-COLUMN CHAT CANVAS & DOSSIER ARTIFACT (LOADED DIRECTLY BELOW HERO SEARCH) ── */}
         <div id="copilot-audit-dossier" className="pt-4 space-y-3 scroll-mt-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-1">
             <div>
@@ -410,17 +359,6 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </p>
         </div>
       </div>
-
-      {/* Interactive Workflow Explainer Modal */}
-      <CopilotWorkflowExplainerModal
-        isOpen={isExplainerOpen}
-        onClose={() => setIsExplainerOpen(false)}
-        initialStep={explainerStep}
-        onLaunchAudit={(addr) => {
-          setAddress(addr);
-          handleSubmit(null, addr);
-        }}
-      />
     </div>
   );
 }
