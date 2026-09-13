@@ -193,63 +193,63 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
       </div>
 
       {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
-      <div className="px-6 sm:px-10 pb-8 space-y-3.5">
-        {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Tan background with Gold and Black font */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          <div className="p-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-1.5 shadow-md transition-all">
-            <div className="flex items-center gap-2 text-[#854d0e]">
-              <TrendingUp className="w-4 h-4 text-[#854d0e]" />
-              <span className="text-xs font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
+      <div className="px-6 sm:px-10 pb-7 space-y-2.5">
+        {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Sleek reduced vertical height */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+            <div className="flex items-center gap-1.5 text-[#854d0e]">
+              <TrendingUp className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
+              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
             </div>
-            <p className="text-xs sm:text-sm text-[#0a0a0a] leading-relaxed font-normal">
+            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
               AI-powered comps, trends, and valuation insights.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-1.5 shadow-md transition-all">
-            <div className="flex items-center gap-2 text-[#854d0e]">
-              <ShieldAlert className="w-4 h-4 text-[#854d0e]" />
-              <span className="text-xs font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
+          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+            <div className="flex items-center gap-1.5 text-[#854d0e]">
+              <ShieldAlert className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
+              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
             </div>
-            <p className="text-xs sm:text-sm text-[#0a0a0a] leading-relaxed font-normal">
+            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
               Hidden risks, title issues, zoning, and red flags.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-1.5 shadow-md transition-all">
-            <div className="flex items-center gap-2 text-[#854d0e]">
-              <Percent className="w-4 h-4 text-[#854d0e]" />
-              <span className="text-xs font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
+          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+            <div className="flex items-center gap-1.5 text-[#854d0e]">
+              <Percent className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
+              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
             </div>
-            <p className="text-xs sm:text-sm text-[#0a0a0a] leading-relaxed font-normal">
+            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
               Where allowed by law. Maximize your ROI with our rebate.
             </p>
           </div>
         </div>
 
-        {/* Row 2: Listen Charlie Box below - Tan background with Gold and Black font */}
-        <div className="w-full p-3.5 sm:p-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-md transition-all">
-          <div className="flex items-center gap-3">
+        {/* Row 2: Listen Charlie Box below - Sleek reduced vertical height */}
+        <div className="w-full py-2 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs shadow-sm transition-all">
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={handleToggleAudio}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
                 isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#222]'
               }`}
               title="Play Charlie Simmons Brief"
             >
-              <Volume2 className="w-4 h-4" />
+              <Volume2 className="w-3.5 h-3.5" />
             </button>
             <div>
-              <span className="text-[#854d0e] font-bold text-xs sm:text-sm block">
+              <span className="text-[#854d0e] font-bold text-xs sm:text-[13px] block leading-tight">
                 {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
               </span>
-              <span className="text-[#0a0a0a] text-[11px] sm:text-xs font-normal">
+              <span className="text-[#0a0a0a] text-[10.5px] sm:text-[11px] font-normal block leading-tight pt-0.5">
                 Instant property summary backed by Bob Dyson (Broker DRE #00609384)
               </span>
             </div>
           </div>
-          <span className="text-[10px] font-bold text-[#D4AF37] px-3 py-1 rounded bg-[#0a0a0a] border border-[#D4AF37]/50 uppercase shrink-0">
+          <span className="text-[9.5px] font-bold text-[#D4AF37] px-2.5 py-0.5 rounded bg-[#0a0a0a] border border-[#D4AF37]/50 uppercase shrink-0">
             DUAL VOICE
           </span>
         </div>
