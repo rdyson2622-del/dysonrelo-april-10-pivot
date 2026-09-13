@@ -304,10 +304,12 @@ export default function AdminDysonHomesCopilot() {
           {/* Frame Container */}
           <div className="flex justify-center w-full">
             <div 
-              className={`transition-all duration-300 w-full rounded-3xl border-2 border-[#D4AF37]/50 shadow-2xl overflow-hidden ${
-                viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-6xl'
+              className={`transition-all duration-300 w-full rounded-2xl border ${
+                selectedCandidate === 'slide_4' ? 'border-[#e2e8f0]' : 'border-[#D4AF37]/50'
+              } shadow-2xl overflow-hidden ${
+                viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'
               }`}
-              style={{ background: '#0a0a0a' }}
+              style={{ background: selectedCandidate === 'slide_4' ? '#ffffff' : '#0a0a0a' }}
             >
               {/* Browser URL Bar */}
               <div className="px-4 py-2.5 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
@@ -387,26 +389,28 @@ export default function AdminDysonHomesCopilot() {
                 )}
               </div>
 
-              {/* DNN Pulse Ticker */}
-              <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-red-400">
-                    DNN HOUSING PULSE:
-                  </span>
-                  <span className="text-white/80 text-[11px] truncate max-w-md">
-                    Mortgage rates ease to 6.35% as buyers turn to private fee-rebating brokerages over aggregator portals.
-                  </span>
-                </div>
+              {/* DNN Pulse Ticker (Only for legacy slides) */}
+              {selectedCandidate !== 'slide_4' && (
+                <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-red-400">
+                      DNN HOUSING PULSE:
+                    </span>
+                    <span className="text-white/80 text-[11px] truncate max-w-md">
+                      Mortgage rates ease to 6.35% as buyers turn to private fee-rebating brokerages over aggregator portals.
+                    </span>
+                  </div>
 
-                <Link
-                  to="/dnn-news"
-                  className="text-[10px] font-bold text-[#D4AF37] hover:underline flex items-center gap-1"
-                >
-                  <span>Watch Today's 6AM Brief</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+                  <Link
+                    to="/dnn-news"
+                    className="text-[10px] font-bold text-[#D4AF37] hover:underline flex items-center gap-1"
+                  >
+                    <span>Watch Today's 6AM Brief</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              )}
 
             </div>
           </div>
