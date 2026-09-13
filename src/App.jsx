@@ -302,6 +302,24 @@ const AuthenticatedApp = () => {
       <Route path="/portal" element={<FrontDoor />} />
       <Route path="/role-selector" element={<RoleSelector />} />
 
+      {/* Public DysonHomes Copilot Lab & Workflows (Zero-UI Consumer AI — No Login Wall) */}
+      <Route element={<AdminLayout />}>
+        <Route path="/admin/dysonhomes-copilot" element={<AdminDysonHomesCopilot />} />
+        <Route path="/admin/copilot/page-1" element={<AdminDysonHomesCopilot initialPage={1} />} />
+        <Route path="/admin/copilot/page-2" element={<AdminDysonHomesCopilot initialPage={2} />} />
+        <Route path="/admin/copilot/page-3" element={<AdminDysonHomesCopilot initialPage={3} />} />
+        <Route path="/admin/copilot-chat" element={<AdminDysonHomesCopilot initialPage={2} />} />
+        <Route path="/admin/copilot-dossier" element={<AdminDysonHomesCopilot initialPage={3} />} />
+      </Route>
+
+      {/* Standalone consumer routes for DysonHomes Copilot */}
+      <Route path="/copilot" element={<AdminDysonHomesCopilot initialPage={1} />} />
+      <Route path="/copilot/page-1" element={<AdminDysonHomesCopilot initialPage={1} />} />
+      <Route path="/copilot/page-2" element={<AdminDysonHomesCopilot initialPage={2} />} />
+      <Route path="/copilot/page-3" element={<AdminDysonHomesCopilot initialPage={3} />} />
+      <Route path="/copilot-chat" element={<AdminDysonHomesCopilot initialPage={2} />} />
+      <Route path="/copilot-dossier" element={<AdminDysonHomesCopilot initialPage={3} />} />
+
       {/* Everything below requires authentication */}
       <Route element={<ProtectedRoute />}>
         {/* Consumer Routes with Sidebar Layout */}
@@ -476,12 +494,6 @@ const AuthenticatedApp = () => {
         <Route path="/admin/voice-concierge-analytics" element={<AdminVoiceConciergeAnalytics />} />
         <Route path="/admin/front-door-lab" element={<AdminFrontDoorLab />} />
         <Route path="/admin/app-store-mockup" element={<AdminAppStoreMockup />} />
-        <Route path="/admin/dysonhomes-copilot" element={<AdminDysonHomesCopilot />} />
-        <Route path="/admin/copilot/page-1" element={<AdminDysonHomesCopilot initialPage={1} />} />
-        <Route path="/admin/copilot/page-2" element={<AdminDysonHomesCopilot initialPage={2} />} />
-        <Route path="/admin/copilot/page-3" element={<AdminDysonHomesCopilot initialPage={3} />} />
-        <Route path="/admin/copilot-chat" element={<AdminDysonHomesCopilot initialPage={2} />} />
-        <Route path="/admin/copilot-dossier" element={<AdminDysonHomesCopilot initialPage={3} />} />
         <Route path="/admin/relocation-call-desk" element={<AdminRelocationCallDesk />} />
         <Route path="/admin/preferred-vendors" element={<AdminPreferredVendors />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />

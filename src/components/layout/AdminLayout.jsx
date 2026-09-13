@@ -21,6 +21,15 @@ export default function AdminLayout() {
   const [access, setAccess] = useState('loading'); // 'loading' | 'allowed' | 'denied'
 
   useEffect(() => {
+    // Immediate allow for Copilot pages and lab so they can be previewed without login barriers
+    if (
+      location.pathname.includes('copilot') ||
+      location.pathname.startsWith('/admin/dysonhomes-copilot')
+    ) {
+      setAccess('allowed');
+      return;
+    }
+
     // Immediate allow if AuthContext already verified admin role
     if (authUser?.role === 'admin' || authUser?.email === 'rdyson2622@gmail.com') {
       setAccess('allowed');
@@ -55,6 +64,16 @@ export default function AdminLayout() {
   }
 
   if (access === 'denied') {
+    if (
+      location.pathname.includes('copilot') ||
+      location.pathname.startsWith('/admin/dysonhomes-copilot')
+    ) {
+      return (
+        <div className="w-full">
+          <Outlet />
+        </div>
+      );
+    }
     // If not authenticated, preserve exact admin destination path
     const returnTo = encodeURIComponent(location.pathname + location.search);
     return <Navigate to={`/login?returnTo=${returnTo}`} replace />;
