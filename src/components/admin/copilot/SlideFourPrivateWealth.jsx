@@ -59,7 +59,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 DYSON HOMES
               </span>
               <span 
-                className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] leading-none"
+                className="font-serif italic text-lg sm:text-[21px] font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 CoPilot
