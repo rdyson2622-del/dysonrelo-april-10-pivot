@@ -259,19 +259,17 @@ export default function AdminDysonHomesCopilot() {
               </span>
             </div>
 
-            {/* 4 Distinct Layout Choices */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            {/* Choice Switcher */}
+            <div className="flex flex-wrap items-center gap-2">
               {[
-                { id: 'grok_candidate_a', label: '1. Grok Format A (Split)' },
-                { id: 'grok_candidate_b', label: '2. Grok Format B (Centered)' },
-                { id: 'obsidian_twilight', label: '3. Obsidian Twilight' },
-                { id: 'warm_champagne', label: '4. Warm Champagne' },
+                { id: 'grok_candidate_a', label: 'Candidate A · Tan Desktop (Screenshot 1 & 2)' },
+                { id: 'obsidian_twilight', label: 'Obsidian Twilight · Night Twin (Screenshot 3)' },
               ].map((btn) => (
                 <button
                   key={btn.id}
                   type="button"
                   onClick={() => setSelectedCandidate(btn.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
                     selectedCandidate === btn.id
                       ? 'bg-[#D4AF37] text-black font-bold ring-1 ring-[#D4AF37]'
                       : 'bg-[#181818] text-white/80 hover:text-white border border-white/10'
@@ -286,15 +284,14 @@ export default function AdminDysonHomesCopilot() {
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#0a0a0a]/80 px-2 font-medium">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-bold uppercase text-[10px] tracking-wider border border-[#D4AF37]/40">
-                ACTIVE CHOICE: {
-                  selectedCandidate === 'grok_candidate_a' ? '1. Grok Format A (Split Screen)' :
-                  selectedCandidate === 'grok_candidate_b' ? '2. Grok Format B (Centered Symmetrical)' :
-                  selectedCandidate === 'obsidian_twilight' ? '3. Obsidian Twilight (Dark Theme)' :
-                  '4. Warm Champagne (Dyson Tan)'
+                ACTIVE: {
+                  selectedCandidate === 'grok_candidate_a' 
+                    ? 'Candidate A (Exact Tan Match)' 
+                    : 'Obsidian Twilight (Exact Night Twin)'
                 }
               </span>
               <span>
-                Simulating live view for <strong>https://dysonhomes.com</strong>
+                Live preview for <strong>https://dysonhomes.com</strong>
               </span>
             </div>
             <span className="text-[#854d0e] font-medium flex items-center gap-1">
@@ -323,14 +320,8 @@ export default function AdminDysonHomesCopilot() {
                 </div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
                   {selectedCandidate === 'grok_candidate_a' 
-                    ? '★ Grok Format A: Asymmetrical Estate Split (Classy)' 
-                    : selectedCandidate === 'grok_candidate_b' 
-                    ? '★ Grok Format B: Executive Centered Symmetrical (Classy)' 
-                    : selectedCandidate === 'obsidian_twilight' 
-                    ? 'Option 3: Obsidian Twilight (Night)' 
-                    : selectedCandidate === 'warm_champagne' 
-                    ? 'Option 4: Warm Champagne (Dyson Tan)' 
-                    : 'Option 5: Showcase Hybrid'}
+                    ? 'Candidate A (D&D Logo & Tan)' 
+                    : 'Obsidian Twilight (Night Mode Twin)'}
                 </span>
               </div>
 
@@ -571,35 +562,20 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </div>
 
-          {/* ─────────────────────────────────────────────────────────────
-              BELOW IN A SCROLL: OTHER LANDING PAGE CANDIDATES GALLERY
-              ───────────────────────────────────────────────────────────── */}
-          <section className="pt-4 border-t border-[#0a0a0a]/15">
-            <CopilotCandidatesScroll
-              activeCandidateId={selectedCandidate}
-              onSelectCandidate={(id) => {
-                setSelectedCandidate(id);
-                window.scrollTo({ top: 120, behavior: 'smooth' });
-              }}
-            />
-          </section>
-
-          {/* Clean 4-Choice Quick Switcher Toolbar */}
-          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/30 text-left flex flex-wrap items-center justify-between gap-3 shadow-lg">
+          {/* Quick Twin Switcher */}
+          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/40 text-left flex flex-wrap items-center justify-between gap-3 shadow-lg">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] block">
-                COMPARE 4 DESIGN CHOICES
+                APPROVED FORMAT TWINS
               </span>
               <p className="text-xs text-white/70 mt-0.5">
-                Click any option to test its exact typography, search interaction, and layout in the browser frame above.
+                Toggle between the Tan primary layout and the Obsidian night twin.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {[
-                { id: 'grok_candidate_a', label: '1. Grok Format A (Split)' },
-                { id: 'grok_candidate_b', label: '2. Grok Format B (Centered)' },
-                { id: 'obsidian_twilight', label: '3. Obsidian Twilight' },
-                { id: 'warm_champagne', label: '4. Warm Champagne' }
+                { id: 'grok_candidate_a', label: 'Candidate A · Tan Desktop' },
+                { id: 'obsidian_twilight', label: 'Obsidian Twilight · Night Twin' }
               ].map((c) => (
                 <button
                   key={c.id}
@@ -608,7 +584,7 @@ export default function AdminDysonHomesCopilot() {
                     setSelectedCandidate(c.id);
                     window.scrollTo({ top: 140, behavior: 'smooth' });
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     selectedCandidate === c.id
                       ? 'bg-[#D4AF37] text-black font-bold shadow-md'
                       : 'bg-white/10 text-white/80 hover:text-white border border-white/10'
