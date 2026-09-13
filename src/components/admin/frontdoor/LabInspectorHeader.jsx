@@ -47,6 +47,13 @@ export default function LabInspectorHeader({
               Public Front Door
             </button>
             <Link
+              to="/admin/dysonhomes-copilot"
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-black text-black bg-[#D4AF37] hover:brightness-110 transition-all cursor-pointer border-l border-black/30 ml-1 pl-2 shadow-sm"
+              title="DysonHomes Copilot Lab (Zero-UI + Grok Candidates Gallery)"
+            >
+              <span>✨ Copilot Lab</span>
+            </Link>
+            <Link
               to="/admin/app-store-mockup?tab=app_store_catalog"
               className="flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold text-[#D4AF37] hover:text-white hover:bg-white/10 transition-all cursor-pointer border-l border-white/20 ml-1 pl-2"
               title="View the 10 DysonRelo Platform Apps & Specifications"
