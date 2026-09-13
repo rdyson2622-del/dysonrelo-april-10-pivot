@@ -120,9 +120,15 @@ export default function SlideOneTanOverview({ onRunAudit }) {
             Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
           </p>
 
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
-            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fbf7f0] border-2 border-[#854d0e] text-xs text-[#1a1815] shadow-md font-medium">
+              <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
+              <span>When searching MLS: <strong>Do not request an agent</strong> — vet the property here first to save thousands in rebates &amp; choose vetted representation.</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
+              <span>Independent fiduciary match — never the listing agent.</span>
+            </div>
           </div>
         </div>
 

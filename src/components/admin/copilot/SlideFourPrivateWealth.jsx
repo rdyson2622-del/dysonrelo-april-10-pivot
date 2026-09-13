@@ -159,18 +159,20 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               ))}
             </div>
 
-            {/* 4. Trusted and Instant statements are next (Single-line, compact pill, matching gold italic) */}
+            {/* 4. Trusted and Guidance statements (Prominent High-Visibility Callout) */}
             <div className="flex flex-col items-center space-y-2 pt-1 text-center">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12.5px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
-                <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction.</span>
+              {/* High-Visibility MLS Guidance Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#161208] border-2 border-[#D4AF37] text-[11px] sm:text-[12.5px] text-white shadow-lg">
+                <ShieldAlert className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <span>
+                  When searching MLS: <strong className="text-amber-300">Do not request an agent on portal sites</strong> &bull; <strong className="text-white">Vet the property here first</strong> to save thousands &amp; choose vetted representation.
+                </span>
               </div>
 
-              {/* Real-time definition text */}
-              <p className="text-[11px] sm:text-[12.5px] text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
-                <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
-                <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
-              </p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
+                <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction. Instant comps &amp; closing rebate.</span>
+              </div>
             </div>
           </div>
 
@@ -281,10 +283,39 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </span>
         </div>
 
+        {/* ── HIGH-VISIBILITY BUYER GUIDANCE BANNER ── */}
+        <div className="p-4 rounded-2xl bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl text-left flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldAlert className="w-5 h-5 text-[#D4AF37]" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs sm:text-[13px] font-black tracking-wider uppercase text-[#D4AF37]">
+                  CRITICAL BUYER ADVICE WHEN BROWSING MLS:
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 text-[10px] font-bold uppercase tracking-wide">
+                  DO NOT REQUEST AN AGENT ON PORTAL SITES
+                </span>
+              </div>
+              <p className="text-xs sm:text-[12.5px] text-white/90 leading-snug">
+                When searching on Realtor.com, Homes.com, or Zillow, <strong>never click &ldquo;Request an Agent&rdquo; or &ldquo;Contact Agent&rdquo;</strong>. Instead, simply copy the address and <strong>vet the property here first</strong>. You&rsquo;ll save thousands in closing cash rebates while making a far more vetted choice of both property and fiduciary agent representation.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleOpenExplainer(1)}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs whitespace-nowrap shadow-md transition-all cursor-pointer shrink-0"
+          >
+            Read Full Guide &rarr;
+          </button>
+        </div>
+
         {/* ── THE 5 INTERACTIVE WORKFLOW BOXES ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           
-          {/* Box 1: BROWSE MLS (Vertical Row of URLs + Chrome Advice + Full Explainer Link) */}
+          {/* Box 1: BROWSE MLS (Vertical Row of URLs + Chrome Advice + Prominent Guidance Badge) */}
           <div 
             onClick={() => handleOpenExplainer(1)}
             className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
@@ -338,6 +369,17 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                     <span>Zillow</span>
                     <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
                   </a>
+                </div>
+
+                {/* Explicit Guidance Reminder Tag */}
+                <div className="p-1.5 rounded-lg bg-[#1a140a] border border-[#D4AF37]/50 text-left space-y-0.5">
+                  <div className="flex items-center gap-1 text-[9.5px] font-bold text-amber-300 uppercase">
+                    <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0" />
+                    <span>Do Not Request Agent</span>
+                  </div>
+                  <p className="text-[9px] text-white/80 leading-tight">
+                    Vet property here first &bull; Save thousands &bull; Better choice
+                  </p>
                 </div>
               </div>
             </div>

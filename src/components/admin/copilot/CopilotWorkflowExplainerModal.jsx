@@ -107,6 +107,21 @@ export default function CopilotWorkflowExplainerModal({
                 </div>
               </div>
 
+              {/* HIGH-VISIBILITY BUYER ADVICE BANNER */}
+              <div className="p-4 rounded-2xl bg-[#1c0f0f] border-2 border-red-500/80 text-left space-y-1.5 shadow-xl">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center shrink-0">
+                    <ShieldAlert className="w-4 h-4 text-red-400" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-red-400">
+                    CRITICAL WARNING: NEVER CLICK &ldquo;CONTACT AGENT&rdquo; OR &ldquo;REQUEST AN AGENT&rdquo;
+                  </span>
+                </div>
+                <p className="text-xs sm:text-[13px] text-white/90 leading-relaxed pl-9">
+                  When browsing MLS on portal sites, <strong>do not request an agent</strong>. Doing so forfeits your closing cost cash rebate and exposes your private contact information to telemarketing. Instead, <strong>vet the property here first</strong> to save thousands and make a fully vetted choice of property and fiduciary agent selection.
+                </p>
+              </div>
+
               {/* The Three Vertical Choices */}
               <div className="space-y-3">
                 <h5 className="text-xs font-bold uppercase tracking-wider text-white/90">
