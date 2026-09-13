@@ -7,6 +7,7 @@ import {
 import CopilotWorkflowExplainerModal from './CopilotWorkflowExplainerModal';
 import CharlieBobTagTeamBox from './CharlieBobTagTeamBox';
 import CopilotDocumentViewer from './CopilotDocumentViewer';
+import CopilotChatDossierCanvas from './CopilotChatDossierCanvas';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
@@ -368,19 +369,29 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         {/* Charlie & Bob Dyson Tag-Team Box */}
         <CharlieBobTagTeamBox onOpenExplainer={handleOpenExplainer} />
 
-        {/* ── NEW DIGITAL DOCUMENT VIEWER (LOADED BELOW LANDING PAGE FIRST) ── */}
-        <div className="pt-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#0a0a0a]">
-              LIVE GENERATED AUDIT ARTIFACT (BELOW THE FOLD)
-            </span>
-            <span className="text-[11px] text-[#554c40] font-medium">
-              Audit for: {activeProperty.address}
+        {/* ── STEP 2: 2-COLUMN CHAT CANVAS & DOSSIER ARTIFACT (LOADED DIRECTLY BELOW LANDING PAGE) ── */}
+        <div id="copilot-audit-dossier" className="pt-4 space-y-3 scroll-mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-1">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#854d0e] block">
+                STEP 2 · POST-SEARCH INTERACTIVE WORKSPACE
+              </span>
+              <span className="text-sm font-bold text-[#0a0a0a]">
+                Live 2-Column Chat &amp; Dossier Canvas
+              </span>
+            </div>
+            <span className="text-xs text-[#554c40] font-medium">
+              Auditing: <strong>{activeProperty.address.split(',')[0]}</strong>
             </span>
           </div>
-          <div className="rounded-2xl border border-[#d8cab6] shadow-xl overflow-hidden bg-white">
-            <CopilotDocumentViewer property={activeProperty} />
-          </div>
+
+          {/* 2-Column Chat + Dossier Canvas */}
+          <CopilotChatDossierCanvas 
+            property={activeProperty}
+            onPropertyChange={(newAddr) => {
+              handleSubmit(null, newAddr);
+            }}
+          />
         </div>
 
         {/* Footer Slogan */}
