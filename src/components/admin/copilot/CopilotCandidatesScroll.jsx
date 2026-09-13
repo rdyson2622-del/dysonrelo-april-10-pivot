@@ -8,8 +8,34 @@ const GOLD = '#D4AF37';
 
 export const CANDIDATES_LIST = [
   {
+    id: 'grok_candidate_a',
+    title: '★ Option 1: Grok Format A — Asymmetrical Estate Split',
+    badge: 'Grok Classy Split',
+    concept: 'Luxury Estate Split',
+    description: 'Balanced split-screen layout featuring a luxury stone estate, clean conversational search bar, 1-click sample chips, MLS source toggle, and 3-card benefit breakdown.',
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
+    strengths: [
+      'Zero visual friction with prominent search input & 1-click chips',
+      'Clear fiduciary trust shield front and center',
+      'Immediate property audit dossier in one smooth scroll'
+    ]
+  },
+  {
+    id: 'grok_candidate_b',
+    title: '★ Option 2: Grok Format B — Symmetrical Executive Centered',
+    badge: 'Grok Symmetrical',
+    concept: 'Centered Luxury Vignette',
+    description: 'Symmetrical centered layout with estate backdrop softly vignetted into Dyson Tan, floating pill search, 3 elevated white-and-gold cards, and connected 1-2-3 milestone steps.',
+    thumbnail: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80',
+    strengths: [
+      'Centered focus puts the value proposition front and center',
+      'Connected 1-2-3 milestone flow builds trust without sales jargon',
+      'Clean card grid delivers fast scanning on both mobile and desktop'
+    ]
+  },
+  {
     id: 'obsidian_twilight',
-    title: 'Option 1: Obsidian Twilight Suite (Private Wealth)',
+    title: 'Option 3: Obsidian Twilight Suite (Private Wealth)',
     badge: 'Aspirational Night',
     concept: 'Obsidian & Gold Luxury',
     description: 'Deep obsidian night aesthetic featuring hillside estate with illuminated infinity pool. Left column delivers the copilot search, fiduciary shield ("Trusted by private wealth. No agent spam"), 3 gold-accented audit cards, and 4-step execution line.',
@@ -22,41 +48,15 @@ export const CANDIDATES_LIST = [
   },
   {
     id: 'warm_champagne',
-    title: 'Option 2: Warm Champagne Estate (Dyson Tan Signature)',
+    title: 'Option 4: Warm Champagne Estate (Dyson Tan Signature)',
     badge: 'Dyson Tan Sunset',
     concept: 'Warm Editorial Villa',
     description: 'Bespoke cream & Dyson Tan palette with golden-hour villa & infinity pool. Features unvarnished comps, hidden risks, closing-cost credit, and 35-year brokerage legacy anchor ("35 years of high-end brokerage. Now augmented by AI").',
-    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
     strengths: [
       'Seamless alignment with brand-wide Dyson Tan (#ede0cc) palette',
       'Warm, welcoming, non-intimidating luxury aesthetic',
       '3-pillar cards: Honest comps, Hidden risks, Closing-cost credit'
-    ]
-  },
-  {
-    id: 'grok_candidate_a',
-    title: 'Option 3: Grok Format A — Asymmetrical Split',
-    badge: 'Editorial Split',
-    concept: 'Clean Split Screen',
-    description: 'Balanced split-screen layout with left-hand input and right-hand estate photography, paired with an interactive 3-card benefit breakdown and MLS source selector.',
-    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
-    strengths: [
-      'Zero visual friction with prominent search input',
-      'Clear fiduciary trust guarantee front and center',
-      'Immediate property audit dossier in one scroll'
-    ]
-  },
-  {
-    id: 'grok_candidate_b',
-    title: 'Option 4: Grok Format B — Symmetrical Executive Centered',
-    badge: 'Centered Vignette',
-    concept: 'Centered Luxury Vignette',
-    description: 'Symmetrical centered layout with estate backdrop vignetted into tan, floating pill search, and 3 elevated white-and-gold cards.',
-    thumbnail: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=80',
-    strengths: [
-      'Centered focus puts the value statement front and center',
-      'Connected 1-2-3 milestone flow builds trust without sales jargon',
-      'Clean card grid delivers fast scanning on mobile'
     ]
   },
   {

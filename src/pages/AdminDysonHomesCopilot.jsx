@@ -94,7 +94,7 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('obsidian_twilight'); // obsidian_twilight | warm_champagne | grok_candidate_a | grok_candidate_b | baseline_hero
+  const [selectedCandidate, setSelectedCandidate] = useState('grok_candidate_a'); // grok_candidate_a | grok_candidate_b | obsidian_twilight | warm_champagne | baseline_hero
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -259,13 +259,13 @@ export default function AdminDysonHomesCopilot() {
               </span>
             </div>
 
-            {/* Candidate Pills */}
+            {/* Candidate Pills — Grok's High-Class Formats Prominently Featured */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'obsidian_twilight', label: 'Option 1: Obsidian Twilight (Night)' },
-                { id: 'warm_champagne', label: 'Option 2: Warm Champagne (Dyson Tan)' },
-                { id: 'grok_candidate_a', label: 'Option 3: Grok Split (Format A)' },
-                { id: 'grok_candidate_b', label: 'Option 4: Grok Centered (Format B)' },
+                { id: 'grok_candidate_a', label: '★ Grok Format A (Split Estate)' },
+                { id: 'grok_candidate_b', label: '★ Grok Format B (Centered Estate)' },
+                { id: 'obsidian_twilight', label: 'Option 3: Obsidian Twilight (Night)' },
+                { id: 'warm_champagne', label: 'Option 4: Warm Champagne (Dyson Tan)' },
                 { id: 'baseline_hero', label: 'Option 5: Showcase Hybrid' },
               ].map((btn) => (
                 <button
@@ -284,10 +284,15 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-[#0a0a0a]/70 px-2 font-medium">
-            <span>
-              Simulating live consumer view for <strong>https://dysonhomes.com</strong>
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#0a0a0a]/80 px-2 font-medium">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-black uppercase text-[10px] tracking-wider border border-[#D4AF37]/50 shadow-sm">
+                ★ FEATURED GROK PRESENTATION
+              </span>
+              <span>
+                Simulating live consumer view for <strong>https://dysonhomes.com</strong>
+              </span>
+            </div>
             <span className="text-[#854d0e] font-semibold flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" /> Zero UI • Zero Sales Pitch • Pure Buyer Intelligence
             </span>
@@ -313,14 +318,14 @@ export default function AdminDysonHomesCopilot() {
                   <span>https://dysonhomes.com</span>
                 </div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
-                  {selectedCandidate === 'obsidian_twilight' 
-                    ? 'Option 1: Obsidian Twilight' 
-                    : selectedCandidate === 'warm_champagne' 
-                    ? 'Option 2: Warm Champagne' 
-                    : selectedCandidate === 'grok_candidate_a' 
-                    ? 'Option 3: Grok Format A' 
+                  {selectedCandidate === 'grok_candidate_a' 
+                    ? '★ Grok Format A: Asymmetrical Estate Split (Classy)' 
                     : selectedCandidate === 'grok_candidate_b' 
-                    ? 'Option 4: Grok Format B' 
+                    ? '★ Grok Format B: Executive Centered Symmetrical (Classy)' 
+                    : selectedCandidate === 'obsidian_twilight' 
+                    ? 'Option 3: Obsidian Twilight (Night)' 
+                    : selectedCandidate === 'warm_champagne' 
+                    ? 'Option 4: Warm Champagne (Dyson Tan)' 
                     : 'Option 5: Showcase Hybrid'}
                 </span>
               </div>

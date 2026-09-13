@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, DollarSign, TrendingUp, AlertTriangle, 
-  Search, Sparkles, Check, Gift, FileText, CheckCircle2
+  Search, Sparkles, Check, Gift, FileText, CheckCircle2, Mic, MapPin, Award
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -11,29 +12,42 @@ const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef05
 // Luxury Estate background softly blending into tan
 const TWIN_MANSION_BG = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=95";
 
+const PRESET_SAMPLES = [
+  { label: 'Scottsdale Desert Ridge', address: '1844 Mountain Shadow Way, Scottsdale, AZ 85253', price: 2150000, rebate: 13437 },
+  { label: 'La Jolla Oceanfront', address: '742 Vista Del Mar, La Jolla, CA 92037', price: 3450000, rebate: 21562 },
+  { label: 'Austin Modern Glass', address: '4220 Oak Hollow Terrace, Austin, TX 78746', price: 1850000, rebate: 11562 },
+];
+
 export default function GrokCandidateB({
   onSelectAddress,
   onRunAudit,
-  selectedAddress = '1844 Mountain Shadow Way, Scottsdale, AZ',
+  selectedAddress = '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
   rebateAmount = 13437
 }) {
   const [inputVal, setInputVal] = useState(selectedAddress);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!inputVal.trim()) return;
     setSubmitted(true);
     if (onRunAudit) onRunAudit(inputVal);
-    setTimeout(() => setSubmitted(false), 2000);
+    setTimeout(() => setSubmitted(false), 800);
+  };
+
+  const handlePickSample = (sample) => {
+    setInputVal(sample.address);
+    setSubmitted(true);
+    if (onRunAudit) onRunAudit(sample.address);
+    setTimeout(() => setSubmitted(false), 800);
   };
 
   return (
     <div 
-      className="w-full rounded-3xl overflow-hidden border-2 shadow-2xl text-center select-none relative"
+      className="w-full rounded-3xl overflow-hidden border-2 shadow-2xl text-center select-none relative font-sans"
       style={{ 
         background: 'linear-gradient(180deg, #fefbf6 0%, #ede0cc 100%)',
-        borderColor: `${GOLD}70`,
+        borderColor: `${GOLD}80`,
         color: '#1a1815'
       }}
     >
@@ -41,20 +55,20 @@ export default function GrokCandidateB({
       <div className="relative pt-8 pb-10 px-4 sm:px-8 lg:px-12 overflow-hidden">
         
         {/* Soft Estate Backdrop with Tan Gradient Scrim */}
-        <div className="absolute inset-0 z-0 opacity-25 pointer-events-none">
+        <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
           <img 
             src={TWIN_MANSION_BG} 
             alt="Estate Background" 
             className="w-full h-full object-cover object-center filter saturate-125"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#fefbf6]/80 via-[#fefbf6]/60 to-[#ede0cc]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#fefbf6]/85 via-[#fefbf6]/65 to-[#ede0cc]" />
         </div>
 
         {/* Top Header & Brand Pill */}
         <div className="relative z-10 flex flex-col items-center justify-center space-y-2 mb-6">
           <div className="flex items-center justify-between w-full max-w-4xl px-2">
             <div className="flex items-center gap-2">
-              <img src={DYSON_LOGO} alt="DysonHomes" className="h-6 sm:h-7 w-auto object-contain" />
+              <img src={DYSON_LOGO} alt="DysonHomes" className="h-6 sm:h-7 w-auto object-contain drop-shadow" />
               <span 
                 className="font-bold text-lg text-[#0a0a0a] tracking-tight"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -63,15 +77,26 @@ export default function GrokCandidateB({
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-bold shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-              <span>Admin Lab Pick — Format B</span>
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline-block text-[10.5px] font-semibold text-[#854d0e] px-3 py-1 rounded-full bg-white/70 border border-[#D4AF37]/40">
+                35-Yr Brokerage Fiduciary
+              </span>
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-black uppercase tracking-wider shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                <span>Grok Format B</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Centered Headline */}
         <div className="relative z-10 max-w-3xl mx-auto space-y-3 mb-8">
+          
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#faf5ec] border border-[#D4AF37]/60 text-[#684614] text-[11px] font-medium shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
+            <span><strong>The Trust Shield:</strong> No agent spam. Independent fiduciary match — not the listing agent.</span>
+          </div>
+
           <h1 
             className="text-3xl sm:text-5xl lg:text-6xl font-bold text-[#0a0a0a] leading-[1.12] tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -85,30 +110,61 @@ export default function GrokCandidateB({
           </p>
 
           {/* Centered Floating Search Bar */}
-          <div className="max-w-xl mx-auto pt-2">
+          <div className="max-w-xl mx-auto pt-2 space-y-2">
             <form onSubmit={handleSubmit} className="relative">
               <div 
-                className="flex items-center rounded-full p-1.5 pl-4 gap-2 transition-all bg-[#ffffff] border-2 border-[#D4AF37] shadow-xl"
+                className="flex items-center rounded-full p-1.5 pl-4 gap-2 transition-all bg-[#ffffff] border-2 border-[#D4AF37] shadow-xl focus-within:ring-2 focus-within:ring-[#D4AF37]/50"
               >
                 <Search className="w-4 h-4 text-[#854d0e] shrink-0" />
                 <input
                   type="text"
                   value={inputVal}
                   onChange={(e) => setInputVal(e.target.value)}
-                  placeholder="Paste address here..."
+                  placeholder="Paste address here (e.g. 1844 Mountain Shadow Way, Scottsdale, AZ)..."
                   className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm font-medium outline-none placeholder:text-stone-400"
                 />
 
+                {/* Talk to Charlie Voice AI */}
+                <Link
+                  to="/talking-app"
+                  className="p-2 rounded-full bg-black hover:bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/50 shrink-0 transition-transform active:scale-95 mr-1"
+                  title="Talk with Charlie (Voice AI)"
+                >
+                  <Mic className="w-4 h-4" />
+                </Link>
+
                 <button
                   type="submit"
+                  disabled={submitted}
                   className="px-6 py-2.5 rounded-full text-xs sm:text-sm font-black text-black transition-all hover:brightness-105 active:scale-95 cursor-pointer shadow-md flex items-center gap-1.5 shrink-0"
                   style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})` }}
                 >
                   <span>{submitted ? 'Auditing...' : 'Send'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 text-black" />
                 </button>
               </div>
             </form>
+
+            {/* Instant 1-Click Sample Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs pt-1">
+              <span className="text-stone-500 text-[10.5px] uppercase font-bold tracking-wider mr-1">
+                Try Sample:
+              </span>
+              {PRESET_SAMPLES.map((s, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handlePickSample(s)}
+                  className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer border ${
+                    inputVal === s.address
+                      ? 'bg-[#0a0a0a] text-[#D4AF37] border-[#D4AF37] font-bold shadow-sm'
+                      : 'bg-white/80 hover:bg-white text-[#1a1815] border-stone-300'
+                  }`}
+                >
+                  {s.label} (${(s.price / 1000000).toFixed(2)}M)
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
