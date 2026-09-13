@@ -97,9 +97,8 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
             </div>
           </form>
 
-          <p className="text-sm text-white/70 leading-relaxed max-w-xl font-normal pt-1">
-            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
-            and your closing rebate — where allowed by law.
+          <p className="text-sm text-white/70 leading-relaxed font-normal pt-1">
+            Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
           </p>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">

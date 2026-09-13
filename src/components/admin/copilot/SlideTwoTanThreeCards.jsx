@@ -111,9 +111,8 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
             </div>
           </form>
 
-          <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal pt-1">
-            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
-            and your closing rebate — where allowed by law.
+          <p className="text-sm text-[#4a4237] leading-relaxed font-normal pt-1">
+            Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
           </p>
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">

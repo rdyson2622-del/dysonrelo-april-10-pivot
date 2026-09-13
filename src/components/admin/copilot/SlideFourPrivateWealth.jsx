@@ -145,9 +145,8 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal pt-1">
-            Paste address for comps, risks,<br className="hidden sm:inline" />
-            closing rebate where allowed by law.
+          <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal pt-1">
+            Paste address for comps, risks, closing rebate where allowed by law.
           </p>
 
           {/* Trusted Pill + Real-Time Subtext */}
