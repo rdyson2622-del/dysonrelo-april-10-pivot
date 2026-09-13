@@ -4,16 +4,16 @@ import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 import GrokPageTwoChatCanvas from './GrokPageTwoChatCanvas';
 
-export default function CopilotPublicReadOnlyTeamRail() {
+export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLanding, onListenToggle }) {
   return (
     <div className="w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden text-left bg-[#050505] flex flex-col lg:flex-row">
       
       {/* ── FAR-LEFT READ-ONLY / SEE-ONLY TEAM ROSTER RAIL ── */}
       <aside className="w-full lg:w-72 bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-5 flex flex-col justify-between shrink-0 select-none">
         <div className="space-y-5">
-          {/* Top: D&D badge ONLY in sidebar top — NO overlapping floating logo box */}
+          {/* Top: D&D badge ONLY in sidebar top */}
           <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-            <DysonVerticalBadge height={44} />
+            <DysonVerticalBadge height={48} />
             <div>
               <h2 className="text-sm font-serif font-bold text-white tracking-wider" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                 DYSON &amp; DYSON
@@ -124,7 +124,12 @@ export default function CopilotPublicReadOnlyTeamRail() {
 
       {/* ── MAIN CANVAS: CHARLIE REMAINS ONLY LIVE CONVERSATION ── */}
       <main className="flex-1 bg-[#0a0a0a] min-w-0">
-        <GrokPageTwoChatCanvas />
+        <GrokPageTwoChatCanvas 
+          onAskAddress={onAskAddress}
+          onBackToLanding={onBackToLanding}
+          onListenToggle={onListenToggle}
+          hideBadge={true}
+        />
       </main>
     </div>
   );

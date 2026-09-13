@@ -3,7 +3,7 @@ import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck } from 'l
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
-export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding }) {
+export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding, hideBadge = false }) {
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
 
@@ -28,9 +28,9 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
     >
       {/* ── TOP HEADER ── */}
       <div className="flex items-center justify-between w-full border-b border-white/10 pb-4">
-        {/* Top-Left: Clean D&D badge (not overlapping canvas) */}
+        {/* Top-Left: Clean D&D badge (if not hidden by parent) */}
         <div className="flex items-center gap-3">
-          <DysonVerticalBadge height={44} />
+          {!hideBadge && <DysonVerticalBadge height={44} />}
           {onBackToLanding && (
             <button
               type="button"
@@ -143,7 +143,7 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
 
       {/* ── BOTTOM FOOTER ── */}
       <div className="w-full flex items-center justify-between text-[11px] text-stone-500 pt-4 border-t border-white/5">
-        <span>Admin Lab • Page 2: Chat Empty</span>
+        <span>DysonHomes Copilot • Chat Canvas</span>
         
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#e8c84a] text-black font-semibold text-xs shadow-lg">
           <span className="flex items-center gap-1">

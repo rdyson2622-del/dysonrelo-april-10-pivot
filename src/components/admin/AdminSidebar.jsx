@@ -408,8 +408,8 @@ export default function AdminSidebar() {
           </span>
         </Link>
 
-        {/* Dedicated 4 Pages Direct Access Grid in Sidebar */}
-        <div className="grid grid-cols-4 gap-1 px-0.5">
+        {/* Dedicated 3 Pages Direct Access Grid in Sidebar */}
+        <div className="grid grid-cols-3 gap-1 px-0.5">
           <Link
             to="/admin/dysonhomes-copilot#page-1"
             className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
@@ -420,7 +420,7 @@ export default function AdminSidebar() {
           <Link
             to="/admin/dysonhomes-copilot#page-2"
             className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
-            title="Page 2: Chat Canvas"
+            title="Page 2: Chat Canvas & Team Rail"
           >
             2. Chat
           </Link>
@@ -430,13 +430,6 @@ export default function AdminSidebar() {
             title="Page 3: Live Dossier Split"
           >
             3. Dossier
-          </Link>
-          <Link
-            to="/admin/dysonhomes-copilot#page-4"
-            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
-            title="Page 4: Public Team Rail"
-          >
-            4. Team Rail
           </Link>
         </div>
       </div>
