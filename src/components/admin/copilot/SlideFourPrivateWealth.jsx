@@ -105,26 +105,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal">
-            Paste address for comps, risks,<br className="hidden sm:inline" />
-            closing rebate where allowed by law.
-          </p>
-
-          {/* Trusted Pill + Real-Time Subtext */}
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-              <span>Trusted by private wealth. No agent spam.</span>
-            </div>
-
-            {/* Real-time definition text selected by user */}
-            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center gap-1.5 pt-0.5">
-              <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
-              <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
-            </p>
-          </div>
-
-          {/* Search Bar */}
+          {/* Search Bar — Directly under heading */}
           <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#111111] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
               <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
@@ -162,6 +143,25 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                 {chip.split(',')[0]}
               </button>
             ))}
+          </div>
+
+          <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal pt-1">
+            Paste address for comps, risks,<br className="hidden sm:inline" />
+            closing rebate where allowed by law.
+          </p>
+
+          {/* Trusted Pill + Real-Time Subtext */}
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+              <span>Trusted by private wealth. No agent spam.</span>
+            </div>
+
+            {/* Real-time definition text selected by user */}
+            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center gap-1.5 pt-0.5">
+              <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
+              <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
+            </p>
           </div>
 
           {/* Audio Response Bar (Charlie Simmons voice briefing) */}

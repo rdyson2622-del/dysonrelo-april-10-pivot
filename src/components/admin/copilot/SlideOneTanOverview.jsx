@@ -83,7 +83,7 @@ export default function SlideOneTanOverview({ onRunAudit }) {
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
       <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Left Column (7 cols) */}
-        <div className="lg:col-span-7 space-y-5">
+        <div className="lg:col-span-7 space-y-4">
           <h1 
             className="text-3xl sm:text-4xl lg:text-[42px] font-normal text-[#1a1815] leading-[1.18] tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -92,18 +92,8 @@ export default function SlideOneTanOverview({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal">
-            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
-            and your closing rebate — where allowed by law.
-          </p>
-
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
-            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
-          </div>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSubmit} className="pt-2">
+          {/* Search Bar — Directly under heading */}
+          <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#fbf7f0] rounded-2xl border-2 border-[#e8c84a]/70 shadow-[0_4px_20px_rgba(212,175,55,0.18)] p-2 pl-4 transition-all">
               <input
                 type="text"
@@ -122,6 +112,16 @@ export default function SlideOneTanOverview({ onRunAudit }) {
               </button>
             </div>
           </form>
+
+          <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal pt-1">
+            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
+            and your closing rebate — where allowed by law.
+          </p>
+
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
+            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
+          </div>
         </div>
 
         {/* Right Column (5 cols): Modern Sunset Stone Villa with Pool */}

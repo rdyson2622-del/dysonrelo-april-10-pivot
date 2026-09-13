@@ -90,8 +90,8 @@ export default function GrokCandidateA({
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
       <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left Column (7 cols): Headline, Subtext, Trust Pill, Search, 3 Cards */}
-        <div className="lg:col-span-7 space-y-5">
+        {/* Left Column (7 cols): Headline, Search, Subtext, Trust Pill, 3 Cards */}
+        <div className="lg:col-span-7 space-y-4">
           
           {/* Headline */}
           <h1 
@@ -102,19 +102,7 @@ export default function GrokCandidateA({
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* Subtext */}
-          <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal">
-            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
-            and your closing rebate — where allowed by law.
-          </p>
-
-          {/* Fiduciary Trust Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
-            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
-          </div>
-
-          {/* Search Bar */}
+          {/* Search Bar — Directly under heading */}
           <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#fbf7f0] rounded-2xl border-2 border-[#e8c84a]/70 shadow-[0_4px_20px_rgba(212,175,55,0.18)] p-1.5 pl-4 transition-all">
               <input
@@ -134,6 +122,18 @@ export default function GrokCandidateA({
               </button>
             </div>
           </form>
+
+          {/* Subtext */}
+          <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal pt-1">
+            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
+            and your closing rebate — where allowed by law.
+          </p>
+
+          {/* Fiduciary Trust Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f4ebe0] border border-[#d8cab6] text-xs text-[#3a3227] shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
+            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
+          </div>
 
           {/* 3 Value Cards (from Screenshot 2) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">

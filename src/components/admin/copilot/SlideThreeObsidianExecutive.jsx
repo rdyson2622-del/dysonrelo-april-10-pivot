@@ -66,7 +66,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
       <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column (7 cols) */}
-        <div className="lg:col-span-7 space-y-5">
+        <div className="lg:col-span-7 space-y-4">
           <h1 
             className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.18] tracking-tight text-center"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -75,17 +75,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          <p className="text-sm text-white/70 leading-relaxed max-w-xl font-normal">
-            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
-            and your closing rebate — where allowed by law.
-          </p>
-
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
-            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
-          </div>
-
-          {/* Search Bar */}
+          {/* Search Bar — Directly under heading */}
           <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#141414] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.6)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
               <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
@@ -106,6 +96,16 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
               </button>
             </div>
           </form>
+
+          <p className="text-sm text-white/70 leading-relaxed max-w-xl font-normal pt-1">
+            Paste any address to see real comps, property risks,<br className="hidden sm:inline" />
+            and your closing rebate — where allowed by law.
+          </p>
+
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
+            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
+          </div>
 
           {/* 3 Value Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
