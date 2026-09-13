@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, Percent, 
   MapPin, Home, Brain, FileText, Gem, Volume2, 
-  CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info
+  CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info, HelpCircle
 } from 'lucide-react';
+import CopilotWorkflowExplainerModal from './CopilotWorkflowExplainerModal';
+import CharlieBobTagTeamBox from './CharlieBobTagTeamBox';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
@@ -20,6 +22,13 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditComplete, setAuditComplete] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
+  const [explainerStep, setExplainerStep] = useState(1);
+
+  const handleOpenExplainer = (step) => {
+    setExplainerStep(step);
+    setIsExplainerOpen(true);
+  };
 
   const handleSubmit = (e, customAddr) => {
     if (e) e.preventDefault();
@@ -255,34 +264,52 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
 
       {/* ── HOW COPILOT WORKS SECTION (BELOW THE CREASE - SEAMLESS TAN PAGE BACKGROUND) ── */}
       <div 
-        className="w-full px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-4"
+        className="w-full px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-5"
         style={{ background: '#ede0cc', color: '#0a0a0a' }}
       >
-        <div className="text-center">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <span className="text-[11px] font-bold tracking-widest text-[#0a0a0a] uppercase">
             HOW DYSON HOMES <span className="font-serif italic text-base text-[#854d0e] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
           </span>
+          <span className="text-xs text-[#554c40] font-medium flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+            Click any step below for full detailed guide &amp; examples
+          </span>
         </div>
 
+        {/* ── THE 5 INTERACTIVE WORKFLOW BOXES ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {/* Step 1: Browse MLS on Realtor / Homes / Zillow */}
-          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1.5 flex flex-col justify-between">
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Compass className="w-3.5 h-3.5" />
+          
+          {/* Box 1: BROWSE MLS (Vertical Row of URLs + Chrome Advice + Full Explainer Link) */}
+          <div 
+            onClick={() => handleOpenExplainer(1)}
+            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
+                    <Compass className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
+                    1. BROWSE MLS
+                  </span>
                 </div>
-                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">1. BROWSE MLS</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
+                  GUIDE &rarr;
+                </span>
               </div>
               
-              <div className="space-y-1">
-                <span className="text-[10px] text-white/70 font-medium block">Browse MLS on:</span>
-                <div className="flex flex-wrap items-center gap-1">
+              <div className="space-y-1.5">
+                <span className="text-[10px] text-white/70 font-medium block">Browse MLS in 1-Click:</span>
+                
+                {/* VERTICAL ROW OF ALL 3 URLS */}
+                <div className="flex flex-col gap-1 w-full" onClick={(e) => e.stopPropagation()}>
                   <a 
                     href="https://www.realtor.com" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
                   >
                     <span>Realtor.com</span>
                     <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
@@ -292,7 +319,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                     href="https://www.homes.com" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
                   >
                     <span>Homes.com</span>
                     <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
@@ -302,7 +329,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                     href="https://www.zillow.com" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
                   >
                     <span>Zillow</span>
                     <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
@@ -311,86 +338,174 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               </div>
             </div>
 
-            <div className="text-[9px] text-white/50 flex items-center gap-1 pt-1.5 border-t border-white/10">
-              <Info className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
-              <span>opens in a new tab — return here when ready</span>
+            <div className="space-y-1 pt-1.5 border-t border-white/10">
+              <div className="text-[9px] text-[#D4AF37] flex items-center gap-1 font-medium">
+                <Info className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
+                <span>Tip: Use Google Chrome to toggle tabs easily</span>
+              </div>
+              <span className="text-[9px] text-white/40 block">Click for full return instructions</span>
             </div>
           </div>
 
-          {/* Step 2: Paste Address */}
-          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Home className="w-3.5 h-3.5" />
+          {/* Box 2: PASTE ADDRESS (Clickable to Explainer on What We Provide, How & When) */}
+          <div 
+            onClick={() => handleOpenExplainer(2)}
+            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
+          >
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
+                    <Home className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
+                    2. PASTE ADDRESS
+                  </span>
                 </div>
-                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">2. PASTE ADDRESS</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
+                  HOW &amp; WHEN &rarr;
+                </span>
               </div>
-              <p className="text-[11px] text-white/70 leading-snug pl-8">
-                Paste any property address or MLS link.
+
+              <p className="text-[11px] text-white/80 leading-snug">
+                Drop any address or MLS #. Get instant unvarnished comps, risks, and closing rebate.
               </p>
             </div>
-            <span className="text-[9.5px] text-white/40 pl-8 block">Zero UI &bull; No forms</span>
+
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <span className="text-[9.5px] text-[#10b981] block font-semibold">Zero UI &bull; No forms</span>
+              <span className="text-[9px] text-white/40 block">Delivered on screen in 30s &bull; Click to see how</span>
+            </div>
           </div>
 
-          {/* Step 3: AI + Human Audit */}
-          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Brain className="w-3.5 h-3.5" />
+          {/* Box 3: AI + HUMAN AUDIT (Clickable to Explainer on How We Audit, No Commitment) */}
+          <div 
+            onClick={() => handleOpenExplainer(3)}
+            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
+          >
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
+                    <Brain className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
+                    3. AI + HUMAN
+                  </span>
                 </div>
-                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">3. AI + HUMAN</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
+                  AUDIT &rarr;
+                </span>
               </div>
-              <p className="text-[11px] text-white/70 leading-snug pl-8">
-                Audited with AI precision &amp; broker fiduciary expertise.
+
+              <p className="text-[11px] text-white/80 leading-snug">
+                Audited with AI precision &amp; 35+ year licensed broker fiduciary oversight.
               </p>
             </div>
-            <span className="text-[9.5px] text-[#D4AF37] pl-8 block font-medium">DRE #00609384</span>
+
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <span className="text-[9.5px] text-[#D4AF37] block font-medium">DRE #00609384 &bull; No Commitment</span>
+              <span className="text-[9px] text-white/40 block">Click to see how our dual audit works</span>
+            </div>
           </div>
 
-          {/* Step 4: Delivered Report */}
-          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <FileText className="w-3.5 h-3.5" />
+          {/* Box 4: DELIVERED (Clickable to Explainer on What We Deliver + Exact Dossier Preview) */}
+          <div 
+            onClick={() => handleOpenExplainer(4)}
+            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
+          >
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
+                    <FileText className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
+                    4. DELIVERED
+                  </span>
                 </div>
-                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">4. DELIVERED</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
+                  PREVIEW &rarr;
+                </span>
               </div>
-              <p className="text-[11px] text-white/70 leading-snug pl-8">
-                Comps, risks &amp; cash closing rebate in one private report.
+
+              <p className="text-[11px] text-white/80 leading-snug">
+                Comps, risks &amp; cash closing rebate in one private, unvarnished dossier.
               </p>
             </div>
-            <span className="text-[9.5px] text-[#10b981] pl-8 block font-medium">Instant Dossier</span>
+
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <span className="text-[9.5px] text-[#10b981] block font-medium">Instant Live Dossier</span>
+              <span className="text-[9px] text-white/40 block">Click to inspect sample report output</span>
+            </div>
           </div>
 
-          {/* Step 5: Decisions */}
-          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                  <Gem className="w-3.5 h-3.5" />
+          {/* Box 5: DECISIONS & ESCROW (Clickable to Explainer on Features, Benefits & Escrow Monitoring) */}
+          <div 
+            onClick={() => handleOpenExplainer(5)}
+            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
+          >
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
+                    <Gem className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
+                    5. DECISIONS
+                  </span>
                 </div>
-                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">5. DECISIONS</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
+                  REBATE &rarr;
+                </span>
               </div>
-              <p className="text-[11px] text-white/70 leading-snug pl-8">
-                Close with confidence. Keep more wealth.
+
+              <p className="text-[11px] text-white/80 leading-snug">
+                Up to 50% rebate credited at closing plus complete fiduciary monitoring through escrow.
               </p>
             </div>
-            <span className="text-[9.5px] text-white/40 pl-8 block">Fiduciary match</span>
+
+            <div className="space-y-1 pt-2 border-t border-white/10">
+              <span className="text-[9.5px] text-[#D4AF37] block font-semibold">Escrow Protection &amp; Cash Back</span>
+              <span className="text-[9px] text-white/40 block">Click to explore full escrow advocacy</span>
+            </div>
           </div>
+
         </div>
 
-        <div className="text-center pt-2">
+        {/* ── CHARLIE SIMMONS & BOB DYSON TAG-TEAM INTRODUCTION BOX ── */}
+        <div className="pt-2">
+          <CharlieBobTagTeamBox onOpenExplainer={handleOpenExplainer} />
+        </div>
+
+        {/* ── SLOGAN QUOTE ATTRIBUTED TO BOB DYSON ── */}
+        <div className="text-center pt-3 pb-2 space-y-1">
           <p 
             className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
           </p>
+          <p 
+            className="text-xs sm:text-sm font-serif font-semibold text-[#554c40] tracking-wide"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            &mdash; Bob Dyson, Founder &amp; Licensed Broker (DRE #00609384)
+          </p>
         </div>
+
       </div>
+
+      {/* ── INTERACTIVE WORKFLOW & EXPLAINER MODAL ── */}
+      <CopilotWorkflowExplainerModal
+        isOpen={isExplainerOpen}
+        onClose={() => setIsExplainerOpen(false)}
+        initialStep={explainerStep}
+        onLaunchAudit={(addr) => {
+          setAddress(addr);
+          handleSubmit(null, addr);
+        }}
+      />
     </div>
   );
 }

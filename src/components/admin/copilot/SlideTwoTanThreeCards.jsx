@@ -244,12 +244,18 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
         </div>
 
         {/* Footer Slogan */}
-        <div className="text-center pt-2">
+        <div className="text-center pt-2 space-y-1">
           <p 
             className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
+          </p>
+          <p 
+            className="text-xs sm:text-sm font-serif font-semibold text-[#554c40] tracking-wide"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            &mdash; Bob Dyson, Founder &amp; Licensed Broker (DRE #00609384)
           </p>
         </div>
       </div>
