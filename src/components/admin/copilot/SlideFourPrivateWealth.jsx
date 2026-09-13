@@ -274,12 +274,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
         </div>
 
         {/* Top Line: Browse MLS Spread Across & Centered Directly Below Header */}
-        <div className="flex items-center justify-center gap-3 pb-2 pt-1 flex-wrap">
+        <div className="flex items-center justify-center gap-3 pb-2 pt-1 flex-wrap text-center">
           <div className="flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider">
-            <Search className="w-4 h-4 text-[#D4AF37]" />
-            <span>BROWSE MLS:</span>
+            <Search className="w-4 h-4 text-[#D4AF37] shrink-0" />
+            <span>FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:</span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <a 
               href="https://www.realtor.com" 
               target="_blank" 
