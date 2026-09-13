@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
-const NIGHT_HILLSIDE_ESTATE = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90";
+const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
 
 export default function SlideFourPrivateWealth({ onRunAudit }) {
   const [address, setAddress] = useState('');
