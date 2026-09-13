@@ -12,6 +12,7 @@ import StudioAmbiencePlayer from '@/components/charlie/StudioAmbiencePlayer';
 import LuxuryHeroShowcase from '@/components/admin/frontdoor/LuxuryHeroShowcase';
 import SubscriberSignInButton from '@/components/auth/SubscriberSignInButton';
 import ExploreDestinationsStrip from '@/components/admin/frontdoor/ExploreDestinationsStrip';
+import ModernConversationalAiCanvas from '@/components/frontdoor/ModernConversationalAiCanvas';
 import { base44 } from '@/api/base44Client';
 
 const GOLD = '#D4AF37';
@@ -352,19 +353,39 @@ export default function FrontDoor() {
             </div>
           </nav>
 
-          {/* THE HYBRID LUXURY PROPERTY SHOWCASE HERO:
-              Behind the subscriber gate, this swaps to the Subscriber Command Card + Personal Sidebar! */}
-          <LuxuryHeroShowcase
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onSearch={handleSearch}
-            searchEngine={searchEngine}
-            setSearchEngine={setSearchEngine}
-            onQuickMarketClick={handleSearch}
-            currentUser={currentUser}
-            isSubscriberMode={showSubscriberMode}
-            onToggleSubscriberMode={handleToggleSubscriberMode}
-          />
+          {/* ── CONDITIONALLY RENDER: PUBLIC CONVERSATIONAL AI CANVAS VS SUBSCRIBER/ADMIN DESK ── */}
+          {!showSubscriberMode && !currentUser ? (
+            /* ========================================================
+               1 & 2. MODERN CONVERSATIONAL AI FRONT DOOR (PUBLIC VIEW):
+               - Centered minimalist hero canvas
+               - Headline: "Never Buy Unrepresented. Get an Independent Fiduciary + Thousands Back at Closing."
+               - Subtitle: "Type an address, city, or tap the microphone to talk with Charlie..."
+               - Conversational input bar + integrated Gemini Live V2V microphone
+               - Trust microcopy
+               - Instant rebate card + BAA Guardrail 1 + Agent Equation Guardrail 2
+               - 12-mini-app grid & 6-portal subscription cards hidden from public view
+               ======================================================== */
+            <div className="py-2 sm:py-6" style={{ background: TAN_BG }}>
+              <ModernConversationalAiCanvas onOpenVoice={() => navigate('/talking-app')} />
+            </div>
+          ) : (
+            /* ========================================================
+               SUBSCRIBER & ADMIN AUTHENTICATED COMMAND DESK:
+               - Full luxury property showcase + personal subscriber sidebar
+               - 12 mini-apps & portal workflows for logged-in accounts
+               ======================================================== */
+            <LuxuryHeroShowcase
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onSearch={handleSearch}
+              searchEngine={searchEngine}
+              setSearchEngine={setSearchEngine}
+              onQuickMarketClick={handleSearch}
+              currentUser={currentUser}
+              isSubscriberMode={showSubscriberMode}
+              onToggleSubscriberMode={handleToggleSubscriberMode}
+            />
+          )}
 
           {/* DIRECTLY UNDER THE LANDING PAGE IN A SCROLL: EXPLORE TOP RELOCATION DESTINATIONS */}
           <ExploreDestinationsStrip
@@ -475,16 +496,16 @@ export default function FrontDoor() {
             </div>
           </section>
 
-
-
-          {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (CORPORATE HR, AGENTS, BROKERS, VENDORS) */}
-          <section id="institutional-gateways-section" className="px-5 sm:px-8 py-6 border-t scroll-mt-6" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
-            <PartnerPortalGateways onSelectRole={setSelectedRoleForSubscription} />
-            <RoleSubscriptionDeck
-              activeRole={selectedRoleForSubscription}
-              onSelectRole={setSelectedRoleForSubscription}
-            />
-          </section>
+          {/* INSTITUTIONAL & PROFESSIONAL GATEWAYS (EXCLUSIVELY FOR SUBSCRIBERS / ADMINS) */}
+          {(showSubscriberMode || currentUser) && (
+            <section id="institutional-gateways-section" className="px-5 sm:px-8 py-6 border-t scroll-mt-6" style={{ background: TAN_BG, borderColor: 'rgba(10,10,10,0.15)' }}>
+              <PartnerPortalGateways onSelectRole={setSelectedRoleForSubscription} />
+              <RoleSubscriptionDeck
+                activeRole={selectedRoleForSubscription}
+                onSelectRole={setSelectedRoleForSubscription}
+              />
+            </section>
+          )}
 
           {/* THREE-LOGO FOOTER ROW & LEGAL */}
           <footer
