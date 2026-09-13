@@ -1,185 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
-  Search, Mic, ShieldCheck, Sparkles, DollarSign, AlertTriangle, 
-  TrendingUp, CheckCircle2, Phone, MessageSquare, ArrowRight, 
-  Smartphone, Monitor, Copy, Check, ExternalLink, Play, Radio,
-  Lock, Share2, Compass, Home, Info, ChevronRight, Zap
+  ShieldCheck, Sparkles, DollarSign, Copy, Check, Lock, 
+  ArrowDown, ChevronDown, Monitor, Smartphone
 } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
-import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
-import SlideOneTanOverview from '@/components/admin/copilot/SlideOneTanOverview';
-import SlideTwoTanThreeCards from '@/components/admin/copilot/SlideTwoTanThreeCards';
-import SlideThreeObsidianExecutive from '@/components/admin/copilot/SlideThreeObsidianExecutive';
 import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
 import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCanvas';
 import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
+import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPublicReadOnlyTeamRail';
+import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
+import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
-const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
-const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
-// Sample properties for instant 1-click preview
-const SAMPLE_PROPERTIES = [
-  {
-    address: '742 Vista Del Mar, La Jolla, CA 92037',
-    price: 3450000,
-    beds: 4,
-    baths: 4.5,
-    sqft: 3820,
-    dom: 64,
-    compsPrice: 3200000,
-    rebate: 21562,
-    risks: [
-      '64 days on market — seller price reduction of $150k pending',
-      'Coastal Commission permitting boundary: strict exterior remodel restrictions',
-      'Recent neighborhood comp sold 7.2% below asking price'
-    ],
-    pros: [
-      'Unobstructed ocean sunset view easements protected by deed',
-      'High walkability score to Bird Rock village'
-    ],
-    listingOffice: 'Independent Coastal Brokerage',
-    lastSoldPrice: 2100000,
-    lastSoldYear: 2019
-  },
-  {
-    address: '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
-    price: 2150000,
-    beds: 4,
-    baths: 3,
-    sqft: 3240,
-    dom: 18,
-    compsPrice: 2125000,
-    rebate: 13437,
-    risks: [
-      'HOA rental restriction: minimum 12-month lease required (no short-term Airbnb)',
-      'Dual A/C units are 14 years old — approaching replacement lifecycle'
-    ],
-    pros: [
-      'Camelback Mountain view corridor',
-      'Zero state income tax migration corridor'
-    ],
-    listingOffice: 'Southwest Luxury Realty',
-    lastSoldPrice: 1420000,
-    lastSoldYear: 2021
-  },
-  {
-    address: '4220 Oak Hollow Terrace, Austin, TX 78746',
-    price: 1850000,
-    beds: 3,
-    baths: 3.5,
-    sqft: 2890,
-    dom: 42,
-    compsPrice: 1775000,
-    rebate: 11562,
-    risks: [
-      'Travis County tax reassessment will trigger ~18% property tax escalation next cycle',
-      'Flash flood zone buffer near greenbelt easement'
-    ],
-    pros: [
-      'Top-rated Eanes ISD school district feeder pattern',
-      'Complete 2024 interior kitchen & plumbing remodel'
-    ],
-    listingOffice: 'Westlake Premier Estates',
-    lastSoldPrice: 1150000,
-    lastSoldYear: 2018
-  }
-];
-
-export default function AdminDysonHomesCopilot({ initialPage }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const resolvePageFromQuery = () => {
-    if (initialPage === 2) return 'grok_page_2';
-    if (initialPage === 3) return 'grok_page_3';
-    if (initialPage === 1) return 'slide_4';
-    const p = searchParams.get('page');
-    if (p === '2' || p === 'chat') return 'grok_page_2';
-    if (p === '3' || p === 'dossier') return 'grok_page_3';
-    if (p === '1' || p === 'landing') return 'slide_4';
-    const c = searchParams.get('candidate');
-    if (c) return c;
-    return 'slide_4';
-  };
-
+export default function AdminDysonHomesCopilot() {
   const [viewportMode, setViewportMode] = useState('desktop'); // desktop | mobile
-  const [addressInput, setAddressInput] = useState('');
-  const [selectedProperty, setSelectedProperty] = useState(SAMPLE_PROPERTIES[0]);
-  const [isAuditing, setIsAuditing] = useState(false);
-  const [smsPhone, setSmsPhone] = useState('');
-  const [smsSent, setSmsSent] = useState(false);
+  const [activeTab, setActiveTab] = useState('vertical_scroll'); // vertical_scroll | dnn_sponsor | admin_specs
   const [copiedScript, setCopiedScript] = useState(false);
-  const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState(resolvePageFromQuery);
 
-  // Sync state if URL search query changes
-  React.useEffect(() => {
-    const target = resolvePageFromQuery();
-    setSelectedCandidate(target);
-  }, [searchParams, initialPage]);
+  const page1Ref = useRef(null);
+  const page2Ref = useRef(null);
+  const page3Ref = useRef(null);
+  const page4Ref = useRef(null);
 
-  const handleSelectPage = (pageNum) => {
-    if (pageNum === 1) {
-      setSelectedCandidate('slide_4');
-      setSearchParams({ page: '1' });
-    } else if (pageNum === 2) {
-      setSelectedCandidate('grok_page_2');
-      setSearchParams({ page: '2' });
-    } else if (pageNum === 3) {
-      setSelectedCandidate('grok_page_3');
-      setSearchParams({ page: '3' });
+  const scrollToSection = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  const handleSelectSample = (property) => {
-    setIsAuditing(true);
-    setAddressInput(property.address);
-    setSmsSent(false);
-    setTimeout(() => {
-      setSelectedProperty(property);
-      setIsAuditing(false);
-    }, 450);
-  };
-
-  const handleCustomSearch = (e) => {
-    e.preventDefault();
-    if (!addressInput.trim()) return;
-    setIsAuditing(true);
-    setSmsSent(false);
-
-    // Dynamic mock valuation generator based on input
-    setTimeout(() => {
-      setSelectedProperty({
-        address: addressInput,
-        price: 1950000,
-        beds: 4,
-        baths: 3.5,
-        sqft: 3100,
-        dom: 38,
-        compsPrice: 1890000,
-        rebate: 12187,
-        risks: [
-          'Average sales in this micro-pocket closed 3.5% below initial list price',
-          'Check title for easement or municipal zoning updates prior to offer',
-          'Property tax basis will recalculate to purchase price upon closing'
-        ],
-        pros: [
-          'High buyer demand area with solid appreciation history',
-          'Strong neighborhood school ratings and infrastructure'
-        ],
-        listingOffice: 'Syndicated Regional Listing',
-        lastSoldPrice: 1320000,
-        lastSoldYear: 2020
-      });
-      setIsAuditing(false);
-    }, 600);
-  };
-
-  const handleSendSms = (e) => {
-    e.preventDefault();
-    if (!smsPhone) return;
-    setSmsSent(true);
-  };
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === '#page-1' || hash === '#landing') scrollToSection(page1Ref);
+    else if (hash === '#page-2' || hash === '#chat') scrollToSection(page2Ref);
+    else if (hash === '#page-3' || hash === '#dossier') scrollToSection(page3Ref);
+    else if (hash === '#page-4' || hash === '#team-rail') scrollToSection(page4Ref);
+  }, []);
 
   const copySponsorScript = () => {
     const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and claim your buyer closing cost rebate. Human and AI assisted real estate intelligence at DysonHomes.com.`;
@@ -198,18 +53,21 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
-              ADMIN LAB · CONSUMER ZERO-UI PIVOT
+              ADMIN LAB · VERTICAL SCROLL
             </span>
-            <span className="text-sm font-bold text-white tracking-wide">
-              DysonHomes Copilot Lab (DysonHomes.com)
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-white tracking-wide">
+                DysonHomes Copilot Lab
+              </span>
+              <CopilotSweepLogo size="sm" />
+            </div>
           </div>
           <p className="text-xs text-white/70 mt-1 max-w-2xl leading-relaxed">
-            Eliminates all portal login walls and friction. The consumer pastes any listing address or link, gets instant comp reality, risk analysis, and exact rebate dollars, backed by Charlie AI and Bob Dyson's licensed brokerage.
+            Locked vertical scroll order: Page 1 (Landing), Page 2 (Chat Empty), Page 3 (Chat + Dossier), Page 4 (Public Read-Only Team Rail). Zero login barrier for review.
           </p>
         </div>
 
-        {/* View Controls & GoDaddy Indicator */}
+        {/* View Controls & Jump Navigation */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Domain status pill */}
           <div className="px-3 py-1.5 rounded-xl bg-[#141414] border border-[#D4AF37]/40 flex items-center gap-2 text-xs">
@@ -222,12 +80,12 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
           <div className="flex items-center bg-[#181818] p-1 rounded-xl border border-white/10">
             <button
               type="button"
-              onClick={() => setActiveTab('consumer_mockup')}
+              onClick={() => setActiveTab('vertical_scroll')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'consumer_mockup' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
+                activeTab === 'vertical_scroll' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
               }`}
             >
-              Consumer Experience
+              Vertical Scroll Lab
             </button>
             <button
               type="button"
@@ -250,7 +108,7 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
           </div>
 
           {/* Viewport switch */}
-          {activeTab === 'consumer_mockup' && (
+          {activeTab === 'vertical_scroll' && (
             <div className="flex items-center bg-[#181818] p-1 rounded-xl border border-white/10">
               <button
                 type="button"
@@ -278,305 +136,224 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          TAB 1: LIVE CONSUMER COPILOT MOCKUP (TEST CANDIDATE DESIGNS)
+          VERTICAL SCROLL JUMP BAR
           ───────────────────────────────────────────────────────────── */}
-      {activeTab === 'consumer_mockup' && (
-        <div className="space-y-6">
-          
-          {/* ── UNMISSABLE PRIMARY 3-PAGE WORKFLOW BAR (TOP HEADER) ── */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[9.5px] font-black uppercase tracking-wider bg-[#D4AF37] text-black flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-black" />
-                  THE 3 COPILOT PAGES
-                </span>
-                <span className="text-xs font-bold text-[#D4AF37] tracking-wider uppercase">
-                  DIRECT ACCESS BUTTONS
-                </span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white font-serif tracking-tight mt-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                Select Any Page To View Immediately:
-              </h2>
-            </div>
-
-            {/* The 3 Core Step Buttons */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => handleSelectPage(1)}
-                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
-                  selectedCandidate === 'slide_4'
-                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
-                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
-                }`}
-              >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
-                  selectedCandidate === 'slide_4' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
-                }`}>
-                  1
-                </span>
-                <span className="tracking-wide">PAGE 1: LANDING PAGE</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectPage(2)}
-                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
-                  selectedCandidate === 'grok_page_2'
-                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
-                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
-                }`}
-              >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
-                  selectedCandidate === 'grok_page_2' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
-                }`}>
-                  2
-                </span>
-                <span className="tracking-wide">PAGE 2: CHAT CANVAS</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSelectPage(3)}
-                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
-                  selectedCandidate === 'grok_page_3'
-                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
-                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
-                }`}
-              >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
-                  selectedCandidate === 'grok_page_3' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
-                }`}>
-                  3
-                </span>
-                <span className="tracking-wide">PAGE 3: LIVE DOSSIER SPLIT</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Secondary Candidate & Classic Slides Switcher */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#0f0f0f] border border-white/10 shadow-sm">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-bold text-white/60 tracking-wider">
-                Classic Alternative Looks:
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              {[
-                { id: 'slide_2', label: 'Slide 2 (Candidate A · Tan)' },
-                { id: 'slide_1', label: 'Slide 1 (Tan Overview)' },
-                { id: 'slide_3', label: 'Slide 3 (Obsidian Dark)' },
-              ].map((btn) => (
-                <button
-                  key={btn.id}
-                  type="button"
-                  onClick={() => setSelectedCandidate(btn.id)}
-                  className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    selectedCandidate === btn.id
-                      ? 'bg-[#D4AF37] text-black font-bold'
-                      : 'bg-[#181818] text-white/70 hover:text-white border border-white/10'
-                  }`}
-                >
-                  {btn.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#0a0a0a]/80 px-2 font-medium">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-bold uppercase text-[10px] tracking-wider border border-[#D4AF37]/40">
-                ACTIVE: {
-                  selectedCandidate === 'slide_4' ? '1. Landing Page (Private Wealth Deep Black & Gold)' :
-                  selectedCandidate === 'grok_page_2' ? '2. Page 2: Chat Canvas ("What can I help you with?")' :
-                  selectedCandidate === 'grok_page_3' ? '3. Page 3: Live Dossier Split (Two-Column Chat + Honest Comps Dossier)' :
-                  selectedCandidate === 'slide_2' ? 'Slide 2 (Candidate A · Tan Desktop with 3 Cards & Pool Villa)' :
-                  selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview with Sunset Villa)' :
-                  'Slide 3 (Obsidian Executive Dark)'
-                }
-              </span>
-              <span>
-                Live preview for <strong>https://dysonhomes.com</strong>
-              </span>
-            </div>
-            <span className="text-[#854d0e] font-medium flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" /> Zero UI • Buyer Intelligence &amp; Closing Rebate
+      {activeTab === 'vertical_scroll' && (
+        <div className="p-3 sm:p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-30 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+            <span className="text-xs font-bold text-white tracking-wider uppercase font-mono">
+              VERTICAL SCROLL LAB (IN ORDER):
             </span>
           </div>
 
-          {/* Frame Container */}
-          <div className="flex justify-center w-full">
-            <div 
-              className={`transition-all duration-300 w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden ${
-                viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'
-              }`}
-              style={{ background: '#0a0a0a' }}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => scrollToSection(page1Ref)}
+              className="px-3 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
             >
-              {/* Browser URL Bar */}
-              <div className="px-4 py-2.5 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+              <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">1</span>
+              <span>Page 1: Landing</span>
+              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection(page2Ref)}
+              className="px-3 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
+              <span>Page 2: Chat Empty</span>
+              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection(page3Ref)}
+              className="px-3 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">3</span>
+              <span>Page 3: Chat + Dossier</span>
+              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection(page4Ref)}
+              className="px-3 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">4</span>
+              <span>Page 4: Team Rail</span>
+              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          VERTICAL SCROLL CONTENT (PAGES 1 -> 2 -> 3 -> 4)
+          ───────────────────────────────────────────────────────────── */}
+      {activeTab === 'vertical_scroll' && (
+        <div className="space-y-10 w-full flex flex-col items-center">
+          
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 1 — LANDING (Slide 4 Private Wealth)
+              ══════════════════════════════════════════════════════════ */}
+          <section id="page-1" ref={page1Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 1 — LANDING (SLIDE 4 PRIVATE WEALTH)
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Dark Charcoal + Champagne Gold • DD Vertical Badge • Sweep Logo
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
                 </div>
-                <div className="px-6 py-1 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
                   <Lock className="w-3 h-3 text-[#10b981]" />
                   <span>https://dysonhomes.com</span>
                 </div>
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
-                  {selectedCandidate === 'slide_4' ? 'Page 1 (Landing Page)' :
-                   selectedCandidate === 'grok_page_2' ? 'Page 2 (Chat Canvas)' :
-                   selectedCandidate === 'grok_page_3' ? 'Page 3 (Dossier Split)' :
-                   selectedCandidate === 'slide_2' ? 'Candidate A (D&D Logo & Tan Desktop)' :
-                   selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview)' :
-                   'Slide 3 (Obsidian Executive)'}
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 1</span>
+              </div>
+
+              <SlideFourPrivateWealth
+                onRunAudit={(addr) => {
+                  scrollToSection(page3Ref);
+                }}
+                onGoToChatCanvas={() => {
+                  scrollToSection(page2Ref);
+                }}
+              />
+            </div>
+          </section>
+
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 2 — CHAT EMPTY (Grok home)
+              ══════════════════════════════════════════════════════════ */}
+          <section ref={page2Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 2 — CHAT EMPTY (GROK HOME)
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Large Centered Sweep Logo • "What can I help you with?" • 3 Tan Pills
                 </span>
               </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/chat</span>
+            </div>
 
-              {/* ── RENDER EXACT SELECTED SLIDE (FULL-BLEED PAGE BACKGROUND) ── */}
-              <div className="w-full">
-                {selectedCandidate === 'slide_4' && (
-                  <SlideFourPrivateWealth
-                    onRunAudit={(addr) => {
-                      setAddressInput(addr);
-                      handleCustomSearch({ preventDefault: () => {} });
-                      handleSelectPage(3);
-                    }}
-                    onGoToChatCanvas={() => handleSelectPage(2)}
-                  />
-                )}
-
-                {selectedCandidate === 'grok_page_2' && (
-                  <GrokPageTwoChatCanvas
-                    onAskAddress={(addr) => {
-                      setAddressInput(addr);
-                      handleCustomSearch({ preventDefault: () => {} });
-                      handleSelectPage(3);
-                    }}
-                    onBackToLanding={() => handleSelectPage(1)}
-                  />
-                )}
-
-                {selectedCandidate === 'grok_page_3' && (
-                  <GrokPageThreeSplitCanvas
-                    property={selectedProperty}
-                    onBackToSearch={() => handleSelectPage(1)}
-                  />
-                )}
-
-                {selectedCandidate === 'slide_2' && (
-                  <SlideTwoTanThreeCards
-                    onRunAudit={(addr) => {
-                      setAddressInput(addr);
-                      handleCustomSearch({ preventDefault: () => {} });
-                    }}
-                  />
-                )}
-
-                {selectedCandidate === 'slide_1' && (
-                  <SlideOneTanOverview
-                    onRunAudit={(addr) => {
-                      setAddressInput(addr);
-                      handleCustomSearch({ preventDefault: () => {} });
-                    }}
-                  />
-                )}
-
-                {selectedCandidate === 'slide_3' && (
-                  <SlideThreeObsidianExecutive
-                    onRunAudit={(addr) => {
-                      setAddressInput(addr);
-                      handleCustomSearch({ preventDefault: () => {} });
-                    }}
-                  />
-                )}
-
-                {/* Audit Dossier in smooth scroll for classic slides */}
-                {(selectedCandidate !== 'slide_4' && selectedCandidate !== 'grok_page_2' && selectedCandidate !== 'grok_page_3') && (
-                  <div 
-                    id="copilot-audit-dossier" 
-                    className="w-full px-4 sm:px-8 pt-8 pb-14 scroll-mt-6 border-t border-[#d8cab6]/60"
-                    style={{ 
-                      background: (selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2') ? '#ede0cc' : '#050505' 
-                    }}
-                  >
-                    <div className="max-w-3xl mx-auto space-y-3">
-                      <div className="text-center pb-2">
-                        <span className="text-[11px] font-bold tracking-widest uppercase text-[#854d0e]">
-                          POST-SEARCH AUDIT DOSSIER
-                        </span>
-                      </div>
-                      <CopilotPropertyDossier property={selectedProperty} />
-                    </div>
-                  </div>
-                )}
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/chat</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 2</span>
               </div>
 
-              {/* DNN Pulse Ticker (Only for legacy slides) */}
-              {(selectedCandidate !== 'slide_4' && selectedCandidate !== 'grok_page_2' && selectedCandidate !== 'grok_page_3') && (
-                <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-wider text-red-400">
-                      DNN HOUSING PULSE:
-                    </span>
-                    <span className="text-white/80 text-[11px] truncate max-w-md">
-                      Mortgage rates ease to 6.35% as buyers turn to private fee-rebating brokerages over aggregator portals.
-                    </span>
-                  </div>
+              <GrokPageTwoChatCanvas
+                onAskAddress={(addr) => {
+                  scrollToSection(page3Ref);
+                }}
+                onBackToLanding={() => {
+                  scrollToSection(page1Ref);
+                }}
+              />
+            </div>
+          </section>
 
-                  <Link
-                    to="/dnn-news"
-                    className="text-[10px] font-bold text-[#D4AF37] hover:underline flex items-center gap-1"
-                  >
-                    <span>Watch Today's 6AM Brief</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 3 — CHAT + DOSSIER (after address)
+              ══════════════════════════════════════════════════════════ */}
+          <section ref={page3Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 3 — CHAT + DOSSIER (AFTER ADDRESS)
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  35% Sticky Charlie Chat • 65% Dossier with THREE TAN FILL Boxes
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/dossier</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
                 </div>
-              )}
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/dossier</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 3</span>
+              </div>
 
+              <GrokPageThreeSplitCanvas
+                onBackToSearch={() => {
+                  scrollToSection(page1Ref);
+                }}
+              />
             </div>
-          </div>
+          </section>
 
-          {/* Bottom 4 Slides Selector */}
-          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/40 text-left flex flex-wrap items-center justify-between gap-3 shadow-lg">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] block">
-                THE 4 EXACT SPECIFIED SLIDES
-              </span>
-              <p className="text-xs text-white/70 mt-0.5">
-                Switch directly between all four specific layouts and color palettes.
-              </p>
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 4 — PUBLIC READ-ONLY TEAM RAIL (optional on public canvas)
+              ══════════════════════════════════════════════════════════ */}
+          <section ref={page4Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 4 — PUBLIC READ-ONLY TEAM RAIL
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Far-left See-Only Roster (Bob Dyson at top, bots below) • Charlie Single Live Canvas
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/team-rail</span>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { id: 'slide_4', label: '1. Landing Page (Private Wealth)' },
-                { id: 'grok_page_2', label: '2. Page 2: Chat Canvas' },
-                { id: 'grok_page_3', label: '3. Page 3: Live Dossier Split' },
-                { id: 'slide_2', label: '4. Candidate A (Tan)' },
-                { id: 'slide_1', label: '5. Tan Overview' },
-                { id: 'slide_3', label: '6. Obsidian Dark' }
-              ].map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedCandidate(c.id);
-                    window.scrollTo({ top: 140, behavior: 'smooth' });
-                  }}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    selectedCandidate === c.id
-                      ? 'bg-[#D4AF37] text-black font-bold shadow-md'
-                      : 'bg-white/10 text-white/80 hover:text-white border border-white/10'
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/team-rail</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 4</span>
+              </div>
+
+              <CopilotPublicReadOnlyTeamRail />
             </div>
-          </div>
+          </section>
 
         </div>
       )}
@@ -610,7 +387,6 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
               To avoid trademark disputes with national real estate portal aggregators, our daily news broadcast and social videos use generic, protective language ("online real estate portals" and "national home search sites").
             </p>
 
-            {/* Approved Script Card */}
             <div className="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/40 space-y-2">
               <span className="text-[10px] font-black uppercase tracking-wider text-[#10b981] block">
                 APPROVED 15-SECOND DNN SPONSOR BUMPER SCRIPT
@@ -623,34 +399,6 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
                 <span className="text-[#D4AF37] font-semibold">Destination: https://dysonhomes.com</span>
               </div>
             </div>
-
-            {/* Organic Funnel Flywheel */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs">
-              <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
-                <div className="text-[10px] font-bold text-red-400 uppercase">1. Top of Funnel (Media)</div>
-                <div className="font-bold text-white text-xs">DNN Real Estate News</div>
-                <p className="text-white/60 text-[11px]">
-                  Daily market reports, Fed rates, housing updates on LinkedIn, social video &amp; email. Zero ad spend.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
-                <div className="text-[10px] font-bold text-[#D4AF37] uppercase">2. The Conversion Hook</div>
-                <div className="font-bold text-white text-xs">DysonHomes.com Copilot</div>
-                <p className="text-white/60 text-[11px]">
-                  Viewer visits DysonHomes.com, pastes a home they are touring, sees 50% rebate + unvarnished comps.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
-                <div className="text-[10px] font-bold text-emerald-400 uppercase">3. The Revenue Engine</div>
-                <div className="font-bold text-white text-xs">25% Referral Settlement</div>
-                <p className="text-white/60 text-[11px]">
-                  Dyson pairs buyer with top vetted PRN agent. Dyson collects 25%, credits 50% back to buyer, retains 50%.
-                </p>
-              </div>
-            </div>
-
           </div>
         </div>
       )}
@@ -669,7 +417,7 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
                 DysonHomes.com 1-Man Scalable Operating Model
               </h2>
               <p className="text-xs text-white/70 mt-1">
-                How all 12 internal admin modules power this sleek front-facing consumer experience without operational overhead.
+                How all internal admin modules power this sleek front-facing consumer experience without operational overhead.
               </p>
             </div>
 
@@ -701,40 +449,6 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
                 </div>
               </div>
             </div>
-
-            {/* Connected Admin Modules List */}
-            <div className="p-4 rounded-2xl bg-black border border-white/10 space-y-2">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] block">
-                INTEGRATED ADMIN CONSOLE MODULES CONNECTED TO DYSONHOMES COPILOT
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-white/80">
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ Relocation Call Desk
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ PRN Agent Bureau
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ Preferred Vendors
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ Charlie Voice AI
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ Escrow Audit &amp; HUD-1
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ SMS Dispatch (Twilio)
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ DNN News Engine
-                </div>
-                <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                  ✓ Master Agreement Desk
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
       )}

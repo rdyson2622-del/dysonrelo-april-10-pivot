@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, CheckCircle2, 
-  Waves, Clock, Square, Compass
+  Waves, Clock, Square, DollarSign
 } from 'lucide-react';
+import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
+import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
-const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 const CHARLIE_AVATAR = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1f6368d4d_CharlieSimmons_Headshot.png";
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
@@ -13,7 +14,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     {
       id: 1,
       sender: 'charlie',
-      text: "I audited 742 Vista Del Mar, La Jolla.\nOverpriced vs comps; rebate estimate where allowed by law. Dossier on the right.\nWhat's your mobile so I can text this?"
+      text: "I audited 742 Vista Del Mar, La Jolla.\nOverpriced vs comps; rebate estimate where allowed by law. Dossier on the right.\nWhat's your mobile so I can text this report to you?"
     },
     {
       id: 2,
@@ -43,7 +44,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         {
           id: Date.now() + 1,
           sender: 'charlie',
-          text: `Got it! I've updated the file and dispatched the audit details. Feel free to ask any other questions about 742 Vista Del Mar.`
+          text: `Got it! I've dispatched the 742 Vista Del Mar dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
         }
       ]);
     }, 600);
@@ -54,15 +55,11 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
       className="w-full rounded-2xl border border-[#D4AF37]/40 shadow-2xl overflow-hidden select-none text-left"
       style={{ background: '#080808', color: '#f5f5f5' }}
     >
-      {/* ── TOP HEADER BAR ── */}
+      {/* ── TOP HEADER BAR: D&D badge + sweep copilot logo ── */}
       <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-[#0a0a0a]">
-        {/* Left: D&D Logo + IN LAB + Back Button */}
+        {/* Left: D&D badge + Back Button */}
         <div className="flex items-center gap-3">
-          <img 
-            src={DYSON_LOGO} 
-            alt="Dyson & Dyson" 
-            className="h-8 w-auto object-contain"
-          />
+          <DysonVerticalBadge height={40} />
           <div className="flex items-center gap-2">
             <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase">
               PAGE 3 · DOSSIER
@@ -80,7 +77,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           )}
         </div>
 
-        {/* Center / Right: Brand Header */}
+        {/* Center / Right: Brand Header with Sweep Logo */}
         <div className="flex items-baseline gap-2">
           <span 
             className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
@@ -88,19 +85,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           >
             DYSON HOMES
           </span>
-          <span 
-            className="font-serif italic text-xl sm:text-2xl text-[#D4AF37] leading-none drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            copilot
-          </span>
+          <CopilotSweepLogo size="sm" />
         </div>
       </div>
 
-      {/* ── 2-COLUMN MAIN CANVAS ── */}
+      {/* ── 2-COLUMN MAIN CANVAS: Left ~35% sticky chat, Right ~65% dossier ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[660px]">
         
-        {/* ── LEFT COLUMN: CHAT INTERFACE (35% = 4 cols lg) ── */}
+        {/* ── LEFT COLUMN: STICKY CHARLIE CHAT (~35% = 4 or 5 cols lg) ── */}
         <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/10 bg-[#0d0d0d]">
           <div className="space-y-4">
             {/* Top Charlie Profile */}
@@ -147,7 +139,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
             </div>
           </div>
 
-          {/* Bottom Chat Input Form */}
+          {/* Bottom Chat Input Form: ask mobile to text report */}
           <div className="pt-4 mt-auto">
             <form onSubmit={handleSendMessage} className="space-y-1.5">
               <div className="flex items-center bg-[#141414] rounded-2xl border border-white/10 focus-within:border-[#D4AF37]/60 p-2 pl-3 shadow-inner">
@@ -156,13 +148,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Type your message..."
+                  placeholder="Enter your mobile or ask Charlie..."
                   className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-stone-500 font-normal"
                 />
                 <button
                   type="submit"
                   disabled={!inputText.trim()}
-                  className="w-8 h-8 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 text-black flex items-center justify-center transition-all cursor-pointer shrink-0 ml-1.5"
+                  className="w-8 h-8 rounded-full bg-[#D4AF37] hover:brightness-110 disabled:opacity-40 text-black flex items-center justify-center transition-all cursor-pointer shrink-0 ml-1.5 shadow-md"
                 >
                   <Send className="w-3.5 h-3.5 text-black -rotate-12 translate-x-px" />
                 </button>
@@ -174,8 +166,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN: DOSSIER ARTIFACT (65% = 7 cols lg) ── */}
-        <div className="lg:col-span-7 p-4 sm:p-6 bg-[#080808] space-y-3.5 overflow-y-auto">
+        {/* ── RIGHT COLUMN: DOSSIER WITH THREE TAN FILL BOXES (~65% = 7 cols lg) ── */}
+        <div className="lg:col-span-7 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto">
           {/* Header */}
           <div className="pb-1">
             <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
@@ -183,123 +175,123 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
             </span>
           </div>
 
-          {/* ── CARD 1: HONEST COMPS ── */}
-          <div className="rounded-xl border border-[#D4AF37]/40 bg-[#0f0f0f] p-4 space-y-2.5 shadow-md">
-            <div className="flex items-center gap-2 text-[#D4AF37]">
-              <Scale className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#D4AF37]">
+          {/* ── TAN BOX 1: HONEST COMPS (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <Scale className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
                 HONEST COMPS
               </h3>
             </div>
-            <p className="text-[11px] text-stone-400">
-              Sold 30–90 days | Within 0.75 mi | Adjusted to 7/2024 market
+            <p className="text-[11px] text-[#554c40] font-medium">
+              Sold 30–90 days | Within 0.75 mi | Adjusted to current market
             </p>
 
-            {/* Comps Table */}
+            {/* Comps Table in Tan Container */}
             <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-              <div className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
-                <span className="font-semibold text-white w-28 sm:w-32">718 Via Capri</span>
-                <span className="text-stone-400">0.32 mi</span>
-                <span className="text-stone-400">5 bd | 4.5 ba | 4,612 sf</span>
-                <span className="text-stone-200">Sold $6.25M</span>
-                <span className="text-[#D4AF37] font-bold">Adj. $6.41M</span>
+              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
+                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">718 Via Capri</span>
+                <span className="text-[#554c40]">0.32 mi</span>
+                <span className="text-[#554c40]">5 bd | 4.5 ba | 4,612 sf</span>
+                <span className="text-[#2a241c]">Sold $6.25M</span>
+                <span className="text-[#854d0e] font-bold">Adj. $6.41M</span>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
-                <span className="font-semibold text-white w-28 sm:w-32">7550 Eads Ave</span>
-                <span className="text-stone-400">0.48 mi</span>
-                <span className="text-stone-400">4 bd | 4 ba | 3,980 sf</span>
-                <span className="text-stone-200">Sold $5.30M</span>
-                <span className="text-[#D4AF37] font-bold">Adj. $5.48M</span>
+              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
+                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">7550 Eads Ave</span>
+                <span className="text-[#554c40]">0.48 mi</span>
+                <span className="text-[#554c40]">4 bd | 4 ba | 3,980 sf</span>
+                <span className="text-[#2a241c]">Sold $5.30M</span>
+                <span className="text-[#854d0e] font-bold">Adj. $5.48M</span>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/5 gap-2">
-                <span className="font-semibold text-white w-28 sm:w-32">737 Bonair Way</span>
-                <span className="text-stone-400">0.61 mi</span>
-                <span className="text-stone-400">5 bd | 4 ba | 4,305 sf</span>
-                <span className="text-stone-200">Sold $5.85M</span>
-                <span className="text-[#D4AF37] font-bold">Adj. $6.02M</span>
+              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
+                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">737 Bonair Way</span>
+                <span className="text-[#554c40]">0.61 mi</span>
+                <span className="text-[#554c40]">5 bd | 4 ba | 4,305 sf</span>
+                <span className="text-[#2a241c]">Sold $5.85M</span>
+                <span className="text-[#854d0e] font-bold">Adj. $6.02M</span>
               </div>
             </div>
 
-            <p className="text-[11px] italic text-[#D4AF37] pt-1">
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
               Subject at $7.95M list is 24–32% above adjusted comps.
             </p>
           </div>
 
-          {/* ── CARD 2: HIDDEN RISKS ── */}
-          <div className="rounded-xl border border-[#D4AF37]/40 bg-[#0f0f0f] p-4 space-y-2.5 shadow-md">
-            <div className="flex items-center gap-2 text-[#D4AF37]">
-              <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#D4AF37]">
+          {/* ── TAN BOX 2: HIDDEN RISKS (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
                 HIDDEN RISKS
               </h3>
             </div>
 
             <div className="space-y-2.5 text-xs">
               <div className="flex items-start gap-2.5">
-                <Scale className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                <Scale className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-white">Topography &amp; drainage</h4>
-                  <p className="text-stone-400 text-[11px]">
+                  <h4 className="font-bold text-[#0a0a0a]">Topography &amp; drainage</h4>
+                  <p className="text-[#554c40] text-[11px]">
                     Steep lot; prior water intrusion noted in 2021 disclosure.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Waves className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                <Waves className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-white">Coastal bluff influence</h4>
-                  <p className="text-stone-400 text-[11px]">
+                  <h4 className="font-bold text-[#0a0a0a]">Coastal bluff influence</h4>
+                  <p className="text-[#554c40] text-[11px]">
                     Setback &amp; erosion disclosure on file; future costs possible.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-white">Permit &amp; code notes</h4>
-                  <p className="text-stone-400 text-[11px]">
+                  <h4 className="font-bold text-[#0a0a0a]">Permit &amp; code notes</h4>
+                  <p className="text-[#554c40] text-[11px]">
                     Unpermitted pool heater; fence variance exception.
                   </p>
                 </div>
               </div>
             </div>
 
-            <p className="text-[11px] italic text-[#D4AF37] pt-1">
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
               Review seller disclosures and coastal reports closely.
             </p>
           </div>
 
-          {/* ── CARD 3: CLOSING-COST CREDIT ── */}
-          <div className="rounded-xl border border-[#D4AF37]/40 bg-[#0f0f0f] p-4 space-y-2.5 shadow-md">
-            <div className="flex items-center gap-2 text-[#D4AF37]">
-              <FileText className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#D4AF37]">
+          {/* ── TAN BOX 3: CLOSING-COST CREDIT (TAN FILL #ede0cc, BLACK TEXT) ── */}
+          <div className="rounded-xl border border-[#c4b59f] bg-[#ede0cc] text-[#0a0a0a] p-4 space-y-2.5 shadow-lg">
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-[#854d0e]" />
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-[#1a1815]">
                 CLOSING-COST CREDIT
               </h3>
             </div>
-            <p className="text-[11px] text-stone-400">
+            <p className="text-[11px] text-[#554c40] font-medium">
               Rebate estimate where allowed by law | Based on $7.95M purchase price.
             </p>
 
-            <div className="bg-[#141414] border border-white/5 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-medium text-stone-300">
+            <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-semibold text-[#1a1815]">
                 Estimated buyer credit
               </span>
               <div className="text-right">
-                <div className="text-base sm:text-lg font-bold font-mono text-[#D4AF37]">
+                <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
                   $199,500 – $238,500
                 </div>
-                <div className="text-[11px] text-[#D4AF37]/90 font-mono">
+                <div className="text-[11px] text-[#554c40] font-mono">
                   (2.51% – 3.00%)
                 </div>
               </div>
             </div>
 
-            <p className="text-[11px] italic text-[#D4AF37] pt-0.5">
+            <p className="text-[11px] font-semibold text-[#854d0e] pt-0.5">
               Requires licensed broker representation. Not available in all states.
             </p>
           </div>
