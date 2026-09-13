@@ -10,13 +10,31 @@ const GOLD = '#D4AF37';
 
 export const WORKING_MODELS = [
   {
-    id: 'dysonhomes_copilot',
-    title: 'DysonHomes Copilot Lab',
-    sub: 'Zero-UI Consumer AI + 50% closing rebate',
-    badge: 'NEW PIVOT',
-    path: '/admin/dysonhomes-copilot',
+    id: 'dysonhomes_copilot_p1',
+    title: 'Copilot Page 1: Landing Page',
+    sub: 'Zero-UI Private Wealth luxury hero & search',
+    badge: 'PAGE 1',
+    path: '/admin/dysonhomes-copilot?page=1',
     icon: Sparkles,
     iconColor: '#D4AF37',
+  },
+  {
+    id: 'dysonhomes_copilot_p2',
+    title: 'Copilot Page 2: Chat Canvas',
+    sub: 'Grok-style "What can I help you with?"',
+    badge: 'PAGE 2',
+    path: '/admin/dysonhomes-copilot?page=2',
+    icon: Sparkles,
+    iconColor: '#e8c84a',
+  },
+  {
+    id: 'dysonhomes_copilot_p3',
+    title: 'Copilot Page 3: Live Dossier Split',
+    sub: 'Two-column chat + honest comps dossier',
+    badge: 'PAGE 3',
+    path: '/admin/dysonhomes-copilot?page=3',
+    icon: Sparkles,
+    iconColor: '#10b981',
   },
   {
     id: 'app_store_catalog',

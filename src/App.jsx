@@ -477,6 +477,11 @@ const AuthenticatedApp = () => {
         <Route path="/admin/front-door-lab" element={<AdminFrontDoorLab />} />
         <Route path="/admin/app-store-mockup" element={<AdminAppStoreMockup />} />
         <Route path="/admin/dysonhomes-copilot" element={<AdminDysonHomesCopilot />} />
+        <Route path="/admin/copilot/page-1" element={<AdminDysonHomesCopilot initialPage={1} />} />
+        <Route path="/admin/copilot/page-2" element={<AdminDysonHomesCopilot initialPage={2} />} />
+        <Route path="/admin/copilot/page-3" element={<AdminDysonHomesCopilot initialPage={3} />} />
+        <Route path="/admin/copilot-chat" element={<AdminDysonHomesCopilot initialPage={2} />} />
+        <Route path="/admin/copilot-dossier" element={<AdminDysonHomesCopilot initialPage={3} />} />
         <Route path="/admin/relocation-call-desk" element={<AdminRelocationCallDesk />} />
         <Route path="/admin/preferred-vendors" element={<AdminPreferredVendors />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />

@@ -31,7 +31,10 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
-      { label: '✨ DYSONHOMES COPILOT LAB (ZERO-UI)', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
+      { label: '✨ DYSONHOMES COPILOT LAB', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
+      { label: '↳ Page 1: Landing Page (Private Wealth)', path: '/admin/dysonhomes-copilot?page=1', icon: Home, indent: true },
+      { label: '↳ Page 2: Chat Canvas ("What can I help you with?")', path: '/admin/dysonhomes-copilot?page=2', icon: MessageCircle, indent: true },
+      { label: '↳ Page 3: Live Dossier Split (Two-Column)', path: '/admin/dysonhomes-copilot?page=3', icon: FileText, indent: true },
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
@@ -386,7 +389,7 @@ export default function AdminSidebar() {
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
       {/* ── TOP PINNED: COPILOT LANDING PAGES ── */}
-      <div className="px-3 pt-2 pb-1 shrink-0">
+      <div className="px-3 pt-2 pb-1 shrink-0 space-y-1.5">
         <Link
           to="/admin/dysonhomes-copilot"
           className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full border transition-all cursor-pointer shadow-xl active:scale-95 group w-full ${
@@ -404,6 +407,31 @@ export default function AdminSidebar() {
             ✨ COPILOT LANDING PAGES
           </span>
         </Link>
+
+        {/* Dedicated 3 Pages Direct Access Grid in Sidebar */}
+        <div className="grid grid-cols-3 gap-1 px-0.5">
+          <Link
+            to="/admin/dysonhomes-copilot?page=1"
+            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
+            title="Page 1: Landing Page (Private Wealth)"
+          >
+            1. Landing
+          </Link>
+          <Link
+            to="/admin/dysonhomes-copilot?page=2"
+            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
+            title="Page 2: Chat Canvas"
+          >
+            2. Chat
+          </Link>
+          <Link
+            to="/admin/dysonhomes-copilot?page=3"
+            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
+            title="Page 3: Live Dossier Split"
+          >
+            3. Dossier
+          </Link>
+        </div>
       </div>
 
       {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}

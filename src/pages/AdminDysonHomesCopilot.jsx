@@ -5,7 +5,7 @@ import {
   Smartphone, Monitor, Copy, Check, ExternalLink, Play, Radio,
   Lock, Share2, Compass, Home, Info, ChevronRight, Zap
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
 import SlideOneTanOverview from '@/components/admin/copilot/SlideOneTanOverview';
 import SlideTwoTanThreeCards from '@/components/admin/copilot/SlideTwoTanThreeCards';
@@ -86,7 +86,22 @@ const SAMPLE_PROPERTIES = [
   }
 ];
 
-export default function AdminDysonHomesCopilot() {
+export default function AdminDysonHomesCopilot({ initialPage }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const resolvePageFromQuery = () => {
+    if (initialPage === 2) return 'grok_page_2';
+    if (initialPage === 3) return 'grok_page_3';
+    if (initialPage === 1) return 'slide_4';
+    const p = searchParams.get('page');
+    if (p === '2' || p === 'chat') return 'grok_page_2';
+    if (p === '3' || p === 'dossier') return 'grok_page_3';
+    if (p === '1' || p === 'landing') return 'slide_4';
+    const c = searchParams.get('candidate');
+    if (c) return c;
+    return 'slide_4';
+  };
+
   const [viewportMode, setViewportMode] = useState('desktop'); // desktop | mobile
   const [addressInput, setAddressInput] = useState('');
   const [selectedProperty, setSelectedProperty] = useState(SAMPLE_PROPERTIES[0]);
@@ -95,7 +110,26 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('slide_4'); // slide_4 (1. Landing Page) | grok_page_2 (2. Chat Canvas) | grok_page_3 (3. Live Dossier Split)
+  const [selectedCandidate, setSelectedCandidate] = useState(resolvePageFromQuery);
+
+  // Sync state if URL search query changes
+  React.useEffect(() => {
+    const target = resolvePageFromQuery();
+    setSelectedCandidate(target);
+  }, [searchParams, initialPage]);
+
+  const handleSelectPage = (pageNum) => {
+    if (pageNum === 1) {
+      setSelectedCandidate('slide_4');
+      setSearchParams({ page: '1' });
+    } else if (pageNum === 2) {
+      setSelectedCandidate('grok_page_2');
+      setSearchParams({ page: '2' });
+    } else if (pageNum === 3) {
+      setSelectedCandidate('grok_page_3');
+      setSearchParams({ page: '3' });
+    }
+  };
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -249,35 +283,100 @@ export default function AdminDysonHomesCopilot() {
       {activeTab === 'consumer_mockup' && (
         <div className="space-y-6">
           
-          {/* Top Candidate Switcher Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-md">
+          {/* ── UNMISSABLE PRIMARY 3-PAGE WORKFLOW BAR (TOP HEADER) ── */}
+          <div className="p-4 sm:p-5 rounded-3xl bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full text-[9.5px] font-black uppercase tracking-wider bg-[#D4AF37] text-black flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-black" />
+                  THE 3 COPILOT PAGES
+                </span>
+                <span className="text-xs font-bold text-[#D4AF37] tracking-wider uppercase">
+                  DIRECT ACCESS BUTTONS
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-serif tracking-tight mt-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                Select Any Page To View Immediately:
+              </h2>
+            </div>
+
+            {/* The 3 Core Step Buttons */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => handleSelectPage(1)}
+                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
+                  selectedCandidate === 'slide_4'
+                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
+                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
+                }`}
+              >
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
+                  selectedCandidate === 'slide_4' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
+                }`}>
+                  1
+                </span>
+                <span className="tracking-wide">PAGE 1: LANDING PAGE</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectPage(2)}
+                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
+                  selectedCandidate === 'grok_page_2'
+                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
+                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
+                }`}
+              >
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
+                  selectedCandidate === 'grok_page_2' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
+                }`}>
+                  2
+                </span>
+                <span className="tracking-wide">PAGE 2: CHAT CANVAS</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectPage(3)}
+                className={`px-4 sm:px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all shadow-lg cursor-pointer ${
+                  selectedCandidate === 'grok_page_3'
+                    ? 'bg-[#D4AF37] text-black ring-2 ring-white scale-105 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
+                    : 'bg-[#181818] text-white/90 hover:text-white border border-white/15 hover:border-[#D4AF37]'
+                }`}
+              >
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
+                  selectedCandidate === 'grok_page_3' ? 'bg-black text-[#D4AF37]' : 'bg-[#D4AF37]/20 text-[#D4AF37]'
+                }`}>
+                  3
+                </span>
+                <span className="tracking-wide">PAGE 3: LIVE DOSSIER SPLIT</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Secondary Candidate & Classic Slides Switcher */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-2xl bg-[#0f0f0f] border border-white/10 shadow-sm">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-[#D4AF37] text-black">
-                ACTIVE LAB PREVIEW
-              </span>
-              <span className="text-xs font-bold text-white tracking-wide">
-                Select Design To Simulate in Browser:
+              <span className="text-[10px] uppercase font-bold text-white/60 tracking-wider">
+                Classic Alternative Looks:
               </span>
             </div>
 
-            {/* Candidate & Exact Grok Pages Switcher */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'slide_4', label: '1. Landing Page (Private Wealth)' },
-                { id: 'grok_page_2', label: '2. Page 2: Chat Canvas' },
-                { id: 'grok_page_3', label: '3. Page 3: Live Dossier Split' },
-                { id: 'slide_2', label: 'Slide 2: Candidate A (Tan)' },
-                { id: 'slide_1', label: 'Slide 1: Tan Overview' },
-                { id: 'slide_3', label: 'Slide 3: Obsidian Dark' },
+                { id: 'slide_2', label: 'Slide 2 (Candidate A · Tan)' },
+                { id: 'slide_1', label: 'Slide 1 (Tan Overview)' },
+                { id: 'slide_3', label: 'Slide 3 (Obsidian Dark)' },
               ].map((btn) => (
                 <button
                   key={btn.id}
                   type="button"
                   onClick={() => setSelectedCandidate(btn.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
+                  className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                     selectedCandidate === btn.id
-                      ? 'bg-[#D4AF37] text-black font-bold ring-1 ring-[#D4AF37]'
-                      : 'bg-[#181818] text-white/80 hover:text-white border border-white/10'
+                      ? 'bg-[#D4AF37] text-black font-bold'
+                      : 'bg-[#181818] text-white/70 hover:text-white border border-white/10'
                   }`}
                 >
                   {btn.label}
@@ -343,9 +442,9 @@ export default function AdminDysonHomesCopilot() {
                     onRunAudit={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
-                      setSelectedCandidate('grok_page_3');
+                      handleSelectPage(3);
                     }}
-                    onGoToChatCanvas={() => setSelectedCandidate('grok_page_2')}
+                    onGoToChatCanvas={() => handleSelectPage(2)}
                   />
                 )}
 
@@ -354,16 +453,16 @@ export default function AdminDysonHomesCopilot() {
                     onAskAddress={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
-                      setSelectedCandidate('grok_page_3');
+                      handleSelectPage(3);
                     }}
-                    onBackToLanding={() => setSelectedCandidate('slide_4')}
+                    onBackToLanding={() => handleSelectPage(1)}
                   />
                 )}
 
                 {selectedCandidate === 'grok_page_3' && (
                   <GrokPageThreeSplitCanvas
                     property={selectedProperty}
-                    onBackToSearch={() => setSelectedCandidate('slide_4')}
+                    onBackToSearch={() => handleSelectPage(1)}
                   />
                 )}
 
