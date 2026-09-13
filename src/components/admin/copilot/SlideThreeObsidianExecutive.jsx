@@ -4,6 +4,7 @@ import {
   MapPin, FlaskConical, Award
 } from 'lucide-react';
 
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 const LUXURY_VILLA_NIGHT = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=90";
 
 export default function SlideThreeObsidianExecutive({ onRunAudit }) {
@@ -28,19 +29,32 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
       }}
     >
       {/* ── TOP HEADER BAR ── */}
-      <div className="px-6 sm:px-10 pt-6 pb-4 flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full border border-[#D4AF37]/60 flex items-center justify-center text-[#D4AF37]">
-            <Award className="w-4 h-4 text-[#D4AF37]" />
+      <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
+        <div className="flex items-center gap-3.5">
+          <div className="shrink-0 flex items-center">
+            <img 
+              src={DYSON_LOGO} 
+              alt="Dyson & Dyson" 
+              className="h-11 sm:h-12 w-auto object-contain rounded-sm border border-[#D4AF37]/60 p-0.5 bg-black shadow-md" 
+            />
           </div>
-          <div>
-            <span 
-              className="font-serif text-lg font-bold tracking-wider text-[#f5f5f5] uppercase block leading-none"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              DYSON HOMES
-            </span>
-            <span className="text-[9px] tracking-widest text-[#D4AF37]/80 uppercase block mt-0.5 font-sans">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="flex items-baseline gap-2">
+              <span 
+                className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                DYSON HOMES
+              </span>
+              <span 
+                className="font-serif italic font-bold text-xl sm:text-[23px] text-[#D4AF37] tracking-wider leading-none transform -skew-x-6 inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                COPILOT
+              </span>
+            </div>
+            <span className="hidden sm:inline text-white/30 text-xs">|</span>
+            <span className="text-[9px] tracking-widest text-[#D4AF37]/80 uppercase block font-sans">
               EST. 1989 · PRIVATE WEALTH REAL ESTATE
             </span>
           </div>

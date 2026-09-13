@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
+const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
 
 const SAMPLE_SEARCHES = [
@@ -55,19 +56,34 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         color: '#f5f5f5'
       }}
     >
-      {/* ── TOP HEADER BAR (EXACT TO SCREENSHOT) ── */}
-      <div className="px-6 sm:px-10 pt-6 pb-4 flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#854d0e] flex items-center justify-center text-black font-black text-sm shadow-md">
-            <span>D</span>
+      {/* ── TOP HEADER BAR ── */}
+      <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
+        <div className="flex items-center gap-3.5">
+          {/* #1: Dyson and Dyson Logo in scale with adjoining font scale */}
+          <div className="shrink-0 flex items-center">
+            <img 
+              src={DYSON_LOGO} 
+              alt="Dyson & Dyson" 
+              className="h-11 sm:h-12 w-auto object-contain rounded-sm border border-[#D4AF37]/60 p-0.5 bg-black shadow-md transition-transform hover:scale-105" 
+            />
           </div>
-          <div className="flex items-center gap-2">
-            <span 
-              className="font-serif text-lg font-bold tracking-wider text-white uppercase block leading-none"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              DYSON HOMES COPILOT
-            </span>
+
+          {/* #2: Spelled out DYSON HOMES with COPILOT italicized for aircraft movement & slightly larger font size */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="flex items-baseline gap-2">
+              <span 
+                className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                DYSON HOMES
+              </span>
+              <span 
+                className="font-serif italic font-bold text-xl sm:text-[23px] text-[#D4AF37] tracking-wider leading-none transform -skew-x-6 inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                COPILOT
+              </span>
+            </div>
             <span className="hidden sm:inline text-white/30 text-xs">|</span>
             <span className="hidden sm:inline text-[9.5px] tracking-widest text-[#D4AF37] uppercase font-bold">
               PRIVATE REAL ESTATE INTELLIGENCE
@@ -251,7 +267,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
       <div className="px-6 sm:px-10 pb-8 pt-4 border-t border-white/10 space-y-4">
         <div className="text-center">
           <span className="text-[10px] font-bold tracking-widest text-[#D4AF37] uppercase">
-            HOW DYSON HOMES COPILOT WORKS
+            HOW DYSON HOMES <span className="italic font-bold text-xs tracking-wider inline-block transform -skew-x-6 text-[#e8c84a]">COPILOT</span> WORKS
           </span>
         </div>
 
