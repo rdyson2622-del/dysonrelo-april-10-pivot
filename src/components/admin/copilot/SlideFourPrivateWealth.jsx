@@ -59,12 +59,12 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
       {/* ── TOP HEADER BAR ── */}
       <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3.5">
-          {/* #1: Dyson and Dyson Logo in scale with adjoining font scale */}
+          {/* #1: Dyson and Dyson Logo - strictly free-standing with no container box or border */}
           <div className="shrink-0 flex items-center">
             <img 
               src={DYSON_LOGO} 
               alt="Dyson & Dyson" 
-              className="h-11 sm:h-12 w-auto object-contain rounded-sm border border-[#D4AF37]/60 p-0.5 bg-black shadow-md transition-transform hover:scale-105" 
+              className="h-11 sm:h-12 w-auto object-contain" 
             />
           </div>
 

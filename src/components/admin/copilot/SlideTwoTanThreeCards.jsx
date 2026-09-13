@@ -31,9 +31,7 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
       {/* ── TOP HEADER BAR ── */}
       <div className="px-6 sm:px-10 pt-6 pb-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#d8cab6]/60">
         <div className="flex items-center">
-          <div className="w-14 h-14 bg-black rounded-sm border border-[#D4AF37]/60 p-1 flex items-center justify-center shadow-sm">
-            <img src={DYSON_LOGO} alt="Dyson & Dyson" className="w-full h-full object-contain" />
-          </div>
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto object-contain" />
         </div>
 
         <div className="flex flex-col items-center">
