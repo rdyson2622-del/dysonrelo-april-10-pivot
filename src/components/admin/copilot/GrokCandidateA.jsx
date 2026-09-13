@@ -6,7 +6,7 @@ import {
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
-const LUXURY_VILLA_IMAGE = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=90";
+const LUXURY_VILLA_IMAGE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/3e3531fda_Screenshot2026-09-13at43748AM.png";
 
 export default function GrokCandidateA({ 
   onRunAudit,

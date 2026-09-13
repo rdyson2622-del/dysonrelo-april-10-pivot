@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
-const WHITE_POOL_VILLA = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90";
+const WHITE_POOL_VILLA = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/3e3531fda_Screenshot2026-09-13at43748AM.png";
 
 export default function SlideTwoTanThreeCards({ onRunAudit }) {
   const [inputVal, setInputVal] = useState('742 Vista Del Mar, La Jolla, CA 92037');
