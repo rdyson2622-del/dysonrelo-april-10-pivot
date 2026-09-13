@@ -80,8 +80,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
           >
             <Volume2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="hidden sm:inline">{isPlayingAudio ? 'Audio Playing...' : 'Listen: 30s Tag-Team Intro'}</span>
-            <span className="sm:hidden">Audio</span>
+            <span className="hidden sm:inline">{isPlayingAudio ? 'Audio Playing...' : 'Listen to Your Copilots'}</span>
+            <span className="sm:hidden">Listen</span>
           </button>
         </div>
       </div>
