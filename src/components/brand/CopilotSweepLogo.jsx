@@ -2,27 +2,27 @@ import React from 'react';
 
 /**
  * CopilotSweepLogo
- * Italicized gold lower case "copilot"
- * Replaces previous image artifacts with pure typographic rendering.
+ * Uses the authentic pixel-identical uploaded PNG asset:
+ * https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/acf69797f_copilot-sweep-logo.png
+ * No redraw, no SVG, no canvas, no CSS script, no glow, no blur, no drop-shadow.
  */
 export default function CopilotSweepLogo({ size = 'md', className = '', onClick }) {
   const sizeClasses = {
-    xs: 'text-xs sm:text-sm',
-    sm: 'text-sm sm:text-base',
-    md: 'text-xl sm:text-2xl',
-    lg: 'text-3xl sm:text-4xl',
-    xl: 'text-4xl sm:text-5xl lg:text-6xl',
+    xs: 'h-4',
+    sm: 'h-5',
+    md: 'h-7 sm:h-8',
+    lg: 'h-10 sm:h-12',
+    xl: 'h-12 sm:h-16 lg:h-20',
   };
 
   const selectedSizeClass = sizeClasses[size] || sizeClasses.md;
 
   return (
-    <span 
-      className={`inline-block font-serif italic lowercase font-normal text-[#D4AF37] tracking-normal leading-none select-none drop-shadow-[0_2px_10px_rgba(212,175,55,0.35)] ${selectedSizeClass} ${onClick ? 'cursor-pointer' : ''} ${className}`}
-      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+    <img
+      src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/acf69797f_copilot-sweep-logo.png"
+      alt="copilot"
+      className={`inline-block object-contain ${selectedSizeClass} ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
-    >
-      copilot
-    </span>
+    />
   );
 }
