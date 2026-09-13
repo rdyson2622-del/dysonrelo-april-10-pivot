@@ -68,11 +68,11 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
         {/* Left Column (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
           <h1 
-            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.18] tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.18] tracking-tight text-center"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your human &amp; AI-assisted<br />
-            private real estate <span className="italic">copilot.</span>
+            Your Human &amp; AI-assisted<br />
+            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           <p className="text-sm text-white/70 leading-relaxed max-w-xl font-normal">

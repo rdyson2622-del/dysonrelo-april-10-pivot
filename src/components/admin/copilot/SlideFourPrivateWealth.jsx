@@ -98,12 +98,12 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         {/* Left Column (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           <h1 
-            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.15] tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.15] tracking-tight text-center"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your human &amp;<br />
-            AI-assisted private<br />
-            real estate <span className="italic text-[#D4AF37]">copilot.</span>
+            Your Human &amp;<br />
+            AI-assisted Private<br />
+            Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal">

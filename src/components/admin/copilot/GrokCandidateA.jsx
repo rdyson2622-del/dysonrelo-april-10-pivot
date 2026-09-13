@@ -98,8 +98,8 @@ export default function GrokCandidateA({
             className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-[#1a1815] leading-[1.18] tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your human &amp; AI-assisted<br />
-            private real estate copilot.
+            Your Human &amp; AI-assisted<br />
+            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           {/* Subtext */}

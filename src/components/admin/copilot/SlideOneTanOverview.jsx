@@ -88,8 +88,8 @@ export default function SlideOneTanOverview({ onRunAudit }) {
             className="text-3xl sm:text-4xl lg:text-[42px] font-normal text-[#1a1815] leading-[1.18] tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your human &amp; AI-assisted<br />
-            private real estate copilot.
+            Your Human &amp; AI-assisted<br />
+            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           <p className="text-sm text-[#4a4237] leading-relaxed max-w-xl font-normal">
