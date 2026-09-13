@@ -158,9 +158,9 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
 
           {/* Trust Banner */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm whitespace-nowrap">
-            <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
-            <span className="whitespace-nowrap">We are an independent research entity - no spam calls or agent involvement</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-[#D4AF37]/30 text-xs text-[#D4AF37] shadow-sm whitespace-nowrap font-medium">
+            <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
+            <span className="text-[#D4AF37] whitespace-nowrap font-medium">We are an independent research entity - no spam calls or agent involvement</span>
           </div>
 
           {/* Three lower feature boxes across: Honest comps / Hidden risks / Closing cost credit */}
