@@ -49,7 +49,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           {/* Real Dyson & Dyson vertical DD badge — no white side bars, no tear lines */}
           <DysonVerticalBadge height={48} />
 
-          {/* Brand Title with Sweep Logo */}
+          {/* Brand Title with Italicized Copilot */}
           <div className="flex items-center gap-2.5">
             <div className="flex items-baseline gap-2.5">
               <span 
@@ -58,7 +58,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
               >
                 DYSON HOMES
               </span>
-              <CopilotSweepLogo size="md" />
+              <span 
+                className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] lowercase leading-none"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                copilot
+              </span>
             </div>
           </div>
         </div>
@@ -100,7 +105,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
               >
                 meet
               </span>
-              <CopilotSweepLogo size="xl" />
+              <span 
+                className="text-3xl sm:text-5xl lg:text-6xl font-serif italic font-medium text-[#D4AF37] lowercase leading-none"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                copilot
+              </span>
             </div>
             <h2 
               className="text-lg sm:text-2xl lg:text-[25px] text-white/90 font-normal tracking-normal mt-2 font-serif text-center"
