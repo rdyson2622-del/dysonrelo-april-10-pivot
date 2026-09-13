@@ -1,105 +1,239 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, Percent, 
-  MapPin, Home, Brain, FileText, Gem, Volume2, 
-  CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info, HelpCircle
+  MapPin, Volume2, Sparkles, HelpCircle, ArrowLeft, RefreshCw
 } from 'lucide-react';
-import CopilotWorkflowExplainerModal from './CopilotWorkflowExplainerModal';
-import CharlieBobTagTeamBox from './CharlieBobTagTeamBox';
+import CopilotCanvasChat from './CopilotCanvasChat';
+import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
 
-const SAMPLE_SEARCHES = [
-  '742 Vista Del Mar, La Jolla, CA 92037',
-  '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
-  '4220 Oak Hollow Terrace, Austin, TX 78746'
+const SAMPLE_PROPERTIES = {
+  '742 Vista Del Mar, La Jolla, CA 92037': {
+    address: '742 Vista Del Mar, La Jolla, CA 92037',
+    price: 3450000,
+    beds: 4,
+    baths: 4.5,
+    sqft: 3820,
+    dom: 64,
+    compsPrice: 3200000,
+    rebate: 21562,
+    risks: [
+      '64 days on market — seller price reduction of $150k pending',
+      'Coastal Commission permitting boundary: strict exterior remodel restrictions',
+      'Recent neighborhood comp sold 7.2% below asking price'
+    ],
+    listingOffice: 'Independent Coastal Brokerage',
+    lastSoldPrice: 2100000,
+    lastSoldYear: 2019
+  },
+  '1844 Mountain Shadow Way, Scottsdale, AZ 85253': {
+    address: '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
+    price: 2150000,
+    beds: 4,
+    baths: 3,
+    sqft: 3240,
+    dom: 18,
+    compsPrice: 2125000,
+    rebate: 13437,
+    risks: [
+      'HOA rental restriction: minimum 12-month lease required',
+      'Dual A/C units are 14 years old — nearing replacement'
+    ],
+    listingOffice: 'Southwest Luxury Realty',
+    lastSoldPrice: 1420000,
+    lastSoldYear: 2021
+  },
+  '4220 Oak Hollow Terrace, Austin, TX 78746': {
+    address: '4220 Oak Hollow Terrace, Austin, TX 78746',
+    price: 1850000,
+    beds: 3,
+    baths: 3.5,
+    sqft: 2890,
+    dom: 42,
+    compsPrice: 1775000,
+    rebate: 11562,
+    risks: [
+      'Travis County reassessment triggers property tax escalation',
+      'Flash flood zone buffer near greenbelt easement'
+    ],
+    listingOffice: 'Westlake Premier Estates',
+    lastSoldPrice: 1150000,
+    lastSoldYear: 2018
+  }
+};
+
+const PROMPT_PILLS = [
+  {
+    id: 'rebate',
+    label: 'How do I get thousands back at closing?',
+    answer: "Through our fiduciary buyer rebate, we credit up to 50% of our standard brokerage referral fee directly to your HUD-1 closing settlement statement (or toward an interest rate buy-down) where allowed by law. On a $1.5M home, that's ~$21,500 back in your pocket. Type or paste any address above and I'll calculate the exact rebate for that home!"
+  },
+  {
+    id: 'risks',
+    label: 'How do you find hidden property risks?',
+    answer: "I instantly cross-reference municipal permit databases for unpermitted additions, scan flood zones and coastal commission boundaries, and calculate whether the list price matches true closed neighborhood comps. Bob Dyson (Broker DRE #00609384) then verifies the findings before you make an offer."
+  },
+  {
+    id: 'bob',
+    label: 'Who is Bob Dyson?',
+    answer: "Bob Dyson is our licensed California Broker (DRE #00609384) with over 35 years of fiduciary luxury transaction experience. Unlike online aggregators who sell your info to 5 competing agents, Bob works solely for you as the buyer—protecting your escrow deposit and ensuring your closing cash rebate."
+  }
 ];
 
 export default function SlideFourPrivateWealth({ onRunAudit }) {
   const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
+  const [viewMode, setViewMode] = useState('resting'); // 'resting' | 'canvas'
   const [isAuditing, setIsAuditing] = useState(false);
-  const [auditComplete, setAuditComplete] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
-  const [explainerStep, setExplainerStep] = useState(1);
+  const [smsSent, setSmsSent] = useState(false);
+  const [currentProperty, setCurrentProperty] = useState(SAMPLE_PROPERTIES['742 Vista Del Mar, La Jolla, CA 92037']);
+  const [chatMessages, setChatMessages] = useState([]);
 
-  const handleOpenExplainer = (step) => {
-    setExplainerStep(step);
-    setIsExplainerOpen(true);
-  };
-
-  const handleSubmit = (e, customAddr) => {
-    if (e) e.preventDefault();
-    const targetAddr = customAddr || address;
-    if (!targetAddr.trim()) return;
+  // Trigger search / audit
+  const handleTriggerAudit = (targetAddr) => {
+    const finalAddr = (targetAddr || address).trim();
+    if (!finalAddr) return;
 
     setIsAuditing(true);
-    setAuditComplete(false);
+    if (onRunAudit) onRunAudit(finalAddr);
 
-    if (onRunAudit) onRunAudit(targetAddr);
+    const matchedProp = SAMPLE_PROPERTIES[finalAddr] || {
+      address: finalAddr,
+      price: 2450000,
+      beds: 4,
+      baths: 3.5,
+      sqft: 3350,
+      dom: 45,
+      compsPrice: 2280000,
+      rebate: 15312,
+      risks: [
+        'List price is ~7% above 90-day closed comps in this tract',
+        'Title review recommended for municipal utility easement',
+        'Tax basis will reset to purchase price upon escrow completion'
+      ],
+      listingOffice: 'Syndicated Listing Office',
+      lastSoldPrice: 1650000,
+      lastSoldYear: 2020
+    };
+
+    setCurrentProperty(matchedProp);
+    setAddress(finalAddr);
 
     setTimeout(() => {
       setIsAuditing(false);
-      setAuditComplete(true);
-
-      // Smooth scroll to dossier section if present
-      const dossierEl = document.getElementById('copilot-audit-dossier');
-      if (dossierEl) {
-        dossierEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 700);
+      setViewMode('canvas');
+      setChatMessages([
+        {
+          role: 'assistant',
+          speaker: 'charlie',
+          text: `I just audited ${finalAddr.split(',')[0]}. It is currently listed for $${matchedProp.price.toLocaleString()}, but recent closed comps point to ~$${matchedProp.compsPrice.toLocaleString()}.\n\nThrough our fiduciary representation, I can secure you +$${matchedProp.rebate.toLocaleString()} cash back credited directly to your closing HUD-1 statement. See the full dossier artifact on the right.`
+        },
+        {
+          role: 'assistant',
+          speaker: 'bob',
+          text: `Bob Dyson here (DRE #00609384). I've reviewed the preliminary comps. When you tour or negotiate, never click 'Contact Agent' on MLS portals—let us protect your deposit and rebate. Drop your mobile number so we can text you this verified dossier!`
+        }
+      ]);
+    }, 450);
   };
 
-  const handleToggleAudio = () => {
-    setIsPlayingAudio(prev => !prev);
+  // Handle clicking one of the 3 conversational prompt pills
+  const handlePromptPillClick = (pill) => {
+    setViewMode('canvas');
+    setChatMessages([
+      {
+        role: 'user',
+        text: pill.label
+      },
+      {
+        role: 'assistant',
+        speaker: pill.id === 'bob' ? 'bob' : 'charlie',
+        text: pill.answer
+      }
+    ]);
+  };
+
+  const handleSendMessage = (userText) => {
+    setChatMessages(prev => [
+      ...prev,
+      { role: 'user', text: userText },
+      {
+        role: 'assistant',
+        speaker: 'charlie',
+        text: `Got it. For ${currentProperty.address.split(',')[0]}, I've logged that. Bob and I can also audit property disclosures, HOA documents, or draft an unvarnished offer recommendation whenever you're ready.`
+      }
+    ]);
+  };
+
+  const handleSendSms = (phone) => {
+    setSmsSent(true);
+    setChatMessages(prev => [
+      ...prev,
+      {
+        role: 'assistant',
+        speaker: 'charlie',
+        text: `Thanks! We just dispatched the private audit brief for ${currentProperty.address.split(',')[0]} to ${phone}. Zero telemarketing spam guaranteed.`
+      }
+    ]);
   };
 
   return (
-    <div className="w-full text-left select-none">
-      {/* ── HERO SECTION ABOVE THE CREASE (DARK OBSIDIAN / NIGHT VILLA) ── */}
-      <div style={{ background: '#050505', color: '#f5f5f5' }}>
-        {/* ── TOP HEADER BAR ── */}
-        <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
-          <div className="flex items-center gap-3.5">
-            {/* #1: Dyson and Dyson Logo - strictly free-standing with no container box or border */}
-            <div className="shrink-0 flex items-center">
-              <img 
-                src={DYSON_LOGO} 
-                alt="Dyson & Dyson" 
-                className="h-[51px] sm:h-[55px] w-auto object-contain" 
-              />
-            </div>
+    <div className="w-full text-left select-none bg-[#050505] text-[#f5f5f5]">
+      {/* ── TOP HEADER BAR ── */}
+      <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
+        <div className="flex items-center gap-3.5">
+          <div className="shrink-0 flex items-center">
+            <img 
+              src={DYSON_LOGO} 
+              alt="Dyson & Dyson" 
+              className="h-[50px] sm:h-[54px] w-auto object-contain" 
+            />
+          </div>
 
-            {/* #2: Spelled out DYSON HOMES with copilot mirroring the exact font and style (lowercase) from the headline below */}
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="flex items-baseline gap-2">
-                <span 
-                  className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  DYSON HOMES
-                </span>
-                <span 
-                  className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
-                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                >
-                  copilot
-                </span>
-              </div>
-              <span className="hidden sm:inline text-white/30 text-xs">|</span>
-              <span className="hidden sm:inline text-[9.5px] tracking-widest text-[#D4AF37] uppercase font-bold">
-                PRIVATE REAL ESTATE INTELLIGENCE
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="flex items-baseline gap-2">
+              <span 
+                className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                DYSON HOMES
+              </span>
+              <span 
+                className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                copilot
               </span>
             </div>
+            <span className="hidden sm:inline text-white/30 text-xs">|</span>
+            <span className="hidden sm:inline text-[9.5px] tracking-widest text-[#D4AF37] uppercase font-bold">
+              PRIVATE REAL ESTATE INTELLIGENCE
+            </span>
           </div>
         </div>
 
-        {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
-        <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column (7 cols) */}
-          <div className="lg:col-span-7 space-y-4">
+        {viewMode === 'canvas' && (
+          <button
+            type="button"
+            onClick={() => setViewMode('resting')}
+            className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#D4AF37] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Home</span>
+          </button>
+        )}
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          1. RESTING STATE (NO SCROLLING BELOW THE CREASE)
+          Grok/Gemini Style Clean Conversational Canvas
+          ───────────────────────────────────────────────────────────── */}
+      {viewMode === 'resting' ? (
+        <div className="px-6 sm:px-10 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[580px]">
+          {/* Left Column (7 cols): Hero + Search + Prompt Pills */}
+          <div className="lg:col-span-7 space-y-5">
             <h1 
               className="font-normal text-white leading-[1.15] tracking-tight text-center"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -112,16 +246,16 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               </span>
             </h1>
 
-            {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
-            <div className="pt-6 sm:pt-7 space-y-1.5 text-center">
-              <form onSubmit={handleSubmit}>
+            {/* Main Search Bar */}
+            <div className="pt-4 space-y-2 text-center">
+              <form onSubmit={(e) => { e.preventDefault(); handleTriggerAudit(address); }}>
                 <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
                   <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
                   <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Paste property address"
+                    placeholder="Paste property address for comps, risks &amp; rebate"
                     className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-medium"
                   />
                   <button
@@ -135,23 +269,39 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                 </div>
               </form>
 
-              {/* 2. Tightened directly under search pill & centered */}
               <p className="text-xs sm:text-sm text-white/70 leading-normal font-normal">
                 Paste address for comps, risks, closing rebate where allowed by law.
               </p>
             </div>
 
-            {/* 3. Try sample is next (Centered, Tan with Black Font) */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5">
+            {/* ── THE 3 CONVERSATIONAL PROMPT PILLS (GROK / GEMINI MODEL) ── */}
+            <div className="pt-1 space-y-2 text-center">
+              <span className="text-[10px] text-[#D4AF37] uppercase font-bold tracking-wider block">
+                Ask Charlie &amp; Bob in 1-Click:
+              </span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {PROMPT_PILLS.map((pill) => (
+                  <button
+                    key={pill.id}
+                    type="button"
+                    onClick={() => handlePromptPillClick(pill)}
+                    className="px-3.5 py-2 rounded-xl bg-[#141414] hover:bg-[#202020] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-white hover:text-[#D4AF37] text-xs font-medium shadow-md transition-all flex items-center gap-1.5 cursor-pointer hover:scale-[1.02]"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>&ldquo;{pill.label}&rdquo;</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Try Sample Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
               <span className="text-[10px] text-white/50 uppercase font-semibold">Try sample:</span>
-              {SAMPLE_SEARCHES.map((chip) => (
+              {Object.keys(SAMPLE_PROPERTIES).map((chip) => (
                 <button
                   key={chip}
                   type="button"
-                  onClick={() => {
-                    setAddress(chip);
-                    handleSubmit(null, chip);
-                  }}
+                  onClick={() => handleTriggerAudit(chip)}
                   className="text-[10.5px] px-2.5 py-1 rounded-lg bg-[#ede0cc] hover:bg-[#f6ebd9] border border-[#d8cab6] hover:border-[#D4AF37] text-[#0a0a0a] font-medium transition-all cursor-pointer truncate max-w-[200px] shadow-sm"
                 >
                   {chip.split(',')[0]}
@@ -159,9 +309,8 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               ))}
             </div>
 
-            {/* 4. Trusted and Guidance statements (Prominent High-Visibility Callout) */}
-            <div className="flex flex-col items-center space-y-2 pt-1 text-center">
-              {/* High-Visibility MLS Guidance Pill */}
+            {/* MLS Guidance Warning Pill */}
+            <div className="pt-2 flex flex-col items-center space-y-2 text-center">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#161208] border-2 border-[#D4AF37] text-[11px] sm:text-[12.5px] text-white shadow-lg">
                 <ShieldAlert className="w-4 h-4 text-[#D4AF37] shrink-0" />
                 <span>
@@ -169,9 +318,9 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                 </span>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] text-[#D4AF37] italic font-medium shadow-sm">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
-                <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction. Instant comps &amp; closing rebate.</span>
+                <span>Trusted by private wealth. No agent spam or auctioning. Instant comps &amp; closing rebate.</span>
               </div>
             </div>
           </div>
@@ -181,377 +330,105 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             <img 
               src={NIGHT_HILLSIDE_ESTATE} 
               alt="Hillside Estate at Night" 
-              className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%] transition-transform duration-700"
+              className="w-full h-full object-cover origin-bottom-left scale-[1.18] translate-y-[2%] -translate-x-[2%] transition-transform duration-700"
             />
-
-            {/* Top-right dark twilight sky blend to eliminate any artifact */}
             <div className="absolute top-0 right-0 w-36 h-16 bg-gradient-to-bl from-[#0a0d14]/95 via-[#0d121c]/70 to-transparent pointer-events-none rounded-tr-2xl" />
-
-            {/* Active Audit Status Indicator */}
-            {auditComplete && (
-              <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 text-white text-xs flex items-center justify-between shadow-xl">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
-                  <span className="text-[11px] font-semibold truncate">
-                    Audit Ready for {address.split(',')[0]}
-                  </span>
-                </div>
-                <span className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">
-                  SCROLL FOR DOSSIER ↓
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
-        <div className="px-6 sm:px-10 pb-7 space-y-2.5">
-          {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Sleek reduced vertical height */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-              <div className="flex items-center gap-1.5 text-[#854d0e]">
-                <TrendingUp className="w-3 h-3 text-[#854d0e] shrink-0" />
-                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
-              </div>
-              <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
-                AI-powered comps, trends, and valuation insights.
-              </p>
-            </div>
-
-            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-              <div className="flex items-center gap-1.5 text-[#854d0e]">
-                <ShieldAlert className="w-3 h-3 text-[#854d0e] shrink-0" />
-                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
-              </div>
-              <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
-                Hidden risks, title issues, zoning, and red flags.
-              </p>
-            </div>
-
-            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-              <div className="flex items-center gap-1.5 text-[#854d0e]">
-                <Percent className="w-3 h-3 text-[#854d0e] shrink-0" />
-                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
-              </div>
-              <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] text-[#0a0a0a] leading-tight font-normal tracking-tight pt-0.5">
-                Where allowed by law. Maximize your ROI with our rebate.
-              </p>
-            </div>
-          </div>
-
-          {/* Row 2: Listen Charlie Box below - Sleek reduced vertical height */}
-          <div className="w-full py-2 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs shadow-sm transition-all">
-            <div className="flex items-center gap-2.5">
-              <button
-                type="button"
-                onClick={handleToggleAudio}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
-                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#222]'
-                }`}
-                title="Play Charlie Simmons Brief"
-              >
-                <Volume2 className="w-3.5 h-3.5" />
-              </button>
+            
+            <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-black/90 backdrop-blur-md border border-[#D4AF37]/40 text-white text-xs flex items-center justify-between shadow-xl">
               <div>
-                <span className="text-[#854d0e] font-bold text-xs sm:text-[13px] block leading-tight">
-                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
-                </span>
-                <span className="text-[#0a0a0a] text-[10.5px] sm:text-[11px] font-normal block leading-tight pt-0.5">
-                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
-                </span>
+                <span className="text-[#D4AF37] font-bold block text-[11px]">Charlie &amp; Bob Fiduciary Duo</span>
+                <span className="text-white/70 text-[10px]">Zero UI &bull; No forms &bull; Drop any address</span>
               </div>
+              <span className="px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] text-[9px] font-bold uppercase">
+                ACTIVE 24/7
+              </span>
             </div>
-            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2.5 py-0.5 rounded bg-[#0a0a0a] border border-[#D4AF37]/50 uppercase shrink-0">
-              DUAL VOICE
-            </span>
           </div>
         </div>
+      ) : (
+        /* ─────────────────────────────────────────────────────────────
+            2. SPLIT-SCREEN CANVAS MODE (THE GROK / CLAUDE ARTIFACT MODEL)
+            Left: Sticky Chat with Charlie & Bob
+            Right: Interactive Post-Search Audit Dossier Document
+            ───────────────────────────────────────────────────────────── */
+        <div className="px-4 sm:px-8 py-6 space-y-4 animate-in fade-in duration-300">
+          {/* Sub-header Context Bar */}
+          <div className="p-3 rounded-2xl bg-[#111111] border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-bold text-white text-sm">
+                Active Audit Workspace: <span className="text-[#D4AF37]">{currentProperty.address}</span>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <form 
+                onSubmit={(e) => { e.preventDefault(); handleTriggerAudit(address); }}
+                className="flex items-center gap-1.5"
+              >
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Switch address..."
+                  className="px-3 py-1.5 rounded-xl bg-black border border-white/20 text-white text-xs outline-none focus:border-[#D4AF37] w-48 sm:w-64"
+                />
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 rounded-xl bg-[#D4AF37] text-black font-bold text-xs hover:brightness-110 transition-all cursor-pointer"
+                >
+                  Audit
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* ── SIDE-BY-SIDE SPLIT SCREEN: LEFT 35% CHAT / RIGHT 65% ARTIFACT DOSSIER ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            {/* Left Column (4 cols / ~35% width): Persistent Chat with Charlie */}
+            <div className="lg:col-span-5 h-[620px] sticky top-4">
+              <CopilotCanvasChat
+                messages={chatMessages}
+                onSendMessage={handleSendMessage}
+                onSendSms={handleSendSms}
+                smsSent={smsSent}
+                activePropertyAddress={currentProperty.address}
+                onReset={() => setViewMode('resting')}
+              />
+            </div>
+
+            {/* Right Column (7 cols / ~65% width): The Dossier Artifact */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="text-left pb-1 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] block">
+                  DELIVERABLE ARTIFACT · POST-SEARCH AUDIT DOSSIER
+                </span>
+                <span className="text-[10px] text-white/50">
+                  Updated in real-time
+                </span>
+              </div>
+
+              <CopilotPropertyDossier property={currentProperty} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── SLOGAN QUOTE IN FOOTER (CLEAN & ELEGANT) ── */}
+      <div className="text-center py-4 border-t border-white/10 space-y-1 bg-[#050505]">
+        <p 
+          className="text-sm sm:text-base font-serif italic font-bold text-[#D4AF37] tracking-wider"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
+        </p>
+        <p 
+          className="text-[11px] font-serif font-medium text-white/50 tracking-wide"
+          style={{ fontFamily: 'Cormorant Garamond, serif' }}
+        >
+          &mdash; Bob Dyson, Founder &amp; Licensed Broker (DRE #00609384)
+        </p>
       </div>
-
-      {/* ── HOW COPILOT WORKS SECTION (BELOW THE CREASE - SEAMLESS TAN PAGE BACKGROUND) ── */}
-      <div 
-        className="w-full px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-5"
-        style={{ background: '#ede0cc', color: '#0a0a0a' }}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span className="text-[11px] font-bold tracking-widest text-[#0a0a0a] uppercase">
-            HOW DYSON HOMES <span className="font-serif italic text-base text-[#854d0e] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
-          </span>
-          <span className="text-xs text-[#554c40] font-medium flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            Click any step below for full detailed guide &amp; examples
-          </span>
-        </div>
-
-        {/* ── HIGH-VISIBILITY BUYER GUIDANCE BANNER ── */}
-        <div className="p-4 rounded-2xl bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl text-left flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldAlert className="w-5 h-5 text-[#D4AF37]" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs sm:text-[13px] font-black tracking-wider uppercase text-[#D4AF37]">
-                  CRITICAL BUYER ADVICE WHEN BROWSING MLS:
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-300 text-[10px] font-bold uppercase tracking-wide">
-                  DO NOT REQUEST AN AGENT ON PORTAL SITES
-                </span>
-              </div>
-              <p className="text-xs sm:text-[12.5px] text-white/90 leading-snug">
-                When searching on Realtor.com, Homes.com, or Zillow, <strong>never click &ldquo;Request an Agent&rdquo; or &ldquo;Contact Agent&rdquo;</strong>. Instead, simply copy the address and <strong>vet the property here first</strong>. You&rsquo;ll save thousands in closing cash rebates while making a far more vetted choice of both property and fiduciary agent representation.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleOpenExplainer(1)}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs whitespace-nowrap shadow-md transition-all cursor-pointer shrink-0"
-          >
-            Read Full Guide &rarr;
-          </button>
-        </div>
-
-        {/* ── THE 5 INTERACTIVE WORKFLOW BOXES ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          
-          {/* Box 1: BROWSE MLS (Vertical Row of URLs + Chrome Advice + Prominent Guidance Badge) */}
-          <div 
-            onClick={() => handleOpenExplainer(1)}
-            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
-          >
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                    <Compass className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
-                    1. BROWSE MLS
-                  </span>
-                </div>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
-                  GUIDE &rarr;
-                </span>
-              </div>
-              
-              <div className="space-y-1.5">
-                <span className="text-[10px] text-white/70 font-medium block">Browse MLS in 1-Click:</span>
-                
-                {/* VERTICAL ROW OF ALL 3 URLS */}
-                <div className="flex flex-col gap-1 w-full" onClick={(e) => e.stopPropagation()}>
-                  <a 
-                    href="https://www.realtor.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
-                  >
-                    <span>Realtor.com</span>
-                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
-                  </a>
-
-                  <a 
-                    href="https://www.homes.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
-                  >
-                    <span>Homes.com</span>
-                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
-                  </a>
-
-                  <a 
-                    href="https://www.zillow.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full px-2.5 py-1 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[10px] font-semibold flex items-center justify-between shadow-sm transition-colors cursor-pointer"
-                  >
-                    <span>Zillow</span>
-                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
-                  </a>
-                </div>
-
-                {/* Explicit Guidance Reminder Tag */}
-                <div className="p-1.5 rounded-lg bg-[#1a140a] border border-[#D4AF37]/50 text-left space-y-0.5">
-                  <div className="flex items-center gap-1 text-[9.5px] font-bold text-amber-300 uppercase">
-                    <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0" />
-                    <span>Do Not Request Agent</span>
-                  </div>
-                  <p className="text-[9px] text-white/80 leading-tight">
-                    Vet property here first &bull; Save thousands &bull; Better choice
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-1 pt-1.5 border-t border-white/10">
-              <div className="text-[9px] text-[#D4AF37] flex items-center gap-1 font-medium">
-                <Info className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
-                <span>Tip: Use Google Chrome to toggle tabs easily</span>
-              </div>
-              <span className="text-[9px] text-white/40 block">Click for full return instructions</span>
-            </div>
-          </div>
-
-          {/* Box 2: PASTE ADDRESS (Clickable to Explainer on What We Provide, How & When) */}
-          <div 
-            onClick={() => handleOpenExplainer(2)}
-            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
-          >
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                    <Home className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
-                    2. PASTE ADDRESS
-                  </span>
-                </div>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
-                  HOW &amp; WHEN &rarr;
-                </span>
-              </div>
-
-              <p className="text-[11px] text-white/80 leading-snug">
-                Drop any address or MLS #. Get instant unvarnished comps, risks, and closing rebate.
-              </p>
-            </div>
-
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <span className="text-[9.5px] text-[#10b981] block font-semibold">Zero UI &bull; No forms</span>
-              <span className="text-[9px] text-white/40 block">Delivered on screen in 30s &bull; Click to see how</span>
-            </div>
-          </div>
-
-          {/* Box 3: AI + HUMAN AUDIT (Clickable to Explainer on How We Audit, No Commitment) */}
-          <div 
-            onClick={() => handleOpenExplainer(3)}
-            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
-          >
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                    <Brain className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
-                    3. AI + HUMAN
-                  </span>
-                </div>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
-                  AUDIT &rarr;
-                </span>
-              </div>
-
-              <p className="text-[11px] text-white/80 leading-snug">
-                Audited with AI precision &amp; 35+ year licensed broker fiduciary oversight.
-              </p>
-            </div>
-
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <span className="text-[9.5px] text-[#D4AF37] block font-medium">DRE #00609384 &bull; No Commitment</span>
-              <span className="text-[9px] text-white/40 block">Click to see how our dual audit works</span>
-            </div>
-          </div>
-
-          {/* Box 4: DELIVERED (Clickable to Explainer on What We Deliver + Exact Dossier Preview) */}
-          <div 
-            onClick={() => handleOpenExplainer(4)}
-            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
-          >
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                    <FileText className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
-                    4. DELIVERED
-                  </span>
-                </div>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
-                  PREVIEW &rarr;
-                </span>
-              </div>
-
-              <p className="text-[11px] text-white/80 leading-snug">
-                Comps, risks &amp; cash closing rebate in one private, unvarnished dossier.
-              </p>
-            </div>
-
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <span className="text-[9.5px] text-[#10b981] block font-medium">Instant Live Dossier</span>
-              <span className="text-[9px] text-white/40 block">Click to inspect sample report output</span>
-            </div>
-          </div>
-
-          {/* Box 5: DECISIONS & ESCROW (Clickable to Explainer on Features, Benefits & Escrow Monitoring) */}
-          <div 
-            onClick={() => handleOpenExplainer(5)}
-            className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] hover:border-[#D4AF37]/70 shadow-lg space-y-2 flex flex-col justify-between transition-all cursor-pointer group hover:scale-[1.01]"
-          >
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
-                    <Gem className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-[10.5px] font-bold text-white uppercase tracking-wider group-hover:text-[#D4AF37] transition-colors">
-                    5. DECISIONS
-                  </span>
-                </div>
-                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/10 text-white/70 group-hover:bg-[#D4AF37]/20 group-hover:text-[#D4AF37] font-semibold">
-                  REBATE &rarr;
-                </span>
-              </div>
-
-              <p className="text-[11px] text-white/80 leading-snug">
-                Up to 50% rebate credited at closing plus complete fiduciary monitoring through escrow.
-              </p>
-            </div>
-
-            <div className="space-y-1 pt-2 border-t border-white/10">
-              <span className="text-[9.5px] text-[#D4AF37] block font-semibold">Escrow Protection &amp; Cash Back</span>
-              <span className="text-[9px] text-white/40 block">Click to explore full escrow advocacy</span>
-            </div>
-          </div>
-
-        </div>
-
-        {/* ── CHARLIE SIMMONS & BOB DYSON TAG-TEAM INTRODUCTION BOX ── */}
-        <div className="pt-2">
-          <CharlieBobTagTeamBox onOpenExplainer={handleOpenExplainer} />
-        </div>
-
-        {/* ── SLOGAN QUOTE ATTRIBUTED TO BOB DYSON ── */}
-        <div className="text-center pt-3 pb-2 space-y-1">
-          <p 
-            className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
-          </p>
-          <p 
-            className="text-xs sm:text-sm font-serif font-semibold text-[#554c40] tracking-wide"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            &mdash; Bob Dyson, Founder &amp; Licensed Broker (DRE #00609384)
-          </p>
-        </div>
-
-      </div>
-
-      {/* ── INTERACTIVE WORKFLOW & EXPLAINER MODAL ── */}
-      <CopilotWorkflowExplainerModal
-        isOpen={isExplainerOpen}
-        onClose={() => setIsExplainerOpen(false)}
-        initialStep={explainerStep}
-        onLaunchAudit={(addr) => {
-          setAddress(addr);
-          handleSubmit(null, addr);
-        }}
-      />
     </div>
   );
 }

@@ -366,23 +366,25 @@ export default function AdminDysonHomesCopilot() {
                   />
                 )}
 
-                {/* Audit Dossier in smooth scroll — continuous seamless page background */}
-                <div 
-                  id="copilot-audit-dossier" 
-                  className="w-full px-4 sm:px-8 pt-8 pb-14 scroll-mt-6 border-t border-[#d8cab6]/60"
-                  style={{ 
-                    background: (selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2' || selectedCandidate === 'slide_4') ? '#ede0cc' : '#050505' 
-                  }}
-                >
-                  <div className="max-w-3xl mx-auto space-y-3">
-                    <div className="text-center pb-2">
-                      <span className="text-[11px] font-bold tracking-widest uppercase text-[#854d0e]">
-                        POST-SEARCH AUDIT DOSSIER
-                      </span>
+                {/* Audit Dossier in smooth scroll for classic slides (Slide 4 has its own Grok Split-Screen Canvas) */}
+                {selectedCandidate !== 'slide_4' && (
+                  <div 
+                    id="copilot-audit-dossier" 
+                    className="w-full px-4 sm:px-8 pt-8 pb-14 scroll-mt-6 border-t border-[#d8cab6]/60"
+                    style={{ 
+                      background: (selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2') ? '#ede0cc' : '#050505' 
+                    }}
+                  >
+                    <div className="max-w-3xl mx-auto space-y-3">
+                      <div className="text-center pb-2">
+                        <span className="text-[11px] font-bold tracking-widest uppercase text-[#854d0e]">
+                          POST-SEARCH AUDIT DOSSIER
+                        </span>
+                      </div>
+                      <CopilotPropertyDossier property={selectedProperty} />
                     </div>
-                    <CopilotPropertyDossier property={selectedProperty} />
                   </div>
-                </div>
+                )}
               </div>
 
               {/* DNN Pulse Ticker */}
