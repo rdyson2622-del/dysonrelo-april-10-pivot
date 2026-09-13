@@ -152,78 +152,18 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          {/* 4. Trusted and Instant statements are next (Centered) */}
-          <div className="flex flex-col items-center space-y-1.5 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+          {/* 4. Trusted and Instant statements are next (Centered & +75% font size) */}
+          <div className="flex flex-col items-center space-y-3 pt-2 text-center">
+            <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/5 border border-white/15 text-lg sm:text-xl text-white font-medium shadow-md">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] shrink-0" />
               <span>Trusted by private wealth. No agent spam.</span>
             </div>
 
-            {/* Real-time definition text */}
-            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center justify-center gap-1.5 text-center">
-              <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
+            {/* Real-time definition text (+75% font size) */}
+            <p className="text-base sm:text-[19px] text-[#D4AF37] italic flex items-center justify-center gap-2 text-center leading-relaxed font-normal max-w-2xl">
+              <Clock className="w-5 h-5 text-[#D4AF37] shrink-0" />
               <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
             </p>
-          </div>
-
-          {/* Next: The three boxes COMPS / RISKS / CLOSING REBATE */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-            <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5 text-[#D4AF37]">
-                <TrendingUp className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold tracking-wider uppercase">COMPS &amp; MARKET</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                AI-powered comps, trends, and valuation insights.
-              </p>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5 text-[#D4AF37]">
-                <ShieldAlert className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold tracking-wider uppercase">RISKS &amp; DUE DILIGENCE</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                Hidden risks, title issues, zoning, and red flags.
-              </p>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5 text-[#D4AF37]">
-                <Percent className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-bold tracking-wider uppercase">CLOSING REBATE</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                Where allowed by law. Maximize your ROI with our rebate.
-              </p>
-            </div>
-          </div>
-
-          {/* Followed by: Listen Charlie */}
-          <div className="p-2.5 rounded-xl bg-[#141414] border border-[#D4AF37]/35 flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleToggleAudio}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-white/10 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black'
-                }`}
-                title="Play Charlie Simmons Brief"
-              >
-                <Volume2 className="w-3.5 h-3.5" />
-              </button>
-              <div>
-                <span className="text-white font-semibold text-[11px] block">
-                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
-                </span>
-                <span className="text-white/50 text-[10px]">
-                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
-                </span>
-              </div>
-            </div>
-            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2 py-0.5 rounded bg-black/60 border border-[#D4AF37]/40 uppercase shrink-0">
-              DUAL VOICE
-            </span>
           </div>
         </div>
 
@@ -234,8 +174,6 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             alt="Hillside Estate at Night" 
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
           />
-
-
 
           {/* Active Audit Status Indicator */}
           {auditComplete && (
@@ -251,6 +189,69 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               </span>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
+      <div className="px-6 sm:px-10 pb-8 space-y-3.5">
+        {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <div className="p-4 rounded-xl bg-[#111111] border border-white/10 space-y-1.5 hover:border-[#D4AF37]/40 transition-all">
+            <div className="flex items-center gap-2 text-[#D4AF37]">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-xs font-bold tracking-wider uppercase">COMPS &amp; MARKET</span>
+            </div>
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
+              AI-powered comps, trends, and valuation insights.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#111111] border border-white/10 space-y-1.5 hover:border-[#D4AF37]/40 transition-all">
+            <div className="flex items-center gap-2 text-[#D4AF37]">
+              <ShieldAlert className="w-4 h-4" />
+              <span className="text-xs font-bold tracking-wider uppercase">RISKS &amp; DUE DILIGENCE</span>
+            </div>
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
+              Hidden risks, title issues, zoning, and red flags.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#111111] border border-white/10 space-y-1.5 hover:border-[#D4AF37]/40 transition-all">
+            <div className="flex items-center gap-2 text-[#D4AF37]">
+              <Percent className="w-4 h-4" />
+              <span className="text-xs font-bold tracking-wider uppercase">CLOSING REBATE</span>
+            </div>
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
+              Where allowed by law. Maximize your ROI with our rebate.
+            </p>
+          </div>
+        </div>
+
+        {/* Row 2: Listen Charlie Box below, spread across the page */}
+        <div className="w-full p-3.5 sm:p-4 rounded-xl bg-[#141414] border border-[#D4AF37]/35 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-md">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleToggleAudio}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+                isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-white/10 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black'
+              }`}
+              title="Play Charlie Simmons Brief"
+            >
+              <Volume2 className="w-4 h-4" />
+            </button>
+            <div>
+              <span className="text-white font-semibold text-xs sm:text-sm block">
+                {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
+              </span>
+              <span className="text-white/60 text-[11px] sm:text-xs">
+                Instant property summary backed by Bob Dyson (Broker DRE #00609384)
+              </span>
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-[#D4AF37] px-3 py-1 rounded bg-black/60 border border-[#D4AF37]/40 uppercase shrink-0">
+            DUAL VOICE
+          </span>
         </div>
       </div>
 
