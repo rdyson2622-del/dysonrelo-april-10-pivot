@@ -105,8 +105,8 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* Search Bar — Directly under heading */}
-          <form onSubmit={handleSubmit} className="pt-1">
+          {/* 1. Search Bar — Lowered a little more from heading */}
+          <form onSubmit={handleSubmit} className="pt-3.5">
             <div className="flex items-center bg-[#111111] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
               <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
               <input
@@ -127,7 +127,12 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             </div>
           </form>
 
-          {/* 1-Click Sample Address Chips */}
+          {/* 2. Paste address statement all on one line under search bar */}
+          <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal pt-0.5">
+            Paste address for comps, risks, closing rebate where allowed by law.
+          </p>
+
+          {/* 3. Try sample is next */}
           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
             <span className="text-[10px] text-white/40 uppercase font-semibold">Try sample:</span>
             {SAMPLE_SEARCHES.map((chip) => (
@@ -145,52 +150,21 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal pt-1">
-            Paste address for comps, risks, closing rebate where allowed by law.
-          </p>
-
-          {/* Trusted Pill + Real-Time Subtext */}
-          <div className="space-y-2">
+          {/* 4. Trusted and Instant statements are next */}
+          <div className="space-y-2 pt-0.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
               <span>Trusted by private wealth. No agent spam.</span>
             </div>
 
-            {/* Real-time definition text selected by user */}
+            {/* Real-time definition text */}
             <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center gap-1.5 pt-0.5">
               <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
               <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
             </p>
           </div>
 
-          {/* Audio Response Bar (Charlie Simmons voice briefing) */}
-          <div className="p-2.5 rounded-xl bg-[#141414] border border-[#D4AF37]/35 flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleToggleAudio}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-white/10 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black'
-                }`}
-                title="Play Charlie Simmons Brief"
-              >
-                <Volume2 className="w-3.5 h-3.5" />
-              </button>
-              <div>
-                <span className="text-white font-semibold text-[11px] block">
-                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
-                </span>
-                <span className="text-white/50 text-[10px]">
-                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
-                </span>
-              </div>
-            </div>
-            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2 py-0.5 rounded bg-black/60 border border-[#D4AF37]/40 uppercase shrink-0">
-              DUAL VOICE
-            </span>
-          </div>
-
-          {/* 3 Dark Intelligence Cards */}
+          {/* Next: The three boxes COMPS / RISKS / CLOSING REBATE */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
               <div className="flex items-center gap-1.5 text-[#D4AF37]">
@@ -221,6 +195,33 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                 Where allowed by law. Maximize your ROI with our rebate.
               </p>
             </div>
+          </div>
+
+          {/* Followed by: Listen Charlie */}
+          <div className="p-2.5 rounded-xl bg-[#141414] border border-[#D4AF37]/35 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleToggleAudio}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-white/10 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black'
+                }`}
+                title="Play Charlie Simmons Brief"
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+              </button>
+              <div>
+                <span className="text-white font-semibold text-[11px] block">
+                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
+                </span>
+                <span className="text-white/50 text-[10px]">
+                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
+                </span>
+              </div>
+            </div>
+            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2 py-0.5 rounded bg-black/60 border border-[#D4AF37]/40 uppercase shrink-0">
+              DUAL VOICE
+            </span>
           </div>
         </div>
 
