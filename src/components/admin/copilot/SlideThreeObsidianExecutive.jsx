@@ -67,11 +67,15 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
         {/* Left Column (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           <h1 
-            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.18] tracking-tight text-center"
+            className="font-normal text-white leading-[1.15] tracking-tight text-center"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your Human &amp; AI-assisted<br />
-            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
+            <span className="block text-4xl sm:text-5xl lg:text-[52px] font-medium leading-tight">
+              Meet <span className="italic text-[#D4AF37]">copilot</span>
+            </span>
+            <span className="block text-lg sm:text-2xl lg:text-[25px] text-white/90 font-normal tracking-normal mt-2">
+              The First Personal Human &amp; AI Real Estate Assistant
+            </span>
           </h1>
 
           {/* Search Bar — Directly under heading */}
