@@ -80,6 +80,7 @@ export const PAGE_REGISTRY = {
   80: { name: 'Relocation Call Desk',   path: '/admin/relocation-call-desk',  section: 'Admin' },
   81: { name: 'Relocation Agent Desk',  path: '/relocation-agent-desk',       section: 'Portal' },
   82: { name: 'Preferred Vendors',      path: '/admin/preferred-vendors',     section: 'Admin' },
+  83: { name: 'DysonHomes Copilot Lab', path: '/admin/dysonhomes-copilot',    section: 'Admin' },
 };
 
 // Helper function: Get page number by path

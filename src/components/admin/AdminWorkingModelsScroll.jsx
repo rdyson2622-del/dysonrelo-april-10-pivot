@@ -10,6 +10,15 @@ const GOLD = '#D4AF37';
 
 export const WORKING_MODELS = [
   {
+    id: 'dysonhomes_copilot',
+    title: 'DysonHomes Copilot Lab',
+    sub: 'Zero-UI Consumer AI + 50% closing rebate',
+    badge: 'NEW PIVOT',
+    path: '/admin/dysonhomes-copilot',
+    icon: Sparkles,
+    iconColor: '#D4AF37',
+  },
+  {
     id: 'app_store_catalog',
     title: '10 Apps & Specs Catalog',
     sub: 'DysonRelo modules (Apple-style icons)',

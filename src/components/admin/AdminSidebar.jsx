@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Home, UserCheck, BarChart3, ArrowLeft, Search,
   SendHorizontal, Flag, MessageCircle, FileText, Link as LinkIcon, ScrollText,
   ArrowRight, Fingerprint, List, Brain, AlertTriangle, ChevronDown,
-  ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package,
+  ChevronRight as ChevronRightIcon, Calendar, Video, Newspaper, Star, Package, Sparkles,
   Edit, Globe, Send, Shield, TrendingUp, FileCheck, DollarSign, BookOpen, Zap,
   Clapperboard, Library, Monitor, Plug, GitBranch, Bot, Map, Building2, UserPlus,
   FileSearch, ShoppingBag, Archive, DoorOpen, ShieldCheck, MapPin, ClipboardList, Megaphone,
@@ -31,6 +31,7 @@ const NAV_SECTIONS = [
     label: 'QUICK LINKS',
     children: [
       { isCommsBadge: true },
+      { label: '✨ DYSONHOMES COPILOT LAB (ZERO-UI)', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
@@ -185,6 +186,7 @@ const NAV_SECTIONS = [
     label: 'CREATIVE LAB',
     children: [
       { label: '📊 Marketing Flow Chart', path: '/admin/workflows/marketing', icon: GitBranch, highlight: true },
+      { label: '✨ DysonHomes Copilot Lab', path: '/admin/dysonhomes-copilot', icon: Sparkles, highlight: true },
       { label: 'New Landing Page', path: '/admin/new-landing-page', icon: Globe },
       { label: '📦 Archived Studio Landing', path: '/admin/archived/studio-landing', icon: Archive, highlight: true },
     ],

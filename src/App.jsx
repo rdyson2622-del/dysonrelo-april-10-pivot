@@ -191,6 +191,7 @@ import ReferSomeone from './pages/ReferSomeone';
 import AdminVoiceConciergeAnalytics from './pages/AdminVoiceConciergeAnalytics';
 import AdminFrontDoorLab from './pages/AdminFrontDoorLab';
 import AdminAppStoreMockup from './pages/AdminAppStoreMockup';
+import AdminDysonHomesCopilot from './pages/AdminDysonHomesCopilot';
 import AdminRelocationCallDesk from './pages/AdminRelocationCallDesk';
 import RelocationAgentDesk from './pages/RelocationAgentDesk';
 import AdminPreferredVendors from './pages/AdminPreferredVendors';
@@ -475,6 +476,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/voice-concierge-analytics" element={<AdminVoiceConciergeAnalytics />} />
         <Route path="/admin/front-door-lab" element={<AdminFrontDoorLab />} />
         <Route path="/admin/app-store-mockup" element={<AdminAppStoreMockup />} />
+        <Route path="/admin/dysonhomes-copilot" element={<AdminDysonHomesCopilot />} />
         <Route path="/admin/relocation-call-desk" element={<AdminRelocationCallDesk />} />
         <Route path="/admin/preferred-vendors" element={<AdminPreferredVendors />} />
         <Route path="/admin/archived/studio-landing" element={<DnnStudioLanding />} />
