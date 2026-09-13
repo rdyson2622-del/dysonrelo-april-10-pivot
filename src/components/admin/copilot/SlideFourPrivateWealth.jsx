@@ -59,10 +59,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 DYSON HOMES
               </span>
               <span 
-                className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] lowercase leading-none"
+                className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                copilot
+                coPilot
               </span>
             </div>
           </div>
@@ -106,10 +106,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 meet
               </span>
               <span 
-                className="text-3xl sm:text-5xl lg:text-6xl font-serif italic font-medium text-[#D4AF37] lowercase leading-none"
+                className="text-3xl sm:text-5xl lg:text-6xl font-serif italic font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                copilot
+                coPilot
               </span>
             </div>
             <h2 
