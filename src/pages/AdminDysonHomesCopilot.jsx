@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  DollarSign, Copy, Check, ArrowDown, Monitor, Smartphone
+  DollarSign, Copy, Check, Lock, 
+  ArrowDown, Monitor, Smartphone
 } from 'lucide-react';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
+import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
 const TAN_BG = '#ede0cc';
 
-// Four locked uploaded PNG assets in exact order
+// Attached LOCKED pixel-identical assets
 const LOCKED_PAGES = [
   {
     id: 'page-1',
@@ -85,7 +87,7 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
     <div className="min-h-screen text-[#0a0a0a] p-3 sm:p-6 lg:p-8 space-y-6 select-none" style={{ background: TAN_BG }}>
       
       {/* ─────────────────────────────────────────────────────────────
-          ADMIN LABORATORY INSPECTOR BAR (Admin Chrome)
+          ADMIN LABORATORY INSPECTOR BAR
           ───────────────────────────────────────────────────────────── */}
       <header className="p-4 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-2xl flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -93,23 +95,18 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
               ADMIN LAB · VERTICAL SCROLL
             </span>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-white tracking-wide">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-white tracking-wide">
                 DysonHomes
               </span>
-              <img
-                src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/acf69797f_copilot-sweep-logo.png"
-                alt="copilot"
-                style={{ height: '64px', width: 'auto' }}
-                className="inline-block object-contain"
-              />
-              <span className="text-xl font-bold text-white tracking-wide">
+              <CopilotSweepLogo size="sm" />
+              <span className="text-sm font-bold text-white tracking-wide">
                 Lab
               </span>
             </div>
           </div>
           <p className="text-xs text-white/70 mt-1 max-w-2xl leading-relaxed">
-            Locked vertical scroll order: Page 1 (Landing), Page 2 (Chat Empty), Page 3 (Chat + Dossier), Page 4 (Public Read-Only Team Rail).
+            Locked vertical scroll order: Page 1 (Landing), Page 2 (Chat Empty), Page 3 (Chat + Dossier), Page 4 (Public Read-Only Team Rail). Zero login barrier for review.
           </p>
         </div>
 
@@ -182,7 +179,7 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          VERTICAL SCROLL JUMP BAR (Admin Chrome)
+          VERTICAL SCROLL JUMP BAR
           ───────────────────────────────────────────────────────────── */}
       {activeTab === 'vertical_scroll' && (
         <div className="p-3 sm:p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-xl flex flex-wrap items-center justify-between gap-3 sticky top-2 z-30 backdrop-blur-md">
@@ -213,7 +210,7 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          VERTICAL SCROLL CONTENT (FOUR LOCKED PNGS EXACTLY ONCE, FULL CONTENT WIDTH)
+          VERTICAL SCROLL CONTENT (LOCKED PNGS EMBEDDED EXACTLY ONCE)
           ───────────────────────────────────────────────────────────── */}
       {activeTab === 'vertical_scroll' && (
         <div className="space-y-12 w-full flex flex-col items-center">
@@ -222,9 +219,9 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
               key={p.id}
               id={p.id}
               ref={sectionRefs[p.id]}
-              className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'w-full'} space-y-2 scroll-mt-24`}
+              className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-24`}
             >
-              {/* Header Label Bar */}
+              {/* Tiny Label Bar */}
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-md bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold uppercase tracking-wider">
@@ -237,8 +234,8 @@ export default function AdminDysonHomesCopilot({ initialPage }) {
                 <span className="text-[11px] font-mono text-[#854d0e]">{p.url}</span>
               </div>
 
-              {/* Exact Locked Uploaded PNG Embed Only */}
-              <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a] w-full">
+              {/* Exact Locked PNG Embed (No HTML Recreation) */}
+              <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
                 <img
                   src={p.image}
                   alt={p.alt}

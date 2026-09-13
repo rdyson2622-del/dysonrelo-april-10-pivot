@@ -163,6 +163,22 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
             <span className="text-[#D4AF37] whitespace-nowrap font-medium">We are an independent research entity - no spam calls or agent involvement</span>
           </div>
+
+          {/* Quiet MLS companion chips */}
+          <div className="pt-1 flex items-center gap-2 text-xs text-white/50">
+            <span>Browse MLS independently on:</span>
+            <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
+              Realtor.com <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+            <span>•</span>
+            <a href="https://www.homes.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
+              Homes.com <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+            <span>•</span>
+            <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
+              Zillow <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+          </div>
         </div>
 
         {/* Right Column (5 cols): Night Luxury Hillside Estate */}
@@ -261,25 +277,6 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           <div className="absolute px-6 bg-[#050505] text-[11px] sm:text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase whitespace-nowrap">
             HOW DYSON HOMES COPILOT WORKS
           </div>
-        </div>
-
-        {/* Header: Browse Independently on MLS */}
-        <div className="text-center pt-1 pb-3 px-2 sm:px-6">
-          <p className="text-xs sm:text-[13px] text-white/95 font-medium leading-relaxed tracking-wide uppercase">
-            <span className="text-[#D4AF37] font-bold">FIRST OF ALL....</span> START BY BROWSING INDEPENDENTLY ON{' '}
-            <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] hover:underline font-bold inline-flex items-center gap-0.5">
-              REALTOR.COM <ExternalLink className="w-3 h-3 ml-0.5" />
-            </a>{' '}
-            * {' '}
-            <a href="https://www.homes.com" target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] hover:underline font-bold inline-flex items-center gap-0.5">
-              HOMES.COM <ExternalLink className="w-3 h-3 ml-0.5" />
-            </a>{' '}
-            * {' '}
-            <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] hover:underline font-bold inline-flex items-center gap-0.5">
-              ZILLOW.COM <ExternalLink className="w-3 h-3 ml-0.5" />
-            </a>{' '}
-            PREFERABLY USING CHROME SO YOUR RETURN TO THIS SITE IS IMMEDIATE.
-          </p>
         </div>
 
         {/* Bottom Row: 4 Steps Across */}
