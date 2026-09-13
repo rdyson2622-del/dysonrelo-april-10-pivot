@@ -173,22 +173,6 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
             <span className="text-[#D4AF37] whitespace-nowrap font-medium">We are an independent research entity - no spam calls or agent involvement</span>
           </div>
-
-          {/* Quiet MLS companion chips */}
-          <div className="pt-1 flex items-center gap-2 text-xs text-white/50">
-            <span>Browse MLS independently on:</span>
-            <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
-              Realtor.com <ExternalLink className="w-2.5 h-2.5" />
-            </a>
-            <span>•</span>
-            <a href="https://www.homes.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
-              Homes.com <ExternalLink className="w-2.5 h-2.5" />
-            </a>
-            <span>•</span>
-            <a href="https://www.zillow.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
-              Zillow <ExternalLink className="w-2.5 h-2.5" />
-            </a>
-          </div>
         </div>
 
         {/* Right Column (5 cols): Night Luxury Hillside Estate */}
@@ -287,6 +271,37 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           <div className="absolute px-6 bg-[#050505] text-[11px] sm:text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase whitespace-nowrap">
             HOW DYSON HOMES COPILOT WORKS
           </div>
+        </div>
+
+        {/* Browse MLS independently — placed directly below HOW DYSON HOMES COPILOT WORKS */}
+        <div className="flex items-center justify-center gap-2 text-xs text-white/70 -mt-2 pb-1">
+          <span>Browse MLS independently on:</span>
+          <a 
+            href="https://www.realtor.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
+          >
+            Realtor.com <ExternalLink className="w-2.5 h-2.5" />
+          </a>
+          <span>•</span>
+          <a 
+            href="https://www.homes.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
+          >
+            Homes.com <ExternalLink className="w-2.5 h-2.5" />
+          </a>
+          <span>•</span>
+          <a 
+            href="https://www.zillow.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
+          >
+            Zillow <ExternalLink className="w-2.5 h-2.5" />
+          </a>
         </div>
 
         {/* Bottom Row: 4 Steps Across */}
