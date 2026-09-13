@@ -90,14 +90,6 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* Slogan */}
-          <p 
-            className="text-xs sm:text-sm font-serif italic text-[#854d0e] tracking-wider"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
-          </p>
-
           {/* Search Bar — Directly under heading */}
           <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#fbf7f0] rounded-2xl border-2 border-[#e8c84a]/70 shadow-[0_4px_20px_rgba(212,175,55,0.18)] p-1.5 pl-4 transition-all">

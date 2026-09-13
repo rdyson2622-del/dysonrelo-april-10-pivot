@@ -75,16 +75,6 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* Slogan */}
-          <div className="text-center pt-0.5">
-            <p 
-              className="text-xs sm:text-sm font-serif italic text-[#D4AF37] tracking-wider"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
-            </p>
-          </div>
-
           {/* Search Bar — Directly under heading */}
           <form onSubmit={handleSubmit} className="pt-1">
             <div className="flex items-center bg-[#141414] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.6)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
@@ -213,10 +203,10 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
         {/* Footer Subtitle */}
         <div className="text-center pt-2">
           <p 
-            className="text-sm font-serif italic text-[#D4AF37]/90 tracking-wide"
+            className="text-xs sm:text-sm font-serif italic text-[#D4AF37]/90 tracking-wider"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            35 years of high-end brokerage. Now augmented by AI.
+            &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
           </p>
         </div>
       </div>

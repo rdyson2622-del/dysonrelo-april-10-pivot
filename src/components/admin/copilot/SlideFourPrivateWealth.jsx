@@ -105,18 +105,8 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* Official Slogan */}
-          <div className="text-center pt-1">
-            <p 
-              className="text-xs sm:text-sm md:text-[14px] font-serif italic text-[#D4AF37] tracking-wider drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)]"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
-              &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
-            </p>
-          </div>
-
           {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
-          <div className="pt-5 sm:pt-6 space-y-1.5 text-center">
+          <div className="pt-6 sm:pt-7 space-y-1.5 text-center">
             <form onSubmit={handleSubmit}>
               <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
                 <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
@@ -397,16 +387,13 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </div>
         </div>
 
-        <div className="text-center pt-2 space-y-1">
+        <div className="text-center pt-2">
           <p 
-            className="text-xs sm:text-sm font-serif italic text-[#854d0e] tracking-wider"
+            className="text-xs sm:text-sm font-serif italic text-[#854d0e] tracking-wider font-medium"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
           </p>
-          <span className="text-[9.5px] font-bold tracking-widest text-[#554c40] uppercase block">
-            FOR ACCREDITED INVESTORS &amp; PRIVATE WEALTH
-          </span>
         </div>
       </div>
     </div>
