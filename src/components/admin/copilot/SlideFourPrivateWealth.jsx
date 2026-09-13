@@ -134,9 +134,9 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             </p>
           </div>
 
-          {/* 3. Try sample is next (Centered) */}
+          {/* 3. Try sample is next (Centered, Tan with Black Font) */}
           <div className="flex flex-wrap items-center justify-center gap-1.5">
-            <span className="text-[10px] text-white/40 uppercase font-semibold">Try sample:</span>
+            <span className="text-[10px] text-white/50 uppercase font-semibold">Try sample:</span>
             {SAMPLE_SEARCHES.map((chip) => (
               <button
                 key={chip}
@@ -145,7 +145,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                   setAddress(chip);
                   handleSubmit(null, chip);
                 }}
-                className="text-[10.5px] px-2.5 py-0.5 rounded-lg bg-white/5 hover:bg-[#D4AF37]/20 border border-white/10 hover:border-[#D4AF37]/40 text-white/80 hover:text-white transition-all cursor-pointer truncate max-w-[200px]"
+                className="text-[10.5px] px-2.5 py-1 rounded-lg bg-[#ede0cc] hover:bg-[#f6ebd9] border border-[#d8cab6] hover:border-[#D4AF37] text-[#0a0a0a] font-medium transition-all cursor-pointer truncate max-w-[200px] shadow-sm"
               >
                 {chip.split(',')[0]}
               </button>
