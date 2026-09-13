@@ -1,8 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { 
-  ShieldCheck, DollarSign, Copy, Check, 
+  ShieldCheck, DollarSign, Copy, Check, Lock,
   ArrowDown, Monitor, Smartphone
 } from 'lucide-react';
+import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
+import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCanvas';
+import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
+import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPublicReadOnlyTeamRail';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
 const TAN_BG = '#ede0cc';
@@ -175,14 +179,191 @@ export default function AdminDysonHomesCopilot() {
               <span>Page 3: Chat + Dossier</span>
               <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
             </button>
-            <button type="button" onClick={() => scrollToSection(page4Ref)} className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs border border-white/10 cursor-pointer">4 Team Rail</button>
+            <button
+              type="button"
+              onClick={() => scrollToSection(page4Ref)}
+              className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">4</span>
+              <span>Page 4: Team Rail</span>
+              <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
+            </button>
           </div>
         </div>
       )}
 
-      {/* VERTICAL SCROLL locked PNGs once each */}
+      {/* ─────────────────────────────────────────────────────────────
+          VERTICAL SCROLL CONTENT (PAGES 1 -> 2 -> 3 -> 4)
+          ───────────────────────────────────────────────────────────── */}
       {activeTab === 'vertical_scroll' && (
-        <div className="space-y-8 w-full max-w-5xl mx-auto"><section key="page-1" id="page-1" ref={page1Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 1 — LANDING</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a6fa3abd7_dysonhomes-page1-landing-LOCKED.png" alt="PAGE 1 — LANDING" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-2" id="page-2" ref={page2Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 2 — CHAT EMPTY</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/b1a35db81_dysonhomes-page2-chat-empty-LOCKED.png" alt="PAGE 2 — CHAT EMPTY" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-3" id="page-3" ref={page3Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 3 — CHAT + DOSSIER</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0432c81ce_dysonhomes-page3-chat-dossier-LOCKED.png" alt="PAGE 3 — CHAT + DOSSIER" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-4" id="page-4" ref={page4Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PUBLIC READ-ONLY TEAM RAIL</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/e28f5a5ef_dysonhomes-public-readonly-team-rail-FIXED.png" alt="PUBLIC READ-ONLY TEAM RAIL" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section></div>
+        <div className="space-y-10 w-full flex flex-col items-center">
+          
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 1 — LANDING (Slide 4 Private Wealth)
+              ══════════════════════════════════════════════════════════ */}
+          <section id="page-1" ref={page1Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 1 — LANDING
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Dark Charcoal + Champagne Gold • DD Vertical Badge • Sweep Logo
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 1</span>
+              </div>
+
+              <SlideFourPrivateWealth
+                onRunAudit={() => {
+                  scrollToSection(page3Ref);
+                }}
+                onGoToChatCanvas={() => {
+                  scrollToSection(page2Ref);
+                }}
+              />
+            </div>
+          </section>
+
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 2 — CHAT CANVAS (What Can I Help You With)
+              ══════════════════════════════════════════════════════════ */}
+          <section id="page-2" ref={page2Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 2 — CHAT CANVAS
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  "What can I help you with?" • 3 Tan Pills
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/chat</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/chat</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 2</span>
+              </div>
+
+              <GrokPageTwoChatCanvas
+                onAskAddress={() => {
+                  scrollToSection(page3Ref);
+                }}
+                onBackToLanding={() => {
+                  scrollToSection(page1Ref);
+                }}
+              />
+            </div>
+          </section>
+
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 3 — CHAT + DOSSIER (after address)
+              ══════════════════════════════════════════════════════════ */}
+          <section id="page-3" ref={page3Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 3 — CHAT + DOSSIER
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Sticky Charlie Chat • Dossier with THREE TAN FILL Boxes
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/dossier</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/dossier</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 3</span>
+              </div>
+
+              <GrokPageThreeSplitCanvas
+                onBackToSearch={() => {
+                  scrollToSection(page1Ref);
+                }}
+              />
+            </div>
+          </section>
+
+          {/* ══════════════════════════════════════════════════════════
+              PAGE 4 — PUBLIC READ-ONLY TEAM ROSTER RAIL
+              ══════════════════════════════════════════════════════════ */}
+          <section id="page-4" ref={page4Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  PAGE 4 — PUBLIC READ-ONLY TEAM ROSTER
+                </span>
+                <span className="text-xs text-[#0a0a0a]/70 font-medium">
+                  Public See-Only Fiduciary Team Rail + Chat
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/team</span>
+            </div>
+
+            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
+              {/* Browser bar */}
+              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
+                </div>
+                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
+                  <Lock className="w-3 h-3 text-[#10b981]" />
+                  <span>https://dysonhomes.com/team</span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 4</span>
+              </div>
+
+              <CopilotPublicReadOnlyTeamRail
+                onAskAddress={() => {
+                  scrollToSection(page3Ref);
+                }}
+                onBackToLanding={() => {
+                  scrollToSection(page1Ref);
+                }}
+              />
+            </div>
+          </section>
+
+        </div>
       )}
 
       {/* ─────────────────────────────────────────────────────────────

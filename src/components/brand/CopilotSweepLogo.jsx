@@ -4,6 +4,18 @@ const HEIGHT = { xs: 18, sm: 28, md: 40, lg: 64, xl: 96 };
 export default function CopilotSweepLogo({ size = 'md', className = '', onClick }) {
   const height = HEIGHT[size] || HEIGHT.md;
   return (
-    <img src={SWEEP_SRC} alt="copilot" onClick={onClick} draggable={false} className={`inline-block object-contain align-middle select-none ${onClick ? 'cursor-pointer' : ''} ${className}`} style={{ height: `${height}px`, width: 'auto', filter: 'none', boxShadow: 'none' }} />
+    <img 
+      src={SWEEP_SRC} 
+      alt="copilot" 
+      onClick={onClick} 
+      draggable={false} 
+      className={`inline-block object-contain align-middle select-none mix-blend-screen ${onClick ? 'cursor-pointer' : ''} ${className}`} 
+      style={{ 
+        height: `${height}px`, 
+        width: 'auto', 
+        filter: 'contrast(160%) brightness(1.05)',
+        boxShadow: 'none' 
+      }} 
+    />
   );
 }
