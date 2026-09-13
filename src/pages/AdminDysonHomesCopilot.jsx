@@ -11,6 +11,8 @@ import SlideOneTanOverview from '@/components/admin/copilot/SlideOneTanOverview'
 import SlideTwoTanThreeCards from '@/components/admin/copilot/SlideTwoTanThreeCards';
 import SlideThreeObsidianExecutive from '@/components/admin/copilot/SlideThreeObsidianExecutive';
 import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
+import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCanvas';
+import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -93,7 +95,7 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('slide_4'); // slide_1 | slide_2 | slide_3 | slide_4
+  const [selectedCandidate, setSelectedCandidate] = useState('grok_page_2'); // grok_page_2 | grok_page_3 | slide_4 | slide_2 | slide_1 | slide_3
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -258,13 +260,15 @@ export default function AdminDysonHomesCopilot() {
               </span>
             </div>
 
-            {/* 4 Exact Slides Switcher */}
+            {/* Candidate & Exact Grok Pages Switcher */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'slide_4', label: 'Slide 4: Private Wealth (Chosen Candidate)' },
-                { id: 'slide_2', label: 'Slide 2: Candidate A (Tan Desktop + 3 Cards)' },
+                { id: 'grok_page_2', label: '★ Grok Page 2: Chat Canvas' },
+                { id: 'grok_page_3', label: '★ Grok Page 3: Live Dossier Split' },
+                { id: 'slide_4', label: 'Slide 4: Private Wealth' },
+                { id: 'slide_2', label: 'Slide 2: Candidate A (Tan)' },
                 { id: 'slide_1', label: 'Slide 1: Tan Overview' },
-                { id: 'slide_3', label: 'Slide 3: Obsidian Executive Dark' },
+                { id: 'slide_3', label: 'Slide 3: Obsidian Dark' },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -286,6 +290,8 @@ export default function AdminDysonHomesCopilot() {
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-bold uppercase text-[10px] tracking-wider border border-[#D4AF37]/40">
                 ACTIVE: {
+                  selectedCandidate === 'grok_page_2' ? 'Grok Page 2 Look (Chat Canvas · "What can I help you with?")' :
+                  selectedCandidate === 'grok_page_3' ? 'Grok Page 3 Look (Two-Column Chat + Honest Comps Dossier)' :
                   selectedCandidate === 'slide_2' ? 'Slide 2 (Candidate A · Tan Desktop with 3 Cards & Pool Villa)' :
                   selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview with Sunset Villa)' :
                   selectedCandidate === 'slide_3' ? 'Slide 3 (Obsidian Executive Dark)' :
@@ -321,7 +327,9 @@ export default function AdminDysonHomesCopilot() {
                   <span>https://dysonhomes.com</span>
                 </div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
-                  {selectedCandidate === 'slide_2' ? 'Candidate A (D&D Logo & Tan Desktop)' :
+                  {selectedCandidate === 'grok_page_2' ? 'Grok Page 2 (Chat Canvas)' :
+                   selectedCandidate === 'grok_page_3' ? 'Grok Page 3 (Dossier Split)' :
+                   selectedCandidate === 'slide_2' ? 'Candidate A (D&D Logo & Tan Desktop)' :
                    selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview)' :
                    selectedCandidate === 'slide_3' ? 'Slide 3 (Obsidian Executive)' :
                    'Slide 4 (Private Wealth)'}
@@ -330,6 +338,22 @@ export default function AdminDysonHomesCopilot() {
 
               {/* ── RENDER EXACT SELECTED SLIDE (FULL-BLEED PAGE BACKGROUND) ── */}
               <div className="w-full">
+                {selectedCandidate === 'grok_page_2' && (
+                  <GrokPageTwoChatCanvas
+                    onAskAddress={(addr) => {
+                      setAddressInput(addr);
+                      setSelectedCandidate('grok_page_3');
+                    }}
+                  />
+                )}
+
+                {selectedCandidate === 'grok_page_3' && (
+                  <GrokPageThreeSplitCanvas
+                    property={selectedProperty}
+                    onBackToSearch={() => setSelectedCandidate('grok_page_2')}
+                  />
+                )}
+
                 {selectedCandidate === 'slide_2' && (
                   <SlideTwoTanThreeCards
                     onRunAudit={(addr) => {
@@ -366,8 +390,8 @@ export default function AdminDysonHomesCopilot() {
                   />
                 )}
 
-                {/* Audit Dossier in smooth scroll for classic slides (Slide 4 has its own Grok Split-Screen Canvas) */}
-                {selectedCandidate !== 'slide_4' && (
+                {/* Audit Dossier in smooth scroll for classic slides */}
+                {(selectedCandidate !== 'slide_4' && selectedCandidate !== 'grok_page_2' && selectedCandidate !== 'grok_page_3') && (
                   <div 
                     id="copilot-audit-dossier" 
                     className="w-full px-4 sm:px-8 pt-8 pb-14 scroll-mt-6 border-t border-[#d8cab6]/60"
@@ -388,7 +412,7 @@ export default function AdminDysonHomesCopilot() {
               </div>
 
               {/* DNN Pulse Ticker (Only for legacy slides) */}
-              {selectedCandidate !== 'slide_4' && (
+              {(selectedCandidate !== 'slide_4' && selectedCandidate !== 'grok_page_2' && selectedCandidate !== 'grok_page_3') && (
                 <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -425,10 +449,12 @@ export default function AdminDysonHomesCopilot() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {[
-                { id: 'slide_4', label: '1. Slide 4 (Private Wealth — Active Choice)' },
-                { id: 'slide_2', label: '2. Candidate A (Tan Desktop + 3 Cards)' },
-                { id: 'slide_1', label: '3. Tan Overview' },
-                { id: 'slide_3', label: '4. Obsidian Executive Dark' }
+                { id: 'grok_page_2', label: '1. ★ Grok Page 2: Chat Canvas' },
+                { id: 'grok_page_3', label: '2. ★ Grok Page 3: Live Dossier Split' },
+                { id: 'slide_4', label: '3. Slide 4 (Private Wealth)' },
+                { id: 'slide_2', label: '4. Candidate A (Tan)' },
+                { id: 'slide_1', label: '5. Tan Overview' },
+                { id: 'slide_3', label: '6. Obsidian Dark' }
               ].map((c) => (
                 <button
                   key={c.id}
