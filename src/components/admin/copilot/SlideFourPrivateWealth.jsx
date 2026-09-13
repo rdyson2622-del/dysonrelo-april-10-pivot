@@ -64,7 +64,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             <img 
               src={DYSON_LOGO} 
               alt="Dyson & Dyson" 
-              className="h-11 sm:h-12 w-auto object-contain" 
+              className="h-[51px] sm:h-[55px] w-auto object-contain" 
             />
           </div>
 
@@ -101,9 +101,8 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.15] tracking-tight text-center"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            Your Human &amp;<br />
-            AI-assisted Private<br />
-            Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
+            Your Human &amp; AI-assisted<br />
+            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal">

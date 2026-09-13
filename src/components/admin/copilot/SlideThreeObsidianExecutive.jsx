@@ -35,7 +35,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
             <img 
               src={DYSON_LOGO} 
               alt="Dyson & Dyson" 
-              className="h-11 sm:h-12 w-auto object-contain" 
+              className="h-[51px] sm:h-[55px] w-auto object-contain" 
             />
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">

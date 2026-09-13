@@ -38,7 +38,7 @@ export default function GrokCandidateA({
         
         {/* Left: Dyson & Dyson Logo - free-standing */}
         <div className="flex items-center">
-          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-12 w-auto object-contain" />
+          <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-[55px] w-auto object-contain" />
         </div>
 
         {/* Center: Browse MLS links */}
