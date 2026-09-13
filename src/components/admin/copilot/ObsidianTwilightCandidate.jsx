@@ -95,22 +95,21 @@ export default function ObsidianTwilightCandidate({
             </div>
 
             <h1 
-              className="text-3xl sm:text-4xl lg:text-5xl font-serif text-white tracking-tight leading-[1.12]"
+              className="text-2xl sm:text-3xl font-serif font-normal text-white tracking-tight leading-snug"
             >
-              Your human &amp; <br />
-              AI-assisted private <br />
-              <span className="text-[#e8c84a] italic font-serif">real estate copilot.</span>
+              Your human &amp; AI-assisted <br />
+              <span className="text-[#e8c84a] italic font-serif">private real estate copilot</span>
             </h1>
 
             <p className="text-xs sm:text-sm text-white/75 max-w-lg leading-relaxed font-light">
-              Before clicking 'Contact Agent' on any aggregator portal, paste the address here. Receive unvarnished sold comps, hidden property risks, and claim your closing cost rebate.
+              Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
             </p>
           </div>
 
           {/* Search Box + Charlie Voice Button */}
           <div className="space-y-2.5 pt-1">
             <form onSubmit={handleSubmit} className="relative">
-              <div className="flex items-center bg-[#121212] rounded-2xl border-2 border-[#D4AF37]/75 p-1.5 shadow-2xl focus-within:border-[#D4AF37] transition-all">
+              <div className="flex items-center bg-[#121212] rounded-2xl border border-[#D4AF37]/60 p-1.5 shadow-xl focus-within:border-[#D4AF37] transition-all">
                 <div className="pl-3 pr-2 flex items-center gap-2 text-white/40 shrink-0">
                   <MapPin className="w-4 h-4 text-[#D4AF37]" />
                 </div>
@@ -118,7 +117,7 @@ export default function ObsidianTwilightCandidate({
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Paste property address (e.g., 72 Beverly Park Ln, Beverly Hills, CA)"
+                  placeholder="Paste property address (e.g., 72 Beverly Park Ln, Beverly Hills, CA)..."
                   className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-light"
                 />
 
@@ -134,10 +133,10 @@ export default function ObsidianTwilightCandidate({
                 <button
                   type="submit"
                   disabled={isAuditing}
-                  className="px-5 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4AF37] hover:bg-[#e8c84a] transition-all cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 shrink-0"
+                  className="px-5 py-2.5 rounded-xl text-xs font-semibold text-black bg-[#D4AF37] hover:bg-[#e8c84a] transition-all cursor-pointer flex items-center gap-1.5 shadow-md active:scale-95 shrink-0"
                   style={{ background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
                 >
-                  <span>{isAuditing ? 'Auditing...' : 'RUN COPILOT'}</span>
+                  <span>{isAuditing ? 'Auditing...' : 'Send'}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-black" />
                 </button>
               </div>
@@ -180,14 +179,14 @@ export default function ObsidianTwilightCandidate({
               <div className="flex items-center justify-between text-[#D4AF37]">
                 <div className="flex items-center gap-1.5">
                   <BarChart3 className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-white">
-                    HONEST COMPS
+                  <span className="text-xs font-semibold text-white">
+                    Honest Comps
                   </span>
                 </div>
                 <ChevronRight className="w-3 h-3 text-[#D4AF37]/60" />
               </div>
               <p className="text-[11px] text-white/75 leading-snug">
-                Unvarnished neighborhood closed sales vs. listing agent hype.
+                Neighborhood closed sales data without listing agent bias.
               </p>
             </div>
 
@@ -196,21 +195,21 @@ export default function ObsidianTwilightCandidate({
               onClick={() => setActivePillar('risks')}
               className={`p-3.5 rounded-2xl border transition-all cursor-pointer shadow-md space-y-1.5 ${
                 activePillar === 'risks'
-                  ? 'bg-[#180e0e] border-red-500/80 ring-1 ring-red-500/50'
-                  : 'bg-[#0f0f0f] border-white/10 hover:border-red-500/40'
+                  ? 'bg-[#180e0e] border-amber-500/80 ring-1 ring-amber-500/50'
+                  : 'bg-[#0f0f0f] border-white/10 hover:border-amber-500/40'
               }`}
             >
-              <div className="flex items-center justify-between text-red-400">
+              <div className="flex items-center justify-between text-amber-400">
                 <div className="flex items-center gap-1.5">
                   <ShieldAlert className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-white">
-                    HIDDEN RISKS
+                  <span className="text-xs font-semibold text-white">
+                    Hidden Risks
                   </span>
                 </div>
-                <ChevronRight className="w-3 h-3 text-red-400/60" />
+                <ChevronRight className="w-3 h-3 text-amber-400/60" />
               </div>
               <p className="text-[11px] text-white/75 leading-snug">
-                Permits, coastal easements, title &amp; DOM reality portals hide.
+                Permits, coastal easements, title issues, and days-on-market reality.
               </p>
             </div>
 
@@ -226,8 +225,8 @@ export default function ObsidianTwilightCandidate({
               <div className="flex items-center justify-between text-emerald-400">
                 <div className="flex items-center gap-1.5">
                   <Percent className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-white">
-                    CLOSING REBATE
+                  <span className="text-xs font-semibold text-white">
+                    Closing Rebate
                   </span>
                 </div>
                 <ChevronRight className="w-3 h-3 text-emerald-400/60" />
@@ -311,45 +310,45 @@ export default function ObsidianTwilightCandidate({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 text-xs max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs max-w-5xl mx-auto">
           
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#D4AF37]/40 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-black text-xs shadow-inner">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10">
+            <div className="w-6 h-6 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-bold text-xs">
               1
             </div>
             <div>
-              <div className="font-bold text-white text-[11.5px] uppercase tracking-wider">PASTE ADDRESS</div>
+              <div className="font-semibold text-white text-xs">Paste an address</div>
               <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Share property details or any online listing link.</div>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#D4AF37]/40 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-black text-xs shadow-inner">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10">
+            <div className="w-6 h-6 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-bold text-xs">
               2
             </div>
             <div>
-              <div className="font-bold text-white text-[11.5px] uppercase tracking-wider">AI + HUMAN ANALYSIS</div>
-              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Copilot audits with AI precision &amp; broker expertise.</div>
+              <div className="font-semibold text-white text-xs">We analyze</div>
+              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Human expertise + AI precision delivers comps &amp; risks.</div>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#D4AF37]/40 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-black text-xs shadow-inner">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10">
+            <div className="w-6 h-6 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-bold text-xs">
               3
             </div>
             <div>
-              <div className="font-bold text-white text-[11.5px] uppercase tracking-wider">INTELLIGENCE DELIVERED</div>
-              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Unbiased comps, risks, and rebate in one private report.</div>
+              <div className="font-semibold text-white text-xs">Get insights</div>
+              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Unbiased comps, risks, and calculated cash rebate.</div>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-[#D4AF37]/40 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-black text-xs shadow-inner">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10">
+            <div className="w-6 h-6 rounded-full bg-[#111] border border-[#D4AF37]/60 flex items-center justify-center shrink-0 text-[#D4AF37] font-bold text-xs">
               4
             </div>
             <div>
-              <div className="font-bold text-white text-[11.5px] uppercase tracking-wider">BETTER DECISIONS</div>
-              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Close with confidence. Retain maximum equity.</div>
+              <div className="font-semibold text-white text-xs">You decide</div>
+              <div className="text-white/60 text-[11px] mt-0.5 leading-snug">Move forward independently with clarity and confidence.</div>
             </div>
           </div>
 

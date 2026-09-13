@@ -77,21 +77,20 @@ export default function GrokCandidateA({
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-[#D4AF37]/40 text-[#854d0e] text-[10.5px] font-semibold">
+              <span className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/70 border border-[#D4AF37]/40 text-[#854d0e] text-[11px] font-medium">
                 <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>35-Yr Brokerage Fiduciary</span>
+                <span>35-Year Brokerage Fiduciary</span>
               </span>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-black uppercase tracking-wider shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                <span>Grok Format A</span>
-              </div>
+              <span className="px-2.5 py-1 rounded-full bg-[#0a0a0a] text-[#D4AF37] text-[10px] font-semibold border border-[#D4AF37]/50 shadow-sm">
+                Format A · Split Screen
+              </span>
             </div>
           </div>
 
           {/* Headline & Value Proposition */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <h1 
-              className="text-2xl sm:text-4xl lg:text-[42px] font-bold text-[#0a0a0a] leading-[1.12] tracking-tight"
+              className="text-2xl sm:text-3xl font-semibold text-[#0a0a0a] leading-snug tracking-tight"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Your human &amp; AI-assisted <br className="hidden sm:inline" />
@@ -103,9 +102,9 @@ export default function GrokCandidateA({
             </p>
 
             {/* Fiduciary Trust Statement */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#faf5ec] border border-[#D4AF37]/60 text-[#684614] text-[11px] font-medium shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
-              <span><strong>The Trust Shield:</strong> No agent spam. Independent fiduciary match — not the listing agent.</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#faf5ec] border border-[#D4AF37]/50 text-[#684614] text-[11px] font-normal shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+              <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
             </div>
           </div>
 
@@ -257,21 +256,21 @@ export default function GrokCandidateA({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
 
-          {/* Floating Luxury Tag on Photo */}
-          <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-2xl bg-black/85 backdrop-blur-md border border-white/20 text-white flex items-center justify-between shadow-2xl">
+          {/* Refined Estate Details Overlay */}
+          <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-black/80 backdrop-blur-md border border-white/15 text-white flex items-center justify-between shadow-xl">
             <div>
-              <span className="text-[9px] font-black uppercase tracking-wider text-[#D4AF37] block">
-                TYPICAL EXECUTIVE PURCHASE
+              <span className="text-[10px] text-white/60 block">
+                Sample Property Audit
               </span>
-              <span className="text-sm font-bold block">
+              <span className="text-xs font-semibold block text-white/95">
                 $3.45M Estate · La Jolla, CA
               </span>
             </div>
             <div className="text-right">
-              <span className="text-[9px] font-bold text-white/60 block">
-                ESTIMATED REBATE
+              <span className="text-[10px] text-white/60 block">
+                Estimated Closing Rebate
               </span>
-              <span className="text-sm font-black text-[#10b981] font-mono block">
+              <span className="text-xs font-bold text-[#10b981] font-mono block">
                 +${rebateAmount?.toLocaleString()}
               </span>
             </div>

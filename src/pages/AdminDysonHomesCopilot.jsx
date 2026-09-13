@@ -259,23 +259,22 @@ export default function AdminDysonHomesCopilot() {
               </span>
             </div>
 
-            {/* Candidate Pills — Grok's High-Class Formats Prominently Featured */}
+            {/* 4 Distinct Layout Choices */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'grok_candidate_a', label: '★ Grok Format A (Split Estate)' },
-                { id: 'grok_candidate_b', label: '★ Grok Format B (Centered Estate)' },
-                { id: 'obsidian_twilight', label: 'Option 3: Obsidian Twilight (Night)' },
-                { id: 'warm_champagne', label: 'Option 4: Warm Champagne (Dyson Tan)' },
-                { id: 'baseline_hero', label: 'Option 5: Showcase Hybrid' },
+                { id: 'grok_candidate_a', label: '1. Grok Format A (Split)' },
+                { id: 'grok_candidate_b', label: '2. Grok Format B (Centered)' },
+                { id: 'obsidian_twilight', label: '3. Obsidian Twilight' },
+                { id: 'warm_champagne', label: '4. Warm Champagne' },
               ].map((btn) => (
                 <button
                   key={btn.id}
                   type="button"
                   onClick={() => setSelectedCandidate(btn.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
                     selectedCandidate === btn.id
-                      ? 'bg-[#D4AF37] text-black font-black scale-102 ring-1 ring-[#D4AF37]'
-                      : 'bg-[#181818] text-white/70 hover:text-white border border-white/10'
+                      ? 'bg-[#D4AF37] text-black font-bold ring-1 ring-[#D4AF37]'
+                      : 'bg-[#181818] text-white/80 hover:text-white border border-white/10'
                   }`}
                 >
                   {btn.label}
@@ -286,15 +285,20 @@ export default function AdminDysonHomesCopilot() {
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#0a0a0a]/80 px-2 font-medium">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-black uppercase text-[10px] tracking-wider border border-[#D4AF37]/50 shadow-sm">
-                ★ FEATURED GROK PRESENTATION
+              <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-bold uppercase text-[10px] tracking-wider border border-[#D4AF37]/40">
+                ACTIVE CHOICE: {
+                  selectedCandidate === 'grok_candidate_a' ? '1. Grok Format A (Split Screen)' :
+                  selectedCandidate === 'grok_candidate_b' ? '2. Grok Format B (Centered Symmetrical)' :
+                  selectedCandidate === 'obsidian_twilight' ? '3. Obsidian Twilight (Dark Theme)' :
+                  '4. Warm Champagne (Dyson Tan)'
+                }
               </span>
               <span>
-                Simulating live consumer view for <strong>https://dysonhomes.com</strong>
+                Simulating live view for <strong>https://dysonhomes.com</strong>
               </span>
             </div>
-            <span className="text-[#854d0e] font-semibold flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" /> Zero UI • Zero Sales Pitch • Pure Buyer Intelligence
+            <span className="text-[#854d0e] font-medium flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" /> Zero UI • Buyer Intelligence &amp; Closing Rebate
             </span>
           </div>
 
@@ -580,45 +584,39 @@ export default function AdminDysonHomesCopilot() {
             />
           </section>
 
-          {/* ─────────────────────────────────────────────────────────────
-              CLASS IT UP A NOTCH: WHY THESE TWO GROK FORMATS WORK
-              ───────────────────────────────────────────────────────────── */}
-          <div className="p-6 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-xl text-left space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] block">
-                  FIDUCIARY ELEVATION AUDIT
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-white">
-                  How We Classed Up Grok's Scenarios from Entry-Level to Executive Luxury
-                </h3>
-              </div>
+          {/* Clean 4-Choice Quick Switcher Toolbar */}
+          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/30 text-left flex flex-wrap items-center justify-between gap-3 shadow-lg">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] block">
+                COMPARE 4 DESIGN CHOICES
+              </span>
+              <p className="text-xs text-white/70 mt-0.5">
+                Click any option to test its exact typography, search interaction, and layout in the browser frame above.
+              </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-white/80">
-              <div className="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/40 space-y-2">
-                <h4 className="font-bold text-[#D4AF37] text-sm flex items-center gap-1.5">
-                  <span>Option 1: Obsidian Twilight (Aspirational Night)</span>
-                </h4>
-                <ul className="space-y-1.5 text-[11px] text-white/70">
-                  <li>• <strong>Atmosphere:</strong> Illuminated hillside modern estate with infinity pool overlooking twilight valley lights.</li>
-                  <li>• <strong>Target Persona:</strong> Accredited investors and private wealth seeking discretion and institutional comps.</li>
-                  <li>• <strong>Shield Message:</strong> "Trusted by private wealth. No agent spam."</li>
-                  <li>• <strong>4-Step Process:</strong> Paste Address → AI + Human Analysis → Intelligence Delivered → Better Decisions.</li>
-                </ul>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[#141414] border border-[#d8cab6]/40 space-y-2">
-                <h4 className="font-bold text-[#e8c84a] text-sm flex items-center gap-1.5">
-                  <span>Option 2: Warm Champagne (Dyson Tan Signature)</span>
-                </h4>
-                <ul className="space-y-1.5 text-[11px] text-white/70">
-                  <li>• <strong>Atmosphere:</strong> Warm golden-hour coastal villa with infinity pool blended seamlessly into Dyson Tan (#ede0cc).</li>
-                  <li>• <strong>Target Persona:</strong> Relocating luxury homebuyers wanting warmth, trust, and unvarnished reality.</li>
-                  <li>• <strong>Legacy Anchor:</strong> "35 years of high-end brokerage. Now augmented by AI."</li>
-                  <li>• <strong>3 Pillars:</strong> Honest comps, Hidden risks, Closing-cost credit.</li>
-                </ul>
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { id: 'grok_candidate_a', label: '1. Grok Format A (Split)' },
+                { id: 'grok_candidate_b', label: '2. Grok Format B (Centered)' },
+                { id: 'obsidian_twilight', label: '3. Obsidian Twilight' },
+                { id: 'warm_champagne', label: '4. Warm Champagne' }
+              ].map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCandidate(c.id);
+                    window.scrollTo({ top: 140, behavior: 'smooth' });
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    selectedCandidate === c.id
+                      ? 'bg-[#D4AF37] text-black font-bold shadow-md'
+                      : 'bg-white/10 text-white/80 hover:text-white border border-white/10'
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
             </div>
           </div>
 

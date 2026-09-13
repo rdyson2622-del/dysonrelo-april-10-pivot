@@ -49,25 +49,24 @@ export default function WarmChampagneCandidate({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-[#ede0cc] border border-[#d8cab6] text-[#854d0e] shadow-sm">
-            ADMIN LAB MOCK — NOT LIVE
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#ede0cc] border border-[#d8cab6] text-[#854d0e]">
+            Format 4 · Warm Champagne
           </span>
         </div>
       </div>
 
       {/* ── MAIN ASYMMETRICAL SPLIT HERO ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[480px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[440px]">
         
         {/* Left Content Column (7 cols) */}
-        <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6 bg-gradient-to-br from-[#faf6ee] via-[#f7f1e4] to-[#ede0cc]">
+        <div className="lg:col-span-7 p-6 sm:p-8 lg:p-9 flex flex-col justify-between space-y-5 bg-gradient-to-br from-[#faf6ee] via-[#f7f1e4] to-[#ede0cc]">
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h1 
-              className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#111111] tracking-tight leading-[1.12]"
+              className="text-2xl sm:text-3xl font-serif text-[#111111] tracking-tight leading-snug"
             >
-              Your human &amp; <br />
-              AI-assisted private <br />
-              <span className="text-[#854d0e] italic font-serif">real estate copilot.</span>
+              Your human &amp; AI-assisted <br />
+              <span className="text-[#854d0e] italic font-serif">private real estate copilot</span>
             </h1>
 
             <p className="text-xs sm:text-sm text-[#44382c] max-w-lg leading-relaxed font-normal">
@@ -75,15 +74,15 @@ export default function WarmChampagneCandidate({
             </p>
 
             {/* The Fiduciary Trust Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ede0cc] border border-[#d8cab6] text-[11px] text-[#2a241b] font-medium shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-[#854d0e] shrink-0" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ede0cc] border border-[#d8cab6] text-[11px] text-[#2a241b] font-normal shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
               <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
             </div>
           </div>
 
           {/* Search Box */}
-          <form onSubmit={handleSubmit} className="pt-2">
-            <div className="flex items-center bg-[#ffffff] rounded-xl border border-[#d8cab6] p-1.5 shadow-md focus-within:border-[#854d0e] focus-within:ring-1 focus-within:ring-[#854d0e]/30 transition-all">
+          <form onSubmit={handleSubmit} className="pt-1">
+            <div className="flex items-center bg-[#ffffff] rounded-xl border border-[#d8cab6] p-1.5 shadow-sm focus-within:border-[#854d0e] focus-within:ring-1 focus-within:ring-[#854d0e]/30 transition-all">
               <div className="pl-3 pr-2 flex items-center gap-2 text-[#786a58]">
                 <MapPin className="w-4 h-4 text-[#854d0e]" />
               </div>
@@ -91,15 +90,15 @@ export default function WarmChampagneCandidate({
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Paste any property address (e.g., 72 Beverly Park Ln, Beverly Hills, CA)"
+                placeholder="Paste property address (e.g., 742 Vista Del Mar, La Jolla, CA)..."
                 className="flex-1 bg-transparent text-[#1a1a1a] text-xs sm:text-sm outline-none placeholder:text-[#9c8e7c] font-normal"
               />
               <button
                 type="submit"
                 disabled={isAuditing}
-                className="px-5 py-2.5 rounded-lg text-xs font-bold text-white bg-[#854d0e] hover:bg-[#6d3e0b] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0"
+                className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#854d0e] hover:bg-[#6d3e0b] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0"
               >
-                <span>{isAuditing ? 'Auditing...' : 'SEND'}</span>
+                <span>{isAuditing ? 'Auditing...' : 'Send'}</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>

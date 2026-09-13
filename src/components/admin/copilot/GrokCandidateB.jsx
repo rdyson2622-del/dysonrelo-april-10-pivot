@@ -78,34 +78,33 @@ export default function GrokCandidateB({
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="hidden sm:inline-block text-[10.5px] font-semibold text-[#854d0e] px-3 py-1 rounded-full bg-white/70 border border-[#D4AF37]/40">
-                35-Yr Brokerage Fiduciary
+              <span className="hidden sm:inline-block text-[11px] font-medium text-[#854d0e] px-2.5 py-0.5 rounded-full bg-white/70 border border-[#D4AF37]/40">
+                35-Year Brokerage Fiduciary
               </span>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-black uppercase tracking-wider shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                <span>Grok Format B</span>
-              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] text-[10px] font-semibold border border-[#D4AF37]/50 shadow-sm">
+                Format B · Centered Symmetrical
+              </span>
             </div>
           </div>
         </div>
 
         {/* Centered Headline */}
-        <div className="relative z-10 max-w-3xl mx-auto space-y-3 mb-8">
+        <div className="relative z-10 max-w-2xl mx-auto space-y-2.5 mb-6">
           
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#faf5ec] border border-[#D4AF37]/60 text-[#684614] text-[11px] font-medium shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-[#10b981] shrink-0" />
-            <span><strong>The Trust Shield:</strong> No agent spam. Independent fiduciary match — not the listing agent.</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#faf5ec] border border-[#D4AF37]/50 text-[#684614] text-[11px] font-normal shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+            <span>No agent spam. Independent fiduciary match — not the listing agent.</span>
           </div>
 
           <h1 
-            className="text-3xl sm:text-5xl lg:text-6xl font-bold text-[#0a0a0a] leading-[1.12] tracking-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0a0a0a] leading-snug tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             Your human &amp; AI-assisted <br />
-            <span className="text-[#854d0e]">private real estate copilot.</span>
+            <span className="text-[#854d0e]">private real estate copilot</span>
           </h1>
 
-          <p className="text-xs sm:text-base text-[#3a342c] font-normal max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#3a342c] font-normal max-w-lg mx-auto leading-relaxed">
             Paste any address to get comps, risks, and a closing rebate where allowed by law.
           </p>
 
@@ -168,54 +167,54 @@ export default function GrokCandidateB({
           </div>
         </div>
 
-        {/* ── 3 ELEVATED LUXURY CARDS (SYMMETRICAL) ── */}
-        <div className="relative z-10 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        {/* ── 3 CLEAN BENEFIT CARDS (SYMMETRICAL) ── */}
+        <div className="relative z-10 max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
           
           {/* Card 1: Smart Comps */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-[#ffffff]/95 border border-[#D4AF37]/50 shadow-lg space-y-2.5 transition-all hover:-translate-y-1 hover:shadow-xl hover:border-[#D4AF37]">
-            <div className="w-10 h-10 mx-auto rounded-2xl bg-[#854d0e]/10 text-[#854d0e] flex items-center justify-center shadow-inner">
-              <TrendingUp className="w-5 h-5" />
+          <div className="p-4 rounded-2xl bg-[#ffffff]/95 border border-[#D4AF37]/40 shadow-sm space-y-1.5 transition-all hover:border-[#D4AF37]">
+            <div className="w-8 h-8 mx-auto rounded-xl bg-[#854d0e]/10 text-[#854d0e] flex items-center justify-center">
+              <TrendingUp className="w-4 h-4" />
             </div>
             <h3 
-              className="text-base sm:text-lg font-bold text-[#0a0a0a]"
+              className="text-sm font-semibold text-[#0a0a0a]"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Smart Comps
             </h3>
-            <p className="text-xs text-[#554c40] leading-relaxed">
-              Instant, accurate comps tailored to the property and local micro-market sales.
+            <p className="text-[11px] text-[#554c40] leading-snug">
+              Accurate neighborhood sold comps tailored to the micro-market.
             </p>
           </div>
 
           {/* Card 2: Risk Insights */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-[#ffffff]/95 border border-[#D4AF37]/50 shadow-lg space-y-2.5 transition-all hover:-translate-y-1 hover:shadow-xl hover:border-[#D4AF37]">
-            <div className="w-10 h-10 mx-auto rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center shadow-inner">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="p-4 rounded-2xl bg-[#ffffff]/95 border border-[#D4AF37]/40 shadow-sm space-y-1.5 transition-all hover:border-[#D4AF37]">
+            <div className="w-8 h-8 mx-auto rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <h3 
-              className="text-base sm:text-lg font-bold text-[#0a0a0a]"
+              className="text-sm font-semibold text-[#0a0a0a]"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Risk Insights
             </h3>
-            <p className="text-xs text-[#554c40] leading-relaxed">
-              AI-flagged risks, title red flags, permit boundaries, and local factors that actually matter.
+            <p className="text-[11px] text-[#554c40] leading-snug">
+              Zoning, permit boundaries, easements, and seller DOM history.
             </p>
           </div>
 
           {/* Card 3: Closing Rebate */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-[#ffffff]/95 border border-[#D4AF37]/50 shadow-lg space-y-2.5 transition-all hover:-translate-y-1 hover:shadow-xl hover:border-[#D4AF37]">
-            <div className="w-10 h-10 mx-auto rounded-2xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center shadow-inner">
-              <DollarSign className="w-5 h-5" />
+          <div className="p-4 rounded-2xl bg-[#ffffff]/95 border border-[#D4AF37]/40 shadow-sm space-y-1.5 transition-all hover:border-[#D4AF37]">
+            <div className="w-8 h-8 mx-auto rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center">
+              <DollarSign className="w-4 h-4" />
             </div>
             <h3 
-              className="text-base sm:text-lg font-bold text-[#0a0a0a]"
+              className="text-sm font-semibold text-[#0a0a0a]"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Closing Rebate
             </h3>
-            <p className="text-xs text-[#554c40] leading-relaxed">
-              Earn thousands back at closing — where allowed by law. Up to 50% referral fee credited.
+            <p className="text-[11px] text-[#554c40] leading-snug">
+              Earn thousands credited on your closing statement where legal.
             </p>
           </div>
 
