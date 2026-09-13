@@ -156,7 +156,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           <div className="flex flex-col items-center space-y-3 pt-2 text-center">
             <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/5 border border-white/15 text-lg sm:text-xl text-white font-medium shadow-md">
               <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] shrink-0" />
-              <span>Trusted by private wealth. No agent spam.</span>
+              <span>Trusted by private wealth. No agent spam or interaction.</span>
             </div>
 
             {/* Real-time definition text (+75% font size) */}
