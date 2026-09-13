@@ -105,35 +105,37 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* 1. Search Bar — Lowered a little more from heading */}
-          <form onSubmit={handleSubmit} className="pt-3.5">
-            <div className="flex items-center bg-[#111111] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
-              <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Paste property address"
-                className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-normal"
-              />
-              <button
-                type="submit"
-                disabled={isAuditing}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
-              >
-                <span>{isAuditing ? 'AUDITING...' : 'SEND'}</span>
-                <ArrowRight className="w-4 h-4 text-black" />
-              </button>
-            </div>
-          </form>
+          {/* 1. Search Bar + 2. Tightened & Centered Paste Address Statement */}
+          <div className="pt-3 space-y-1.5 text-center">
+            <form onSubmit={handleSubmit}>
+              <div className="flex items-center bg-[#111111] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
+                <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Paste property address"
+                  className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-normal"
+                />
+                <button
+                  type="submit"
+                  disabled={isAuditing}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
+                >
+                  <span>{isAuditing ? 'AUDITING...' : 'SEND'}</span>
+                  <ArrowRight className="w-4 h-4 text-black" />
+                </button>
+              </div>
+            </form>
 
-          {/* 2. Paste address statement all on one line under search bar */}
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-normal pt-0.5">
-            Paste address for comps, risks, closing rebate where allowed by law.
-          </p>
+            {/* 2. Tightened directly under search pill & centered */}
+            <p className="text-xs sm:text-sm text-white/70 leading-normal font-normal">
+              Paste address for comps, risks, closing rebate where allowed by law.
+            </p>
+          </div>
 
-          {/* 3. Try sample is next */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+          {/* 3. Try sample is next (Centered) */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
             <span className="text-[10px] text-white/40 uppercase font-semibold">Try sample:</span>
             {SAMPLE_SEARCHES.map((chip) => (
               <button
@@ -150,15 +152,15 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          {/* 4. Trusted and Instant statements are next */}
-          <div className="space-y-2 pt-0.5">
+          {/* 4. Trusted and Instant statements are next (Centered) */}
+          <div className="flex flex-col items-center space-y-1.5 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
               <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
               <span>Trusted by private wealth. No agent spam.</span>
             </div>
 
             {/* Real-time definition text */}
-            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center gap-1.5 pt-0.5">
+            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center justify-center gap-1.5 text-center">
               <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
               <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
             </p>
