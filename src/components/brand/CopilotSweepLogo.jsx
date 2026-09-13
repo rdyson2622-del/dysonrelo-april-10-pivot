@@ -22,6 +22,7 @@ export default function CopilotSweepLogo({ size = 'md', className = '', onClick 
       src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/acf69797f_copilot-sweep-logo.png"
       alt="copilot"
       className={`inline-block object-contain ${selectedSizeClass} ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      style={{ mixBlendMode: 'screen', filter: 'contrast(1.4)' }}
       onClick={onClick}
     />
   );
