@@ -172,8 +172,11 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           <img 
             src={NIGHT_HILLSIDE_ESTATE} 
             alt="Hillside Estate at Night" 
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%] transition-transform duration-700"
           />
+
+          {/* Top-right dark twilight sky blend to eliminate any artifact */}
+          <div className="absolute top-0 right-0 w-36 h-16 bg-gradient-to-bl from-[#0a0d14]/95 via-[#0d121c]/70 to-transparent pointer-events-none rounded-tr-2xl" />
 
           {/* Active Audit Status Indicator */}
           {auditComplete && (
