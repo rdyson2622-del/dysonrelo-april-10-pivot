@@ -135,9 +135,9 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         </div>
 
         {/* Trust Endorsement */}
-        <div className="pt-2 flex items-center justify-center gap-2 text-xs text-stone-400">
+        <div className="pt-2 flex items-center justify-center gap-2 text-xs text-stone-400 whitespace-nowrap">
           <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-          <span>Independent fiduciary match — never the listing agent.</span>
+          <span className="whitespace-nowrap">We are an independent research entity - no spam calls or agent involvement</span>
         </div>
       </div>
 
