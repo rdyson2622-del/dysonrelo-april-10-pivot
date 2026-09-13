@@ -316,11 +316,11 @@ export default function FrontDoor() {
                     className="font-bold text-[11px] sm:text-xs md:text-sm lg:text-base tracking-wide text-white block leading-tight whitespace-nowrap"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
-                    <span className="md:hidden">DysonRelo</span>
-                    <span className="hidden md:inline">DysonRelo.com</span>
+                    <span className="md:hidden">DysonHomes</span>
+                    <span className="hidden md:inline">DysonHomes.com</span>
                   </span>
                   <span className="hidden md:block text-[7.5px] md:text-[8px] lg:text-[8.5px] text-[#D4AF37] tracking-wider uppercase font-sans font-semibold leading-tight whitespace-nowrap">
-                    Nationwide Relocation Concierge
+                    Private Real Estate Copilot
                   </span>
                 </div>
               </div>

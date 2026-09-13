@@ -6,6 +6,7 @@ import {
   Lock, Share2, Compass, Home, Info, ChevronRight, Zap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -273,37 +274,47 @@ export default function AdminDysonHomesCopilot() {
                 </span>
               </div>
 
-              {/* ── CONSUMER HERO SECTION ── */}
-              <div className="px-4 py-8 sm:py-12 sm:px-8 text-center space-y-5 text-white">
+              {/* ── CONSUMER HERO SECTION IN TAN BACKGROUND WITH ARCHITECTURAL HOME PHOTO ── */}
+              <div className="p-4 sm:p-6 lg:p-8 space-y-6" style={{ background: TAN_BG }}>
                 
-                {/* Brand Logo & Copilot Mark */}
-                <div className="inline-flex flex-col items-center">
-                  <img src={DYSON_LOGO} alt="Dyson & Dyson" className="h-10 sm:h-12 w-auto mb-2" />
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#17140b] border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-black tracking-widest uppercase shadow-sm">
-                    <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-                    <span>DysonHomes Copilot</span>
+                {/* 1. Featured Architectural Home for Color and Prestige */}
+                <div className="w-full relative rounded-2xl overflow-hidden shadow-2xl aspect-[16/9] bg-black border border-[#D4AF37]/40">
+                  <img
+                    src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95"
+                    alt="Luxury Estate"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/80 border border-[#D4AF37]/60 text-white text-[11px] font-bold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+                    <span>Featured: Austin, TX ($7.5M • Corporate Tech Relo Hub)</span>
                   </div>
                 </div>
 
-                {/* Primary Value Headline */}
-                <div className="max-w-2xl mx-auto space-y-2">
+                {/* 2. Brand Pill & Value Headline */}
+                <div className="text-center max-w-2xl mx-auto space-y-2 pt-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10.5px] font-black tracking-widest uppercase shadow-md">
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>DYSONHOMES COPILOT</span>
+                  </div>
+
                   <h1 
-                    className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight"
+                    className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
                     Your Human &amp; AI-Assisted <br className="hidden sm:inline" />
-                    <span className="text-[#D4AF37]">Private Real Estate Copilot.</span>
+                    <span style={{ color: '#854d0e' }}>Private Real Estate Copilot.</span>
                   </h1>
-                  <p className="text-xs sm:text-sm text-white/70 max-w-xl mx-auto leading-relaxed">
+
+                  <p className="text-xs sm:text-sm text-[#0a0a0a]/80 max-w-xl mx-auto font-medium leading-relaxed pt-1">
                     Paste any address from any online real estate site to see real sold comps, hidden property risks, and your calculated cash rebate at closing.
                   </p>
                 </div>
 
-                {/* ── THE ZERO-UI SEARCH PROMPT ── */}
-                <div className="max-w-2xl mx-auto pt-2">
+                {/* 3. The Zero-UI Search Prompt */}
+                <div className="max-w-2xl mx-auto pt-1">
                   <form onSubmit={handleCustomSearch} className="relative">
                     <div 
-                      className="flex items-center rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3.5 gap-2 sm:gap-3 transition-all bg-[#1a1a1a] border-2 border-[#D4AF37] shadow-[0_0_35px_rgba(212,175,55,0.2)]"
+                      className="flex items-center rounded-2xl sm:rounded-full px-3 sm:px-4 py-2 sm:py-3 gap-2 sm:gap-3 transition-all bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl"
                     >
                       <Search className="w-5 h-5 text-[#D4AF37] shrink-0" />
                       <input
@@ -316,7 +327,7 @@ export default function AdminDysonHomesCopilot() {
                       
                       <Link 
                         to="/talking-app"
-                        className="p-2 rounded-xl bg-black/60 hover:bg-black text-[#10b981] border border-[#10b981]/40 shrink-0 transition-transform active:scale-95"
+                        className="p-2 rounded-xl bg-black hover:bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/50 shrink-0 transition-transform active:scale-95"
                         title="Talk with Charlie (Voice AI)"
                       >
                         <Mic className="w-4 h-4" />
@@ -325,7 +336,7 @@ export default function AdminDysonHomesCopilot() {
                       <button
                         type="submit"
                         disabled={isAuditing}
-                        className="px-4 py-2 rounded-xl text-xs sm:text-sm font-black text-black shrink-0 transition-all hover:brightness-110 active:scale-95 cursor-pointer shadow-md"
+                        className="px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-black text-black shrink-0 transition-all hover:brightness-110 active:scale-95 cursor-pointer shadow-md"
                         style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})` }}
                       >
                         {isAuditing ? 'Auditing...' : 'Run Copilot'}
@@ -335,7 +346,7 @@ export default function AdminDysonHomesCopilot() {
 
                   {/* 1-Click Sample Address Chips */}
                   <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 text-xs">
-                    <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider mr-1">
+                    <span className="text-[#0a0a0a]/60 text-[10.5px] font-bold uppercase tracking-wider mr-1">
                       Try Sample:
                     </span>
                     {SAMPLE_PROPERTIES.map((p, idx) => (
@@ -343,230 +354,38 @@ export default function AdminDysonHomesCopilot() {
                         key={idx}
                         type="button"
                         onClick={() => handleSelectSample(p)}
-                        className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-all cursor-pointer truncate max-w-[220px] ${
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm truncate max-w-[260px] ${
                           selectedProperty.address === p.address
-                            ? 'bg-[#D4AF37] text-black font-bold shadow-md'
-                            : 'bg-white/5 hover:bg-white/10 text-white/70 border border-white/10'
+                            ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
+                            : 'bg-[#faf6ee] text-[#0a0a0a] border border-[#0a0a0a]/20 hover:border-[#D4AF37]'
                         }`}
                       >
                         {p.address.split(',')[0]} (${(p.price / 1000000).toFixed(2)}M)
                       </button>
                     ))}
                   </div>
+
+                  {/* Bob Dyson Quote */}
+                  <div className="max-w-xl mx-auto pt-3 text-center">
+                    <p
+                      className="text-base sm:text-lg italic font-bold text-[#0a0a0a] tracking-normal leading-snug"
+                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                    >
+                      <span>“You are absolutely going to love our stressless </span>
+                      <span className="block sm:inline">Concierge Approach to transacting your real estate ventures.”</span>
+                    </p>
+                    <div className="text-right pr-2 sm:pr-4 text-xs sm:text-sm font-bold text-[#854d0e] tracking-wide mt-0.5" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      — Bob Dyson
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Added Scroll: Copilot Intelligence Dossier */}
+                <div className="max-w-2xl mx-auto pt-2">
+                  <CopilotPropertyDossier property={selectedProperty} />
                 </div>
 
               </div>
-
-              {/* ── COPILOT INTELLIGENCE DOSSIER (THE PAYOFF) ── */}
-              {selectedProperty && (
-                <div className="p-4 sm:p-6 lg:p-8 border-t border-[#D4AF37]/30 bg-[#0e0e0e] space-y-6">
-                  
-                  {/* Property Header Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-black border border-white/10">
-                    <div className="text-left space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm sm:text-base font-bold text-white">
-                          {selectedProperty.address}
-                        </span>
-                        <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black uppercase bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40">
-                          Verified Listing
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/50">
-                        {selectedProperty.beds} Beds • {selectedProperty.baths} Baths • {selectedProperty.sqft?.toLocaleString()} SqFt • {selectedProperty.dom} Days on Market • Office: {selectedProperty.listingOffice}
-                      </p>
-                    </div>
-
-                    <div className="text-left sm:text-right shrink-0">
-                      <div className="text-xs text-white/40 uppercase font-bold tracking-wider">
-                        Current List Price
-                      </div>
-                      <div className="text-xl sm:text-2xl font-bold text-white font-mono">
-                        ${selectedProperty.price?.toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3 Core Analytical Blocks: Rebate, Comps, Risks */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                    
-                    {/* BLOCK 1: 50% REFERRAL REBATE CALCULATOR */}
-                    <div className="p-4 rounded-2xl bg-[#14120b] border-2 border-[#D4AF37] shadow-lg flex flex-col justify-between space-y-3">
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37]">
-                            YOUR CASH BACK AT CLOSING
-                          </span>
-                          <span className="p-1 rounded-md bg-[#D4AF37]/20 text-[#D4AF37]">
-                            <DollarSign className="w-3.5 h-3.5" />
-                          </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-black text-white font-mono mt-1">
-                          +${selectedProperty.rebate?.toLocaleString()}
-                        </div>
-                        <p className="text-[11px] text-white/70 mt-1 leading-relaxed">
-                          Up to <strong>50% of our brokerage referral fee</strong> credited directly to your closing settlement statement or rate buy-down.
-                        </p>
-                      </div>
-
-                      <div className="pt-2 border-t border-[#D4AF37]/30 text-[10px] text-white/50 space-y-1 font-mono">
-                        <div className="flex justify-between">
-                          <span>Listing Side Fee:</span>
-                          <span>2.5% (${(selectedProperty.price * 0.025).toLocaleString()})</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Dyson 25% Referral:</span>
-                          <span>${(selectedProperty.rebate * 2).toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between text-[#D4AF37] font-bold">
-                          <span>Your 50% Rebate:</span>
-                          <span>${selectedProperty.rebate?.toLocaleString()}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* BLOCK 2: UNVARNISHED COMPS REALITY */}
-                    <div className="p-4 rounded-2xl bg-[#141414] border border-white/15 shadow-md flex flex-col justify-between space-y-3">
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-[#60a5fa]">
-                            UNBIASED COMPS VALUATION
-                          </span>
-                          <span className="p-1 rounded-md bg-blue-500/20 text-[#60a5fa]">
-                            <TrendingUp className="w-3.5 h-3.5" />
-                          </span>
-                        </div>
-                        <div className="text-2xl sm:text-3xl font-bold text-white font-mono mt-1">
-                          ${selectedProperty.compsPrice?.toLocaleString()}
-                        </div>
-                        <p className="text-[11px] text-white/70 mt-1 leading-relaxed">
-                          Estimated market value based on actual closed neighborhood sales, not asking prices or algorithmic hype.
-                        </p>
-                      </div>
-
-                      <div className="pt-2 border-t border-white/10 text-[10px] text-white/50 space-y-1">
-                        <div className="flex justify-between">
-                          <span>Spread vs Ask:</span>
-                          <span className={selectedProperty.price > selectedProperty.compsPrice ? 'text-amber-400 font-bold' : 'text-emerald-400'}>
-                            {selectedProperty.price > selectedProperty.compsPrice 
-                              ? `-$${(selectedProperty.price - selectedProperty.compsPrice).toLocaleString()} (Overpriced)`
-                              : 'Fairly Priced'
-                            }
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Last Sold ({selectedProperty.lastSoldYear}):</span>
-                          <span>${selectedProperty.lastSoldPrice?.toLocaleString()}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* BLOCK 3: HIDDEN PROPERTY RISKS & FLAWS */}
-                    <div className="p-4 rounded-2xl bg-[#141414] border border-white/15 shadow-md flex flex-col justify-between space-y-3">
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-[#f87171]">
-                            HIDDEN RISKS &amp; AUDIT
-                          </span>
-                          <span className="p-1 rounded-md bg-red-500/20 text-[#f87171]">
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                          </span>
-                        </div>
-                        <ul className="mt-2 space-y-1.5 text-[11px] text-white/80">
-                          {selectedProperty.risks.map((risk, rIdx) => (
-                            <li key={rIdx} className="flex items-start gap-1.5">
-                              <span className="text-red-400 font-bold leading-none shrink-0">•</span>
-                              <span className="leading-snug">{risk}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="pt-2 border-t border-white/10 text-[10px] text-emerald-400">
-                        ✓ Deed &amp; zoning audit performed by Dyson copilot
-                      </div>
-                    </div>
-
-                  </div>
-
-                  {/* ── ZERO-TRAP PRIVATE DELIVERY & TALK WITH CHARLIE ── */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-[#17140b] border border-[#D4AF37]/50 flex flex-col md:flex-row md:items-center justify-between gap-4 text-left">
-                    <div className="space-y-1 max-w-xl">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-                        <span className="text-xs font-black uppercase tracking-wider text-[#D4AF37]">
-                          PRIVATE DOSSIER · NO AGENT HARASSMENT
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/80 leading-relaxed">
-                        We don't auction your phone number to 5 competing agents. Get this full property audit, comps report, and rebate guarantee sent straight to your cell.
-                      </p>
-                    </div>
-
-                    {/* Send form */}
-                    <div className="shrink-0 w-full md:w-auto">
-                      {smsSent ? (
-                        <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 shrink-0" />
-                          <span>Dossier sent to {smsPhone}. Check your messages!</span>
-                        </div>
-                      ) : (
-                        <form onSubmit={handleSendSms} className="flex items-center gap-2">
-                          <input
-                            type="tel"
-                            value={smsPhone}
-                            onChange={(e) => setSmsPhone(e.target.value)}
-                            placeholder="(555) 000-0000"
-                            required
-                            className="px-3 py-2 rounded-xl bg-black border border-white/20 text-white text-xs w-36 sm:w-44 focus:outline-none focus:border-[#D4AF37]"
-                          />
-                          <button
-                            type="submit"
-                            className="px-3.5 py-2 rounded-xl bg-[#D4AF37] text-black font-black text-xs hover:brightness-110 active:scale-95 transition-all cursor-pointer whitespace-nowrap shadow-md"
-                          >
-                            Text Me Dossier
-                          </button>
-                        </form>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── HUMAN + AI SAFETY NET FOOTER ── */}
-                  <div className="p-4 rounded-2xl bg-black border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-white/60">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/50 flex items-center justify-center text-[#D4AF37] font-bold">
-                        BD
-                      </div>
-                      <div>
-                        <div className="text-white font-bold text-xs">
-                          Human Fiduciary Oversight
-                        </div>
-                        <div className="text-[11px] text-white/50">
-                          Audited by Bob Dyson &amp; licensed brokers. 55 years of California transaction governance.
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Link
-                        to="/talking-app"
-                        className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/15 flex items-center gap-1.5 transition-all"
-                      >
-                        <Mic className="w-3.5 h-3.5 text-[#10b981]" />
-                        <span>Discuss with Charlie</span>
-                      </Link>
-                      <a
-                        href="tel:+18583531200"
-                        className="px-3 py-1.5 rounded-xl bg-[#D4AF37] text-black text-xs font-bold flex items-center gap-1.5 hover:brightness-110 transition-all shadow-md"
-                      >
-                        <Phone className="w-3 h-3" />
-                        <span>(858) 353-1200</span>
-                      </a>
-                    </div>
-                  </div>
-
-                </div>
-              )}
 
               {/* ── DNN REAL ESTATE NEWS LIVE TICKER INTEGRATION ── */}
               <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">

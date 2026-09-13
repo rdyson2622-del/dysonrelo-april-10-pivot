@@ -12,35 +12,130 @@ import FirstTimeViewerSidebarIntro from '@/components/sidebar/FirstTimeViewerSid
 
 const GOLD = '#D4AF37';
 
-// Curated high-valued architectural luxury estates captured at sunset and twilight
+import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
+
+// Curated high-valued architectural luxury estates captured at sunset and twilight with live Copilot dossier data
 const HERO_BACKGROUNDS = [
+  {
+    id: 'lajolla',
+    city: 'La Jolla, CA',
+    title: 'Coastal Sunset Architectural Estate',
+    tag: '$3.45M • Ocean View Permitted Boundary',
+    url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=95',
+    property: {
+      address: '742 Vista Del Mar, La Jolla, CA 92037',
+      price: 3450000,
+      beds: 4,
+      baths: 4.5,
+      sqft: 3820,
+      dom: 64,
+      compsPrice: 3200000,
+      rebate: 21562,
+      risks: [
+        '64 days on market — seller price reduction of $150k pending',
+        'Coastal Commission permitting boundary: strict exterior remodel restrictions',
+        'Recent neighborhood comp sold 7.2% below asking price'
+      ],
+      listingOffice: 'Independent Coastal Brokerage',
+      lastSoldPrice: 2100000,
+      lastSoldYear: 2019
+    }
+  },
   {
     id: 'scottsdale',
     city: 'Scottsdale, AZ',
     title: 'Desert Sunset Architectural Estate',
-    tag: '$8.9M • 0% Income Tax Destination',
+    tag: '$2.15M • 0% Income Tax Corridor',
     url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2400&q=95',
+    property: {
+      address: '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
+      price: 2150000,
+      beds: 4,
+      baths: 3,
+      sqft: 3240,
+      dom: 18,
+      compsPrice: 2125000,
+      rebate: 13437,
+      risks: [
+        'HOA rental restriction: minimum 12-month lease required (no short-term Airbnb)',
+        'Dual A/C units are 14 years old — approaching replacement lifecycle'
+      ],
+      listingOffice: 'Southwest Luxury Realty',
+      lastSoldPrice: 1420000,
+      lastSoldYear: 2021
+    }
   },
   {
     id: 'austin',
     city: 'Austin, TX',
     title: 'Twilight Hill Country Glass Villa',
-    tag: '$7.5M • Corporate Tech Relo Hub',
+    tag: '$1.85M • Corporate Tech Relo Hub',
     url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95',
+    property: {
+      address: '4220 Oak Hollow Terrace, Austin, TX 78746',
+      price: 1850000,
+      beds: 3,
+      baths: 3.5,
+      sqft: 2890,
+      dom: 42,
+      compsPrice: 1775000,
+      rebate: 11562,
+      risks: [
+        'Travis County tax reassessment will trigger ~18% property tax escalation next cycle',
+        'Flash flood zone buffer near greenbelt easement'
+      ],
+      listingOffice: 'Westlake Premier Estates',
+      lastSoldPrice: 1150000,
+      lastSoldYear: 2018
+    }
   },
   {
     id: 'naples',
     city: 'Naples, FL',
     title: 'Waterfront Sunset Palm Estate',
-    tag: '$12.8M • Coastal Relo Haven',
+    tag: '$4.85M • Coastal Relo Haven',
     url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=2400&q=95',
+    property: {
+      address: '112 Port Royal Coastal Vista, Naples, FL 34102',
+      price: 4850000,
+      beds: 5,
+      baths: 6,
+      sqft: 5120,
+      dom: 29,
+      compsPrice: 4650000,
+      rebate: 30312,
+      risks: [
+        'High-velocity coastal wind & hurricane insurance surcharge',
+        'Seawall inspection required for deepwater dock easement'
+      ],
+      listingOffice: 'Port Royal Luxury Brokerage',
+      lastSoldPrice: 3200000,
+      lastSoldYear: 2020
+    }
   },
   {
     id: 'boulder',
     city: 'Boulder, CO',
     title: 'Mountain Contemporary Glass Manor',
-    tag: '$9.2M • Alpine Lifestyle Relo',
+    tag: '$2.95M • Alpine Lifestyle Relo',
     url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=95',
+    property: {
+      address: '744 Chautauqua Alpine Ridge, Boulder, CO 80302',
+      price: 2950000,
+      beds: 4,
+      baths: 4,
+      sqft: 3650,
+      dom: 24,
+      compsPrice: 2890000,
+      rebate: 18437,
+      risks: [
+        'Wildfire urban interface mitigation mandate',
+        'City of Boulder open space view corridor setback restrictions'
+      ],
+      listingOffice: 'Flatirons Alpine Realty',
+      lastSoldPrice: 1950000,
+      lastSoldYear: 2019
+    }
   },
 ];
 
@@ -58,6 +153,60 @@ export default function LuxuryHeroShowcase({
   const navigate = useNavigate();
   const [activeBgIndex, setActiveBgIndex] = useState(0);
   const currentBg = HERO_BACKGROUNDS[activeBgIndex];
+
+  const [customProperty, setCustomProperty] = useState(null);
+  const [isAuditing, setIsAuditing] = useState(false);
+  const activeProperty = customProperty || currentBg.property;
+
+  const handleCopilotRun = (e) => {
+    e.preventDefault();
+    const query = searchQuery?.trim();
+    if (!query) return;
+    setIsAuditing(true);
+
+    const qLower = query.toLowerCase();
+    const matchedBgIndex = HERO_BACKGROUNDS.findIndex(b => 
+      qLower.includes(b.city.toLowerCase().split(',')[0]) ||
+      b.property.address.toLowerCase().includes(qLower)
+    );
+
+    if (matchedBgIndex >= 0) {
+      setActiveBgIndex(matchedBgIndex);
+      setCustomProperty(null);
+      setIsAuditing(false);
+    } else {
+      setTimeout(() => {
+        setCustomProperty({
+          address: query,
+          price: 2450000,
+          beds: 4,
+          baths: 3.5,
+          sqft: 3400,
+          dom: 31,
+          compsPrice: 2380000,
+          rebate: 15312,
+          risks: [
+            'Micro-pocket sales average closed 2.8% below initial asking price',
+            'Municipal zoning & tax assessment recalculation required upon transfer',
+            'Verify active utility easements prior to offer submission'
+          ],
+          listingOffice: 'Syndicated Regional Listing',
+          lastSoldPrice: 1650000,
+          lastSoldYear: 2020
+        });
+        setIsAuditing(false);
+      }, 400);
+    }
+  };
+
+  const handleSelectSample = (sampleAddress, bgId) => {
+    setSearchQuery(sampleAddress);
+    const idx = HERO_BACKGROUNDS.findIndex(b => b.id === bgId);
+    if (idx >= 0) {
+      setActiveBgIndex(idx);
+    }
+    setCustomProperty(null);
+  };
 
   // Gating rule:
   // Family = authenticated DnnSubscriber email OR explicit view-as localStorage dyson_view_as_family_subscriber=true (optional dyson_view_as_subscriber_email)
@@ -386,109 +535,132 @@ export default function LuxuryHeroShowcase({
             />
           </div>
 
-          {/* ================= 3. STATEMENT & SEARCH PILL DIRECTLY BELOW PHOTO ================= */}
-          <div className="w-full max-w-2xl mx-auto space-y-3.5 text-center pt-1">
+          {/* ================= 3. DYSONHOMES COPILOT STATEMENT & ZERO-UI SEARCH PROMPT ================= */}
+          <div className="w-full max-w-2xl mx-auto space-y-3.5 text-center pt-2">
 
-            {/* 1ST: THE STATEMENT & EXPLANATION COPY (ALL IN BLACK FONT COLOR) */}
-            <div className="space-y-0.5 pt-1 text-center">
-              <h3 
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#0a0a0a]"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                We Don't Sell Real Estate
-              </h3>
-              <p
-                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-wide"
-                style={{
-                  fontFamily: 'Cormorant Garamond, serif',
-                  color: '#854d0e',
-                }}
-              >
-                We Orchestrate Your Entire Move.
-              </p>
-              <div className="text-xs sm:text-sm text-[#0a0a0a]/85 font-semibold pt-0.5 leading-relaxed">
-                <div>Independent agent vetting &amp; fiduciary relocation management across all 50 states</div>
-                <div className="whitespace-nowrap font-bold text-[#854d0e] sm:text-[#0a0a0a]/90">
-                  — zero fees to buyers &amp; employers.
-                </div>
-              </div>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10.5px] font-black tracking-widest uppercase shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>DYSONHOMES COPILOT</span>
             </div>
 
-            {/* 2ND: WRITING FORMAT QUOTE FROM BOB DYSON (JUST ABOVE SEARCH PILL) */}
-            <div className="max-w-xl mx-auto pt-1 pb-1">
-              <p
-                className="text-lg sm:text-xl lg:text-2xl italic font-bold text-[#0a0a0a] tracking-normal leading-snug"
+            {/* Main Headline */}
+            <div className="space-y-1">
+              <h2 
+                className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                <span>“You are absolutely going to love our stressless </span>
-                <span className="block">Concierge Approach to transacting your real estate ventures.”</span>
+                Your Human &amp; AI-Assisted <br className="hidden sm:inline" />
+                <span style={{ color: '#854d0e' }}>Private Real Estate Copilot.</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-[#0a0a0a]/80 max-w-xl mx-auto font-medium leading-relaxed pt-1">
+                Paste any address from any online real estate site to see real sold comps, hidden property risks, and your calculated cash rebate at closing.
               </p>
-              <div className="text-right pr-1 sm:pr-3 text-xs sm:text-sm md:text-base font-bold text-[#854d0e] tracking-wide mt-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                — Bob Dyson
-              </div>
             </div>
             
-            {/* 3RD: THE FLOATING LUXURY SEARCH PILL (JUST BELOW BOB'S QUOTE) */}
+            {/* The Zero-UI Search Pill */}
             <form
               id="hero-search-bar"
-              onSubmit={(e) => {
-                e.preventDefault();
-                onSearch(searchQuery);
-              }}
-              className="flex items-center gap-2 p-1.5 rounded-full transition-all shadow-xl"
+              onSubmit={handleCopilotRun}
+              className="flex items-center gap-2 p-1.5 rounded-2xl sm:rounded-full transition-all shadow-xl bg-[#0a0a0a] border-2 border-[#D4AF37]"
               style={{
-                background: '#faf6ee',
-                border: `2px solid ${GOLD}`,
-                boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
               }}
             >
-              <div className="flex items-center gap-2.5 w-full pl-5 py-1">
-                <Search className="w-5 h-5 shrink-0" style={{ color: '#0a0a0a' }} />
+              <div className="flex items-center gap-2.5 w-full pl-4 py-1">
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-[#D4AF37]" />
                 <input
                   id="hero-search-input"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Enter City, State, ZIP, or paste any listing URL to vet agent..."
-                  className="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none placeholder:text-stone-500"
-                  style={{ color: '#0a0a0a' }}
+                  placeholder="Paste any address or online home link..."
+                  className="w-full bg-transparent text-xs sm:text-sm font-semibold focus:outline-none text-white placeholder:text-white/40"
                 />
               </div>
 
-              {/* Action Button */}
-              <div className="flex items-center pr-1 shrink-0">
+              {/* Action Buttons: Voice Mic + Run Copilot */}
+              <div className="flex items-center gap-1.5 pr-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => navigate('/talking-app')}
+                  className="p-2 sm:p-2.5 rounded-xl bg-black border border-[#10b981]/50 text-[#10b981] hover:bg-[#10b981]/10 transition-all cursor-pointer"
+                  title="Talk with Charlie (Live Voice AI)"
+                >
+                  <Mic className="w-3.5 h-3.5" />
+                </button>
                 <button
                   type="submit"
-                  className="font-bold text-xs sm:text-sm px-6 py-2.5 rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-105"
+                  disabled={isAuditing}
+                  className="font-black text-xs sm:text-sm px-5 sm:px-6 py-2.5 rounded-xl sm:rounded-full whitespace-nowrap transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:brightness-110 text-black"
                   style={{
                     background: 'linear-gradient(135deg, #e8c84a 0%, #D4AF37 50%, #b8920a 100%)',
-                    color: '#0a0a0a',
                   }}
                 >
-                  <span>Explore</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>{isAuditing ? 'Auditing...' : 'Run Copilot'}</span>
                 </button>
               </div>
             </form>
 
-            {/* THEN: VETTING HELPER NOTE (IN BLACK FONT COLOR) */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 text-xs text-[#0a0a0a] pt-1 font-medium">
-              <span>Looking at a specific listing?</span>
-              <span className="text-[#854d0e] font-bold">
-                Subscribe to have our fiduciary team vet the listing agent &amp; audit the escrow for you.
+            {/* 1-Click Sample Property Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs pt-1">
+              <span className="text-[#0a0a0a]/60 text-[10.5px] font-bold uppercase tracking-wider mr-1">
+                Try Sample:
               </span>
               <button
                 type="button"
-                onClick={() => {
-                  const elem = document.getElementById('portal-subscribe-section');
-                  if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-                  else navigate('/subscribe');
-                }}
-                className="underline text-[#78350f] hover:text-black font-bold cursor-pointer ml-1"
+                onClick={() => handleSelectSample('742 Vista Del Mar, La Jolla, CA 92037', 'lajolla')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  activeProperty.address.includes('Vista Del Mar')
+                    ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
+                    : 'bg-[#faf6ee] text-[#0a0a0a] border border-[#0a0a0a]/20 hover:border-[#D4AF37]'
+                }`}
               >
-                (FREE Subscription Required)
+                742 Vista Del Mar ($3.45M)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectSample('1844 Mountain Shadow Way, Scottsdale, AZ 85253', 'scottsdale')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  activeProperty.address.includes('Mountain Shadow')
+                    ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
+                    : 'bg-[#faf6ee] text-[#0a0a0a] border border-[#0a0a0a]/20 hover:border-[#D4AF37]'
+                }`}
+              >
+                1844 Mountain Shadow Way ($2.15M)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectSample('4220 Oak Hollow Terrace, Austin, TX 78746', 'austin')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  activeProperty.address.includes('Oak Hollow')
+                    ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
+                    : 'bg-[#faf6ee] text-[#0a0a0a] border border-[#0a0a0a]/20 hover:border-[#D4AF37]'
+                }`}
+              >
+                4220 Oak Hollow Terrace ($1.85M)
               </button>
             </div>
+
+            {/* Bob Dyson Writing Quote: Trust & Human Oversight Anchor */}
+            <div className="max-w-xl mx-auto pt-2 pb-1">
+              <p
+                className="text-base sm:text-lg italic font-bold text-[#0a0a0a] tracking-normal leading-snug"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                <span>“You are absolutely going to love our stressless </span>
+                <span className="block sm:inline">Concierge Approach to transacting your real estate ventures.”</span>
+              </p>
+              <div className="text-right pr-2 sm:pr-4 text-xs sm:text-sm font-bold text-[#854d0e] tracking-wide mt-0.5" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                — Bob Dyson
+              </div>
+            </div>
+
+          </div>
+
+          {/* ================= 4. ADDED SCROLL: THE COPILOT PROPERTY DOSSIER ================= */}
+          <div className="w-full max-w-2xl mx-auto pt-2">
+            <CopilotPropertyDossier property={activeProperty} />
           </div>
             </>
           )}
