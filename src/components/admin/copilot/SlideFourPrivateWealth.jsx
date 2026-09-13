@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, 
   MapPin, Volume2, CheckCircle2, DollarSign, ExternalLink,
-  Brain, FileText, ChevronRight
+  Brain, FileText, ChevronRight, Search
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
@@ -273,43 +273,56 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
         </div>
 
-        {/* Browse MLS independently — placed directly below HOW DYSON HOMES COPILOT WORKS */}
-        <div className="flex items-center justify-center gap-2 text-xs text-white/70 -mt-2 pb-1">
-          <span>Browse MLS independently on:</span>
-          <a 
-            href="https://www.realtor.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
-          >
-            Realtor.com <ExternalLink className="w-2.5 h-2.5" />
-          </a>
-          <span>•</span>
-          <a 
-            href="https://www.homes.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
-          >
-            Homes.com <ExternalLink className="w-2.5 h-2.5" />
-          </a>
-          <span>•</span>
-          <a 
-            href="https://www.zillow.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-white hover:text-[#D4AF37] underline underline-offset-2 flex items-center gap-0.5 font-medium transition-colors"
-          >
-            Zillow <ExternalLink className="w-2.5 h-2.5" />
-          </a>
-        </div>
-
-        {/* Bottom Row: 4 Steps Across */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pt-1">
-          {/* Step 1 */}
-          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+        {/* Bottom Row: 5 Steps Across */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-3 pt-1">
+          {/* Step 1: Browse MLS with 3 small tan pills */}
+          <div className="flex items-center gap-3 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
               1
+            </span>
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <Search className="w-8 h-8 text-[#D4AF37]" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">BROWSE MLS</h4>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <a 
+                  href="https://www.realtor.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-2 py-0.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-[10px] font-semibold border border-[#c4b59f] inline-flex items-center gap-0.5 transition-colors shadow-sm"
+                >
+                  <span>Realtor.com</span>
+                  <ExternalLink className="w-2.5 h-2.5 text-[#854d0e]" />
+                </a>
+                <a 
+                  href="https://www.homes.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-2 py-0.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-[10px] font-semibold border border-[#c4b59f] inline-flex items-center gap-0.5 transition-colors shadow-sm"
+                >
+                  <span>Homes.com</span>
+                  <ExternalLink className="w-2.5 h-2.5 text-[#854d0e]" />
+                </a>
+                <a 
+                  href="https://www.zillow.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-2 py-0.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] text-[#0a0a0a] text-[10px] font-semibold border border-[#c4b59f] inline-flex items-center gap-0.5 transition-colors shadow-sm"
+                >
+                  <span>Zillow</span>
+                  <ExternalLink className="w-2.5 h-2.5 text-[#854d0e]" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
+
+          {/* Step 2: Paste Address */}
+          <div className="flex items-center gap-3 flex-1 w-full lg:w-auto">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              2
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -325,10 +338,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 2 */}
-          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+          {/* Step 3: AI + Human Analysis */}
+          <div className="flex items-center gap-3 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              2
+              3
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <Brain className="w-8 h-8 text-[#D4AF37]" />
@@ -341,10 +354,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 3 */}
-          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+          {/* Step 4: Intelligence Delivered */}
+          <div className="flex items-center gap-3 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              3
+              4
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <FileText className="w-8 h-8 text-[#D4AF37]" />
@@ -357,10 +370,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 4 */}
-          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+          {/* Step 5: Better Decisions */}
+          <div className="flex items-center gap-3 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              4
+              5
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

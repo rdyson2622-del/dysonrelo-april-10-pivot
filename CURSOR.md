@@ -67,7 +67,7 @@ Seed missing nodes from Admin → AI Library Specialists, or invoke `claudeLibra
 ## DysonHomes Copilot Architecture (CODE FREEZE / LOCKED IN)
 
 The DysonHomes Copilot consumer and admin lab entry sequence is strictly locked to 3 pages:
-1. **Page 1:** Landing Page (`SlideFourPrivateWealth`) — meet copilot, search pill, 3 features, 4 steps, MLS links.
+1. **Page 1:** Landing Page (`SlideFourPrivateWealth`) — meet copilot, search pill, 3 features, 5 steps (Box #1: Browse MLS with 3 active small tan pills for Realtor.com, Homes.com, Zillow; Boxes #2-5: Paste Address, AI + Human Analysis, Intelligence Delivered, Better Decisions).
 2. **Page 2:** Team Rail & Live Chat (`CopilotPublicReadOnlyTeamRail`) — public see-only roster with Charlie live conversation.
 3. **Page 3:** Chat + Live Dossier (`GrokPageThreeSplitCanvas`) — split canvas with comps, risks, and closing cost rebate.
 
