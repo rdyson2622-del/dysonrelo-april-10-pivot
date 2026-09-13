@@ -64,6 +64,15 @@ Seed missing nodes from Admin → AI Library Specialists, or invoke `claudeLibra
 - Finance does not change DysonRelo.com unless the request says so in plain language.
 - Do not invent new fees, DRE numbers, or Bob biography facts. Read `src/lib/corporateProfile.js` and the Company History node.
 
+## DysonHomes Copilot Architecture (CODE FREEZE / LOCKED IN)
+
+The DysonHomes Copilot consumer and admin lab entry sequence is strictly locked to 3 pages:
+1. **Page 1:** Landing Page (`SlideFourPrivateWealth`) — meet copilot, search pill, 3 features, 4 steps, MLS links.
+2. **Page 2:** Team Rail & Live Chat (`CopilotPublicReadOnlyTeamRail`) — public see-only roster with Charlie live conversation.
+3. **Page 3:** Chat + Live Dossier (`GrokPageThreeSplitCanvas`) — split canvas with comps, risks, and closing cost rebate.
+
+*Do not add a 4th standalone chat page or revert this 3-page structure.*
+
 ## Product map (short)
 
 - **Charlie** — portal concierge (chat, voice, Gemini live)
