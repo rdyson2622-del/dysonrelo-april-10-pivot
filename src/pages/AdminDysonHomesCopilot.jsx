@@ -7,11 +7,10 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CopilotPropertyDossier from '@/components/copilot/CopilotPropertyDossier';
-import ObsidianTwilightCandidate from '@/components/admin/copilot/ObsidianTwilightCandidate';
-import WarmChampagneCandidate from '@/components/admin/copilot/WarmChampagneCandidate';
-import GrokCandidateA from '@/components/admin/copilot/GrokCandidateA';
-import GrokCandidateB from '@/components/admin/copilot/GrokCandidateB';
-import CopilotCandidatesScroll from '@/components/admin/copilot/CopilotCandidatesScroll';
+import SlideOneTanOverview from '@/components/admin/copilot/SlideOneTanOverview';
+import SlideTwoTanThreeCards from '@/components/admin/copilot/SlideTwoTanThreeCards';
+import SlideThreeObsidianExecutive from '@/components/admin/copilot/SlideThreeObsidianExecutive';
+import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
 
 const GOLD = '#D4AF37';
 const TAN_BG = '#ede0cc';
@@ -94,7 +93,7 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('grok_candidate_a'); // grok_candidate_a | grok_candidate_b | obsidian_twilight | warm_champagne | baseline_hero
+  const [selectedCandidate, setSelectedCandidate] = useState('slide_2'); // slide_1 | slide_2 | slide_3 | slide_4
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -259,17 +258,19 @@ export default function AdminDysonHomesCopilot() {
               </span>
             </div>
 
-            {/* Choice Switcher */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* 4 Exact Slides Switcher */}
+            <div className="flex flex-wrap items-center gap-1.5">
               {[
-                { id: 'grok_candidate_a', label: 'Candidate A · Tan Desktop (Screenshot 1 & 2)' },
-                { id: 'obsidian_twilight', label: 'Obsidian Twilight · Night Twin (Screenshot 3)' },
+                { id: 'slide_2', label: 'Slide 2: Candidate A (Tan Desktop + 3 Cards)' },
+                { id: 'slide_1', label: 'Slide 1: Tan Overview' },
+                { id: 'slide_3', label: 'Slide 3: Obsidian Executive Dark' },
+                { id: 'slide_4', label: 'Slide 4: Private Wealth Deep Black' },
               ].map((btn) => (
                 <button
                   key={btn.id}
                   type="button"
                   onClick={() => setSelectedCandidate(btn.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shadow-sm ${
                     selectedCandidate === btn.id
                       ? 'bg-[#D4AF37] text-black font-bold ring-1 ring-[#D4AF37]'
                       : 'bg-[#181818] text-white/80 hover:text-white border border-white/10'
@@ -285,9 +286,10 @@ export default function AdminDysonHomesCopilot() {
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#D4AF37] font-bold uppercase text-[10px] tracking-wider border border-[#D4AF37]/40">
                 ACTIVE: {
-                  selectedCandidate === 'grok_candidate_a' 
-                    ? 'Candidate A (Exact Tan Match)' 
-                    : 'Obsidian Twilight (Exact Night Twin)'
+                  selectedCandidate === 'slide_2' ? 'Slide 2 (Candidate A · Tan Desktop with 3 Cards & Pool Villa)' :
+                  selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview with Sunset Villa)' :
+                  selectedCandidate === 'slide_3' ? 'Slide 3 (Obsidian Executive Dark)' :
+                  'Slide 4 (Private Wealth Deep Black & Gold)'
                 }
               </span>
               <span>
@@ -303,11 +305,11 @@ export default function AdminDysonHomesCopilot() {
           <div className="flex justify-center w-full">
             <div 
               className={`transition-all duration-300 w-full rounded-3xl border-2 border-[#D4AF37]/50 shadow-2xl overflow-hidden ${
-                viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-5xl'
+                viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-6xl'
               }`}
               style={{ background: '#0a0a0a' }}
             >
-              {/* Fake Browser URL Bar */}
+              {/* Browser URL Bar */}
               <div className="px-4 py-2.5 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
@@ -319,226 +321,63 @@ export default function AdminDysonHomesCopilot() {
                   <span>https://dysonhomes.com</span>
                 </div>
                 <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">
-                  {selectedCandidate === 'grok_candidate_a' 
-                    ? 'Candidate A (D&D Logo & Tan)' 
-                    : 'Obsidian Twilight (Night Mode Twin)'}
+                  {selectedCandidate === 'slide_2' ? 'Candidate A (D&D Logo & Tan Desktop)' :
+                   selectedCandidate === 'slide_1' ? 'Slide 1 (Tan Overview)' :
+                   selectedCandidate === 'slide_3' ? 'Slide 3 (Obsidian Executive)' :
+                   'Slide 4 (Private Wealth)'}
                 </span>
               </div>
 
-              {/* ── CONDITIONALLY RENDER ACTIVE CANDIDATE ── */}
-
-              {/* OPTION 1: OBSIDIAN TWILIGHT (PRIVATE WEALTH NIGHT MOCK) */}
-              {selectedCandidate === 'obsidian_twilight' && (
-                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: '#050505' }}>
-                  <ObsidianTwilightCandidate
-                    selectedAddress={selectedProperty.address}
-                    rebateAmount={selectedProperty.rebate}
+              {/* ── RENDER EXACT SELECTED SLIDE ── */}
+              <div className="p-3 sm:p-5 lg:p-6" style={{ background: selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2' ? TAN_BG : '#050505' }}>
+                {selectedCandidate === 'slide_2' && (
+                  <SlideTwoTanThreeCards
                     onRunAudit={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
                     }}
                   />
+                )}
 
-                  {/* Added Scroll: Copilot Intelligence Dossier */}
-                  <div className="max-w-2xl mx-auto pt-2">
-                    <div className="text-center pb-2">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#D4AF37]">
-                        POST-SEARCH AUDIT DOSSIER
-                      </span>
-                    </div>
-                    <CopilotPropertyDossier property={selectedProperty} />
-                  </div>
-                </div>
-              )}
-
-              {/* OPTION 2: WARM CHAMPAGNE (DYSON TAN SIGNATURE SUNSET MOCK) */}
-              {selectedCandidate === 'warm_champagne' && (
-                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: TAN_BG }}>
-                  <WarmChampagneCandidate
-                    selectedAddress={selectedProperty.address}
-                    rebateAmount={selectedProperty.rebate}
+                {selectedCandidate === 'slide_1' && (
+                  <SlideOneTanOverview
                     onRunAudit={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
                     }}
                   />
+                )}
 
-                  {/* Added Scroll: Copilot Intelligence Dossier */}
-                  <div className="max-w-2xl mx-auto pt-2">
-                    <div className="text-center pb-2">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
-                        POST-SEARCH AUDIT DOSSIER
-                      </span>
-                    </div>
-                    <CopilotPropertyDossier property={selectedProperty} />
-                  </div>
-                </div>
-              )}
-              
-              {/* CANDIDATE 2: GROK FORMAT A (ASYMMETRICAL ESTATE SPLIT) */}
-              {selectedCandidate === 'grok_candidate_a' && (
-                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: TAN_BG }}>
-                  <GrokCandidateA 
-                    selectedAddress={selectedProperty.address}
-                    rebateAmount={selectedProperty.rebate}
+                {selectedCandidate === 'slide_3' && (
+                  <SlideThreeObsidianExecutive
                     onRunAudit={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
                     }}
                   />
+                )}
 
-                  {/* Added Scroll: Copilot Intelligence Dossier */}
-                  <div className="max-w-2xl mx-auto pt-2">
-                    <div className="text-center pb-2">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
-                        POST-SEARCH AUDIT DOSSIER
-                      </span>
-                    </div>
-                    <CopilotPropertyDossier property={selectedProperty} />
-                  </div>
-                </div>
-              )}
-
-              {/* CANDIDATE 3: GROK FORMAT B (SYMMETRICAL EXECUTIVE CENTERED) */}
-              {selectedCandidate === 'grok_candidate_b' && (
-                <div className="p-3 sm:p-5 lg:p-6 space-y-6" style={{ background: TAN_BG }}>
-                  <GrokCandidateB 
-                    selectedAddress={selectedProperty.address}
-                    rebateAmount={selectedProperty.rebate}
+                {selectedCandidate === 'slide_4' && (
+                  <SlideFourPrivateWealth
                     onRunAudit={(addr) => {
                       setAddressInput(addr);
                       handleCustomSearch({ preventDefault: () => {} });
                     }}
                   />
+                )}
 
-                  {/* Added Scroll: Copilot Intelligence Dossier */}
-                  <div className="max-w-2xl mx-auto pt-2">
-                    <div className="text-center pb-2">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
-                        POST-SEARCH AUDIT DOSSIER
-                      </span>
-                    </div>
-                    <CopilotPropertyDossier property={selectedProperty} />
+                {/* Audit Dossier in smooth scroll */}
+                <div className="max-w-2xl mx-auto pt-6">
+                  <div className="text-center pb-2">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
+                      POST-SEARCH AUDIT DOSSIER
+                    </span>
                   </div>
+                  <CopilotPropertyDossier property={selectedProperty} />
                 </div>
-              )}
+              </div>
 
-              {/* CANDIDATE 1: CURRENT ARCHITECTURAL SHOWCASE HYBRID */}
-              {selectedCandidate === 'baseline_hero' && (
-                <div className="p-4 sm:p-6 lg:p-8 space-y-6" style={{ background: TAN_BG }}>
-                  
-                  {/* 1. Featured Architectural Home for Color and Prestige */}
-                  <div className="w-full relative rounded-2xl overflow-hidden shadow-2xl aspect-[16/9] bg-black border border-[#D4AF37]/40">
-                    <img
-                      src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=95"
-                      alt="Luxury Estate"
-                      className="w-full h-full object-cover object-center"
-                    />
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/80 border border-[#D4AF37]/60 text-white text-[11px] font-bold flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                      <span>Featured: Austin, TX ($7.5M • Corporate Tech Relo Hub)</span>
-                    </div>
-                  </div>
-
-                  {/* 2. Brand Pill & Value Headline */}
-                  <div className="text-center max-w-2xl mx-auto space-y-2 pt-2">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0a0a0a] border border-[#D4AF37]/60 text-[#D4AF37] text-[10.5px] font-black tracking-widest uppercase shadow-md">
-                      <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-                      <span>DYSONHOMES COPILOT</span>
-                    </div>
-
-                    <h1 
-                      className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0a0a0a] leading-tight"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
-                      Your Human &amp; AI-Assisted <br className="hidden sm:inline" />
-                      <span style={{ color: '#854d0e' }}>Private Real Estate Copilot.</span>
-                    </h1>
-
-                    <p className="text-xs sm:text-sm text-[#0a0a0a]/80 max-w-xl mx-auto font-medium leading-relaxed pt-1">
-                      Paste any address from any online real estate site to see real sold comps, hidden property risks, and your calculated cash rebate at closing.
-                    </p>
-                  </div>
-
-                  {/* 3. The Zero-UI Search Prompt */}
-                  <div className="max-w-2xl mx-auto pt-1">
-                    <form onSubmit={handleCustomSearch} className="relative">
-                      <div 
-                        className="flex items-center rounded-2xl sm:rounded-full px-3 sm:px-4 py-2 sm:py-3 gap-2 sm:gap-3 transition-all bg-[#0a0a0a] border-2 border-[#D4AF37] shadow-xl"
-                      >
-                        <Search className="w-5 h-5 text-[#D4AF37] shrink-0" />
-                        <input
-                          type="text"
-                          value={addressInput}
-                          onChange={(e) => setAddressInput(e.target.value)}
-                          placeholder="Paste any address or online home link..."
-                          className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40"
-                        />
-                        
-                        <Link 
-                          to="/talking-app"
-                          className="p-2 rounded-xl bg-black hover:bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/50 shrink-0 transition-transform active:scale-95"
-                          title="Talk with Charlie (Voice AI)"
-                        >
-                          <Mic className="w-4 h-4" />
-                        </Link>
-
-                        <button
-                          type="submit"
-                          disabled={isAuditing}
-                          className="px-5 py-2.5 rounded-xl sm:rounded-full text-xs sm:text-sm font-black text-black shrink-0 transition-all hover:brightness-110 active:scale-95 cursor-pointer shadow-md"
-                          style={{ background: `linear-gradient(135deg, #e8c84a, ${GOLD})` }}
-                        >
-                          {isAuditing ? 'Auditing...' : 'Run Copilot'}
-                        </button>
-                      </div>
-                    </form>
-
-                    {/* 1-Click Sample Address Chips */}
-                    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 text-xs">
-                      <span className="text-[#0a0a0a]/60 text-[10.5px] font-bold uppercase tracking-wider mr-1">
-                        Try Sample:
-                      </span>
-                      {SAMPLE_PROPERTIES.map((p, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => handleSelectSample(p)}
-                          className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer shadow-sm truncate max-w-[260px] ${
-                            selectedProperty.address === p.address
-                              ? 'bg-[#0a0a0a] text-[#D4AF37] border border-[#D4AF37]'
-                              : 'bg-[#faf6ee] text-[#0a0a0a] border border-[#0a0a0a]/20 hover:border-[#D4AF37]'
-                          }`}
-                        >
-                          {p.address.split(',')[0]} (${(p.price / 1000000).toFixed(2)}M)
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Bob Dyson Quote */}
-                    <div className="max-w-xl mx-auto pt-3 text-center">
-                      <p 
-                        className="text-base sm:text-lg italic font-bold text-[#0a0a0a] tracking-normal leading-snug"
-                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                      >
-                        <span>“You are absolutely going to love our stressless </span>
-                        <span className="block sm:inline">Concierge Approach to transacting your real estate ventures.”</span>
-                      </p>
-                      <div className="text-right pr-2 sm:pr-4 text-xs sm:text-sm font-bold text-[#854d0e] tracking-wide mt-0.5" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
-                        — Bob Dyson
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 4. Added Scroll: Copilot Intelligence Dossier */}
-                  <div className="max-w-2xl mx-auto pt-2">
-                    <CopilotPropertyDossier property={selectedProperty} />
-                  </div>
-
-                </div>
-              )}
-
-              {/* ── DNN REAL ESTATE NEWS LIVE TICKER INTEGRATION ── */}
+              {/* DNN Pulse Ticker */}
               <div className="px-4 py-3 bg-[#050505] border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -562,20 +401,22 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </div>
 
-          {/* Quick Twin Switcher */}
+          {/* Bottom 4 Slides Selector */}
           <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#D4AF37]/40 text-left flex flex-wrap items-center justify-between gap-3 shadow-lg">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] block">
-                APPROVED FORMAT TWINS
+                THE 4 EXACT SPECIFIED SLIDES
               </span>
               <p className="text-xs text-white/70 mt-0.5">
-                Toggle between the Tan primary layout and the Obsidian night twin.
+                Switch directly between all four specific layouts and color palettes.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {[
-                { id: 'grok_candidate_a', label: 'Candidate A · Tan Desktop' },
-                { id: 'obsidian_twilight', label: 'Obsidian Twilight · Night Twin' }
+                { id: 'slide_2', label: '1. Candidate A (Tan Desktop + 3 Cards)' },
+                { id: 'slide_1', label: '2. Tan Overview' },
+                { id: 'slide_3', label: '3. Obsidian Executive Dark' },
+                { id: 'slide_4', label: '4. Private Wealth Deep Black' }
               ].map((c) => (
                 <button
                   key={c.id}
