@@ -328,8 +328,8 @@ export default function AdminDysonHomesCopilot() {
                 </span>
               </div>
 
-              {/* ── RENDER EXACT SELECTED SLIDE ── */}
-              <div className="p-3 sm:p-5 lg:p-6" style={{ background: selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2' ? TAN_BG : '#050505' }}>
+              {/* ── RENDER EXACT SELECTED SLIDE (FULL-BLEED PAGE BACKGROUND) ── */}
+              <div className="w-full">
                 {selectedCandidate === 'slide_2' && (
                   <SlideTwoTanThreeCards
                     onRunAudit={(addr) => {
@@ -366,14 +366,22 @@ export default function AdminDysonHomesCopilot() {
                   />
                 )}
 
-                {/* Audit Dossier in smooth scroll */}
-                <div id="copilot-audit-dossier" className="max-w-2xl mx-auto pt-6 scroll-mt-6">
-                  <div className="text-center pb-2">
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
-                      POST-SEARCH AUDIT DOSSIER
-                    </span>
+                {/* Audit Dossier in smooth scroll — continuous seamless page background */}
+                <div 
+                  id="copilot-audit-dossier" 
+                  className="w-full px-4 sm:px-8 pt-8 pb-14 scroll-mt-6 border-t border-[#d8cab6]/60"
+                  style={{ 
+                    background: (selectedCandidate === 'slide_1' || selectedCandidate === 'slide_2' || selectedCandidate === 'slide_4') ? '#ede0cc' : '#050505' 
+                  }}
+                >
+                  <div className="max-w-3xl mx-auto space-y-3">
+                    <div className="text-center pb-2">
+                      <span className="text-[11px] font-bold tracking-widest uppercase text-[#854d0e]">
+                        POST-SEARCH AUDIT DOSSIER
+                      </span>
+                    </div>
+                    <CopilotPropertyDossier property={selectedProperty} />
                   </div>
-                  <CopilotPropertyDossier property={selectedProperty} />
                 </div>
               </div>
 

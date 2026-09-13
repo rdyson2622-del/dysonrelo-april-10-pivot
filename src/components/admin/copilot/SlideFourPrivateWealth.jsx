@@ -48,220 +48,215 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
   };
 
   return (
-    <div 
-      className="w-full rounded-2xl overflow-hidden border shadow-2xl text-left select-none"
-      style={{ 
-        background: '#050505',
-        borderColor: '#222222',
-        color: '#f5f5f5'
-      }}
-    >
-      {/* ── TOP HEADER BAR ── */}
-      <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-3.5">
-          {/* #1: Dyson and Dyson Logo - strictly free-standing with no container box or border */}
-          <div className="shrink-0 flex items-center">
-            <img 
-              src={DYSON_LOGO} 
-              alt="Dyson & Dyson" 
-              className="h-[51px] sm:h-[55px] w-auto object-contain" 
-            />
-          </div>
+    <div className="w-full text-left select-none">
+      {/* ── HERO SECTION ABOVE THE CREASE (DARK OBSIDIAN / NIGHT VILLA) ── */}
+      <div style={{ background: '#050505', color: '#f5f5f5' }}>
+        {/* ── TOP HEADER BAR ── */}
+        <div className="px-6 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-white/10">
+          <div className="flex items-center gap-3.5">
+            {/* #1: Dyson and Dyson Logo - strictly free-standing with no container box or border */}
+            <div className="shrink-0 flex items-center">
+              <img 
+                src={DYSON_LOGO} 
+                alt="Dyson & Dyson" 
+                className="h-[51px] sm:h-[55px] w-auto object-contain" 
+              />
+            </div>
 
-          {/* #2: Spelled out DYSON HOMES with copilot mirroring the exact font and style (lowercase) from the headline below */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex items-baseline gap-2">
-              <span 
-                className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                DYSON HOMES
-              </span>
-              <span 
-                className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                copilot
+            {/* #2: Spelled out DYSON HOMES with copilot mirroring the exact font and style (lowercase) from the headline below */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="flex items-baseline gap-2">
+                <span 
+                  className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  DYSON HOMES
+                </span>
+                <span 
+                  className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                  style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                >
+                  copilot
+                </span>
+              </div>
+              <span className="hidden sm:inline text-white/30 text-xs">|</span>
+              <span className="hidden sm:inline text-[9.5px] tracking-widest text-[#D4AF37] uppercase font-bold">
+                PRIVATE REAL ESTATE INTELLIGENCE
               </span>
             </div>
-            <span className="hidden sm:inline text-white/30 text-xs">|</span>
-            <span className="hidden sm:inline text-[9.5px] tracking-widest text-[#D4AF37] uppercase font-bold">
-              PRIVATE REAL ESTATE INTELLIGENCE
+          </div>
+        </div>
+
+        {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
+        <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column (7 cols) */}
+          <div className="lg:col-span-7 space-y-4">
+            <h1 
+              className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.15] tracking-tight text-center"
+              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+            >
+              Your Human &amp; AI-assisted<br />
+              Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
+            </h1>
+
+            {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
+            <div className="pt-6 sm:pt-7 space-y-1.5 text-center">
+              <form onSubmit={handleSubmit}>
+                <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
+                  <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Paste property address"
+                    className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-medium"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isAuditing}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
+                  >
+                    <span>{isAuditing ? 'AUDITING...' : 'SEND'}</span>
+                    <ArrowRight className="w-4 h-4 text-black" />
+                  </button>
+                </div>
+              </form>
+
+              {/* 2. Tightened directly under search pill & centered */}
+              <p className="text-xs sm:text-sm text-white/70 leading-normal font-normal">
+                Paste address for comps, risks, closing rebate where allowed by law.
+              </p>
+            </div>
+
+            {/* 3. Try sample is next (Centered, Tan with Black Font) */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              <span className="text-[10px] text-white/50 uppercase font-semibold">Try sample:</span>
+              {SAMPLE_SEARCHES.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => {
+                    setAddress(chip);
+                    handleSubmit(null, chip);
+                  }}
+                  className="text-[10.5px] px-2.5 py-1 rounded-lg bg-[#ede0cc] hover:bg-[#f6ebd9] border border-[#d8cab6] hover:border-[#D4AF37] text-[#0a0a0a] font-medium transition-all cursor-pointer truncate max-w-[200px] shadow-sm"
+                >
+                  {chip.split(',')[0]}
+                </button>
+              ))}
+            </div>
+
+            {/* 4. Trusted and Instant statements are next (Single-line, compact pill, matching gold italic) */}
+            <div className="flex flex-col items-center space-y-2 pt-1 text-center">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12.5px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
+                <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction.</span>
+              </div>
+
+              {/* Real-time definition text */}
+              <p className="text-[11px] sm:text-[12.5px] text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
+                <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
+                <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column (5 cols): Night Luxury Villa */}
+          <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative group">
+            <img 
+              src={NIGHT_HILLSIDE_ESTATE} 
+              alt="Hillside Estate at Night" 
+              className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%] transition-transform duration-700"
+            />
+
+            {/* Top-right dark twilight sky blend to eliminate any artifact */}
+            <div className="absolute top-0 right-0 w-36 h-16 bg-gradient-to-bl from-[#0a0d14]/95 via-[#0d121c]/70 to-transparent pointer-events-none rounded-tr-2xl" />
+
+            {/* Active Audit Status Indicator */}
+            {auditComplete && (
+              <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 text-white text-xs flex items-center justify-between shadow-xl">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
+                  <span className="text-[11px] font-semibold truncate">
+                    Audit Ready for {address.split(',')[0]}
+                  </span>
+                </div>
+                <span className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">
+                  SCROLL FOR DOSSIER ↓
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
+        <div className="px-6 sm:px-10 pb-7 space-y-2.5">
+          {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Sleek reduced vertical height */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
+              <div className="flex items-center gap-1.5 text-[#854d0e]">
+                <TrendingUp className="w-3 h-3 text-[#854d0e] shrink-0" />
+                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
+              </div>
+              <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
+                AI-powered comps, trends, and valuation insights.
+              </p>
+            </div>
+
+            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
+              <div className="flex items-center gap-1.5 text-[#854d0e]">
+                <ShieldAlert className="w-3 h-3 text-[#854d0e] shrink-0" />
+                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
+              </div>
+              <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
+                Hidden risks, title issues, zoning, and red flags.
+              </p>
+            </div>
+
+            <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
+              <div className="flex items-center gap-1.5 text-[#854d0e]">
+                <Percent className="w-3 h-3 text-[#854d0e] shrink-0" />
+                <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
+              </div>
+              <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] text-[#0a0a0a] leading-tight font-normal tracking-tight pt-0.5">
+                Where allowed by law. Maximize your ROI with our rebate.
+              </p>
+            </div>
+          </div>
+
+          {/* Row 2: Listen Charlie Box below - Sleek reduced vertical height */}
+          <div className="w-full py-2 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs shadow-sm transition-all">
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleToggleAudio}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#222]'
+                }`}
+                title="Play Charlie Simmons Brief"
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+              </button>
+              <div>
+                <span className="text-[#854d0e] font-bold text-xs sm:text-[13px] block leading-tight">
+                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
+                </span>
+                <span className="text-[#0a0a0a] text-[10.5px] sm:text-[11px] font-normal block leading-tight pt-0.5">
+                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
+                </span>
+              </div>
+            </div>
+            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2.5 py-0.5 rounded bg-[#0a0a0a] border border-[#D4AF37]/50 uppercase shrink-0">
+              DUAL VOICE
             </span>
           </div>
         </div>
-
       </div>
 
-      {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
-      <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column (7 cols) */}
-        <div className="lg:col-span-7 space-y-4">
-          <h1 
-            className="text-3xl sm:text-4xl lg:text-[40px] font-normal text-white leading-[1.15] tracking-tight text-center"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            Your Human &amp; AI-assisted<br />
-            Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
-          </h1>
-
-          {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
-          <div className="pt-6 sm:pt-7 space-y-1.5 text-center">
-            <form onSubmit={handleSubmit}>
-              <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
-                <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Paste property address"
-                  className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-medium"
-                />
-                <button
-                  type="submit"
-                  disabled={isAuditing}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d89f38] via-[#e2b755] to-[#c7922d] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
-                >
-                  <span>{isAuditing ? 'AUDITING...' : 'SEND'}</span>
-                  <ArrowRight className="w-4 h-4 text-black" />
-                </button>
-              </div>
-            </form>
-
-            {/* 2. Tightened directly under search pill & centered */}
-            <p className="text-xs sm:text-sm text-white/70 leading-normal font-normal">
-              Paste address for comps, risks, closing rebate where allowed by law.
-            </p>
-          </div>
-
-          {/* 3. Try sample is next (Centered, Tan with Black Font) */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            <span className="text-[10px] text-white/50 uppercase font-semibold">Try sample:</span>
-            {SAMPLE_SEARCHES.map((chip) => (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => {
-                  setAddress(chip);
-                  handleSubmit(null, chip);
-                }}
-                className="text-[10.5px] px-2.5 py-1 rounded-lg bg-[#ede0cc] hover:bg-[#f6ebd9] border border-[#d8cab6] hover:border-[#D4AF37] text-[#0a0a0a] font-medium transition-all cursor-pointer truncate max-w-[200px] shadow-sm"
-              >
-                {chip.split(',')[0]}
-              </button>
-            ))}
-          </div>
-
-          {/* 4. Trusted and Instant statements are next (Single-line, compact pill, matching gold italic) */}
-          <div className="flex flex-col items-center space-y-2 pt-1 text-center">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12.5px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
-              <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction.</span>
-            </div>
-
-            {/* Real-time definition text */}
-            <p className="text-[11px] sm:text-[12.5px] text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
-              <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
-              <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Right Column (5 cols): Night Luxury Villa */}
-        <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative group">
-          <img 
-            src={NIGHT_HILLSIDE_ESTATE} 
-            alt="Hillside Estate at Night" 
-            className="w-full h-full object-cover origin-bottom-left scale-[1.20] translate-y-[2%] -translate-x-[2%] transition-transform duration-700"
-          />
-
-          {/* Top-right dark twilight sky blend to eliminate any artifact */}
-          <div className="absolute top-0 right-0 w-36 h-16 bg-gradient-to-bl from-[#0a0d14]/95 via-[#0d121c]/70 to-transparent pointer-events-none rounded-tr-2xl" />
-
-          {/* Active Audit Status Indicator */}
-          {auditComplete && (
-            <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 text-white text-xs flex items-center justify-between shadow-xl">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
-                <span className="text-[11px] font-semibold truncate">
-                  Audit Ready for {address.split(',')[0]}
-                </span>
-              </div>
-              <span className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">
-                SCROLL FOR DOSSIER ↓
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
-      <div className="px-6 sm:px-10 pb-7 space-y-2.5">
-        {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Sleek reduced vertical height */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-            <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <TrendingUp className="w-3 h-3 text-[#854d0e] shrink-0" />
-              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
-            </div>
-            <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
-              AI-powered comps, trends, and valuation insights.
-            </p>
-          </div>
-
-          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-            <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <ShieldAlert className="w-3 h-3 text-[#854d0e] shrink-0" />
-              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
-            </div>
-            <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
-              Hidden risks, title issues, zoning, and red flags.
-            </p>
-          </div>
-
-          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
-            <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <Percent className="w-3 h-3 text-[#854d0e] shrink-0" />
-              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
-            </div>
-            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] text-[#0a0a0a] leading-tight font-normal tracking-tight pt-0.5">
-              Where allowed by law. Maximize your ROI with our rebate.
-            </p>
-          </div>
-        </div>
-
-        {/* Row 2: Listen Charlie Box below - Sleek reduced vertical height */}
-        <div className="w-full py-2 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs shadow-sm transition-all">
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={handleToggleAudio}
-              className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
-                isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-[#0a0a0a] text-[#D4AF37] hover:bg-[#222]'
-              }`}
-              title="Play Charlie Simmons Brief"
-            >
-              <Volume2 className="w-3.5 h-3.5" />
-            </button>
-            <div>
-              <span className="text-[#854d0e] font-bold text-xs sm:text-[13px] block leading-tight">
-                {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
-              </span>
-              <span className="text-[#0a0a0a] text-[10.5px] sm:text-[11px] font-normal block leading-tight pt-0.5">
-                Instant property summary backed by Bob Dyson (Broker DRE #00609384)
-              </span>
-            </div>
-          </div>
-          <span className="text-[9.5px] font-bold text-[#D4AF37] px-2.5 py-0.5 rounded bg-[#0a0a0a] border border-[#D4AF37]/50 uppercase shrink-0">
-            DUAL VOICE
-          </span>
-        </div>
-      </div>
-
-      {/* ── HOW COPILOT WORKS SECTION (BELOW THE CREASE - TAN BACKGROUND WITH BLACK BOXES) ── */}
+      {/* ── HOW COPILOT WORKS SECTION (BELOW THE CREASE - SEAMLESS TAN PAGE BACKGROUND) ── */}
       <div 
-        className="px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-4"
-        style={{ background: '#ede0cc' }}
+        className="w-full px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-4"
+        style={{ background: '#ede0cc', color: '#0a0a0a' }}
       >
         <div className="text-center">
           <span className="text-[11px] font-bold tracking-widest text-[#0a0a0a] uppercase">

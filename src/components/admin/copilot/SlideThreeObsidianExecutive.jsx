@@ -21,10 +21,9 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
 
   return (
     <div 
-      className="w-full rounded-2xl overflow-hidden border shadow-2xl text-left select-none"
+      className="w-full text-left select-none"
       style={{ 
         background: '#0a0a0a',
-        borderColor: '#262626',
         color: '#f5f5f5'
       }}
     >

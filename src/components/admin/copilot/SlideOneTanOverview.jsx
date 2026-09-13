@@ -21,10 +21,9 @@ export default function SlideOneTanOverview({ onRunAudit }) {
 
   return (
     <div 
-      className="w-full rounded-2xl overflow-hidden border shadow-xl text-left select-none"
+      className="w-full text-left select-none"
       style={{ 
         background: '#ede0cc',
-        borderColor: '#d8cab6',
         color: '#1a1815'
       }}
     >
