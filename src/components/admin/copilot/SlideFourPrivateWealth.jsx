@@ -198,33 +198,33 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
       {/* ── 4 BOXES SPREAD ACROSS PAGE (UNDER PHOTO & HERO SECTION) ── */}
       <div className="px-6 sm:px-10 pb-7 space-y-2.5">
         {/* Row 1: The Three Boxes (COMPS / RISKS / CLOSING REBATE) - Sleek reduced vertical height */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
             <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <TrendingUp className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
-              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
+              <TrendingUp className="w-3 h-3 text-[#854d0e] shrink-0" />
+              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">COMPS &amp; MARKET</span>
             </div>
-            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
+            <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
               AI-powered comps, trends, and valuation insights.
             </p>
           </div>
 
-          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
             <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
-              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
+              <ShieldAlert className="w-3 h-3 text-[#854d0e] shrink-0" />
+              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">RISKS &amp; DUE DILIGENCE</span>
             </div>
-            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
+            <p className="text-[10.5px] sm:text-[11px] text-[#0a0a0a] leading-tight font-normal pt-0.5">
               Hidden risks, title issues, zoning, and red flags.
             </p>
           </div>
 
-          <div className="py-2.5 px-4 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] space-y-0.5 shadow-sm transition-all">
+          <div className="py-1.5 px-3.5 rounded-xl bg-[#ede0cc] border border-[#d8cab6] hover:border-[#D4AF37] shadow-sm transition-all flex flex-col justify-center">
             <div className="flex items-center gap-1.5 text-[#854d0e]">
-              <Percent className="w-3.5 h-3.5 text-[#854d0e] shrink-0" />
-              <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
+              <Percent className="w-3 h-3 text-[#854d0e] shrink-0" />
+              <span className="text-[10.5px] sm:text-[11px] font-bold tracking-wider uppercase text-[#854d0e]">CLOSING REBATE</span>
             </div>
-            <p className="text-[11.5px] sm:text-xs text-[#0a0a0a] leading-snug font-normal">
+            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] text-[#0a0a0a] leading-tight font-normal tracking-tight pt-0.5">
               Where allowed by law. Maximize your ROI with our rebate.
             </p>
           </div>
