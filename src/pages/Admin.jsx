@@ -180,6 +180,13 @@ export default function Admin() {
 
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
+              to="/admin/dysonhomes-copilot"
+              className="inline-flex items-center gap-1.5 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
+              style={{ border: '1.5px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-black" /> ✨ DYSONHOMES COPILOT LAB
+            </Link>
+            <Link
               to="/admin/app-store-mockup?tab=full_mockup"
               className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-transform hover:scale-105"
               style={{ border: '1.5px solid #D4AF37', color: '#000', background: 'linear-gradient(135deg, #e8c84a, #D4AF37)' }}

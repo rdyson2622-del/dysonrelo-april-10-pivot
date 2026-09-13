@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, Navigate, useLocation, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import AdminSidebar from '../admin/AdminSidebar';
 import LayoutToggleButton from './LayoutToggleButton';
 import PageNumberBadge from '../PageNumberBadge';
 import { useLayout } from '@/lib/LayoutContext';
-import { ArrowLeft, Menu, X } from 'lucide-react';
+import { ArrowLeft, Menu, X, Sparkles } from 'lucide-react';
 import AdminCharliePanel from '../admin/AdminCharliePanel';
 import ReferralFloatingPill from '../portal/ReferralFloatingPill';
 import CommandPills from './CommandPills';
@@ -81,6 +81,19 @@ export default function AdminLayout() {
         {/* Top Controls */}
         <div className="fixed top-3 left-3 md:left-[330px] z-50 flex items-center gap-2">
           <PortalHomeButton onClick={() => navigate('/?choose=1')} label="STUDIO" />
+          <Link
+            to="/admin/dysonhomes-copilot"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 border"
+            style={{
+              background: '#0a0a0a',
+              borderColor: '#D4AF37',
+              color: '#D4AF37',
+            }}
+            title="DysonHomes Copilot Lab"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+            <span className="font-black text-[11px] tracking-wider uppercase whitespace-nowrap">✨ DYSONHOMES COPILOT LAB</span>
+          </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full transition-all hover:opacity-80"

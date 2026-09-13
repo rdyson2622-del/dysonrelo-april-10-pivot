@@ -385,8 +385,29 @@ export default function AdminSidebar() {
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
-      {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
+      {/* ── TOP PINNED: DYSONHOMES COPILOT LAB (MOVED TO TOP FOR EASY ACCESS) ── */}
       <div className="px-3 pt-2 pb-1 shrink-0">
+        <Link
+          to="/admin/dysonhomes-copilot"
+          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full border transition-all cursor-pointer shadow-xl active:scale-95 group w-full ${
+            location.pathname === '/admin/dysonhomes-copilot'
+              ? 'bg-[#3d3113] border-[#D4AF37] ring-2 ring-[#D4AF37]'
+              : 'bg-[#18140c] hover:bg-[#251e10] border-[#D4AF37] hover:border-[#e8c84a]'
+          }`}
+          style={{
+            boxShadow: '0 4px 16px rgba(212,175,55,0.3)',
+          }}
+          title="Open DysonHomes Copilot Lab (Zero-UI Consumer AI)"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
+            ✨ DYSONHOMES COPILOT LAB
+          </span>
+        </Link>
+      </div>
+
+      {/* ── TOP PINNED: 10 PLATFORM APPS & SPRINGBOARD SPECS ── */}
+      <div className="px-3 pt-1 pb-1 shrink-0">
         <Link
           to="/admin/app-store-mockup"
           className={`flex items-center justify-center gap-2 px-3 py-2 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
