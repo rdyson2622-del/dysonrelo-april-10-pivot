@@ -56,7 +56,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     >
       {/* ── TOP HEADER BAR ── */}
       <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-[#0a0a0a]">
-        {/* Left: D&D Logo + IN LAB */}
+        {/* Left: D&D Logo + IN LAB + Back Button */}
         <div className="flex items-center gap-3">
           <img 
             src={DYSON_LOGO} 
@@ -65,10 +65,19 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           />
           <div className="flex items-center gap-2">
             <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase">
-              IN LAB
+              PAGE 3 · DOSSIER
             </span>
             <Square className="w-3.5 h-3.5 text-stone-500" />
           </div>
+          {onBackToSearch && (
+            <button
+              type="button"
+              onClick={onBackToSearch}
+              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-2 cursor-pointer"
+            >
+              ← Back to Landing Page
+            </button>
+          )}
         </div>
 
         {/* Center / Right: Brand Header */}

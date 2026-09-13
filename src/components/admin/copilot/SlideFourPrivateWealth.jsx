@@ -68,7 +68,7 @@ const INITIAL_PROPERTIES = {
   }
 };
 
-export default function SlideFourPrivateWealth({ onRunAudit }) {
+export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas }) {
   const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditComplete, setAuditComplete] = useState(false);
@@ -152,8 +152,18 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             </div>
           </div>
 
-          {/* Audio Listen Button */}
+          {/* Actions & Navigation */}
           <div className="flex items-center gap-2">
+            {onGoToChatCanvas && (
+              <button
+                type="button"
+                onClick={onGoToChatCanvas}
+                className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold transition-all cursor-pointer shadow-sm hidden sm:inline-flex items-center gap-1.5"
+              >
+                <span>Chat Canvas</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
             <button
               type="button"
               onClick={handleToggleAudio}

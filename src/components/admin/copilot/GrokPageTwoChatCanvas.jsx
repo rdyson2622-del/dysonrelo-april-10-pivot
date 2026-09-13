@@ -3,7 +3,7 @@ import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck } from 'l
 
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
 
-export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle }) {
+export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding }) {
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
 
@@ -29,12 +29,23 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle }) 
       {/* ── TOP HEADER ── */}
       <div className="flex items-start justify-between w-full">
         {/* Top-Left Card with gold outline and Dyson & Dyson logo */}
-        <div className="w-28 sm:w-36 h-28 sm:h-36 rounded-2xl border border-[#D4AF37]/40 bg-[#121212]/60 p-2 sm:p-3 relative shadow-lg flex items-start justify-start">
-          <img 
-            src={DYSON_LOGO} 
-            alt="Dyson & Dyson" 
-            className="w-12 sm:w-14 h-auto object-contain"
-          />
+        <div className="flex flex-col gap-2">
+          <div className="w-28 sm:w-36 h-28 sm:h-36 rounded-2xl border border-[#D4AF37]/40 bg-[#121212]/60 p-2 sm:p-3 relative shadow-lg flex items-start justify-start">
+            <img 
+              src={DYSON_LOGO} 
+              alt="Dyson & Dyson" 
+              className="w-12 sm:w-14 h-auto object-contain"
+            />
+          </div>
+          {onBackToLanding && (
+            <button
+              type="button"
+              onClick={onBackToLanding}
+              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all w-fit cursor-pointer"
+            >
+              ← Back to Landing Page
+            </button>
+          )}
         </div>
 
         {/* Top-Right: — copilot script + Listen button */}
@@ -142,7 +153,19 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle }) 
       {/* ── BOTTOM FOOTER ── */}
       <div className="w-full flex items-center justify-between text-[11px] text-stone-500 pt-4">
         <span>Admin Lab • chat canvas •</span>
-        <span className="hidden sm:inline">DysonHomes Copilot · Private Wealth</span>
+        
+        {/* Floating Bottom-Right Pill from Mockup */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#e8c84a] text-black font-semibold text-xs shadow-lg">
+          <span className="flex items-center gap-1">
+            <span className="text-sm font-bold leading-none">+</span>
+            <span>Refer a Friend</span>
+          </span>
+          <span className="text-black/40">|</span>
+          <span className="flex items-center gap-1 text-[11px] font-bold">
+            <Volume2 className="w-3.5 h-3.5 text-black" />
+            <span>V2V</span>
+          </span>
+        </div>
       </div>
     </div>
   );
