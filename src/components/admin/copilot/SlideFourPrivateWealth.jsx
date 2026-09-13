@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, 
-  MapPin, Volume2, CheckCircle2, DollarSign, ExternalLink
+  MapPin, Volume2, CheckCircle2, DollarSign, ExternalLink,
+  Brain, FileText, ChevronRight
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
@@ -163,41 +164,8 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             <span className="text-[#D4AF37] whitespace-nowrap font-medium">We are an independent research entity - no spam calls or agent involvement</span>
           </div>
 
-          {/* Three lower feature boxes across: Honest comps / Hidden risks / Closing cost credit */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <div className="p-3.5 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="text-xs font-bold text-white">Honest comps</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                Institutional-grade comps. Real market, not marketing.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="text-xs font-bold text-white">Hidden risks</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                Natural, title, flood, zoning, and neighborhood risk intelligence.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#141414] border border-white/10 space-y-1">
-              <div className="flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="text-xs font-bold text-white">Closing cost credit</span>
-              </div>
-              <p className="text-[11px] text-white/60 leading-snug">
-                Your rebate, clearly estimated. Fiduciary first.
-              </p>
-            </div>
-          </div>
-
           {/* Quiet MLS companion chips */}
-          <div className="pt-2 flex items-center gap-2 text-xs text-white/50">
+          <div className="pt-1 flex items-center gap-2 text-xs text-white/50">
             <span>Browse MLS independently on:</span>
             <a href="https://www.realtor.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#D4AF37] underline flex items-center gap-0.5">
               Realtor.com <ExternalLink className="w-2.5 h-2.5" />
@@ -233,6 +201,162 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
               </span>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ── 3 OVER 4 SPREAD ACROSS ENTIRE PAGE (COMPS / RISKS / REBATE + 4 STEPS) ── */}
+      <div className="px-6 sm:px-10 pb-8 space-y-6">
+        {/* Top Row: 3 Boxes Across */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Box 1: Comps & Market Intelligence */}
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
+            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 38h36" />
+                <path d="M12 38V26" />
+                <path d="M18 38V20" />
+                <path d="M24 38V14" />
+                <path d="M30 38V10" />
+                <circle cx="34" cy="32" r="7" />
+                <path d="m39 37 5 5" />
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
+                COMPS &amp; MARKET INTELLIGENCE
+              </h3>
+              <p className="text-xs text-white/70 leading-snug">
+                AI-powered comps, trends, and valuation <span className="text-[#D4AF37] font-semibold">insights.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Box 2: Risks & Due Diligence */}
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
+            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M24 6s14 4 14 14c0 14-14 22-14 22S10 34 10 20c0-10 14-14 14-14z" />
+                <path d="M24 16v10" />
+                <circle cx="24" cy="31" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
+                RISKS &amp; DUE DILIGENCE
+              </h3>
+              <p className="text-xs text-white/70 leading-snug">
+                Hidden risks, title issues, zoning, and red flags—<span className="text-[#D4AF37] font-semibold">before you commit.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Box 3: Closing Rebate */}
+          <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-4">
+            <div className="w-12 h-12 shrink-0 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="24" cy="24" r="18" />
+                <circle cx="18" cy="18" r="2.5" fill="currentColor" />
+                <circle cx="30" cy="30" r="2.5" fill="currentColor" />
+                <path d="m16 32 16-16" />
+              </svg>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
+                CLOSING REBATE
+              </h3>
+              <p className="text-xs text-white/70 leading-snug">
+                Where allowed by law. <span className="text-[#D4AF37] font-semibold">Maximize your ROI</span> with our rebate.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Divider: HOW DYSON HOMES COPILOT WORKS */}
+        <div className="relative flex items-center justify-center my-6">
+          <div className="border-t border-[#D4AF37]/30 w-full" />
+          <div className="absolute px-6 bg-[#050505] text-[11px] sm:text-xs font-bold tracking-[0.25em] text-[#D4AF37] uppercase whitespace-nowrap">
+            HOW DYSON HOMES COPILOT WORKS
+          </div>
+        </div>
+
+        {/* Bottom Row: 4 Steps Across */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pt-1">
+          {/* Step 1 */}
+          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              1
+            </span>
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">PASTE ADDRESS</h4>
+              <p className="text-[11px] text-white/70 leading-tight">Share the property details.</p>
+            </div>
+          </div>
+
+          <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
+
+          {/* Step 2 */}
+          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              2
+            </span>
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <Brain className="w-8 h-8 text-[#D4AF37]" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">AI + HUMAN ANALYSIS</h4>
+              <p className="text-[11px] text-white/70 leading-tight">Copilot analyzes with AI precision and human expertise.</p>
+            </div>
+          </div>
+
+          <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
+
+          {/* Step 3 */}
+          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              3
+            </span>
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <FileText className="w-8 h-8 text-[#D4AF37]" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">INTELLIGENCE DELIVERED</h4>
+              <p className="text-[11px] text-white/70 leading-tight">Comps, risks, and rebate insights in one private report.</p>
+            </div>
+          </div>
+
+          <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
+
+          {/* Step 4 */}
+          <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              4
+            </span>
+            <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 3h12l4 6-10 12L2 9z"/>
+                <path d="M2 9h20"/>
+                <path d="m10 3 2 6-2 12"/>
+                <path d="m14 3-2 6 2 12"/>
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider">BETTER DECISIONS</h4>
+              <p className="text-[11px] text-white/70 leading-tight">Close with confidence. Keep more wealth.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Subtitle */}
+        <div className="text-center pt-2">
+          <p className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] text-[#D4AF37] uppercase">
+            FOR ACCREDITED INVESTORS &amp; PRIVATE WEALTH
+          </p>
         </div>
       </div>
     </div>
