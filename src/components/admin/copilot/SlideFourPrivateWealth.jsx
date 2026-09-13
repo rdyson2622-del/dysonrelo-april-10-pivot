@@ -105,17 +105,17 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             Private Real Estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
-          {/* 1. Search Bar + 2. Tightened & Centered Paste Address Statement */}
+          {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
           <div className="pt-3 space-y-1.5 text-center">
             <form onSubmit={handleSubmit}>
-              <div className="flex items-center bg-[#111111] rounded-2xl border border-[#D4AF37]/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
-                <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-1.5" />
+              <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
+                <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Paste property address"
-                  className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-normal"
+                  className="flex-1 bg-transparent text-[#0a0a0a] text-xs sm:text-sm outline-none placeholder:text-[#554c40] font-medium"
                 />
                 <button
                   type="submit"
