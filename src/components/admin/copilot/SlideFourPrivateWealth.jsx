@@ -377,12 +377,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
         </div>
 
-        {/* Footer Subtitle */}
-        <div className="text-center pt-2">
-          <p className="text-[11px] sm:text-xs font-semibold tracking-[0.3em] text-[#D4AF37] uppercase">
-            FOR ACCREDITED INVESTORS &amp; PRIVATE WEALTH
-          </p>
-        </div>
+
       </div>
     </div>
   );
