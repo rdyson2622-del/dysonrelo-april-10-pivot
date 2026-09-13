@@ -77,13 +77,7 @@ export default function SlideOneTanOverview({ onRunAudit }) {
           </div>
         </div>
 
-        {/* Right: Admin Lab mock */}
-        <div className="flex items-center">
-          <div className="px-3.5 py-1.5 rounded-xl border border-[#c4b59f] bg-[#fbf7f0]/80 text-[#554c40] text-xs font-medium flex items-center gap-1.5 shadow-sm">
-            <FlaskConical className="w-3.5 h-3.5 text-[#854d0e]" />
-            <span>Admin Lab mock — not live</span>
-          </div>
-        </div>
+
       </div>
 
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}

@@ -60,12 +60,7 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
           </div>
         </div>
 
-        <div className="flex items-center">
-          <div className="px-3.5 py-1.5 rounded-xl border border-white/15 bg-white/5 text-white/70 text-xs font-medium flex items-center gap-1.5 shadow-sm">
-            <FlaskConical className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>Admin Lab mock — not live</span>
-          </div>
-        </div>
+
       </div>
 
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}

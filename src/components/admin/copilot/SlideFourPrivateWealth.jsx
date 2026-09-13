@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, Percent, 
-  MapPin, Home, Brain, FileText, Gem, Sparkles, Volume2, 
-  CheckCircle2, Clock, Crown, DollarSign
+  MapPin, Home, Brain, FileText, Gem, Volume2, 
+  CheckCircle2, Clock, DollarSign
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -91,12 +91,6 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </div>
         </div>
 
-        <div className="flex items-center">
-          <div className="px-3.5 py-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37] text-[11px] font-bold tracking-wider uppercase flex items-center gap-1.5 shadow-sm">
-            <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-            <span>ADMIN LAB MOCK</span>
-          </div>
-        </div>
       </div>
 
       {/* ── MAIN HERO SECTION (SPLIT LAYOUT) ── */}
@@ -232,7 +226,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </div>
         </div>
 
-        {/* Right Column (5 cols): Night Luxury Villa with ADMIN LAB Badge */}
+        {/* Right Column (5 cols): Night Luxury Villa */}
         <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative group">
           <img 
             src={NIGHT_HILLSIDE_ESTATE} 
@@ -240,11 +234,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
           />
 
-          {/* Screenshot Match: ADMIN LAB Crown Badge in top-right */}
-          <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5 shadow-lg">
-            <Crown className="w-3 h-3 text-[#D4AF37]" />
-            <span>ADMIN LAB</span>
-          </div>
+
 
           {/* Active Audit Status Indicator */}
           {auditComplete && (
