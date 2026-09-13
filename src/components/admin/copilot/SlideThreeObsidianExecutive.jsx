@@ -71,10 +71,10 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             <span className="flex items-baseline justify-center gap-3 leading-tight">
-              <span className="text-xl sm:text-2xl lg:text-3xl font-light text-white/80 tracking-wide">
-                Meet
+              <span className="text-lg sm:text-2xl lg:text-3xl font-light text-white tracking-wide font-serif">
+                meet
               </span>
-              <span className="text-4xl sm:text-5xl lg:text-[62px] font-semibold italic text-[#D4AF37] leading-none drop-shadow-[0_2px_12px_rgba(212,175,55,0.35)]">
+              <span className="text-4xl sm:text-5xl lg:text-6xl font-normal italic text-[#D4AF37] lowercase leading-none drop-shadow-[0_2px_10px_rgba(212,175,55,0.35)] font-serif">
                 copilot
               </span>
             </span>

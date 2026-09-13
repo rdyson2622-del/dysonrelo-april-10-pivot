@@ -94,14 +94,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
       <div className="px-6 sm:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          {/* Headline: "Meet" noticeably SMALLER than the sweep copilot logo beside it */}
+          {/* Headline: "meet" in white font, smaller than italicized gold "copilot" */}
           <div className="text-center pt-1 pb-2">
-            <div className="inline-flex items-center justify-center gap-3">
+            <div className="inline-flex items-baseline justify-center gap-3">
               <span 
-                className="text-lg sm:text-xl lg:text-2xl font-light text-white/80 tracking-wide font-serif"
+                className="text-lg sm:text-2xl lg:text-3xl font-light text-white tracking-wide font-serif"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                Meet
+                meet
               </span>
               <CopilotSweepLogo size="xl" />
             </div>

@@ -53,11 +53,14 @@ export default function AdminDysonHomesCopilot() {
             <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#D4AF37] text-black">
               ADMIN LAB · VERTICAL SCROLL
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-baseline gap-1.5">
               <span className="text-sm font-bold text-white tracking-wide">
-                DysonHomes Copilot Lab
+                DysonHomes
               </span>
               <CopilotSweepLogo size="sm" />
+              <span className="text-sm font-bold text-white tracking-wide">
+                Lab
+              </span>
             </div>
           </div>
           <p className="text-xs text-white/70 mt-1 max-w-2xl leading-relaxed">
