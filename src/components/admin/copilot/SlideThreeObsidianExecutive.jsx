@@ -47,10 +47,10 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
                 DYSON HOMES
               </span>
               <span 
-                className="font-serif italic font-bold text-xl sm:text-[23px] text-[#D4AF37] tracking-wider leading-none transform -skew-x-6 inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                COPILOT
+                copilot
               </span>
             </div>
             <span className="hidden sm:inline text-white/30 text-xs">|</span>

@@ -68,7 +68,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             />
           </div>
 
-          {/* #2: Spelled out DYSON HOMES with COPILOT italicized for aircraft movement & slightly larger font size */}
+          {/* #2: Spelled out DYSON HOMES with copilot mirroring the exact font and style (lowercase) from the headline below */}
           <div className="flex items-center gap-2.5 flex-wrap">
             <div className="flex items-baseline gap-2">
               <span 
@@ -78,10 +78,10 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
                 DYSON HOMES
               </span>
               <span 
-                className="font-serif italic font-bold text-xl sm:text-[23px] text-[#D4AF37] tracking-wider leading-none transform -skew-x-6 inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                COPILOT
+                copilot
               </span>
             </div>
             <span className="hidden sm:inline text-white/30 text-xs">|</span>
@@ -267,7 +267,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
       <div className="px-6 sm:px-10 pb-8 pt-4 border-t border-white/10 space-y-4">
         <div className="text-center">
           <span className="text-[10px] font-bold tracking-widest text-[#D4AF37] uppercase">
-            HOW DYSON HOMES <span className="italic font-bold text-xs tracking-wider inline-block transform -skew-x-6 text-[#e8c84a]">COPILOT</span> WORKS
+            HOW DYSON HOMES <span className="font-serif italic text-sm text-[#e8c84a] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
           </span>
         </div>
 
