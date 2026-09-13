@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, Percent, 
   MapPin, Home, Brain, FileText, Gem, Volume2, 
-  CheckCircle2, Clock, DollarSign
+  CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
@@ -266,53 +266,121 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
-                <Home className="w-3.5 h-3.5" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {/* Step 1: Browse MLS on Realtor / Homes / Zillow */}
+          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1.5 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                  <Compass className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">1. BROWSE MLS</span>
               </div>
-              <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">1. PASTE ADDRESS</span>
+              
+              <div className="space-y-1">
+                <span className="text-[10px] text-white/70 font-medium block">Browse MLS on:</span>
+                <div className="flex flex-wrap items-center gap-1">
+                  <a 
+                    href="https://www.realtor.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                  >
+                    <span>Realtor.com</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
+                  </a>
+
+                  <a 
+                    href="https://www.homes.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                  >
+                    <span>Homes.com</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
+                  </a>
+
+                  <a 
+                    href="https://www.zillow.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-2 py-0.5 rounded-md border border-[#c4b59f] bg-[#ede0cc] hover:bg-white text-[#0a0a0a] text-[9.5px] font-medium flex items-center gap-0.5 shadow-sm transition-colors cursor-pointer"
+                  >
+                    <span>Zillow</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-[#554c40]" />
+                  </a>
+                </div>
+              </div>
             </div>
-            <p className="text-[11px] text-white/60 leading-snug pl-8">
-              Share the property details.
-            </p>
+
+            <div className="text-[9px] text-white/50 flex items-center gap-1 pt-1 border-t border-white/5">
+              <Info className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
+              <span>opens in a new tab — return here when ready</span>
+            </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
-                <Brain className="w-3.5 h-3.5" />
+          {/* Step 2: Paste Address */}
+          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                  <Home className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">2. PASTE ADDRESS</span>
               </div>
-              <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">2. AI + HUMAN</span>
+              <p className="text-[11px] text-white/60 leading-snug pl-8">
+                Paste any property address or MLS link.
+              </p>
             </div>
-            <p className="text-[11px] text-white/60 leading-snug pl-8">
-              Audited with AI precision &amp; broker expertise.
-            </p>
+            <span className="text-[9.5px] text-white/40 pl-8 block">Zero UI &bull; No forms</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
-                <FileText className="w-3.5 h-3.5" />
+          {/* Step 3: AI + Human Audit */}
+          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                  <Brain className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">3. AI + HUMAN</span>
               </div>
-              <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">3. DELIVERED</span>
+              <p className="text-[11px] text-white/60 leading-snug pl-8">
+                Audited with AI precision &amp; broker fiduciary expertise.
+              </p>
             </div>
-            <p className="text-[11px] text-white/60 leading-snug pl-8">
-              Comps, risks &amp; rebate in one private report.
-            </p>
+            <span className="text-[9.5px] text-[#D4AF37] pl-8 block">DRE #00609384</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
-                <Gem className="w-3.5 h-3.5" />
+          {/* Step 4: Delivered Report */}
+          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                  <FileText className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">4. DELIVERED</span>
               </div>
-              <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">4. DECISIONS</span>
+              <p className="text-[11px] text-white/60 leading-snug pl-8">
+                Comps, risks &amp; cash closing rebate in one private report.
+              </p>
             </div>
-            <p className="text-[11px] text-white/60 leading-snug pl-8">
-              Close with confidence. Keep more wealth.
-            </p>
+            <span className="text-[9.5px] text-[#10b981] pl-8 block">Instant Dossier</span>
+          </div>
+
+          {/* Step 5: Decisions */}
+          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                  <Gem className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">5. DECISIONS</span>
+              </div>
+              <p className="text-[11px] text-white/60 leading-snug pl-8">
+                Close with confidence. Keep more wealth.
+              </p>
+            </div>
+            <span className="text-[9.5px] text-white/40 pl-8 block">Fiduciary match</span>
           </div>
         </div>
 
