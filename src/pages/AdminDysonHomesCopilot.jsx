@@ -1,14 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { 
-  ShieldCheck, Sparkles, DollarSign, Copy, Check, Lock, 
-  ArrowDown, ChevronDown, Monitor, Smartphone
+  ShieldCheck, DollarSign, Copy, Check, 
+  ArrowDown, Monitor, Smartphone
 } from 'lucide-react';
-import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
-import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCanvas';
-import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
-import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPublicReadOnlyTeamRail';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
-import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 
 const TAN_BG = '#ede0cc';
 
@@ -20,6 +15,7 @@ export default function AdminDysonHomesCopilot() {
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const page3Ref = useRef(null);
+  const page4Ref = useRef(null);
 
   const scrollToSection = (ref) => {
     if (ref && ref.current) {
@@ -30,7 +26,8 @@ export default function AdminDysonHomesCopilot() {
   React.useEffect(() => {
     const hash = window.location.hash;
     if (hash === '#page-1' || hash === '#landing') scrollToSection(page1Ref);
-    else if (hash === '#page-2' || hash === '#chat' || hash === '#team-rail' || hash === '#page-4') scrollToSection(page2Ref);
+    else if (hash === '#page-2' || hash === '#chat') scrollToSection(page2Ref);
+    else if (hash === '#page-4' || hash === '#team-rail') scrollToSection(page4Ref);
     else if (hash === '#page-3' || hash === '#dossier') scrollToSection(page3Ref);
   }, []);
 
@@ -64,7 +61,7 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </div>
           <p className="text-xs text-white/70 mt-1 max-w-2xl leading-relaxed">
-            Locked vertical scroll order: Page 1 (Landing), Page 2 (Chat Canvas with Team Rail), Page 3 (Chat + Dossier). Zero login barrier for review.
+            Locked vertical scroll once: Page 1 Landing, Page 2 Chat empty, Page 3 Chat + dossier, then public read-only team rail. Real sweep PNG. No duplicate center page.
           </p>
         </div>
 
@@ -165,7 +162,7 @@ export default function AdminDysonHomesCopilot() {
               className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
             >
               <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-              <span>Page 2: Chat Canvas</span>
+              <span>Page 2: Chat Empty</span>
               <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
             </button>
 
@@ -178,140 +175,14 @@ export default function AdminDysonHomesCopilot() {
               <span>Page 3: Chat + Dossier</span>
               <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
             </button>
+            <button type="button" onClick={() => scrollToSection(page4Ref)} className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs border border-white/10 cursor-pointer">4 Team Rail</button>
           </div>
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────
-          VERTICAL SCROLL CONTENT (PAGES 1 -> 2 -> 3 -> 4)
-          ───────────────────────────────────────────────────────────── */}
+      {/* VERTICAL SCROLL locked PNGs once each */}
       {activeTab === 'vertical_scroll' && (
-        <div className="space-y-10 w-full flex flex-col items-center">
-          
-          {/* ══════════════════════════════════════════════════════════
-              PAGE 1 — LANDING (Slide 4 Private Wealth)
-              ══════════════════════════════════════════════════════════ */}
-          <section id="page-1" ref={page1Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
-                  PAGE 1 — LANDING (SLIDE 4 PRIVATE WEALTH)
-                </span>
-                <span className="text-xs text-[#0a0a0a]/70 font-medium">
-                  Dark Charcoal + Champagne Gold • DD Vertical Badge • Sweep Logo
-                </span>
-              </div>
-              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com</span>
-            </div>
-
-            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-              {/* Browser bar */}
-              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
-                </div>
-                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
-                  <Lock className="w-3 h-3 text-[#10b981]" />
-                  <span>https://dysonhomes.com</span>
-                </div>
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 1</span>
-              </div>
-
-              <SlideFourPrivateWealth
-                onRunAudit={(addr) => {
-                  scrollToSection(page3Ref);
-                }}
-                onGoToChatCanvas={() => {
-                  scrollToSection(page2Ref);
-                }}
-              />
-            </div>
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════
-              PAGE 2 — CHAT CANVAS & PUBLIC TEAM RAIL (What Can I Help You With)
-              ══════════════════════════════════════════════════════════ */}
-          <section id="page-2" ref={page2Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
-                  PAGE 2 — CHAT CANVAS &amp; TEAM ROSTER
-                </span>
-                <span className="text-xs text-[#0a0a0a]/70 font-medium">
-                  Public See-Only Team Rail • "What can I help you with?" • 3 Tan Pills
-                </span>
-              </div>
-              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/chat</span>
-            </div>
-
-            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-              {/* Browser bar */}
-              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
-                </div>
-                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
-                  <Lock className="w-3 h-3 text-[#10b981]" />
-                  <span>https://dysonhomes.com/chat</span>
-                </div>
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 2</span>
-              </div>
-
-              <CopilotPublicReadOnlyTeamRail
-                onAskAddress={(addr) => {
-                  scrollToSection(page3Ref);
-                }}
-                onBackToLanding={() => {
-                  scrollToSection(page1Ref);
-                }}
-              />
-            </div>
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════
-              PAGE 3 — CHAT + DOSSIER (after address)
-              ══════════════════════════════════════════════════════════ */}
-          <section id="page-3" ref={page3Ref} className={`w-full ${viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'} space-y-2 scroll-mt-20`}>
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
-                  PAGE 3 — CHAT + DOSSIER (AFTER ADDRESS)
-                </span>
-                <span className="text-xs text-[#0a0a0a]/70 font-medium">
-                  35% Sticky Charlie Chat • 65% Dossier with THREE TAN FILL Boxes
-                </span>
-              </div>
-              <span className="text-[11px] font-mono text-[#854d0e]">https://dysonhomes.com/dossier</span>
-            </div>
-
-            <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-              {/* Browser bar */}
-              <div className="px-4 py-2 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
-                </div>
-                <div className="px-6 py-0.5 rounded-full bg-black/60 border border-white/10 text-white/80 font-mono text-[11px] flex items-center gap-1.5 shadow-inner">
-                  <Lock className="w-3 h-3 text-[#10b981]" />
-                  <span>https://dysonhomes.com/dossier</span>
-                </div>
-                <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">PAGE 3</span>
-              </div>
-
-              <GrokPageThreeSplitCanvas
-                onBackToSearch={() => {
-                  scrollToSection(page1Ref);
-                }}
-              />
-            </div>
-          </section>
-
-        </div>
+        <div className="space-y-8 w-full max-w-5xl mx-auto"><section key="page-1" id="page-1" ref={page1Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 1 — LANDING</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a6fa3abd7_dysonhomes-page1-landing-LOCKED.png" alt="PAGE 1 — LANDING" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-2" id="page-2" ref={page2Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 2 — CHAT EMPTY</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/b1a35db81_dysonhomes-page2-chat-empty-LOCKED.png" alt="PAGE 2 — CHAT EMPTY" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-3" id="page-3" ref={page3Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PAGE 3 — CHAT + DOSSIER</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/0432c81ce_dysonhomes-page3-chat-dossier-LOCKED.png" alt="PAGE 3 — CHAT + DOSSIER" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section><section key="page-4" id="page-4" ref={page4Ref} className={`w-full scroll-mt-24 space-y-2 ${viewportMode === 'mobile' ? 'max-w-[420px] mx-auto' : ''}`}><span className="inline-block px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-wider">PUBLIC READ-ONLY TEAM RAIL</span><img src="https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/e28f5a5ef_dysonhomes-public-readonly-team-rail-FIXED.png" alt="PUBLIC READ-ONLY TEAM RAIL" draggable={false} className="w-full h-auto block rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl" /></section></div>
       )}
 
       {/* ─────────────────────────────────────────────────────────────
