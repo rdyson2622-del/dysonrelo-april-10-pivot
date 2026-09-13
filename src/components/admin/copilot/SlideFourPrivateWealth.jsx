@@ -152,16 +152,16 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          {/* 4. Trusted and Instant statements are next (Single-line, compact pill) */}
+          {/* 4. Trusted and Instant statements are next (Single-line, compact pill, matching gold italic) */}
           <div className="flex flex-col items-center space-y-2 pt-1 text-center">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white/5 border border-white/15 text-xs sm:text-sm text-white font-medium shadow-sm whitespace-nowrap">
-              <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-white/5 border border-[#D4AF37]/30 text-[11px] sm:text-[12.5px] text-[#D4AF37] italic font-medium shadow-sm whitespace-nowrap">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
               <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction.</span>
             </div>
 
             {/* Real-time definition text */}
-            <p className="text-xs sm:text-sm text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
-              <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+            <p className="text-[11px] sm:text-[12.5px] text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
+              <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 not-italic" />
               <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
             </p>
           </div>
