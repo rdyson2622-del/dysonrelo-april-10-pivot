@@ -1,9 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowDown, Shield, LayoutDashboard, ExternalLink } from 'lucide-react';
+import { ArrowDown, Shield, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import SlideFourPrivateWealth from '@/components/admin/copilot/SlideFourPrivateWealth';
-import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCanvas';
 import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
 import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPublicReadOnlyTeamRail';
 
@@ -17,7 +16,6 @@ export default function DysonHomesCopilot({ initialPage }) {
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const page3Ref = useRef(null);
-  const page4Ref = useRef(null);
 
   const scrollToSection = (ref, pageNum, path) => {
     if (ref && ref.current) {
@@ -29,18 +27,15 @@ export default function DysonHomesCopilot({ initialPage }) {
   };
 
   useEffect(() => {
-    // If an initial page prop or hash is present, scroll there on mount
     const hash = window.location.hash;
     const pathname = location.pathname;
 
     if (initialPage === 1 || hash === '#page-1' || hash === '#landing' || pathname === '/landing') {
       scrollToSection(page1Ref, 1);
-    } else if (initialPage === 2 || hash === '#page-2' || hash === '#chat' || pathname === '/chat' || pathname === '/copilot-chat') {
+    } else if (initialPage === 2 || hash === '#page-2' || hash === '#team' || hash === '#team-rail' || hash === '#chat' || pathname === '/team' || pathname === '/team-rail' || pathname === '/chat' || pathname === '/copilot-chat' || pathname === '/copilot-team') {
       scrollToSection(page2Ref, 2);
     } else if (initialPage === 3 || hash === '#page-3' || hash === '#dossier' || pathname === '/dossier' || pathname === '/copilot-dossier') {
       scrollToSection(page3Ref, 3);
-    } else if (initialPage === 4 || hash === '#page-4' || hash === '#team' || hash === '#team-rail' || pathname === '/team' || pathname === '/team-rail') {
-      scrollToSection(page4Ref, 4);
     }
   }, [initialPage, location.pathname]);
 
@@ -68,7 +63,7 @@ export default function DysonHomesCopilot({ initialPage }) {
           </Link>
           <Link
             to="/admin/dysonhomes-copilot"
-            className="px-3 py-1.5 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] border border-[#D4AF37]/40 text-[#D4AF37] font-semibold text-xs hidden md:flex items-center gap-1.5 transition-all shadow-sm"
+            className="px-3.5 py-1.5 rounded-xl bg-[#1a1a1a] hover:bg-[#252525] border border-[#D4AF37]/40 text-[#D4AF37] font-semibold text-xs hidden md:flex items-center gap-1.5 transition-all shadow-sm"
             title="Open Admin Copilot Lab"
           >
             <Shield className="w-3 h-3 text-[#D4AF37]" />
@@ -89,11 +84,11 @@ export default function DysonHomesCopilot({ initialPage }) {
 
           <button
             type="button"
-            onClick={() => scrollToSection(page2Ref, 2, '/chat')}
+            onClick={() => scrollToSection(page2Ref, 2, '/team')}
             className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-            <span>Page 2: Chat Empty</span>
+            <span>Page 2: Team Rail</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
 
@@ -106,20 +101,10 @@ export default function DysonHomesCopilot({ initialPage }) {
             <span>Page 3: Chat + Dossier</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
-
-          <button
-            type="button"
-            onClick={() => scrollToSection(page4Ref, 4, '/team')}
-            className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
-          >
-            <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">4</span>
-            <span>Page 4: Team Rail</span>
-            <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
-          </button>
         </div>
       </nav>
 
-      {/* ── 4 VERIFIED LOCKED PAGES (IN ORDER) ── */}
+      {/* ── 3 VERIFIED LOCKED PAGES (IN ORDER) ── */}
       <main className="space-y-12 w-full flex flex-col items-center">
         
         {/* ── PAGE 1: LANDING ── */}
@@ -130,16 +115,16 @@ export default function DysonHomesCopilot({ initialPage }) {
                 scrollToSection(page3Ref, 3, '/dossier');
               }}
               onGoToChatCanvas={() => {
-                scrollToSection(page2Ref, 2, '/chat');
+                scrollToSection(page2Ref, 2, '/team');
               }}
             />
           </div>
         </section>
 
-        {/* ── PAGE 2: CHAT CANVAS ── */}
+        {/* ── PAGE 2: TEAM RAIL (Fiduciary Roster + Chat Canvas) ── */}
         <section id="page-2" ref={page2Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-            <GrokPageTwoChatCanvas
+            <CopilotPublicReadOnlyTeamRail
               onAskAddress={() => {
                 scrollToSection(page3Ref, 3, '/dossier');
               }}
@@ -155,20 +140,6 @@ export default function DysonHomesCopilot({ initialPage }) {
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <GrokPageThreeSplitCanvas
               onBackToSearch={() => {
-                scrollToSection(page1Ref, 1, '/');
-              }}
-            />
-          </div>
-        </section>
-
-        {/* ── PAGE 4: TEAM RAIL ── */}
-        <section id="page-4" ref={page4Ref} className="w-full max-w-7xl scroll-mt-24">
-          <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-            <CopilotPublicReadOnlyTeamRail
-              onAskAddress={() => {
-                scrollToSection(page3Ref, 3, '/dossier');
-              }}
-              onBackToLanding={() => {
                 scrollToSection(page1Ref, 1, '/');
               }}
             />

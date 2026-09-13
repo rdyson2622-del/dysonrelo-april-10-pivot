@@ -409,7 +409,7 @@ export default function AdminSidebar() {
           </span>
         </Link>
 
-        {/* Sub-links matching screenshot */}
+        {/* Sub-links matching 3-page sequence */}
         <div className="pt-1 space-y-0.5">
           <Link
             to="/admin/dysonhomes-copilot?page=1"
@@ -425,11 +425,11 @@ export default function AdminSidebar() {
           <Link
             to="/admin/dysonhomes-copilot?page=2"
             className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 2: Chat Canvas ('What can I help you with?')"
+            title="Page 2: Team Rail (Fiduciary Roster & Chat)"
           >
-            <MessageCircle className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
+            <Users className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
             <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 2: Chat Canvas (&ldquo;What can I help you with?&rdquo;)
+              ↳ Page 2: Team Rail (Fiduciary Roster &amp; Chat)
             </span>
           </Link>
 
@@ -441,17 +441,6 @@ export default function AdminSidebar() {
             <FileText className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
             <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
               ↳ Page 3: Live Dossier Split (Two-Column)
-            </span>
-          </Link>
-
-          <Link
-            to="/admin/dysonhomes-copilot?page=4"
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
-            title="Page 4: Team Rail (Fiduciary Roster)"
-          >
-            <Users className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
-            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
-              ↳ Page 4: Team Rail (Fiduciary Roster)
             </span>
           </Link>
         </div>
