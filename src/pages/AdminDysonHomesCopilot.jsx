@@ -93,7 +93,7 @@ export default function AdminDysonHomesCopilot() {
   const [smsSent, setSmsSent] = useState(false);
   const [copiedScript, setCopiedScript] = useState(false);
   const [activeTab, setActiveTab] = useState('consumer_mockup'); // consumer_mockup | dnn_sponsor | admin_specs
-  const [selectedCandidate, setSelectedCandidate] = useState('slide_2'); // slide_1 | slide_2 | slide_3 | slide_4
+  const [selectedCandidate, setSelectedCandidate] = useState('slide_4'); // slide_1 | slide_2 | slide_3 | slide_4
 
   const handleSelectSample = (property) => {
     setIsAuditing(true);
@@ -261,10 +261,10 @@ export default function AdminDysonHomesCopilot() {
             {/* 4 Exact Slides Switcher */}
             <div className="flex flex-wrap items-center gap-1.5">
               {[
+                { id: 'slide_4', label: 'Slide 4: Private Wealth (Chosen Candidate)' },
                 { id: 'slide_2', label: 'Slide 2: Candidate A (Tan Desktop + 3 Cards)' },
                 { id: 'slide_1', label: 'Slide 1: Tan Overview' },
                 { id: 'slide_3', label: 'Slide 3: Obsidian Executive Dark' },
-                { id: 'slide_4', label: 'Slide 4: Private Wealth Deep Black' },
               ].map((btn) => (
                 <button
                   key={btn.id}
@@ -367,7 +367,7 @@ export default function AdminDysonHomesCopilot() {
                 )}
 
                 {/* Audit Dossier in smooth scroll */}
-                <div className="max-w-2xl mx-auto pt-6">
+                <div id="copilot-audit-dossier" className="max-w-2xl mx-auto pt-6 scroll-mt-6">
                   <div className="text-center pb-2">
                     <span className="text-[10px] font-bold tracking-widest uppercase text-[#854d0e]">
                       POST-SEARCH AUDIT DOSSIER
@@ -413,10 +413,10 @@ export default function AdminDysonHomesCopilot() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {[
-                { id: 'slide_2', label: '1. Candidate A (Tan Desktop + 3 Cards)' },
-                { id: 'slide_1', label: '2. Tan Overview' },
-                { id: 'slide_3', label: '3. Obsidian Executive Dark' },
-                { id: 'slide_4', label: '4. Private Wealth Deep Black' }
+                { id: 'slide_4', label: '1. Slide 4 (Private Wealth — Active Choice)' },
+                { id: 'slide_2', label: '2. Candidate A (Tan Desktop + 3 Cards)' },
+                { id: 'slide_1', label: '3. Tan Overview' },
+                { id: 'slide_3', label: '4. Obsidian Executive Dark' }
               ].map((c) => (
                 <button
                   key={c.id}

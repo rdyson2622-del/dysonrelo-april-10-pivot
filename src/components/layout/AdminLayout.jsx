@@ -89,10 +89,10 @@ export default function AdminLayout() {
               borderColor: '#D4AF37',
               color: '#D4AF37',
             }}
-            title="DysonHomes Copilot Lab"
+            title="Copilot Landing Pages"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-            <span className="font-black text-[11px] tracking-wider uppercase whitespace-nowrap">✨ DYSONHOMES COPILOT LAB</span>
+            <span className="font-black text-[11px] tracking-wider uppercase whitespace-nowrap">✨ COPILOT LANDING PAGES</span>
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

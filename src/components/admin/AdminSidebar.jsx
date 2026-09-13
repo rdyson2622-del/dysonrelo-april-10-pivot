@@ -385,7 +385,7 @@ export default function AdminSidebar() {
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
-      {/* ── TOP PINNED: DYSONHOMES COPILOT LAB (MOVED TO TOP FOR EASY ACCESS) ── */}
+      {/* ── TOP PINNED: COPILOT LANDING PAGES ── */}
       <div className="px-3 pt-2 pb-1 shrink-0">
         <Link
           to="/admin/dysonhomes-copilot"
@@ -397,11 +397,11 @@ export default function AdminSidebar() {
           style={{
             boxShadow: '0 4px 16px rgba(212,175,55,0.3)',
           }}
-          title="Open DysonHomes Copilot Lab (Zero-UI Consumer AI)"
+          title="Open Copilot Landing Pages"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
           <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
-            ✨ DYSONHOMES COPILOT LAB
+            ✨ COPILOT LANDING PAGES
           </span>
         </Link>
       </div>
@@ -488,6 +488,7 @@ export default function AdminSidebar() {
       <div className="px-3 pt-2 pb-1 space-y-2 shrink-0">
         {[
           { label: 'Admin Dashboard', path: '/admin', icon: LayoutDashboard },
+          { label: '✨ DysonHomes Copilot Lab', path: '/admin/dysonhomes-copilot', icon: Sparkles },
           { label: '📜 AI Library Specialists', path: '/admin/library-specialists', icon: Brain },
           { label: '👁️ Grok Screen Viewer', path: '/admin/claude-screen-viewer', icon: Monitor },
           { label: '🔌 Connect AI Assistant', path: '/connect', icon: Plug },

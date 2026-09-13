@@ -1,22 +1,49 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, ArrowRight, TrendingUp, ShieldAlert, Percent, 
-  MapPin, Home, Brain, FileText, Gem, Sparkles
+  MapPin, Home, Brain, FileText, Gem, Sparkles, Volume2, 
+  CheckCircle2, Clock, Crown, DollarSign
 } from 'lucide-react';
 
 const GOLD = '#D4AF37';
 const NIGHT_HILLSIDE_ESTATE = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/a57180df3_Screenshot2026-09-13at43243AM.png";
 
-export default function SlideFourPrivateWealth({ onRunAudit }) {
-  const [address, setAddress] = useState('');
-  const [isAuditing, setIsAuditing] = useState(false);
+const SAMPLE_SEARCHES = [
+  '742 Vista Del Mar, La Jolla, CA 92037',
+  '1844 Mountain Shadow Way, Scottsdale, AZ 85253',
+  '4220 Oak Hollow Terrace, Austin, TX 78746'
+];
 
-  const handleSubmit = (e) => {
+export default function SlideFourPrivateWealth({ onRunAudit }) {
+  const [address, setAddress] = useState('742 Vista Del Mar, La Jolla, CA 92037');
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [auditComplete, setAuditComplete] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  const handleSubmit = (e, customAddr) => {
     if (e) e.preventDefault();
-    if (!address.trim()) return;
+    const targetAddr = customAddr || address;
+    if (!targetAddr.trim()) return;
+
     setIsAuditing(true);
-    if (onRunAudit) onRunAudit(address);
-    setTimeout(() => setIsAuditing(false), 800);
+    setAuditComplete(false);
+
+    if (onRunAudit) onRunAudit(targetAddr);
+
+    setTimeout(() => {
+      setIsAuditing(false);
+      setAuditComplete(true);
+
+      // Smooth scroll to dossier section if present
+      const dossierEl = document.getElementById('copilot-audit-dossier');
+      if (dossierEl) {
+        dossierEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 700);
+  };
+
+  const handleToggleAudio = () => {
+    setIsPlayingAudio(prev => !prev);
   };
 
   return (
@@ -28,7 +55,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         color: '#f5f5f5'
       }}
     >
-      {/* ── TOP HEADER BAR ── */}
+      {/* ── TOP HEADER BAR (EXACT TO SCREENSHOT) ── */}
       <div className="px-6 sm:px-10 pt-6 pb-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#854d0e] flex items-center justify-center text-black font-black text-sm shadow-md">
@@ -66,7 +93,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           >
             Your human &amp;<br />
             AI-assisted private<br />
-            real estate <span className="italic">copilot.</span>
+            real estate <span className="italic text-[#D4AF37]">copilot.</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg font-normal">
@@ -74,9 +101,18 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             closing rebate where allowed by law.
           </p>
 
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-            <span>Trusted by private wealth. No agent spam.</span>
+          {/* Trusted Pill + Real-Time Subtext */}
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+              <span>Trusted by private wealth. No agent spam.</span>
+            </div>
+
+            {/* Real-time definition text selected by user */}
+            <p className="text-[11px] text-[#D4AF37]/90 italic flex items-center gap-1.5 pt-0.5">
+              <Clock className="w-3 h-3 text-[#D4AF37] shrink-0" />
+              <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
+            </p>
           </div>
 
           {/* Search Bar */}
@@ -100,6 +136,51 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               </button>
             </div>
           </form>
+
+          {/* 1-Click Sample Address Chips */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            <span className="text-[10px] text-white/40 uppercase font-semibold">Try sample:</span>
+            {SAMPLE_SEARCHES.map((chip) => (
+              <button
+                key={chip}
+                type="button"
+                onClick={() => {
+                  setAddress(chip);
+                  handleSubmit(null, chip);
+                }}
+                className="text-[10.5px] px-2.5 py-0.5 rounded-lg bg-white/5 hover:bg-[#D4AF37]/20 border border-white/10 hover:border-[#D4AF37]/40 text-white/80 hover:text-white transition-all cursor-pointer truncate max-w-[200px]"
+              >
+                {chip.split(',')[0]}
+              </button>
+            ))}
+          </div>
+
+          {/* Audio Response Bar (Charlie Simmons voice briefing) */}
+          <div className="p-2.5 rounded-xl bg-[#141414] border border-[#D4AF37]/35 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleToggleAudio}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                  isPlayingAudio ? 'bg-[#D4AF37] text-black animate-pulse' : 'bg-white/10 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black'
+                }`}
+                title="Play Charlie Simmons Brief"
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+              </button>
+              <div>
+                <span className="text-white font-semibold text-[11px] block">
+                  {isPlayingAudio ? 'Charlie Speaking: 15s Property Brief...' : 'Listen: Charlie AI Voice Dossier'}
+                </span>
+                <span className="text-white/50 text-[10px]">
+                  Instant property summary backed by Bob Dyson (Broker DRE #00609384)
+                </span>
+              </div>
+            </div>
+            <span className="text-[9.5px] font-bold text-[#D4AF37] px-2 py-0.5 rounded bg-black/60 border border-[#D4AF37]/40 uppercase shrink-0">
+              DUAL VOICE
+            </span>
+          </div>
 
           {/* 3 Dark Intelligence Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
@@ -135,13 +216,34 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </div>
         </div>
 
-        {/* Right Column (5 cols): Night Luxury Villa */}
-        <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black">
+        {/* Right Column (5 cols): Night Luxury Villa with ADMIN LAB Badge */}
+        <div className="lg:col-span-5 rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/11] bg-black relative group">
           <img 
             src={NIGHT_HILLSIDE_ESTATE} 
             alt="Hillside Estate at Night" 
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
           />
+
+          {/* Screenshot Match: ADMIN LAB Crown Badge in top-right */}
+          <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-[#D4AF37]/60 text-[#D4AF37] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5 shadow-lg">
+            <Crown className="w-3 h-3 text-[#D4AF37]" />
+            <span>ADMIN LAB</span>
+          </div>
+
+          {/* Active Audit Status Indicator */}
+          {auditComplete && (
+            <div className="absolute bottom-3 left-3 right-3 p-2.5 rounded-xl bg-black/90 backdrop-blur-md border border-[#10b981]/60 text-white text-xs flex items-center justify-between shadow-xl">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[#10b981]" />
+                <span className="text-[11px] font-semibold truncate">
+                  Audit Ready for {address.split(',')[0]}
+                </span>
+              </div>
+              <span className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">
+                SCROLL FOR DOSSIER ↓
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
