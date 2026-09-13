@@ -152,16 +152,16 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
             ))}
           </div>
 
-          {/* 4. Trusted and Instant statements are next (Centered & +75% font size) */}
-          <div className="flex flex-col items-center space-y-3 pt-2 text-center">
-            <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/5 border border-white/15 text-lg sm:text-xl text-white font-medium shadow-md">
-              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37] shrink-0" />
-              <span>Trusted by private wealth. No agent spam or interaction.</span>
+          {/* 4. Trusted and Instant statements are next (Single-line, compact pill) */}
+          <div className="flex flex-col items-center space-y-2 pt-1 text-center">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white/5 border border-white/15 text-xs sm:text-sm text-white font-medium shadow-sm whitespace-nowrap">
+              <ShieldCheck className="w-4 h-4 text-[#D4AF37] shrink-0" />
+              <span className="whitespace-nowrap">Trusted by private wealth. No agent spam or interaction.</span>
             </div>
 
-            {/* Real-time definition text (+75% font size) */}
-            <p className="text-base sm:text-[19px] text-[#D4AF37] italic flex items-center justify-center gap-2 text-center leading-relaxed font-normal max-w-2xl">
-              <Clock className="w-5 h-5 text-[#D4AF37] shrink-0" />
+            {/* Real-time definition text */}
+            <p className="text-xs sm:text-sm text-[#D4AF37] italic flex items-center justify-center gap-1.5 text-center leading-normal max-w-xl">
+              <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
               <span>Instant on-screen comps &amp; rebate calculation. Human fiduciary verification delivered in minutes.</span>
             </p>
           </div>
