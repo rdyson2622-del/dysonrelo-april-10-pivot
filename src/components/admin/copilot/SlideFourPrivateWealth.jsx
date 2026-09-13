@@ -275,7 +275,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
         {/* Top Line: Browse MLS Spread Across & Centered Directly Below Header */}
         <div className="flex items-center justify-center gap-3 pb-2 pt-1 flex-wrap text-center">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
+            <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
+              1
+            </span>
             <Search className="w-4 h-4 text-[#D4AF37] shrink-0" />
             <span>FIRST OF ALL BROWSE YOUR PREFERRED MLS AND COPY THE MLS# OR ADDRESS:</span>
           </div>
@@ -310,12 +313,12 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           </div>
         </div>
 
-        {/* 4 Steps Across (Original Position Restored) */}
+        {/* 4 Steps Across (Renumbered 2 through 5) */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 pt-2">
-          {/* Step 1 */}
+          {/* Step 2 */}
           <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              1
+              2
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -331,10 +334,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 2 */}
+          {/* Step 3 */}
           <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              2
+              3
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <Brain className="w-8 h-8 text-[#D4AF37]" />
@@ -347,10 +350,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 3 */}
+          {/* Step 4 */}
           <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              3
+              4
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <FileText className="w-8 h-8 text-[#D4AF37]" />
@@ -363,10 +366,10 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
 
           <ChevronRight className="w-4 h-4 text-[#D4AF37]/60 hidden lg:block shrink-0" />
 
-          {/* Step 4 */}
+          {/* Step 5 */}
           <div className="flex items-center gap-3.5 flex-1 w-full lg:w-auto">
             <span className="w-5 h-5 rounded-full border border-[#D4AF37] text-[#D4AF37] text-[11px] font-bold flex items-center justify-center shrink-0">
-              4
+              5
             </span>
             <div className="w-10 h-10 shrink-0 flex items-center justify-center">
               <svg className="w-8 h-8 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
