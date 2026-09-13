@@ -258,20 +258,23 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         </div>
       </div>
 
-      {/* ── HOW COPILOT WORKS SECTION ── */}
-      <div className="px-6 sm:px-10 pb-8 pt-4 border-t border-white/10 space-y-4">
+      {/* ── HOW COPILOT WORKS SECTION (BELOW THE CREASE - TAN BACKGROUND WITH BLACK BOXES) ── */}
+      <div 
+        className="px-6 sm:px-10 pb-8 pt-6 border-t border-[#d8cab6] space-y-4"
+        style={{ background: '#ede0cc' }}
+      >
         <div className="text-center">
-          <span className="text-[10px] font-bold tracking-widest text-[#D4AF37] uppercase">
-            HOW DYSON HOMES <span className="font-serif italic text-sm text-[#e8c84a] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
+          <span className="text-[11px] font-bold tracking-widest text-[#0a0a0a] uppercase">
+            HOW DYSON HOMES <span className="font-serif italic text-base text-[#854d0e] normal-case" style={{ fontFamily: 'Cormorant Garamond, serif' }}>copilot</span> WORKS
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Step 1: Browse MLS on Realtor / Homes / Zillow */}
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1.5 flex flex-col justify-between">
+          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1.5 flex flex-col justify-between">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
                   <Compass className="w-3.5 h-3.5" />
                 </div>
                 <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">1. BROWSE MLS</span>
@@ -313,22 +316,22 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
               </div>
             </div>
 
-            <div className="text-[9px] text-white/50 flex items-center gap-1 pt-1 border-t border-white/5">
+            <div className="text-[9px] text-white/50 flex items-center gap-1 pt-1.5 border-t border-white/10">
               <Info className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
               <span>opens in a new tab — return here when ready</span>
             </div>
           </div>
 
           {/* Step 2: Paste Address */}
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
                   <Home className="w-3.5 h-3.5" />
                 </div>
                 <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">2. PASTE ADDRESS</span>
               </div>
-              <p className="text-[11px] text-white/60 leading-snug pl-8">
+              <p className="text-[11px] text-white/70 leading-snug pl-8">
                 Paste any property address or MLS link.
               </p>
             </div>
@@ -336,47 +339,47 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </div>
 
           {/* Step 3: AI + Human Audit */}
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
                   <Brain className="w-3.5 h-3.5" />
                 </div>
                 <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">3. AI + HUMAN</span>
               </div>
-              <p className="text-[11px] text-white/60 leading-snug pl-8">
+              <p className="text-[11px] text-white/70 leading-snug pl-8">
                 Audited with AI precision &amp; broker fiduciary expertise.
               </p>
             </div>
-            <span className="text-[9.5px] text-[#D4AF37] pl-8 block">DRE #00609384</span>
+            <span className="text-[9.5px] text-[#D4AF37] pl-8 block font-medium">DRE #00609384</span>
           </div>
 
           {/* Step 4: Delivered Report */}
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
                   <FileText className="w-3.5 h-3.5" />
                 </div>
                 <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">4. DELIVERED</span>
               </div>
-              <p className="text-[11px] text-white/60 leading-snug pl-8">
+              <p className="text-[11px] text-white/70 leading-snug pl-8">
                 Comps, risks &amp; cash closing rebate in one private report.
               </p>
             </div>
-            <span className="text-[9.5px] text-[#10b981] pl-8 block">Instant Dossier</span>
+            <span className="text-[9.5px] text-[#10b981] pl-8 block font-medium">Instant Dossier</span>
           </div>
 
           {/* Step 5: Decisions */}
-          <div className="p-3 rounded-xl bg-[#111111] border border-white/10 space-y-1 flex flex-col justify-between">
+          <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-[#222222] shadow-lg space-y-1 flex flex-col justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-[#222] border border-[#D4AF37]/40 text-[#D4AF37] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#1a1a1a] border border-[#D4AF37]/50 text-[#D4AF37] flex items-center justify-center shrink-0">
                   <Gem className="w-3.5 h-3.5" />
                 </div>
                 <span className="text-[10.5px] font-bold text-white uppercase tracking-wider">5. DECISIONS</span>
               </div>
-              <p className="text-[11px] text-white/60 leading-snug pl-8">
+              <p className="text-[11px] text-white/70 leading-snug pl-8">
                 Close with confidence. Keep more wealth.
               </p>
             </div>
@@ -385,7 +388,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         </div>
 
         <div className="text-center pt-2">
-          <span className="text-[9.5px] font-bold tracking-widest text-white/40 uppercase">
+          <span className="text-[9.5px] font-bold tracking-widest text-[#554c40] uppercase">
             FOR ACCREDITED INVESTORS &amp; PRIVATE WEALTH
           </span>
         </div>
