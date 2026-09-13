@@ -35,6 +35,7 @@ const NAV_SECTIONS = [
       { label: '↳ Page 1: Landing Page (Private Wealth)', path: '/admin/dysonhomes-copilot?page=1', icon: Home, indent: true },
       { label: '↳ Page 2: Chat Canvas ("What can I help you with?")', path: '/admin/dysonhomes-copilot?page=2', icon: MessageCircle, indent: true },
       { label: '↳ Page 3: Live Dossier Split (Two-Column)', path: '/admin/dysonhomes-copilot?page=3', icon: FileText, indent: true },
+      { label: '↳ Page 4: Team Rail (Fiduciary Roster)', path: '/admin/dysonhomes-copilot?page=4', icon: Users, indent: true },
       { label: '📱 10 PLATFORM APPS & SPRINGBOARD SPECS', path: '/admin/app-store-mockup', icon: Star, highlight: true },
       { isWorkingModelsScroll: true },
       { label: '📞 Relocation Call Desk', path: '/admin/relocation-call-desk', icon: PhoneCall, highlight: true },
@@ -388,48 +389,70 @@ export default function AdminSidebar() {
       {/* Sidebar Search — searches every link in every nav section below */}
       <AdminSidebarSearch items={buildSearchIndex(NAV_SECTIONS)} />
 
-      {/* ── TOP PINNED: COPILOT LANDING PAGES ── */}
-      <div className="px-3 pt-2 pb-1 shrink-0 space-y-1.5">
+      {/* ── TOP PINNED: DYSONHOMES COPILOT LAB (JUST UNDER SEARCH ADMIN PILL) ── */}
+      <div className="px-3 pt-2.5 pb-2 shrink-0 space-y-1">
         <Link
           to="/admin/dysonhomes-copilot"
-          className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full border transition-all cursor-pointer shadow-xl active:scale-95 group w-full ${
+          className={`flex items-center gap-2 px-3.5 py-2.5 rounded-full border transition-all cursor-pointer shadow-lg active:scale-95 group w-full ${
             location.pathname === '/admin/dysonhomes-copilot'
-              ? 'bg-[#3d3113] border-[#D4AF37] ring-2 ring-[#D4AF37]'
-              : 'bg-[#18140c] hover:bg-[#251e10] border-[#D4AF37] hover:border-[#e8c84a]'
+              ? 'bg-[#2a220c] border-[#D4AF37] ring-1 ring-[#D4AF37]'
+              : 'bg-[#18140c] hover:bg-[#241c0e] border-[#D4AF37] hover:border-[#e8c84a]'
           }`}
           style={{
-            boxShadow: '0 4px 16px rgba(212,175,55,0.3)',
+            boxShadow: '0 4px 14px rgba(212,175,55,0.25)',
           }}
-          title="Open Copilot Landing Pages"
+          title="Open DysonHomes Copilot Lab"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
-            ✨ COPILOT LANDING PAGES
+          <Sparkles className="w-4 h-4 text-[#D4AF37] shrink-0 group-hover:scale-110 transition-transform" />
+          <span className="text-[12px] font-black uppercase tracking-wider text-[#D4AF37] truncate">
+            ✨ DYSONHOMES COPILOT LAB
           </span>
         </Link>
 
-        {/* Dedicated 3 Pages Direct Access Grid in Sidebar */}
-        <div className="grid grid-cols-3 gap-1 px-0.5">
+        {/* Sub-links matching screenshot */}
+        <div className="pt-1 space-y-0.5">
           <Link
-            to="/admin/dysonhomes-copilot#page-1"
-            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
+            to="/admin/dysonhomes-copilot?page=1"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
             title="Page 1: Landing Page (Private Wealth)"
           >
-            1. Landing
+            <Home className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
+            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
+              ↳ Page 1: Landing Page (Private Wealth)
+            </span>
           </Link>
+
           <Link
-            to="/admin/dysonhomes-copilot#page-2"
-            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
-            title="Page 2: Chat Canvas & Team Rail"
+            to="/admin/dysonhomes-copilot?page=2"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
+            title="Page 2: Chat Canvas ('What can I help you with?')"
           >
-            2. Chat
+            <MessageCircle className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
+            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
+              ↳ Page 2: Chat Canvas (&ldquo;What can I help you with?&rdquo;)
+            </span>
           </Link>
+
           <Link
-            to="/admin/dysonhomes-copilot#page-3"
-            className="py-1.5 px-1 rounded-xl bg-[#14120b] hover:bg-[#251e10] border border-[#D4AF37]/50 hover:border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold text-center block transition-all shadow-sm truncate"
-            title="Page 3: Live Dossier Split"
+            to="/admin/dysonhomes-copilot?page=3"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
+            title="Page 3: Live Dossier Split (Two-Column)"
           >
-            3. Dossier
+            <FileText className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
+            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
+              ↳ Page 3: Live Dossier Split (Two-Column)
+            </span>
+          </Link>
+
+          <Link
+            to="/admin/dysonhomes-copilot?page=4"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-white hover:text-[#D4AF37] hover:bg-white/5 transition-all group"
+            title="Page 4: Team Rail (Fiduciary Roster)"
+          >
+            <Users className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#D4AF37] shrink-0" />
+            <span className="text-[11px] font-semibold text-white group-hover:text-[#D4AF37] truncate">
+              ↳ Page 4: Team Rail (Fiduciary Roster)
+            </span>
           </Link>
         </div>
       </div>
