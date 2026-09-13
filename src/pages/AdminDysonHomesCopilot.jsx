@@ -304,12 +304,10 @@ export default function AdminDysonHomesCopilot() {
           {/* Frame Container */}
           <div className="flex justify-center w-full">
             <div 
-              className={`transition-all duration-300 w-full rounded-2xl border ${
-                selectedCandidate === 'slide_4' ? 'border-[#e2e8f0]' : 'border-[#D4AF37]/50'
-              } shadow-2xl overflow-hidden ${
+              className={`transition-all duration-300 w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden ${
                 viewportMode === 'mobile' ? 'max-w-[420px]' : 'max-w-7xl'
               }`}
-              style={{ background: selectedCandidate === 'slide_4' ? '#ffffff' : '#0a0a0a' }}
+              style={{ background: '#0a0a0a' }}
             >
               {/* Browser URL Bar */}
               <div className="px-4 py-2.5 bg-[#141414] border-b border-white/10 flex items-center justify-between text-xs">
