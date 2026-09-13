@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
 export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding, hideBadge = false }) {
   const [inputValue, setInputValue] = useState('');
@@ -62,11 +61,6 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
 
       {/* ── CENTER CONTENT ── */}
       <div className="w-full max-w-2xl mx-auto text-center space-y-6 my-auto py-8">
-        {/* LARGE sweep copilot logo CENTERED ABOVE greeting */}
-        <div className="flex justify-center pt-2">
-          <CopilotSweepLogo size="xl" />
-        </div>
-
         {/* Headline greeting */}
         <div className="space-y-2">
           <h1 
