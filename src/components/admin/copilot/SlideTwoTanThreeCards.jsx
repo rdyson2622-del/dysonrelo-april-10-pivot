@@ -85,8 +85,13 @@ export default function SlideTwoTanThreeCards({ onRunAudit }) {
             className="font-normal text-[#1a1815] leading-[1.15] tracking-tight"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
-            <span className="block text-4xl sm:text-5xl lg:text-[52px] font-medium leading-tight">
-              Meet <span className="italic text-[#D4AF37]">copilot</span>
+            <span className="flex items-baseline gap-3 leading-tight">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-light text-[#1a1815]/80 tracking-wide">
+                Meet
+              </span>
+              <span className="text-4xl sm:text-5xl lg:text-[62px] font-semibold italic text-[#D4AF37] leading-none drop-shadow-[0_2px_8px_rgba(212,175,55,0.25)]">
+                copilot
+              </span>
             </span>
             <span className="block text-lg sm:text-2xl lg:text-[25px] text-[#4a4237] font-normal tracking-normal mt-2">
               The First Personal Human &amp; AI Real Estate Assistant
