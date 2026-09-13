@@ -106,7 +106,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
           </h1>
 
           {/* 1. Search Bar (Tan background / Black font) + 2. Tightened & Centered Paste Address Statement */}
-          <div className="pt-3 space-y-1.5 text-center">
+          <div className="pt-6 sm:pt-7 space-y-1.5 text-center">
             <form onSubmit={handleSubmit}>
               <div className="flex items-center bg-[#ede0cc] rounded-2xl border-2 border-[#D4AF37]/80 shadow-[0_4px_24px_rgba(212,175,55,0.25)] p-1.5 pl-4 transition-all focus-within:border-[#D4AF37]">
                 <MapPin className="w-4 h-4 text-[#854d0e] shrink-0 mr-1.5" />
