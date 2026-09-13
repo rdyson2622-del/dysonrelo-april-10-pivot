@@ -4,7 +4,6 @@ import {
   Waves, Clock, Square, DollarSign
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 
 const CHARLIE_AVATAR = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1f6368d4d_CharlieSimmons_Headshot.png";
 
@@ -77,7 +76,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           )}
         </div>
 
-        {/* Center / Right: Brand Header with Sweep Logo */}
+        {/* Center / Right: Brand Header with Italicized Copilot */}
         <div className="flex items-baseline gap-2.5">
           <span 
             className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
@@ -85,7 +84,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           >
             DYSON HOMES
           </span>
-          <CopilotSweepLogo size="md" />
+          <span 
+            className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] lowercase leading-none"
+            style={{ fontFamily: 'Cormorant Garamond, serif' }}
+          >
+            copilot
+          </span>
         </div>
       </div>
 
