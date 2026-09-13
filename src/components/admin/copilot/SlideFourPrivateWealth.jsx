@@ -62,7 +62,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 className="font-serif italic text-2xl sm:text-3xl font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                CoPilot
+                Co Pilot
               </span>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
                 className="text-3xl sm:text-5xl lg:text-6xl font-serif italic font-medium text-[#D4AF37] leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
-                CoPilot
+                Co Pilot
               </span>
             </div>
             <h2 
