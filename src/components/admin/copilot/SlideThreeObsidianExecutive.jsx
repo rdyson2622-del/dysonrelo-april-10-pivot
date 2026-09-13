@@ -37,8 +37,8 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
               className="h-[51px] sm:h-[55px] w-auto object-contain" 
             />
           </div>
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-baseline gap-2.5">
               <span 
                 className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
@@ -46,16 +46,12 @@ export default function SlideThreeObsidianExecutive({ onRunAudit }) {
                 DYSON HOMES
               </span>
               <span 
-                className="font-serif italic text-2xl sm:text-[26px] text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
+                className="font-serif italic text-xl sm:text-2xl text-[#D4AF37] leading-none inline-block drop-shadow-[0_2px_8px_rgba(212,175,55,0.35)]"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 copilot
               </span>
             </div>
-            <span className="hidden sm:inline text-white/30 text-xs">|</span>
-            <span className="text-[9px] tracking-widest text-[#D4AF37]/80 uppercase block font-sans">
-              EST. 1989 · PRIVATE WEALTH REAL ESTATE
-            </span>
           </div>
         </div>
 

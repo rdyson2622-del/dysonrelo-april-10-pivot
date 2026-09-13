@@ -78,14 +78,14 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         </div>
 
         {/* Center / Right: Brand Header with Sweep Logo */}
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-baseline gap-2.5">
           <span 
             className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             DYSON HOMES
           </span>
-          <CopilotSweepLogo size="sm" />
+          <CopilotSweepLogo size="md" />
         </div>
       </div>
 

@@ -49,20 +49,16 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
           <DysonVerticalBadge height={48} />
 
           {/* Brand Title with Sweep Logo */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-baseline gap-2.5">
               <span 
                 className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
               >
                 DYSON HOMES
               </span>
-              <CopilotSweepLogo size="sm" />
+              <CopilotSweepLogo size="md" />
             </div>
-            <span className="hidden sm:inline text-white/30 text-xs">|</span>
-            <span className="text-[9px] tracking-widest text-[#D4AF37]/80 uppercase block font-sans">
-              EST. 1989 · PRIVATE WEALTH REAL ESTATE
-            </span>
           </div>
         </div>
 
