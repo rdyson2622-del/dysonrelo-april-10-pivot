@@ -109,30 +109,35 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             </h2>
           </div>
 
-          {/* Search Bar — Strong address input + Gold Send */}
-          <form onSubmit={handleSubmit} className="pt-1">
-            <div className="flex items-center bg-[#141414] rounded-2xl border-2 border-[#D4AF37]/60 shadow-[0_4px_24px_rgba(0,0,0,0.7)] p-2 pl-4 transition-all focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]">
-              <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-2" />
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Paste any address (e.g., 742 Vista Del Mar, La Jolla, CA 92037)"
-                className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-normal"
-              />
-              <button
-                type="submit"
-                disabled={isAuditing}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#e8c84a] via-[#D4AF37] to-[#b8920a] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
-              >
-                <span>{isAuditing ? 'Auditing...' : 'Send'}</span>
-                <ArrowRight className="w-4 h-4 text-black" />
-              </button>
-            </div>
-          </form>
+          {/* Search Bar — Strong address input + Gold Send + Statement tucked up close */}
+          <div className="space-y-1.5 pt-1">
+            <form onSubmit={handleSubmit}>
+              <div className="flex items-center bg-[#141414] rounded-2xl border-2 border-[#D4AF37]/60 shadow-[0_4px_24px_rgba(0,0,0,0.7)] p-2 pl-4 transition-all focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]">
+                <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mr-2" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Paste any address (e.g., 742 Vista Del Mar, La Jolla, CA 92037)"
+                  className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-white/40 font-normal"
+                />
+                <button
+                  type="submit"
+                  disabled={isAuditing}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#e8c84a] via-[#D4AF37] to-[#b8920a] hover:brightness-105 text-black font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md transition-all cursor-pointer shrink-0"
+                >
+                  <span>{isAuditing ? 'Auditing...' : 'Send'}</span>
+                  <ArrowRight className="w-4 h-4 text-black" />
+                </button>
+              </div>
+            </form>
+            <p className="text-xs sm:text-sm text-white/70 leading-tight font-normal px-2">
+              Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
+            </p>
+          </div>
 
           {/* SAMPLE LOOKUPS: Three TAN fill pills, BLACK text, GOLD accents/icons INSIDE */}
-          <div className="flex items-center gap-2 flex-wrap pt-1">
+          <div className="flex items-center gap-2 flex-wrap pt-0.5">
             <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-wider">
               Sample Lookups:
             </span>
@@ -151,10 +156,6 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
               </button>
             ))}
           </div>
-
-          <p className="text-sm text-white/70 leading-relaxed font-normal pt-1">
-            Paste any address to see real comps, property risks, and your closing rebate — where allowed by law.
-          </p>
 
           {/* Trust Banner */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/90 shadow-sm">
