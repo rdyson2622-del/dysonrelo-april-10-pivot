@@ -4,8 +4,7 @@ import {
   MapPin, Home, Brain, FileText, Gem, Volume2, 
   CheckCircle2, Clock, DollarSign, Compass, ExternalLink, Info, HelpCircle
 } from 'lucide-react';
-import CopilotDocumentViewer from './CopilotDocumentViewer';
-import CopilotChatDossierCanvas from './CopilotChatDossierCanvas';
+
 
 const GOLD = '#D4AF37';
 const DYSON_LOGO = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/c04428737_DYSONDYSONLOGO2026.png";
@@ -107,12 +106,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
     setTimeout(() => {
       setIsAuditing(false);
       setAuditComplete(true);
-
-      const dossierEl = document.getElementById('copilot-audit-dossier');
-      if (dossierEl) {
-        dossierEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 700);
+    }, 500);
   };
 
   const handleToggleAudio = () => {
@@ -307,52 +301,7 @@ export default function SlideFourPrivateWealth({ onRunAudit }) {
         </div>
       </div>
 
-      {/* ── LOWER SECTION: STEP 2 DIRECT CONNECTION (SIGNATURE DYSON TAN #ede0cc) ── */}
-      <div 
-        className="w-full px-6 sm:px-10 py-6 space-y-6 border-t border-[#d8cab6]/60"
-        style={{ background: '#ede0cc', color: '#1a1815' }}
-      >
-        {/* ── STEP 2: 2-COLUMN CHAT CANVAS & DOSSIER ARTIFACT (LOADED DIRECTLY BELOW HERO SEARCH) ── */}
-        <div id="copilot-audit-dossier" className="pt-4 space-y-3 scroll-mt-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-1">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#854d0e] block">
-                STEP 2 · POST-SEARCH INTERACTIVE WORKSPACE
-              </span>
-              <span className="text-sm font-bold text-[#0a0a0a]">
-                Live 2-Column Chat &amp; Dossier Canvas
-              </span>
-            </div>
-            <span className="text-xs text-[#554c40] font-medium">
-              Auditing: <strong>{activeProperty.address.split(',')[0]}</strong>
-            </span>
-          </div>
 
-          {/* 2-Column Chat + Dossier Canvas */}
-          <CopilotChatDossierCanvas 
-            property={activeProperty}
-            onPropertyChange={(newAddr) => {
-              handleSubmit(null, newAddr);
-            }}
-          />
-        </div>
-
-        {/* Footer Slogan */}
-        <div className="text-center pt-4 space-y-1">
-          <p 
-            className="text-base sm:text-lg lg:text-xl font-serif italic font-bold text-[#854d0e] tracking-wider"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            &ldquo;IF YOU DON&rsquo;T HAVE A REAL ESTATE COPILOT YOU ARE SIMPLY FLYING BLIND!&rdquo;
-          </p>
-          <p 
-            className="text-xs sm:text-sm font-serif font-semibold text-[#554c40] tracking-wide"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            &mdash; Bob Dyson, Founder &amp; Licensed Broker (DRE #00609384)
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
