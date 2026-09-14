@@ -81,8 +81,8 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         </div>
       </div>
 
-      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Reduced 20%, tight to right below Listen) ── */}
-      <div className="hidden lg:block absolute top-[68px] right-3 sm:right-4 w-[185px] z-20">
+      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Lowered 2%, tight to right below Listen) ── */}
+      <div className="hidden lg:block absolute top-[84px] right-3 sm:right-4 w-[185px] z-20">
         <CopilotAvatarSlot 
           activeExplainer={activeExplainer}
           onClearExplainer={() => setActiveExplainer(null)}
@@ -90,8 +90,8 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
         />
       </div>
 
-      {/* ── CENTER CONTENT (Lowered on page to avoid clashing with Charlie) ── */}
-      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-14 pb-8 sm:pt-20 sm:pb-10 my-auto">
+      {/* ── CENTER CONTENT (Lowered by 10% to give generous breathing room) ── */}
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-5 pt-24 sm:pt-32 pb-8 sm:pb-12 my-auto">
         {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
         <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
           <CopilotAvatarSlot 
