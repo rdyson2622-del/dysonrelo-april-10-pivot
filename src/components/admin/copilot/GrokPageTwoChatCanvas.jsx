@@ -193,8 +193,8 @@ User question: "${query}"`
         </div>
       </div>
 
-      {/* ── UPPER-RIGHT CHARLIE VERTICAL RECTANGULAR BOX (Lowered 2%, tight to right below Listen) ── */}
-      <div className="hidden lg:block absolute top-[84px] right-3 sm:right-4 w-[185px] z-20">
+      {/* ── CHARLIE AVATAR SLOT: Single responsive instance (mobile fallback in flow, desktop upper-right) ── */}
+      <div className="w-full max-w-xs mx-auto mb-2 lg:mb-0 lg:max-w-none lg:absolute lg:top-[84px] lg:right-3 lg:w-[185px] lg:z-20">
         <CopilotAvatarSlot 
           activeExplainer={activeExplainer}
           onClearExplainer={() => setActiveExplainer(null)}
@@ -203,15 +203,7 @@ User question: "${query}"`
       </div>
 
       {/* ── CENTER CONTENT (Shifted left 5% and lowered another 10% for clear separation) ── */}
-      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-4 pt-16 sm:pt-24 pb-8 sm:pb-12 my-auto translate-y-[6%] -translate-x-[5%] transition-transform">
-        {/* Mobile/Tablet Fallback: Avatar Slot above heading */}
-        <div className="lg:hidden w-full max-w-xs mx-auto mb-2">
-          <CopilotAvatarSlot 
-            activeExplainer={activeExplainer}
-            onClearExplainer={() => setActiveExplainer(null)}
-            size="vertical"
-          />
-        </div>
+      <div className="w-full max-w-xl xl:max-w-2xl mx-auto text-center space-y-4 pt-4 lg:pt-24 pb-8 sm:pb-12 my-auto translate-y-[6%] -translate-x-[5%] transition-transform">
 
         {/* When no messages yet: Greeting heading */}
         {messages.length === 0 ? (
