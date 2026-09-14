@@ -20,9 +20,10 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Red Ring',
     colorHex: '#ef4444',
     text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and can we structure a closing rebate?",
-    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/9417a119e_speech.mp3",
+    // Authentic lifelike American female voice for buyer
+    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/e7bab9e3a_buyer_annie_three_way.wav",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
-    delayMs: 3800
+    delayMs: 4000
   },
   {
     turn: 2,
@@ -31,10 +32,11 @@ export const THREE_WAY_SCRIPT = [
     role: 'AI Voice Concierge',
     colorName: 'Green Ring',
     colorHex: '#10b981',
-    text: "Charlie here: On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to structure your contingency shield.",
-    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/bbe89eee0_speech.mp3",
-    voiceConfig: { pitch: 1.15, rate: 1.05, voiceType: 'charlie' },
-    delayMs: 6500
+    text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to structure your contingency shield.",
+    // Official Charlie Simmons Ruben Voice (cc5fb6c924064712ba9f690852aa4646)
+    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/e7da6a823_charlie_ruben_three_way.wav",
+    voiceConfig: { pitch: 1.0, rate: 1.0, voiceType: 'charlie' },
+    delayMs: 7000
   },
   {
     turn: 3,
@@ -43,10 +45,11 @@ export const THREE_WAY_SCRIPT = [
     role: 'Principal Broker · DRE #00609384',
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
-    text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an un-waivable soil stability inspection. And under our zero-fee protocol, your estimated $16,800 closing rebate is locked directly on line 204 of your HUD-1.",
-    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/1270ef2d9_speech.mp3",
-    voiceConfig: { pitch: 0.88, rate: 0.95, voiceType: 'bob' },
-    delayMs: 6800
+    text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an unwaivable soil stability inspection. And under our zero-fee protocol, your estimated $16,800 closing rebate is locked directly on line 204 of your HUD-1.",
+    // Official Bob Dyson Cloned Voice (147b8f5713024fb9afc106f266e47482)
+    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/d7d032452_bob_dyson_official_three_way.wav",
+    voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
+    delayMs: 7500
   }
 ];
 
@@ -58,19 +61,24 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
 
   // Helper to speak a turn with studio-grade audio or distinct fallback
   const speakTurn = (turnData, onEndCallback) => {
-    // 1. First priority: Play studio-recorded MP3
+    // 1. First priority: Play studio-recorded audio using persistent audio element
     if (turnData.audioUrl && typeof Audio !== 'undefined') {
       try {
-        if (audioPlayerRef.current) {
-          audioPlayerRef.current.pause();
-          audioPlayerRef.current = null;
-        }
         if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
 
-        const audio = new Audio(turnData.audioUrl);
-        audioPlayerRef.current = audio;
+        // Reuse existing audio element to avoid browser/Safari autoplay policy restrictions on subsequent turns
+        let audio = audioPlayerRef.current;
+        if (!audio) {
+          audio = new Audio();
+          audioPlayerRef.current = audio;
+        } else {
+          audio.pause();
+        }
+
+        audio.src = turnData.audioUrl;
+        audio.currentTime = 0;
 
         let hasFinished = false;
         const finish = () => {
@@ -81,15 +89,15 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
         };
 
         audio.onended = finish;
-        audio.onerror = () => {
-          console.warn('Audio playback error, falling back to speech synthesis');
+        audio.onerror = (e) => {
+          console.warn('Audio error on track, trying fallback:', e);
           fallbackSpeak(turnData, onEndCallback);
         };
 
         const playPromise = audio.play();
         if (playPromise !== undefined) {
           playPromise.catch((err) => {
-            console.warn('Audio autoplay prevented, using speech synthesis fallback:', err);
+            console.warn('Audio play prevented, using speech synthesis fallback:', err);
             fallbackSpeak(turnData, onEndCallback);
           });
         }
@@ -199,6 +207,13 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
       stopDemo();
       return;
     }
+
+    // Initialize or unlock audio element during the direct user click gesture
+    try {
+      if (!audioPlayerRef.current && typeof Audio !== 'undefined') {
+        audioPlayerRef.current = new Audio();
+      }
+    } catch (_) {}
 
     setIsPlaying(true);
     setCurrentStep(1);
