@@ -32,6 +32,7 @@ export default function CopilotDynamicSpeakerBox({
   onTriggerExplainer,
   onVoiceTranscript,
   variant = 'card', // 'card' (Page 3) | 'rail' (Team Sidebar Rail)
+  isSpeakingOverride = false,
   className = '',
 }) {
   const isBob = speaker === 'bob';
@@ -66,7 +67,7 @@ export default function CopilotDynamicSpeakerBox({
   const isLiveVoiceActive = !isBob && (voiceStatus === 'connecting' || voiceStatus === 'listening' || voiceStatus === 'speaking');
   
   // Total enlarged state
-  const isEnlarged = isThisExplainerActive || isLiveVoiceActive;
+  const isEnlarged = isThisExplainerActive || isLiveVoiceActive || isSpeakingOverride;
 
   // Handle active video explainer playback
   useEffect(() => {
@@ -408,6 +409,57 @@ export default function CopilotDynamicSpeakerBox({
               <Square className="w-2.5 h-2.5 fill-current text-red-400" />
               <span>End</span>
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── 2B. ACTIVE SPEAKING OVERRIDE (For 3-Way Demo Turn-Taking) ──
+  if (isSpeakingOverride) {
+    return (
+      <div 
+        className={`relative z-40 transition-all duration-300 ease-out ${
+          variant === 'rail' 
+            ? 'w-[220px] sm:w-[240px] -ml-2 -mr-28 my-1' 
+            : 'w-full sm:w-[240px]'
+        } ${className}`}
+      >
+        <div className={`w-full rounded-xl bg-[#0c0c0c] border-2 ${
+          isBob ? 'border-[#D4AF37] shadow-[0_12px_40px_rgba(212,175,55,0.4)]' : 'border-emerald-500 shadow-[0_12px_40px_rgba(16,185,129,0.3)]'
+        } p-2.5 flex flex-col items-center text-center space-y-2 animate-in fade-in zoom-in-95 duration-200`}>
+          <div className="w-full flex items-center justify-between text-[10px] px-1 font-mono">
+            <div className="flex items-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full ${isBob ? 'bg-[#D4AF37]' : 'bg-emerald-400'} animate-ping`} />
+              <span className={`${isBob ? 'text-[#D4AF37]' : 'text-emerald-400'} font-bold tracking-wider uppercase text-[9.5px]`}>
+                {isBob ? 'BOB DYSON SPEAKING' : 'CHARLIE SIMMONS SPEAKING'}
+              </span>
+            </div>
+            <span className="text-stone-400 font-semibold text-[9px] uppercase font-mono">
+              {isBob ? 'BROKER' : 'AI VOICE'}
+            </span>
+          </div>
+
+          <div className="relative shrink-0 pt-0.5">
+            <div className={`w-14 h-14 aspect-square rounded-full border-2 ${
+              isBob ? 'border-[#D4AF37] ring-3 ring-[#D4AF37]/50 shadow-[0_0_15px_rgba(212,175,55,0.7)]' : 'border-emerald-400 ring-3 ring-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.6)]'
+            } p-0.5 overflow-hidden bg-black scale-105 transition-all`}>
+              <img src={headshot} alt={name} className="w-full h-full object-cover scale-105 rounded-full" />
+            </div>
+
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-full bg-black/90 border border-white/20 text-[8px] font-mono text-white flex items-center gap-1 shadow-md whitespace-nowrap">
+              <Sparkles className={`w-2 h-2 ${isBob ? 'text-[#D4AF37]' : 'text-emerald-400'} animate-spin`} />
+              <span className={isBob ? 'text-[#D4AF37]' : 'text-emerald-400'}>Answering Live</span>
+            </div>
+          </div>
+
+          <div className="space-y-0.5 w-full pt-0.5">
+            <h3 className="text-[11.5px] font-bold text-white tracking-wide leading-tight">
+              {name}
+            </h3>
+            <p className="text-[9px] text-stone-300 font-medium truncate leading-tight">
+              {title} · {subtitle}
+            </p>
           </div>
         </div>
       </div>

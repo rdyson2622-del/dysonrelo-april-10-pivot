@@ -15,7 +15,6 @@ export default function DysonHomesCopilot({ initialPage }) {
 
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
-  const page3Ref = useRef(null);
   const [analyzedProperty, setAnalyzedProperty] = useState('742 Vista Del Mar, La Jolla, CA 92037');
 
   const scrollToSection = (ref, pageNum, path) => {
@@ -33,10 +32,20 @@ export default function DysonHomesCopilot({ initialPage }) {
 
     if (initialPage === 1 || hash === '#page-1' || hash === '#landing' || pathname === '/landing') {
       scrollToSection(page1Ref, 1);
-    } else if (initialPage === 2 || hash === '#page-2' || hash === '#team' || hash === '#team-rail' || hash === '#chat' || pathname === '/team' || pathname === '/team-rail' || pathname === '/chat' || pathname === '/copilot-chat' || pathname === '/copilot-team') {
+    } else if (
+      initialPage === 2 || 
+      initialPage === 3 || 
+      hash === '#page-2' || 
+      hash === '#dossier' || 
+      hash === '#chat' || 
+      hash === '#team' || 
+      pathname === '/dossier' || 
+      pathname === '/chat' || 
+      pathname === '/team' || 
+      pathname === '/copilot-dossier' || 
+      pathname === '/copilot-chat'
+    ) {
       scrollToSection(page2Ref, 2);
-    } else if (initialPage === 3 || hash === '#page-3' || hash === '#dossier' || pathname === '/dossier' || pathname === '/copilot-dossier') {
-      scrollToSection(page3Ref, 3);
     }
   }, [initialPage, location.pathname]);
 
@@ -79,36 +88,26 @@ export default function DysonHomesCopilot({ initialPage }) {
             className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">1</span>
-            <span>Page 1: Landing</span>
+            <span>Page 1: Landing &amp; Search</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
 
           <button
             type="button"
-            onClick={() => scrollToSection(page2Ref, 2, '/team')}
+            onClick={() => scrollToSection(page2Ref, 2, '/dossier')}
             className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">2</span>
-            <span>Page 2: Team Rail</span>
-            <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => scrollToSection(page3Ref, 3, '/dossier')}
-            className="px-3.5 py-1.5 rounded-xl bg-[#1c1c1c] hover:bg-[#D4AF37] text-white hover:text-black font-semibold text-xs transition-all border border-white/10 hover:border-[#D4AF37] cursor-pointer flex items-center gap-1.5 shadow-sm"
-          >
-            <span className="w-4 h-4 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] flex items-center justify-center text-[10px] font-bold">3</span>
-            <span>Page 3: Chat + Dossier</span>
+            <span>Page 2: Command Center &amp; Dossier</span>
             <ArrowDown className="w-3 h-3 text-[#D4AF37]" />
           </button>
         </div>
       </nav>
 
-      {/* ── 3 VERIFIED LOCKED PAGES (IN ORDER) ── */}
+      {/* ── 2 STREAMLINED CORE PAGES ── */}
       <main className="space-y-12 w-full flex flex-col items-center">
         
-        {/* ── PAGE 1: LANDING ── */}
+        {/* ── PAGE 1: LANDING & PROPERTY SEARCH ── */}
         <section id="page-1" ref={page1Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <SlideFourPrivateWealth
@@ -117,35 +116,21 @@ export default function DysonHomesCopilot({ initialPage }) {
               }}
               onOpenDossier={(addr) => {
                 if (addr) setAnalyzedProperty(addr);
-                scrollToSection(page3Ref, 3, '/dossier');
+                scrollToSection(page2Ref, 2, '/dossier');
               }}
               onGoToChatCanvas={() => {
-                scrollToSection(page2Ref, 2, '/team');
+                scrollToSection(page2Ref, 2, '/dossier');
               }}
             />
           </div>
         </section>
 
-        {/* ── PAGE 2: TEAM RAIL (Fiduciary Roster + Chat Canvas) ── */}
+        {/* ── PAGE 2: CONSOLIDATED COMMAND CENTER & DOSSIER (Mini-Apps Rail + 3-Way Dialogue + Fiduciary Dossier) ── */}
         <section id="page-2" ref={page2Ref} className="w-full max-w-7xl scroll-mt-24">
-          <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
-            <CopilotPublicReadOnlyTeamRail
-              onAskAddress={(addr) => {
-                if (addr) setAnalyzedProperty(addr);
-                scrollToSection(page3Ref, 3, '/dossier');
-              }}
-              onBackToLanding={() => {
-                scrollToSection(page1Ref, 1, '/');
-              }}
-            />
-          </div>
-        </section>
-
-        {/* ── PAGE 3: CHAT + DOSSIER ── */}
-        <section id="page-3" ref={page3Ref} className="w-full max-w-7xl scroll-mt-24">
           <div className="rounded-2xl border-2 border-[#D4AF37]/60 shadow-2xl overflow-hidden bg-[#0a0a0a]">
             <GrokPageThreeSplitCanvas
               property={analyzedProperty}
+              showRail={true}
               onBackToSearch={() => {
                 scrollToSection(page1Ref, 1, '/');
               }}

@@ -7,13 +7,16 @@ import {
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
+import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
+import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
-export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
+export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, showRail = true }) {
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [isConsumerTransmitting, setIsConsumerTransmitting] = useState(false);
+  const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
   const messagesEndRef = React.useRef(null);
   const dossierData = getPropertyDossier(property);
 
@@ -202,14 +205,19 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         </div>
       </div>
 
-      {/* ── 2-COLUMN MAIN CANVAS: Left ~42% Dialogue Engine (3-Way Avatar Staging + Chat Stream + Pinned Grok Bar), Right ~58% Presentation Dossier ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[720px]">
+      {/* ── UNIFIED 3-ZONE MAIN CANVAS: Far-Left Mini-Apps Rail (~124px), Left Dialogue Engine, Right Presentation Dossier ── */}
+      <div className="flex flex-col lg:flex-row min-h-[740px]">
         
-        {/* ── LEFT COLUMN: ALL COMMUNICATION & LIVE DIALOGUE ENGINE (~5 cols lg) ── */}
-        <div className="lg:col-span-5 p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative">
+        {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL ── */}
+        {showRail && (
+          <CopilotMiniAppsRail />
+        )}
+
+        {/* ── CENTER-LEFT COLUMN: ALL COMMUNICATION & LIVE DIALOGUE ENGINE ── */}
+        <div className="w-full lg:w-[460px] xl:w-[490px] p-3 sm:p-4 flex flex-col justify-between bg-[#0b0b0b] border-b lg:border-b-0 lg:border-r border-white/10 relative shrink-0">
           
           {/* Scrollable Conversation Container */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[560px]">
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[580px]">
             {/* Header Stage Label */}
             <div className="flex items-center justify-between pb-1 border-b border-white/5">
               <span className="text-[9px] font-mono tracking-widest text-[#D4AF37] uppercase font-bold flex items-center gap-1.5">
@@ -219,6 +227,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               <span className="text-[8px] text-stone-500 font-mono">LIVE CONVERSATION</span>
             </div>
 
+            {/* ── HOW TO / WHAT TO EXPECT: INTERACTIVE 3-WAY AUDIO DISCUSSION DEMO ── */}
+            <CopilotThreeWayDemo 
+              onTurnChange={setActiveDemoSpeaker}
+              onMessagePosted={(msg) => {
+                setMessages(prev => [...prev, msg]);
+              }}
+              onResetDemo={() => {
+                setActiveDemoSpeaker(null);
+              }}
+            />
+
             {/* ── 3-WAY AVATAR STAGING: BOB, CHARLIE & CONSUMER/SUBSCRIBER ── */}
             <div className="flex flex-wrap items-start gap-2 pt-0.5">
               {/* Bob Dyson Box */}
@@ -226,6 +245,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 speaker="bob"
                 variant="card"
                 activeExplainer={activeExplainer}
+                isSpeakingOverride={activeDemoSpeaker === 'bob'}
                 onClearExplainer={() => setActiveExplainer(null)}
                 onTriggerExplainer={handlePillClick}
               />
@@ -235,6 +255,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 speaker="charlie"
                 variant="card"
                 activeExplainer={activeExplainer}
+                isSpeakingOverride={activeDemoSpeaker === 'charlie'}
                 onClearExplainer={() => setActiveExplainer(null)}
                 onTriggerExplainer={handlePillClick}
                 onVoiceTranscript={(t) => {
@@ -253,7 +274,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
 
               {/* Consumer / Subscriber Box (Enlarges when sending) */}
               <CopilotConsumerSpeakerBox 
-                isTransmitting={isConsumerTransmitting}
+                isTransmitting={isConsumerTransmitting || activeDemoSpeaker === 'consumer'}
                 userName="You"
                 userRole="Verified Buyer"
               />
@@ -392,12 +413,44 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN: DOSSIER WITH THREE TAN FILL BOXES (~65% = 7 cols lg) ── */}
-        <div className="lg:col-span-7 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto">
+        {/* ── RIGHT COLUMN: PRESENTATION DOSSIER + CHARLIE OPENING STATEMENT ── */}
+        <div className="flex-1 min-w-0 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto">
+          {/* ── CHARLIE'S OPENING GREETING BANNER (TRANSFERRED FROM PAGE 2) ── */}
+          <div className="rounded-xl border border-[#D4AF37]/50 bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
+                  FIDUCIARY AUDIT COMPLETE
+                </span>
+              </div>
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
+                I've audited {dossierData.shortAddress}. Can we help?
+              </h2>
+              <p className="text-xs text-stone-300">
+                {dossierData.marketSummary} Ask questions on the left or text the full dossier to your mobile.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => handlePillClick("Text full report to my mobile")}
+                className="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+              >
+                <span>Text Me Report</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
           {/* Header */}
-          <div className="pb-1">
+          <div className="pb-1 flex items-center justify-between">
             <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
               DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
+            </span>
+            <span className="text-[9px] text-stone-500 font-mono">
+              INDEPENDENT 2ND-OPINION
             </span>
           </div>
 
