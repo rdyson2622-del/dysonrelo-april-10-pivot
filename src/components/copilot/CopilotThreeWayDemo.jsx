@@ -32,8 +32,9 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Green Ring',
     colorHex: '#10b981',
     text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and an updated geotechnical soil report. Public comps also indicate the listing is priced at an 18% premium over recent neighborhood sales. Let me bring in Bob Dyson to review your physical inspection contingency protections.",
-    // Authentic studio voice (HeyGen Ruben voice ID cc5fb6c924064712ba9f690852aa4646)
-    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/4a7cd1b38_charlie_simmons_fay_ave_demo.wav",
+    // Authentic HeyGen Ruben studio voice
+    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/cc5fb6c924064712ba9f690852aa4646/id=85e1c607-1d70-4280-87fa-03281bdd8c87.wav",
+    backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/c6de86332_speech.mp3",
     voiceConfig: { pitch: 1.0, rate: 1.0, voiceType: 'charlie' },
     delayMs: 7000
   },
@@ -45,8 +46,9 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
     text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. Under my broker license #00609384, we mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
-    // Authentic studio voice (HeyGen Bob Dyson cloned voice ID 147b8f5713024fb9afc106f266e47482)
-    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/218b440f2_bob_dyson_fay_ave_demo.wav",
+    // Authentic HeyGen Bob Dyson cloned studio voice
+    audioUrl: "https://resource2.heygen.ai/text_to_speech/33dec76283f44f80b7d658cc9060acbb/147b8f5713024fb9afc106f266e47482/id=9e301f9f-7314-479e-89ca-6e626559204f.wav",
+    backupAudioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/30f033c82_speech.mp3",
     voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
     delayMs: 7500
   }
@@ -89,8 +91,17 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
 
         audio.onended = finish;
         audio.onerror = (e) => {
-          console.warn('Audio error on track, trying fallback:', e);
-          fallbackSpeak(turnData, onEndCallback);
+          console.warn('Audio error on primary track, trying backup:', e);
+          if (turnData.backupAudioUrl) {
+            audio.src = turnData.backupAudioUrl;
+            audio.currentTime = 0;
+            audio.onerror = () => {
+              fallbackSpeak(turnData, onEndCallback);
+            };
+            audio.play().catch(() => fallbackSpeak(turnData, onEndCallback));
+          } else {
+            fallbackSpeak(turnData, onEndCallback);
+          }
         };
 
         const playPromise = audio.play();
@@ -124,11 +135,17 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
 
       const voices = window.speechSynthesis.getVoices();
       if (voices && voices.length > 0) {
+        const isFemaleName = (name) => /female|woman|samantha|victoria|karen|susan|moira|fiona|tessa|ava|allison|jenny|zoe/i.test(name);
+        
         if (turnData.speaker === 'bob') {
-          const maleVoice = voices.find(v => v.lang.startsWith('en') && /daniel|george|oliver|alex|david|guy/i.test(v.name));
+          utterance.pitch = 0.85; // Deep authoritative tone
+          const maleVoice = voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name) && /daniel|george|oliver|alex|david|guy|male|fred|lee|tom/i.test(v.name))
+            || voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name));
           if (maleVoice) utterance.voice = maleVoice;
         } else if (turnData.speaker === 'charlie') {
-          const charlieVoice = voices.find(v => v.lang.startsWith('en') && /natural|aaron|evan|alex|google us english/i.test(v.name));
+          utterance.pitch = 1.0;
+          const charlieVoice = voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name) && /aaron|evan|alex|male|natural male|tom|guy|daniel/i.test(v.name))
+            || voices.find(v => v.lang.startsWith('en') && !isFemaleName(v.name));
           if (charlieVoice) utterance.voice = charlieVoice;
         } else {
           // Modern, warm woman voice for buyer
