@@ -338,7 +338,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             </div>
             <div className="space-y-1">
               <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
-                COMPS &amp; MARKET INTELLIGENCE
+                WE RUN COMPS &amp; MARKET INTEL
               </h3>
               <p className="text-xs text-white/70 leading-snug">
                 AI-powered comps, trends, and valuation <span className="text-[#D4AF37] font-semibold">insights.</span>
@@ -357,7 +357,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             </div>
             <div className="space-y-1">
               <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
-                RISKS &amp; DUE DILIGENCE
+                WE EXPLORE RISKS &amp; DUE DILIGENCE
               </h3>
               <p className="text-xs text-white/70 leading-snug">
                 Hidden risks, title issues, zoning, and red flags—<span className="text-[#D4AF37] font-semibold">before you commit.</span>
@@ -377,7 +377,7 @@ export default function SlideFourPrivateWealth({ onRunAudit, onGoToChatCanvas })
             </div>
             <div className="space-y-1">
               <h3 className="text-xs sm:text-sm font-bold tracking-wider text-white uppercase font-sans">
-                CLOSING REBATE
+                WE CALCULATE CLOSING REBATES
               </h3>
               <p className="text-xs text-white/70 leading-snug">
                 Where allowed by law. <span className="text-[#D4AF37] font-semibold">Maximize your ROI</span> with our rebate.
