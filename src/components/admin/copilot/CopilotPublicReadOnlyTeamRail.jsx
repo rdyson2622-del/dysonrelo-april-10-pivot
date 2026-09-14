@@ -129,56 +129,56 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
           <div className="flex flex-col items-center text-center space-y-1 pt-0.5">
             {/* Bob Photo */}
             <div className="relative">
-              <div className="w-13 h-13 rounded-full overflow-hidden border border-[#D4AF37]/70 bg-black shadow-md">
+              <div className="w-10 h-10 aspect-square rounded-full overflow-hidden border border-[#D4AF37]/70 bg-black shadow-md shrink-0">
                 <img 
                   src={BOB_HEADSHOT} 
                   alt="Bob Dyson Headshot" 
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-[#0c0c0c] shadow" title="Active CA Broker" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow" title="Active CA Broker" />
             </div>
 
             {/* Name + Title only */}
             <div className="w-full space-y-0.5">
-              <h4 className="text-[10.5px] font-bold text-white tracking-wide truncate leading-tight">
+              <h4 className="text-[10px] font-bold text-white tracking-wide truncate leading-tight">
                 Bob Dyson
               </h4>
-              <span className="text-[8px] text-stone-300 font-medium block leading-tight">
+              <span className="text-[7.5px] text-stone-300 font-medium block leading-tight">
                 Principal &amp; Fiduciary
               </span>
-              <span className="text-[7px] text-[#D4AF37]/90 font-mono block leading-none">
+              <span className="text-[6.5px] text-[#D4AF37]/90 font-mono block leading-none">
                 DRE #00609384
               </span>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-1" />
+          <div className="border-t border-white/10 my-0.5 w-10 mx-auto" />
 
           {/* ── 2. CHARLIE SIMMONS: UNBOXED IN STRAIGHT VERTICAL ROW ── */}
           <div className="flex flex-col items-center text-center space-y-1">
             {/* Charlie Desk Photo */}
             <div className="relative">
-              <div className="w-13 h-13 rounded-full overflow-hidden border border-emerald-500/70 bg-black shadow-md">
+              <div className="w-10 h-10 aspect-square rounded-full overflow-hidden border border-emerald-500/70 bg-black shadow-md shrink-0">
                 <img 
                   src={CHARLIE_DESK_PHOTO} 
                   alt="Charlie Simmons at Desk" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-[#0c0c0c] shadow animate-pulse" title="Live Concierge" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow animate-pulse" title="Live Concierge" />
             </div>
 
             {/* Name + Title only */}
             <div className="w-full space-y-0.5">
-              <h4 className="text-[10.5px] font-bold text-white tracking-wide truncate leading-tight">
+              <h4 className="text-[10px] font-bold text-white tracking-wide truncate leading-tight">
                 Charlie Simmons
               </h4>
-              <span className="text-[8px] text-stone-300 font-medium block leading-tight">
+              <span className="text-[7.5px] text-stone-300 font-medium block leading-tight">
                 Voice &amp; Concierge
               </span>
-              <span className="text-[7px] text-[#D4AF37] font-serif italic block leading-none">
+              <span className="text-[6.5px] text-[#D4AF37] font-serif italic block leading-none">
                 The Face of CoPilot
               </span>
             </div>
