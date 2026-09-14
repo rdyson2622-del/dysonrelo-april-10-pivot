@@ -1,17 +1,39 @@
 import React, { useState } from 'react';
-import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck } from 'lucide-react';
+import { Paperclip, Send, Sparkles, Shield, User, Volume2, ShieldCheck, Briefcase } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
+import CopilotAvatarSlot from '@/components/copilot/CopilotAvatarSlot';
+import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 
 export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, onBackToLanding, hideBadge = false }) {
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [activeExplainer, setActiveExplainer] = useState(null);
+
+  const handlePillClick = (query) => {
+    const explainer = findExplainerByQuery(query);
+    if (explainer?.videoUrl) {
+      setActiveExplainer(explainer);
+    } else {
+      setActiveExplainer(null);
+      if (onAskAddress) {
+        onAskAddress(query);
+      }
+    }
+  };
 
   const handleSubmit = (e, customText) => {
     if (e) e.preventDefault();
     const query = customText || inputValue;
     if (!query.trim()) return;
-    if (onAskAddress) {
-      onAskAddress(query.trim());
+
+    const explainer = findExplainerByQuery(query.trim());
+    if (explainer?.videoUrl) {
+      setActiveExplainer(explainer);
+    } else {
+      setActiveExplainer(null);
+      if (onAskAddress) {
+        onAskAddress(query.trim());
+      }
     }
   };
 
@@ -60,17 +82,25 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
       </div>
 
       {/* ── CENTER CONTENT ── */}
-      <div className="w-full max-w-2xl mx-auto text-center space-y-6 my-auto py-8">
+      <div className="w-full max-w-2xl mx-auto text-center space-y-5 my-auto py-4">
+        {/* Persistent Avatar Slot (Charlie default / Bob on solutions / Canned MP4 player) */}
+        <div className="w-full max-w-md mx-auto">
+          <CopilotAvatarSlot 
+            activeExplainer={activeExplainer}
+            onClearExplainer={() => setActiveExplainer(null)}
+          />
+        </div>
+
         {/* Headline greeting */}
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <h1 
-            className="text-3xl sm:text-5xl lg:text-[52px] font-normal text-white tracking-tight font-serif"
+            className="text-3xl sm:text-5xl lg:text-[48px] font-normal text-white tracking-tight font-serif"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             What can I help you with?
           </h1>
-          <p className="text-sm sm:text-base text-stone-400 font-light tracking-wide">
-            Ask Charlie about any address
+          <p className="text-xs sm:text-sm text-stone-400 font-light tracking-wide">
+            Ask Charlie about any address or tap a prompt for an explainer
           </p>
         </div>
 
@@ -95,15 +125,14 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
           </div>
         </form>
 
-        {/* Three TAN pills (black text, gold inside):
-            1) How do I get thousands back at closing?
-            2) How do you find hidden property risks?
-            3) Who is Dyson & Dyson? */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        {/* TAN prompt pills (black text, gold inside, mapped to shipped explainers) */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
           <button
             type="button"
-            onClick={() => handleSubmit(null, 'How do I get thousands back at closing?')}
-            className="px-4 py-2.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border border-[#c4b59f] text-[#0a0a0a] text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+            onClick={() => handlePillClick('How do I get thousands back at closing?')}
+            className={`px-3.5 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border text-[#0a0a0a] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeExplainer?.id === 'closing_rebate' ? 'ring-2 ring-[#D4AF37] border-[#854d0e]' : 'border-[#c4b59f]'
+            }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[#b8920a]" />
             <span>How do I get thousands back at closing?</span>
@@ -111,8 +140,10 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
 
           <button
             type="button"
-            onClick={() => handleSubmit(null, 'How do you find hidden property risks?')}
-            className="px-4 py-2.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border border-[#c4b59f] text-[#0a0a0a] text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+            onClick={() => handlePillClick('How do you find hidden property risks?')}
+            className={`px-3.5 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border text-[#0a0a0a] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeExplainer?.id === 'hidden_risks' ? 'ring-2 ring-[#D4AF37] border-[#854d0e]' : 'border-[#c4b59f]'
+            }`}
           >
             <Shield className="w-3.5 h-3.5 text-[#b8920a]" />
             <span>How do you find hidden property risks?</span>
@@ -120,11 +151,25 @@ export default function GrokPageTwoChatCanvas({ onAskAddress, onListenToggle, on
 
           <button
             type="button"
-            onClick={() => handleSubmit(null, 'Who is Dyson & Dyson?')}
-            className="px-4 py-2.5 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border border-[#c4b59f] text-[#0a0a0a] text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+            onClick={() => handlePillClick('Who is Dyson & Dyson?')}
+            className={`px-3.5 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border text-[#0a0a0a] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeExplainer?.id === 'who_is_dyson' ? 'ring-2 ring-[#D4AF37] border-[#854d0e]' : 'border-[#c4b59f]'
+            }`}
           >
             <User className="w-3.5 h-3.5 text-[#b8920a]" />
             <span>Who is Dyson & Dyson?</span>
+          </button>
+
+          {/* Bob's solutions take trigger */}
+          <button
+            type="button"
+            onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
+            className={`px-3.5 py-2 rounded-full bg-[#ede0cc] hover:bg-[#e4d4bd] border text-[#0a0a0a] text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm ${
+              activeExplainer?.id === 'bob_solutions_traps' ? 'ring-2 ring-[#D4AF37] border-[#854d0e]' : 'border-[#c4b59f]'
+            }`}
+          >
+            <Briefcase className="w-3.5 h-3.5 text-[#854d0e]" />
+            <span>Bob's Take: Escrow &amp; Deal Traps</span>
           </button>
         </div>
 

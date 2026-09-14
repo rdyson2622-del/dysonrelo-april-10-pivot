@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { 
   Paperclip, Send, Scale, ShieldAlert, FileText, CheckCircle2, 
-  Waves, Clock, Square, DollarSign
+  Waves, Clock, Square, DollarSign, Sparkles, Shield, Briefcase
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-
-const CHARLIE_AVATAR = "https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/1f6368d4d_CharlieSimmons_Headshot.png";
+import CopilotAvatarSlot from '@/components/copilot/CopilotAvatarSlot';
+import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
   const [inputText, setInputText] = useState('');
+  const [activeExplainer, setActiveExplainer] = useState(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -22,6 +23,43 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
       time: "10:24 AM"
     }
   ]);
+
+  const handlePillClick = (query) => {
+    const explainer = findExplainerByQuery(query);
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text: query,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setMessages(prev => [...prev, userMsg]);
+
+    if (explainer?.videoUrl) {
+      setActiveExplainer(explainer);
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: explainer.speaker === 'bob' ? 'bob' : 'charlie',
+            text: explainer.textAnswer || `Playing video explainer for "${explainer.label}" above.`
+          }
+        ]);
+      }, 400);
+    } else {
+      setActiveExplainer(null);
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'charlie',
+            text: `Got it! Let me know if you need any adjustments or offer structuring guidance for 742 Vista Del Mar.`
+          }
+        ]);
+      }, 500);
+    }
+  };
 
   const handleSendMessage = (e) => {
     if (e) e.preventDefault();
@@ -37,16 +75,32 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
 
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'charlie',
-          text: `Got it! I've dispatched the 742 Vista Del Mar dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
-        }
-      ]);
-    }, 600);
+    const explainer = findExplainerByQuery(text);
+    if (explainer?.videoUrl) {
+      setActiveExplainer(explainer);
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: explainer.speaker === 'bob' ? 'bob' : 'charlie',
+            text: explainer.textAnswer || `Playing video explainer for "${explainer.label}" in your Copilot slot above.`
+          }
+        ]);
+      }, 400);
+    } else {
+      setActiveExplainer(null);
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'charlie',
+            text: `Got it! I've dispatched the 742 Vista Del Mar dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
+          }
+        ]);
+      }, 600);
+    }
   };
 
   return (
@@ -99,23 +153,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         {/* ── LEFT COLUMN: STICKY CHARLIE CHAT (~35% = 4 or 5 cols lg) ── */}
         <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/10 bg-[#0d0d0d]">
           <div className="space-y-4">
-            {/* Top Charlie Profile */}
-            <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-full border-2 border-[#D4AF37] p-0.5 overflow-hidden bg-black">
-                  <img 
-                    src={CHARLIE_AVATAR} 
-                    alt="Charlie" 
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-black" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white leading-tight">Charlie</h3>
-                <span className="text-xs text-stone-400">online</span>
-              </div>
-            </div>
+            {/* Persistent Copilot Avatar Slot (Charlie default / Bob on solutions / Canned MP4 player) */}
+            <CopilotAvatarSlot 
+              activeExplainer={activeExplainer}
+              onClearExplainer={() => setActiveExplainer(null)}
+              size="compact"
+            />
 
             {/* Chat Messages */}
             <div className="space-y-3.5 pt-1">
@@ -143,8 +186,48 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
             </div>
           </div>
 
+          {/* Quick Explainer Pills in Chat Column */}
+          <div className="pt-2 flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => handlePillClick('How do I get thousands back at closing?')}
+              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
+                activeExplainer?.id === 'closing_rebate'
+                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
+              }`}
+            >
+              <Sparkles className="w-3 h-3 text-[#D4AF37]" />
+              <span>Closing rebate</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handlePillClick('How do you find hidden property risks?')}
+              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
+                activeExplainer?.id === 'hidden_risks'
+                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
+              }`}
+            >
+              <Shield className="w-3 h-3 text-[#D4AF37]" />
+              <span>Hidden risks</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
+              className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ${
+                activeExplainer?.id === 'bob_solutions_traps'
+                  ? 'bg-[#ede0cc] text-black border-[#854d0e] ring-1 ring-[#D4AF37]'
+                  : 'bg-white/5 hover:bg-white/10 text-[#D4AF37] border-[#D4AF37]/40'
+              }`}
+            >
+              <Briefcase className="w-3 h-3 text-[#D4AF37]" />
+              <span>Bob's Take</span>
+            </button>
+          </div>
+
           {/* Bottom Chat Input Form: ask mobile to text report */}
-          <div className="pt-4 mt-auto">
+          <div className="pt-3 mt-auto">
             <form onSubmit={handleSendMessage} className="space-y-1.5">
               <div className="flex items-center bg-[#141414] rounded-2xl border border-white/10 focus-within:border-[#D4AF37]/60 p-2 pl-3 shadow-inner">
                 <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white" />
