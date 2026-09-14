@@ -20,6 +20,7 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Red Ring',
     colorHex: '#ef4444',
     text: "We're looking at 7414 Fay Ave in La Jolla. Is the coastal bluff setback going to be a problem, and what unvarnished risks should we know about before writing an offer?",
+    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/46b5afd1d_speech.mp3",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
     delayMs: 4000
   },
@@ -31,6 +32,8 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Green Ring',
     colorHex: '#10b981',
     text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and an updated geotechnical soil report. Public comps also indicate the listing is priced at an 18% premium over recent neighborhood sales. Let me bring in Bob Dyson to review your physical inspection contingency protections.",
+    // Authentic studio voice (HeyGen Ruben voice ID cc5fb6c924064712ba9f690852aa4646)
+    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/4a7cd1b38_charlie_simmons_fay_ave_demo.wav",
     voiceConfig: { pitch: 1.0, rate: 1.0, voiceType: 'charlie' },
     delayMs: 7000
   },
@@ -42,6 +45,8 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
     text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. Under my broker license #00609384, we mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
+    // Authentic studio voice (HeyGen Bob Dyson cloned voice ID 147b8f5713024fb9afc106f266e47482)
+    audioUrl: "https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/218b440f2_bob_dyson_fay_ave_demo.wav",
     voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
     delayMs: 7500
   }
