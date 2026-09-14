@@ -9,6 +9,7 @@ import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeaker
 import CopilotConsumerSpeakerBox from '@/components/copilot/CopilotConsumerSpeakerBox';
 import CopilotMiniAppsRail from '@/components/copilot/CopilotMiniAppsRail';
 import CopilotThreeWayDemo from '@/components/copilot/CopilotThreeWayDemo';
+import CopilotDossierNewsPanel from '@/components/copilot/CopilotDossierNewsPanel';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
@@ -17,6 +18,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
   const [activeExplainer, setActiveExplainer] = useState(null);
   const [isConsumerTransmitting, setIsConsumerTransmitting] = useState(false);
   const [activeDemoSpeaker, setActiveDemoSpeaker] = useState(null);
+  const [rightPanelView, setRightPanelView] = useState('dossier'); // 'dossier' | 'news'
+  const [isNewsExploded, setIsNewsExploded] = useState(false);
   const messagesEndRef = React.useRef(null);
   const dossierData = getPropertyDossier(property);
 
@@ -80,7 +83,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     };
     setMessages(prev => [...prev, userMsg]);
 
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate/i.test(query);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate|offer strategy/i.test(query);
+    const isNewsQuery = /news|broadcast|inventory|bullet|summary|headline/i.test(query);
+
+    if (isNewsQuery) {
+      setRightPanelView('news');
+    }
 
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
@@ -97,14 +105,23 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     } else {
       setActiveExplainer(null);
       setTimeout(() => {
+        let answerText = '';
+        if (query.includes('bullet') || (isNewsQuery && !isBobQuery)) {
+          answerText = `Charlie: Here is your DNN Daily Broadcast Summary for ${dossierData.city || 'Southern California'}:\n• Constrained inventory down 14% YoY across luxury zip codes.\n• Price resilience supported by high equity buyers, but appraisal gaps are emerging.\n• Our fiduciary protocol secures unvarnished comps and up to ${dossierData.rebateRange} back on line 204 of your closing HUD-1.`;
+        } else if (isBobQuery && isNewsQuery) {
+          answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. Under my California broker license #00609384, we demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
+        } else if (isBobQuery) {
+          answerText = `Bob Dyson here: Regarding "${query}" on ${dossierData.shortAddress} — in California transactions, we always draft contingency shields to verify soil stability and ensure credits are credited on your HUD-1 with zero hidden broker fees.`;
+        } else {
+          answerText = `Got it! On ${dossierData.shortAddress}, the comps show 24–32% premium over adjusted sold averages. We can structure an offer anchored to the $6.25M micro-comps.`;
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: isBobQuery ? 'bob' : 'charlie',
-            text: isBobQuery
-              ? `Bob Dyson here: Regarding "${query}" on ${dossierData.shortAddress} — in California transactions, we always draft contingency shields to verify soil stability and ensure credits are credited on your HUD-1 with zero hidden broker fees.`
-              : `Got it! On ${dossierData.shortAddress}, the comps show 24–32% premium over adjusted sold averages. We can structure an offer anchored to the $6.25M micro-comps.`
+            text: answerText
           }
         ]);
       }, 600);
@@ -130,7 +147,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     setInputText('');
 
     const explainer = findExplainerByQuery(text);
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker/i.test(text);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|offer strategy/i.test(text);
+    const isNewsQuery = /news|broadcast|video|inventory|headline|dnn/i.test(text);
+
+    if (isNewsQuery) {
+      setRightPanelView('news');
+    }
 
     if (explainer?.videoUrl) {
       setActiveExplainer(explainer);
@@ -147,14 +169,23 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     } else {
       setActiveExplainer(null);
       setTimeout(() => {
+        let answerText = '';
+        if (isNewsQuery && isBobQuery) {
+          answerText = `Bob Dyson: In light of today's broadcast, our fiduciary desk protects your earnest money deposit with strict escrow contingencies. We audit all listing agent claims on ${dossierData.shortAddress} directly against county recorder data.`;
+        } else if (isNewsQuery) {
+          answerText = `Charlie: I've brought up today's DNN Studio Broadcast on the right. You can watch the full report, expand it to full-screen theater mode, or ask us any questions as it plays.`;
+        } else if (isBobQuery) {
+          answerText = `Bob Dyson: Under CA DRE #00609384, our fiduciary protocol protects you with zero added broker fees and strict disclosure audits for ${dossierData.shortAddress}. Would you like me to prepare an initial offer analysis?`;
+        } else {
+          answerText = `Charlie: I've logged that for ${dossierData.shortAddress}. We can text this full audit directly to your phone or connect you live with Bob.`;
+        }
+
         setMessages(prev => [
           ...prev,
           {
             id: Date.now() + 1,
             sender: isBobQuery ? 'bob' : 'charlie',
-            text: isBobQuery
-              ? `Bob Dyson: Under CA DRE #00609384, our fiduciary protocol protects you with zero added broker fees and strict disclosure audits for ${dossierData.shortAddress}. Would you like me to prepare an initial offer analysis?`
-              : `Charlie: I've logged that for ${dossierData.shortAddress}. We can text this full audit directly to your phone or connect you live with Bob.`
+            text: answerText
           }
         ]);
       }, 700);
@@ -168,12 +199,12 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     >
       {/* ── TOP HEADER BAR: D&D badge + sweep copilot logo ── */}
       <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-[#0a0a0a]">
-        {/* Left: D&D badge + Back Button */}
+        {/* Left: D&D badge + Back Button + Dual View Indicator */}
         <div className="flex items-center gap-3">
           <DysonVerticalBadge height={40} />
           <div className="flex items-center gap-2">
             <span className="text-[10px] tracking-widest text-[#D4AF37] font-bold uppercase">
-              PAGE 3 · DOSSIER
+              PAGE 2 · COMMAND CENTER
             </span>
             <Square className="w-3.5 h-3.5 text-stone-500" />
           </div>
@@ -181,11 +212,39 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <button
               type="button"
               onClick={onBackToSearch}
-              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-2 cursor-pointer"
+              className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-[#D4AF37] transition-all ml-1 cursor-pointer"
             >
-              ← Back to Landing Page
+              ← Search
             </button>
           )}
+
+          {/* Quick Right-Side View Switcher in Header */}
+          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-lg border border-white/10 ml-2">
+            <button
+              type="button"
+              onClick={() => setRightPanelView('dossier')}
+              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                rightPanelView === 'dossier'
+                  ? 'bg-[#D4AF37] text-black shadow'
+                  : 'text-stone-400 hover:text-white'
+              }`}
+            >
+              <Scale className="w-3 h-3" />
+              <span>Dossier</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRightPanelView('news')}
+              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                rightPanelView === 'news'
+                  ? 'bg-[#D4AF37] text-black shadow'
+                  : 'text-stone-400 hover:text-white'
+              }`}
+            >
+              <Radio className="w-3 h-3 text-rose-500 animate-pulse" />
+              <span>Daily News</span>
+            </button>
+          </div>
         </div>
 
         {/* Center / Right: Brand Header with Italicized Copilot */}
@@ -210,7 +269,30 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         
         {/* ── FAR-LEFT STREAMLINED AI MINIONS RAIL ── */}
         {showRail && (
-          <CopilotMiniAppsRail />
+          <CopilotMiniAppsRail 
+            onSelectApp={(app) => {
+              if (app?.name === 'DNN News') {
+                setRightPanelView('news');
+                setMessages(prev => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    sender: 'charlie',
+                    text: "Switched the presentation screen to today's DNN Daily News Broadcast. You can watch the full 1080p briefing or click 'Explode to Full Page' while asking us anything live.",
+                  }
+                ]);
+              } else {
+                setMessages(prev => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    sender: 'charlie',
+                    text: `Connecting to ${app.name} (${app.identifier}). Our fiduciary automation desk operates in real-time under Bob Dyson's broker supervision.`
+                  }
+                ]);
+              }
+            }}
+          />
         )}
 
         {/* ── CENTER-LEFT COLUMN: ALL COMMUNICATION & LIVE DIALOGUE ENGINE ── */}
@@ -342,6 +424,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             <div className="flex flex-wrap items-center gap-1">
               <button
                 type="button"
+                onClick={() => {
+                  setRightPanelView('news');
+                  handlePillClick("Charlie, summarize this broadcast in bullet points");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-all cursor-pointer flex items-center gap-1"
+              >
+                <Radio className="w-2.5 h-2.5 text-rose-400" />
+                <span>Daily News</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => handlePillClick('What should my opening offer be based on comps?')}
                 className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer"
               >
@@ -413,136 +506,17 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN: PRESENTATION DOSSIER + CHARLIE OPENING STATEMENT ── */}
-        <div className="flex-1 min-w-0 p-4 sm:p-6 bg-[#080808] space-y-4 overflow-y-auto">
-          {/* ── CHARLIE'S OPENING GREETING BANNER (TRANSFERRED FROM PAGE 2) ── */}
-          <div className="rounded-xl border border-[#D4AF37]/50 bg-gradient-to-r from-[#17140b] via-[#101010] to-[#121212] p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#D4AF37] font-bold">
-                  FIDUCIARY AUDIT COMPLETE
-                </span>
-              </div>
-              <h2 className="text-sm sm:text-base font-bold text-white tracking-wide">
-                I've audited {dossierData.shortAddress}. Can we help?
-              </h2>
-              <p className="text-xs text-stone-300">
-                {dossierData.marketSummary} Ask questions on the left or text the full dossier to your mobile.
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => handlePillClick("Text full report to my mobile")}
-                className="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#e8c84a] text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
-              >
-                <span>Text Me Report</span>
-                <span>→</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Header */}
-          <div className="pb-1 flex items-center justify-between">
-            <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
-              DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
-            </span>
-            <span className="text-[9px] text-stone-500 font-mono">
-              INDEPENDENT 2ND-OPINION
-            </span>
-          </div>
-
-          {/* ── BLACK BOX 1: HONEST COMPS (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                HONEST COMPS
-              </h3>
-            </div>
-            <p className="text-[11px] text-stone-400 font-medium">
-              Sold 30–90 days | Within 0.75 mi | Adjusted to current market
-            </p>
-
-            {/* Comps Table */}
-            <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-              {dossierData.comps.map((comp, idx) => (
-                <div key={idx} className="flex flex-wrap items-center justify-between text-stone-300 py-1 border-b border-white/10 gap-2">
-                  <span className="font-bold text-white w-32 sm:w-36 truncate">{comp.address}</span>
-                  <span className="text-stone-400">{comp.distance}</span>
-                  <span className="text-stone-400">{comp.specs}</span>
-                  <span className="text-stone-300">{comp.soldPrice}</span>
-                  <span className="text-[#D4AF37] font-bold">{comp.adjPrice}</span>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#D4AF37] pt-1">
-              {dossierData.compsSummary}
-            </p>
-          </div>
-
-          {/* ── BLACK BOX 2: HIDDEN RISKS (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                HIDDEN RISKS
-              </h3>
-            </div>
-
-            <div className="space-y-2.5 text-xs">
-              {dossierData.risks.map((risk, idx) => {
-                const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
-                return (
-                  <div key={risk.id || idx} className="flex items-start gap-2.5">
-                    <IconComp className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-white">{risk.title}</h4>
-                      <p className="text-stone-400 text-[11px]">{risk.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#D4AF37] pt-1">
-              {dossierData.risksSummary}
-            </p>
-          </div>
-
-          {/* ── BLACK BOX 3: CLOSING-COST CREDIT (BLACK BACKDROP, WHITE/GREY/GOLD TEXT) ── */}
-          <div className="rounded-xl border border-white/10 bg-[#121212] text-white p-4 space-y-2.5 shadow-lg">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#D4AF37]" />
-              <h3 className="text-xs sm:text-sm font-bold tracking-wider uppercase text-white">
-                CLOSING-COST CREDIT
-              </h3>
-            </div>
-            <p className="text-[11px] text-stone-400 font-medium">
-              Rebate estimate where allowed by law | {dossierData.rebateBasis}
-            </p>
-
-            <div className="bg-[#181818] border border-white/10 rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-semibold text-white">
-                Estimated buyer credit
-              </span>
-              <div className="text-right">
-                <div className="text-base sm:text-lg font-bold font-mono text-[#D4AF37]">
-                  {dossierData.rebateRange}
-                </div>
-                <div className="text-[11px] text-stone-400 font-mono">
-                  {dossierData.rebatePercent}
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[11px] font-semibold text-[#D4AF37] pt-0.5">
-              Requires licensed broker representation. Not available in all states.
-            </p>
-          </div>
+        {/* ── RIGHT COLUMN: PRESENTATION DOSSIER & DAILY NEWS BROADCAST (WITH EXPLODE-TO-FULL-PAGE) ── */}
+        <div className="flex-1 min-w-0 bg-[#080808]">
+          <CopilotDossierNewsPanel
+            property={property}
+            dossierData={dossierData}
+            activeView={rightPanelView}
+            onViewChange={setRightPanelView}
+            isExploded={isNewsExploded}
+            onToggleExplode={() => setIsNewsExploded(prev => !prev)}
+            onPromptClick={handlePillClick}
+          />
         </div>
 
       </div>

@@ -95,7 +95,7 @@ export const MINI_APPS = [
  * Compact vertical rail (~120px) showcasing the team of AI minions & automated workflows
  * backing Dyson & Dyson's rapid responses and fiduciary intelligence.
  */
-export default function CopilotMiniAppsRail({ className = '' }) {
+export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
   return (
     <aside className={`w-full lg:w-[124px] xl:w-[128px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[920px] overflow-visible relative z-30 ${className}`}>
       <div className="space-y-2.5">
@@ -138,8 +138,11 @@ export default function CopilotMiniAppsRail({ className = '' }) {
               return (
                 <div
                   key={app.name}
-                  className="p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-white/15 flex items-center justify-between transition-all cursor-default group"
-                  title={`${app.name} · ${app.identifier}`}
+                  onClick={() => onSelectApp?.(app)}
+                  className={`p-1 rounded-md bg-[#121212] hover:bg-[#181818] border border-white/5 hover:border-[#D4AF37]/50 flex items-center justify-between transition-all cursor-pointer group ${
+                    app.name === 'DNN News' ? 'ring-1 ring-rose-500/40' : ''
+                  }`}
+                  title={`${app.name} · ${app.identifier} (Click to open)`}
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
                     <div className={`w-5 h-5 rounded bg-gradient-to-br ${app.gradient} border ${app.border} flex items-center justify-center shrink-0 relative`}>
