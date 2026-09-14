@@ -7,16 +7,16 @@ import {
 
 export const SOLUTIONS_LIBRARY = [
   {
-    id: 'hud1-rebate-line-204',
-    category: 'rebates',
-    categoryLabel: 'Closing Rebates',
+    id: 'lender-compliance-discovery',
+    category: 'compliance',
+    categoryLabel: 'Closing Compliance',
     format: 'VIDEO HOW-TO (3 MIN)',
     formatType: 'video',
-    title: 'How to Legally Receive Thousands on HUD-1 Line 204',
-    subtitle: 'DOJ-Approved Buyer Commission Rebate Mechanics',
-    summary: 'The U.S. Department of Justice explicitly protects buyer commission rebates. In California, Dyson & Dyson credits up to 1.5% of the purchase price directly on line 204 of your closing statement.',
-    keyRule: 'Credit is applied directly against your closing costs, loan discount points, or down payment reduction.',
-    promptQuery: 'How do closing rebates work on line 204 of the HUD-1 statement?',
+    title: 'How Fiduciary Discovery Verifies Contract & Lender Compliance',
+    subtitle: 'Escrow Settlement Discovery & Protective Contract Audits',
+    summary: 'Under California broker guidelines, our fiduciary desk audits your settlement statement, title exceptions, and loan documents to ensure all disclosures align with lender regulations and buyer protections.',
+    keyRule: 'Full disclosure and independent broker review ensure zero hidden fees or unverified title clouds before closing.',
+    promptQuery: 'How does Dyson & Dyson handle transaction discovery and lender compliance?',
     speaker: 'bob'
   },
   {
@@ -119,7 +119,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
   const categories = [
     { id: 'all', label: 'All Solutions' },
     { id: 'escrow', label: 'Escrow & Traps' },
-    { id: 'rebates', label: 'Closing Rebates' },
+    { id: 'compliance', label: 'Lender Compliance' },
     { id: 'coastal', label: 'Coastal & Soil' },
     { id: 'tax', label: 'Tax & Prop 19' },
     { id: 'representation', label: 'Fiduciary Duty' },
@@ -155,7 +155,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
               Real Estate Knowledge, Playbooks &amp; Legal Shields
             </h2>
             <p className="text-xs text-stone-300">
-              Most consumers move once every 5 to 7 years. Our curated vault eliminates the guesswork—covering HUD-1 rebates, contract traps, coastal hazards, and tax portability.
+              Most consumers move once every 5 to 7 years. Our curated vault eliminates the guesswork—covering lender compliance discovery, contract traps, coastal hazards, and tax portability.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export default function CopilotSolutionsVault({ onPromptClick, onExplodePlaybook
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search solutions, podcast how-tos, escrow traps, Prop 19, rebates..."
+            placeholder="Search solutions, podcast how-tos, escrow traps, Prop 19, lender compliance..."
             className="w-full bg-[#121212] border border-white/15 focus:border-[#D4AF37] rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-stone-500 outline-none transition-all shadow-inner"
           />
           {searchQuery && (

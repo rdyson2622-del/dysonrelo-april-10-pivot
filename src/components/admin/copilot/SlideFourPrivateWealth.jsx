@@ -408,22 +408,26 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier, onGo
             </div>
           </div>
 
-          {/* Box 3: Closing Rebate */}
+          {/* Box 3: Escrow & Lender Compliance Audit */}
           <div className="relative p-5 rounded-lg bg-[#0e0e0e] border border-[#D4AF37]/50 shadow-lg flex items-center gap-3.5">
             <div className="w-11 h-11 shrink-0 flex items-center justify-center">
               <svg className="w-9 h-9 text-[#D4AF37]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="24" cy="24" r="18" />
-                <circle cx="18" cy="18" r="2.5" fill="currentColor" />
-                <circle cx="30" cy="30" r="2.5" fill="currentColor" />
-                <path d="m16 32 16-16" />
+                <path d="M24 4v40" />
+                <path d="M4 14h40" />
+                <path d="m10 24 6-6 6 6" />
+                <path d="m26 24 6-6 6 6" />
+                <path d="M16 14v16" />
+                <path d="M32 14v16" />
+                <circle cx="16" cy="34" r="4" />
+                <circle cx="32" cy="34" r="4" />
               </svg>
             </div>
             <div className="space-y-1 min-w-0">
               <h3 className="text-[11px] sm:text-[11.5px] xl:text-xs 2xl:text-[13px] font-bold tracking-wide text-white uppercase font-sans whitespace-nowrap">
-                WE CALCULATE CLOSING REBATES
+                WE AUDIT ESCROW &amp; COMPLIANCE
               </h3>
               <p className="text-xs text-white/70 leading-snug">
-                Where allowed by law. <span className="text-[#D4AF37] font-semibold">Maximize your ROI</span> with our rebate.
+                Strict escrow shields &amp; lender guidelines—<span className="text-[#D4AF37] font-semibold">protecting your deposit.</span>
               </p>
             </div>
           </div>

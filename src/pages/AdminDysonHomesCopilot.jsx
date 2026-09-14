@@ -9,6 +9,8 @@ import GrokPageTwoChatCanvas from '@/components/admin/copilot/GrokPageTwoChatCan
 import GrokPageThreeSplitCanvas from '@/components/admin/copilot/GrokPageThreeSplitCanvas';
 import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPublicReadOnlyTeamRail';
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
+import CoastalAddressKeywordExporter from '@/components/admin/copilot/CoastalAddressKeywordExporter';
+import DysonHomesDomainDnsCard from '@/components/admin/copilot/DysonHomesDomainDnsCard';
 
 const TAN_BG = '#ede0cc';
 
@@ -50,7 +52,7 @@ export default function AdminDysonHomesCopilot() {
   }, [location.hash, location.search]);
 
   const copySponsorScript = () => {
-    const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and claim your buyer closing cost rebate. Human and AI assisted real estate intelligence at DysonHomes.com.`;
+    const text = `Today's housing market report is brought to you by DysonHomes Copilot at DysonHomes.com. Before you click 'Contact Agent' on any online home search site or aggregator, paste the address into DysonHomes.com to see unvarnished comps, hidden property risks, and verify lender compliance shields. Independent human and AI-assisted fiduciary intelligence under California DRE #00609384 at DysonHomes.com.`;
     navigator.clipboard.writeText(text);
     setCopiedScript(true);
     setTimeout(() => setCopiedScript(false), 2000);
@@ -112,14 +114,19 @@ export default function AdminDysonHomesCopilot() {
         {/* View Controls & Jump Navigation */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Domain status pill */}
-          <div className="px-3 py-1.5 rounded-xl bg-[#141414] border border-[#D4AF37]/40 flex items-center gap-2 text-xs">
-            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+          <button
+            type="button"
+            onClick={() => setActiveTab('domain_dns')}
+            className="px-3 py-1.5 rounded-xl bg-[#141414] border border-amber-500/50 hover:border-amber-400 flex items-center gap-2 text-xs transition-all cursor-pointer"
+            title="Click to view DysonHomes.com DNS instructions"
+          >
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-white/80 font-mono text-[11px]">DysonHomes.com</span>
-            <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-bold">READY</span>
-          </div>
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold">DNS PENDING</span>
+          </button>
 
           {/* Sub-tab Switcher */}
-          <div className="flex items-center bg-[#181818] p-1 rounded-xl border border-white/10">
+          <div className="flex items-center bg-[#181818] p-1 rounded-xl border border-white/10 flex-wrap">
             <button
               type="button"
               onClick={() => setActiveTab('vertical_scroll')}
@@ -136,7 +143,16 @@ export default function AdminDysonHomesCopilot() {
                 activeTab === 'retargeting' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
               }`}
             >
-              Retargeting Playbook
+              Google Ads &amp; Retargeting
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('domain_dns')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                activeTab === 'domain_dns' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
+              }`}
+            >
+              Domain DNS Setup
             </button>
             <button
               type="button"
@@ -145,7 +161,7 @@ export default function AdminDysonHomesCopilot() {
                 activeTab === 'dnn_sponsor' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
               }`}
             >
-              DNN News Sponsor Hook
+              DNN Sponsor Hook
             </button>
             <button
               type="button"
@@ -319,10 +335,13 @@ export default function AdminDysonHomesCopilot() {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          TAB: RETARGETING PLAYBOOK & GROK BOT INTEGRATION
+          TAB: RETARGETING PLAYBOOK & GOOGLE ADDRESS KEYWORD GENERATOR
           ───────────────────────────────────────────────────────────── */}
       {activeTab === 'retargeting' && (
-        <div className="max-w-4xl mx-auto space-y-4 text-left">
+        <div className="max-w-4xl mx-auto space-y-6 text-left">
+          {/* Automated Coastal Keyword Exporter Component */}
+          <CoastalAddressKeywordExporter />
+
           <div className="p-6 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-xl space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -365,14 +384,14 @@ export default function AdminDysonHomesCopilot() {
                     <span>Channel 1: Micro-Geofence Display</span>
                   </h4>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold">
-                    $250 / MO (~$8.30/DAY)
+                    $100 / MO (RETARGETING ONLY)
                   </span>
                 </div>
                 <p className="text-stone-300 text-[11.5px] leading-relaxed">
-                  Bids exclusively on portal banner inventory inside <strong>92037 (La Jolla)</strong> and <strong>92014 (Del Mar)</strong> with a $350k+ HHI net-worth overlay.
+                  Bids exclusively on portal banner inventory inside <strong>92037 (La Jolla)</strong> and <strong>92014 (Del Mar)</strong> to retarget users who have previously visited your site.
                 </p>
                 <div className="bg-black/50 p-2.5 rounded-xl border border-white/5 space-y-1 text-[10.5px] text-stone-400">
-                  <p>• <strong>Expected Delivery:</strong> ~10,000 to 14,000 targeted impressions/mo</p>
+                  <p>• <strong>Expected Delivery:</strong> ~4,000 to 6,000 retargeted impressions/mo</p>
                   <p>• <strong>CPM:</strong> $18.00 – $25.00</p>
                   <p>• <strong>Ad Copy Hook:</strong> <em>"Viewing Coastal San Diego? Get the Unvarnished 2nd-Opinion Fiduciary Audit before you write an offer."</em></p>
                 </div>
@@ -382,18 +401,18 @@ export default function AdminDysonHomesCopilot() {
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-                    <span>Channel 2: Google Due Diligence Intent</span>
+                    <span>Channel 2: Google Address Due Diligence Intent</span>
                   </h4>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-mono font-bold">
-                    $250 / MO (~$8.30/DAY)
+                    $400 / MO (PRIMARY ACQUISITION)
                   </span>
                 </div>
                 <p className="text-stone-300 text-[11.5px] leading-relaxed">
                   Catches the buyer when they copy the address from Zillow into Google to search <em>"property tax"</em>, <em>"permits"</em>, or <em>"bluff hazard"</em>.
                 </p>
                 <div className="bg-black/50 p-2.5 rounded-xl border border-white/5 space-y-1 text-[10.5px] text-stone-400">
-                  <p>• <strong>Expected Delivery:</strong> 70 to 100 direct qualified clicks/mo</p>
-                  <p>• <strong>CPC:</strong> ~$2.50 to $3.50 per click</p>
+                  <p>• <strong>Expected Delivery:</strong> 120 to 160 direct qualified clicks/mo</p>
+                  <p>• <strong>CPC:</strong> ~$0.95 to $1.25 per click (long-tail exact match)</p>
                   <p>• <strong>Ad Copy Hook:</strong> <em>"[Address] Fiduciary Audit — Check the 25-ft Setback &amp; Soil Stability Report before offering."</em></p>
                 </div>
               </div>
@@ -426,6 +445,15 @@ export default function AdminDysonHomesCopilot() {
               <span className="text-[#D4AF37] font-semibold">100% Conflict-Free Second Opinion</span>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          TAB: DYSONHOMES.COM DOMAIN & DNS SETUP
+          ───────────────────────────────────────────────────────────── */}
+      {activeTab === 'domain_dns' && (
+        <div className="max-w-4xl mx-auto space-y-4 text-left">
+          <DysonHomesDomainDnsCard />
         </div>
       )}
 
@@ -501,9 +529,9 @@ export default function AdminDysonHomesCopilot() {
                 <div className="space-y-1.5 text-white/70 text-[11px]">
                   <p>• <strong>Average Purchase Price:</strong> $1,500,000</p>
                   <p>• <strong>Buyer Broker Commission (2.5%):</strong> $37,500</p>
-                  <p>• <strong>Dyson Referral Fee (25%):</strong> $9,375</p>
-                  <p>• <strong>50% Buyer Closing Rebate:</strong> <span className="text-emerald-400 font-bold">$4,687</span> (Credited on closing HUD-1)</p>
-                  <p>• <strong>Dyson Net Retained Revenue:</strong> <span className="text-[#D4AF37] font-bold">$4,688</span> (Pure profit, zero inventory)</p>
+                  <p>• <strong>Dyson Referral Management Fee (25%):</strong> $9,375</p>
+                  <p>• <strong>Lender &amp; Fiduciary Compliance Audit:</strong> <span className="text-emerald-400 font-bold">Included</span> (Pre-offer due diligence)</p>
+                  <p>• <strong>Dyson Net Retained Fee Revenue:</strong> <span className="text-[#D4AF37] font-bold">$9,375</span> (Pure profit, zero inventory)</p>
                 </div>
               </div>
 
