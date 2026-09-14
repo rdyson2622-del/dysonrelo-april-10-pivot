@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Eye, ShieldCheck, Tv, Network, Newspaper, 
   MapPin, DollarSign, Shield, MessageSquare, Mail, Lock 
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import GrokPageTwoChatCanvas from './GrokPageTwoChatCanvas';
-
-const BOB_HEADSHOT = 'https://files2.heygen.ai/talking_photo/31b79a86784e495090472af2e7b9407c/5c0bde249fe348bb8b9dfb07299f608c.WEBP?Expires=1789606882&Signature=YUNW1j0tU8LsI1vb0JnPSMwCFFhUwdI2U1MoECnlYvthEhenxAfg-ws0S6jibQKfxBhXSRobys8qEkDXU-WvfEi4rH1Sej4yZCwxgjlxPNNv9XjJgaTpZDeeMYzQC8A5cLTT3-l~u5Jy~zeoIlaRFJGM2yu4vTRxo2Ul0fPWg4dK-10LrLqrsFrxEITI1uvRsyfP5ysTm1J7HaW9pCVY~1~1z2HB1zmNuMsVYcCowXhZWfyyOAsPySSciYJfIkFN6Xw16C~n7mK1B5twxKAPjW-yV0Cq8H~wCvqAUr9BbBZpTut1jy1kHtWCEmRiju1M-sQOb4ymWXlvLHxP71xlpA__&Key-Pair-Id=K38HBHX5LX3X2H';
-const CHARLIE_DESK_PHOTO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/6421add7d_Screenshot2026-08-31at40550PM.png';
+import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
+import { findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 
 const MINI_APPS = [
   {
@@ -94,11 +93,20 @@ const MINI_APPS = [
 ];
 
 export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLanding, onListenToggle }) {
+  const [activeExplainer, setActiveExplainer] = useState(null);
+
+  const handleTriggerExplainer = (query) => {
+    const exp = findExplainerByQuery(query);
+    if (exp) {
+      setActiveExplainer(exp);
+    }
+  };
+
   return (
-    <div className="w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-hidden text-left bg-[#050505] flex flex-col lg:flex-row">
+    <div className="w-full rounded-2xl border border-[#D4AF37]/50 shadow-2xl overflow-visible text-left bg-[#050505] flex flex-col lg:flex-row">
       
-      {/* ── FAR-LEFT STREAMLINED TEAM & MINI APPS RAIL (REDUCED BY ANOTHER 30% ~124px) ── */}
-      <aside className="w-full lg:w-[124px] xl:w-[128px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[920px] overflow-y-auto">
+      {/* ── FAR-LEFT STREAMLINED TEAM & MINI APPS RAIL (DYNAMIC ENLARGEMENT ON SPEAK) ── */}
+      <aside className="w-full lg:w-[124px] xl:w-[128px] bg-[#0c0c0c] border-b lg:border-b-0 lg:border-r border-white/10 p-2 flex flex-col shrink-0 select-none max-h-[920px] overflow-visible relative z-30">
         <div className="space-y-2.5">
           
           {/* Top: Compact D&D Brand Header */}
@@ -121,67 +129,33 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
               <span className="text-[7.5px] font-semibold truncate">Roster</span>
             </div>
             <span className="text-[6px] px-1 py-0.5 rounded bg-white/10 text-stone-400 font-mono uppercase tracking-wider shrink-0">
-              VIEW
+              LIVE
             </span>
           </div>
 
-          {/* ── 1. BOB DYSON: UNBOXED IN STRAIGHT VERTICAL ROW ── */}
-          <div className="flex flex-col items-center text-center space-y-1 pt-0.5">
-            {/* Bob Photo */}
-            <div className="relative">
-              <div className="w-10 h-10 aspect-square rounded-full overflow-hidden border border-[#D4AF37]/70 bg-black shadow-md shrink-0">
-                <img 
-                  src={BOB_HEADSHOT} 
-                  alt="Bob Dyson Headshot" 
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow" title="Active CA Broker" />
-            </div>
-
-            {/* Name + Title only */}
-            <div className="w-full space-y-0.5">
-              <h4 className="text-[10px] font-bold text-white tracking-wide truncate leading-tight">
-                Bob Dyson
-              </h4>
-              <span className="text-[7.5px] text-stone-300 font-medium block leading-tight">
-                Principal &amp; Fiduciary
-              </span>
-              <span className="text-[6.5px] text-[#D4AF37]/90 font-mono block leading-none">
-                DRE #00609384
-              </span>
-            </div>
+          {/* ── 1. BOB DYSON: DYNAMIC SPEAKER BOX (ENLARGES WHILE SPEAKING) ── */}
+          <div className="relative pt-0.5">
+            <CopilotDynamicSpeakerBox 
+              speaker="bob"
+              variant="rail"
+              activeExplainer={activeExplainer}
+              onClearExplainer={() => setActiveExplainer(null)}
+              onTriggerExplainer={handleTriggerExplainer}
+            />
           </div>
 
           {/* Divider */}
           <div className="border-t border-white/10 my-0.5 w-10 mx-auto" />
 
-          {/* ── 2. CHARLIE SIMMONS: UNBOXED IN STRAIGHT VERTICAL ROW ── */}
-          <div className="flex flex-col items-center text-center space-y-1">
-            {/* Charlie Desk Photo */}
-            <div className="relative">
-              <div className="w-10 h-10 aspect-square rounded-full overflow-hidden border border-emerald-500/70 bg-black shadow-md shrink-0">
-                <img 
-                  src={CHARLIE_DESK_PHOTO} 
-                  alt="Charlie Simmons at Desk" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-1.5 ring-[#0c0c0c] shadow animate-pulse" title="Live Concierge" />
-            </div>
-
-            {/* Name + Title only */}
-            <div className="w-full space-y-0.5">
-              <h4 className="text-[10px] font-bold text-white tracking-wide truncate leading-tight">
-                Charlie Simmons
-              </h4>
-              <span className="text-[7.5px] text-stone-300 font-medium block leading-tight">
-                Voice &amp; Concierge
-              </span>
-              <span className="text-[6.5px] text-[#D4AF37] font-serif italic block leading-none">
-                The Face of CoPilot
-              </span>
-            </div>
+          {/* ── 2. CHARLIE SIMMONS: DYNAMIC SPEAKER BOX (ENLARGES WHILE SPEAKING) ── */}
+          <div className="relative">
+            <CopilotDynamicSpeakerBox 
+              speaker="charlie"
+              variant="rail"
+              activeExplainer={activeExplainer}
+              onClearExplainer={() => setActiveExplainer(null)}
+              onTriggerExplainer={handleTriggerExplainer}
+            />
           </div>
 
           {/* ── 3. COMPACT MINI APPS LIST ── */}
@@ -239,13 +213,16 @@ export default function CopilotPublicReadOnlyTeamRail({ onAskAddress, onBackToLa
         </div>
       </aside>
 
-      {/* ── MAIN CANVAS: CHARLIE REMAINS ONLY LIVE CONVERSATION ── */}
+      {/* ── MAIN CANVAS: UPPER-RIGHT CHARLIE BOX REMOVED (HANDLED BY DYNAMIC RAIL AVATARS) ── */}
       <main className="flex-1 bg-[#0a0a0a] min-w-0">
         <GrokPageTwoChatCanvas 
           onAskAddress={onAskAddress}
           onBackToLanding={onBackToLanding}
           onListenToggle={onListenToggle}
           hideBadge={true}
+          hideAvatarSlot={true}
+          activeExplainer={activeExplainer}
+          onExplainerChange={setActiveExplainer}
         />
       </main>
     </div>

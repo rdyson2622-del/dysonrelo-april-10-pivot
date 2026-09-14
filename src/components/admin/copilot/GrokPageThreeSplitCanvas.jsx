@@ -4,7 +4,7 @@ import {
   Waves, Clock, Square, DollarSign, Sparkles, Shield, Briefcase
 } from 'lucide-react';
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
-import CopilotAvatarSlot from '@/components/copilot/CopilotAvatarSlot';
+import CopilotDynamicSpeakerBox from '@/components/copilot/CopilotDynamicSpeakerBox';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
 import { getPropertyDossier } from './propertyDossierData';
 
@@ -177,27 +177,37 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
         {/* ── LEFT COLUMN: STICKY CHARLIE CHAT + CHARLIE VOICE BOX IN UPPER LEFT (~35% = 5 cols lg) ── */}
         <div className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between bg-[#0d0d0d] border-b lg:border-b-0 lg:border-r border-white/10">
           <div className="space-y-4">
-            {/* Charlie in his vertical rectangular card positioned to the UPPER LEFT */}
-            <div className="flex justify-start pl-1 pt-1">
-              <div className="w-[140px]">
-                <CopilotAvatarSlot 
-                  activeExplainer={activeExplainer}
-                  onClearExplainer={() => setActiveExplainer(null)}
-                  onVoiceTranscript={(t) => {
-                    if (t?.text && t?.role === 'assistant') {
-                      setMessages(prev => [
-                        ...prev,
-                        {
-                          id: Date.now(),
-                          sender: 'charlie',
-                          text: t.text,
-                        }
-                      ]);
-                    }
-                  }}
-                  size="vertical"
-                />
-              </div>
+            {/* ── BOB & CHARLIE DUAL DYNAMIC SPEAKER BOXES (UPPER LEFT) ── */}
+            <div className="flex flex-wrap items-start gap-2 pl-1 pt-1">
+              {/* Bob Dyson Box — enlarges when Bob answers or speaks */}
+              <CopilotDynamicSpeakerBox 
+                speaker="bob"
+                variant="card"
+                activeExplainer={activeExplainer}
+                onClearExplainer={() => setActiveExplainer(null)}
+                onTriggerExplainer={handlePillClick}
+              />
+
+              {/* Charlie Simmons Box — enlarges when Charlie answers or speaks */}
+              <CopilotDynamicSpeakerBox 
+                speaker="charlie"
+                variant="card"
+                activeExplainer={activeExplainer}
+                onClearExplainer={() => setActiveExplainer(null)}
+                onTriggerExplainer={handlePillClick}
+                onVoiceTranscript={(t) => {
+                  if (t?.text && t?.role === 'assistant') {
+                    setMessages(prev => [
+                      ...prev,
+                      {
+                        id: Date.now(),
+                        sender: 'charlie',
+                        text: t.text,
+                      }
+                    ]);
+                  }
+                }}
+              />
             </div>
 
             {/* Chat Messages */}
