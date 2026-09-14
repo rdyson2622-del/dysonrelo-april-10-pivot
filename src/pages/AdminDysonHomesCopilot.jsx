@@ -14,8 +14,9 @@ const TAN_BG = '#ede0cc';
 
 export default function AdminDysonHomesCopilot() {
   const [viewportMode, setViewportMode] = useState('desktop'); // desktop | mobile
-  const [activeTab, setActiveTab] = useState('vertical_scroll'); // vertical_scroll | dnn_sponsor | admin_specs
+  const [activeTab, setActiveTab] = useState('vertical_scroll'); // vertical_scroll | dnn_sponsor | admin_specs | retargeting
   const [copiedScript, setCopiedScript] = useState(false);
+  const [copiedRetargeting, setCopiedRetargeting] = useState(false);
 
   const location = useLocation();
   const page1Ref = useRef(null);
@@ -53,6 +54,32 @@ export default function AdminDysonHomesCopilot() {
     navigator.clipboard.writeText(text);
     setCopiedScript(true);
     setTimeout(() => setCopiedScript(false), 2000);
+  };
+
+  const copyRetargetingPlan = () => {
+    const text = `# RETARGETING PLAYBOOK: DYSONHOMES COPILOT & REAL ESTATE PORTALS
+
+## 1. Direct Portal Advertising Mechanics
+- Direct Listing Infiltration: Prohibited by portals to protect listing agent relationships.
+- Display & In-App Banner Placement: Permitted. Appears directly adjacent or beneath listing details while buyer researches property.
+- Channels: Programmatic Private Marketplace (PMP / DSP) via Google Ad Manager/The Trade Desk, and Portal Direct Sponsorship (Realtor.com / CoStar).
+
+## 2. Targeting Parameters: San Diego Coastal Luxury ($1,500,000+)
+- Zip Codes: 92037 (La Jolla), 92014 (Del Mar), 92075 (Solana Beach), 92109 (Pacific Beach), 92106 (Point Loma), 92024 (Encinitas).
+- Net Worth Overlay: Household Income $350k+ / Net Worth $1.5M+.
+- Hook: "Viewing Coastal San Diego? Get the Unvarnished 2nd-Opinion Fiduciary Audit for this Property before you write an offer."
+- Destination: DysonHomes.com/dossier
+
+## 3. Retargeting Lifespans & Frequency Capping
+- 7–14 Days (Fast-Burn): RECOMMENDED. Luxury buyers evaluate specific homes intensively for 1-2 weeks.
+- Frequency Cap: Mandatory limit of 3 to 4 impressions per person per day to avoid budget burn.
+
+## 4. Lean $500/Month Test Budget Blueprint ($16.60/Day)
+- Channel A ($250/mo): Hyper-Narrow Micro-Geofence (92037 La Jolla & 92014 Del Mar only). Delivers ~10,000 to 14,000 impressions.
+- Channel B ($250/mo): Exact Google Address-Search Due Diligence Match. Captures buyers searching "7414 Fay Ave tax / permits / hazard". Delivers 70 to 100 direct high-intent visits at ~$2.50 to $3.50 CPC.`;
+    navigator.clipboard.writeText(text);
+    setCopiedRetargeting(true);
+    setTimeout(() => setCopiedRetargeting(false), 2000);
   };
 
   return (
@@ -101,6 +128,15 @@ export default function AdminDysonHomesCopilot() {
               }`}
             >
               Vertical Scroll Lab
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('retargeting')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                activeTab === 'retargeting' ? 'bg-[#D4AF37] text-black shadow-md' : 'text-white/70 hover:text-white'
+              }`}
+            >
+              Retargeting Playbook
             </button>
             <button
               type="button"
@@ -279,6 +315,117 @@ export default function AdminDysonHomesCopilot() {
             </div>
           </section>
 
+        </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          TAB: RETARGETING PLAYBOOK & GROK BOT INTEGRATION
+          ───────────────────────────────────────────────────────────── */}
+      {activeTab === 'retargeting' && (
+        <div className="max-w-4xl mx-auto space-y-4 text-left">
+          <div className="p-6 rounded-3xl bg-[#0a0a0a] border border-[#D4AF37]/50 shadow-xl space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#D4AF37] block">
+                  DIGITAL ACQUISITION STRATEGY · GROK BOT READY
+                </span>
+                <h2 className="text-xl font-bold text-white">
+                  Portal Retargeting Playbook (Zillow, Realtor.com, Homes.com)
+                </h2>
+                <p className="text-xs text-white/70 mt-0.5">
+                  Saved to Admin Library under title <strong className="text-[#D4AF37]">RETARGETING</strong> (ClaudeNode ID synced).
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={copyRetargetingPlan}
+                className="px-3.5 py-1.5 rounded-xl bg-[#D4AF37] text-black font-bold text-xs flex items-center gap-1.5 hover:brightness-110 cursor-pointer shadow-md transition-all"
+              >
+                {copiedRetargeting ? <Check className="w-3.5 h-3.5 text-black" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedRetargeting ? 'Copied for Grok Bot' : 'Copy for Grok Bot'}</span>
+              </button>
+            </div>
+
+            {/* Core Truth: Direct Banner vs Infiltration */}
+            <div className="p-4 rounded-2xl bg-[#141414] border border-[#D4AF37]/30 space-y-2">
+              <h3 className="text-xs font-bold text-[#D4AF37] uppercase tracking-wider">
+                Can You Drop a Flag Directly on Zillow, Homes.com, and Realtor.com?
+              </h3>
+              <p className="text-xs text-white/80 leading-relaxed">
+                <strong>Yes, via adjacent display banners and in-app placements:</strong> You cannot alter the listing description or MLS photos directly (portals protect their listing brokers), but you <em>can</em> programmatically buy the surrounding display banners, rail ads, and mobile units that load while the buyer browses that exact listing.
+              </p>
+            </div>
+
+            {/* $500/Month Test Blueprint */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+                    <span>Channel 1: Micro-Geofence Display</span>
+                  </h4>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold">
+                    $250 / MO (~$8.30/DAY)
+                  </span>
+                </div>
+                <p className="text-stone-300 text-[11.5px] leading-relaxed">
+                  Bids exclusively on portal banner inventory inside <strong>92037 (La Jolla)</strong> and <strong>92014 (Del Mar)</strong> with a $350k+ HHI net-worth overlay.
+                </p>
+                <div className="bg-black/50 p-2.5 rounded-xl border border-white/5 space-y-1 text-[10.5px] text-stone-400">
+                  <p>• <strong>Expected Delivery:</strong> ~10,000 to 14,000 targeted impressions/mo</p>
+                  <p>• <strong>CPM:</strong> $18.00 – $25.00</p>
+                  <p>• <strong>Ad Copy Hook:</strong> <em>"Viewing Coastal San Diego? Get the Unvarnished 2nd-Opinion Fiduciary Audit before you write an offer."</em></p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                    <span>Channel 2: Google Due Diligence Intent</span>
+                  </h4>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-mono font-bold">
+                    $250 / MO (~$8.30/DAY)
+                  </span>
+                </div>
+                <p className="text-stone-300 text-[11.5px] leading-relaxed">
+                  Catches the buyer when they copy the address from Zillow into Google to search <em>"property tax"</em>, <em>"permits"</em>, or <em>"bluff hazard"</em>.
+                </p>
+                <div className="bg-black/50 p-2.5 rounded-xl border border-white/5 space-y-1 text-[10.5px] text-stone-400">
+                  <p>• <strong>Expected Delivery:</strong> 70 to 100 direct qualified clicks/mo</p>
+                  <p>• <strong>CPC:</strong> ~$2.50 to $3.50 per click</p>
+                  <p>• <strong>Ad Copy Hook:</strong> <em>"[Address] Fiduciary Audit — Check the 25-ft Setback &amp; Soil Stability Report before offering."</em></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Retargeting Duration & Frequency Capping Rules */}
+            <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <span>⏱ Retargeting Lifespan &amp; Frequency Rules</span>
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] pt-1">
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
+                  <span className="text-[#D4AF37] font-bold block mb-0.5">7 – 14 Days (Fast-Burn)</span>
+                  <span className="text-stone-300">Recommended. Reaches the buyer immediately while that specific property is top of mind.</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
+                  <span className="text-white font-bold block mb-0.5">30 Days (Standard)</span>
+                  <span className="text-stone-400">Follows them across Forbes, WSJ, and social media for general coastal brand retention.</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
+                  <span className="text-[#10b981] font-bold block mb-0.5">Frequency Cap: 3-4/Day</span>
+                  <span className="text-stone-300">Mandatory setting to prevent ad fatigue and avoid wasting daily budget on repetitive views.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Safe Harbor Legal Compliance */}
+            <div className="p-3 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-[10px] text-stone-400">
+              <span>California DRE #00609384 Fiduciary Standard</span>
+              <span className="text-[#D4AF37] font-semibold">100% Conflict-Free Second Opinion</span>
+            </div>
+          </div>
         </div>
       )}
 
