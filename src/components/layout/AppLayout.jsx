@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import TalkToUsPill from '../portal/TalkToUsPill';
-import ReferralFloatingPill from '../portal/ReferralFloatingPill';
 import PWAInstallPrompt from '../pwa/PWAInstallPrompt';
 import ClientSidebar from './ClientSidebar';
 import PageNumberBadge from '../PageNumberBadge';
@@ -147,7 +146,6 @@ export default function AppLayout() {
       <MobileBottomNav />
       <PageNumberBadge />
       <TalkToUsPill />
-      <ReferralFloatingPill />
       <PWAInstallPrompt />
     </div>
   );
