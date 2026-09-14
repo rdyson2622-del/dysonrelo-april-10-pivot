@@ -375,11 +375,11 @@ export default function CopilotExplodedSubjectModal({
 
                   <button
                     type="button"
-                    onClick={() => handleReturnToCommunication("How do closing rebates apply during an inventory freeze?")}
+                    onClick={() => handleReturnToCommunication("How does fiduciary due diligence protect buyers during an inventory freeze?")}
                     className="px-3.5 py-2 rounded-xl bg-[#181818] hover:bg-white/15 text-stone-200 hover:text-white border border-white/15 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer"
                   >
-                    <DollarSign className="w-3.5 h-3.5 text-yellow-400" />
-                    <span>Rebate in Inventory Freeze?</span>
+                    <Shield className="w-3.5 h-3.5 text-yellow-400" />
+                    <span>Contingency Shields?</span>
                   </button>
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function CopilotExplodedSubjectModal({
                     Conforming Jumbo Rate Spread Stabilizes at 6.45%
                   </h4>
                   <p className="text-xs text-stone-400 mt-1 line-clamp-3">
-                    How high-net-worth buyers are using buyer rebates on line 204 to buydown points by 75 basis points.
+                    How high-net-worth buyers are using fiduciary discovery to verify lender compliance and lock in protective contingency shields.
                   </p>
                 </div>
               </div>
@@ -582,24 +582,24 @@ export default function CopilotExplodedSubjectModal({
               <div className="rounded-xl border border-white/10 bg-[#121212] p-4 sm:p-5 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm uppercase tracking-wider">
-                    <DollarSign className="w-4 h-4 text-[#D4AF37]" />
-                    <span>Line 204 Closing Rebate</span>
+                    <Shield className="w-4 h-4 text-[#D4AF37]" />
+                    <span>Lender &amp; Fiduciary Compliance Audit</span>
                   </div>
                   <p className="text-xs text-stone-400">
-                    Rebate estimate where allowed by law | {dossierData?.rebateBasis}
+                    Pre-Offer Fiduciary Verification | California DRE #00609384
                   </p>
                   <div className="p-4 rounded-xl bg-black border border-[#D4AF37]/50 flex items-center justify-between mt-2">
-                    <span className="text-xs sm:text-sm font-semibold text-white">Estimated Buyer Credit</span>
-                    <span className="text-xl sm:text-2xl font-bold font-mono text-[#D4AF37]">{dossierData?.rebateRange}</span>
+                    <span className="text-xs sm:text-sm font-semibold text-white">Earnest Deposit Contingency</span>
+                    <span className="text-xl sm:text-2xl font-bold font-mono text-emerald-400">100% Protected</span>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => handleReturnToCommunication("Bob, explain how line 204 rebate credit works for this property")}
+                  onClick={() => handleReturnToCommunication("Bob, how does Dyson & Dyson handle transaction discovery and lender compliance?")}
                   className="w-full py-2.5 rounded-xl bg-[#181818] hover:bg-[#D4AF37] text-white hover:text-black border border-white/20 font-semibold text-xs transition-all cursor-pointer"
                 >
-                  Ask Bob Dyson About This Rebate →
+                  Ask Bob About Lender Compliance →
                 </button>
               </div>
             </div>

@@ -491,7 +491,7 @@ export default function CopilotDossierNewsPanel({
                   Conforming Jumbo Rate Spread Stabilizes at 6.45%
                 </h4>
                 <p className="text-[11px] text-stone-400 line-clamp-2 mt-1">
-                  How high-net-worth buyers are using buyer rebates on line 204 to buydown points by 75 basis points.
+                  How high-net-worth buyers are structuring fiduciary contingency shields and lender compliance discovery.
                 </p>
               </div>
             </div>
