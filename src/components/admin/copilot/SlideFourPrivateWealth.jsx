@@ -138,14 +138,14 @@ export default function SlideFourPrivateWealth({ onRunAudit, onOpenDossier }) {
 
       </div>
 
-      {/* ── LINEN "HOW DYSON HOMES COPILOT WORKS" BAND: Plain 1. 2. 3., No yellow dots, No decorative art ── */}
-      <div className="w-full bg-[#F3F0E6] text-[#0a0a0a] border-t border-b border-[#D4AF37]/40 py-16 sm:py-20 px-6 sm:px-10">
+      {/* ── DYSON SIGNATURE TAN "HOW DYSON HOMES COPILOT WORKS" BAND ── */}
+      <div className="w-full bg-[#ede0cc] text-[#0a0a0a] border-t border-b border-[#D4AF37]/40 py-16 sm:py-20 px-6 sm:px-10">
         <div className="max-w-[1180px] mx-auto space-y-8">
           
           {/* Header Divider */}
           <div className="relative flex items-center justify-center">
             <div className="border-t border-[#D4AF37]/60 w-full" />
-            <div className="absolute px-6 bg-[#F3F0E6] text-xs font-bold tracking-[0.25em] text-[#0a0a0a] uppercase whitespace-nowrap font-mono">
+            <div className="absolute px-6 bg-[#ede0cc] text-xs font-bold tracking-[0.25em] text-[#0a0a0a] uppercase whitespace-nowrap font-mono">
               HOW DYSON HOMES COPILOT WORKS
             </div>
           </div>
