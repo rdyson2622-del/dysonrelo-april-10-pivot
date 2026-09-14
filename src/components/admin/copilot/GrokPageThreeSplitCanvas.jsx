@@ -290,6 +290,18 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
                 <CopilotAvatarSlot 
                   activeExplainer={activeExplainer}
                   onClearExplainer={() => setActiveExplainer(null)}
+                  onVoiceTranscript={(t) => {
+                    if (t?.text && t?.role === 'assistant') {
+                      setMessages(prev => [
+                        ...prev,
+                        {
+                          id: Date.now(),
+                          sender: 'charlie',
+                          text: t.text,
+                        }
+                      ]);
+                    }
+                  }}
                   size="vertical"
                 />
               </div>

@@ -33,6 +33,7 @@ class StreamingPcmPlayer {
   }
 
   playChunk(base64Data, { onStart, onEnded } = {}) {
+    if (this.isPaused) return;
     const ctx = this.ensureContext();
     if (!ctx) return;
 
@@ -205,6 +206,8 @@ export class GeminiLiveSessionClient {
     this.turnCount = 0;
     this.active = false;
     this._setupDone = false;
+    this.isPaused = false;
+    this.isMuted = false;
     this.pendingNav = null;
     this.accumulatedTurnText = '';
 
@@ -214,6 +217,33 @@ export class GeminiLiveSessionClient {
     this.scriptProcessor = null;
     this.pcmPlayer = new StreamingPcmPlayer(24000);
     this.passiveSpeechRec = null;
+  }
+
+  pause() {
+    this.isPaused = true;
+    if (this.pcmPlayer) {
+      this.pcmPlayer.isPaused = true;
+      this.pcmPlayer.stop();
+    }
+    this.onSpeaker?.(null);
+  }
+
+  resume() {
+    this.isPaused = false;
+    if (this.pcmPlayer) {
+      this.pcmPlayer.isPaused = false;
+    }
+    if (this.active && this._setupDone) {
+      this.onStatusChange?.('listening');
+    }
+  }
+
+  mute() {
+    this.isMuted = true;
+  }
+
+  unmute() {
+    this.isMuted = false;
   }
 
   async start() {
@@ -343,6 +373,7 @@ export class GeminiLiveSessionClient {
 
           // Handle incoming audio parts from Gemini Live
           if (msg.serverContent?.modelTurn?.parts) {
+            if (this.isPaused) return; // Mute live audio while paused for explainer video
             for (const part of msg.serverContent.modelTurn.parts) {
               // Play inline PCM 24kHz audio via Algieba native voice
               if (part.inlineData && part.inlineData.mimeType?.startsWith('audio/pcm') && part.inlineData.data) {
@@ -431,7 +462,7 @@ export class GeminiLiveSessionClient {
 
       processor.onaudioprocess = (e) => {
         // MUST send mediaChunks ONLY after _setupDone
-        if (!this.active || !this._setupDone || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+        if (!this.active || !this._setupDone || !this.ws || this.ws.readyState !== WebSocket.OPEN || this.isMuted || this.isPaused) return;
 
         const inputChannelData = e.inputBuffer.getChannelData(0);
         const downsampled = downsampleBuffer(inputChannelData, ctx.sampleRate, 16000);
