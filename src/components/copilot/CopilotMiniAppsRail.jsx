@@ -158,7 +158,7 @@ export default function CopilotMiniAppsRail({ className = '', onSelectApp }) {
         <div className="flex flex-col items-center text-center pb-2 border-b border-white/10 gap-0.5">
           <DysonVerticalBadge height={28} />
           <div>
-            <h2 className="text-[9px] font-serif font-bold text-white tracking-wider leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <h2 className="text-[9px] font-serif font-normal text-white tracking-wider leading-tight" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
               DYSON &amp; DYSON
             </h2>
             <span className="text-[6.5px] uppercase tracking-widest text-[#D4AF37] block font-mono font-semibold">

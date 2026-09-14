@@ -268,13 +268,13 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         {/* Center / Right: Brand Header with Italicized Copilot */}
         <div className="flex items-baseline gap-2.5">
           <span 
-            className="font-serif text-base sm:text-lg font-bold tracking-widest text-white uppercase leading-none"
+            className="font-serif text-base sm:text-lg font-normal tracking-[0.18em] text-white uppercase leading-none"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             DYSON HOMES
           </span>
           <span 
-            className="font-serif italic text-lg sm:text-[21px] font-medium text-[#D4AF37] leading-none"
+            className="font-serif italic text-lg sm:text-[21px] font-normal text-[#D4AF37] leading-none"
             style={{ fontFamily: 'Cormorant Garamond, serif' }}
           >
             CoPilot
