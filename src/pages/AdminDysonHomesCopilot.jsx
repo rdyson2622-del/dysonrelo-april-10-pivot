@@ -11,6 +11,7 @@ import CopilotPublicReadOnlyTeamRail from '@/components/admin/copilot/CopilotPub
 import CopilotSweepLogo from '@/components/brand/CopilotSweepLogo';
 import CoastalAddressKeywordExporter from '@/components/admin/copilot/CoastalAddressKeywordExporter';
 import DysonHomesDomainDnsCard from '@/components/admin/copilot/DysonHomesDomainDnsCard';
+import HighestAndBestUseAnalysisCard from '@/components/admin/copilot/HighestAndBestUseAnalysisCard';
 
 const TAN_BG = '#ede0cc';
 
@@ -339,6 +340,9 @@ export default function AdminDysonHomesCopilot() {
           ───────────────────────────────────────────────────────────── */}
       {activeTab === 'retargeting' && (
         <div className="max-w-4xl mx-auto space-y-6 text-left">
+          {/* Highest & Best Use Analysis Card */}
+          <HighestAndBestUseAnalysisCard />
+
           {/* Automated Coastal Keyword Exporter Component */}
           <CoastalAddressKeywordExporter />
 
