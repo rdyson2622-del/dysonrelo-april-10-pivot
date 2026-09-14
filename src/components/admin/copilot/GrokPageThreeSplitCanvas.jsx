@@ -6,23 +6,47 @@ import {
 import DysonVerticalBadge from '@/components/brand/DysonVerticalBadge';
 import CopilotAvatarSlot from '@/components/copilot/CopilotAvatarSlot';
 import { COPILOT_EXPLAINERS, findExplainerByQuery } from '@/components/copilot/copilotExplainers';
+import { getPropertyDossier } from './propertyDossierData';
 
 export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
   const [inputText, setInputText] = useState('');
   const [activeExplainer, setActiveExplainer] = useState(null);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'charlie',
-      text: "I audited 742 Vista Del Mar, La Jolla.\nOverpriced vs comps; rebate estimate where allowed by law. Dossier on the left.\nWhat's your mobile so I can text this report to you?"
-    },
-    {
-      id: 2,
-      sender: 'user',
-      text: "742 Vista Del Mar, La Jolla, CA 92037",
-      time: "10:24 AM"
-    }
-  ]);
+  const dossierData = getPropertyDossier(property);
+
+  const [messages, setMessages] = useState(() => {
+    const data = getPropertyDossier(property);
+    return [
+      {
+        id: 1,
+        sender: 'charlie',
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the left.\nWhat's your mobile so I can text this report to you?`
+      },
+      {
+        id: 2,
+        sender: 'user',
+        text: data.fullAddress,
+        time: "10:24 AM"
+      }
+    ];
+  });
+
+  // Keep chat initial messages strictly in sync whenever property prop changes
+  React.useEffect(() => {
+    const data = getPropertyDossier(property);
+    setMessages([
+      {
+        id: 1,
+        sender: 'charlie',
+        text: `I audited ${data.shortAddress}, ${data.city}.\n${data.marketSummary} Dossier on the left.\nWhat's your mobile so I can text this report to you?`
+      },
+      {
+        id: 2,
+        sender: 'user',
+        text: data.fullAddress,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ]);
+  }, [property]);
 
   const handlePillClick = (query) => {
     const explainer = findExplainerByQuery(query);
@@ -54,7 +78,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           {
             id: Date.now() + 1,
             sender: 'charlie',
-            text: `Got it! Let me know if you need any adjustments or offer structuring guidance for 742 Vista Del Mar.`
+            text: `Got it! Let me know if you need any adjustments or offer structuring guidance for ${dossierData.shortAddress}.`
           }
         ]);
       }, 500);
@@ -96,7 +120,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           {
             id: Date.now() + 1,
             sender: 'charlie',
-            text: `Got it! I've dispatched the 742 Vista Del Mar dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
+            text: `Got it! I've dispatched the ${dossierData.shortAddress} dossier directly to you. Feel free to ask about nearby micro-comps or offer terms.`
           }
         ]);
       }, 600);
@@ -155,7 +179,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
           {/* Header */}
           <div className="pb-1">
             <span className="text-[10.5px] font-bold tracking-widest text-[#D4AF37] uppercase font-mono">
-              DOSSIER • {(property || '742 Vista Del Mar').split(',')[0].toUpperCase()}
+              DOSSIER • {dossierData.shortAddress.toUpperCase()} {dossierData.city ? `(${dossierData.city.toUpperCase()})` : ''}
             </span>
           </div>
 
@@ -173,33 +197,19 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
 
             {/* Comps Table in Tan Container */}
             <div className="space-y-1.5 pt-1 text-[11.5px] font-mono">
-              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
-                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">718 Via Capri</span>
-                <span className="text-[#554c40]">0.32 mi</span>
-                <span className="text-[#554c40]">5 bd | 4.5 ba | 4,612 sf</span>
-                <span className="text-[#2a241c]">Sold $6.25M</span>
-                <span className="text-[#854d0e] font-bold">Adj. $6.41M</span>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
-                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">7550 Eads Ave</span>
-                <span className="text-[#554c40]">0.48 mi</span>
-                <span className="text-[#554c40]">4 bd | 4 ba | 3,980 sf</span>
-                <span className="text-[#2a241c]">Sold $5.30M</span>
-                <span className="text-[#854d0e] font-bold">Adj. $5.48M</span>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
-                <span className="font-bold text-[#0a0a0a] w-28 sm:w-32">737 Bonair Way</span>
-                <span className="text-[#554c40]">0.61 mi</span>
-                <span className="text-[#554c40]">5 bd | 4 ba | 4,305 sf</span>
-                <span className="text-[#2a241c]">Sold $5.85M</span>
-                <span className="text-[#854d0e] font-bold">Adj. $6.02M</span>
-              </div>
+              {dossierData.comps.map((comp, idx) => (
+                <div key={idx} className="flex flex-wrap items-center justify-between text-[#2a241c] py-1 border-b border-[#d8cab6] gap-2">
+                  <span className="font-bold text-[#0a0a0a] w-32 sm:w-36 truncate">{comp.address}</span>
+                  <span className="text-[#554c40]">{comp.distance}</span>
+                  <span className="text-[#554c40]">{comp.specs}</span>
+                  <span className="text-[#2a241c]">{comp.soldPrice}</span>
+                  <span className="text-[#854d0e] font-bold">{comp.adjPrice}</span>
+                </div>
+              ))}
             </div>
 
             <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
-              Subject at $7.95M list is 24–32% above adjusted comps.
+              {dossierData.compsSummary}
             </p>
           </div>
 
@@ -213,39 +223,22 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
             </div>
 
             <div className="space-y-2.5 text-xs">
-              <div className="flex items-start gap-2.5">
-                <Scale className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-[#0a0a0a]">Topography &amp; drainage</h4>
-                  <p className="text-[#554c40] text-[11px]">
-                    Steep lot; prior water intrusion noted in 2021 disclosure.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <Waves className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-[#0a0a0a]">Coastal bluff influence</h4>
-                  <p className="text-[#554c40] text-[11px]">
-                    Setback &amp; erosion disclosure on file; future costs possible.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-[#0a0a0a]">Permit &amp; code notes</h4>
-                  <p className="text-[#554c40] text-[11px]">
-                    Unpermitted pool heater; fence variance exception.
-                  </p>
-                </div>
-              </div>
+              {dossierData.risks.map((risk, idx) => {
+                const IconComp = idx === 0 ? Scale : idx === 1 ? Waves : Clock;
+                return (
+                  <div key={risk.id || idx} className="flex items-start gap-2.5">
+                    <IconComp className="w-4 h-4 text-[#854d0e] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#0a0a0a]">{risk.title}</h4>
+                      <p className="text-[#554c40] text-[11px]">{risk.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             <p className="text-[11px] font-semibold text-[#854d0e] pt-1">
-              Review seller disclosures and coastal reports closely.
+              {dossierData.risksSummary}
             </p>
           </div>
 
@@ -258,7 +251,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               </h3>
             </div>
             <p className="text-[11px] text-[#554c40] font-medium">
-              Rebate estimate where allowed by law | Based on $1.5M purchase price.
+              Rebate estimate where allowed by law | {dossierData.rebateBasis}
             </p>
 
             <div className="bg-[#f7efe3] border border-[#d8cab6] rounded-lg p-3 sm:p-3.5 flex items-center justify-between">
@@ -267,10 +260,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch }) {
               </span>
               <div className="text-right">
                 <div className="text-base sm:text-lg font-bold font-mono text-[#854d0e]">
-                  $10,000 – $12,000
+                  {dossierData.rebateRange}
                 </div>
                 <div className="text-[11px] text-[#554c40] font-mono">
-                  (0.67% – 0.80%)
+                  {dossierData.rebatePercent}
                 </div>
               </div>
             </div>
