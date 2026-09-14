@@ -91,9 +91,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     };
     setMessages(prev => [...prev, userMsg]);
 
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate|offer strategy/i.test(query);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|closing rebate|rebate|offer strategy|hud-1|line 204/i.test(query);
     const isNewsQuery = /news|broadcast|inventory|bullet|summary|headline/i.test(query);
     const isTextReportQuery = /text|mobile|phone|send report|send me/i.test(query);
+    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|rebate|trap|fiduciary/i.test(query);
 
     if (isTextReportQuery) {
       setIsCaptureModalOpen(true);
@@ -101,6 +102,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
     if (isNewsQuery) {
       setRightPanelView('news');
+    } else if (isSolutionsQuery) {
+      setRightPanelView('solutions');
     }
 
     if (explainer?.videoUrl) {
@@ -123,10 +126,16 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           answerText = `Charlie: Here is your DNN Daily Broadcast Summary for ${dossierData.city || 'Southern California'}:\n• Constrained inventory down 14% YoY across luxury zip codes.\n• Price resilience supported by high equity buyers, but appraisal gaps are emerging.\n• Our fiduciary protocol secures unvarnished comps and up to ${dossierData.rebateRange} back on line 204 of your closing HUD-1.`;
         } else if (isBobQuery && isNewsQuery) {
           answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. Under my California broker license #00609384, we demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
+        } else if (/line 204|rebate/i.test(query)) {
+          answerText = `Bob Dyson: On line 204 of your closing HUD-1 / settlement statement, California law and the DOJ explicitly allow licensed brokers to credit buyer representation fees. On ${dossierData.shortAddress}, that delivers ${dossierData.rebateRange} directly to offset your closing costs or buydown your mortgage rate.`;
+        } else if (/prop 19|tax/i.test(query)) {
+          answerText = `Charlie: Under California Proposition 19, if you or your spouse are 55+, severely disabled, or wildfire victims, you can transfer your taxable property base to any replacement home anywhere in California up to 3 times, saving tens of thousands annually.`;
+        } else if (/bluff|coastal|setback|soil/i.test(query)) {
+          answerText = `Charlie: For coastal parcels, California Coastal Commission setback rules require 75-year erosion projections. We mandate a deep geotechnical review of ancient landslide fault lines before you waive physical inspection contingencies.`;
         } else if (isBobQuery) {
-          answerText = `Bob Dyson here: Regarding "${query}" on ${dossierData.shortAddress} — in California transactions, we always draft contingency shields to verify soil stability and ensure credits are credited on your HUD-1 with zero hidden broker fees.`;
+          answerText = `Bob Dyson: Regarding "${query}" — in California contracts, we never allow premature contingency waivers. We draft appraisal and title contingency shields to verify soil stability and credit your representation rebate directly on your HUD-1.`;
         } else {
-          answerText = `Got it! On ${dossierData.shortAddress}, the comps show 24–32% premium over adjusted sold averages. We can structure an offer anchored to the $6.25M micro-comps.`;
+          answerText = `Charlie: I've opened the corresponding playbook in the Solutions Vault on the right. With ${dossierData.shortAddress}, our fiduciary protocol protects you with zero added broker fees and independent comps.`;
         }
 
         setMessages(prev => [
@@ -160,9 +169,10 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
     setInputText('');
 
     const explainer = findExplainerByQuery(text);
-    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|offer strategy/i.test(text);
+    const isBobQuery = /bob|trap|escrow|bluff|contract|legal|fee|disclosure|title|broker|offer strategy|hud-1|line 204|rebate/i.test(text);
     const isNewsQuery = /news|broadcast|video|inventory|headline|dnn/i.test(text);
     const isPhoneOrText = /text|mobile|phone|\d{3}.*\d{3}.*\d{4}/i.test(text);
+    const isSolutionsQuery = /solution|vault|prop 19|tax|bluff|coastal|setback|how to|guide|playbook|exchange|1031|rebate|trap|fiduciary/i.test(text);
 
     if (isPhoneOrText && !isBobQuery && !isNewsQuery) {
       setIsCaptureModalOpen(true);
@@ -170,6 +180,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
 
     if (isNewsQuery) {
       setRightPanelView('news');
+    } else if (isSolutionsQuery) {
+      setRightPanelView('solutions');
     }
 
     if (explainer?.videoUrl) {
@@ -236,8 +248,8 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             </button>
           )}
 
-          {/* Quick Right-Side View Switcher in Header */}
-          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-lg border border-white/10 ml-2">
+          {/* Quick Right-Side View Switcher in Header: Audit, Solutions & News */}
+          <div className="hidden sm:flex items-center bg-[#141414] p-0.5 rounded-lg border border-white/10 ml-2 gap-0.5">
             <button
               type="button"
               onClick={() => setRightPanelView('dossier')}
@@ -249,6 +261,18 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
             >
               <Scale className="w-3 h-3" />
               <span>Audit</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRightPanelView('solutions')}
+              className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                rightPanelView === 'solutions'
+                  ? 'bg-[#D4AF37] text-black shadow'
+                  : 'text-stone-400 hover:text-white'
+              }`}
+            >
+              <FileText className="w-3 h-3 text-amber-400" />
+              <span>Solutions Vault</span>
             </button>
             <button
               type="button"
@@ -438,8 +462,61 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
           {/* ── PINNED BOTTOM DIALOGUE BAR (MODELED AFTER GROK BOT) ── */}
           <div className="pt-2 mt-auto border-t border-white/10 sticky bottom-0 bg-[#0b0b0b] z-20 space-y-2">
             
-            {/* Quick Prompt Pill Suggestions */}
+            {/* Directional Guidance Chips: "Anything Real Estate" Mode */}
             <div className="flex flex-wrap items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setRightPanelView('solutions');
+                  handlePillClick("What solutions and playbooks do you offer for home buyers?");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/50 transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+              >
+                <Sparkles className="w-2.5 h-2.5 text-[#D4AF37]" />
+                <span>🔍 Anything Real Estate</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRightPanelView('solutions');
+                  handlePillClick("How do closing rebates work on line 204 of the HUD-1 statement?");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-amber-300 border border-amber-400/40 transition-all cursor-pointer flex items-center gap-1"
+              >
+                <DollarSign className="w-2.5 h-2.5 text-yellow-400" />
+                <span>Line 204 Rebate</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRightPanelView('solutions');
+                  handlePillClick("Bob, what are the biggest escrow traps and how do we protect our earnest money deposit?");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer flex items-center gap-1"
+              >
+                <Briefcase className="w-2.5 h-2.5" />
+                <span>Ask Bob: Escrow Traps</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRightPanelView('solutions');
+                  handlePillClick("How does Prop 19 tax base portability work when relocating in California?");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+              >
+                <span>Prop 19 Tax</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRightPanelView('solutions');
+                  handlePillClick("What are the coastal bluff setback and soil stability risks in California?");
+                }}
+                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
+              >
+                <span>Bluff Setbacks</span>
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -451,38 +528,9 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                 <Radio className="w-2.5 h-2.5 text-rose-400" />
                 <span>Daily News</span>
               </button>
-              <button
-                type="button"
-                onClick={() => handlePillClick('What should my opening offer be based on comps?')}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer"
-              >
-                <span>Opening offer?</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePillClick("Bob's Take: Escrow & Deal Traps")}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-[#D4AF37] border border-[#D4AF37]/40 transition-all cursor-pointer flex items-center gap-1"
-              >
-                <Briefcase className="w-2.5 h-2.5" />
-                <span>Ask Bob</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePillClick('How do you find hidden property risks?')}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Bluff risks</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePillClick('How do I get thousands back at closing?')}
-                className="px-2 py-0.5 rounded-full text-[9.5px] font-semibold bg-white/5 hover:bg-white/10 text-stone-300 border border-white/15 transition-all cursor-pointer"
-              >
-                <span>Rebate info</span>
-              </button>
             </div>
 
-            {/* Grok-Style Message Bar */}
+            {/* Grok-Style Message Bar with Directions */}
             <form onSubmit={handleSendMessage} className="space-y-1">
               <div className="flex items-center bg-[#141414] hover:bg-[#171717] rounded-2xl border border-white/15 focus-within:border-[#D4AF37] focus-within:ring-1 focus-within:ring-[#D4AF37]/40 px-3 py-2 shadow-2xl transition-all">
                 <Paperclip className="w-4 h-4 text-stone-400 mr-2 shrink-0 cursor-pointer hover:text-white transition-colors" title="Attach file or pre-approval" />
@@ -491,7 +539,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask Bob or Charlie about comps, risks, or closing rebate..."
+                  placeholder="Ask anything real estate—rebates, Prop 19, escrow traps, comps..."
                   className="flex-1 bg-transparent text-white text-xs sm:text-sm outline-none placeholder:text-stone-500 font-normal min-w-0"
                 />
 

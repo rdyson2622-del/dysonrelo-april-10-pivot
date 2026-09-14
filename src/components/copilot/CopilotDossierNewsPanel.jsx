@@ -2,10 +2,11 @@ import React, { useState, useRef } from 'react';
 import { 
   Scale, ShieldAlert, DollarSign, Waves, Clock, Radio, 
   Maximize2, Minimize2, Newspaper, Sparkles, Play, Pause,
-  Share2, Volume2, VolumeX, ChevronRight, MessageSquare
+  Share2, Volume2, VolumeX, ChevronRight, MessageSquare, BookOpen
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import CopilotSolutionsVault from './CopilotSolutionsVault';
 
 const GOLD = '#D4AF37';
 const DNN_LOGO = 'https://media.base44.com/images/public/69d905d72ff7c93b5ef050c4/08d73fd44_DNNOPTIONALLOGO.png';
@@ -91,8 +92,8 @@ export default function CopilotDossierNewsPanel({
       {/* ── TOP CONTROLS & DUAL TAB SELECTOR ── */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
         
-        {/* View Switcher Tabs */}
-        <div className="flex items-center bg-[#141414] p-1 rounded-xl border border-white/10">
+        {/* View Switcher Tabs: 3 Pillars */}
+        <div className="flex flex-wrap items-center bg-[#141414] p-1 rounded-xl border border-white/10 gap-0.5">
           <button
             type="button"
             onClick={() => onViewChange?.('dossier')}
@@ -103,7 +104,25 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <Scale className="w-3.5 h-3.5" />
-            <span>Property Audit &amp; Intelligence</span>
+            <span>Property Audit</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onViewChange?.('solutions')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeView === 'solutions'
+                ? 'bg-[#D4AF37] text-black shadow-md'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+            <span>Solutions &amp; Vault</span>
+            <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+              activeView === 'solutions' ? 'bg-black text-[#D4AF37]' : 'bg-amber-500/20 text-amber-300'
+            }`}>
+              LIBRARY
+            </span>
           </button>
 
           <button
@@ -116,7 +135,7 @@ export default function CopilotDossierNewsPanel({
             }`}
           >
             <Radio className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
-            <span>Daily News Video</span>
+            <span>Daily News</span>
             <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
               activeView === 'news' ? 'bg-black text-[#D4AF37]' : 'bg-rose-500/20 text-rose-400'
             }`}>
@@ -156,10 +175,21 @@ export default function CopilotDossierNewsPanel({
           )}
 
           <span className="text-[9px] text-stone-500 font-mono hidden sm:inline-block">
-            {activeView === 'dossier' ? 'INDEPENDENT 2ND-OPINION' : 'DNN AI BROADCAST DESK'}
+            {activeView === 'dossier' 
+              ? 'INDEPENDENT 2ND-OPINION' 
+              : activeView === 'solutions' 
+              ? 'FIDUCIARY KNOWLEDGE BASE' 
+              : 'DNN AI BROADCAST DESK'}
           </span>
         </div>
       </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          VIEW: REAL ESTATE SOLUTIONS & INTELLIGENCE VAULT
+          ───────────────────────────────────────────────────────────── */}
+      {activeView === 'solutions' && (
+        <CopilotSolutionsVault onPromptClick={onPromptClick} />
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
           VIEW A: FIDUCIARY PROPERTY AUDIT & INTELLIGENCE
