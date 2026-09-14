@@ -20,6 +20,7 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Red Ring',
     colorHex: '#ef4444',
     text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and can we structure a closing rebate?",
+    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/9417a119e_speech.mp3",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
     delayMs: 3800
   },
@@ -31,6 +32,7 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Green Ring',
     colorHex: '#10b981',
     text: "Charlie here: On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to structure your contingency shield.",
+    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/bbe89eee0_speech.mp3",
     voiceConfig: { pitch: 1.15, rate: 1.05, voiceType: 'charlie' },
     delayMs: 6500
   },
@@ -42,6 +44,7 @@ export const THREE_WAY_SCRIPT = [
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
     text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an un-waivable soil stability inspection. And under our zero-fee protocol, your estimated $16,800 closing rebate is locked directly on line 204 of your HUD-1.",
+    audioUrl: "https://media.base44.com/files/public/69d905d72ff7c93b5ef050c4/1270ef2d9_speech.mp3",
     voiceConfig: { pitch: 0.88, rate: 0.95, voiceType: 'bob' },
     delayMs: 6800
   }
@@ -51,9 +54,56 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0); // 0 = idle, 1 = consumer (red), 2 = charlie (green), 3 = bob (gold), 4 = done
   const timerRef = useRef(null);
+  const audioPlayerRef = useRef(null);
 
-  // Helper to speak a turn with distinct voice profile
+  // Helper to speak a turn with studio-grade audio or distinct fallback
   const speakTurn = (turnData, onEndCallback) => {
+    // 1. First priority: Play studio-recorded MP3
+    if (turnData.audioUrl && typeof Audio !== 'undefined') {
+      try {
+        if (audioPlayerRef.current) {
+          audioPlayerRef.current.pause();
+          audioPlayerRef.current = null;
+        }
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+
+        const audio = new Audio(turnData.audioUrl);
+        audioPlayerRef.current = audio;
+
+        let hasFinished = false;
+        const finish = () => {
+          if (!hasFinished) {
+            hasFinished = true;
+            if (onEndCallback) onEndCallback();
+          }
+        };
+
+        audio.onended = finish;
+        audio.onerror = () => {
+          console.warn('Audio playback error, falling back to speech synthesis');
+          fallbackSpeak(turnData, onEndCallback);
+        };
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn('Audio autoplay prevented, using speech synthesis fallback:', err);
+            fallbackSpeak(turnData, onEndCallback);
+          });
+        }
+        return;
+      } catch (e) {
+        console.warn('Audio element error:', e);
+      }
+    }
+
+    fallbackSpeak(turnData, onEndCallback);
+  };
+
+  // Browser Speech Synthesis Fallback with modern voices
+  const fallbackSpeak = (turnData, onEndCallback) => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       if (onEndCallback) onEndCallback();
       return;
@@ -62,20 +112,21 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(turnData.text);
-      utterance.pitch = turnData.voiceConfig.pitch || 1.0;
-      utterance.rate = turnData.voiceConfig.rate || 1.0;
+      utterance.pitch = turnData.voiceConfig?.pitch || 1.0;
+      utterance.rate = turnData.voiceConfig?.rate || 1.0;
 
       const voices = window.speechSynthesis.getVoices();
       if (voices && voices.length > 0) {
         if (turnData.speaker === 'bob') {
-          const maleVoice = voices.find(v => v.lang.startsWith('en') && /male|david|george|alex|daniel/i.test(v.name));
+          const maleVoice = voices.find(v => v.lang.startsWith('en') && /daniel|george|oliver|alex|david|guy/i.test(v.name));
           if (maleVoice) utterance.voice = maleVoice;
         } else if (turnData.speaker === 'charlie') {
-          const charlieVoice = voices.find(v => v.lang.startsWith('en') && /natural|aaron|samantha|karen|fred/i.test(v.name));
+          const charlieVoice = voices.find(v => v.lang.startsWith('en') && /natural|aaron|evan|alex|google us english/i.test(v.name));
           if (charlieVoice) utterance.voice = charlieVoice;
         } else {
-          const consumerVoice = voices.find(v => v.lang.startsWith('en') && /susan|victoria|zoe|steffi/i.test(v.name));
-          if (consumerVoice) utterance.voice = consumerVoice;
+          // Modern, warm woman voice for buyer
+          const buyerVoice = voices.find(v => v.lang.startsWith('en') && /samantha|ava|allison|jenny|victoria|zoe/i.test(v.name));
+          if (buyerVoice) utterance.voice = buyerVoice;
         }
       }
 
@@ -95,6 +146,11 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
   };
 
   const stopDemo = () => {
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause();
+      audioPlayerRef.current.currentTime = 0;
+      audioPlayerRef.current = null;
+    }
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
@@ -152,6 +208,10 @@ export default function CopilotThreeWayDemo({ onTurnChange, onResetDemo, onMessa
 
   useEffect(() => {
     return () => {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
