@@ -7,13 +7,13 @@
 export const COPILOT_EXPLAINERS = [
   {
     id: 'closing_rebate',
-    label: 'How do I get thousands back at closing?',
+    label: 'How does Dyson & Dyson protect buyers?',
     speaker: 'bob',
     speakerName: 'Bob Dyson',
     speakerRole: 'Principal Broker Solutions Take',
-    topic: 'Closing Rebate & Fiduciary Compensation',
+    topic: 'Fiduciary Contingency Shields & Due Diligence',
     videoUrl: 'https://base44.app/api/apps/69d905d72ff7c93b5ef050c4/files/mp/public/69d905d72ff7c93b5ef050c4/3400475d9_bobanswer_6a5d2e96818523aa8749508e.mp4',
-    textAnswer: 'Our service is 100% free to relocating buyers. We are compensated through standard referral fees from the receiving agent, and where allowed by law, our fiduciary audit returns thousands directly to you at closing as a rebate credit.',
+    textAnswer: 'Our fiduciary desk acts as an independent second set of eyes. We review public records, permit history, coastal hazard zones, and contingency timelines to ensure your earnest money deposit is 100% protected before you sign.',
   },
   {
     id: 'hidden_risks',

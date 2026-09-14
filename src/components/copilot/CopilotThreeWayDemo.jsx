@@ -19,7 +19,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'Verified Buyer',
     colorName: 'Red Ring',
     colorHex: '#ef4444',
-    text: "We're looking at 7414 Fay Ave in La Jolla. Is the bluff setback going to be a problem, and how do you review contract terms and lender compliance?",
+    text: "We're looking at 7414 Fay Ave in La Jolla. Is the coastal bluff setback going to be a problem, and what unvarnished risks should we know about before writing an offer?",
     voiceConfig: { pitch: 1.05, rate: 1.02, voiceType: 'consumer' },
     delayMs: 4000
   },
@@ -30,7 +30,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'AI Voice Concierge',
     colorName: 'Green Ring',
     colorHex: '#10b981',
-    text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and geotechnical soil report. Comps show the property is listed at an 18% premium. Let me bring in Bob Dyson to review your contingency protections and compliance discovery.",
+    text: "Charlie here. On 7414 Fay Ave, coastal zoning requires a mandatory 25-foot bluff setback and an updated geotechnical soil report. Public comps also indicate the listing is priced at an 18% premium over recent neighborhood sales. Let me bring in Bob Dyson to review your physical inspection contingency protections.",
     voiceConfig: { pitch: 1.0, rate: 1.0, voiceType: 'charlie' },
     delayMs: 7000
   },
@@ -41,7 +41,7 @@ export const THREE_WAY_SCRIPT = [
     role: 'Principal Broker · DRE #00609384',
     colorName: 'Gold Ring',
     colorHex: '#D4AF37',
-    text: "Bob Dyson here. In California coastal transactions, we never let you write an offer without an un-waivable soil stability inspection. Any discussion of credits, concessions, or transaction structures is handled through individual discovery—verified case-by-case against specific state, federal, and lender regulations so you are always fully protected.",
+    text: "Bob Dyson here. Charlie is spot-on about the bluff setback. In California coastal parcels, ancient fault lines and erosion zones are serious deal-breakers. Under my broker license #00609384, we mandate an un-waivable geological soil stability inspection and strict escrow contingency shields so you never risk your earnest money deposit.",
     voiceConfig: { pitch: 0.95, rate: 0.95, voiceType: 'bob' },
     delayMs: 7500
   }

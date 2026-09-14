@@ -129,7 +129,7 @@ export default function GrokPageThreeSplitCanvas({ property, onBackToSearch, sho
         } else if (isBobQuery && isNewsQuery) {
           answerText = `Bob Dyson: In a constrained inventory market like ${dossierData.shortAddress}, listing agents love to bluff about multiple offers. Under my California broker license #00609384, we demand signed confirmation of competing offers and lock in appraisal protective shields so you never overpay.`;
         } else if (/compliance|concession|credit|structure|lender/i.test(query)) {
-          answerText = `Bob Dyson: Any potential credits, concessions, or transaction structures require individual discovery and strict compliance audits against specific state, federal, and lender regulations. On ${dossierData.shortAddress}, our fiduciary protocol ensures every term is verified and legally compliant before submitting an offer.`;
+          answerText = `Bob Dyson: On ${dossierData.shortAddress}, our fiduciary protocol ensures all contract terms, title exceptions, and physical disclosures are rigorously verified under California broker standards before submitting an offer.`;
         } else if (/prop 19|tax/i.test(query)) {
           answerText = `Charlie: Under California Proposition 19, if you or your spouse are 55+, severely disabled, or wildfire victims, you can transfer your taxable property base to any replacement home anywhere in California up to 3 times, saving tens of thousands annually.`;
         } else if (/bluff|coastal|setback|soil/i.test(query)) {
